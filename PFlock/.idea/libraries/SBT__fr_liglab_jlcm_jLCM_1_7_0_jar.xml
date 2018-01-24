@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: fr.liglab.jlcm:jLCM:1.7.0:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/fr.liglab.jlcm/jLCM/jars/jLCM-1.7.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/fr.liglab.jlcm/jLCM/srcs/jLCM-1.7.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
