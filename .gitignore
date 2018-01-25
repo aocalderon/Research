@@ -9,3 +9,4 @@ metastore_db
 spark-warehouse
 .RData
 .Rhistory
+.history
