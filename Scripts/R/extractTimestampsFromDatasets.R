@@ -11,6 +11,7 @@ PATH = "Datasets/Buses/"
 DATASET = "buses"
 EXTENSION = ".txt"
 SEPARATOR = "\t"
+TRUNCATE_TO_INT = TRUE
 filename = paste0(RESEARCH_HOME,PATH,DATASET,EXTENSION)
 data = read.table(filename, header = F, sep = SEPARATOR)
 
@@ -28,9 +29,17 @@ names(data) = c('id', 'x', 'y','t')
 data = data[ , list(id = min(id)), by = c('x', 'y', 't')]
 
 ###################
-# Writing back...
+# Truncate decimal position if required...
 ###################
 
+if(TRUNCATE_TO_INT){
+  data$x = as.integer(data$x)
+  data$y = as.integer(data$y)
+}
+
+###################
+# Writing back...
+###################
 write.table(data[ , c('id', 'x', 'y', 't')]
             , file = paste0(RESEARCH_HOME,PATH,DATASET,".tsv")
             , row.names = F

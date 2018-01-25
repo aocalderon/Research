@@ -23,10 +23,12 @@ object FlockFinder {
     val candidates: ScallopOption[Int]    = opt[Int]    (default = Some(256))
     val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(28))
     val master:     ScallopOption[String] = opt[String] (default = Some("spark://169.235.27.134:7077")) /* spark://169.235.27.134:7077 */
+    val home:       ScallopOption[String] = opt[String] (default = Some("RESEARCH_HOME"))
     val path:       ScallopOption[String] = opt[String] (default = Some("Y3Q1/Datasets/"))
     val valpath:    ScallopOption[String] = opt[String] (default = Some("Y3Q1/Validation/"))
     val dataset:    ScallopOption[String] = opt[String] (default = Some("Berlin_N15K_A1K_T15"))
     val extension:  ScallopOption[String] = opt[String] (default = Some("csv"))
+    val separator:  ScallopOption[String] = opt[String] (default = Some("\t"))
     val method:     ScallopOption[String] = opt[String] (default = Some("fpmax"))
     // FlockFinder parameters
     val delta:	    ScallopOption[Int]    = opt[Int]    (default = Some(3))    
@@ -65,7 +67,7 @@ object FlockFinder {
     // Calling implicits...
     import simba.implicits._
     import simba.simbaImplicits._
-    val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
+    val phd_home = scala.util.Properties.envOrElse(conf.home(), "/home/acald013/PhD/")
     val filename = s"$phd_home${conf.path()}${conf.dataset()}.${conf.extension()}"
     log.info("Reading %s ...".format(filename))
     val pointset = simba.read.
