@@ -388,8 +388,8 @@ object MaximalFinderExpansion {
     val candidates: ScallopOption[Int]    = opt[Int]    (default = Some(256))
     val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(28))
     val master:     ScallopOption[String] = opt[String] (default = Some("spark://169.235.27.134:7077")) /* spark://169.235.27.134:7077 */
-    val path:       ScallopOption[String] = opt[String] (default = Some("Y3Q1/Datasets/"))
-    val valpath:    ScallopOption[String] = opt[String] (default = Some("Y3Q1/Validation/"))
+    val path:       ScallopOption[String] = opt[String] (default = Some("Datasets/"))
+    val valpath:    ScallopOption[String] = opt[String] (default = Some("Validation/"))
     val dataset:    ScallopOption[String] = opt[String] (default = Some("B20K"))
     val extension:  ScallopOption[String] = opt[String] (default = Some("csv"))
     val method:     ScallopOption[String] = opt[String] (default = Some("fpmax"))
@@ -418,7 +418,7 @@ object MaximalFinderExpansion {
     logger.info("Starting session... [%.3fs]".format((System.currentTimeMillis() - timer)/1000.0))
     // Reading...
     timer = System.currentTimeMillis()
-    phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
+    phd_home = scala.util.Properties.envOrElse("RESEARCH_HOME", "/home/acald013/Research/")
     val filename = "%s%s%s.%s".format(phd_home, conf.path(), conf.dataset(), conf.extension())
     val points = simba.sparkContext.
       textFile(filename, conf.cores()).
