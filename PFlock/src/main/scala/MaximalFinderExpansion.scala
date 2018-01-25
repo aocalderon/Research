@@ -37,6 +37,7 @@ object MaximalFinderExpansion {
     // 00.Setting variables...
     val mu = conf.mu()
     val epsilon = conf.epsilon()
+    val separator = conf.separator()
     var maximals3: RDD[String] = simba.sparkContext.emptyRDD
     
     import simba.implicits._
@@ -48,17 +49,17 @@ object MaximalFinderExpansion {
     var timer = System.currentTimeMillis()
     var pointsNumPartitions = pointsRDD.getNumPartitions
     logger.info("[Partitions Info]Points;Before indexing;%d".format(pointsNumPartitions))
-    val p1 = pointsRDD.map(_.split(",")).
+    val p1 = pointsRDD.map(_.split(separator)).
       map(p => P1(p(0).trim.toLong,p(1).trim.toDouble,p(2).trim.toDouble)).
       toDS().
       index(RTreeType,"p1RT",Array("x1","y1")).
       cache()
-    val p2 = pointsRDD.map(_.split(",")).
+    val p2 = pointsRDD.map(_.split(separator)).
       map(p => P2(p(0).trim.toLong,p(1).trim.toDouble,p(2).trim.toDouble)).
       toDS().
       index(RTreeType,"p2RT",Array("x2","y2")).
       cache()
-    val points = pointsRDD.map(_.split(",")).
+    val points = pointsRDD.map(_.split(separator)).
       map(p => SP_Point(p(0).trim.toLong,p(1).trim.toDouble,p(2).trim.toDouble)).
       toDS().
       index(RTreeType,"pointsRT",Array("x","y")).
@@ -418,7 +419,7 @@ object MaximalFinderExpansion {
     logger.info("Starting session... [%.3fs]".format((System.currentTimeMillis() - timer)/1000.0))
     // Reading...
     timer = System.currentTimeMillis()
-    phd_home = scala.util.Properties.envOrElse("RESEARCH_HOME", "/home/acald013/Research/")
+    phd_home = scala.util.Properties.envOrElse(conf.home(), "/home/acald013/Research/")
     val filename = "%s%s%s.%s".format(phd_home, conf.path(), conf.dataset(), conf.extension())
     val points = simba.sparkContext.
       textFile(filename, conf.cores()).
