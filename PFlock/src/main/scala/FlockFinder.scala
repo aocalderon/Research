@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory
 
 object FlockFinder {
   private val log: Logger = LoggerFactory.getLogger("myLogger")
-  private var phd_home: String = ""
   private var nPointset: Long = 0
+  private var home: String = ""
 
-  case class ST_Point(x: Double, y: Double, t: Int, id: Int)
+  case class ST_Point(id: Int, x: Double, y: Double, t: Int)
   case class Flock(start: Int, end: Int, ids: List[Long], lon: Double = 0.0, lat: Double = 0.0)
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
@@ -24,10 +24,10 @@ object FlockFinder {
     val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(28))
     val master:     ScallopOption[String] = opt[String] (default = Some("spark://169.235.27.134:7077")) /* spark://169.235.27.134:7077 */
     val home:       ScallopOption[String] = opt[String] (default = Some("RESEARCH_HOME"))
-    val path:       ScallopOption[String] = opt[String] (default = Some("Y3Q1/Datasets/"))
-    val valpath:    ScallopOption[String] = opt[String] (default = Some("Y3Q1/Validation/"))
+    val path:       ScallopOption[String] = opt[String] (default = Some("Datasets/"))
+    val valpath:    ScallopOption[String] = opt[String] (default = Some("Validation/"))
     val dataset:    ScallopOption[String] = opt[String] (default = Some("Berlin_N15K_A1K_T15"))
-    val extension:  ScallopOption[String] = opt[String] (default = Some("csv"))
+    val extension:  ScallopOption[String] = opt[String] (default = Some("tsv"))
     val separator:  ScallopOption[String] = opt[String] (default = Some("\t"))
     val method:     ScallopOption[String] = opt[String] (default = Some("fpmax"))
     // FlockFinder parameters
@@ -35,7 +35,8 @@ object FlockFinder {
     val tstart:     ScallopOption[Int]    = opt[Int]    (default = Some(0))
     val tend:       ScallopOption[Int]    = opt[Int]    (default = Some(5))
     val cartesian:  ScallopOption[Int]    = opt[Int]    (default = Some(2))
-    val logs:	    ScallopOption[String] = opt[String] (default = Some("INFO"))    
+    val logs:	      ScallopOption[String] = opt[String] (default = Some("INFO"))    
+    val output:	    ScallopOption[String] = opt[String] (default = Some("/tmp/"))    
     verify()
   }
   
@@ -52,7 +53,10 @@ object FlockFinder {
     val tend: Int = conf.tend()
     val cartesian: Int = conf.cartesian()
     val partitions: Int = conf.partitions()
-    val DELTA = conf.delta()
+    val separator: String = conf.separator()
+    val delta: Int = conf.delta()
+    home = scala.util.Properties.envOrElse(conf.home(), "/home/acald013/Research/")
+     
     val point_schema = ScalaReflection.schemaFor[ST_Point].
       dataType.
       asInstanceOf[StructType]
@@ -67,16 +71,16 @@ object FlockFinder {
     // Calling implicits...
     import simba.implicits._
     import simba.simbaImplicits._
-    val phd_home = scala.util.Properties.envOrElse(conf.home(), "/home/acald013/PhD/")
-    val filename = s"$phd_home${conf.path()}${conf.dataset()}.${conf.extension()}"
+    val filename = s"$home${conf.path()}${conf.dataset()}.${conf.extension()}"
     log.info("Reading %s ...".format(filename))
-    val pointset = simba.read.
-      option("header", "false").
-      schema(point_schema).
-      csv(filename).
-      as[ST_Point].
-      filter(datapoint => datapoint.t >= tstart && datapoint.t <= tend).
-      cache()
+    val pointset = simba.read
+      .option("header", "false")
+      .option("sep", "\t")
+      .schema(point_schema)
+      .csv(filename)
+      .as[ST_Point]
+      .filter(datapoint => datapoint.t >= tstart && datapoint.t <= tend)
+      .cache()
     nPointset = pointset.count()
     log.info("Number of points in dataset: %d".format(nPointset))
     var timestamps = pointset.
@@ -92,18 +96,13 @@ object FlockFinder {
     var currentPoints = pointset
       .filter(datapoint => datapoint.t == timestamp)
       .map{ datapoint => 
-        "%d,%.3f,%.3f".format(datapoint.id, datapoint.x, datapoint.y)
+        "%d%s%.1f%s%.1f".format(datapoint.id, separator, datapoint.x, separator, datapoint.y)
       }.
       rdd
     log.info("nPointset=%d,timestamp=%d".format(currentPoints.count(), timestamp))
     // Maximal disks for time 0...
     val maximals = MaximalFinderExpansion.
       run(currentPoints, simba, conf)
-      
-    ////////////////////////////////////////////////////////////////////
-    saveStringArray(maximals.collect, "Flocks", conf)
-    ////////////////////////////////////////////////////////////////////
-      
     var F: RDD[Flock] = maximals.
       repartition(conf.cartesian()).
       map{ f => 
@@ -125,7 +124,7 @@ object FlockFinder {
     collect.
     mkString("\n")
     log.info(FlockReport)
-    val n = F.filter(flock => flock.end - flock.start + 1 == DELTA).count()
+    val n = F.filter(flock => flock.end - flock.start + 1 == delta).count()
     log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
     
     // Maximal disks for time 1 and onwards
@@ -240,26 +239,40 @@ object FlockFinder {
       log.info(FlockReports)
       */
       // Reporting the number of flocks...
-      val n = F_temp.filter(flock => flock.end - flock.start + 1 == DELTA).count()
+      val n = F_temp.filter(flock => flock.end - flock.start + 1 == delta).count()
       log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
       // Appending new potential flocks from current timestamp...
       F = F_temp
     }
+    saveFlocks(F.map(f => "%d,%d,%s".format(f.start, f.end, f.ids.mkString(" "))).collect, conf)
     // Closing all...
     log.info("Closing app...")
     simba.close()
   }
   
   def saveStringArray(array: Array[String], tag: String, conf: Conf): Unit = {
-    val path = s"$phd_home${conf.valpath()}"
-    val filename = s"${conf.dataset()}_E${conf.epsilon()}_M${conf.mu()}_C${conf.cores()}"
-    new java.io.PrintWriter("%s%s_%s_%d.txt".format(path, filename, tag, System.currentTimeMillis)) {
+    val path = s"$home${conf.valpath()}"
+    val filename = s"${conf.dataset()}_E${conf.epsilon()}_M${conf.mu()}_D${conf.delta()}"
+    new java.io.PrintWriter("%s%s_%s.txt".format(path, filename, tag)) {
       write(array.mkString("\n"))
       close()
     }
   }
   
-  def printFlocks(flocks: RDD[Flock]): String ={
+  def saveFlocks(array: Array[String], conf: Conf): Unit = {
+    val epsilon = conf.epsilon().toInt
+    val mu = conf.mu()
+    val delta = conf.delta()
+    
+    val filename = "PFLOCK_E%d_M%d_D%d".format(epsilon, mu, delta)
+    new java.io.PrintWriter("%s%s.txt".format(conf.output(), filename)) {
+      write(array.mkString("\n"))
+      write("\n")
+      close()
+    }
+  }
+
+  def printFlocks(flocks: RDD[Flock]): String = {
     val n = flocks.count()
     val info = flocks.map{ f => 
       "\n%d,%d,%s".format(f.start, f.end, f.ids.mkString(" "))
@@ -269,9 +282,7 @@ object FlockFinder {
   }
 
   def main(args: Array[String]): Unit = {
-    phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
     log.info("Starting app...")
-    // Reading arguments from command line...
     val conf = new Conf(args)
     FlockFinder.run(conf)
   }

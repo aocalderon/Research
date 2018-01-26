@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DATASET=$1
+EPSILON=$2
+MU=$3
+DELTA=$4
+
+ssh -i ~/.ssh/id_rsa -t acald013@bolt "runBFEandPFlock.py -f $DATASET -e $EPSILON -m $MU -d $DELTA"
+FILENAME="BFE_E${EPSILON}_M${MU}_D${DELTA}.txt"
+scp -i ~/.ssh/id_rsa acald013@bolt.cs.ucr.edu:/home/csgrads/acald013/public_html/public/data/$FILENAME /tmp/$FILENAME           
+
