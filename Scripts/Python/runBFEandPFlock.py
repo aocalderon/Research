@@ -3,6 +3,7 @@
 import subprocess
 import argparse
 
+## Reading arguments...
 parser = argparse.ArgumentParser()
 parser.add_argument("--epsilon", "-e", help="Epsilon")
 parser.add_argument("--mu", "-m", help="Mu")
@@ -14,6 +15,7 @@ parser.add_argument("--pflock_path", "-k", help="PFlock path")
 parser.add_argument("--pflock_dataset", "-g", help="PFlock dataset")
 args = parser.parse_args()
 
+## Setting variables...
 epsilon = args.epsilon
 mu = args.mu
 delta = args.delta
@@ -22,6 +24,7 @@ bfe_dataset = args.bfe_dataset
 pflock_path = args.pflock_path
 pflock_dataset = args.pflock_dataset
 
+## Running BFE...
 command = "bfe {0} {1} {2} {3}".format(bfe_dataset, epsilon, mu, delta)
 subprocess.call(command, shell=True)
 
@@ -30,6 +33,7 @@ pflock_partitions = args.pflock_partitions
 pflock_path = args.pflock_path
 pflock_dataset = args.pflock_dataset
 
+## Running PFlock...
 command = "spark-submit {0} --partitions {1} --epsilon {2} --mu {3} --delta {4} --path {5} --dataset {6}".format(pflock_jar
     , pflock_partitions
     , epsilon
@@ -37,5 +41,9 @@ command = "spark-submit {0} --partitions {1} --epsilon {2} --mu {3} --delta {4} 
     , delta
     , pflock_path
     , pflock_dataset)
-#print(command)
 subprocess.call(command, shell=True)
+
+## Sorting and comparing outputs...
+bfe_output = "/tmp/BFE_E{0}_M{1}_D{2}.txt".format(epsilon, mu, delta)
+pflock_output = "/tmp/PFLOCK_E{0}_M{1}_D{2}.txt".format(epsilon, mu, delta)
+
