@@ -23,12 +23,6 @@ data = as.data.table(data)
 names(data) = c('id', 'x', 'y','t')
 
 ###################
-# Prunning possible duplicates...
-###################
-
-data = data[ , list(id = min(id)), by = c('x', 'y', 't')]
-
-###################
 # Truncate decimal position if required...
 ###################
 
@@ -36,6 +30,12 @@ if(TRUNCATE_TO_INT){
   data$x = as.integer(data$x)
   data$y = as.integer(data$y)
 }
+
+###################
+# Prunning possible duplicates...
+###################
+
+data = data[ , list(id = min(id)), by = c('x', 'y', 't')]
 
 ###################
 # Writing back...
