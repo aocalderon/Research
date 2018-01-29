@@ -109,6 +109,11 @@ object MaximalFinderExpansion {
       .groupBy("id", "x", "y")
       .agg(collect_list("id1").alias("ids"))
       .cache()
+      
+    ////////////////////////////////////////////////////////////////////  
+    disks.show()
+    ////////////////////////////////////////////////////////////////////  
+      
     val nDisks = disks.count()
     logger.info("05.Getting disks... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nDisks))
     // 06.Filtering less-than-mu disks...

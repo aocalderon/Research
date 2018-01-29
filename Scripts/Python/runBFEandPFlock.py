@@ -47,3 +47,6 @@ subprocess.call(command, shell=True)
 bfe_output = "/tmp/BFE_E{0}_M{1}_D{2}.txt".format(epsilon, mu, delta)
 pflock_output = "/tmp/PFLOCK_E{0}_M{1}_D{2}.txt".format(epsilon, mu, delta)
 
+flock_checker = "/home/acald013/Research/Scripts/Scala/target/scala-2.11/checker_2.11-0.1.jar"
+command = "spark-submit {0} {1} {2}".format(flock_checker, pflock_output, bfe_output)
+
