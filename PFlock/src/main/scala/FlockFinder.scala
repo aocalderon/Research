@@ -244,7 +244,7 @@ object FlockFinder {
       // Appending new potential flocks from current timestamp...
       F = F_temp
     }
-    saveFlocks(F.map(f => "%d,%d,%s".format(f.start, f.end, f.ids.mkString(" "))).collect, conf)
+    saveFlocks(F.map(f => "%d,%d,%s\n".format(f.start, f.end, f.ids.mkString(" "))).collect, conf)
     // Closing all...
     log.info("Closing app...")
     simba.close()
@@ -266,8 +266,7 @@ object FlockFinder {
     
     val filename = "PFLOCK_E%d_M%d_D%d".format(epsilon, mu, delta)
     new java.io.PrintWriter("%s%s.txt".format(conf.output(), filename)) {
-      write(array.mkString("\n"))
-      write("\n")
+      write(array.mkString(""))
       close()
     }
   }

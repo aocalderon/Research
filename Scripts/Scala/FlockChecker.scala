@@ -70,7 +70,9 @@ object FlockChecker {
     var flocks: SortedSet[Flock] = SortedSet.empty
     val file = Source.fromFile(path)
     for (line <- file.getLines) {
-      flocks += new Flock(line)
+      if(line != "" | line != "\n"){
+	flocks += new Flock(line)
+      }
     }
     file.close()
 
@@ -83,6 +85,7 @@ object FlockChecker {
     var notfound = new ListBuffer[String]()
     var hits = 0
     
+    notfound += ""
     for(flock1 <- flocks1){
       var found = false
       for(flock2 <- flocks2){
@@ -92,15 +95,14 @@ object FlockChecker {
 	}
       }
       if(!found){
-	notfound += "%s".format(flock1.pids.mkString(" "))
+	notfound += "%s\n".format(flock1.pids.mkString(" "))
       } 
     }
     val n = flocks1.size
     val p = (hits.toFloat / n) * 100
     logger.info("Percentage of found flocks: %.2f%% [%d/%d]".format(p, hits, n))
     new PrintWriter("/tmp/NotFound.flocks") {
-      write(notfound.mkString("\n"))
-      write("\n")
+      write(notfound.mkString(""))
       close() 
     }
   }
