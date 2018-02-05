@@ -7,6 +7,9 @@ import scala.util.control.Breaks._
 import java.io.PrintWriter
 
 object FlockChecker {
+  private var epsilon = 0.0
+  private var mu = 0
+  private var delta = 0
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
 	
   class Flock(val line: String) extends Ordered [Flock] {
@@ -100,7 +103,9 @@ object FlockChecker {
     }
     val n = flocks1.size
     val p = (hits.toFloat / n) * 100
-    logger.info("Percentage of found flocks: %.2f%% [%d/%d]".format(p, hits, n))
+    val method1 = path1.split("/").last.split("_").head
+    val method2 = path2.split("/").last.split("_").head
+    logger.info("Percentage,%s,%s,%.2f,%d,%d,%.2f,%d,%d".format(method1, method2, p, hits, n, epsilon, mu, delta))
     new PrintWriter("/tmp/NotFound.flocks") {
       write(notfound.mkString(""))
       close() 
@@ -110,6 +115,9 @@ object FlockChecker {
   def main(args: Array[String]): Unit = {
     val path1 = args(0)
     var path2 = args(1)
+    epsilon = args(2).toDouble
+    mu = args(3).toInt
+    delta = args(4).toInt
 
     FlockChecker.compareFiles(path1,path2)
   }
