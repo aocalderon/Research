@@ -39,6 +39,7 @@ for epsilon in range(min_epsilon, max_epsilon + 1, step_epsilon):
       , epsilon
       , mu
       , delta)
+    #print(command)
     subprocess.call(command, shell=True)
     logging.warning("Iteration Epsilon={0} and Mu={1} has ended...".format(epsilon, mu))
     logging.warning("***")
