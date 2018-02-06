@@ -8,10 +8,10 @@ pacman::p_load(data.table, sqldf)
 
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 PATH = "Datasets/Berlin/"
-DATASET = "B20K"
+DATASET = "B40K"
 EXTENSION = ".csv"
 SEPARATOR = ","
-TRUNCATE_TO_INT = TRUE
+TRUNCATE_TO_INT = FALSE
 ADD_T = TRUE
 filename = paste0(RESEARCH_HOME,PATH,DATASET,EXTENSION)
 data = read.table(filename, header = F, sep = SEPARATOR)
