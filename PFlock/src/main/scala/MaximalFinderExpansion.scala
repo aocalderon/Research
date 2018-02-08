@@ -76,6 +76,7 @@ object MaximalFinderExpansion {
       .cache()
     val nPairs = pairs.count()
     logger.info("02.Getting pairs... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nPairs))
+    if(conf.debug()) { logger.info("\n\n" + pairs.map(p => "%s\n".format(p.toString)).collect.mkString("")) }
     // 03.Computing centers...
     timer = System.currentTimeMillis()
     val centerPairs = findCenters(pairs, epsilon)
@@ -278,6 +279,7 @@ object MaximalFinderExpansion {
         )
       )
     }
+    if(conf.debug()) { logger.info(maximals3.map(p => "%s\n".format(p.toString)).collect.mkString("")) }
     // Dropping indices...
     timer = System.currentTimeMillis()
     p1.dropIndex()
@@ -380,7 +382,7 @@ object MaximalFinderExpansion {
   }
   
   def mbr2wkt(mbr: MBR): String = toWKT(mbr.low.coord(0),mbr.low.coord(1),mbr.high.coord(0),mbr.high.coord(1))
-
+  
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
     val epsilon:    ScallopOption[Double] = opt[Double] (default = Some(10.0))
     val mu:         ScallopOption[Int]    = opt[Int]    (default = Some(5))
