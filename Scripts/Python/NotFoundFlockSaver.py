@@ -11,6 +11,7 @@ parser.add_argument("--mu", "-m", help="Mu")
 parser.add_argument("--delta", "-d", help="Delta")
 parser.add_argument("--pointset", "-p", help="Pointset file")
 parser.add_argument("--input", "-i", default="/tmp/NotFound.flocks", help="Input file")
+parser.add_argument("--output", "-o", default="", help="Input file")
 parser.add_argument("--method", "-t", default="BFE", help="Method used")
 args = parser.parse_args()
 
@@ -19,6 +20,7 @@ epsilon = float(args.epsilon)
 mu = int(args.mu)
 delta = int(args.delta)
 method = args.method
+filename = args.output
 saving = True
 points = {}
 
@@ -44,7 +46,8 @@ for flock in flockset:
     notfounds.add("{0}\t{1}\t{2}\t{3}\n".format(pid, x, y, 0))
 
 if(saving):
-  filename = "/tmp/{0}NotFounds_E{1}_M{2}_D{3}.tsv".format(method, epsilon, mu, delta)
+  if filename == "":
+    filename = "/tmp/{0}NotFounds_E{1}_M{2}_D{3}.tsv".format(method, epsilon, mu, delta)
   newdataset = open(filename, "w")
   for notfound in notfounds:
     newdataset.write(notfound)
