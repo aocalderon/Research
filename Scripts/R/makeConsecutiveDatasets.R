@@ -7,11 +7,12 @@ pacman::p_load(data.table, sqldf)
 ###################
 
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
-PATH = "Datasets/Buses/"
-DATASET = "buses"
-EXTENSION = ".txt"
-SEPARATOR = "\t"
+PATH = "Datasets/Berlin/"
+DATASET = "Berlin"
+EXTENSION = ".csv"
+SEPARATOR = ","
 TRUNCATE_TO_INT = FALSE
+ROUND_TO_DECIMALS = 2
 ADD_T = FALSE
 filename = paste0(RESEARCH_HOME,PATH,DATASET,EXTENSION)
 data = read.table(filename, header = F, sep = SEPARATOR)
@@ -21,7 +22,7 @@ data = read.table(filename, header = F, sep = SEPARATOR)
 ###################
 
 data = as.data.table(data)
-names(data) = c('id', 'x', 'y', 't')
+names(data) = c('x', 'y', 't','id')
 
 ###################
 # Truncate decimal position if required...
@@ -30,6 +31,15 @@ names(data) = c('id', 'x', 'y', 't')
 if(TRUNCATE_TO_INT){
   data$x = as.integer(data$x)
   data$y = as.integer(data$y)
+}
+
+###################
+# Round to x decimals if required...
+###################
+
+if(ROUND_TO_DECIMALS != -1){
+  data$x = round(data$x, ROUND_TO_DECIMALS)
+  data$y = round(data$y, ROUND_TO_DECIMALS)
 }
 
 ###################
@@ -49,6 +59,7 @@ data = data[ , list(id = min(id)), by = c('x', 'y', 't')]
 ###################
 # Writing back...
 ###################
+data$t = data$t - 117
 for(i in seq(1,5)){
   write.table(data[data$t < i , c('id', 'x', 'y', 't')]
               , file = paste0(RESEARCH_HOME,PATH,DATASET,"0-",i,".tsv")
