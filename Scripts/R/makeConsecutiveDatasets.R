@@ -60,8 +60,16 @@ data = data[ , list(id = min(id)), by = c('x', 'y', 't')]
 # Writing back...
 ###################
 data$t = data$t - 117
-for(i in seq(1,5)){
-  write.table(data[data$t < i , c('id', 'x', 'y', 't')]
+for(i in seq(0,4)){
+  write.table(data[data$t == i , c('id', 'x', 'y', 't')]
+              , file = paste0(RESEARCH_HOME,PATH,DATASET,i,"-",i,".tsv")
+              , row.names = F
+              , col.names = F
+              , sep = '\t'
+              , quote = F)
+}
+for(i in seq(0,4)){
+  write.table(data[data$t <= i , c('id', 'x', 'y', 't')]
               , file = paste0(RESEARCH_HOME,PATH,DATASET,"0-",i,".tsv")
               , row.names = F
               , col.names = F
