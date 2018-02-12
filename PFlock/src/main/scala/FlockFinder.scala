@@ -63,11 +63,12 @@ object FlockFinder {
       asInstanceOf[StructType]
     // Starting a session...
     log.info("Setting paramaters...")
-    val simba = SimbaSession.builder().
-      master(MASTER).
-      appName("FlockFinder").
-      config("simba.index.partitions", s"${conf.partitions()}").
-      getOrCreate()
+    val simba = SimbaSession.builder()
+      .master(MASTER)
+      .appName("FlockFinder")
+      .config("simba.index.partitions",conf.partitions().toString)
+      .config("spark.cores.max",conf.cores().toString)
+      .getOrCreate()
     simba.sparkContext.setLogLevel(conf.logs())
     // Calling implicits...
     import simba.implicits._
@@ -97,34 +98,22 @@ object FlockFinder {
     var currentPoints = pointset
       .filter(datapoint => datapoint.t == timestamp)
       .map{ datapoint => 
-        "%d%s%.1f%s%.1f".format(datapoint.id, separator, datapoint.x, separator, datapoint.y)
-      }.
-      rdd
+        "%d%s%f%s%f".format(datapoint.id, separator, datapoint.x, separator, datapoint.y)
+      }
+      .rdd
+      .repartition(conf.cores())
     log.info("nPointset=%d,timestamp=%d".format(currentPoints.count(), timestamp))
     // Maximal disks for time 0...
-    val maximals = MaximalFinderExpansion.
-      run(currentPoints, simba, conf)
-    var F: RDD[Flock] = maximals.
-      repartition(conf.cartesian()).
-      map{ f => 
+    val maximals = MaximalFinderExpansion
+      .run(currentPoints, simba, conf)
+    var F: RDD[Flock] = maximals
+      .repartition(conf.cartesian())
+      .map{ f => 
         Flock(timestamp, 
           timestamp, 
           f.split(";")(2).split(" ").toList.map(_.toLong)
         )
       }
-    log.info("Flock,Start,End,Flock")
-    // Reporting flocks for time 0...
-    val FlockReport = F.map{ flock =>
-      ("%d,%d,%s".
-        format(flock.start, 
-          flock.end, 
-          flock.ids.mkString(" ")
-        )
-      )
-    }.
-    collect.
-    mkString("\n")
-    log.info(FlockReport)
     val n = F.filter(flock => flock.end - flock.start + 1 == delta).count()
     log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
     
@@ -134,7 +123,7 @@ object FlockFinder {
       currentPoints = pointset
         .filter(datapoint => datapoint.t == timestamp)
         .map{ datapoint => 
-          "%d,%.3f,%.3f".format(datapoint.id, datapoint.x, datapoint.y)
+          "%d,%f,%f".format(datapoint.id, datapoint.x, datapoint.y)
         }.
         rdd
       log.info("nPointset=%d,timestamp=%d".format(currentPoints.count(), timestamp))

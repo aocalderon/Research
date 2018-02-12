@@ -13,9 +13,9 @@ parser.add_argument("--min_mu", "-m1", help="Minimum mu...")
 parser.add_argument("--max_mu", "-m2", help="Minimum mu...")
 parser.add_argument("--step_mu", "-sm", default=2, help="Stem in mu...")
 parser.add_argument("--delta", "-d", default=1, help="Delta")
-parser.add_argument("--bfe_dataset", "-f", default="/home/and/Documents/PhD/Research/Datasets/Berlin/B20K_d2.tsv", help="BFE dataset")
+parser.add_argument("--bfe_dataset", "-f", default="/home/and/Documents/PhD/Research/Datasets/Berlin/B20K_d.tsv", help="BFE dataset")
 parser.add_argument("--pflock_path", "-k", default="Datasets/Berlin/", help="PFlock path")
-parser.add_argument("--pflock_dataset", "-g", default="B20K_d2", help="PFlock dataset")
+parser.add_argument("--pflock_dataset", "-g", default="B20K_d", help="PFlock dataset")
 args = parser.parse_args()
 
 ## Setting variables...

@@ -76,7 +76,12 @@ object MaximalFinderExpansion {
       .cache()
     val nPairs = pairs.count()
     logger.info("02.Getting pairs... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nPairs))
-    if(conf.debug()) { logger.info("\n\n" + pairs.map(p => "%s\n".format(p.toString)).collect.mkString("")) }
+    if(conf.debug()) { 
+      val pairsTemp = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon + precision)
+        .as[Pair]
+      logger.info("||| Count in pairsTemp: %d".format(pairsTemp.count()))
+      //logger.info("\n\n" + pairsTemp.map(p => "%s\n".format(p.toString)).collect.mkString("")) 
+    }
     // 03.Computing centers...
     timer = System.currentTimeMillis()
     val centerPairs = findCenters(pairs, epsilon)
@@ -279,7 +284,7 @@ object MaximalFinderExpansion {
         )
       )
     }
-    if(conf.debug()) { logger.info(maximals3.map(p => "%s\n".format(p.toString)).collect.mkString("")) }
+    // if(conf.debug()) { logger.info(maximals3.map(p => "%s\n".format(p.toString)).collect.mkString("")) }
     // Dropping indices...
     timer = System.currentTimeMillis()
     p1.dropIndex()
@@ -348,7 +353,7 @@ object MaximalFinderExpansion {
       y > (bbox.miny + epsilon)
   }
 
-  def saveStringArray(array: Array[String], tag: String, conf: Conf): Unit = {
+  def saveStringArray(array: Array[String], tag: String, conf: FlockFinder.Conf): Unit = {
     val path = s"$phd_home${conf.valpath()}"
     val filename = s"${conf.dataset()}_E${conf.epsilon()}_M${conf.mu()}_C${conf.cores()}"
     new java.io.PrintWriter("%s%s_%s_%d.txt".format(path, filename, tag, System.currentTimeMillis)) {
@@ -357,7 +362,7 @@ object MaximalFinderExpansion {
     }
   }
 
-  def saveStringArrayWithoutTimeMillis(array: Array[String], tag: String, conf: Conf): Unit = {
+  def saveStringArrayWithoutTimeMillis(array: Array[String], tag: String, conf: FlockFinder.Conf): Unit = {
     val path = s"$phd_home${conf.valpath()}"
     val filename = s"${conf.dataset()}_E${conf.epsilon()}_M${conf.mu()}_C${conf.cores()}"
     new java.io.PrintWriter("%s%s_%s.txt".format(path, filename, tag)) {
@@ -382,30 +387,6 @@ object MaximalFinderExpansion {
   }
   
   def mbr2wkt(mbr: MBR): String = toWKT(mbr.low.coord(0),mbr.low.coord(1),mbr.high.coord(0),mbr.high.coord(1))
-  
-  class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
-    val epsilon:    ScallopOption[Double] = opt[Double] (default = Some(10.0))
-    val mu:         ScallopOption[Int]    = opt[Int]    (default = Some(5))
-    val entries:    ScallopOption[Int]    = opt[Int]    (default = Some(25))
-    val partitions: ScallopOption[Int]    = opt[Int]    (default = Some(1024))
-    val candidates: ScallopOption[Int]    = opt[Int]    (default = Some(256))
-    val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(28))
-    val master:     ScallopOption[String] = opt[String] (default = Some("spark://169.235.27.134:7077")) /* spark://169.235.27.134:7077 */
-    val path:       ScallopOption[String] = opt[String] (default = Some("Datasets/"))
-    val valpath:    ScallopOption[String] = opt[String] (default = Some("Validation/"))
-    val dataset:    ScallopOption[String] = opt[String] (default = Some("B20K"))
-    val extension:  ScallopOption[String] = opt[String] (default = Some("csv"))
-    val method:     ScallopOption[String] = opt[String] (default = Some("fpmax"))
-    // FlockFinder parameters
-    val delta:	    ScallopOption[Int]    = opt[Int]    (default = Some(3))    
-    val tstart:     ScallopOption[Int]    = opt[Int]    (default = Some(0))
-    val tend:       ScallopOption[Int]    = opt[Int]    (default = Some(5))
-    val cartesian:  ScallopOption[Int]    = opt[Int]    (default = Some(2))
-    val logs:	    ScallopOption[String] = opt[String] (default = Some("INFO"))    
-    
-    verify()
-  }
-
   def main(args: Array[String]): Unit = {
     // Reading arguments from command line...
     val conf = new FlockFinder.Conf(args)

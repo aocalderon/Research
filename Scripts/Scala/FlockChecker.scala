@@ -86,6 +86,7 @@ object FlockChecker {
     val flocks1 = sortFile(path1)
     val flocks2 = sortFile(path2)
     var notfound = new ListBuffer[String]()
+    var partial_hits = 0
     var hits = 0
     
     notfound += ""
@@ -94,7 +95,11 @@ object FlockChecker {
       for(flock2 <- flocks2){
 	if(!found && flock2.pids.intersect(flock1.pids).sameElements(flock1.pids)){
 	  found = true
-	  hits = hits + 1
+	  if(flock2.pids.sameElements(flock1.pids)){
+	    hits = hits + 1
+	  } else {
+	    partial_hits = partial_hits + 1
+	  }
 	}
       }
       if(!found){
@@ -102,13 +107,17 @@ object FlockChecker {
       } 
     }
     val n = flocks1.size
-    val p = (hits.toFloat / n) * 100
+    val total_hits = hits + partial_hits
+    val p = (total_hits.toFloat / n) * 100
     val method1 = path1.split("/").last.split("_").head
     val method2 = path2.split("/").last.split("_").head
-    logger.info("Percentage,%s,%s,%.2f,%d,%d,%.2f,%d,%d".format(method1, method2, p, hits, n, epsilon, mu, delta))
-    new PrintWriter("/tmp/NotFound.flocks") {
-      write(notfound.mkString(""))
-      close() 
+    logger.info("Percentage,%s,%s,%.2f,%d,%d,%d,%d,%.2f,%d,%d".format(
+      method1, method2, p, total_hits, hits, partial_hits, n, epsilon, mu, delta))
+    if(hits != n){
+      new PrintWriter("/tmp/NotFound.flocks") {
+	write(notfound.mkString(""))
+	close() 
+      }
     }
   }
     	
