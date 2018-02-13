@@ -1,11 +1,11 @@
-import scala.collection.mutable.ListBuffer
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.types.StructType
 import org.rogach.scallop.{ScallopConf, ScallopOption}
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import org.slf4j.{Logger, LoggerFactory}
+
+import scala.collection.mutable.ListBuffer
 
 object FlockFinder {
   private val log: Logger = LoggerFactory.getLogger("myLogger")
@@ -16,27 +16,27 @@ object FlockFinder {
   case class Flock(start: Int, end: Int, ids: List[Long], lon: Double = 0.0, lat: Double = 0.0)
 
   class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
-    val epsilon:    ScallopOption[Double] = opt[Double] (default = Some(10.0))
-    val mu:         ScallopOption[Int]    = opt[Int]    (default = Some(5))
+    val epsilon:    ScallopOption[Double] = opt[Double] (default = Some(1.0))
+    val mu:         ScallopOption[Int]    = opt[Int]    (default = Some(3))
     val entries:    ScallopOption[Int]    = opt[Int]    (default = Some(25))
-    val partitions: ScallopOption[Int]    = opt[Int]    (default = Some(1024))
+    val partitions: ScallopOption[Int]    = opt[Int]    (default = Some(32))
     val candidates: ScallopOption[Int]    = opt[Int]    (default = Some(256))
-    val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(28))
+    val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(3))
     val master:     ScallopOption[String] = opt[String] (default = Some("spark://169.235.27.134:7077")) /* spark://169.235.27.134:7077 */
     val home:       ScallopOption[String] = opt[String] (default = Some("RESEARCH_HOME"))
-    val path:       ScallopOption[String] = opt[String] (default = Some("Datasets/"))
+    val path:       ScallopOption[String] = opt[String] (default = Some("Datasets/Buses/"))
     val valpath:    ScallopOption[String] = opt[String] (default = Some("Validation/"))
-    val dataset:    ScallopOption[String] = opt[String] (default = Some("Berlin_N15K_A1K_T15"))
+    val dataset:    ScallopOption[String] = opt[String] (default = Some("buses0-1"))
     val extension:  ScallopOption[String] = opt[String] (default = Some("tsv"))
     val separator:  ScallopOption[String] = opt[String] (default = Some("\t"))
     val method:     ScallopOption[String] = opt[String] (default = Some("fpmax"))
-    val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
+    val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(true))
     // FlockFinder parameters
-    val delta:	    ScallopOption[Int]    = opt[Int]    (default = Some(3))    
+    val delta:	    ScallopOption[Int]    = opt[Int]    (default = Some(2))
     val tstart:     ScallopOption[Int]    = opt[Int]    (default = Some(0))
     val tend:       ScallopOption[Int]    = opt[Int]    (default = Some(5))
     val cartesian:  ScallopOption[Int]    = opt[Int]    (default = Some(2))
-    val logs:	      ScallopOption[String] = opt[String] (default = Some("INFO"))    
+    val logs:	      ScallopOption[String] = opt[String] (default = Some("INFO"))
     val output:	    ScallopOption[String] = opt[String] (default = Some("/tmp/"))    
     val printIntermadiate: ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
     
@@ -59,7 +59,7 @@ object FlockFinder {
     val separator: String = conf.separator()
     val printIntermadiate: Boolean = conf.printIntermadiate()
     val delta: Int = conf.delta()
-    home = scala.util.Properties.envOrElse(conf.home(), "/home/acald013/Research/")
+    home = scala.util.Properties.envOrElse(conf.home(), "/home/and/Documents/PhD/Research/")
      
     val point_schema = ScalaReflection.schemaFor[ST_Point].
       dataType.
@@ -75,7 +75,6 @@ object FlockFinder {
     simba.sparkContext.setLogLevel(conf.logs())
     // Calling implicits...
     import simba.implicits._
-    import simba.simbaImplicits._
     val filename = s"$home${conf.path()}${conf.dataset()}.${conf.extension()}"
     log.info("Reading %s ...".format(filename))
     val pointset = simba.read
@@ -88,16 +87,15 @@ object FlockFinder {
       .cache()
     nPointset = pointset.count()
     log.info("Number of points in dataset: %d".format(nPointset))
-    var timestamps = pointset.
-      map(datapoint => datapoint.t).
-      distinct.
-      sort("value").
-      collect.toList
-    var FLOCKS_OUT = List.empty[String]
+    val timestamps = pointset.
+        map(datapoint => datapoint.t).
+        distinct.
+        sort("value").
+        collect.toList
     // Running experiment with different values of epsilon and mu...
     log.info("epsilon=%.1f,mu=%d".format(epsilon, mu))
     // Running MaximalFinder...
-    var timestamp = timestamps.head
+    val timestamp = timestamps.head
     var currentPoints = pointset
       .filter(datapoint => datapoint.t == timestamp)
       .map{ datapoint => 
@@ -119,10 +117,14 @@ object FlockFinder {
       }
     var F_temp = F.filter(flock => flock.end - flock.start + 1 == delta) 
     val n = F_temp.count()
-    var FinalFlocks = F_temp.toDS()
-    log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
-    
-    // Maximal disks for time 1 and onwards
+    log.warn("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
+    var FinalFlocks = F_temp
+    if(conf.debug()){
+      log.warn("\n\nPartial flocks:\n%s\n\n".format(FinalFlocks.collect().mkString("\n")))
+    }
+    /***************************************
+    * Maximal disks for time 1 and onwards *
+    ***************************************/
     for(timestamp <- timestamps.slice(1,timestamps.length)){
       // Reading points for current timestamp...
       currentPoints = pointset
@@ -144,7 +146,7 @@ object FlockFinder {
         }
       // Joining previous flocks and current ones...
       log.info("Running cartesian function for timestamps %d...".format(timestamp))
-      var combinations = F.cartesian(F_prime)
+      val combinations = F.cartesian(F_prime)
       if(printIntermadiate){
         log.info("\nPrinting F... %s".format(printFlocks(F)))
         log.info("\nPrinting F_prime... %s".format(printFlocks(F_prime)))
@@ -152,19 +154,19 @@ object FlockFinder {
       val ncombinations = combinations.count()
       log.info("Cartesian returns %d combinations...".format(ncombinations))
       // Checking if ids intersect...
-      F_temp = combinations.
-        map{ tuple => 
+      F_temp = combinations
+        .map{ tuple =>
           val s = tuple._1.start
           val e = tuple._2.end
           val ids1 = tuple._1.ids
           val ids2 = tuple._2.ids
           val ids_in_common = ids1.intersect(ids2).sorted
           Flock(s, e, ids_in_common)
-        }.
+        }
         // Checking if they are greater than mu...
-        filter(flock => flock.ids.length >= mu).
+        .filter(flock => flock.ids.length >= mu)
         // Removing duplicates...
-        distinct
+        .distinct
 
       //////////////////////////////////////////////////////////////////
       F_temp = F_temp.mapPartitions{ records =>
@@ -172,15 +174,11 @@ object FlockFinder {
         for(record <- records){
           flocks += Tuple2(record, true)
         }
-        for(i <- 0 until flocks.length){ 
-          for(j <- 0 until flocks.length){ 
+        for(i <- flocks.indices){
+          for(j <- flocks.indices){
             if(i != j & flocks(i)._2){
               val ids1 = flocks(i)._1.ids
               val ids2 = flocks(j)._1.ids
-              println("%d -> (%s:%s) <=> %d -> (%s:%s)".format(
-                i, ids1.mkString(" "), flocks(i)._2.toString, 
-                j, ids2.mkString(" "), flocks(j)._2.toString)
-              ) 
               if(flocks(j)._2 & ids1.forall(ids2.contains)){
                 flocks(i) = Tuple2(flocks(i)._1, false)
               }
@@ -191,7 +189,7 @@ object FlockFinder {
           }
         }
         flocks.filter(_._2).map(_._1).toIterator
-      }
+      }.cache()
       
       F_temp = F_temp.repartition(1).
         mapPartitions{ records =>
@@ -199,8 +197,8 @@ object FlockFinder {
           for(record <- records){
             flocks += Tuple2(record, true)
           }
-          for(i <- 0 until flocks.length){ 
-            for(j <- 0 until flocks.length){ 
+          for(i <- flocks.indices){
+            for(j <- flocks.indices){
               if(i != j & flocks(i)._2){
                 val ids1 = flocks(i)._1.ids
                 val ids2 = flocks(j)._1.ids
@@ -214,29 +212,35 @@ object FlockFinder {
             }
           }
           flocks.filter(_._2).map(_._1).toIterator
-      }.
-      repartition(partitions)
+      }.repartition(partitions).cache()
       //////////////////////////////////////////////////////////////////
         
       if(printIntermadiate){
         log.info("\nPrinting F_temp... %s".format(printFlocks(F_temp)))
       }
-      
       // Reporting the number of flocks...
-      val n = F_temp.filter(flock => flock.end - flock.start + 1 == delta).count()
-      FinalFlocks = FinalFlocks.union(F_temp.toDS())
-      log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
+      F_temp = F_temp.filter(flock => flock.end - flock.start + 1 == delta)
+      val n = F_temp.count()
+      log.warn("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
+      FinalFlocks = FinalFlocks.union(F_temp)
       if(conf.debug()){
-        FinalFlocks.show
-        //log.info("\n %s \n".format(temp.mkString("")))
+        log.warn("\n\nPartial flocks:\n%s\n\n".format(FinalFlocks.collect().mkString("\n")))
       }
       // Appending new potential flocks from current timestamp...
       F = F_temp
+
     }
     //val temp  = FinalFlocks.rdd.map(f => "%d,%d,%s\n".format(f.start, f.end, f.ids.mkString(" "))).collect
     //saveFlocks(temp, conf)
     if(conf.debug()){
-      //log.info("\n %s \n".format(FinalFlocks.mkString("")))
+      val finalFlocks = FinalFlocks.collect()
+      val nFinalFlocks = finalFlocks.length
+      val flocksReport = finalFlocks
+        .map{ f =>
+          "%d, %d, %s\n".format(f.start, f.end, f.ids.mkString(" "))
+        }
+        .mkString("")
+      log.warn("\n\nFinal flocks: %d\n%s\n\n".format(nFinalFlocks, flocksReport))
     }
     // Closing all...
     log.info("Closing app...")
