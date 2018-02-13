@@ -38,6 +38,8 @@ object FlockFinder {
     val cartesian:  ScallopOption[Int]    = opt[Int]    (default = Some(2))
     val logs:	      ScallopOption[String] = opt[String] (default = Some("INFO"))    
     val output:	    ScallopOption[String] = opt[String] (default = Some("/tmp/"))    
+    val printIntermadiate: ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
+    
     verify()
   }
   
@@ -55,6 +57,7 @@ object FlockFinder {
     val cartesian: Int = conf.cartesian()
     val partitions: Int = conf.partitions()
     val separator: String = conf.separator()
+    val printIntermadiate: Boolean = conf.printIntermadiate()
     val delta: Int = conf.delta()
     home = scala.util.Properties.envOrElse(conf.home(), "/home/acald013/Research/")
      
@@ -114,7 +117,9 @@ object FlockFinder {
           f.split(";")(2).split(" ").toList.map(_.toLong)
         )
       }
-    val n = F.filter(flock => flock.end - flock.start + 1 == delta).count()
+    var F_temp = F.filter(flock => flock.end - flock.start + 1 == delta) 
+    val n = F_temp.count()
+    var FinalFlocks = F_temp.toDS()
     log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
     
     // Maximal disks for time 1 and onwards
@@ -123,11 +128,10 @@ object FlockFinder {
       currentPoints = pointset
         .filter(datapoint => datapoint.t == timestamp)
         .map{ datapoint => 
-          "%d,%f,%f".format(datapoint.id, datapoint.x, datapoint.y)
-        }.
-        rdd
+          "%d\t%f\t%f".format(datapoint.id, datapoint.x, datapoint.y)
+        }
+        .rdd
       log.info("nPointset=%d,timestamp=%d".format(currentPoints.count(), timestamp))
-      
       // Finding maximal disks for current timestamp...
       val F_prime: RDD[Flock] = MaximalFinderExpansion.
         run(currentPoints, simba, conf).
@@ -141,16 +145,14 @@ object FlockFinder {
       // Joining previous flocks and current ones...
       log.info("Running cartesian function for timestamps %d...".format(timestamp))
       var combinations = F.cartesian(F_prime)
-
-      //////////////////////////////////////////////////////////////////
-      log.info("\nPrinting F... %s".format(printFlocks(F)))
-      log.info("\nPrinting F_prime... %s".format(printFlocks(F_prime)))
-      //////////////////////////////////////////////////////////////////
-
+      if(printIntermadiate){
+        log.info("\nPrinting F... %s".format(printFlocks(F)))
+        log.info("\nPrinting F_prime... %s".format(printFlocks(F_prime)))
+      }
       val ncombinations = combinations.count()
       log.info("Cartesian returns %d combinations...".format(ncombinations))
       // Checking if ids intersect...
-      var F_temp = combinations.
+      F_temp = combinations.
         map{ tuple => 
           val s = tuple._1.start
           val e = tuple._2.end
@@ -216,25 +218,25 @@ object FlockFinder {
       repartition(partitions)
       //////////////////////////////////////////////////////////////////
         
-      //////////////////////////////////////////////////////////////////
-      log.info("\nPrinting F_temp... %s".format(printFlocks(F_temp)))
-      //////////////////////////////////////////////////////////////////
-
+      if(printIntermadiate){
+        log.info("\nPrinting F_temp... %s".format(printFlocks(F_temp)))
+      }
       
-      // Reporting flocks with delta duration...
-      /*
-      val FlockReports = F.map{ flock =>
-        ("%d,%d,%s".format(flock.start, flock.end, flock.ids.mkString(" ")))
-      }.collect.mkString("\n")
-      log.info(FlockReports)
-      */
       // Reporting the number of flocks...
       val n = F_temp.filter(flock => flock.end - flock.start + 1 == delta).count()
+      FinalFlocks = FinalFlocks.union(F_temp.toDS())
       log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
+      if(conf.debug()){
+        FinalFlocks.show()
+      }
       // Appending new potential flocks from current timestamp...
       F = F_temp
     }
-    saveFlocks(F.map(f => "%d,%d,%s\n".format(f.start, f.end, f.ids.mkString(" "))).collect, conf)
+    val temp  = FinalFlocks.map(f => "%d,%d,%s\n".format(f.start, f.end, f.ids.mkString(" "))).collect
+    saveFlocks(temp, conf)
+    if(conf.debug()){
+      log.info("\n %s \n".format(temp.mkString("")))
+    }
     // Closing all...
     log.info("Closing app...")
     simba.close()
