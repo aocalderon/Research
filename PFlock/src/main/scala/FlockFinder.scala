@@ -227,15 +227,16 @@ object FlockFinder {
       FinalFlocks = FinalFlocks.union(F_temp.toDS())
       log.info("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
       if(conf.debug()){
-        FinalFlocks.show()
+        FinalFlocks.show
+        //log.info("\n %s \n".format(temp.mkString("")))
       }
       // Appending new potential flocks from current timestamp...
       F = F_temp
     }
-    val temp  = FinalFlocks.map(f => "%d,%d,%s\n".format(f.start, f.end, f.ids.mkString(" "))).collect
-    saveFlocks(temp, conf)
+    //val temp  = FinalFlocks.rdd.map(f => "%d,%d,%s\n".format(f.start, f.end, f.ids.mkString(" "))).collect
+    //saveFlocks(temp, conf)
     if(conf.debug()){
-      log.info("\n %s \n".format(temp.mkString("")))
+      //log.info("\n %s \n".format(FinalFlocks.mkString("")))
     }
     // Closing all...
     log.info("Closing app...")
