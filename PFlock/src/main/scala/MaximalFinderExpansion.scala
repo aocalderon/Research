@@ -76,12 +76,6 @@ object MaximalFinderExpansion {
       .cache()
     val nPairs = pairs.count()
     logger.info("02.Getting pairs... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nPairs))
-    if(conf.debug()) { 
-      val pairsTemp = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon + precision)
-        .as[Pair]
-      logger.info("||| Count in pairsTemp: %d".format(pairsTemp.count()))
-      //logger.info("\n\n" + pairsTemp.map(p => "%s\n".format(p.toString)).collect.mkString("")) 
-    }
     // 03.Computing centers...
     timer = System.currentTimeMillis()
     val centerPairs = findCenters(pairs, epsilon)
