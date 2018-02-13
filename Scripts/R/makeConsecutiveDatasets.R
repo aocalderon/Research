@@ -7,12 +7,12 @@ pacman::p_load(data.table, sqldf)
 ###################
 
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
-PATH = "Datasets/Berlin/"
-DATASET = "Berlin"
-EXTENSION = ".csv"
-SEPARATOR = ","
+PATH = "Datasets/Buses/"
+DATASET = "buses"
+EXTENSION = ".txt"
+SEPARATOR = "\t"
 TRUNCATE_TO_INT = FALSE
-ROUND_TO_DECIMALS = 2
+ROUND_TO_DECIMALS = -1
 ADD_T = FALSE
 filename = paste0(RESEARCH_HOME,PATH,DATASET,EXTENSION)
 data = read.table(filename, header = F, sep = SEPARATOR)
@@ -22,7 +22,7 @@ data = read.table(filename, header = F, sep = SEPARATOR)
 ###################
 
 data = as.data.table(data)
-names(data) = c('x', 'y', 't','id')
+names(data) = c('id', 'x', 'y','t')
 
 ###################
 # Truncate decimal position if required...
@@ -59,7 +59,6 @@ data = data[ , list(id = min(id)), by = c('x', 'y', 't')]
 ###################
 # Writing back...
 ###################
-data$t = data$t - 117
 for(i in seq(0,4)){
   write.table(data[data$t == i , c('id', 'x', 'y', 't')]
               , file = paste0(RESEARCH_HOME,PATH,DATASET,i,"-",i,".tsv")
