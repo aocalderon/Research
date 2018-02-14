@@ -8,9 +8,8 @@ import org.slf4j.{Logger, LoggerFactory}
 import scala.collection.mutable.ListBuffer
 
 object FlockFinder {
-  private val log: Logger = LoggerFactory.getLogger("myLogger")
+  private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private var nPointset: Long = 0
-  private var home: String = ""
 
   case class ST_Point(id: Int, x: Double, y: Double, t: Int)
   case class Flock(start: Int, end: Int, ids: List[Long], lon: Double = 0.0, lat: Double = 0.0)
@@ -21,7 +20,7 @@ object FlockFinder {
     val entries:    ScallopOption[Int]    = opt[Int]    (default = Some(25))
     val partitions: ScallopOption[Int]    = opt[Int]    (default = Some(32))
     val candidates: ScallopOption[Int]    = opt[Int]    (default = Some(256))
-    val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(3))
+    val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(32))
     val master:     ScallopOption[String] = opt[String] (default = Some("spark://169.235.27.134:7077")) /* spark://169.235.27.134:7077 */
     val home:       ScallopOption[String] = opt[String] (default = Some("RESEARCH_HOME"))
     val path:       ScallopOption[String] = opt[String] (default = Some("Datasets/Buses/"))
@@ -38,45 +37,54 @@ object FlockFinder {
     val cartesian:  ScallopOption[Int]    = opt[Int]    (default = Some(2))
     val logs:	      ScallopOption[String] = opt[String] (default = Some("INFO"))
     val output:	    ScallopOption[String] = opt[String] (default = Some("/tmp/"))    
-    val printIntermadiate: ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
+    val printIntermediate: ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
     
     verify()
   }
   
   def run(conf: Conf): Unit = {
-    // Tuning master and number of cores...
-    var MASTER = conf.master()
-    if (conf.cores() == 1) {
-      MASTER = "local"
-    }
-    // Setting parameters...
+    // Setting paramaters...
+    var timer = System.currentTimeMillis()
     val epsilon: Double = conf.epsilon()
     val mu: Int = conf.mu()
+    val delta: Int = conf.delta()
     val tstart: Int = conf.tstart()
     val tend: Int = conf.tend()
     val cartesian: Int = conf.cartesian()
     val partitions: Int = conf.partitions()
+    val cores: Int = conf.cores()
+    val printIntermediate: Boolean = conf.printIntermediate()
     val separator: String = conf.separator()
-    val printIntermadiate: Boolean = conf.printIntermadiate()
-    val delta: Int = conf.delta()
-    home = scala.util.Properties.envOrElse(conf.home(), "/home/and/Documents/PhD/Research/")
-     
-    val point_schema = ScalaReflection.schemaFor[ST_Point].
-      dataType.
-      asInstanceOf[StructType]
+    val logs: String = conf.logs()
+    val path: String = conf.path()
+    val dataset: String = conf.dataset()
+    val extension: String = conf.extension()
+    var master: Int = conf.master()
+    if (conf.cores() == 1) {
+      master = "local"
+    }
+    val home: String = scala.util.Properties.envOrElse(conf.home(), "/home/and/Documents/PhD/Research/")
+    val point_schema = ScalaReflection
+      .schemaFor[ST_Point]
+      .dataType
+      .asInstanceOf[StructType]
+    logger.warn("Setting paramaters... [%.3fs]".format((System.currentTimeMillis() - timer)/1000.0))
+    
     // Starting a session...
-    log.info("Setting paramaters...")
+    timer = System.currentTimeMillis()
     val simba = SimbaSession.builder()
-      .master(MASTER)
+      .master(master)
       .appName("FlockFinder")
-      .config("simba.index.partitions",conf.partitions().toString)
-      .config("spark.cores.max",conf.cores().toString)
+      .config("simba.index.partitions", partitions)
+      .config("spark.cores.max", cores)
       .getOrCreate()
-    simba.sparkContext.setLogLevel(conf.logs())
-    // Calling implicits...
+    simba.sparkContext.setLogLevel(logs)
     import simba.implicits._
-    val filename = s"$home${conf.path()}${conf.dataset()}.${conf.extension()}"
-    log.info("Reading %s ...".format(filename))
+    logger.warn("Starting current session... [%.3fs]".format((System.currentTimeMillis() - timer)/1000.0))
+
+    // Reading data...
+    timer = System.currentTimeMillis()
+    val filename = "%s%s%s.%s".format(home, path, dataset, extension)
     val pointset = simba.read
       .option("header", "false")
       .option("sep", "\t")
@@ -85,91 +93,84 @@ object FlockFinder {
       .as[ST_Point]
       .filter(datapoint => datapoint.t >= tstart && datapoint.t <= tend)
       .cache()
-    nPointset = pointset.count()
-    log.info("Number of points in dataset: %d".format(nPointset))
-    val timestamps = pointset.
-        map(datapoint => datapoint.t).
-        distinct.
-        sort("value").
-        collect.toList
-    // Running experiment with different values of epsilon and mu...
-    log.info("epsilon=%.1f,mu=%d".format(epsilon, mu))
-    // Running MaximalFinder...
-    val timestamp = timestamps.head
-    var currentPoints = pointset
-      .filter(datapoint => datapoint.t == timestamp)
-      .map{ datapoint => 
-        "%d%s%f%s%f".format(datapoint.id, separator, datapoint.x, separator, datapoint.y)
-      }
-      .rdd
-      .repartition(conf.cores())
-    log.info("nPointset=%d,timestamp=%d".format(currentPoints.count(), timestamp))
-    // Maximal disks for time 0...
-    val maximals = MaximalFinderExpansion
-      .run(currentPoints, simba, conf)
-    var F: RDD[Flock] = maximals
-      .repartition(conf.cartesian())
-      .map{ f => 
-        Flock(timestamp, 
-          timestamp, 
-          f.split(";")(2).split(" ").toList.map(_.toLong)
-        )
-      }
-    var F_temp = F.filter(flock => flock.end - flock.start + 1 == delta) 
-    val n = F_temp.count()
-    log.warn("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
-    var FinalFlocks = F_temp
-    if(conf.debug()){
-      log.warn("\n\nPartial flocks:\n%s\n\n".format(FinalFlocks.collect().mkString("\n")))
-    }
+    val nPointset = pointset.count()
+    logger.warn("Reading %s... [%.3fs] [%d records]".format(dataset, (System.currentTimeMillis() - timer)/1000.0, nPointset))
+
+    // Extracting timestamps...
+    timer = System.currentTimeMillis()
+    val timestamps = pointset
+        .map(datapoint => datapoint.t)
+        .distinct
+        .sort("value")
+        .collect
+        .toList
+    val nTimestamps = timestamps.length
+    logger.warn("Extracting timestamps... [%.3fs] [%d timestamps]".format((System.currentTimeMillis() - timer)/1000.0, nTimestamps))
+
+    // Running experiments with different values of epsilon, mu and delta...
+    log.warn("Epsilon=%.1f, Mu=%d and Delta=%d".format(epsilon, mu, delta))
+    
     /***************************************
-    * Maximal disks for time 1 and onwards *
+    *     Starting Flock Evaluation...     *
     ***************************************/
-    for(timestamp <- timestamps.slice(1,timestamps.length)){
-      // Reading points for current timestamp...
-      currentPoints = pointset
+    // Initialize partial result set...
+    var F_prime = simba.sparkContext.emptyRDD[Flock]
+    // For each new time instance t_i...
+    for(timestamp <- timestamps){
+      // Reported location for trajectories in time t_i...
+      timer = System.currentTimeMillis()
+      val currentPoints = pointset
         .filter(datapoint => datapoint.t == timestamp)
         .map{ datapoint => 
           "%d\t%f\t%f".format(datapoint.id, datapoint.x, datapoint.y)
         }
         .rdd
-      log.info("nPointset=%d,timestamp=%d".format(currentPoints.count(), timestamp))
-      // Finding maximal disks for current timestamp...
-      val F_prime: RDD[Flock] = MaximalFinderExpansion.
+        .cache()
+      val nCurrentPoints = currentPoints.count()
+      logger.warn("Reported location for trajectories in time %d... [%.3fs] [%d points]".format(timestamp, (System.currentTimeMillis() - timer)/1000.0, nCurrentPoints))
+      
+      // Set of disks for t_i...
+      timer = System.currentTimeMillis()
+      val C: RDD[Flock] = MaximalFinderExpansion.
         run(currentPoints, simba, conf).
         repartition(cartesian).
-        map{ f => 
-          Flock(timestamp, 
-            timestamp, 
-            f.split(";")(2).split(" ").toList.map(_.toLong)
-          )
-        }
-      // Joining previous flocks and current ones...
-      log.info("Running cartesian function for timestamps %d...".format(timestamp))
-      val combinations = F.cartesian(F_prime)
-      if(printIntermadiate){
-        log.info("\nPrinting F... %s".format(printFlocks(F)))
-        log.info("\nPrinting F_prime... %s".format(printFlocks(F_prime)))
+        map{ m => 
+          val c = m.split(";")(2).split(" ").toList.map(_.toLong)
+          Flock(timestamp, timestamp, c)
+        }.cache()
+      val nC = C.count()
+      logger.warn("Set of disks for t_i... [%.3fs] [%d disks]".format(timestamp, (System.currentTimeMillis() - timer)/1000.0, nC))
+        
+      // Holds potential flocks up to t...
+      timer = System.currentTimeMillis()
+      var F = simba.sparkContext.emptyRDD[Flock]
+      logger.warn("Holds potential flocks up to t... [%.3fs]".format(timestamp, (System.currentTimeMillis() - timer)/1000.0))
+
+      // Join phase with previous potential flocks...
+      timer = System.currentTimeMillis()
+      if(printIntermediate){
+        logger.info("Running cartesian function for timestamps %d...".format(timestamp))
       }
-      val ncombinations = combinations.count()
-      log.info("Cartesian returns %d combinations...".format(ncombinations))
-      // Checking if ids intersect...
-      F_temp = combinations
-        .map{ tuple =>
-          val s = tuple._1.start
-          val e = tuple._2.end
-          val ids1 = tuple._1.ids
-          val ids2 = tuple._2.ids
-          val ids_in_common = ids1.intersect(ids2).sorted
-          Flock(s, e, ids_in_common)
+      val combinations = C.cartesian(F_prime).cache()
+      if(printIntermediate){
+        logger.info("\nPrinting F (%d flocks)\n %s\n".format(C.count(), printFlocks(C)))
+        logger.info("\nPrinting F_prime (%d flocks)\n %s\n".format(F_prime.count(), printFlocks(F_prime)))
+      }
+      val nCombinations = combinations.count()
+      logger.warn("Join phase with previous potential flocks... [%.3fs] [%d combinations]".format((System.currentTimeMillis() - timer)/1000.0, nCombinations))
+      
+      // At least mu...
+      var U = combinations.map{ tuple =>
+          val u = tuple._1.ids.intersect(tuple._2.ids).sorted
+          val s = tuple._2.start  // set the initial time...
+          val e = timestamp       // set the final time...
+          Flock(s, e, u)
         }
-        // Checking if they are greater than mu...
         .filter(flock => flock.ids.length >= mu)
-        // Removing duplicates...
-        .distinct
+        .cache()
 
       //////////////////////////////////////////////////////////////////
-      F_temp = F_temp.mapPartitions{ records =>
+      U = U.mapPartitions{ records =>
         var flocks = new ListBuffer[(Flock, Boolean)]()
         for(record <- records){
           flocks += Tuple2(record, true)
@@ -191,7 +192,7 @@ object FlockFinder {
         flocks.filter(_._2).map(_._1).toIterator
       }.cache()
       
-      F_temp = F_temp.repartition(1).
+      U = U.repartition(1).
         mapPartitions{ records =>
           var flocks = new ListBuffer[(Flock, Boolean)]()
           for(record <- records){
@@ -215,20 +216,20 @@ object FlockFinder {
       }.repartition(partitions).cache()
       //////////////////////////////////////////////////////////////////
         
-      if(printIntermadiate){
-        log.info("\nPrinting F_temp... %s".format(printFlocks(F_temp)))
+      if(printIntermediate){
+        log.info("\nPrinting F_temp (%d flocks)\n %s\n".format(U.count(), printFlocks(U)))
       }
       // Reporting the number of flocks...
-      F_temp = F_temp.filter(flock => flock.end - flock.start + 1 == delta)
-      val n = F_temp.count()
-      log.warn("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(n, timestamp))
-      FinalFlocks = FinalFlocks.union(F_temp)
+      val F_flocks = F_temp.filter(flock => flock.end - flock.start + 1 == delta).cache()
+      val nF_flocks = F_flocks.count()
+      log.warn("\n######\n#\n# Done!\n# %d flocks found in timestamp %d...\n#\n######".format(nF_flocks, timestamp))
+      FinalFlocks = FinalFlocks.union(F_flocks).cache()
       if(conf.debug()){
-        log.warn("\n\nPartial flocks:\n%s\n\n".format(FinalFlocks.collect().mkString("\n")))
+        log.warn("\n\nPartial flocks: %d\n%s\n\n".format(FinalFlocks.count(), FinalFlocks.collect().mkString("\n")))
       }
-      // Appending new potential flocks from current timestamp...
+      // Appending current maximal disks to from current flocks for next timestamp...
       F = F_temp
-
+        .filter(flock => flock.end == timestamp)
     }
     //val temp  = FinalFlocks.rdd.map(f => "%d,%d,%s\n".format(f.start, f.end, f.ids.mkString(" "))).collect
     //saveFlocks(temp, conf)
