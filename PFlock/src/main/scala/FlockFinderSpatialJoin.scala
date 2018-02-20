@@ -95,6 +95,8 @@ object FlockFinderSpatialJoin {
     // Initialize partial result set...
     var F_prime: RDD[Flock] = simba.sparkContext.emptyRDD[Flock]
     var nF_prime: Long = 0
+    var U: RDD[Flock] = simba.sparkContext.emptyRDD[Flock]
+    var nU: Long = 0
     // For each new time instance t_i...
     for(timestamp <- timestamps){
       // Reported location for trajectories in time t_i...
@@ -127,9 +129,6 @@ object FlockFinderSpatialJoin {
       logger.warn("Getting flock coordinates... [%.3fs] [%d disks located]".format((System.currentTimeMillis() - timer)/1000.0, nC))
       var nFlocks: Long = 0
       var nJoin: Long = 0
-      var nU: Long = 0
-      var U = C
-      nU = nC
 
       /*****************************************************************************/
       if(nF_prime != 0) {
@@ -159,21 +158,6 @@ object FlockFinderSpatialJoin {
         // At least mu...
         timer = System.currentTimeMillis()
         val the_mu = conf.mu()
-        val U_prime2 = join.map { tuple =>
-          val ids1 = tuple.getString(2).split(" ").map(_.toLong)
-          val ids2 = tuple.getString(7).split(" ").map(_.toLong)
-          val u = ids1.intersect(ids2)
-          val length = u.length
-          val s = tuple.getInt(5) // set the initial time...
-          val e = timestamp // set the final time...
-          val ids = u.sorted.mkString(" ") // set flocks ids...
-          val x = tuple.getDouble(3)
-          val y = tuple.getDouble(4)
-          (Flock(s, e, ids, x, y), length)
-        }
-
-        U_prime2.show(truncate = false)
-
         val U_prime = join.map { tuple =>
           val ids1 = tuple.getString(2).split(" ").map(_.toLong)
           val ids2 = tuple.getString(7).split(" ").map(_.toLong)
@@ -208,6 +192,9 @@ object FlockFinderSpatialJoin {
         if (printIntermediate) {
           logger.warn("\nPrinting U (%d flocks)\n %s\n".format(nU, Flocks2String(U)))
         }
+      } else {
+        U = C
+        nU = nC        
       }
 
       // Found flocks...
