@@ -3,7 +3,6 @@ import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.StructType
-import org.rogach.scallop.{ScallopConf, ScallopOption}
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.mutable.ListBuffer
@@ -14,35 +13,6 @@ object FlockFinder {
   case class ST_Point(id: Int, x: Double, y: Double, t: Int)
   case class Flock(start: Int, end: Int, ids: String, lon: Double = 0.0, lat: Double = 0.0)
 
-  class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
-    val epsilon:    ScallopOption[Double] = opt[Double] (default = Some(1.0))
-    val mu:         ScallopOption[Int]    = opt[Int]    (default = Some(3))
-    val entries:    ScallopOption[Int]    = opt[Int]    (default = Some(25))
-    val partitions: ScallopOption[Int]    = opt[Int]    (default = Some(32))
-    val candidates: ScallopOption[Int]    = opt[Int]    (default = Some(256))
-    val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(32))
-    val master:     ScallopOption[String] = opt[String] (default = Some("spark://169.235.27.134:7077")) /* spark://169.235.27.134:7077 */
-    val home:       ScallopOption[String] = opt[String] (default = Some("RESEARCH_HOME"))
-    val path:       ScallopOption[String] = opt[String] (default = Some("Datasets/Buses/"))
-    val valpath:    ScallopOption[String] = opt[String] (default = Some("Validation/"))
-    val dataset:    ScallopOption[String] = opt[String] (default = Some("buses0-1"))
-    val extension:  ScallopOption[String] = opt[String] (default = Some("tsv"))
-    val separator:  ScallopOption[String] = opt[String] (default = Some("\t"))
-    val method:     ScallopOption[String] = opt[String] (default = Some("fpmax"))
-    val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(true))
-    // FlockFinder parameters
-    val delta:	    ScallopOption[Int]    = opt[Int]    (default = Some(2))
-    val tstart:     ScallopOption[Int]    = opt[Int]    (default = Some(0))
-    val tend:       ScallopOption[Int]    = opt[Int]    (default = Some(5))
-    val cartesian:  ScallopOption[Int]    = opt[Int]    (default = Some(2))
-    val logs:	      ScallopOption[String] = opt[String] (default = Some("INFO"))
-    val output:	    ScallopOption[String] = opt[String] (default = Some("/tmp/"))    
-    val printIntermediate: ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
-    val printFlocks: ScallopOption[Boolean] = opt[Boolean] (default = Some(true))
-
-    verify()
-  }
-  
   def run(conf: Conf): Unit = {
     // Setting paramaters...
     var timer = System.currentTimeMillis()
@@ -54,8 +24,8 @@ object FlockFinder {
     val cartesian: Int = conf.cartesian()
     val partitions: Int = conf.partitions()
     val cores: Int = conf.cores()
-    val printIntermediate: Boolean = conf.printIntermediate()
-    val printFlocks: Boolean = conf.printFlocks()
+    val printIntermediate: Boolean = conf.debug()
+    val printFlocks: Boolean = conf.print()
     val separator: String = conf.separator()
     val logs: String = conf.logs()
     val path: String = conf.path()
@@ -157,7 +127,7 @@ object FlockFinder {
       // Join phase with previous potential flocks...
       timer = System.currentTimeMillis()
       logger.warn("Running cartesian function (%d x %d = %d) for timestamps %d...".format(nC, nF_prime, nC*nF_prime, timestamp))
-      val combinations = C.repartition(8).cartesian(F_prime.repartition(8)).cache()
+      val combinations = C.repartition(cartesian).cartesian(F_prime.repartition(cartesian)).cache()
       val nCombinations = combinations.count()
       logger.warn("Join phase with previous potential flocks... [%.3fs] [%d combinations]".format((System.currentTimeMillis() - timer)/1000.0, nCombinations))
 
@@ -192,8 +162,8 @@ object FlockFinder {
         val filename = "/tmp/U_prime_T%d".format(timestamp)
         saveFlocks(U_prime, filename)
       }
-      var U = pruneFlocks(U_prime, partitions).cache()
-      var nU = U.count()
+      val U = pruneFlocks(U_prime, partitions).cache()
+      val nU = U.count()
       if(printIntermediate){
         logger.warn("\nU after prune: %d flocks\n".format(U.count()))
         val filename = "/tmp/U_T%d".format(timestamp)
@@ -271,7 +241,6 @@ object FlockFinder {
   /* Extract coordinates from a set of point IDs */
   def getCoordinates(C: RDD[Flock], currentPoints: RDD[String], timestamp: Int, simba: SimbaSession): RDD[Flock] = {
     import simba.implicits._
-    import simba.simbaImplicits._
 
     val C_prime = C.map(c => (c.ids, c.ids.split(" ").map(_.toInt)))
       .toDF("ids", "idsList")
