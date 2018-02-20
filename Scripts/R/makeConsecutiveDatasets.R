@@ -62,6 +62,7 @@ data = data[ , list(id = min(id)), by = c('x', 'y', 't')]
 # Writing back...
 ###################
 TIMESTAMPS = 10
+DATASET = "Berlin/berlin"
 for(i in seq(0,TIMESTAMPS)){
   write.table(data[data$t == i , c('id', 'x', 'y', 't')]
               , file = paste0(RESEARCH_HOME,PATH,DATASET,i,"-",i,".tsv")
