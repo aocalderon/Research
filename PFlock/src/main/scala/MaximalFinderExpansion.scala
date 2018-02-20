@@ -6,7 +6,6 @@ import org.apache.spark.sql.simba.index.{RTree, RTreeType}
 import org.apache.spark.sql.simba.partitioner.STRPartitioner
 import org.apache.spark.sql.simba.spatial.{MBR, Point}
 import org.joda.time.DateTime
-import org.rogach.scallop.{ScallopConf, ScallopOption}
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
@@ -33,7 +32,7 @@ object MaximalFinderExpansion {
 
   def run(pointsRDD: RDD[String]
       , simba: SimbaSession
-      , conf: FlockFinder.Conf): RDD[String] = {
+      , conf: Conf): RDD[String] = {
     // 00.Setting variables...
     val mu = conf.mu()
     val epsilon = conf.epsilon()
@@ -347,7 +346,7 @@ object MaximalFinderExpansion {
       y > (bbox.miny + epsilon)
   }
 
-  def saveStringArray(array: Array[String], tag: String, conf: FlockFinder.Conf): Unit = {
+  def saveStringArray(array: Array[String], tag: String, conf: Conf): Unit = {
     val path = s"$phd_home${conf.valpath()}"
     val filename = s"${conf.dataset()}_E${conf.epsilon()}_M${conf.mu()}_C${conf.cores()}"
     new java.io.PrintWriter("%s%s_%s_%d.txt".format(path, filename, tag, System.currentTimeMillis)) {
@@ -356,7 +355,7 @@ object MaximalFinderExpansion {
     }
   }
 
-  def saveStringArrayWithoutTimeMillis(array: Array[String], tag: String, conf: FlockFinder.Conf): Unit = {
+  def saveStringArrayWithoutTimeMillis(array: Array[String], tag: String, conf: Conf): Unit = {
     val path = s"$phd_home${conf.valpath()}"
     val filename = s"${conf.dataset()}_E${conf.epsilon()}_M${conf.mu()}_C${conf.cores()}"
     new java.io.PrintWriter("%s%s_%s.txt".format(path, filename, tag)) {
@@ -383,7 +382,7 @@ object MaximalFinderExpansion {
   def mbr2wkt(mbr: MBR): String = toWKT(mbr.low.coord(0),mbr.low.coord(1),mbr.high.coord(0),mbr.high.coord(1))
   def main(args: Array[String]): Unit = {
     // Reading arguments from command line...
-    val conf = new FlockFinder.Conf(args)
+    val conf = new Conf(args)
     val master = conf.master()
     // Starting session...
     var timer = System.currentTimeMillis()
