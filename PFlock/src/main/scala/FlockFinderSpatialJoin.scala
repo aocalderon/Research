@@ -139,7 +139,7 @@ object FlockFinderSpatialJoin {
         val cDS = C.toDS().index(RTreeType, "cRT", Array("lon", "lat"))
         val fDS = F_prime.toDS().index(RTreeType, "f_primeRT", Array("lon", "lat"))
         logger.warn("Joining sets using a distance of %.2fm...".format(distanceBetweenTimestamps))
-        val join = cDS.distanceJoin(fDS, Array("lon", "lat"), Array("lon", "lat"), distanceBetweenTimestamps)
+        val join = fDS.distanceJoin(cDS, Array("lon", "lat"), Array("lon", "lat"), distanceBetweenTimestamps)
         if (printIntermediate) {
           join.show()
         }
@@ -159,15 +159,15 @@ object FlockFinderSpatialJoin {
         timer = System.currentTimeMillis()
         val the_mu = conf.mu()
         val U_prime = join.map { tuple =>
-          val ids1 = tuple.getString(2).split(" ").map(_.toLong)
-          val ids2 = tuple.getString(7).split(" ").map(_.toLong)
+          val ids1 = tuple.getString(7).split(" ").map(_.toLong)
+          val ids2 = tuple.getString(2).split(" ").map(_.toLong)
           val u = ids1.intersect(ids2)
           val length = u.length
-          val s = tuple.getInt(5) // set the initial time...
+          val s = tuple.getInt(0) // set the initial time...
           val e = timestamp // set the final time...
           val ids = u.sorted.mkString(" ") // set flocks ids...
-          val x = tuple.getDouble(3)
-          val y = tuple.getDouble(4)
+          val x = tuple.getDouble(8)
+          val y = tuple.getDouble(9)
           (Flock(s, e, ids, x, y), length)
         }
         .filter(flock => flock._2 >= the_mu)
