@@ -130,6 +130,15 @@ object FlockFinderSpatialJoin {
       var nFlocks: Long = 0
       var nJoin: Long = 0
 
+      if (printIntermediate) {
+        logger.warn("\nPrinting C (%d flocks)\n %s\n".format(nC, Flocks2String(C)))
+        logger.warn("\nPrinting F_prime (%d flocks)\n %s\n".format(nF_prime, Flocks2String(F_prime)))
+        val filename1 = "/tmp/C_T%d".format(timestamp)
+        saveFlocks(C, filename1)
+        val filename2 = "/tmp/F_prime_T%d".format(timestamp)
+        saveFlocks(F_prime, filename2)
+      }
+
       /*****************************************************************************/
       if(nF_prime != 0) {
         // Distance Join phase with previous potential flocks...
@@ -145,15 +154,6 @@ object FlockFinderSpatialJoin {
         }
         nJoin = join.count()
         logger.warn("Distance Join phase with previous potential flocks... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer) / 1000.0, nJoin))
-
-        if (printIntermediate) {
-          logger.warn("\nPrinting C (%d flocks)\n %s\n".format(nC, Flocks2String(C)))
-          logger.warn("\nPrinting F_prime (%d flocks)\n %s\n".format(nF_prime, Flocks2String(F_prime)))
-          val filename1 = "/tmp/C_T%d".format(timestamp)
-          saveFlocks(C, filename1)
-          val filename2 = "/tmp/F_prime_T%d".format(timestamp)
-          saveFlocks(F_prime, filename2)
-        }
 
         // At least mu...
         timer = System.currentTimeMillis()
@@ -216,7 +216,7 @@ object FlockFinderSpatialJoin {
       // Update u.t_start. Shift the time...
       timer = System.currentTimeMillis()
       val F = U.filter(flock => flock.end - flock.start + 1 != delta)
-        .union(flocks.map(u => Flock(u.start + 1, u.end, u.ids)))
+        .union(flocks.map(u => Flock(u.start + 1, u.end, u.ids, u.lon, u.lat)))
         .cache()
       val nF = F.count()
       logger.warn("Update u.t_start. Shift the time... [%.3fs] [%d flocks updated]".format((System.currentTimeMillis() - timer)/1000.0, nF))
