@@ -18,6 +18,7 @@ class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
   val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   // FlockFinder parameters
   val delta:	    ScallopOption[Int]    = opt[Int]    (default = Some(2))
+  val decimals:	  ScallopOption[Int]    = opt[Int]    (default = Some(3))
   val tstart:     ScallopOption[Int]    = opt[Int]    (default = Some(0))
   val tend:       ScallopOption[Int]    = opt[Int]    (default = Some(5))
   val cartesian:  ScallopOption[Int]    = opt[Int]    (default = Some(2))
