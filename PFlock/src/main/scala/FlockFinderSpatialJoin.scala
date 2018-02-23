@@ -21,6 +21,7 @@ object FlockFinderSpatialJoin {
     val speed: Double = conf.speed()
     val mu: Int = conf.mu()
     val delta: Int = conf.delta()
+    val decimals: Int = conf.decimals()
     val tstart: Int = conf.tstart()
     val tend: Int = conf.tend()
     val partitions: Int = conf.partitions()
@@ -54,6 +55,7 @@ object FlockFinderSpatialJoin {
       .getOrCreate()
     simba.sparkContext.setLogLevel(logs)
     import simba.implicits._
+    import simba.simbaImplicits._
     logger.warn("Starting current session... [%.3fs]".format((System.currentTimeMillis() - timer)/1000.0))
 
     // Reading data...
@@ -125,7 +127,7 @@ object FlockFinderSpatialJoin {
         
       // Getting flock coordinates...
       timer = System.currentTimeMillis()
-      C = getCoordinates(C, currentPoints, timestamp, simba)
+      C = getCoordinates(C, currentPoints, timestamp, simba, decimals)
       logger.warn("Getting flock coordinates... [%.3fs] [%d disks located]".format((System.currentTimeMillis() - timer)/1000.0, nC))
       var nFlocks: Long = 0
       var nJoin: Long = 0
@@ -143,11 +145,11 @@ object FlockFinderSpatialJoin {
       if(nF_prime != 0) {
         // Distance Join phase with previous potential flocks...
         timer = System.currentTimeMillis()
-        logger.warn("Indexing current maximal disks and previous potential flocks for timestamps %d...".format(timestamp))
-        import simba.simbaImplicits._
+        logger.warn("Indexing current maximal disks for timestamps %d...".format(timestamp))
         val cDS = C.toDS().index(RTreeType, "cRT", Array("lon", "lat"))
+        logger.warn("Indexing previous potential flocks for timestamps %d...".format(timestamp))
         val fDS = F_prime.toDS().index(RTreeType, "f_primeRT", Array("lon", "lat"))
-        logger.warn("Joining sets using a distance of %.2fm...".format(distanceBetweenTimestamps))
+        logger.warn("Joining C and F_prime using a distance of %.2fm...".format(distanceBetweenTimestamps))
         val join = fDS.distanceJoin(cDS, Array("lon", "lat"), Array("lon", "lat"), distanceBetweenTimestamps)
         if (printIntermediate) {
           join.show()
@@ -262,10 +264,10 @@ object FlockFinderSpatialJoin {
   }
   
   /* Extract coordinates from a set of point IDs */
-  def getCoordinates(C: RDD[Flock], currentPoints: RDD[String], timestamp: Int, simba: SimbaSession): RDD[Flock] = {
+  def getCoordinates(C: RDD[Flock], currentPoints: RDD[String], timestamp: Int, simba: SimbaSession, decimals: Int = 3): RDD[Flock] = {
     import simba.implicits._
-
-    val C_prime = C.map(c => (c.ids, c.ids.split(" ").map(_.toInt)))
+    
+    val C_prime = C.map(c => (c.ids, c.ids.split(" ").map(_.toLong)))
       .toDF("ids", "idsList")
       .withColumn("id", explode($"idsList"))
       .select("ids", "id")
@@ -285,7 +287,9 @@ object FlockFinderSpatialJoin {
       )
       .map{ f => 
         val n = f._1.split(" ").length
-        Flock(timestamp, timestamp, f._1, f._2._1 / n, f._2._2 / n)
+        val x = BigDecimal(f._2._1 / n).setScale(decimals, BigDecimal.RoundingMode.HALF_UP).toDouble
+        val y = BigDecimal(f._2._2 / n).setScale(decimals, BigDecimal.RoundingMode.HALF_UP).toDouble
+        Flock(timestamp, timestamp, f._1, x, y)
       }
   }
   
@@ -385,7 +389,7 @@ object FlockFinderSpatialJoin {
     new java.io.PrintWriter(filename) {
       write(
         flocks.map{ f => 
-          "%d, %d, %s\n".format(f.start, f.end, f.ids)
+          "%d, %d, %s, %.3f, %.3f\n".format(f.start, f.end, f.ids, f.lon, f.lat)
         }.collect.mkString("")
       )
       close()
