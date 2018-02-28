@@ -1,38 +1,31 @@
-import org.apache.spark.sql.simba.{Dataset, SimbaSession}
+import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.simba.index.RTreeType
-import org.slf4j.{Logger, LoggerFactory}
 import org.scalameter._
-import org.apache.spark.sql.functions._
+import org.slf4j.{Logger, LoggerFactory}
 
 object BasicSpatialOps {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   var epsilon = 0.0
   val precision = 0.01
-  val master = "spark://169.235.27.134:7077"
-  var cores = 0
-  var pointsFile = ""
-  var centersFile = ""
+  val master = "local[*]" //"spark://169.235.27.134:7077"
+  var cores = 4
+  var file1 = ""
+  var file2 = ""
   var timer = new Quantity[Double](0.0, "ms")
   var clock = 0.0
 
-  case class PointData(x: Double, y: Double, z: Double, other: String)
-  case class SP_Point(id: Long, x: Double, y: Double)
-  case class P1(id1: Long, x1: Double, y1: Double)
-  case class P2(id2: Long, x2: Double, y2: Double)
+  case class Disk(t: Int, ids: String, lon: Double, lat: Double)
 
   def main(args: Array[String]): Unit = {
     clock = System.nanoTime()
-    pointsFile = args(0)
-    centersFile = args(1)
-    epsilon = args(2).toDouble
-    cores = args(3).toInt
-    //master = "local[10]"
+    file1 = "/tmp/D_i.txt"
+    file2 = "/tmp/D_prime.txt"
+
     val simba = SimbaSession.builder().master(master).
       appName("Benchmark").
       //config("simba.join.partitions", "32").
-      config("simba.index.partitions", "1024").
+      config("simba.index.partitions", "16").
       getOrCreate()
-    simba.sparkContext.setLogLevel("ERROR")
     logger.info("Starting session,%.2f,%d".format((System.nanoTime() - clock)/1e9d, 0))
     runJoinQuery(simba)
     simba.stop()
@@ -44,61 +37,59 @@ object BasicSpatialOps {
     import simba.simbaImplicits._
     logger.info("Setting variables,%.2f,%d".format((System.nanoTime() - clock)/1e9d, 0))
     clock = System.nanoTime()
-    val phd_home = scala.util.Properties.envOrElse("PHD_HOME", "/home/acald013/PhD/")
-    var path = "Y3Q1/Validation/"
-    var dataset = pointsFile
-    var extension = "txt"
-    var filename = "%s%s%s.%s".format(phd_home, path, dataset, extension)
-    var points = simba.sparkContext.
-      textFile(filename).
+    var left = simba.sparkContext.
+      textFile(file1).
       map { line =>
         val lineArray = line.split(",")
-        val id = lineArray(0).toLong
-        val x = lineArray(1).toDouble
-        val y = lineArray(2).toDouble
-        SP_Point(id, x, y)
+        val t = lineArray(0).toInt
+        val ids = lineArray(1)
+        val x = lineArray(2).toDouble
+        val y = lineArray(3).toDouble
+        Disk(t, ids, x, y)
       }.toDS() //NO CACHE!!!
-    var nPoints = points.count()
-    path = "Y3Q1/Validation/"
-    dataset = centersFile
-    extension = "txt"
-    filename = "%s%s%s.%s".format(phd_home, path, dataset, extension)
-    var centers = simba.sparkContext.
-      textFile(filename).
+    var nLeft = left.count()
+
+    /*
+    var right = simba.sparkContext.
+      textFile(file2).
       map { line =>
         val lineArray = line.split(",")
-        val id = lineArray(0).toLong
-        val x = lineArray(1).toDouble
-        val y = lineArray(2).toDouble
-        SP_Point(id, x, y)
+        val t = lineArray(0).toInt
+        val ids = lineArray(1)
+        val x = lineArray(2).toDouble
+        val y = lineArray(3).toDouble
+        Disk(t, ids, x, y)
       }.toDS()
-    var nCenters = centers.count()
+      */
+    var right = (0 until 1).map(d => Disk(-1,"",0.0,0.0)).toDS
+    var nRight = right.count()
     logger.info("Reading datasets,%.2f,%d".format((System.nanoTime() - clock)/1e9d, 0))
-    logger.info("Points partitions: " + points.rdd.getNumPartitions)
-    logger.info("Centers partitions: " + centers.rdd.getNumPartitions)
+    logger.info("D_i partitions: " + left.rdd.getNumPartitions)
+    logger.info("D_prime partitions: " + right.rdd.getNumPartitions)
     timer = measure {
-      points = points.index(RTreeType, "pointsRT", Array("x", "y")).cache()
-      nPoints = points.count()
+      left = left.index(RTreeType, "leftRT", Array("lon", "lat")).cache()
+      nLeft = left.count()
     }
-    logInfo("01.Indexing points", timer.value, nPoints)
+    logInfo("01.Indexing D_i", timer.value, nLeft)
     timer = measure {
-      centers = centers.index(RTreeType, "centersRT", Array("x", "y")).cache()
-      nCenters = centers.count()
+      if(nRight > 0){
+        right = right.index(RTreeType, "rightRT", Array("lon", "lat")).cache()
+        nRight = right.count()
+      }
     }
-    logInfo("02.Indexing centers", timer.value, nCenters)
-    logger.info("" + points.rdd.getNumPartitions)
-    logger.info("" + centers.rdd.getNumPartitions)
+    logInfo("02.Indexing D_prime", timer.value, nRight)
+    logger.info("D_i partitions: " + left.rdd.getNumPartitions)
+    logger.info("D_prime partitions: " + right.rdd.getNumPartitions)
     clock = System.nanoTime()
-    val disks = points.
-      distanceJoin(centers.toDF("id1","x1","y1"), Array("x", "y"), Array("x1", "y1"), epsilon/2 + precision).
-      groupBy("id1", "x1", "y1").
-      agg(collect_list("id").alias("ids")).
-      cache()
-    val nDisks = disks.count()
-    logInfo("03.Joining datasets", (System.nanoTime() - clock) / 1e6d, nDisks)
+    val join = left
+      .distanceJoin(right.toDF("t2", "ids2", "lon2", "lat2"), Array("lon", "lat"), Array("lon2", "lat2"), 10.0)
+      .cache()
+    val nJoin = join.count()
+    join.show(truncate = false)
+    logInfo("03.Joining datasets", (System.nanoTime() - clock) / 1e6d, nJoin)
   }
   
   private def logInfo(msg: String, millis: Double, n: Long): Unit = {
-    logger.info("%s,%.2f,%d,%.1f,%d".format(msg, millis / 1000.0, n, epsilon, cores))
+    logger.info("%s... [%.3f] [%d]".format(msg, millis / 1000.0, n))
   }
 }

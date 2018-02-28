@@ -87,7 +87,6 @@ object FlockFinderSpatialJoin {
     logger.warn("\n\n*** Epsilon=%.1f, Mu=%d and Delta=%d ***\n".format(epsilon, mu, delta))
 
     // Storing final set of flocks...
-    simba.conf.set("spark.sql.autoBroadcastJoinThreshold", -1) // To improve cartesian product performance...
     var FinalFlocks: RDD[Flock] = simba.sparkContext.emptyRDD
     var nFinalFlocks: Long = 0
 
@@ -259,7 +258,6 @@ object FlockFinderSpatialJoin {
 
     // Closing all...
     logger.warn("Closing app...")
-    simba.conf.set("spark.sql.autoBroadcastJoinThreshold", 10485760)
     simba.close()
   }
   
