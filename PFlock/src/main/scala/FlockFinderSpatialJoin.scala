@@ -84,7 +84,7 @@ object FlockFinderSpatialJoin {
     logger.warn("Extracting timestamps... [%.3fs] [%d timestamps]".format((System.currentTimeMillis() - timer)/1000.0, nTimestamps))
 
     // Running experiments with different values of epsilon, mu and delta...
-    logger.warn("\n\n*** Epsilon=%.1f, Mu=%d and Delta=%d ***\n".format(epsilon, mu, delta))
+    logger.warn("\n\n*** Epsilon=%.1f, Mu=%d and Delta=%d ==SpatialJoin== ***\n".format(epsilon, mu, delta))
 
     // Storing final set of flocks...
     var FinalFlocks: RDD[Flock] = simba.sparkContext.emptyRDD
@@ -93,6 +93,8 @@ object FlockFinderSpatialJoin {
     /***************************************
     *     Starting Flock Evaluation...     *
     ***************************************/
+    // Starting timer...
+    val SpatialJoinTimer = System.currentTimeMillis()    
     // Initialize partial result set...
     var F_prime: RDD[Flock] = simba.sparkContext.emptyRDD[Flock]
     var nF_prime: Long = 0
@@ -240,7 +242,7 @@ object FlockFinderSpatialJoin {
       /*****************************************************************************/
 
       // Reporting summary...
-      logger.warn("\n\nPFLOCK\t%d\t%.1f\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n"
+      logger.warn("\n\nPFLOCK_SJ\t%d\t%.1f\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n"
         .format(timestamp, epsilon, mu, delta, nFlocks, nFinalFlocks, nCurrentPoints, nC, nJoin, nU, nF_prime))
     }
 
@@ -255,6 +257,9 @@ object FlockFinderSpatialJoin {
       logger.warn("\n\n%s\n".format(flocksReport))
       logger.warn("\n\nFinal flocks: %d\n".format(nFinalFlocks))
     }
+
+    val totalTime = (System.currentTimeMillis() - SpatialJoinTimer) / 1000.0
+    logger.warn("\n\nSpatialJoin,%.1f,%d,%d,%d,%.3f\n\n".format(epsilon, mu, delta, nFinalFlocks, totalTime))
 
     // Closing all...
     logger.warn("Closing app...")

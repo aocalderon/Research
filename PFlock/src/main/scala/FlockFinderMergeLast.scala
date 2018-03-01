@@ -90,7 +90,7 @@ object FlockFinderMergeLast {
     logger.warn("%-70s [%.3fs] [%d timestamps]".format(msg, (System.currentTimeMillis() - timer)/1000.0, nTimestamps))
 
     // Running experiments with different values of epsilon, mu and delta...
-    logger.warn("\n\n*** Epsilon=%.1f, Mu=%d and Delta=%d ***\n".format(epsilon, mu, delta))
+    logger.warn("\n\n*** Epsilon=%.1f, Mu=%d and Delta=%d  ==MergeLast== ***\n".format(epsilon, mu, delta))
 
     // Storing final set of flocks...
     var FinalFlocks: Dataset[Flock] = simba.sparkContext.emptyRDD[Flock].toDS()
@@ -99,6 +99,8 @@ object FlockFinderMergeLast {
     /***************************************
     *     Starting Flock Evaluation...     *
     ***************************************/
+    // Starting timer...
+    val MergeLastTimer = System.currentTimeMillis()
     // Initializing initial variables...
     val D = collection.mutable.Map[Int, Dataset[Disk]]()
     var nD: Long = 0
@@ -191,7 +193,7 @@ object FlockFinderMergeLast {
         nFinalFlocks = FinalFlocks.count()
 
         // Reporting summary...
-        logger.warn("\n\nPFLOCK\t%.1f\t%d\t%d\t%d\t%d\n".format(epsilon, mu, delta, t, nFinalFlocks))
+        logger.warn("\n\nPFLOCK_ML\t%.1f\t%d\t%d\t%d\t%d\n".format(epsilon, mu, delta, t, nFinalFlocks))
 
       }
 
@@ -210,6 +212,9 @@ object FlockFinderMergeLast {
       logger.warn("\n\n%s\n".format(flocksReport))
       logger.warn("\n\nFinal flocks: %d\n".format(nFinalFlocks))
     }
+
+    val totalTime = (System.currentTimeMillis() - MergeLastTimer) / 1000.0
+    logger.warn("\n\nMergeLast,%.1f,%d,%d,%d,%.3f\n\n".format(epsilon, mu, delta, nFinalFlocks, totalTime))
 
     // Closing all...
     logger.warn("Closing app...")
