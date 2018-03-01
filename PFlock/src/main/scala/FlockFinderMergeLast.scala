@@ -139,18 +139,18 @@ object FlockFinderMergeLast {
       // Adding current set of disks to D...
       val timer3 = System.currentTimeMillis()
       D += (t -> C)
-      nD = nC
+      nD = D.values.map(_.count()).sum
       msg = "Adding %d new disks to D...".format(nC)
       logger.warn("%-70s [%.3fs] [%d total disks]".format(msg, (System.currentTimeMillis() - timer3)/1000.0, nD))
       
       // Catching if we have to merge...
       if(printIntermediate) logger.warn("Current values for t = %d and delta - 1 = %d".format(t, delta - 1))
       if(t >= delta - 1){
-        if(printIntermediate) logger.warn("D size: %d".format(D.keys.size))
+        if(printIntermediate) logger.warn("D keys size: %d".format(D.keys.size))
         var slice = D.keys.toList.sorted
         slice = reorder(slice)
-        var F_prime = D(slice.head)
-        var nF_prime = 0L
+        var F_prime = D.remove(slice.head).get
+        var nF_prime = F_prime.count()
         slice = slice.drop(1)
         if(printIntermediate) logger.warn("Slice content: %s".format(slice.mkString(" ")))
         for(i <- slice){
@@ -193,9 +193,6 @@ object FlockFinderMergeLast {
         // Reporting summary...
         logger.warn("\n\nPFLOCK\t%.1f\t%d\t%d\t%d\t%d\n".format(epsilon, mu, delta, t, nFinalFlocks))
 
-        // Removing minimun timestamp...
-        if(slice.length > 0)
-          D.remove(slice.min)
       }
 
       // Going to next timestamp...
@@ -220,7 +217,7 @@ object FlockFinderMergeLast {
   }
 
   def reorder(list: List[Int]): List[Int] = {
-    if(list.length < 3) return list
+    if(list.lengthCompare(3) < 0) return list
     val queue = new mutable.Queue[(Int, Int)]()
     val result = new ListBuffer[Int]()
     var lo = 0
