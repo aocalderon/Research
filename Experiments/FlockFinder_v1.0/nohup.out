@@ -20810,3 +20810,17 @@ MergeLast,30.0,5,5,6077,356.137
 
 2018-03-01 00:13:39,243 -> Closing app...
 DONE!!!
+2018-03-01 09:08:45,054 -> Starting app...
+2018-03-01 09:08:46,902 -> Setting paramaters... [0.537s]
+2018-03-01 09:08:49,914 -> Starting current session... [3.011s]
+2018-03-01 09:08:54,042 -> Reading berlin0-10... [4.128s] [203106 records]
+2018-03-01 09:08:58,118 -> Extracting timestamps... [4.076s] [11 timestamps]
+2018-03-01 09:08:58,118 -> 
+
+*** Epsilon=10.0, Mu=3 and Delta=3 ==SpatialJoin== ***
+
+2018-03-01 09:09:03,791 -> Reported location for trajectories in time 0... [5.651s] [18093 points]
+2018-03-01 09:09:03,806 -> 00.Setting mu=3,epsilon=10.0,cores=28,dataset=berlin0-10
+2018-03-01 09:09:03,806 -> [Partitions Info]Points;Before indexing;2
+2018-03-01 09:09:06,800 -> [Partitions Info]Points;After indexing;30
+2018-03-01 09:09:06,800 -> 01.Indexing points... [2.994s] [0 results]
