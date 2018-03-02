@@ -107,6 +107,7 @@ object FlockFinderMergeLast {
     var t: Int = 0
     while(t < timestamps.length){
       logger.warn("\n\n")
+      if(printIntermediate) logger.warn("Reporting location for trajectories in time %d...".format(t))
       val timer1 = System.currentTimeMillis()
       val points = pointset
         .filter(datapoint => datapoint.t == t)
@@ -116,7 +117,7 @@ object FlockFinderMergeLast {
         .rdd
         .cache()
       val nCurrentPoints = currentPoints.count()
-      msg = "Reported location for trajectories in time %d...".format(t)
+      msg = "Reporting locations..."
       logger.warn("%-70s [%.3fs] [%d points]".format(msg, (System.currentTimeMillis() - timer1)/1000.0, nCurrentPoints))
 
       // Set of disks for t_i...
@@ -142,7 +143,7 @@ object FlockFinderMergeLast {
       val timer3 = System.currentTimeMillis()
       D += (t -> C)
       nD = D.values.map(_.count()).sum
-      msg = "Adding %d new disks to D...".format(nC)
+      msg = "Adding new disks to D (%d)...".format(nC)
       logger.warn("%-70s [%.3fs] [%d total disks]".format(msg, (System.currentTimeMillis() - timer3)/1000.0, nD))
       
       // Catching if we have to merge...
@@ -157,7 +158,9 @@ object FlockFinderMergeLast {
         if(printIntermediate) logger.warn("Slice content: %s".format(slice.mkString(" ")))
         for(i <- slice){
           val F = D(i)
+          val nF =  F.count()
           // Distance Join and filtering phase...
+          if(printIntermediate) logger.warn("Distance join between t_%d (%d) and t_%d (%d)...".format(i - 1, i, nF_prime, nF))
           val timer1 = System.currentTimeMillis()
           val U = F_prime.distanceJoin(F.toDF("t2", "ids2", "x2", "y2"), Array("x", "y"), Array("x2", "y2"), distanceBetweenTimestamps)
             .as[Tuple]
@@ -174,6 +177,7 @@ object FlockFinderMergeLast {
           val nU = U.count()
           msg = "Distance Join and filtering phase at timestamp %d...".format(i)
           logger.warn("%-70s [%.3fs] [%d disks]".format(msg, (System.currentTimeMillis() - timer1) / 1000.0, nU))
+          if(printIntermediate) U.show(nU.toInt, false)
 
           // Indexing intersected dataset...
           if(printIntermediate) logger.warn("Indexing intersected dataset...")
