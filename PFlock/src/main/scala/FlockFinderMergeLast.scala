@@ -1,3 +1,4 @@
+import SPMF.AlgoFPMax
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.catalyst.ScalaReflection
@@ -8,6 +9,8 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
+
+import scala.collection.JavaConverters._
 
 object FlockFinderMergeLast {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -160,7 +163,7 @@ object FlockFinderMergeLast {
           val F = D(i)
           val nF =  F.count()
           // Distance Join and filtering phase...
-          if(printIntermediate) logger.warn("Distance join between t_%d (%d) and t_%d (%d)...".format(i - 1, i, nF_prime, nF))
+          if(printIntermediate) logger.warn("Distance join between t_%d (%d) and t_%d (%d)...".format(i - 1, nF_prime, i, nF))
           val timer1 = System.currentTimeMillis()
           val U = F_prime.distanceJoin(F.toDF("t2", "ids2", "x2", "y2"), Array("x", "y"), Array("x2", "y2"), distanceBetweenTimestamps)
             .as[Tuple]
@@ -173,16 +176,24 @@ object FlockFinderMergeLast {
             }
             .filter(_._2 >= mu)
             .map(_._1)
+            .distinct()
             .cache()
           val nU = U.count()
           msg = "Distance Join and filtering phase at timestamp %d...".format(i)
           logger.warn("%-70s [%.3fs] [%d disks]".format(msg, (System.currentTimeMillis() - timer1) / 1000.0, nU))
-          if(printIntermediate) U.show(nU.toInt, false)
+          if(printIntermediate) U.show(nU.toInt, truncate = false)
+
+          // Reducing redundants and duplicates...
+          val reducedU = U.map(u => List(u.ids)).reduce(reduceDisks(_,_))
+          val U_prime = simba.sparkContext.parallelize(reducedU).toDF("ids")
+              .join(U, "ids").select("t", "ids", "x", "y").as[Disk]
+          val nU_prime = U_prime.count()
+          if(printIntermediate) U_prime.show(nU_prime.toInt, false)
 
           // Indexing intersected dataset...
           if(printIntermediate) logger.warn("Indexing intersected dataset...")
           val timer2 = System.currentTimeMillis()
-          F_prime = U.index(RTreeType, "f_primeRT", Array("x", "y")).cache()
+          F_prime = U_prime.index(RTreeType, "f_primeRT", Array("x", "y")).cache()
           nF_prime = F_prime.count()
           msg = "Indexing intersected dataset..."
           logger.warn("%-70s [%.3fs] [%d intersections]".format(msg, (System.currentTimeMillis() - timer2)/1000.0, nF_prime))
@@ -224,6 +235,15 @@ object FlockFinderMergeLast {
     logger.warn("Closing app...")
     simba.close()
   }
+
+  def reduceDisks(a: List[String], b: List[String]): List[String] ={
+    val transactions = a.union(b).map { disk => disk.split(" ").map(new Integer(_)).toList.asJava}.toList.asJava
+    val algorithm = new AlgoFPMax
+    val maximals = algorithm.runAlgorithm(transactions, 1)
+
+    maximals.getItemsets(1).asScala.map(m => m.asScala.toList.sorted.mkString(" ")).toList
+  }
+
 
   def reorder(list: List[Int]): List[Int] = {
     if(list.lengthCompare(3) < 0) return list

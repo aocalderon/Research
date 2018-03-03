@@ -37,6 +37,7 @@ object MaximalFinderExpansion {
     val mu = conf.mu()
     val epsilon = conf.epsilon()
     val separator = conf.separator()
+    val debug = conf.debug()
     var maximals3: RDD[String] = simba.sparkContext.emptyRDD
     
     import simba.implicits._
@@ -47,7 +48,7 @@ object MaximalFinderExpansion {
     // 01.Indexing points...
     var timer = System.currentTimeMillis()
     var pointsNumPartitions = pointsRDD.getNumPartitions
-    logger.info("[Partitions Info]Points;Before indexing;%d".format(pointsNumPartitions))
+    if(debug) logger.info("[Partitions Info]Points;Before indexing;%d".format(pointsNumPartitions))
     val p1 = pointsRDD.map(_.split(separator)).
       map(p => P1(p(0).trim.toLong,p(1).trim.toDouble,p(2).trim.toDouble)).
       toDS().
@@ -64,7 +65,7 @@ object MaximalFinderExpansion {
       index(RTreeType,"pointsRT",Array("x","y")).
       cache()
     pointsNumPartitions = points.rdd.getNumPartitions
-    logger.info("[Partitions Info]Points;After indexing;%d".format(pointsNumPartitions))
+    if(debug) logger.info("[Partitions Info]Points;After indexing;%d".format(pointsNumPartitions))
     logger.info("01.Indexing points... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nPoints))
     // 02.Getting pairs...
     timer = System.currentTimeMillis()
@@ -96,10 +97,10 @@ object MaximalFinderExpansion {
     // 04.Indexing centers...
     timer = System.currentTimeMillis()
     var centersNumPartitions: Int = centersRDD.getNumPartitions
-    logger.info("[Partitions Info]Centers;Before indexing;%d".format(centersNumPartitions))
+    if(debug) logger.info("[Partitions Info]Centers;Before indexing;%d".format(centersNumPartitions))
     val centers = centersRDD.toDS.index(RTreeType, "centersRT", Array("x", "y")).cache()
     centersNumPartitions = centers.rdd.getNumPartitions
-    logger.info("[Partitions Info]Centers;After indexing;%d".format(centersNumPartitions))
+    if(debug) logger.info("[Partitions Info]Centers;After indexing;%d".format(centersNumPartitions))
     logger.info("04.Indexing centers... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCenters))
     // 05.Getting disks...
     timer = System.currentTimeMillis()
@@ -146,7 +147,7 @@ object MaximalFinderExpansion {
     // 08.Indexing candidates... 
     if(nCandidates > 0){
       var candidatesNumPartitions: Int = candidates.rdd.getNumPartitions
-      logger.info("[Partitions Info]Candidates;Before indexing;%d".format(candidatesNumPartitions))
+      if(debug) logger.info("[Partitions Info]Candidates;Before indexing;%d".format(candidatesNumPartitions))
       val pointCandidate = candidates.map{ candidate =>
           ( new Point(Array(candidate.x, candidate.y)), candidate)
         }
@@ -187,7 +188,7 @@ object MaximalFinderExpansion {
         .cache()
       val nCandidates2 = candidates2.count()
       candidatesNumPartitions = candidates2.getNumPartitions
-      logger.info("[Partitions Info]Candidates;After indexing;%d".format(candidatesNumPartitions))
+      if(debug) logger.info("[Partitions Info]Candidates;After indexing;%d".format(candidatesNumPartitions))
       logger.info("09.Getting expansions... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidates2))
       // 10.Finding maximal disks...
       timer = System.currentTimeMillis()
@@ -277,7 +278,6 @@ object MaximalFinderExpansion {
         )
       )
     }
-    // if(conf.debug()) { logger.info(maximals3.map(p => "%s\n".format(p.toString)).collect.mkString("")) }
     // Dropping indices...
     timer = System.currentTimeMillis()
     p1.dropIndex()
