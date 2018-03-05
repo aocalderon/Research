@@ -2,6 +2,7 @@ import org.rogach.scallop.{ScallopConf, ScallopOption}
 
 class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
   val epsilon:    ScallopOption[Double] = opt[Double] (default = Some(1.0))
+  val precision:  ScallopOption[Double] = opt[Double] (default = Some(0.001))
   val mu:         ScallopOption[Int]    = opt[Int]    (default = Some(3))
   val entries:    ScallopOption[Int]    = opt[Int]    (default = Some(25))
   val partitions: ScallopOption[Int]    = opt[Int]    (default = Some(32))

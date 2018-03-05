@@ -11,6 +11,8 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 import scala.collection.JavaConverters._
+import org.apache.spark.sql.functions._
+
 
 object FlockFinderMergeLast {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -25,6 +27,7 @@ object FlockFinderMergeLast {
     var timer = System.currentTimeMillis()
     val epsilon: Double = conf.epsilon()
     val speed: Double = conf.speed()
+    val precision: Double = conf.precision()
     val mu: Int = conf.mu()
     val delta: Int = conf.delta()
     val tstart: Int = conf.tstart()
@@ -176,19 +179,34 @@ object FlockFinderMergeLast {
             }
             .filter(_._2 >= mu)
             .map(_._1)
-            .distinct()
             .cache()
           val nU = U.count()
           msg = "Distance Join and filtering phase at timestamp %d...".format(i)
+          U.show(100, truncate = false)
           logger.warn("%-70s [%.3fs] [%d disks]".format(msg, (System.currentTimeMillis() - timer1) / 1000.0, nU))
-          if(printIntermediate) U.show(nU.toInt, truncate = false)
 
-          // Reducing redundants and duplicates...
-          val reducedU = U.map(u => List(u.ids)).reduce(reduceDisks(_,_))
-          val U_prime = simba.sparkContext.parallelize(reducedU).toDF("ids")
-              .join(U, "ids").select("t", "ids", "x", "y").as[Disk]
+          // Reducing redundant and duplicate patterns...
+          timer = System.currentTimeMillis()
+          val U_temp = U.map(_.ids)
+            .mapPartitions(runFPMax) // Running local...
+            .repartition(1)
+            .mapPartitions(runFPMax) // Running global...
+            .repartition(partitions).cache()
+          val nU_temp = U_temp.count()
+          U_temp.show(100, truncate = false)
+          msg = "Mapping partitions..."
+          logger.info("%-70s [%.2fs] [%d records]".format(msg, (System.currentTimeMillis() - timer)/1000.0, nU_temp))
+
+          val U_prime = U_temp.toDF("ids")
+            .join(U, "ids")
+            .select("t", "ids", "x", "y").as[Disk]
+            .groupBy("t", "ids")
+            .agg(min("x").alias("x"), min("y").alias("y"))
+            .as[Disk].cache()
           val nU_prime = U_prime.count()
-          if(printIntermediate) U_prime.show(nU_prime.toInt, false)
+          U_prime.show(100,false)
+          msg = "Joining results..."
+          logger.warn("%-70s [%.3fs] [%d disks]".format(msg, (System.currentTimeMillis() - timer)/1000.0, nU_prime))
 
           // Indexing intersected dataset...
           if(printIntermediate) logger.warn("Indexing intersected dataset...")
@@ -202,7 +220,7 @@ object FlockFinderMergeLast {
         // Reporting flocks...
         FinalFlocks = FinalFlocks.union{
           F_prime.map{ disk =>
-            Flock(disk.t, t, disk.ids)
+            Flock(disk.t, disk.t + delta - 1, disk.ids)
           }
         }.cache()
         nFinalFlocks = FinalFlocks.count()
@@ -236,8 +254,15 @@ object FlockFinderMergeLast {
     simba.close()
   }
 
+  def runFPMax(data: Iterator[String]): Iterator[String] = {
+    val transactions = data.toList.map(disk => disk.split(" ").map(new Integer(_)).toList.asJava).asJava
+    val algorithm = new AlgoFPMax
+
+    algorithm.runAlgorithm(transactions, 1).getItemsets(1).asScala.map(m => m.asScala.toList.sorted.mkString(" ")).toList.toIterator
+  }
+
   def reduceDisks(a: List[String], b: List[String]): List[String] ={
-    val transactions = a.union(b).map { disk => disk.split(" ").map(new Integer(_)).toList.asJava}.toList.asJava
+    val transactions = a.union(b).map { disk => disk.split(" ").map(new Integer(_)).toList.asJava }.asJava
     val algorithm = new AlgoFPMax
     val maximals = algorithm.runAlgorithm(transactions, 1)
 
