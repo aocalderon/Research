@@ -1,17 +1,15 @@
 import SPMF.AlgoFPMax
-import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.catalyst.ScalaReflection
+import org.apache.spark.sql.functions._
 import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.simba.index.RTreeType
 import org.apache.spark.sql.types.StructType
 import org.slf4j.{Logger, LoggerFactory}
 
+import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
-
-import scala.collection.JavaConverters._
-import org.apache.spark.sql.functions._
 
 
 object FlockFinderMergeLast {
@@ -49,7 +47,7 @@ object FlockFinderMergeLast {
       .schemaFor[ST_Point]
       .dataType
       .asInstanceOf[StructType]
-    val distanceBetweenTimestamps = speed * delta
+    val distanceBetweenTimestamps = speed * delta + 50
     var msg = "Setting paramaters..."
     logger.warn("%-70s [%.3fs]".format(msg, (System.currentTimeMillis() - timer)/1000.0))
     
@@ -152,7 +150,6 @@ object FlockFinderMergeLast {
       logger.warn("%-70s [%.3fs] [%d total disks]".format(msg, (System.currentTimeMillis() - timer3)/1000.0, nD))
       
       // Catching if we have to merge...
-      if(printIntermediate) logger.warn("Current values for t = %d and delta - 1 = %d".format(t, delta - 1))
       if(t >= delta - 1){
         if(printIntermediate) logger.warn("D keys size: %d".format(D.keys.size))
         var slice = D.keys.toList.sorted
@@ -165,7 +162,15 @@ object FlockFinderMergeLast {
           val F = D(i)
           val nF =  F.count()
           // Distance Join and filtering phase...
-          if(printIntermediate) logger.warn("Distance join between t_%d (%d) and t_%d (%d)...".format(i - 1, nF_prime, i, nF))
+          if(printIntermediate){
+            logger.warn("Distance join between t_%d (%d) and t_%d (%d)...".format(i - 1, nF_prime, i, nF))
+            logger.warn("Printing F_prime (%d disks)...".format(nF_prime))
+            F_prime.orderBy("t", "ids").show(nF.toInt, truncate = false)
+            logger.warn("Printing F_ (%d disks)...".format(nF))
+            F.orderBy("t", "ids").show(nF.toInt, truncate = false)
+            saveDisks(F_prime, "/tmp/F_prime_t%d_i%d.txt".format(t, i))
+            saveDisks(F, "/tmp/F_t%d_i%d.txt".format(t, i))
+          }
           val timer1 = System.currentTimeMillis()
           val U = F_prime.distanceJoin(F.toDF("t2", "ids2", "x2", "y2"), Array("x", "y"), Array("x2", "y2"), distanceBetweenTimestamps)
             .as[Tuple]
@@ -180,8 +185,8 @@ object FlockFinderMergeLast {
             .map(_._1)
             .cache()
           val nU = U.count()
+          U.orderBy("ids").show(100, truncate = false)
           msg = "Distance Join and filtering phase at timestamp %d...".format(i)
-          U.show(100, truncate = false)
           logger.warn("%-70s [%.3fs] [%d disks]".format(msg, (System.currentTimeMillis() - timer1) / 1000.0, nU))
 
           // Reducing redundant and duplicate patterns...
@@ -190,20 +195,20 @@ object FlockFinderMergeLast {
             .mapPartitions(runFPMax) // Running local...
             .repartition(1)
             .mapPartitions(runFPMax) // Running global...
-            .repartition(partitions).cache()
+            .repartition(partitions)
+            .toDF("ids").cache()
           val nU_temp = U_temp.count()
-          U_temp.show(100, truncate = false)
+          U_temp.orderBy("ids").show(100, truncate = false)
           msg = "Mapping partitions..."
           logger.info("%-70s [%.2fs] [%d records]".format(msg, (System.currentTimeMillis() - timer)/1000.0, nU_temp))
 
-          val U_prime = U_temp.toDF("ids")
-            .join(U, "ids")
+          val U_prime = U_temp.join(U, "ids")
             .select("t", "ids", "x", "y").as[Disk]
             .groupBy("t", "ids")
             .agg(min("x").alias("x"), min("y").alias("y"))
             .as[Disk].cache()
           val nU_prime = U_prime.count()
-          U_prime.show(100,truncate = false)
+          U_prime.orderBy("ids").show(100,truncate = false)
           msg = "Joining results..."
           logger.warn("%-70s [%.3fs] [%d disks]".format(msg, (System.currentTimeMillis() - timer)/1000.0, nU_prime))
 
@@ -218,7 +223,7 @@ object FlockFinderMergeLast {
 
         // Reporting flocks...
         FinalFlocks = FinalFlocks.union{
-          F_prime.map{ disk =>
+          F_prime.orderBy("ids").map{ disk =>
             Flock(disk.t, disk.t + delta - 1, disk.ids)
           }
         }.cache()
@@ -234,7 +239,7 @@ object FlockFinderMergeLast {
     }
 
     if(printFlocks){ // Reporting final set of flocks...
-      FinalFlocks.show(nFinalFlocks.toInt, truncate = false)
+      FinalFlocks.orderBy("start", "end", "ids").show(1000, truncate = false)
       logger.warn("\n\nFinal flocks: %d\n".format(nFinalFlocks))
       saveFlocks(FinalFlocks, "PFLOCK_E%d_M%d_D%d.txt".format(epsilon.toInt, mu, delta))
     }
@@ -253,15 +258,6 @@ object FlockFinderMergeLast {
 
     algorithm.runAlgorithm(transactions, 1).getItemsets(1).asScala.map(m => m.asScala.toList.sorted.mkString(" ")).toList.toIterator
   }
-
-  def reduceDisks(a: List[String], b: List[String]): List[String] ={
-    val transactions = a.union(b).map { disk => disk.split(" ").map(new Integer(_)).toList.asJava }.asJava
-    val algorithm = new AlgoFPMax
-    val maximals = algorithm.runAlgorithm(transactions, 1)
-
-    maximals.getItemsets(1).asScala.map(m => m.asScala.toList.sorted.mkString(" ")).toList
-  }
-
 
   def reorder(list: List[Int]): List[Int] = {
     if(list.lengthCompare(3) < 0) return list
@@ -290,20 +286,22 @@ object FlockFinderMergeLast {
     result.toList.map(i => list(i))
   }
 
-  def Flocks2String(flocks: RDD[Flock]): String = {
-    val n = flocks.count()
-    val info = flocks.map{ f => 
-      "\n%d,%d,%s,%.2f,%.2f".format(f.start, f.end, f.ids, f.lon, f.lat)
-    }.collect.mkString("")
-    
-    "# of flocks: %d\n%s".format(n,info)
-  }
-
   def saveFlocks(flocks: Dataset[Flock], filename: String): Unit = {
     new java.io.PrintWriter(filename) {
       write(
-        flocks.orderBy("start", "end", "ids").map{ f =>
+        flocks.orderBy("start", "end", "ids").rdd.map{ f =>
           "%d, %d, %s\n".format(f.start, f.end, f.ids)
+        }.collect.mkString("")
+      )
+      close()
+    }
+  }
+
+  def saveDisks(disks: Dataset[Disk], filename: String): Unit = {
+    new java.io.PrintWriter(filename) {
+      write(
+        disks.orderBy("ids").rdd.map{ d =>
+          "%d, %s, %f, %f\n".format(d.t, d.ids, d.x, d.y)
         }.collect.mkString("")
       )
       close()

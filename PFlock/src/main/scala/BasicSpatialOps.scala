@@ -4,6 +4,7 @@ import org.apache.spark.sql.simba.SimbaSession
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
+import org.apache.spark.sql.functions._
 
 object BasicSpatialOps {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -28,9 +29,63 @@ object BasicSpatialOps {
         .getOrCreate()
     logger.info("%-50s [%.2fs]".format("Starting session", (System.currentTimeMillis() - timer)/1000.0))
 
-    runFunction(simba)
+    getMaxSpeed(simba)
 
     simba.stop()
+  }
+
+  private def getTrajectoryLength(simba: SimbaSession): Unit = {
+    import simba.implicits._
+
+    timer = System.currentTimeMillis()
+    val U = simba.sparkContext.
+      textFile("/home/and/Documents/PhD/Research/Datasets/Berlin/berlin0-10.tsv").
+      map { line =>
+        val lineArray = line.split("\t")
+        val ids = lineArray(0).trim
+        val x = lineArray(1).toDouble
+        val y = lineArray(2).toDouble
+        val t = lineArray(3).toInt
+        Disk(t, ids, x, y)
+      }.toDS() //NO CACHE!!!
+    var nU = U.count()
+    U.show(truncate = false)
+    logger.info("%-50s [%.2fs] [%d records]".format("Reading data", (System.currentTimeMillis() - timer)/1000.0, nU))
+
+    timer = System.currentTimeMillis()
+    U.groupBy("ids")
+  }
+
+  private def getMaxSpeed(simba: SimbaSession): Unit = {
+    import simba.implicits._
+    timer = System.currentTimeMillis()
+    val U = simba.sparkContext.
+      textFile("/home/and/Documents/PhD/Research/Datasets/Berlin/berlin0-10.tsv").
+      map { line =>
+        val lineArray = line.split("\t")
+        val ids = lineArray(0).trim
+        val x = lineArray(1).toDouble
+        val y = lineArray(2).toDouble
+        val t = lineArray(3).toInt
+        Disk(t, ids, x, y)
+      }.toDS() //NO CACHE!!!
+    var nU = U.count()
+    U.show(truncate = false)
+    logger.info("%-50s [%.2fs] [%d records]".format("Reading data", (System.currentTimeMillis() - timer)/1000.0, nU))
+
+    import java.lang.Math._
+    U.filter("t = 0" ).select("ids", "x", "y").toDF("id", "x1", "y1")
+      .join(U.filter("t = 10").select("ids", "x", "y").toDF("id", "x2", "y2"), "id")
+      .select("id", "x1", "y1", "x2", "y2")
+      .map{ p =>
+        val x1 = p.getDouble(1)
+        val y1 = p.getDouble(2)
+        val x2 = p.getDouble(3)
+        val y2 = p.getDouble(4)
+
+        (p.getString(0), sqrt( pow(x1 - x2, 2) +  pow(y1 - y2, 2) ))
+      }
+      .toDF("id", "speed").orderBy(desc("speed")).show()
   }
 
   private def runFunction(simba: SimbaSession): Unit = {
