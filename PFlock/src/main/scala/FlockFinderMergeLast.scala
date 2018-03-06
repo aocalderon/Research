@@ -27,7 +27,6 @@ object FlockFinderMergeLast {
     var timer = System.currentTimeMillis()
     val epsilon: Double = conf.epsilon()
     val speed: Double = conf.speed()
-    val precision: Double = conf.precision()
     val mu: Int = conf.mu()
     val delta: Int = conf.delta()
     val tstart: Int = conf.tstart()
@@ -204,7 +203,7 @@ object FlockFinderMergeLast {
             .agg(min("x").alias("x"), min("y").alias("y"))
             .as[Disk].cache()
           val nU_prime = U_prime.count()
-          U_prime.show(100,false)
+          U_prime.show(100,truncate = false)
           msg = "Joining results..."
           logger.warn("%-70s [%.3fs] [%d disks]".format(msg, (System.currentTimeMillis() - timer)/1000.0, nU_prime))
 
@@ -235,15 +234,9 @@ object FlockFinderMergeLast {
     }
 
     if(printFlocks){ // Reporting final set of flocks...
-      val finalFlocks = FinalFlocks.collect()
-      val nFinalFlocks = finalFlocks.length
-      val flocksReport = finalFlocks
-        .map{ f =>
-          "%d, %d, %s\n".format(f.start, f.end, f.ids)
-        }
-        .mkString("")
-      logger.warn("\n\n%s\n".format(flocksReport))
+      FinalFlocks.show(nFinalFlocks.toInt, truncate = false)
       logger.warn("\n\nFinal flocks: %d\n".format(nFinalFlocks))
+      saveFlocks(FinalFlocks, "PFLOCK_E%d_M%d_D%d.txt".format(epsilon.toInt, mu, delta))
     }
 
     val totalTime = (System.currentTimeMillis() - MergeLastTimer) / 1000.0
@@ -306,11 +299,11 @@ object FlockFinderMergeLast {
     "# of flocks: %d\n%s".format(n,info)
   }
 
-  def saveFlocks(flocks: RDD[Flock], filename: String): Unit = {
+  def saveFlocks(flocks: Dataset[Flock], filename: String): Unit = {
     new java.io.PrintWriter(filename) {
       write(
-        flocks.map{ f => 
-          "%d, %d, %s, %.3f, %.3f\n".format(f.start, f.end, f.ids, f.lon, f.lat)
+        flocks.orderBy("start", "end", "ids").map{ f =>
+          "%d, %d, %s\n".format(f.start, f.end, f.ids)
         }.collect.mkString("")
       )
       close()
