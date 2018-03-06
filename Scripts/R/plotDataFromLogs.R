@@ -24,14 +24,17 @@ getDataByMethod <- function(dataFile){
   data = data[, c(1, 2, 3, 4, 6)]
   names(data) = c("Method", "Epsilon", "Mu", "Delta", "Time")
   data$Time = as.numeric(as.character(data$Time))
-  data = sqldf("SELECT Method, Epsilon, Mu, Delta, avg(Time) AS Time FROM data GROUP BY 1, 2, 3, 4")
+  data = sqldf("SELECT Method, Epsilon, Mu, Delta, AVG(Time) AS Time FROM data GROUP BY 1, 2, 3, 4")
 
   return(data)  
 }
 
 data = getDataByMethod(dataFile) 
+epsilonDefault = '30.0'
+muDefault = '4'
+deltaDefault = '4'
 
-dataEpsilon = data[data$Mu == '3' & data$Delta == '3', ]  
+dataEpsilon = data[data$Mu == muDefault & data$Delta == deltaDefault, ]  
 temp_title = paste("(radius of disk in mts) in Berlin dataset.")
 title = substitute(paste("Execution time by ", epsilon) ~ temp_title, list(temp_title = temp_title))
 g = ggplot(data=dataEpsilon, aes(x=factor(Epsilon), y=Time, fill=Method)) +
@@ -39,7 +42,7 @@ g = ggplot(data=dataEpsilon, aes(x=factor(Epsilon), y=Time, fill=Method)) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
 plot(g)
 
-dataMu = data[data$Epsilon == '30.0' & data$Delta == '3', ]  
+dataMu = data[data$Epsilon == epsilonDefault & data$Delta == deltaDefault, ]  
 temp_title = paste("(number of moving objects) in Berlin dataset.")
 title = substitute(paste("Execution time by ", mu) ~ temp_title, list(temp_title = temp_title))
 g = ggplot(data=dataMu, aes(x=factor(Mu), y=Time, fill=Method)) +
@@ -47,7 +50,7 @@ g = ggplot(data=dataMu, aes(x=factor(Mu), y=Time, fill=Method)) +
   labs(title=title, y="Time(s)", x=expression(paste(mu," (# of objects)")))
 plot(g)
 
-dataDelta = data[data$Epsilon == '30.0' & data$Mu == '3', ]  
+dataDelta = data[data$Epsilon == epsilonDefault & data$Mu == muDefault, ]  
 temp_title = paste("(consecutive timestamps) in Berlin dataset.")
 title = substitute(paste("Execution time by ", delta) ~ temp_title, list(temp_title = temp_title))
 g = ggplot(data=dataDelta, aes(x=factor(Delta), y=Time, fill=Method)) +
