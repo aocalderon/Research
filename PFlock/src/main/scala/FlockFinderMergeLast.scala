@@ -185,7 +185,7 @@ object FlockFinderMergeLast {
             .map(_._1)
             .cache()
           val nU = U.count()
-          U.orderBy("ids").show(100, truncate = false)
+          //U.orderBy("ids").show(100, truncate = false)
           msg = "Distance Join and filtering phase at timestamp %d...".format(i)
           logger.warn("%-70s [%.3fs] [%d disks]".format(msg, (System.currentTimeMillis() - timer1) / 1000.0, nU))
 
@@ -198,7 +198,7 @@ object FlockFinderMergeLast {
             .repartition(partitions)
             .toDF("ids").cache()
           val nU_temp = U_temp.count()
-          U_temp.orderBy("ids").show(100, truncate = false)
+          //U_temp.orderBy("ids").show(100, truncate = false)
           msg = "Mapping partitions..."
           logger.info("%-70s [%.2fs] [%d records]".format(msg, (System.currentTimeMillis() - timer)/1000.0, nU_temp))
 
@@ -208,7 +208,7 @@ object FlockFinderMergeLast {
             .agg(min("x").alias("x"), min("y").alias("y"))
             .as[Disk].cache()
           val nU_prime = U_prime.count()
-          U_prime.orderBy("ids").show(100,truncate = false)
+          //U_prime.orderBy("ids").show(100,truncate = false)
           msg = "Joining results..."
           logger.warn("%-70s [%.3fs] [%d disks]".format(msg, (System.currentTimeMillis() - timer)/1000.0, nU_prime))
 
