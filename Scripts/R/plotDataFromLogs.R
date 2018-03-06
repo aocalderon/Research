@@ -39,7 +39,7 @@ g = ggplot(data=dataEpsilon, aes(x=factor(Epsilon), y=Time, fill=Method)) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
 plot(g)
 
-dataMu = data[data$Epsilon == '20.0' & data$Delta == '4', ]  
+dataMu = data[data$Epsilon == '30.0' & data$Delta == '3', ]  
 temp_title = paste("(number of moving objects) in Berlin dataset.")
 title = substitute(paste("Execution time by ", mu) ~ temp_title, list(temp_title = temp_title))
 g = ggplot(data=dataMu, aes(x=factor(Mu), y=Time, fill=Method)) +
@@ -47,7 +47,7 @@ g = ggplot(data=dataMu, aes(x=factor(Mu), y=Time, fill=Method)) +
   labs(title=title, y="Time(s)", x=expression(paste(mu," (# of objects)")))
 plot(g)
 
-dataDelta = data[data$Epsilon == '10.0' & data$Mu == '4', ]  
+dataDelta = data[data$Epsilon == '30.0' & data$Mu == '3', ]  
 temp_title = paste("(consecutive timestamps) in Berlin dataset.")
 title = substitute(paste("Execution time by ", delta) ~ temp_title, list(temp_title = temp_title))
 g = ggplot(data=dataDelta, aes(x=factor(Delta), y=Time, fill=Method)) +
