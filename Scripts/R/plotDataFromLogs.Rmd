@@ -15,9 +15,6 @@ params:
     value: "out"
 ---
 
-<!--- Reading data... --->
-Default values: \(\varepsilon\)=20.0, \(\mu\)=4 and \(\delta\)=4
-
 ```{r ScaleupSetup, include=FALSE}
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr, stringr, dplyr)
@@ -26,12 +23,18 @@ source('DataFromLogs.R')
 dataFile = '/home/and/Documents/PhD/Research/Experiments/FlockFinder_v1.0/nohup.out'
 
 data = getDataByMethod(dataFile)
+epsilonDefault = '30.0'
+muDefault = '4'
+deltaDefault = '4'
+
 ```
+
+Default values: \(\varepsilon\)=`r epsilonDefault`, \(\mu\)=`r muDefault` and \(\delta\)=`r deltaDefault`.
 
 ## Plotting \(\varepsilon\)
 
 ```{r EpsilonPlot, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
-dataEpsilon = data[data$Mu == '3' & data$Delta == '3', ]  
+dataEpsilon = data[data$Mu == muDefault & data$Delta == deltaDefault, ]  
 temp_title = paste("(radius of disk in mts) in Berlin dataset.")
 title = substitute(paste("Execution time by ", epsilon) ~ temp_title, list(temp_title = temp_title))
 g = ggplot(data=dataEpsilon, aes(x=factor(Epsilon), y=Time, fill=Method)) +
@@ -43,7 +46,7 @@ plot(g)
 ## Plotting \(\mu\)
 
 ```{r MuPlot, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
-dataMu = data[data$Epsilon == '20.0' & data$Delta == '4', ]  
+dataMu = data[data$Epsilon == epsilonDefault & data$Delta == deltaDefault, ]  
 temp_title = paste("(number of moving objects) in Berlin dataset.")
 title = substitute(paste("Execution time by ", mu) ~ temp_title, list(temp_title = temp_title))
 g = ggplot(data=dataMu, aes(x=factor(Mu), y=Time, fill=Method)) +
@@ -55,7 +58,7 @@ plot(g)
 ## Plotting \(\delta\)
 
 ```{r DeltaPlot, echo=FALSE, fig.width=10.5, fig.height=7.5, fig.align='center'}
-dataDelta = data[data$Epsilon == '10.0' & data$Mu == '4', ]  
+dataDelta = data[data$Epsilon == epsilonDefault & data$Mu == muDefault, ]  
 temp_title = paste("(consecutive timestamps) in Berlin dataset.")
 title = substitute(paste("Execution time by ", delta) ~ temp_title, list(temp_title = temp_title))
 g = ggplot(data=dataDelta, aes(x=factor(Delta), y=Time, fill=Method)) +
