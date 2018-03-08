@@ -56,18 +56,27 @@ data1 = sqldf("SELECT d.Method AS Method,Epsilon,Mu,Delta,Stage2 AS Stage,StageI
 data1 = sqldf("SELECT Method,Epsilon,Mu,Delta,Stage,StageId,SUM(Time) AS Time FROM data1 GROUP BY 1,2,3,4,5,6")
 data1 = sqldf("SELECT Method,Epsilon,Mu,Delta,Stage,Time FROM data1 WHERE StageId >= 6 AND StageId != 11")
 
-dataEpsilon = data1[data1$Method == 'SpatialJoin' & data1$Mu == '4' & data1$Delta == '4', ]  
+muDefault = '4'
+deltaDefault = '4'
+
+dataEpsilon = data1[data1$Method == 'SpatialJoin' & data1$Mu == muDefault & data1$Delta == deltaDefault, ]  
+Totals = sqldf("SELECT Method, Epsilon, Mu, Delta, '00.Total' AS Stage, SUM(Time) AS Time FROM dataEpsilon GROUP BY 1,2,3,4,5")
+dataEpsilon = rbind(dataEpsilon, Totals)
+
 title = "Execution time SpatiaJoin method."
 g = ggplot(data=dataEpsilon, aes(x=factor(Epsilon), y=Time, fill=Stage)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) +
-  ylim(0,30)
+  ylim(0,35)
 plot(g)
 
-dataEpsilon = data1[data1$Method == 'MergeLast' & data1$Mu == '4' & data1$Delta == '4', ]  
+dataEpsilon = data1[data1$Method == 'MergeLast' & data1$Mu == muDefault & data1$Delta == deltaDefault, ]  
+Totals = sqldf("SELECT Method, Epsilon, Mu, Delta, '00.Total' AS Stage, SUM(Time) AS Time FROM dataEpsilon GROUP BY 1,2,3,4,5")
+dataEpsilon2 = rbind(dataEpsilon, Totals)
+dataEpsilon2 = sqldf("SELECT Method, Epsilon, Stage, Time FROM dataEpsilon2 ORDER BY Method, Epsilon, Stage")
 title = "Execution time MergeLast method."
-g = ggplot(data=dataEpsilon, aes(x=factor(Epsilon), y=Time, fill=Stage)) +
+g = ggplot(data=dataEpsilon2, aes(x=factor(Epsilon), y=Time, fill=Stage)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) +
-  ylim(0,30)
+  ylim(0,35)
 plot(g)
