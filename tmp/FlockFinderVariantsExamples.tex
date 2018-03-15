@@ -1,0 +1,17 @@
+\documentclass[letter,12pt]{article}
+\usepackage[landscape, margin=1cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[usenames,dvipsnames]{pstricks}
+\usepackage{epsfig}
+\usepackage{pst-grad} % For gradients
+\usepackage{pst-plot} % For axes
+\usepackage[space]{grffile} % For spaces in paths
+\usepackage{etoolbox} % For spaces in paths
+\makeatletter % For spaces in paths
+\patchcmd\Gread@eps{\@inputcheck#1 }{\@inputcheck"#1"\relax}{}{}
+\makeatother
+
+\begin{document}
+	\input{SpatialJoinExample.tex}
+	\input{MergeLastExample.tex}
+\end{document}
