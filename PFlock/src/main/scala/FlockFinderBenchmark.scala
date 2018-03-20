@@ -211,7 +211,7 @@ object FlockFinderBenchmark {
     logging("Found flocks", timer, nFlocks, "flocks")
 
     // Reporting summary...
-    logger.warn("\n\nPFLOCK_JS\t%.1f\t%d\t%d\t%d\n".format(epsilon, mu, delta, nFlocks))
+    logger.warn("\n\nPFLOCK_SJ\t%.1f\t%d\t%d\t%d\n".format(epsilon, mu, delta, nFlocks))
 
     flocks.as[Flock]
   }
