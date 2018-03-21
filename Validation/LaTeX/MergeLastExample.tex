@@ -1,18 +1,21 @@
-\documentclass[letter,12pt]{article}
-\usepackage[landscape, margin=1cm]{geometry}
-\usepackage[utf8]{inputenc}
-\usepackage[usenames,dvipsnames]{pstricks}
-\usepackage{epsfig}
-\usepackage{pst-grad} % For gradients
-\usepackage{pst-plot} % For axes
-\usepackage[space]{grffile} % For spaces in paths
-\usepackage{etoolbox} % For spaces in paths
-\makeatletter % For spaces in paths
-\patchcmd\Gread@eps{\@inputcheck#1 }{\@inputcheck"#1"\relax}{}{}
-\makeatother
+\documentclass{article}
+
+\usepackage{pst-node}
+\usepackage[paperheight=7in,paperwidth=4in, margin=1cm]{geometry}
+
+\makeatletter
+
+\pagestyle{empty}
 
 \begin{document}
 
-\input{graph}
+\begin{pspicture}(5,5)
+	\dotnode[dotstyle=*,linecolor=cyan,dotsize=0.1](0,1){A1}
+	\dotnode[dotstyle=*,linecolor=cyan,dotsize=0.1](2,4){A2}
+	\dotnode[dotstyle=*,linecolor=cyan,dotsize=0.1](4,1){A4}
+	\dotnode[dotstyle=*,linecolor=cyan,dotsize=0.1](5,4){A5}
+	\ncline[linecolor=cyan,linestyle=dashed]{A2}{A4}
+	\ncline[linecolor=cyan,linestyle=dashed]{A4}{A5}
+\end{pspicture}
 
 \end{document}

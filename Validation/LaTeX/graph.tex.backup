@@ -1,0 +1,9 @@
+\section*{Maximal disks...}
+	\vspace{1cm}
+	\psscalebox{1.0 1.0} {
+	\begin{pspicture}(0,0)(5,5)
+		\cnode[dotstyle=*,fillstyle=solid,fillcolor=blue](0,0){A_1}
+		\dotnode[dotstyle=*](5,5){A_5}
+		\ncline[fillcolor=blue]{A_1}{A_5}
+	\end{pspicture}
+}

@@ -1,0 +1,16 @@
+\documentclass{article}
+
+\usepackage{pst-node}
+\usepackage[paperheight=7in,paperwidth=4in, margin=1cm]{geometry}
+
+\makeatletter
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{pspicture}(5,5)
+	\pscurve[linecolor=green,linewidth=2pt,showpoints=true](1,5)(2,2)(3,4)(4,3)
+\end{pspicture}
+
+\end{document}
