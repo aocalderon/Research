@@ -1,21 +1,9 @@
 \documentclass{article}
-
 \usepackage{pst-node}
 \usepackage[paperheight=7in,paperwidth=4in, margin=1cm]{geometry}
-
 \makeatletter
 
-\pagestyle{empty}
-
 \begin{document}
-
-\begin{pspicture}(5,5)
-	\dotnode[dotstyle=*,linecolor=cyan,dotsize=0.1](0,1){A1}
-	\dotnode[dotstyle=*,linecolor=cyan,dotsize=0.1](2,4){A2}
-	\dotnode[dotstyle=*,linecolor=cyan,dotsize=0.1](4,1){A4}
-	\dotnode[dotstyle=*,linecolor=cyan,dotsize=0.1](5,4){A5}
-	\ncline[linecolor=cyan,linestyle=dashed]{A2}{A4}
-	\ncline[linecolor=cyan,linestyle=dashed]{A4}{A5}
-\end{pspicture}
-
+  \pagestyle{empty}
+  \input{graph}
 \end{document}

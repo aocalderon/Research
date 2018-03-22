@@ -1,9 +1,61 @@
+
 \section*{Maximal disks...}
 	\vspace{1cm}
 	\psscalebox{1.0 1.0} {
-	\begin{pspicture}(0,0)(5,5)
-		\cnodeput[fillstyle=solid,fillcolor=blue](0,0){A1}{}
-		\dotnode[dotstyle=*,fillstyle=solid,fillcolor=blue](5,5){A5}{}
-		\ncline[fillcolor=blue]{A1}{A5}
+	\begin{pspicture}(0,0.0)(11,12)
+		\psline[linecolor=black, linewidth=0.05] (0,-1)(0,12) \uput[90](0, 12){$t_{0}$}
+		\psline[linecolor=black, linewidth=0.05] (4,-1)(4,12) \uput[90](4, 12){$t_{4}$}
+		\dotnode[dotstyle=*,linecolor=blue,dotsize=0.2] (4.0,-0.13) {A 4}
+		\dotnode[dotstyle=*,linecolor=red,dotsize=0.2] (4.0,0.5700000000000001) {B 4}
+		\dotnode[dotstyle=*,linecolor=magenta,dotsize=0.2] (4.0,2.52) {D 4}
+		\dotnode[dotstyle=*,linecolor=orange,dotsize=0.2] (4.0,3.81) {E 4}
+		\dotnode[dotstyle=*,linecolor=green,dotsize=0.2] (4.0,5.43) {F 4}
+		\dotnode[dotstyle=*,linecolor=gray,dotsize=0.2] (4.0,5.74) {G 4}
+		\dotnode[dotstyle=*,linecolor=violet,dotsize=0.2] (4.0,7.35) {H 4}
+		\dotnode[dotstyle=*,linecolor=olive,dotsize=0.2] (4.0,7.56) {I 4}
+		\dotnode[dotstyle=*,linecolor=brown,dotsize=0.2] (4.0,9.43) {J 4}
+		\dotnode[dotstyle=*,linecolor=black,dotsize=0.2] (4.0,10.9) {L 4}
+		\dotnode[dotstyle=*,linecolor=red,dotsize=0.2] (0.0,1.22) {B 0}
+		\dotnode[dotstyle=*,linecolor=cyan,dotsize=0.2] (0.0,2.42) {C 0}
+		\dotnode[dotstyle=*,linecolor=magenta,dotsize=0.2] (0.0,2.93) {D 0}
+		\dotnode[dotstyle=*,linecolor=orange,dotsize=0.2] (0.0,4.06) {E 0}
+		\dotnode[dotstyle=*,linecolor=green,dotsize=0.2] (0.0,4.65) {F 0}
+		\dotnode[dotstyle=*,linecolor=violet,dotsize=0.2] (0.0,6.71) {H 0}
+		\dotnode[dotstyle=*,linecolor=brown,dotsize=0.2] (0.0,9.29) {J 0}
+		
 	\end{pspicture}
 }
+\clearpage
+
+\section*{Join...}
+	\vspace{1cm}
+	\psscalebox{1.0 1.0} {
+	\begin{pspicture}(0,0.0)(11,12)
+		\psline[linecolor=black, linewidth=0.05] (0,-1)(0,12) \uput[90](0, 12){$t_{0}$}
+		\psline[linecolor=black, linewidth=0.05] (4,-1)(4,12) \uput[90](4, 12){$t_{4}$}
+		\dotnode[dotstyle=*,linecolor=blue,dotsize=0.2] (4.0,-0.13) {A 4}
+		\dotnode[dotstyle=*,linecolor=red,dotsize=0.2] (4.0,0.5700000000000001) {B 4}
+		\dotnode[dotstyle=*,linecolor=magenta,dotsize=0.2] (4.0,2.52) {D 4}
+		\dotnode[dotstyle=*,linecolor=orange,dotsize=0.2] (4.0,3.81) {E 4}
+		\dotnode[dotstyle=*,linecolor=green,dotsize=0.2] (4.0,5.43) {F 4}
+		\dotnode[dotstyle=*,linecolor=gray,dotsize=0.2] (4.0,5.74) {G 4}
+		\dotnode[dotstyle=*,linecolor=violet,dotsize=0.2] (4.0,7.35) {H 4}
+		\dotnode[dotstyle=*,linecolor=olive,dotsize=0.2] (4.0,7.56) {I 4}
+		\dotnode[dotstyle=*,linecolor=brown,dotsize=0.2] (4.0,9.43) {J 4}
+		\dotnode[dotstyle=*,linecolor=black,dotsize=0.2] (4.0,10.9) {L 4}
+		\dotnode[dotstyle=*,linecolor=red,dotsize=0.2] (0.0,1.22) {B 0}
+		\dotnode[dotstyle=*,linecolor=cyan,dotsize=0.2] (0.0,2.42) {C 0}
+		\dotnode[dotstyle=*,linecolor=magenta,dotsize=0.2] (0.0,2.93) {D 0}
+		\dotnode[dotstyle=*,linecolor=orange,dotsize=0.2] (0.0,4.06) {E 0}
+		\dotnode[dotstyle=*,linecolor=green,dotsize=0.2] (0.0,4.65) {F 0}
+		\dotnode[dotstyle=*,linecolor=violet,dotsize=0.2] (0.0,6.71) {H 0}
+		\dotnode[dotstyle=*,linecolor=brown,dotsize=0.2] (0.0,9.29) {J 0}
+		\ncline[linecolor=red,linestyle=dashed]{B 4}{B 0}
+		\ncline[linecolor=magenta,linestyle=dashed]{D 4}{D 0}
+		\ncline[linecolor=orange,linestyle=dashed]{E 4}{E 0}
+		\ncline[linecolor=green,linestyle=dashed]{F 4}{F 0}
+		\ncline[linecolor=violet,linestyle=dashed]{H 4}{H 0}
+		\ncline[linecolor=brown,linestyle=dashed]{J 4}{J 0}
+	\end{pspicture}
+}
+\clearpage

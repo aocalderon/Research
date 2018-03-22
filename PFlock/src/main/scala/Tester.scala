@@ -54,6 +54,7 @@ object Tester {
     m = trajs.select("t").distinct().count()
     log.info(s"Timestamps:   $m")
     log.info("Reading trajectories...")
+    val L = new java.io.PrintWriter("/home/and/Documents/PhD/Research/Validation/LaTeX/graph.tex")
 
     val timestamps = List(4,0,2,3,1,8,6,7,5,10,9)
 
@@ -65,6 +66,7 @@ object Tester {
     val C_1 = trajs.filter(p => timestamps(1) == p.t)
     F_prime = F_prime.union(C_1) // if timestamp is first or last in window
     LaTeX += parser(spark, F_prime, "Maximal disks")
+
     var F = F_prime.toDF("id", "t0", "x0", "y0").join(C_1, "id").select("id", "x", "y", "t").as[ST_Point]
     F_prime = F_prime.union(F).distinct()
     LaTeX += parser(spark, F_prime, "Join")
@@ -75,19 +77,6 @@ object Tester {
     F_prime = F_prime.union(F)
     LaTeX += parser(spark, F_prime, "Join")
 
-    val C_3 = trajs.filter(p => timestamps(3) == p.t)
-    LaTeX += parser(spark, F_prime.union(C_3), "Maximal disks")
-    F = F_prime.toDF("id", "t0", "x0", "y0").join(C_3, "id").select("id", "x", "y", "t").as[ST_Point]
-    F_prime = F_prime.union(F)
-    LaTeX += parser(spark, F_prime, "Join")
-
-    val C_4 = trajs.filter(p => timestamps(4) == p.t)
-    LaTeX += parser(spark, F_prime.union(C_4), "Maximal disks")
-    F = F_prime.toDF("id", "t0", "x0", "y0").join(C_4, "id").select("id", "x", "y", "t").as[ST_Point]
-    F_prime = F_prime.union(F)
-    LaTeX += parser(spark, F_prime, "Join")
-
-    save(LaTeX)
     log.info("Parsing LaTeX...")
 
 		spark.close
