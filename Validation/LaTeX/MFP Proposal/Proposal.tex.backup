@@ -9,39 +9,9 @@
   
   %\input{sample}
   
-  \input{timestamps/W1_T1_A}
-  \input{timestamps/W1_T1_B}
-  \input{timestamps/W1_T1_C}
-  
-  \input{timestamps/W1_T2_A}
-  \input{timestamps/W1_T2_B}
-  \input{timestamps/W1_T2_C}
-  
-  \input{timestamps/W1_T3_A}
-  \input{timestamps/W1_T3_B}
-  \input{timestamps/W1_T3_C}
-
-  \input{timestamps/W1_T4_A}
-  \input{timestamps/W1_T4_B}
-  \input{timestamps/W1_T4_C}
-  \input{timestamps/W1_T4_Report}
-
-  \input{timestamps/W2_T5_A}
-  \input{timestamps/W2_T5_B}
-  \input{timestamps/W2_T5_C}
-
-  \input{timestamps/W2_T6_A}
-  \input{timestamps/W2_T6_B}
-  \input{timestamps/W2_T6_C}
-
-  \input{timestamps/W2_T7_A}
-  \input{timestamps/W2_T7_B}
-  \input{timestamps/W2_T7_C}
-
-  \input{timestamps/W2_T8_A}
-  \input{timestamps/W2_T8_B}
-  \input{timestamps/W2_T8_C}
-  \input{timestamps/W2_T8_Report}
+  \input{timestamps/Window1}
+  \input{timestamps/Window2}
+  \input{timestamps/Window3}
 
   \input{full}
   
