@@ -1,104 +1,28 @@
+\centering
 \section*{From trajectories to transactions}
 	\vspace{1cm}
-	\centering
 	\psscalebox{1.0 1.0} {
 	\begin{pspicture}(0,0)(12,12)
-		%\psframe(0,0)(12,12)
-
-		\psellipse( 1.00,10.00)(0.75,1.50) \uput[90]( 1.0,12.0){$t_0$}
-		\psellipse( 3.50,10.00)(0.75,1.50) \uput[90]( 3.5,12.0){$t_1$}
-		\psellipse( 6.00,10.00)(0.75,1.50) \uput[90]( 6.0,12.0){$t_2$}
-		\psellipse( 8.50,10.00)(0.75,1.50) \uput[90]( 8.5,12.0){$t_3$}
-		\psellipse(11.00,10.00)(0.75,1.50) \uput[90](11.0,12.0){$t_4$}
-
-		% \uput[180](0,9){\textcolor{blue}{$A$}}
-
-		\uput[180](0.00,11.20){\textcolor{blue}{$a$}}
-		\uput[180](0.00,10.90){\textcolor{blue}{$b$}}
-		\uput[180](0.00,10.60){\textcolor{blue}{$c$}}
-		\uput[180](0.00,10.30){\textcolor{blue}{$d$}}
-		\uput[180](0.00,10.00){\textcolor{blue}{$e$}}
-		\uput[180](0.00, 9.70){\textcolor{blue}{$f$}}
-		\uput[180](0.00, 9.40){\textcolor{blue}{$g$}}
-		\uput[180](0.00, 9.10){\textcolor{blue}{$h$}}
-		\uput[180](0.00, 8.80){\textcolor{blue}{$i$}}
-
-		%\dotnode[dotstyle=*,dotsize=0.1](1.00,11.20) {a0} 
-		\dotnode[dotstyle=*,dotsize=0.1](1.00,10.90) {b0} 
-		\dotnode[dotstyle=*,dotsize=0.1](1.00,10.60) {c0} 
-		\dotnode[dotstyle=*,dotsize=0.1](1.00,10.30) {d0} 
-		%\dotnode[dotstyle=*,dotsize=0.1](1.00,10.00) {e0} 
-		\dotnode[dotstyle=*,dotsize=0.1](1.00, 9.70) {f0} 
-		%\dotnode[dotstyle=*,dotsize=0.1](1.00, 9.40) {g0} 
-		\dotnode[dotstyle=*,dotsize=0.1](1.00, 9.10) {h0} 
-		%\dotnode[dotstyle=*,dotsize=0.1](1.00, 8.80) {i0} 
-
-		\dotnode[dotstyle=*,dotsize=0.1](3.50,11.20) {a1} 
-		\dotnode[dotstyle=*,dotsize=0.1](3.50,10.90) {b1} 
-		\dotnode[dotstyle=*,dotsize=0.1](3.50,10.60) {c1} 
-		\dotnode[dotstyle=*,dotsize=0.1](3.50,10.30) {d1} 
-		\dotnode[dotstyle=*,dotsize=0.1](3.50,10.00) {e1} 
-		\dotnode[dotstyle=*,dotsize=0.1](3.50, 9.70) {f1} 
-		%\dotnode[dotstyle=*,dotsize=0.1](3.50, 9.40) {g1} 
-		\dotnode[dotstyle=*,dotsize=0.1](3.50, 9.10) {h1} 
-		%\dotnode[dotstyle=*,dotsize=0.1](3.50, 8.80) {i1} 
-
-		\dotnode[dotstyle=*,dotsize=0.1](6.00,11.20) {a2} 
-		\dotnode[dotstyle=*,dotsize=0.1](6.00,10.90) {b2} 
-		\dotnode[dotstyle=*,dotsize=0.1](6.00,10.60) {c2} 
-		\dotnode[dotstyle=*,dotsize=0.1](6.00,10.30) {d2} 
-		\dotnode[dotstyle=*,dotsize=0.1](6.00,10.00) {e2} 
-		\dotnode[dotstyle=*,dotsize=0.1](6.00, 9.70) {f2} 
-		\dotnode[dotstyle=*,dotsize=0.1](6.00, 9.40) {g2} 
-		\dotnode[dotstyle=*,dotsize=0.1](6.00, 9.10) {h2} 
-		\dotnode[dotstyle=*,dotsize=0.1](6.00, 8.80) {i2} 
-
-		%\dotnode[dotstyle=*,dotsize=0.1](8.50,11.20) {a3} 
-		\dotnode[dotstyle=*,dotsize=0.1](8.50,10.90) {b3} 
-		%\dotnode[dotstyle=*,dotsize=0.1](8.50,10.60) {c3} 
-		\dotnode[dotstyle=*,dotsize=0.1](8.50,10.30) {d3} 
-		\dotnode[dotstyle=*,dotsize=0.1](8.50,10.00) {e3} 
-		\dotnode[dotstyle=*,dotsize=0.1](8.50, 9.70) {f3} 
-		\dotnode[dotstyle=*,dotsize=0.1](8.50, 9.40) {g3} 
-		\dotnode[dotstyle=*,dotsize=0.1](8.50, 9.10) {h3} 
-		\dotnode[dotstyle=*,dotsize=0.1](8.50, 8.80) {i3} 
-
-		%\dotnode[dotstyle=*,dotsize=0.1](11.0,11.20) {a4} 
-		\dotnode[dotstyle=*,dotsize=0.1](11.0,10.90) {b4} 
-		%\dotnode[dotstyle=*,dotsize=0.1](11.0,10.60) {c4} 
-		\dotnode[dotstyle=*,dotsize=0.1](11.0,10.30) {d4} 
-		\dotnode[dotstyle=*,dotsize=0.1](11.0,10.00) {e4} 
-		%\dotnode[dotstyle=*,dotsize=0.1](11.0, 9.70) {f4} 
-		%\dotnode[dotstyle=*,dotsize=0.1](11.0, 9.40) {g4} 
-		\dotnode[dotstyle=*,dotsize=0.1](11.0, 9.10) {h4} 
-		\dotnode[dotstyle=*,dotsize=0.1](11.0, 8.80) {i4} 
-
-		\ncline[linecolor=blue,linewidth=0.01]{a1}{a2}
-		\ncline[linecolor=blue,linewidth=0.01]{b0}{b1}
-		\ncline[linecolor=blue,linewidth=0.01]{b1}{b2}
-		\ncline[linecolor=blue,linewidth=0.01]{b2}{b3}
-		\ncline[linecolor=blue,linewidth=0.01]{b3}{b4}
-		\ncline[linecolor=blue,linewidth=0.01]{c0}{c1}
-		\ncline[linecolor=blue,linewidth=0.01]{c1}{c2}
-		\ncline[linecolor=blue,linewidth=0.01]{d0}{d1}
-		\ncline[linecolor=blue,linewidth=0.01]{d1}{d2}
-		\ncline[linecolor=blue,linewidth=0.01]{d2}{d3}
-		\ncline[linecolor=blue,linewidth=0.01]{d3}{d4}
-		\ncline[linecolor=blue,linewidth=0.01]{e1}{e2}
-		\ncline[linecolor=blue,linewidth=0.01]{e2}{e3}
-		\ncline[linecolor=blue,linewidth=0.01]{e3}{e4}
-		\ncline[linecolor=blue,linewidth=0.01]{f0}{f1}
-		\ncline[linecolor=blue,linewidth=0.01]{f1}{f2}
-		\ncline[linecolor=blue,linewidth=0.01]{f2}{f3}
-		\ncline[linecolor=blue,linewidth=0.01]{g2}{g3}
-		\ncline[linecolor=blue,linewidth=0.01]{h0}{h1}
-		\ncline[linecolor=blue,linewidth=0.01]{h1}{h2}
-		\ncline[linecolor=blue,linewidth=0.01]{h2}{h3}
-		\ncline[linecolor=blue,linewidth=0.01]{h3}{h4}
-		\ncline[linecolor=blue,linewidth=0.01]{i2}{i3}
-		\ncline[linecolor=blue,linewidth=0.01]{i3}{i4}
-		\ncline[linecolor=blue,linewidth=0.01]{i4}{i}
-
+		\input{disks1}
+	\end{pspicture}
+}
+\clearpage
+\section*{From trajectories to transactions}
+	\vspace{1cm}
+	\psscalebox{1.0 1.0} {
+	\begin{pspicture}(0,0)(12,12)
+		\input{disks1}
+		\input{disks2}
+	\end{pspicture}
+}
+\clearpage
+\section*{From trajectories to transactions}
+	\vspace{1cm}
+	\psscalebox{1.0 1.0} {
+	\begin{pspicture}(0,0)(12,12)
+		\input{disks1}
+		\input{disks2}
+		\input{disks3}
 	\end{pspicture}
 }
 \clearpage
