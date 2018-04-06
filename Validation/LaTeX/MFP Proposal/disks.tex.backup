@@ -1,0 +1,28 @@
+\centering
+\section*{From trajectories to transactions}
+	\vspace{1cm}
+	\psscalebox{1.0 1.0} {
+	\begin{pspicture}(0,0)(12,12)
+		\input{disks/disks1}
+	\end{pspicture}
+}
+\clearpage
+\section*{From trajectories to transactions}
+	\vspace{1cm}
+	\psscalebox{1.0 1.0} {
+	\begin{pspicture}(0,0)(12,12)
+		\input{disks/disks1}
+		\input{disks/disks2}
+	\end{pspicture}
+}
+\clearpage
+\section*{From trajectories to transactions}
+	\vspace{1cm}
+	\psscalebox{1.0 1.0} {
+	\begin{pspicture}(0,0)(12,12)
+		\input{disks/disks1}
+		\input{disks/disks2}
+		\input{disks/disks3}
+	\end{pspicture}
+}
+\clearpage

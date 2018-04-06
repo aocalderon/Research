@@ -1,0 +1,34 @@
+\section*{MP finding per window...}
+	\vspace{1cm}
+	\psscalebox{1.0 1.0} {
+	\begin{pspicture}(0,0.0)(13,12)
+		\input{transactions/W1_T1_A}
+	\end{pspicture}
+}
+\clearpage
+\section*{MP finding per window...}
+	\vspace{1cm}
+	\psscalebox{1.0 1.0} {
+	\begin{pspicture}(0,0.0)(13,12)
+		\input{transactions/W1_T1_A}
+		\input{transactions/W1_T1_B}
+	\end{pspicture}
+}
+\clearpage
+\section*{MP finding per window...}
+	\vspace{1cm}
+	Each trajectory is associated just to the maximal disks it touches.  MP algorithms returns sets of disks which are visited by the same trajectories.  If they happen in consecutive order, it is a flock.
+	\vspace{0.5cm}
+	
+	Pros:
+	\begin{itemize}
+		\item Do not perform distance join at each timestamp.  
+		\item Although still have to deal with consecutive checking, it is done just at the end of the window.
+		\item It deals with subset elimination.
+	\end{itemize}
+	Cons:
+	\begin{itemize}
+		\item Overlapping disks could introduce false flocks.  It will require an additional filter at the end of the window.
+	\end{itemize}
+\clearpage
+	
