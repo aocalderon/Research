@@ -1,44 +1,28 @@
-import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
+val Xs = List(1.0, 2.0, 3.0, 4.0, 5.0)
+val Ys = List(1.0, 2.0, 3.0, 4.0, 5.0)
 
-def reorder(list: List[Int], delta: Int): List[Int] = {
-  list.grouped(delta).map(binarySearchOrder).reduce(_ union _)
+val p = Xs.zip(Ys)
+val d = getDistanceMatrix(p)
+printDistanceMatrix(d)
+
+def printDistanceMatrix(m: Array[Array[Double]]): Unit ={
+  println(m.map(_.map("%.2f".format(_)).mkString("\t")).mkString("\n"))
 }
 
-def binarySearchOrder(list: List[Int]): List[Int] = {
-  if(list.lengthCompare(3) < 0) return list.reverse
-  val result = new ListBuffer[Int]()
-  val queue = new mutable.Queue[(Int, Int)]()
-  var lo = 0
-  var hi = list.length - 1
-
-  result += hi
-  result += lo
-  queue.enqueue((lo, hi))
-
-  while(queue.nonEmpty){
-    val pair = queue.dequeue()
-    val lo = pair._1
-    val hi = pair._2
-    if(lo + 1 == hi){
-    } else {
-      val mi = Math.ceil(lo + (hi - lo) / 2.0).toInt
-      result += mi
-      queue.enqueue((mi, hi))
-      queue.enqueue((lo, mi))
+def getDistanceMatrix(p: List[(Double, Double)]): Array[Array[Double]] ={
+  val n = p.length
+  val m = Array.ofDim[Double](n,n)
+  for(i <- Range(0, n - 1)){
+    for(j <- Range(i + 1, n)) {
+      m(i)(j) = dist(p(i), p(j))
     }
   }
 
-  result.toList.map(i => list(i))
+  m
 }
 
-
-val timestamps: List[Int] = List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-val d: Int = 8
-
-reorder(timestamps, d)
-
-
-
-
+import Math._
+def dist(p1: Tuple2[Double, Double], p2: Tuple2[Double, Double]): Double ={
+  sqrt(pow(p1._1 - p2._1, 2) + pow(p1._2 - p2._2, 2))
+}
 
