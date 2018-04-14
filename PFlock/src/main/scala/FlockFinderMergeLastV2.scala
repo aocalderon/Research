@@ -18,7 +18,7 @@ object FlockFinderMergeLastV2 {
   case class FlockPoints(flockID: Long, pointID: Long)
 
   // Starting a session...
-  private val params = ConfigFactory.load("flockfinder.conf")
+  private val params = ConfigFactory.parseFile(new java.io.File("/tmp/flockfinder.conf"))
   private val master = params.getString("master")
   private val partitions = params.getString("partitions")
   private val cores = params.getString("cores")
@@ -82,7 +82,7 @@ object FlockFinderMergeLastV2 {
 
     // Printing results...
     printFlocks(flocks)
-    if(debug) saveFlocks(flocks, s"/tmp/PFlock_E${conf.epsilon()}_M${conf.mu()}_D${conf.delta()}.txt")
+    if(debug) saveFlocks(flocks, s"/tmp/PFLOCK_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt")
 
     // Closing all...
     logger.info("Closing app...")
@@ -159,7 +159,6 @@ object FlockFinderMergeLastV2 {
       val nF = F.count()
       logging("Checking internal timestamps...", timer, nF, "flocks")
 
-      if(debug) showFlocks(F)
       flocks = flocks.union(F)
     }
     nFlocks = flocks.count()
@@ -431,7 +430,7 @@ object FlockFinderMergeLastV2 {
     new java.io.PrintWriter(filename) {
       write(
         flocks.map{ f =>
-          "%d, %d, %s\n".format(f.start, f.end, f.ids)
+          "%d,%d,%s\n".format(f.start, f.end, f.ids)
         }.collect.mkString("")
       )
       close()

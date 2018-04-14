@@ -6,16 +6,16 @@ import logging
 
 ## Reading arguments...
 parser = argparse.ArgumentParser()
-parser.add_argument("--min_epsilon", "-e1", help="Minimum epsilon...")
-parser.add_argument("--max_epsilon", "-e2", help="Maximum epsilon...")
+parser.add_argument("--min_epsilon", "-e1", default=30.0, help="Minimum epsilon...")
+parser.add_argument("--max_epsilon", "-e2", default=50.0, help="Maximum epsilon...")
 parser.add_argument("--step_epsilon", "-se", default=5, help="Step in epsilon...")
-parser.add_argument("--min_mu", "-m1", help="Minimum mu...")
-parser.add_argument("--max_mu", "-m2", help="Minimum mu...")
-parser.add_argument("--step_mu", "-sm", default=2, help="Stem in mu...")
-parser.add_argument("--delta", "-d", default=1, help="Delta")
-parser.add_argument("--bfe_dataset", "-f", default="/home/and/Documents/PhD/Research/Datasets/Berlin/B20K_d.tsv", help="BFE dataset")
+parser.add_argument("--min_mu", "-m1", default=3, help="Minimum mu...")
+parser.add_argument("--max_mu", "-m2", default=5, help="Maximum mu...")
+parser.add_argument("--step_mu", "-sm", default=1, help="Step in mu...")
+parser.add_argument("--delta", "-d", default=4, help="Delta")
+parser.add_argument("--bfe_dataset", "-f", default="/home/and/Documents/PhD/Research/Datasets/Berlin/berlin0-5.tsv", help="BFE dataset")
 parser.add_argument("--pflock_path", "-k", default="Datasets/Berlin/", help="PFlock path")
-parser.add_argument("--pflock_dataset", "-g", default="B20K_d", help="PFlock dataset")
+parser.add_argument("--pflock_dataset", "-g", default="berlin0-5", help="PFlock dataset")
 args = parser.parse_args()
 
 ## Setting variables...

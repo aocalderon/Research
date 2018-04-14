@@ -19,6 +19,7 @@ args = parser.parse_args()
 
 ## Setting variables...
 research_home = os.environ['RESEARCH_HOME']
+justCheck = False
 epsilon = args.epsilon
 mu = args.mu
 delta = args.delta
@@ -30,7 +31,8 @@ pflock_extension = args.pflock_extension
 
 ## Running BFE...
 command = "bfe {0} {1} {2} {3}".format(bfe_dataset, epsilon, mu, delta)
-subprocess.call(command, shell=True)
+if(not justCheck):
+  subprocess.call(command, shell=True)
 
 pflock_jar = args.pflock_jar
 pflock_partitions = args.pflock_partitions
@@ -38,14 +40,15 @@ pflock_path = args.pflock_path
 pflock_dataset = args.pflock_dataset
 
 ## Running PFlock...
-command = "spark-submit {0} --partitions {1} --epsilon {2} --mu {3} --delta {4} --path {5} --dataset {6}".format(pflock_jar
+command = "spark-submit --class FlockFinderMergeLastV2 {0} --epsilon {2} --mu {3} --delta {4} --path {5} --dataset {6} --debug".format(pflock_jar
     , pflock_partitions
     , epsilon
     , mu
     , delta
     , pflock_path
     , pflock_dataset)
-subprocess.call(command, shell=True)
+if(not justCheck):
+  subprocess.call(command, shell=True)
 
 ## Sorting and comparing outputs...
 bfe_output = "/tmp/BFE_E{0}_M{1}_D{2}.txt".format(epsilon, mu, delta)
@@ -61,14 +64,14 @@ flock_checker = "/home/acald013/Research/Scripts/Scala/target/scala-2.11/checker
 
 command = "spark-submit {0} {1} {2} {3} {4} {5}".format(flock_checker, pflock_output, bfe_output, epsilon, mu, delta)
 subprocess.call(command, shell=True)
-command = "~/Research/Scripts/Python/DiskVisualizer.py -e {0} -m {1} -d {2} -p {3} -t {4}".format(epsilon, mu, delta, pointset, "PFlock")
-subprocess.call(command, shell=True)
-command = "~/Research/Scripts/Python/NotFoundFlockSaver.py -e {0} -m {1} -d {2} -p {3} -t {4}".format(epsilon, mu, delta, pointset, "PFlock")
-subprocess.call(command, shell=True)
+#command = "~/Research/Scripts/Python/DiskVisualizer.py -e {0} -m {1} -d {2} -p {3} -t {4}".format(epsilon, mu, delta, pointset, "PFlock")
+#subprocess.call(command, shell=True)
+#command = "~/Research/Scripts/Python/NotFoundFlockSaver.py -e {0} -m {1} -d {2} -p {3} -t {4}".format(epsilon, mu, delta, pointset, "PFlock")
+#subprocess.call(command, shell=True)
 
 command = "spark-submit {0} {1} {2} {3} {4} {5}".format(flock_checker, bfe_output, pflock_output, epsilon, mu, delta)
 subprocess.call(command, shell=True)
-command = "~/Research/Scripts/Python/DiskVisualizer.py -e {0} -m {1} -d {2} -p {3} -t {4}".format(epsilon, mu, delta, pointset, "BFE")
-subprocess.call(command, shell=True)
-command = "~/Research/Scripts/Python/NotFoundFlockSaver.py -e {0} -m {1} -d {2} -p {3}".format(epsilon, mu, delta, pointset, "BFE")
-subprocess.call(command, shell=True)
+#command = "~/Research/Scripts/Python/DiskVisualizer.py -e {0} -m {1} -d {2} -p {3} -t {4}".format(epsilon, mu, delta, pointset, "BFE")
+#subprocess.call(command, shell=True)
+#command = "~/Research/Scripts/Python/NotFoundFlockSaver.py -e {0} -m {1} -d {2} -p {3}".format(epsilon, mu, delta, pointset, "BFE")
+#subprocess.call(command, shell=True)
