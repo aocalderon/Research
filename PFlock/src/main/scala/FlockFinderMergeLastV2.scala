@@ -13,7 +13,7 @@ object FlockFinderMergeLastV2 {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   var conf: Conf = new Conf(Array.empty[String])
 
-  case class ST_Point(id: Int, x: Double, y: Double, t: Int)
+  case class ST_Point(id: Long, x: Double, y: Double, t: Int = -1)
   case class Flock(start: Int, end: Int, ids: String, x: Double = 0.0, y: Double = 0.0)
   case class FlockPoints(flockID: Long, pointID: Long)
 
@@ -34,6 +34,7 @@ object FlockFinderMergeLastV2 {
   import simba.simbaImplicits._
   private var timer: Long = System.currentTimeMillis()
   private var debug: Boolean = false
+  private var r2: Double = 0.0
   var flocks: Dataset[Flock] = simba.sparkContext.emptyRDD[Flock].toDS
   var nFlocks: Long = 0
   logging("Starting session", timer)
@@ -139,20 +140,25 @@ object FlockFinderMergeLastV2 {
       // Checking internal timestamps...
       timer = System.currentTimeMillis()
       for (t <- Range(timestamp + 1, timestamp + delta)) {
-        F_prime = getFlockPoints(F_prime).as("c").join(pointset.filter(_.t == t).as("p"), $"c.pointID" === $"p.id", "left")
+        val P = getFlockPoints(F_prime).as("c").join(pointset.filter(_.t == t).as("p"), $"c.pointID" === $"p.id", "left")
           .groupBy("flockID")
           .agg(collect_list($"id"), collect_list($"x"), collect_list($"y"))
-          .map{ p =>
+        val P_prime = P.map{ p =>
             val ids = p.getList[Long](1).asScala.toList.mkString(" ")
             val Xs  = p.getList[Double](2).asScala.toList
             val Ys  = p.getList[Double](3).asScala.toList
             val d   = getMaximalDistance(Xs zip Ys)
 
-            (Flock(timestamp, timestamp + delta, ids), d)
+            (ids, Xs, Ys, d)
           }
-          .filter(_._2 <= epsilon)
-          .map(_._1)
+        val F1 = P_prime.filter(_._4 <= epsilon)
+          .map(f => Flock(timestamp, timestamp + delta, f._1))
           .cache()
+        val F2 = P_prime.filter(_._4 > epsilon)
+          .flatMap(f => computeMaximalDisks(f._1, f._2, f._3))
+          .map(ids => Flock(timestamp, timestamp + delta, ids))
+          .cache()
+        F_prime = F1.union(F2)
         nF_prime = F_prime.count()
       }
       val F = pruneIDsSubsets(F_prime).cache()
@@ -162,6 +168,87 @@ object FlockFinderMergeLastV2 {
       flocks = flocks.union(F)
     }
     nFlocks = flocks.count()
+  }
+
+  private def computeMaximalDisks(ids: String, Xs: List[Double], Ys: List[Double]): List[String] = {
+    val points = ids.split(" ").map(_.toLong).zip(Xs.zip(Ys)).map(p => ST_Point(p._1, p._2._1, p._2._2)).toList
+    val pairs = getPairs(points)
+    r2 = Math.pow(conf.epsilon() / 2.0, 2)
+    val centers = pairs.flatMap(computeCenters)
+    val disks = getDisks(points, centers)
+    filterDisks(disks)
+  }
+
+  def filterDisks(input: List[List[Long]]): List[String] ={
+    val mu = conf.mu()
+    var ids = new collection.mutable.ListBuffer[(List[Long], Boolean)]()
+    for( disk <- input.filter(_.lengthCompare(mu) >= 0) ){ ids += Tuple2(disk, true) }
+    for(i <- ids.indices){
+      for(j <- ids.indices){
+        if(i != j & ids(i)._2){
+          val ids1 = ids(i)._1
+          val ids2 = ids(j)._1
+          if(ids(j)._2 & ids1.forall(ids2.contains)){
+            ids(i) = Tuple2(ids(i)._1, false)
+          }
+          if(ids(i)._2 & ids2.forall(ids1.contains)){
+            ids(j) = Tuple2(ids(j)._1, false)
+          }
+        }
+      }
+    }
+
+    ids.filter(_._2).map(_._1.sorted.mkString(" ")).toList
+  }
+
+  def getDisks(points: List[ST_Point], centers: List[ST_Point]): List[List[Long]] ={
+    val epsilon = conf.epsilon()
+    val precision = conf.precision()
+    val PointCenter = for{ p <- points; c <- centers } yield (p, c)
+    PointCenter.map(d => (d._2, d._1.id, dist( (d._1.x, d._1.y), (d._2.x, d._2.y) ))) // Getting the distance between centers and points...
+      .filter(_._3 <= (epsilon / 2.0) + precision) // Filtering out those greater than epsilon / 2...
+      .map(d => ( (d._1.x, d._1.y), d._2 )) // Selecting center and point ID...
+      .groupBy(_._1) // Grouping by the center...
+      .map(_._2.map(_._2)) // Selecting just the list of IDs...
+      .toList
+  }
+
+  def getPairs(points: List[ST_Point]): List[(ST_Point, ST_Point)] ={
+    val epsilon = conf.epsilon()
+    val precision = conf.precision()
+    val n = points.length
+    var pairs = collection.mutable.ListBuffer[(ST_Point, ST_Point)]()
+    for(i <- Range(0, n - 1)){
+      for(j <- Range(i + 1, n)) {
+        val d = dist((points(i).x, points(i).y), (points(j).x, points(j).y))
+        if(d <= epsilon + precision){
+          pairs += Tuple2(points(i), points(j))
+        }
+      }
+    }
+    pairs.toList
+  }
+
+  import Math.{pow, sqrt}
+  def dist(p1: (Double, Double), p2: (Double, Double)): Double ={
+    sqrt(pow(p1._1 - p2._1, 2) + pow(p1._2 - p2._2, 2))
+  }
+
+  def computeCenters(pair: (ST_Point, ST_Point)): List[ST_Point] = {
+    var centerPair = collection.mutable.ListBuffer[ST_Point]()
+    val X: Double = pair._1.x - pair._2.x
+    val Y: Double = pair._1.y - pair._2.y
+    val D2: Double = math.pow(X, 2) + math.pow(Y, 2)
+    if (D2 != 0.0){
+      val root: Double = math.sqrt(math.abs(4.0 * (r2 / D2) - 1.0))
+      val h1: Double = ((X + Y * root) / 2) + pair._2.x
+      val k1: Double = ((Y - X * root) / 2) + pair._2.y
+      val h2: Double = ((X - Y * root) / 2) + pair._2.x
+      val k2: Double = ((Y + X * root) / 2) + pair._2.y
+      centerPair += ST_Point(pair._1.id, h1, k1)
+      centerPair += ST_Point(pair._2.id, h2, k2)
+    }
+    centerPair.toList
   }
 
   def getMaximalDistance(p: List[(Double, Double)]): Double ={
@@ -176,26 +263,6 @@ object FlockFinderMergeLastV2 {
       }
     }
     max
-  }
-
-  def printDistanceMatrix(m: Array[Array[Double]]): String ={
-    s"\n${m.map(_.map("%.2f".format(_)).mkString("\t")).mkString("\n")}\n"
-  }
-
-  def getDistanceMatrix(p: List[(Double, Double)]): Array[Array[Double]] ={
-    val n = p.length
-    val m = Array.ofDim[Double](n,n)
-    for(i <- Range(0, n - 1)){
-      for(j <- Range(i + 1, n)) {
-        m(i)(j) = dist(p(i), p(j))
-      }
-    }
-    m
-  }
-
-  import Math.{pow, sqrt}
-  def dist(p1: (Double, Double), p2: (Double, Double)): Double ={
-    sqrt(pow(p1._1 - p2._1, 2) + pow(p1._2 - p2._2, 2))
   }
 
   def getFlockPoints(flocks: Dataset[Flock]): Dataset[FlockPoints] ={
