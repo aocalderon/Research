@@ -1,11 +1,12 @@
-import org.apache.spark.sql.simba.{Dataset, SimbaSession}
-import org.apache.spark.sql.simba.index.RTreeType
-import scala.collection.mutable.ListBuffer
-import scala.collection.mutable.HashMap
-import org.slf4j.{Logger, LoggerFactory}
-import org.scalameter._
+package Testing
+
 import org.apache.spark.sql.functions._
-import scala.collection.JavaConverters._
+import org.apache.spark.sql.simba.index.RTreeType
+import org.apache.spark.sql.simba.{Dataset, SimbaSession}
+import org.scalameter._
+import org.slf4j.{Logger, LoggerFactory}
+
+import scala.collection.mutable.{HashMap, ListBuffer}
 
 object RandomTester {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
