@@ -66,25 +66,27 @@ object FlockChecker {
     sorted_path
   }
 
-  def sortFile(path: String): SortedSet[Flock] = {
+  def sortFile(path: String): List[Flock] = {
     logger.info("Reading %s".format(path))
     val extension = path.split("\\.").last
     val path_without_extension = path.split("\\.").dropRight(1).mkString(".")
-    var flocks: SortedSet[Flock] = SortedSet.empty
+    var flocks = new collection.mutable.ListBuffer[Flock]()
     val file = Source.fromFile(path)
     for (line <- file.getLines) {
-      if(line != "" | line != "\n"){
+      if(line != "" || line != "\n"){
 	flocks += new Flock(line)
       }
     }
     file.close()
 
-    flocks
+    flocks.toList
   }
 
   def compareFiles(path1: String, path2: String): Unit = {
     val flocks1 = sortFile(path1)
+    logger.info(s"$path1 has ${flocks1.size} flocks...")
     val flocks2 = sortFile(path2)
+    logger.info(s"$path2 has ${flocks2.size} flocks...")
     var notfound = new ListBuffer[String]()
     var partial_hits = 0
     var hits = 0
