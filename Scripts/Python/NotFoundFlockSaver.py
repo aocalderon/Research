@@ -7,6 +7,8 @@ from pysqldf import SQLDF
 sqldf = SQLDF(globals())
 import pandas as pd
 import numpy as np
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 ## Reading arguments...
 parser = argparse.ArgumentParser()
@@ -38,12 +40,12 @@ for flock in flockset:
     continue
   fid = fid + 1
   start, end, pids = flock.split(",")
+  print("Trajectory and Points for {0},{1},{2}\n".format(start, end, pids))
   pids = list(map(int, pids.split(" ")))
-  print("{0},{1},{2}".format(start, end, pids))
   for pid in pids:
     query = """
       SELECT 
-        id, 'STRINGLINE(' || GROUP_CONCAT(p) || ')' AS wkt 
+        id, 'LINESTRING(' || GROUP_CONCAT(p) || ')' AS wkt 
       FROM 
         ( SELECT 
           id, t, x || ' ' || y AS p 
@@ -57,27 +59,35 @@ for flock in flockset:
         id
       """.format(pid, start, end)
     traj = sqldf.execute(query)
-    record = '{0}\t"{1}"\n'.format(fid, traj['wkt'][0])
-    print(record)
-    trajs.append(record)
+    traj = '{0}\t"{1}"\n'.format(fid, traj['wkt'][0])
+    print(traj)
+    trajs.append(traj)
     query = """
       SELECT 
-        id, t, 'POINT(' || x || ' ' || y || ')' AS wkt
+        id, t, x, y
       FROM
         pointset 
       WHERE 
         id = {0} 
         AND t BETWEEN {1} AND {2}
       """.format(pid, start, end)
-    point = sqldf.execute(query)
-    point = point.apply(lambda x: '{0},{1},{2},"{3}"\n'.format(fid, x['id'], x['t'], x['wkt']), axis=1).values.tolist()
-    print("".join(point))
-    points = points + point
+    pointsInTraj = sqldf.execute(query)
+    pointsInTraj = "".join(pointsInTraj.apply(lambda p: '{0}\t{1}\t{2}\t{3}\t{4}\n'.format(fid, int(p['id']), p['x'], p['y'], int(p['t'])), axis=1).values.tolist())
+    print(pointsInTraj)
+    points.append(pointsInTraj)
 
-if(False):
-  if filename == "":
-    filename1 = "/tmp/{0}Trajs_E{1}_M{2}_D{3}.tsv".format(method, epsilon, mu, delta)
-  newdataset = open(filename, "w")
-  for notfound in notfounds:
-    newdataset.write(notfound)
-  newdataset.close()
+if(saving):
+  trajsFilename = "/tmp/{0}TrajsNotFound_E{1}_M{2}_D{3}.tsv".format(method, int(epsilon), mu, delta)
+  pointsFilename = "/tmp/{0}PointsNotFound_E{1}_M{2}_D{3}.tsv".format(method, int(epsilon), mu, delta)
+  trajsFile = open(trajsFilename, "w")
+  pointsFile = open(pointsFilename, "w")
+  for traj in trajs:
+    trajsFile.write(traj)
+  trajsFile.close()
+  for point in points:
+    pointsFile.write(point)
+  pointsFile.close()
+  command = "scp {0} acald013@bolt:/home/csgrads/acald013/tmp/".format(trajsFilename)
+  subprocess.call(command, shell=True)
+  command = "scp {0} acald013@bolt:/home/csgrads/acald013/tmp/".format(pointsFilename)
+  subprocess.call(command, shell=True)
