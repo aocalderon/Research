@@ -19,10 +19,11 @@ parser.add_argument("--pointset", "-p", help="Pointset file")
 parser.add_argument("--input", "-i", default="/tmp/NotFound.flocks", help="Input file")
 parser.add_argument("--output", "-o", default="", help="Input file")
 parser.add_argument("--method", "-t", default="BFE", help="Method used")
+parser.add_argument("--local", "-l", default=False, help="Running locally...")
 args = parser.parse_args()
 
 ## Setting variables...
-epsilon = float(args.epsilon)
+epsilon = int(args.epsilon)
 mu = int(args.mu)
 delta = int(args.delta)
 method = args.method
@@ -87,7 +88,8 @@ if(saving):
   for point in points:
     pointsFile.write(point)
   pointsFile.close()
-  command = "scp {0} acald013@bolt:/home/csgrads/acald013/tmp/".format(trajsFilename)
-  subprocess.call(command, shell=True)
-  command = "scp {0} acald013@bolt:/home/csgrads/acald013/tmp/".format(pointsFilename)
-  subprocess.call(command, shell=True)
+  if(not args.local):
+    command = "scp {0} acald013@bolt:/home/csgrads/acald013/tmp/".format(trajsFilename)
+    subprocess.call(command, shell=True)
+    command = "scp {0} acald013@bolt:/home/csgrads/acald013/tmp/".format(pointsFilename)
+    subprocess.call(command, shell=True)
