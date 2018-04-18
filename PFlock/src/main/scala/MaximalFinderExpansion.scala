@@ -105,12 +105,13 @@ object MaximalFinderExpansion {
     // 05.Getting disks...
     timer = System.currentTimeMillis()
     val disks = centers
-      .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon / 2) + precision)
+      .distanceJoin(p1, Array("x", "y"), Array("x1", "y1"), (epsilon.toFloat / 2.0) + precision)
       .groupBy("id", "x", "y")
       .agg(collect_list("id1").alias("ids"))
       .cache()
     val nDisks = disks.count()
     logger.info("05.Getting disks... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nDisks))
+    if(debug) disks.orderBy("x").show(nDisks.toInt, truncate = false)
     // 06.Filtering less-than-mu disks...
     timer = System.currentTimeMillis()
     val filteredDisks = disks
@@ -143,6 +144,7 @@ object MaximalFinderExpansion {
       .distinct()
       .cache()
     val nCandidates = candidates.count()
+    if(debug) candidates.show(nCandidates.toInt, truncate = false)
     logger.info("07.Prunning duplicate candidates... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidates))
     // 08.Indexing candidates... 
     if(nCandidates > 0){
@@ -380,6 +382,7 @@ object MaximalFinderExpansion {
   }
   
   def mbr2wkt(mbr: MBR): String = toWKT(mbr.low.coord(0),mbr.low.coord(1),mbr.high.coord(0),mbr.high.coord(1))
+
   def main(args: Array[String]): Unit = {
     // Reading arguments from command line...
     val conf = new Conf(args)
@@ -405,10 +408,11 @@ object MaximalFinderExpansion {
     // Running MaximalFinder...
     logger.info("Lauching MaximalFinder at %s...".format(DateTime.now.toLocalTime.toString))
     val start = System.currentTimeMillis()
-    MaximalFinderExpansion.run(points, simba, conf)
+    val disks = MaximalFinderExpansion.run(points, simba, conf)
     val end = System.currentTimeMillis()
     logger.info("Finishing MaximalFinder at %s...".format(DateTime.now.toLocalTime.toString))
     logger.info("Total time for MaximalFinder: %.3fms...".format((end - start)/1000.0))
+    disks.collect().sorted.foreach(println)
     // Closing session...
     timer = System.currentTimeMillis()
     simba.close

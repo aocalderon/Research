@@ -151,10 +151,10 @@ object FlockFinderMergeLastV2 {
 
             (ids, Xs, Ys, d)
           }
-        val F1 = P_prime.filter(_._4 <= epsilon)
+        val F1 = P_prime.filter(_._4 <= epsilon * 0.75)
           .map(f => Flock(timestamp, timestamp + delta, f._1))
           .cache()
-        val F2 = P_prime.filter(_._4 > epsilon)
+        val F2 = P_prime.filter(_._4 > epsilon * 0.75)
           .flatMap(f => computeMaximalDisks(f._1, f._2, f._3))
           .map(ids => Flock(timestamp, timestamp + delta, ids))
           .cache()
