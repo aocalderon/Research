@@ -111,7 +111,6 @@ object MaximalFinderExpansion {
       .cache()
     val nDisks = disks.count()
     logger.info("05.Getting disks... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nDisks))
-    if(debug) disks.orderBy("x").show(nDisks.toInt, truncate = false)
     // 06.Filtering less-than-mu disks...
     timer = System.currentTimeMillis()
     val filteredDisks = disks
@@ -144,7 +143,6 @@ object MaximalFinderExpansion {
       .distinct()
       .cache()
     val nCandidates = candidates.count()
-    if(debug) candidates.show(nCandidates.toInt, truncate = false)
     logger.info("07.Prunning duplicate candidates... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidates))
     // 08.Indexing candidates... 
     if(nCandidates > 0){
