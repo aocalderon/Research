@@ -6,9 +6,9 @@ import logging
 
 ## Reading arguments...
 parser = argparse.ArgumentParser()
-parser.add_argument("--min_epsilon", "-e1", default=20.0, help="Minimum epsilon...")
-parser.add_argument("--max_epsilon", "-e2", default=20.0, help="Maximum epsilon...")
-parser.add_argument("--step_epsilon", "-se", default=5, help="Step in epsilon...")
+parser.add_argument("--min_epsilon", "-e1", default=40.0, help="Minimum epsilon...")
+parser.add_argument("--max_epsilon", "-e2", default=40.0, help="Maximum epsilon...")
+parser.add_argument("--step_epsilon", "-se", default=10, help="Step in epsilon...")
 parser.add_argument("--min_mu", "-m1", default=3, help="Minimum mu...")
 parser.add_argument("--max_mu", "-m2", default=3, help="Maximum mu...")
 parser.add_argument("--step_mu", "-sm", default=1, help="Step in mu...")
