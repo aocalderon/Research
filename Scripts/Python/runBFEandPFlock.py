@@ -41,13 +41,7 @@ pflock_path = args.pflock_path
 pflock_dataset = args.pflock_dataset
 
 ## Running PFlock...
-command = "spark-submit --class FlockFinderMergeLastV2 {0} --epsilon {2} --mu {3} --delta {4} --path {5} --dataset {6} --speed 100".format(pflock_jar
-    , pflock_partitions
-    , epsilon
-    , mu
-    , delta
-    , pflock_path
-    , pflock_dataset)
+command = "spark-submit --class FlockFinderMergeLastV2 {0} --epsilon {2} --mu {3} --delta {4} --path {5} --dataset {6} --debug --speed 10".format(pflock_jar, pflock_partitions, epsilon, mu, delta, pflock_path, pflock_dataset)
 if(not justCheck):
   subprocess.call(command, shell=True)
 
