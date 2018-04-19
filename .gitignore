@@ -3,6 +3,14 @@ PFlock/target/*
 PFlock/project/*
 PFlock/metastore_db/*
 PFlock/spark-warehouse/*
+
+Script/Scala/FlockChecker/.idea/*
+Script/Scala/FlockChecker/target/*
+Script/Scala/FlockChecker/project/*
+Script/Scala/FlockChecker/metastore_db/*
+Script/Scala/FlockChecker/spark-warehouse/*
+
+*.cache
 *.log
 *.class
 metastore_db
