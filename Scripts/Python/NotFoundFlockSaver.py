@@ -7,6 +7,7 @@ from pysqldf import SQLDF
 sqldf = SQLDF(globals())
 import pandas as pd
 import numpy as np
+from operator import itemgetter
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
@@ -65,17 +66,18 @@ for flock in flockset:
     trajs.append(traj)
     query = """
       SELECT 
-        id, t, x, y
+        id, x, y, t
       FROM
         pointset 
       WHERE 
         id = {0} 
         AND t BETWEEN {1} AND {2}
+      ORDER BY
+        t, id
       """.format(pid, start, end)
     pointsInTraj = sqldf.execute(query)
-    pointsInTraj = "".join(pointsInTraj.apply(lambda p: '{0}\t{1}\t{2}\t{3}\t{4}\n'.format(fid, int(p['id']), p['x'], p['y'], int(p['t'])), axis=1).values.tolist())
-    print(pointsInTraj)
-    points.append(pointsInTraj)
+    for p in pointsInTraj.values.tolist():
+      points.append(p)
 
 if(saving):
   trajsFilename = "/tmp/{0}TrajsNotFound_E{1}_M{2}_D{3}.tsv".format(method, int(epsilon), mu, delta)
@@ -85,11 +87,11 @@ if(saving):
   for traj in trajs:
     trajsFile.write(traj)
   trajsFile.close()
-  for point in points:
-    pointsFile.write(point)
+  for point in sorted(points, key=itemgetter(3)):
+    print(point)
+    pointsFile.write("{0}\t{1}\t{2}\t{3}\n".format(int(point[0]),point[1],point[2],int(point[3])))  
   pointsFile.close()
-  if(not args.local):
-    command = "scp {0} acald013@bolt:/home/csgrads/acald013/tmp/".format(trajsFilename)
-    subprocess.call(command, shell=True)
-    command = "scp {0} acald013@bolt:/home/csgrads/acald013/tmp/".format(pointsFilename)
-    subprocess.call(command, shell=True)
+  command = "scp {0} acald013@bolt:/home/csgrads/acald013/tmp/".format(trajsFilename)
+  subprocess.call(command, shell=True)
+  command = "scp {0} acald013@bolt:/home/csgrads/acald013/tmp/".format(pointsFilename)
+  subprocess.call(command, shell=True)

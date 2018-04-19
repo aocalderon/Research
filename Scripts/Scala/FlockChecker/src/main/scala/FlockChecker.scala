@@ -35,7 +35,7 @@ object FlockChecker {
     println(s"$method1 vs $method2, $hits / $n, %.2f%%, $epsilon, $mu, $delta".format(p))
     if(hits != n){
       new java.io.PrintWriter(s"/tmp/NotFound-${method1}_E${epsilon}_M${mu}_$delta.flocks") {
-	      write(notFound.mkString(""))
+	      write(notFound.mkString("\n"))
 	      close()
       }
     }
