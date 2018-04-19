@@ -116,59 +116,61 @@ object FlockFinderMergeLastV2 {
       val nC_tPlusDelta = C_tPlusDelta.count()
       logging(s"Getting maximal disks: t=${timestamp + delta}...", timer, nC_tPlusDelta, "disks")
 
-      // Joining timestamps...
-      timer = System.currentTimeMillis()
-      F_prime = C_t.distanceJoin(C_tPlusDelta, Array("x", "y"), Array("x", "y"), distanceBetweenTimestamps)
-        .map { r =>
-          val start = r.getInt(0)
-          val end = r.getInt(6)
-          val ids1 = r.getString(2).split(" ").map(_.toLong)
-          val ids2 = r.getString(7).split(" ").map(_.toLong)
-          val ids = ids1.intersect(ids2)
-          val len = ids.length
-          val x = r.getDouble(3)
-          val y = r.getDouble(4)
+      if(nC_t > 0 && nC_tPlusDelta > 0) {
+        // Joining timestamps...
+        timer = System.currentTimeMillis()
+        F_prime = C_t.distanceJoin(C_tPlusDelta, Array("x", "y"), Array("x", "y"), distanceBetweenTimestamps)
+          .map { r =>
+            val start = r.getInt(0)
+            val end = r.getInt(6)
+            val ids1 = r.getString(2).split(" ").map(_.toLong)
+            val ids2 = r.getString(7).split(" ").map(_.toLong)
+            val ids = ids1.intersect(ids2)
+            val len = ids.length
+            val x = r.getDouble(3)
+            val y = r.getDouble(4)
 
-          (Flock(start, end, ids.sorted.mkString(" "), x, y), len)
-        }
-        .filter(_._2 >= mu)
-        .map(_._1)
-        .cache()
-      nF_prime = F_prime.count()
-      logging(s"Joining timestams: $timestamp vs ${timestamp + delta}...", timer, nF_prime, "candidates")
+            (Flock(start, end, ids.sorted.mkString(" "), x, y), len)
+          }
+          .filter(_._2 >= mu)
+          .map(_._1)
+          .cache()
+        nF_prime = F_prime.count()
+        logging(s"Joining timestams: $timestamp vs ${timestamp + delta}...", timer, nF_prime, "candidates")
 
-      // Checking internal timestamps...
-      timer = System.currentTimeMillis()
-      for (t <- Range(timestamp + 1, timestamp + delta)) {
-        val P = getFlockPoints(F_prime).as("c").join(pointset.filter(_.t == t).as("p"), $"c.pointID" === $"p.id", "left")
-          .groupBy("flockID")
-          .agg(collect_list($"id"), collect_list($"x"), collect_list($"y"))
-        val P_prime = P.map{ p =>
+        // Checking internal timestamps...
+        timer = System.currentTimeMillis()
+        for (t <- Range(timestamp + 1, timestamp + delta)) {
+          val P = getFlockPoints(F_prime).as("c").join(pointset.filter(_.t == t).as("p"), $"c.pointID" === $"p.id", "left")
+            .groupBy("flockID")
+            .agg(collect_list($"id"), collect_list($"x"), collect_list($"y"))
+          val P_prime = P.map { p =>
             val ids = p.getList[Long](1).asScala.toList.mkString(" ")
-            val Xs  = p.getList[Double](2).asScala.toList
-            val Ys  = p.getList[Double](3).asScala.toList
-            val d   = getMaximalDistance(Xs zip Ys)
+            val Xs = p.getList[Double](2).asScala.toList
+            val Ys = p.getList[Double](3).asScala.toList
+            val d = getMaximalDistance(Xs zip Ys)
 
             (ids, Xs, Ys, d)
           }
-        val F1 = P_prime.filter(_._4 <= epsilon * 0.75)
-          .map(f => Flock(timestamp, timestamp + delta, f._1))
-          .cache()
-        val F2 = P_prime.filter(_._4 > epsilon * 0.75)
-          .flatMap(f => computeMaximalDisks(f._1, f._2, f._3))
-          .map(ids => Flock(timestamp, timestamp + delta, ids))
-          .cache()
-        F_prime = F1.union(F2)
+          val F1 = P_prime.filter(_._4 <= epsilon * 0.75)
+            .map(f => Flock(timestamp, timestamp + delta, f._1))
+            .cache()
+          val F2 = P_prime.filter(_._4 > epsilon * 0.75)
+            .flatMap(f => computeMaximalDisks(f._1, f._2, f._3))
+            .map(ids => Flock(timestamp, timestamp + delta, ids))
+            .cache()
+          F_prime = F1.union(F2)
+          showFlocks(F_prime)
+          nF_prime = F_prime.count()
+        }
         showFlocks(F_prime)
-        nF_prime = F_prime.count()
-      }
-      showFlocks(F_prime)
-      val F = pruneIDsSubsets(F_prime).cache()
-      showFlocks(F)
-      val nF = F.count()
-      logging("Checking internal timestamps...", timer, nF, "flocks")
+        val F = pruneIDsSubsets(F_prime).cache()
+        showFlocks(F)
+        val nF = F.count()
+        logging("Checking internal timestamps...", timer, nF, "flocks")
 
-      flocks = flocks.union(F)
+        flocks = flocks.union(F)
+      }
     }
     nFlocks = flocks.count()
   }

@@ -44,6 +44,7 @@ object MaximalFinderExpansion {
     import simba.simbaImplicits._
     logger.info("00.Setting mu=%d,epsilon=%.1f,cores=%d,dataset=%s"
       .format(mu, epsilon, conf.cores(), conf.dataset()))
+    if(pointsRDD.isEmpty()) return pointsRDD
     val startTime = System.currentTimeMillis()
     // 01.Indexing points...
     var timer = System.currentTimeMillis()

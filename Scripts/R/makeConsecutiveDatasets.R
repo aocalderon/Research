@@ -61,7 +61,7 @@ data = data[ , list(id = min(id)), by = c('x', 'y', 't')]
 ###################
 # Writing back...
 ###################
-TIMESTAMPS = 5
+TIMESTAMPS = 10
 #DATASET = "Berlin/berlin"
 DATASET = "test"
 for(i in seq(0,TIMESTAMPS)){
