@@ -160,12 +160,12 @@ object FlockFinderMergeLastV2 {
             .map(ids => Flock(timestamp, timestamp + delta, ids))
             .cache()
           F_prime = F1.union(F2)
-          showFlocks(F_prime)
+          //showFlocks(F_prime)
           nF_prime = F_prime.count()
         }
-        showFlocks(F_prime)
+        //showFlocks(F_prime)
         val F = pruneIDsSubsets(F_prime).cache()
-        showFlocks(F)
+        //showFlocks(F)
         val nF = F.count()
         logging("Checking internal timestamps...", timer, nF, "flocks")
 

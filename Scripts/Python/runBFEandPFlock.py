@@ -32,8 +32,8 @@ pflock_extension = args.pflock_extension
 
 ## Running BFE...
 command = "bfe {0} {1} {2} {3}".format(bfe_dataset, epsilon, mu, delta)
-if(not justCheck):
-  subprocess.call(command, shell=True)
+#if(not justCheck):
+#  subprocess.call(command, shell=True)
 
 pflock_jar = args.pflock_jar
 pflock_partitions = args.pflock_partitions
@@ -41,19 +41,13 @@ pflock_path = args.pflock_path
 pflock_dataset = args.pflock_dataset
 
 ## Running PFlock...
-command = "spark-submit --class FlockFinderMergeLastV2 {0} --epsilon {2} --mu {3} --delta {4} --path {5} --dataset {6} --debug --speed 10".format(pflock_jar, pflock_partitions, epsilon, mu, delta, pflock_path, pflock_dataset)
+command = "spark-submit --class FlockFinderMergeLastV2 {0} --epsilon {2} --mu {3} --delta {4} --path {5} --dataset {6} --speed 10".format(pflock_jar, pflock_partitions, epsilon, mu, delta, pflock_path, pflock_dataset)
 if(not justCheck):
   subprocess.call(command, shell=True)
 
 ## Sorting and comparing outputs...
 bfe_output = "/tmp/BFE_E{0}_M{1}_D{2}.txt".format(epsilon, mu, delta)
 pflock_output = "/tmp/PFLOCK_E{0}_M{1}_D{2}.txt".format(epsilon, mu, delta)
-
-#bfe = open(bfe_output, "r") 
-#bfeline = bfe.readline()
-#pflock = open(pflock_output, "r") 
-#pflockline = pflock.readline()
-#pointset = "{0}{1}{2}.{3}".format(research_home, pflock_path, pflock_dataset, pflock_extension)
 
 flock_checker = "/home/acald013/Research/Scripts/Scala/FlockChecker/target/scala-2.11/flockchecker_2.11-0.1.jar"
 

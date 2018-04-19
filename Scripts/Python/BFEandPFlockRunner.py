@@ -6,14 +6,14 @@ import logging
 
 ## Reading arguments...
 parser = argparse.ArgumentParser()
-parser.add_argument("--min_epsilon", "-e1", default=30.0, help="Minimum epsilon...")
+parser.add_argument("--min_epsilon", "-e1", default=50.0, help="Minimum epsilon...")
 parser.add_argument("--max_epsilon", "-e2", default=50.0, help="Maximum epsilon...")
 parser.add_argument("--step_epsilon", "-se", default=10.0, help="Step in epsilon...")
 parser.add_argument("--min_mu", "-m1", default=3, help="Minimum mu...")
-parser.add_argument("--max_mu", "-m2", default=5, help="Maximum mu...")
+parser.add_argument("--max_mu", "-m2", default=3, help="Maximum mu...")
 parser.add_argument("--step_mu", "-sm", default=1, help="Step in mu...")
 parser.add_argument("--min_delta", "-d1", default=3, help="Minimum delta...")
-parser.add_argument("--max_delta", "-d2", default=5, help="Maximum delta...")
+parser.add_argument("--max_delta", "-d2", default=3, help="Maximum delta...")
 parser.add_argument("--step_delta", "-sd", default=1, help="Step in delta...")
 parser.add_argument("--bfe_dataset", "-f", default="/home/and/Documents/PhD/Research/Datasets/Berlin/berlin0-10.tsv", help="BFE dataset")
 parser.add_argument("--pflock_path", "-k", default="Datasets/Berlin/", help="PFlock path")
