@@ -39,12 +39,13 @@ object MaximalFinderExpansion {
     val separator = conf.separator()
     val debug = conf.debug()
     var maximals3: RDD[String] = simba.sparkContext.emptyRDD
-    
+
+
     import simba.implicits._
     import simba.simbaImplicits._
     logger.info("00.Setting mu=%d,epsilon=%.1f,cores=%d,dataset=%s"
       .format(mu, epsilon, conf.cores(), conf.dataset()))
-    if(pointsRDD.isEmpty()) return pointsRDD
+    if(pointsRDD.isEmpty()) return maximals3
     val startTime = System.currentTimeMillis()
     // 01.Indexing points...
     var timer = System.currentTimeMillis()
