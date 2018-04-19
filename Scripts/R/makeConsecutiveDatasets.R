@@ -8,9 +8,9 @@ pacman::p_load(data.table, sqldf)
 
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 PATH = "Datasets/"
-DATASET = "Berlin_N277K_A18K_T15"
-EXTENSION = ".csv"
-SEPARATOR = ","
+DATASET = "test"
+EXTENSION = ".tsv"
+SEPARATOR = "\t"
 TRUNCATE_TO_INT = FALSE
 ROUND_TO_DECIMALS = 3
 ADD_T = FALSE
@@ -22,9 +22,9 @@ data = read.table(filename, header = F, sep = SEPARATOR)
 ###################
 
 data = as.data.table(data)
-names(data) = c('x', 'y','t','id')
-##
-data$t = data$t -117
+names(data) = c('id', 'x', 'y','t')
+
+# data$t = data$t -117
 
 ###################
 # Truncate decimal position if required...
@@ -61,8 +61,9 @@ data = data[ , list(id = min(id)), by = c('x', 'y', 't')]
 ###################
 # Writing back...
 ###################
-TIMESTAMPS = 10
-DATASET = "Berlin/berlin"
+TIMESTAMPS = 5
+#DATASET = "Berlin/berlin"
+DATASET = "test"
 for(i in seq(0,TIMESTAMPS)){
   write.table(data[data$t == i , c('id', 'x', 'y', 't')]
               , file = paste0(RESEARCH_HOME,PATH,DATASET,i,"-",i,".tsv")
