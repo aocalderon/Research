@@ -501,8 +501,8 @@ object FlockFinderMergeLastV2 {
   def saveFlocks(flocks: Dataset[Flock], filename: String): Unit = {
     new java.io.PrintWriter(filename) {
       write(
-        flocks.map{ f =>
-          "%d,%d,%s\n".format(f.start, f.end, f.ids)
+        flocks.orderBy("start","end","ids").map{ f =>
+          "%d, %d, %s\n".format(f.start, f.end, f.ids)
         }.collect.mkString("")
       )
       close()
