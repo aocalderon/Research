@@ -1,0 +1,120 @@
+\documentclass[12pt]{scrartcl}
+\usepackage[hidelinks]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage[]{algorithmic}
+\usepackage[]{algorithm}
+
+
+\begin{document}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\renewcommand{\algorithmicforall}{\textbf{for each}}
+
+\begin{algorithm}
+  \footnotesize
+  \caption{MergeLast - Finding flock patterns looking $\delta$ timestamps ahead.}
+  \label{alg:flockfindermergelast}
+  \begin{algorithmic}
+    \REQUIRE 
+    Set of spatio-temporal points $P$, maximum distance $\epsilon$, minimum size $\mu$, minimum duration $\delta$ , maximum traveled distance $\tau$ \\
+
+    \ENSURE 
+    Set of flock patterns $F$ 
+    
+    $T$ $\leftarrow$ sorted set of timestamps in $P$
+    % 00. Getting windows...
+    \FORALL{timestamp $t_i$ in $T - \delta$}
+		\STATE $P_i$ $\leftarrow$ Set of points at timestamp $t_i$
+		\STATE $C_i$ $\leftarrow$ getMaximalDisks($P_i$, $\epsilon$, $\mu$)
+		\STATE $P_{i+\delta}$ $\leftarrow$ Set of points at timestamp $t_{i+\delta}$
+		\STATE $C_{i+\delta}$ $\leftarrow$ getMaximalDisks($P_{i+\delta}$, $\epsilon$, $\mu$)
+        \IF{$C_i \neq $ \O{} and $C_{i+\delta} \neq$ \O{}}
+        	\STATE $F'  \leftarrow C_i \Join_{\tau} C_{i+\delta}$ \COMMENT{Distance join...} 
+        	\FORALL{timestamp $t_j$ between $t_i$ and $t_{i+\delta}$}
+				\STATE $t_j$
+        	\ENDFOR
+		\ENDIF
+    \ENDFOR
+	
+	\RETURN F
+  \end{algorithmic}
+\end{algorithm}
+
+\clearpage
+
+\begin{algorithm}
+  \footnotesize
+  \caption{getMaximalDisks($T$,$\epsilon$,$\mu$) - Finding maximal disks following a parallel approach.}
+  \label{alg:maximals}
+  \begin{algorithmic}
+    \REQUIRE 
+    Set of points $T$, maximum distance $\epsilon$ and minimum size $\mu$ \\
+
+    \ENSURE 
+    Set of maximal disks $M$ 
+    \vspace{3mm}
+    % 01.Indexing points... 
+    % 02.Getting pairs... 
+    \STATE find the set of pairs of points $P$ in $T$ which are $\epsilon$ distance each other
+    % 03.Computing centers... 
+    \STATE $C \leftarrow$ \O{}
+    \FORALL{$p_i$ in $P$}
+      \STATE compute disks $c_i^1$ and $c_i^2$ of $p_i$ using $\epsilon$ 
+      \STATE add $c_i^1$ and $c_i^2$ to $C$
+    \ENDFOR
+    % 04.Indexing centers... 
+    % 05.Getting disks... 
+    \STATE $D \leftarrow$ \O{}
+    \FORALL{$c_i$ in $C$} 
+      \STATE find the set of points $\rho_i$ which lie $\epsilon$ distance around $c_i$ 
+      \IF{$|\rho_i| \geq \mu$} % 06.Filtering less-than-mu disks... 
+		\STATE compute centroid $\varsigma_i$ of the MBR of $\rho_i$ 
+		\STATE set $d_i.center$ as $\varsigma_i$
+		\STATE set $d_i.points$ as $\rho_i$
+		\IF{$d_i$ not in $D$}
+			% 07.Pruning duplicate candidates...
+			\STATE add $d_i$ to $D$ \COMMENT{Pruning duplicate candidates...} 
+		\ENDIF
+      \ENDIF
+    \ENDFOR
+    % 08.Indexing candidates...
+    \STATE build an R-Tree $disksRT$ using centers in $D$ 
+    % 09.Getting expansions... 
+    \STATE $E \leftarrow$ \O{}
+	\FORALL{MBR in $disksRT$} 
+		\STATE expand MBR to create an expanded MBR $\varepsilon_i$ using a buffer of $\epsilon$ distance 
+		\STATE add $\varepsilon_i$ to $E$
+	\ENDFOR
+	\FORALL{$d_i$ in $D$}
+		\FORALL{$\varepsilon_j$ in $E$}
+			\IF{$d_i.center \cap \varepsilon_j$}
+				\STATE add $d_i$ to $\varepsilon_j$ 
+			\ENDIF
+		\ENDFOR
+	\ENDFOR
+    % 10.Finding maximal disks...
+    \STATE $M \leftarrow$ \O{}
+    \FORALL{$\varepsilon_i$ in $E$} 
+		\STATE $\chi \leftarrow$ \O{} 
+		\FORALL{$d_i$ in $\varepsilon_i$}
+			\STATE add $d_i.points$ to $\chi$
+		\ENDFOR
+		\STATE find the set of maximal patterns $F$ in $\chi$
+		\FORALL{$f_i$ in $F$}
+			\STATE compute centroid $\varsigma_i$ of the items in $f_i$
+			\IF{$\varsigma_i$ is not in the expansion area of $\varepsilon_i$}
+				\STATE set $m_i.center$ as $\varsigma_i$
+				\STATE set $m_i.points$ as $f_i$
+				\STATE add $m_i$ to $M$
+			\ENDIF
+		\ENDFOR
+	\ENDFOR
+	
+	\RETURN M
+  \end{algorithmic}
+\end{algorithm}
+
+\end{document}
