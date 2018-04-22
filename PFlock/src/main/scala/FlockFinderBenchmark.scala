@@ -77,7 +77,7 @@ object FlockFinderBenchmark {
       .toList
     val nTimestamps = timestamps.length
     logging("Extracting timestamps", timer, nTimestamps, "timestamps")
-
+/*
     // Running MergeLast V2.0...
     timer = System.currentTimeMillis()
     flocks = runMergeLast(pointset, timestamps)
@@ -86,7 +86,7 @@ object FlockFinderBenchmark {
     // Printing results...
     printFlocks(flocks)
     if(debug) saveFlocks(flocks, s"/tmp/PFLOCK-ML_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt")
-    
+*/
     // Running SpatialJoin...
     timer = System.currentTimeMillis()
     flocks = runSpatialJoin(pointset, timestamps)
@@ -515,6 +515,6 @@ object FlockFinderBenchmark {
   def main(args: Array[String]): Unit = {
     logger.info("Starting app...")
     conf = new Conf(args)
-    FlockFinderMergeLastV2.run()
+    FlockFinderBenchmark.run()
   }
 }

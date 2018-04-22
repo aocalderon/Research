@@ -619,7 +619,7 @@ object FlockFinderBenchmark2 {
   def main(args: Array[String]): Unit = {
     logger.info("Starting app...")
     val conf = new Conf(args)
-    FlockFinderBenchmark.run(conf)
+    FlockFinderBenchmark2.run(conf)
   }
 }
 
