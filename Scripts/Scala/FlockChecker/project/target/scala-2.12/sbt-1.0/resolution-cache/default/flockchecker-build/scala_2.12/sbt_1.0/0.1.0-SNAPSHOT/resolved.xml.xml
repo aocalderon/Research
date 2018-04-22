@@ -4,7 +4,7 @@
 		module="flockchecker-build"
 		revision="0.1.0-SNAPSHOT"
 		status="integration"
-		publication="20180419175712"
+		publication="20180421193209"
 		e:sbtVersion="1.0" e:scalaVersion="2.12"
 	>
 		<description>
