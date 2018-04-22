@@ -1,10 +1,12 @@
-#!/home/acald013/opt/miniconda3/bin/python
+##/home/acald013/opt/miniconda3/bin/python
+#!/opt/miniconda3/bin/python
 
 import subprocess
 import argparse
 import math
 from pysqldf import SQLDF
 sqldf = SQLDF(globals())
+import os
 import pandas as pd
 import numpy as np
 from operator import itemgetter
@@ -13,35 +15,34 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 
 ## Reading arguments...
 parser = argparse.ArgumentParser()
-parser.add_argument("--epsilon", "-e", default=10, help="Epsilon")
-parser.add_argument("--mu", "-m", default=3, help="Mu")
-parser.add_argument("--delta", "-d", default=3, help="Delta")
-parser.add_argument("--pointset", "-p", help="Pointset file")
+parser.add_argument("--pointset", "-p", default="Datasets/Berlin/berlin0-10.tsv", help="Pointset file")
 parser.add_argument("--input", "-i", default="/tmp/NotFound.flocks", help="Input file")
-parser.add_argument("--output", "-o", default="", help="Input file")
-parser.add_argument("--method", "-t", default="BFE", help="Method used")
-parser.add_argument("--local", "-l", default=False, help="Running locally...")
+parser.add_argument("--no_save", dest='save', action='store_false', help="Save trajectories and points?")
+parser.add_argument("--no_send", dest='send', action='store_false', help="Send to Bolt?")
+parser.set_defaults(save=True, send=True)
 args = parser.parse_args()
 
 ## Setting variables...
-epsilon = int(args.epsilon)
-mu = int(args.mu)
-delta = int(args.delta)
-method = args.method
-filename = args.output
+research_home = os.environ['RESEARCH_HOME']
+pointset = "{0}{1}".format(research_home, args.pointset)
+params = ".".join(args.input.split(".")[:-1]).split("/")[-1:][0].split("_")
+epsilon = int(float(params[1][1:]))
+mu = int(params[2][1:])
+delta = int(params[3][1:])
+method = params[0]
 saving = True
 points = []
 trajs = []
 fid = 0
 
-pointset = pd.read_csv('/home/acald013/Research/Datasets/Berlin/berlin0-10.tsv', sep='\t', header=None, names=['id', 'x', 'y', 't'], index_col=['id', 't'])
+pointset = pd.read_csv(pointset, sep='\t', header=None, names=['id', 'x', 'y', 't'], index_col=['id', 't'])
 flockset = open(args.input, "r") 
 for flock in flockset:
   if flock == "":
     saving = False
     continue
   fid = fid + 1
-  start, end, pids = flock.split(",")
+  start, end, pids = flock.split(", ")
   print("Trajectory and Points for {0},{1},{2}\n".format(start, end, pids))
   pids = list(map(int, pids.split(" ")))
   for pid in pids:
@@ -79,9 +80,9 @@ for flock in flockset:
     for p in pointsInTraj.values.tolist():
       points.append(p)
 
-if(saving):
-  trajsFilename = "/tmp/{0}TrajsNotFound_E{1}_M{2}_D{3}.tsv".format(method, int(epsilon), mu, delta)
-  pointsFilename = "/tmp/{0}PointsNotFound_E{1}_M{2}_D{3}.tsv".format(method, int(epsilon), mu, delta)
+if(args.save):
+  trajsFilename = "/tmp/{0}_E{1}_M{2}_D{3}_Trajs.tsv".format(method, int(epsilon), mu, delta)
+  pointsFilename = "/tmp/{0}_E{1}_M{2}_D{3}_Points.tsv".format(method, int(epsilon), mu, delta)
   trajsFile = open(trajsFilename, "w")
   pointsFile = open(pointsFilename, "w")
   for traj in trajs:
@@ -91,7 +92,8 @@ if(saving):
     print(point)
     pointsFile.write("{0}\t{1}\t{2}\t{3}\n".format(int(point[0]),point[1],point[2],int(point[3])))  
   pointsFile.close()
-  command = "scp {0} acald013@bolt:/home/csgrads/acald013/tmp/".format(trajsFilename)
-  subprocess.call(command, shell=True)
-  command = "scp {0} acald013@bolt:/home/csgrads/acald013/tmp/".format(pointsFilename)
-  subprocess.call(command, shell=True)
+  if(args.send):
+    command = "scp {0} acald013@bolt:/home/csgrads/acald013/tmp/".format(trajsFilename)
+    subprocess.call(command, shell=True)
+    command = "scp {0} acald013@bolt:/home/csgrads/acald013/tmp/".format(pointsFilename)
+    subprocess.call(command, shell=True)
