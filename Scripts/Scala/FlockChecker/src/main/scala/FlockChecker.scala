@@ -34,10 +34,12 @@ object FlockChecker {
     val p = (hits.toFloat / n.toFloat) * 100.0
     println(s"$method1 vs $method2, $hits / $n, %.2f%%, $epsilon, $mu, $delta".format(p))
     if(hits != n){
-      new java.io.PrintWriter(s"/tmp/NotFound-${method1}_E${epsilon}_M${mu}_$delta.flocks") {
+      val output = s"/tmp/NotFound-${method1}_E${epsilon}_M${mu}_D${delta}.txt"
+      new java.io.PrintWriter(output) {
 	      write(notFound.mkString("\n"))
 	      close()
       }
+      println(s"Differences saved at $output")
     }
   }
 

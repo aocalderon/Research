@@ -36,7 +36,7 @@ pflock = "{0}{1}".format(research_home, "PFlock/target/scala-2.11/pflock_2.11-2.
 partitions = args.pflock_partitions
 speed = args.speed
 ## Running PFlock...
-command = "spark-submit --class FlockFinderMergeLastV2 {0} --epsilon {1} --mu {2} --delta {3} --path {4} --dataset {5} --speed {6} --debug".format(pflock, epsilon, mu, delta, path, dataset, speed)
+command = "spark-submit --class FlockFinderBenchmark {0} --epsilon {1} --mu {2} --delta {3} --path {4} --dataset {5} --speed {6} --debug".format(pflock, epsilon, mu, delta, path, dataset, speed)
 if(args.pflock):
   subprocess.call(command, shell=True)
 
