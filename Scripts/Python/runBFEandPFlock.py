@@ -18,7 +18,7 @@ parser.set_defaults(bfe=True, pflock=True)
 args = parser.parse_args()
 
 ## Setting variables...
-research_home = os.environ['RESEARCH_HOME']
+dblab_research_home = "/home/and/Documents/PhD/Research/" # RESERCH_HOME at DBLab Desktop...
 epsilon = args.epsilon
 mu = args.mu
 delta = args.delta
@@ -26,12 +26,13 @@ delta = args.delta
 path = args.path
 dataset = args.dataset
 extension = args.extension
-bfe_dataset = "{0}{1}{2}.{3}".format(research_home, path, dataset, extension)
+bfe_dataset = "{0}{1}{2}.{3}".format(dblab_research_home, path, dataset, extension)
 ## Running BFE...
 command = "bfe {0} {1} {2} {3}".format(bfe_dataset, epsilon, mu, delta)
 if(args.bfe):
   subprocess.call(command, shell=True)
 
+research_home = os.environ['RESEARCH_HOME']
 pflock = "{0}{1}".format(research_home, "PFlock/target/scala-2.11/pflock_2.11-2.0.jar")
 partitions = args.pflock_partitions
 speed = args.speed

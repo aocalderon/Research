@@ -10,9 +10,9 @@ class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
   val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(32))
   val master:     ScallopOption[String] = opt[String] (default = Some("spark://169.235.27.134:7077")) /* spark://169.235.27.134:7077 */
   val home:       ScallopOption[String] = opt[String] (default = Some("RESEARCH_HOME"))
-  val path:       ScallopOption[String] = opt[String] (default = Some("Datasets/Buses/"))
+  val path:       ScallopOption[String] = opt[String] (default = Some("Datasets/Berlin/"))
   val valpath:    ScallopOption[String] = opt[String] (default = Some("Validation/"))
-  val dataset:    ScallopOption[String] = opt[String] (default = Some("buses0-1"))
+  val dataset:    ScallopOption[String] = opt[String] (default = Some("berlin0-10"))
   val extension:  ScallopOption[String] = opt[String] (default = Some("tsv"))
   val separator:  ScallopOption[String] = opt[String] (default = Some("\t"))
   val method:     ScallopOption[String] = opt[String] (default = Some("fpmax"))

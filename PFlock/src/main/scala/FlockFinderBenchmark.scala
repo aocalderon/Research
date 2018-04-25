@@ -19,30 +19,35 @@ object FlockFinderBenchmark {
   case class Flock(start: Int, end: Int, ids: String, x: Double = 0.0, y: Double = 0.0)
   case class FlockPoints(flockID: Long, pointID: Long)
 
-  // Starting a session...
-  private val params = ConfigFactory.parseFile(new java.io.File("/tmp/flockfinder.conf"))
-  private val master = params.getString("master")
-  private val partitions = params.getString("partitions")
-  private val cores = params.getString("cores")
-
-  private val simba = SimbaSession.builder()
-    .master(master)
-    .appName("FlockFinder")
-    .config("simba.index.partitions", partitions)
-    .config("spark.cores.max", cores)
-    .getOrCreate()
-  simba.sparkContext.setLogLevel(conf.logs())
-  import simba.implicits._
-  import simba.simbaImplicits._
   private var timer: Long = System.currentTimeMillis()
   private var debug: Boolean = false
   private var print: Boolean = false
   private var r2: Double = 0.0
-  var flocks: Dataset[Flock] = simba.sparkContext.emptyRDD[Flock].toDS
-  var nFlocks: Long = 0
-  logging("Starting session", timer)
 
   def run(): Unit = {
+    // Starting a session...
+    val master = conf.master()
+    val partitions = conf.partitions()
+    val cores = conf.cores()
+    val epsilon = conf.epsilon()
+    val mu = conf.mu()
+    val delta = conf.delta()
+
+    val simba = SimbaSession.builder()
+      .master(master)
+      .appName("FlockFinder")
+      .config("simba.index.partitions", partitions)
+      .config("spark.cores.max", cores)
+      .getOrCreate()
+    simba.sparkContext.setLogLevel(conf.logs())
+    logger.info(s"cores=$cores,partitions=$partitions,epsilon=$epsilon,mu=$mu,delta=$delta,master=$master")
+    
+    import simba.implicits._
+    import simba.simbaImplicits._
+    var flocks: Dataset[Flock] = simba.sparkContext.emptyRDD[Flock].toDS
+    var nFlocks: Long = 0
+    logging("Starting session", timer)
+
     // Setting paramaters...
     timer = System.currentTimeMillis()
     print = conf.print()
@@ -81,25 +86,28 @@ object FlockFinderBenchmark {
       .toList
     val nTimestamps = timestamps.length
     logging("Extracting timestamps", timer, nTimestamps, "timestamps")
-/*
+
     // Running MergeLast V2.0...
+    logger.info("=MergeLast Start=")
     timer = System.currentTimeMillis()
-    flocks = runMergeLast(pointset, timestamps)
+    flocks = runMergeLast(pointset, timestamps, simba)
     nFlocks = flocks.count()
     logging("Running MergeLast...", timer, nFlocks, "flocks")
+    logger.info("=MergeLast End=")
     // Printing results...
-    if(print) printFlocks(flocks)
-    if(debug) saveFlocks(flocks, s"/tmp/PFLOCK-ML_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt")
-*/
+    if(print) printFlocks(flocks, "", simba)
+    if(debug) saveFlocks(flocks, s"/tmp/PFLOCK-ML_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt", simba)
+
     // Running SpatialJoin...
-    logger.warn("SPATIAL JOIN")
+    logger.info("=SpatialJoin Start=")
     timer = System.currentTimeMillis()
-    flocks = runSpatialJoin(pointset, timestamps)
+    flocks = runSpatialJoin(pointset, timestamps, simba)
     nFlocks = flocks.count()
     logging("Running SpatialJoin...", timer, nFlocks, "flocks")
+    logger.info("=SpatialJoin End=")
     // Printing results...
-    if(print) printFlocks(flocks)
-    if(debug) saveFlocks(flocks, s"/tmp/PFLOCK_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt")
+    if(print) printFlocks(flocks, "", simba)
+    if(debug) saveFlocks(flocks, s"/tmp/PFLOCK-SJ_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt", simba)
 
     // Closing all...
     logger.info("Closing app...")
@@ -107,7 +115,7 @@ object FlockFinderBenchmark {
   }
 
   /* MergeLast variant */
-  def runMergeLast(pointset: Dataset[ST_Point], timestamps: List[Int]): Dataset[Flock] ={
+  def runMergeLast(pointset: Dataset[ST_Point], timestamps: List[Int], simba: SimbaSession): Dataset[Flock] ={
     // Initialize partial result set...
     import simba.implicits._
     import simba.simbaImplicits._
@@ -124,13 +132,13 @@ object FlockFinderBenchmark {
     for(timestamp <- timestamps.slice(0, timestamps.length - delta)) {
       // Getting points at timestamp t ...
       timer = System.currentTimeMillis()
-      val C_t = getMaximalDisks(pointset, timestamp)
+      val C_t = getMaximalDisks(pointset, timestamp, simba)
       val nC_t = C_t.count()
       logging(s"Getting maximal disks: t=$timestamp...", timer, nC_t, "disks")
 
       // Getting points at timestamp t + delta ...
       timer = System.currentTimeMillis()
-      val C_tPlusDelta = getMaximalDisks(pointset, timestamp + delta)
+      val C_tPlusDelta = getMaximalDisks(pointset, timestamp + delta, simba)
       val nC_tPlusDelta = C_tPlusDelta.count()
       logging(s"Getting maximal disks: t=${timestamp + delta}...", timer, nC_tPlusDelta, "disks")
 
@@ -159,7 +167,7 @@ object FlockFinderBenchmark {
         // Checking internal timestamps...
         timer = System.currentTimeMillis()
         for (t <- Range(timestamp + 1, timestamp + delta)) {
-          val P = getFlockPoints(F_prime).as("c").join(pointset.filter(_.t == t).as("p"), $"c.pointID" === $"p.id", "left")
+          val P = getFlockPoints(F_prime, simba).as("c").join(pointset.filter(_.t == t).as("p"), $"c.pointID" === $"p.id", "left")
             .groupBy("flockID")
             .agg(collect_list($"id"), collect_list($"x"), collect_list($"y"))
           val P_prime = P.map { p =>
@@ -178,12 +186,9 @@ object FlockFinderBenchmark {
             .map(ids => Flock(timestamp, timestamp + delta, ids))
             .cache()
           F_prime = F1.union(F2)
-          //showFlocks(F_prime)
           nF_prime = F_prime.count()
         }
-        //showFlocks(F_prime)
-        val F = pruneIDsSubsets(F_prime).cache()
-        //showFlocks(F)
+        val F = pruneIDsSubsets(F_prime, simba).cache()
         val nF = F.count()
         logging("Checking internal timestamps...", timer, nF, "flocks")
 
@@ -195,6 +200,128 @@ object FlockFinderBenchmark {
     logger.warn("\n\nPFLOCK_ML\t%.1f\t%d\t%d\t%d\n"
       .format(epsilon, mu, delta + 1, nFinalFlocks))
     
+    FinalFlocks
+  }
+
+  /* SpatialJoin variant */
+  def runSpatialJoin(pointset: Dataset[ST_Point], timestamps: List[Int], simba: SimbaSession): Dataset[Flock] ={
+    // Initialize partial result set...
+    import simba.implicits._
+    import simba.simbaImplicits._
+
+    var FinalFlocks: Dataset[Flock] = simba.sparkContext.emptyRDD[Flock].toDS()
+    var nFinalFlocks: Long = 0
+    var F_prime: Dataset[Flock] = simba.sparkContext.emptyRDD[Flock].toDS()
+    var nF_prime: Long = 0
+    var U: Dataset[Flock] = simba.sparkContext.emptyRDD[Flock].toDS()
+    var nU: Long = 0
+    var timer: Long = 0
+    val epsilon: Double = conf.epsilon()
+    val mu: Int = conf.mu()
+    val delta: Int = conf.delta()
+    val printIntermediate: Boolean = conf.debug()
+    val speed: Double = conf.speed()
+    val distanceBetweenTimestamps = speed * delta
+
+    // For each new time instance t_i...
+    for(timestamp <- timestamps){
+      // Reported location for trajectories in time t_i...
+      timer = System.currentTimeMillis()
+      val currentPoints = pointset
+        .filter(datapoint => datapoint.t == timestamp)
+        .map{ datapoint =>
+          "%d\t%f\t%f".format(datapoint.id, datapoint.x, datapoint.y)
+        }
+        .rdd
+        .cache()
+      val nCurrentPoints = currentPoints.count()
+      logging("Reporting locations...", timer, nCurrentPoints, "points")
+
+      // Set of disks for t_i...
+      timer = System.currentTimeMillis()
+      val C: Dataset[Flock] = MaximalFinderExpansion
+        .run(currentPoints, simba, conf)
+        .map{ m =>
+          val disk = m.split(";")
+          val x = disk(0).toDouble
+          val y = disk(1).toDouble
+          val ids = disk(2)
+          Flock(timestamp, timestamp, ids, x, y)
+        }.toDS().cache()
+      val nC = C.count()
+      logging("Set of disks for t_i...", timer, nC, "disks")
+
+      var nFlocks: Long = 0
+      var nJoin: Long = 0
+      if(nF_prime != 0) {
+        // Distance Join phase with previous potential flocks...
+        timer = System.currentTimeMillis()
+        val cDS = C.index(RTreeType, "cRT", Array("x", "y"))
+        val fDS = F_prime.index(RTreeType, "f_primeRT", Array("x", "y"))
+        val join = fDS.distanceJoin(cDS, Array("x", "y"), Array("x", "y"), distanceBetweenTimestamps)
+        nJoin = join.count()
+        logging("Distance Join phase...", timer, nJoin, "combinations")
+
+        // At least mu...
+        timer = System.currentTimeMillis()
+        val the_mu = conf.mu()
+        val U_prime = join
+          .map { tuple =>
+            val ids1 = tuple.getString(7).split(" ").map(_.toLong)
+            val ids2 = tuple.getString(2).split(" ").map(_.toLong)
+            val u = ids1.intersect(ids2)
+            val length = u.length
+            val s = tuple.getInt(0) // set the initial time...
+            val e = timestamp // set the final time...
+            val ids = u.sorted.mkString(" ") // set flocks ids...
+            val x = tuple.getDouble(8)
+            val y = tuple.getDouble(9)
+            (Flock(s, e, ids, x, y), length)
+          }
+          .filter(flock => flock._2 >= the_mu)
+          .map(_._1).as[Flock]
+        U = pruneFlocks(U_prime, simba).cache()
+        nU = U.count()
+        logging("Getting candidates...", timer, nU, "candidates")
+      } else {
+        U = C
+        nU = nC
+      }
+      // Found flocks...
+      timer = System.currentTimeMillis()
+      val flocks = U.filter(flock => flock.end - flock.start + 1 == delta).cache()
+      nFlocks = flocks.count()
+      logging("Found flocks...", timer, nFlocks, "flocks")
+
+      // Report flock patterns...
+      FinalFlocks = FinalFlocks.union(flocks).cache()
+      nFinalFlocks = FinalFlocks.count()
+
+      // Update u.t_start. Shift the time...
+      timer = System.currentTimeMillis()
+      val F = U.filter(flock => flock.end - flock.start + 1 != delta)
+        .union(flocks.map(u => Flock(u.start + 1, u.end, u.ids, u.x, u.y)))
+        .cache()
+      val nF = F.count()
+      logging("Updating times...", timer, nF, "flocks")
+
+      // Merge potential flocks U and disks C and adding to F...
+      timer = System.currentTimeMillis()
+      F_prime = F.union(C)
+        .rdd
+        .map(f => (f.ids, f))
+        .reduceByKey( (a,b) => if(a.start < b.start) a else b )
+        .map(_._2)
+        .toDS()
+        .cache()
+      nF_prime = F_prime.count()
+      logging("Filter phase...", timer, nF_prime, "flocks")
+      if(debug) printFlocks(F_prime, "", simba)
+    }
+    // Reporting summary...
+    logger.warn("\n\nPFLOCK_SJ\t%.1f\t%d\t%d\t%d\n"
+      .format(epsilon, mu, delta, nFinalFlocks))
+
     FinalFlocks
   }
 
@@ -293,7 +420,9 @@ object FlockFinderBenchmark {
     max
   }
 
-  def getFlockPoints(flocks: Dataset[Flock]): Dataset[FlockPoints] ={
+  def getFlockPoints(flocks: Dataset[Flock], simba: SimbaSession): Dataset[FlockPoints] ={
+    import simba.implicits._
+    import simba.simbaImplicits._
     flocks.map(f => f.ids.split(" ").map(_.toLong))
       .withColumn("flockID", monotonically_increasing_id())
       .withColumn("pointID", explode($"value"))
@@ -301,7 +430,9 @@ object FlockFinderBenchmark {
       .as[FlockPoints]
   }
 
-  def getMaximalDisks(pointset: Dataset[ST_Point], t: Int): Dataset[Flock] ={
+  def getMaximalDisks(pointset: Dataset[ST_Point], t: Int, simba: SimbaSession): Dataset[Flock] ={
+    import simba.implicits._
+    import simba.simbaImplicits._
     // Getting points at timestamp t ...
     var timer = System.currentTimeMillis()
     val points = pointset
@@ -331,137 +462,11 @@ object FlockFinderBenchmark {
     C
   }
 
-  /* SpatialJoin variant */
-  def runSpatialJoin(pointset: Dataset[ST_Point], timestamps: List[Int]): Dataset[Flock] ={
-    // Initialize partial result set...
+  private def pruneSubsets(flocks: Dataset[Flock], simba: SimbaSession): Dataset[Flock] = {
     import simba.implicits._
     import simba.simbaImplicits._
 
-    var FinalFlocks: Dataset[Flock] = simba.sparkContext.emptyRDD[Flock].toDS()
-    var nFinalFlocks: Long = 0
-    var F_prime: Dataset[Flock] = simba.sparkContext.emptyRDD[Flock].toDS()
-    var nF_prime: Long = 0
-    var U: Dataset[Flock] = simba.sparkContext.emptyRDD[Flock].toDS()
-    var nU: Long = 0
-    var timer: Long = 0
-    val epsilon: Double = conf.epsilon()
-    val mu: Int = conf.mu()
-    val delta: Int = conf.delta()
-    val printIntermediate: Boolean = conf.debug()
-    val speed: Double = conf.speed()
-    val distanceBetweenTimestamps = speed * delta
-
-    // For each new time instance t_i...
-    for(timestamp <- timestamps){
-      // Reported location for trajectories in time t_i...
-      timer = System.currentTimeMillis()
-      val currentPoints = pointset
-        .filter(datapoint => datapoint.t == timestamp)
-        .map{ datapoint =>
-          "%d\t%f\t%f".format(datapoint.id, datapoint.x, datapoint.y)
-        }
-        .rdd
-        .cache()
-      val nCurrentPoints = currentPoints.count()
-      logging("Reporting locations...", timer, nCurrentPoints, "points")
-
-      // Set of disks for t_i...
-      timer = System.currentTimeMillis()
-      val C: Dataset[Flock] = MaximalFinderExpansion
-        .run(currentPoints, simba, conf)
-        .map{ m =>
-          val disk = m.split(";")
-          val x = disk(0).toDouble
-          val y = disk(1).toDouble
-          val ids = disk(2)
-          Flock(timestamp, timestamp, ids, x, y)
-        }.toDS().cache()
-      val nC = C.count()
-      logging("Set of disks for t_i...", timer, nC, "disks")
-      if(debug) printFlocks(C)
-
-      var nFlocks: Long = 0
-      var nJoin: Long = 0
-      if(nF_prime != 0) {
-        // Distance Join phase with previous potential flocks...
-        timer = System.currentTimeMillis()
-        val cDS = C.index(RTreeType, "cRT", Array("x", "y"))
-        val fDS = F_prime.index(RTreeType, "f_primeRT", Array("x", "y"))
-        val join = fDS.distanceJoin(cDS, Array("x", "y"), Array("x", "y"), distanceBetweenTimestamps)
-        nJoin = join.count()
-        logging("Distance Join phase...", timer, nJoin, "combinations")
-        if(debug) join.show(truncate = false)
-
-        // At least mu...
-        timer = System.currentTimeMillis()
-        val the_mu = conf.mu()
-        val U_prime = join
-          .map { tuple =>
-            val ids1 = tuple.getString(7).split(" ").map(_.toLong)
-            val ids2 = tuple.getString(2).split(" ").map(_.toLong)
-            val u = ids1.intersect(ids2)
-            val length = u.length
-            val s = tuple.getInt(0) // set the initial time...
-            val e = timestamp // set the final time...
-            val ids = u.sorted.mkString(" ") // set flocks ids...
-            val x = tuple.getDouble(8)
-            val y = tuple.getDouble(9)
-            (Flock(s, e, ids, x, y), length)
-          }
-          .filter(flock => flock._2 >= the_mu)
-          .map(_._1).as[Flock]
-        if(debug) printFlocks(U_prime, "Before prune")
-        U = pruneFlocks(U_prime).cache()
-        if(debug) printFlocks(U, "After prune")
-        nU = U.count()
-        logging("Getting candidates...", timer, nU, "candidates")
-      } else {
-        U = C
-        nU = nC
-      }
-      // Found flocks...
-      timer = System.currentTimeMillis()
-      val flocks = U.filter(flock => flock.end - flock.start + 1 == delta).cache()
-      nFlocks = flocks.count()
-      logging("Found flocks...", timer, nFlocks, "flocks")
-
-      // Report flock patterns...
-      FinalFlocks = FinalFlocks.union(flocks).cache()
-      nFinalFlocks = FinalFlocks.count()
-
-      // Update u.t_start. Shift the time...
-      timer = System.currentTimeMillis()
-      val F = U.filter(flock => flock.end - flock.start + 1 != delta)
-        .union(flocks.map(u => Flock(u.start + 1, u.end, u.ids, u.x, u.y)))
-        .cache()
-      val nF = F.count()
-      logging("Updating times...", timer, nF, "flocks")
-      if(debug) printFlocks(F)
-
-      // Merge potential flocks U and disks C and adding to F...
-      timer = System.currentTimeMillis()
-      F_prime = F.union(C)
-        .rdd
-        .map(f => (f.ids, f))
-        .reduceByKey( (a,b) => if(a.start < b.start) a else b )
-        .map(_._2)
-        .toDS()
-        .cache()
-      nF_prime = F_prime.count()
-      logging("Filter phase...", timer, nF_prime, "flocks")
-      if(debug) printFlocks(F_prime)
-    }
-    // Reporting summary...
-    logger.warn("\n\nPFLOCK_SJ\t%.1f\t%d\t%d\t%d\n"
-      .format(epsilon, mu, delta, nFinalFlocks))
-
-    FinalFlocks
-  }
-
-  private def pruneSubsets(flocks: Dataset[Flock]): Dataset[Flock] = {
-    import simba.implicits._
-
-    pruneIDsSubsets(flocks).rdd
+    pruneIDsSubsets(flocks, simba).rdd
       .map(f => (f.ids, f))
       .reduceByKey{ (a,b) =>
         if(a.start < b.start){ a } else { b }
@@ -470,8 +475,9 @@ object FlockFinderBenchmark {
       .toDS()
   }
 
-  private def pruneIDsSubsets(flocks: Dataset[Flock]): Dataset[Flock] = {
+  private def pruneIDsSubsets(flocks: Dataset[Flock], simba: SimbaSession): Dataset[Flock] = {
     import simba.implicits._
+    import simba.simbaImplicits._
 
     val partitions = flocks.rdd.getNumPartitions
     flocks.map(_.ids)
@@ -495,7 +501,7 @@ object FlockFinderBenchmark {
     algorithm.runAlgorithm(transactions, 1).getItemsets(1).asScala.map(m => m.asScala.toList.sorted.mkString(" ")).toList.toIterator
   }
 
-  def pruneFlocks(flocks: Dataset[Flock]): Dataset[Flock] = {
+  def pruneFlocks(flocks: Dataset[Flock], simba: SimbaSession): Dataset[Flock] = {
     import simba.implicits._
     import simba.simbaImplicits._
 
@@ -574,7 +580,6 @@ object FlockFinderBenchmark {
     U_prime.toDS()
   }
 
-
   def logging(msg: String, timer: Long, n: Long = 0, tag: String = ""): Unit ={
     logger.info("%-50s | %6.2fs | %6d %s".format(msg, (System.currentTimeMillis() - timer)/1000.0, n, tag))
   }
@@ -585,7 +590,9 @@ object FlockFinderBenchmark {
     println(s"Number of flocks: $n")
   }
 
-  def printFlocks(flocks: Dataset[Flock], tag: String = ""): Unit = {
+  def printFlocks(flocks: Dataset[Flock], tag: String = "", simba: SimbaSession): Unit = {
+    import simba.implicits._
+    
     val n = flocks.count()
     val f = flocks.orderBy("start", "end", "ids")
       .map{ f =>
@@ -594,7 +601,8 @@ object FlockFinderBenchmark {
     logger.info(s"\n$tag Number of Flocks: $n\n\n$f\n\n$tag Number of Flocks: $n\n")
   }
 
-  def saveFlocks(flocks: Dataset[Flock], filename: String): Unit = {
+  def saveFlocks(flocks: Dataset[Flock], filename: String, simba: SimbaSession): Unit = {
+    import simba.implicits._
     new java.io.PrintWriter(filename) {
       write(
         flocks.map{ f =>
