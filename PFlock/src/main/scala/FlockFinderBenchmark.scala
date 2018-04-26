@@ -184,7 +184,7 @@ object FlockFinderBenchmark {
             .map(f => Flock(timestamp, timestamp + delta, f._1))
             .cache()
           logger.warn(s"F1: ${F1.count()}")
-/*
+
           val F2_prime = P_prime.filter(_._4 > epsilon * split)
             .map { p =>
               val ids = p._1.split(" ").map(_.toLong)
@@ -192,8 +192,8 @@ object FlockFinderBenchmark {
               points.map(p => ST_Point(p._2, p._1._1, p._1._2, t))
             }
           logger.warn(s"F2_prime: ${F2_prime.count()}")
-*/
-          /***/
+
+/*
           val Pointset_prime = P_prime.filter(_._4 > epsilon * split)
             .flatMap { p =>
               val ids = p._1.split(" ").map(_.toLong)
@@ -203,14 +203,14 @@ object FlockFinderBenchmark {
           logger.warn(s"Pointset_prime: ${Pointset_prime.count()}")
           val C_prime = getMaximalDisks(Pointset_prime, t, simba)
           logger.warn(s"C_prime: ${C_prime.count()}")
-          /***/
-/*
+*/
+
           val F2 = computeMaximalDisks(F2_prime, epsilon, mu, simba)
             .map(ids => Flock(timestamp, timestamp + delta, ids))
             .cache()
           logger.warn(s"F2: ${F2.count()}")
-*/
-          F_prime = F1.union(C_prime)
+
+          F_prime = F1.union(F2)
           nF_prime = F_prime.count()
           logger.warn(s"F_prime: $nF_prime")
         }
