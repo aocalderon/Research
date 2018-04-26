@@ -192,18 +192,12 @@ object FlockFinderBenchmark {
               points.map(p => ST_Point(p._2, p._1._1, p._1._2))
             }
           logger.warn(s"F2_prime: ${F2_prime.count()}")
-          val F3_prime = computeMaximalDisks(F2_prime, epsilon, mu, simba)
-            .map(ids => Flock(timestamp, timestamp + delta, ids))
-            .cache()
-          logger.warn(s"F3_prime: ${F3_prime.count()}")
-
-          val F2 = P_prime.filter(_._4 > epsilon * split)
-            .flatMap(f => computeMaximalDisks(f._1, f._2, f._3))
+          val F2 = computeMaximalDisks(F2_prime, epsilon, mu, simba)
             .map(ids => Flock(timestamp, timestamp + delta, ids))
             .cache()
           logger.warn(s"F2: ${F2.count()}")
 
-          F_prime = F1.union(F3_prime)
+          F_prime = F1.union(F2)
           logger.warn(s"F_prime: $nF_prime")
         }
         val F = pruneIDsSubsets(F_prime, simba).cache()
@@ -355,36 +349,6 @@ object FlockFinderBenchmark {
       }
   }
 
-  private def computeMaximalDisks(ids: String, Xs: List[Double], Ys: List[Double]): List[String] = {
-    val points = ids.split(" ").map(_.toLong).zip(Xs.zip(Ys)).map(p => ST_Point(p._1, p._2._1, p._2._2)).toList
-    val pairs = getPairs(points)
-    val centers = pairs.flatMap(computeCenters)
-    val disks = getDisks(points, centers)
-    filterDisks(disks)
-  }
-
-  def filterDisks(input: List[List[Long]]): List[String] ={
-    val mu = conf.mu()
-    var ids = new collection.mutable.ListBuffer[(List[Long], Boolean)]()
-    for( disk <- input.filter(_.lengthCompare(mu) >= 0) ){ ids += Tuple2(disk, true) }
-    for(i <- ids.indices){
-      for(j <- ids.indices){
-        if(i != j & ids(i)._2){
-          val ids1 = ids(i)._1
-          val ids2 = ids(j)._1
-          if(ids(j)._2 & ids1.forall(ids2.contains)){
-            ids(i) = Tuple2(ids(i)._1, false)
-          }
-          if(ids(i)._2 & ids2.forall(ids1.contains)){
-            ids(j) = Tuple2(ids(j)._1, false)
-          }
-        }
-      }
-    }
-
-    ids.filter(_._2).map(_._1.sorted.mkString(" ")).toList
-  }
-
   def filterDisks(input: List[List[Long]], mu: Int): List[String] ={
     var ids = new collection.mutable.ListBuffer[(List[Long], Boolean)]()
     for( disk <- input.filter(_.lengthCompare(mu) >= 0) ){ ids += Tuple2(disk, true) }
@@ -416,22 +380,6 @@ object FlockFinderBenchmark {
       .groupBy(_._1) // Grouping by the center...
       .map(_._2.map(_._2)) // Selecting just the list of IDs...
       .toList
-  }
-
-  def getPairs(points: List[ST_Point]): List[(ST_Point, ST_Point)] ={
-    val epsilon = conf.epsilon()
-    val precision = conf.precision()
-    val n = points.length
-    var pairs = collection.mutable.ListBuffer[(ST_Point, ST_Point)]()
-    for(i <- Range(0, n - 1)){
-      for(j <- Range(i + 1, n)) {
-        val d = dist((points(i).x, points(i).y), (points(j).x, points(j).y))
-        if(d <= epsilon + precision){
-          pairs += Tuple2(points(i), points(j))
-        }
-      }
-    }
-    pairs.toList
   }
 
   def getPairs(points: List[ST_Point], epsilon: Double): List[(ST_Point, ST_Point)] ={
