@@ -88,10 +88,10 @@ object FlockFinderBenchmark {
 
     // Running MergeLast V2.0...
     logger.info(s"method=MergeLast,cores=$cores,epsilon=$epsilon,mu=$mu,delta=$delta,master=$master")
-    timer = System.currentTimeMillis()
+    val timerML = System.currentTimeMillis()
     flocks = runMergeLast(pointset, timestamps, simba)
     nFlocks = flocks.count()
-    logging("Running MergeLast...", timer, nFlocks, "flocks")
+    logging("Running MergeLast...", timerML, nFlocks, "flocks")
     logger.info("=MergeLast End=")
     // Printing results...
     if(print) printFlocks(flocks, "", simba)
@@ -99,10 +99,10 @@ object FlockFinderBenchmark {
 /*
     // Running SpatialJoin...
     logger.info("=SpatialJoin Start=")
-    timer = System.currentTimeMillis()
+    val timerSJ = System.currentTimeMillis()
     flocks = runSpatialJoin(pointset, timestamps, simba)
     nFlocks = flocks.count()
-    logging("Running SpatialJoin...", timer, nFlocks, "flocks")
+    logging("Running SpatialJoin...", timerSJ, nFlocks, "flocks")
     logger.info("=SpatialJoin End=")
     // Printing results...
     if(print) printFlocks(flocks, "", simba)
@@ -189,15 +189,29 @@ object FlockFinderBenchmark {
             .map { p =>
               val ids = p._1.split(" ").map(_.toLong)
               val points = p._2 zip p._3 zip ids
-              points.map(p => ST_Point(p._2, p._1._1, p._1._2))
+              points.map(p => ST_Point(p._2, p._1._1, p._1._2, t))
             }
           logger.warn(s"F2_prime: ${F2_prime.count()}")
+          
+          /***/
+          val Pointset_prime = P_prime.filter(_._4 > epsilon * split)
+            .flatMap { p =>
+              val ids = p._1.split(" ").map(_.toLong)
+              val points = p._2 zip p._3 zip ids
+              points.map(p => ST_Point(p._2, p._1._1, p._1._2, t))
+            }
+          logger.warn(s"Pointset_prime: ${Pointset_prime.count()}")
+          val C_prime = getMaximalDisks(Pointset_prime, t, simba)
+          logger.warn(s"C_prime: ${C_prime.count()}")
+          /***/
+          
           val F2 = computeMaximalDisks(F2_prime, epsilon, mu, simba)
             .map(ids => Flock(timestamp, timestamp + delta, ids))
             .cache()
           logger.warn(s"F2: ${F2.count()}")
 
           F_prime = F1.union(F2)
+          nF_prime = F_prime.count()
           logger.warn(s"F_prime: $nF_prime")
         }
         val F = pruneIDsSubsets(F_prime, simba).cache()
@@ -337,6 +351,43 @@ object FlockFinderBenchmark {
     FinalFlocks
   }
 
+  private def computeMaximalDisksGetPairs(points: Dataset[List[ST_Point]], epsilon: Double, mu: Int, simba: SimbaSession): Dataset[String] = {
+    import simba.implicits._
+    import simba.simbaImplicits._
+
+    points.flatMap{ p: List[ST_Point] =>
+        getPairs(p, epsilon).map(pair => s"${pair._1} <=> ${pair._1}")
+      }
+  }
+
+  private def computeMaximalDisksGetCenters(points: Dataset[List[ST_Point]], epsilon: Double, mu: Int, simba: SimbaSession): Dataset[String] = {
+    import simba.implicits._
+    import simba.simbaImplicits._
+
+    points.flatMap{ p: List[ST_Point] =>
+        val pairs = getPairs(p, epsilon)
+        val centers = pairs.flatMap(computeCenters)
+        
+        centers.map(center => s"${center.id},${center.x},${center.y}")
+      }
+  }
+
+  private def computeMaximalDisksGetDisks(points: Dataset[List[ST_Point]], epsilon: Double, mu: Int, simba: SimbaSession): Dataset[String] = {
+    import simba.implicits._
+    import simba.simbaImplicits._
+
+    points.flatMap{ p: List[ST_Point] =>
+        val pairs = getPairs(p, epsilon)
+        val centers = pairs.flatMap(computeCenters)
+        val disks = getDisks(p, centers, epsilon)
+        
+        disks.map{ disk => 
+            val ids = disk.mkString(" ")
+            s"$ids"
+          }
+      }
+  }
+
   private def computeMaximalDisks(points: Dataset[List[ST_Point]], epsilon: Double, mu: Int, simba: SimbaSession): Dataset[String] = {
     import simba.implicits._
     import simba.simbaImplicits._
@@ -344,7 +395,7 @@ object FlockFinderBenchmark {
     points.flatMap{ p: List[ST_Point] =>
         val pairs = getPairs(p, epsilon)
         val centers = pairs.flatMap(computeCenters)
-        val disks = getDisks(p, centers)
+        val disks = getDisks(p, centers, epsilon)
         filterDisks(disks, mu)
       }
   }
@@ -370,9 +421,7 @@ object FlockFinderBenchmark {
     ids.filter(_._2).map(_._1.sorted.mkString(" ")).toList
   }
 
-  def getDisks(points: List[ST_Point], centers: List[ST_Point]): List[List[Long]] ={
-    val epsilon = conf.epsilon()
-    val precision = conf.precision()
+  def getDisks(points: List[ST_Point], centers: List[ST_Point], epsilon: Double): List[List[Long]] ={
     val PointCenter = for{ p <- points; c <- centers } yield (p, c)
     PointCenter.map(d => (d._2, d._1.id, dist( (d._1.x, d._1.y), (d._2.x, d._2.y) ))) // Getting the distance between centers and points...
       .filter(_._3 <= (epsilon / 2.0) + precision) // Filtering out those greater than epsilon / 2...
@@ -446,7 +495,7 @@ object FlockFinderBenchmark {
     import simba.implicits._
     import simba.simbaImplicits._
     // Getting points at timestamp t ...
-    var timer = System.currentTimeMillis()
+    val timer1 = System.currentTimeMillis()
     val points = pointset
       .filter(_.t == t)
       .map{ datapoint =>
@@ -455,10 +504,10 @@ object FlockFinderBenchmark {
       .rdd
       .cache()
     val nPoints = points.count()
-    if(conf.debug()) logging(s"Getting points at t=$t...", timer, nPoints, "points")
+    logging(s"Getting points at t=$t...", timer1, nPoints, "points")
 
     // Getting maximal disks at timestamp t ...
-    timer = System.currentTimeMillis()
+    val timer2 = System.currentTimeMillis()
     val C: Dataset[Flock] = MaximalFinderExpansion
       .run(points, simba, conf)
       .map{ m =>
@@ -469,7 +518,7 @@ object FlockFinderBenchmark {
         Flock(t, t, ids, x, y)
       }.toDS().cache()
     val nC = C.count()
-    if(conf.debug()) logging(s"Getting maximal disks at t=$t...", timer, nC, "disks")
+    logging(s"Getting maximal disks at t=$t...", timer2, nC, "disks")
 
     C
   }
