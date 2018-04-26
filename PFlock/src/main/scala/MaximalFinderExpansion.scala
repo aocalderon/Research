@@ -125,7 +125,7 @@ object MaximalFinderExpansion {
     timer = System.currentTimeMillis()
     val candidatePoints = filteredDisks
       .map{ c =>
-        ( c.getLong(0), c.getList[Long](3).asScala)
+        ( c.getLong(0), c.getList[Long](3).asScala )
       }
       .toDF("cid", "items")
       .withColumn("pid", explode($"items"))

@@ -1,6 +1,4 @@
 import SPMF.AlgoFPMax
-import com.typesafe.config._
-import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.simba.index.RTreeType
@@ -23,6 +21,8 @@ object FlockFinderBenchmark {
   private var debug: Boolean = false
   private var print: Boolean = false
   private var r2: Double = 0.0
+  private var precision: Double = 0.001
+  private var split: Double = 0.75
 
   def run(): Unit = {
     // Starting a session...
@@ -178,26 +178,33 @@ object FlockFinderBenchmark {
 
             (ids, Xs, Ys, d)
           }
-          P_prime.show(10, truncate = false)
           logger.warn(s"P_prime: ${P_prime.count()}")
-          val F1 = P_prime.filter(_._4 <= epsilon * 0.75)
+
+          val F1 = P_prime.filter(_._4 <= epsilon * split)
             .map(f => Flock(timestamp, timestamp + delta, f._1))
             .cache()
-          F1.show(10, truncate = false)
           logger.warn(s"F1: ${F1.count()}")
 
-          val test = P_prime.filter(_._4 > epsilon * 0.75)
-            .flatMap(f => computeMaximalDisks(f._1, f._2, f._3))
-          test.show(10, truncate = false)
-          logger.warn(s"Test: ${test.count()}")
+          val F2_prime = P_prime.filter(_._4 > epsilon * split)
+            .map { p =>
+              val ids = p._1.split(" ").map(_.toLong)
+              val points = p._2 zip p._3 zip ids
+              points.map(p => ST_Point(p._2, p._1._1, p._1._2))
+            }
+          logger.warn(s"F2_prime: ${F2_prime.count()}")
+          val F3_prime = computeMaximalDisks(F2_prime, epsilon, mu, simba)
+            .map(ids => Flock(timestamp, timestamp + delta, ids))
+            .cache()
+          logger.warn(s"F3_prime: ${F3_prime.count()}")
 
-          val F2 = P_prime.filter(_._4 > epsilon * 0.75)
+          val F2 = P_prime.filter(_._4 > epsilon * split)
             .flatMap(f => computeMaximalDisks(f._1, f._2, f._3))
             .map(ids => Flock(timestamp, timestamp + delta, ids))
             .cache()
-          F_prime = F1.union(F2)
-          nF_prime = F_prime.count()
-          logger.warn(s"F_prime: ${nF_prime}")
+          logger.warn(s"F2: ${F2.count()}")
+
+          F_prime = F1.union(F3_prime)
+          logger.warn(s"F_prime: $nF_prime")
         }
         val F = pruneIDsSubsets(F_prime, simba).cache()
         val nF = F.count()
@@ -336,6 +343,18 @@ object FlockFinderBenchmark {
     FinalFlocks
   }
 
+  private def computeMaximalDisks(points: Dataset[List[ST_Point]], epsilon: Double, mu: Int, simba: SimbaSession): Dataset[String] = {
+    import simba.implicits._
+    import simba.simbaImplicits._
+
+    points.flatMap{ p: List[ST_Point] =>
+        val pairs = getPairs(p, epsilon)
+        val centers = pairs.flatMap(computeCenters)
+        val disks = getDisks(p, centers)
+        filterDisks(disks, mu)
+      }
+  }
+
   private def computeMaximalDisks(ids: String, Xs: List[Double], Ys: List[Double]): List[String] = {
     val points = ids.split(" ").map(_.toLong).zip(Xs.zip(Ys)).map(p => ST_Point(p._1, p._2._1, p._2._2)).toList
     val pairs = getPairs(points)
@@ -346,6 +365,27 @@ object FlockFinderBenchmark {
 
   def filterDisks(input: List[List[Long]]): List[String] ={
     val mu = conf.mu()
+    var ids = new collection.mutable.ListBuffer[(List[Long], Boolean)]()
+    for( disk <- input.filter(_.lengthCompare(mu) >= 0) ){ ids += Tuple2(disk, true) }
+    for(i <- ids.indices){
+      for(j <- ids.indices){
+        if(i != j & ids(i)._2){
+          val ids1 = ids(i)._1
+          val ids2 = ids(j)._1
+          if(ids(j)._2 & ids1.forall(ids2.contains)){
+            ids(i) = Tuple2(ids(i)._1, false)
+          }
+          if(ids(i)._2 & ids2.forall(ids1.contains)){
+            ids(j) = Tuple2(ids(j)._1, false)
+          }
+        }
+      }
+    }
+
+    ids.filter(_._2).map(_._1.sorted.mkString(" ")).toList
+  }
+
+  def filterDisks(input: List[List[Long]], mu: Int): List[String] ={
     var ids = new collection.mutable.ListBuffer[(List[Long], Boolean)]()
     for( disk <- input.filter(_.lengthCompare(mu) >= 0) ){ ids += Tuple2(disk, true) }
     for(i <- ids.indices){
@@ -381,6 +421,20 @@ object FlockFinderBenchmark {
   def getPairs(points: List[ST_Point]): List[(ST_Point, ST_Point)] ={
     val epsilon = conf.epsilon()
     val precision = conf.precision()
+    val n = points.length
+    var pairs = collection.mutable.ListBuffer[(ST_Point, ST_Point)]()
+    for(i <- Range(0, n - 1)){
+      for(j <- Range(i + 1, n)) {
+        val d = dist((points(i).x, points(i).y), (points(j).x, points(j).y))
+        if(d <= epsilon + precision){
+          pairs += Tuple2(points(i), points(j))
+        }
+      }
+    }
+    pairs.toList
+  }
+
+  def getPairs(points: List[ST_Point], epsilon: Double): List[(ST_Point, ST_Point)] ={
     val n = points.length
     var pairs = collection.mutable.ListBuffer[(ST_Point, ST_Point)]()
     for(i <- Range(0, n - 1)){
@@ -626,6 +680,9 @@ object FlockFinderBenchmark {
   def main(args: Array[String]): Unit = {
     logger.info("Starting app...")
     conf = new Conf(args)
+    precision = conf.precision()
+    split = conf.split()
+
     FlockFinderBenchmark.run()
   }
 }
