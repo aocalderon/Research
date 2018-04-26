@@ -43,5 +43,3 @@ for delta in range(min_delta, max_delta + 1, step_delta):
         pflock_jar, args.path, args.dataset, args.speed, epsilon, mu, delta, args.cores, args.partitions)
       logging.warning(command)
       subprocess.call(command, shell=True)
-print("DONE!!!")
-
