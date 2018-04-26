@@ -7,19 +7,19 @@ from datetime import datetime
 ## Reading arguments...
 parser = argparse.ArgumentParser()
 parser.add_argument("--min_epsilon",  "-e1",    default=30,                 help="Minimum epsilon...")
-parser.add_argument("--max_epsilon",  "-e2",    default=50,                 help="Maximum epsilon...")
+parser.add_argument("--max_epsilon",  "-e2",    default=30,                 help="Maximum epsilon...")
 parser.add_argument("--step_epsilon", "-se",  default=5,                  help="Step in epsilon...")
 parser.add_argument("--min_mu",       "-m1",    default=4,                  help="Minimum mu...")
-parser.add_argument("--max_mu",       "-m2",    default=5,                  help="Maximum mu...")
+parser.add_argument("--max_mu",       "-m2",    default=4,                  help="Maximum mu...")
 parser.add_argument("--step_mu",      "-sm",  default=1,                  help="Step in mu...")
 parser.add_argument("--min_delta",    "-d1",    default=4,                  help="Minimum delta...")
-parser.add_argument("--max_delta",    "-d2",    default=5,                  help="Maximum delta...")
+parser.add_argument("--max_delta",    "-d2",    default=4,                  help="Maximum delta...")
 parser.add_argument("--step_delta",   "-sd",  default=1,                  help="Step in delta...")
 parser.add_argument("--path",         "-p",   default="Datasets/Berlin/", help="URL path...")
-parser.add_argument("--dataset",      "-i",   default="berlin0-10",       help="Point dataset...")
+parser.add_argument("--dataset",      "-i",   default="berlin0-3",       help="Point dataset...")
 parser.add_argument("--speed",        "-s",   default=10,                 help="PFlock speed between timestamps...")
 parser.add_argument("--partitions",   "-n",   default=1024,               help="PFlock number of partitions...")
-parser.add_argument("--iterations",   "-x",   default=3,                  help="Number of iterations...")
+parser.add_argument("--iterations",   "-x",   default=1,                  help="Number of iterations...")
 args = parser.parse_args()
 
 
@@ -50,21 +50,22 @@ def runFlockFinder(cores):
     )
     logging.warning(command)
     subprocess.call(command, shell=True)
-    logging.warning("Iteration {0} has ended...".format(i + 1))
+    logging.warning("Iteration {0} has ended...\n\n".format(i + 1))
 
 CORES_PER_NODE = 7
 
-for NODES in [4,3,2,1]:
-  subprocess.call("touch nohup.out", shell=True)
-  logging.warning("Setting nodes...")
+for NODES in [4]:
+  logging.warning("Setting {0} nodes...\n\n".format(NODES))
   setNodes(NODES)
-  logging.warning("Running FlockFinder Benchmark...")
+  logging.warning("{0} nodes has been set...\n\n".format(NODES))
+  logging.warning("Running FlockFinder Benchmark...\n\n")
   runFlockFinder(NODES * CORES_PER_NODE)
-  logging.warning("Done...")
+  logging.warning("FlockFinder Benchmark has been run...\n\n")
   
 now = datetime.now().isoformat("_","seconds")
 command = "mv nohup.out OutputFlockFinder_E{0}-{1}_M{2}-{3}_D{4}-{5}_{6}.out".format(
 args.min_epsilon,args.max_epsilon,args.min_mu,args.max_mu,args.min_delta,args.max_delta,now)
-subprocess.call(command, shell=True)
+#subprocess.call(command, shell=True)
+subprocess.call("{0}/sbin/stop-all.sh".format(spark_home), shell=True)
 logging.warning("*** Everything is done!!! ***")
   

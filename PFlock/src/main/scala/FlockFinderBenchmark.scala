@@ -40,7 +40,6 @@ object FlockFinderBenchmark {
       .config("spark.cores.max", cores)
       .getOrCreate()
     simba.sparkContext.setLogLevel(conf.logs())
-    logger.info(s"cores=$cores,partitions=$partitions,epsilon=$epsilon,mu=$mu,delta=$delta,master=$master")
     
     import simba.implicits._
     import simba.simbaImplicits._
@@ -88,7 +87,7 @@ object FlockFinderBenchmark {
     logging("Extracting timestamps", timer, nTimestamps, "timestamps")
 
     // Running MergeLast V2.0...
-    logger.info("=MergeLast Start=")
+    logger.info(s"method=MergeLast,cores=$cores,epsilon=$epsilon,mu=$mu,delta=$delta,master=$master")
     timer = System.currentTimeMillis()
     flocks = runMergeLast(pointset, timestamps, simba)
     nFlocks = flocks.count()
@@ -97,7 +96,7 @@ object FlockFinderBenchmark {
     // Printing results...
     if(print) printFlocks(flocks, "", simba)
     if(debug) saveFlocks(flocks, s"/tmp/PFLOCK-ML_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt", simba)
-
+/*
     // Running SpatialJoin...
     logger.info("=SpatialJoin Start=")
     timer = System.currentTimeMillis()
@@ -108,7 +107,7 @@ object FlockFinderBenchmark {
     // Printing results...
     if(print) printFlocks(flocks, "", simba)
     if(debug) saveFlocks(flocks, s"/tmp/PFLOCK-SJ_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt", simba)
-
+*/
     // Closing all...
     logger.info("Closing app...")
     simba.close()
@@ -128,6 +127,7 @@ object FlockFinderBenchmark {
     val mu: Int = conf.mu()
     val distanceBetweenTimestamps: Double = conf.speed() * conf.delta()
     val epsilon: Double = conf.epsilon()
+    r2 = Math.pow(conf.epsilon() / 2.0, 2)
 
     for(timestamp <- timestamps.slice(0, timestamps.length - delta)) {
       // Getting points at timestamp t ...
@@ -178,15 +178,26 @@ object FlockFinderBenchmark {
 
             (ids, Xs, Ys, d)
           }
+          P_prime.show(10, truncate = false)
+          logger.warn(s"P_prime: ${P_prime.count()}")
           val F1 = P_prime.filter(_._4 <= epsilon * 0.75)
             .map(f => Flock(timestamp, timestamp + delta, f._1))
             .cache()
+          F1.show(10, truncate = false)
+          logger.warn(s"F1: ${F1.count()}")
+
+          val test = P_prime.filter(_._4 > epsilon * 0.75)
+            .flatMap(f => computeMaximalDisks(f._1, f._2, f._3))
+          test.show(10, truncate = false)
+          logger.warn(s"Test: ${test.count()}")
+
           val F2 = P_prime.filter(_._4 > epsilon * 0.75)
             .flatMap(f => computeMaximalDisks(f._1, f._2, f._3))
             .map(ids => Flock(timestamp, timestamp + delta, ids))
             .cache()
           F_prime = F1.union(F2)
           nF_prime = F_prime.count()
+          logger.warn(s"F_prime: ${nF_prime}")
         }
         val F = pruneIDsSubsets(F_prime, simba).cache()
         val nF = F.count()
@@ -328,7 +339,6 @@ object FlockFinderBenchmark {
   private def computeMaximalDisks(ids: String, Xs: List[Double], Ys: List[Double]): List[String] = {
     val points = ids.split(" ").map(_.toLong).zip(Xs.zip(Ys)).map(p => ST_Point(p._1, p._2._1, p._2._2)).toList
     val pairs = getPairs(points)
-    r2 = Math.pow(conf.epsilon() / 2.0, 2)
     val centers = pairs.flatMap(computeCenters)
     val disks = getDisks(points, centers)
     filterDisks(disks)
@@ -393,7 +403,7 @@ object FlockFinderBenchmark {
     var centerPair = collection.mutable.ListBuffer[ST_Point]()
     val X: Double = pair._1.x - pair._2.x
     val Y: Double = pair._1.y - pair._2.y
-    val D2: Double = math.pow(X, 2) + math.pow(Y, 2)
+    val D2: Double = Math.pow(X, 2) + Math.pow(Y, 2)
     if (D2 != 0.0){
       val root: Double = math.sqrt(math.abs(4.0 * (r2 / D2) - 1.0))
       val h1: Double = ((X + Y * root) / 2) + pair._2.x
