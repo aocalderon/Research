@@ -4,7 +4,7 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr, stringr, dplyr)
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 
-dataFile = '/home/and/Documents/PhD/Research/Experiments/FlockFinder_v1.0/nohup.out'
+dataFile = '/home/and/Documents/PhD/Research/Script/Python/nohup.out'
 
 getDataByMethod <- function(dataFile){
   lines = readLines(dataFile)
