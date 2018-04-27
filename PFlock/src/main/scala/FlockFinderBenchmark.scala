@@ -22,7 +22,7 @@ object FlockFinderBenchmark {
   private var print: Boolean = false
   private var r2: Double = 0.0
   private var precision: Double = 0.001
-  private var split: Double = 0.75
+  private var split: Double = 0.99
 
   def run(): Unit = {
     // Starting a session...
@@ -181,6 +181,13 @@ object FlockFinderBenchmark {
           }
           logger.warn(s"P_prime: ${P_prime.count()}")
 
+          //val PP1 = P_prime.filter(_._4 <= epsilon * split).map(p => (p._1, p._4)).toDF("ids", "d").orderBy("d", "ids")
+          //PP1.show(PP1.count().toInt, truncate = false)
+          //logger.warn(s"PP1: ${PP1.count()}")
+          //val PP2 = P_prime.filter(_._4 >  epsilon * split).map(p => (p._1, p._4)).toDF("ids", "d").orderBy("d", "ids")
+          //PP2.show(PP2.count().toInt, truncate = false)
+          //logger.warn(s"PP2: ${PP2.count()}")
+          
           val F1 = P_prime.filter(_._4 <= epsilon * split)
             .map(f => Flock(timestamp, timestamp + delta, f._1))
             .cache()
@@ -237,16 +244,21 @@ object FlockFinderBenchmark {
           //logger.warn(s"F2_prime: ${F2_prime.count()}")
 
           //val F2 = computeMaximalDisks(F2_prime, epsilon, mu, simba)
-          val F2 = Points_prime3
+          val F2 = Points_prime3.distinct()
             .map(ids => Flock(timestamp, timestamp + delta, ids))
             .cache()
-          logger.warn(s"F2: ${F2.count()}")
-
-          F_prime = F1.union(F2)
+          //F2.show(truncate = false)
+          //logger.warn(s"F2: ${F2.count()}")
+          val F2_pruned = pruneFlocks(F2, simba)
+          //F2_pruned.show(truncate = false)
+          //logger.warn(s"F2_pruned: ${F2_pruned.count()}")
+          
+          
+          F_prime = F1.union(F2_pruned)
           nF_prime = F_prime.count()
           logger.warn(s"F_prime: $nF_prime")
         }
-        val F = pruneIDsSubsets(F_prime, simba).cache()
+        val F = pruneFlocks(F_prime, simba).cache()
         val nF = F.count()
         logging("Checking internal timestamps...", timer, nF, "flocks")
 
