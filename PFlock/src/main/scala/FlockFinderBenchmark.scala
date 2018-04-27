@@ -74,6 +74,7 @@ object FlockFinderBenchmark {
       .cache()
     val nPointset = pointset.count()
     logging("Reading data", timer, nPointset, "points")
+    pointset.
 
     // Extracting timestamps...
     timer = System.currentTimeMillis()
@@ -95,7 +96,7 @@ object FlockFinderBenchmark {
     logger.info("=MergeLast End=")
     // Printing results...
     if(print) printFlocks(flocks, "", simba)
-    if(debug) saveFlocks(flocks, s"/tmp/PFLOCK-ML_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt", simba)
+    if(debug) saveFlocks(flocks, s"/tmp/PFLOCK_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt", simba)
 /*
     // Running SpatialJoin...
     logger.info("=SpatialJoin Start=")
@@ -192,18 +193,6 @@ object FlockFinderBenchmark {
               points.map(p => ST_Point(p._2, p._1._1, p._1._2, t))
             }
           logger.warn(s"F2_prime: ${F2_prime.count()}")
-
-/*
-          val Pointset_prime = P_prime.filter(_._4 > epsilon * split)
-            .flatMap { p =>
-              val ids = p._1.split(" ").map(_.toLong)
-              val points = p._2 zip p._3 zip ids
-              points.map(p => ST_Point(p._2, p._1._1, p._1._2, t))
-            }
-          logger.warn(s"Pointset_prime: ${Pointset_prime.count()}")
-          val C_prime = getMaximalDisks(Pointset_prime, t, simba)
-          logger.warn(s"C_prime: ${C_prime.count()}")
-*/
 
           val F2 = computeMaximalDisks(F2_prime, epsilon, mu, simba)
             .map(ids => Flock(timestamp, timestamp + delta, ids))
@@ -398,6 +387,7 @@ object FlockFinderBenchmark {
         val disks = getDisks(p, centers, epsilon)
         filterDisks(disks, mu)
       }
+
   }
 
   def filterDisks(input: List[List[Long]], mu: Int): List[String] ={
