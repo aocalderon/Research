@@ -5,8 +5,8 @@ pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr, stringr, dplyr)
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 PATH = "Scripts/R/SJvsML_Analysis/"
 SAVE_PDF = T
-W = 800
-H = 600
+W = 6
+H = 6
 
 dataSJ = read.csv(paste0(RESEARCH_HOME, PATH, 'SpatialJoinTimes.csv'), header = F)
 dataML = read.csv(paste0(RESEARCH_HOME, PATH, 'MergeLastTimes.csv'), header = F)
@@ -18,10 +18,13 @@ data$Mu      = as.numeric(as.character(data$Mu))
 data$Delta   = as.numeric(as.character(data$Delta))
 data$Time    = as.numeric(as.character(data$Time))
 
-data = data[data$Cores == 28, ]
+muDefault    = 4
+deltaDefault = 4
+coresDefault = 21
 
+dataDelta = data[data$Cores == coresDefault & data$Mu == muDefault, ]
 title = "Execution time by delta"
-g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Method)) +
+g = ggplot(data=dataDelta, aes(x=factor(Epsilon), y=Time, fill=Method)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) +
   facet_wrap(~Delta)
@@ -31,8 +34,9 @@ if(SAVE_PDF){
   plot(g)
 }
  
+dataMu = data[data$Cores == coresDefault & data$Delta == deltaDefault, ]
 title = "Execution time by mu"
-g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Method)) +
+g = ggplot(data=dataMu, aes(x=factor(Epsilon), y=Time, fill=Method)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) +
   facet_wrap(~Mu)
