@@ -85,7 +85,7 @@ object FlockFinderBenchmark {
       .toList
     val nTimestamps = timestamps.length
     logging("Extracting timestamps", timer, nTimestamps, "timestamps")
-
+/*
     // Running MergeLast V2.0...
     logger.info(s"method=MergeLast,cores=$cores,epsilon=$epsilon,mu=$mu,delta=$delta,master=$master")
     val timerML = System.currentTimeMillis()
@@ -96,7 +96,7 @@ object FlockFinderBenchmark {
     // Printing results...
     if(print) printFlocks(flocks, "", simba)
     if(debug) saveFlocks(flocks, s"/tmp/PFLOCK_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt", simba)
-/*
+*/
     // Running SpatialJoin...
     logger.info("=SpatialJoin Start=")
     val timerSJ = System.currentTimeMillis()
@@ -107,7 +107,7 @@ object FlockFinderBenchmark {
     // Printing results...
     if(print) printFlocks(flocks, "", simba)
     if(debug) saveFlocks(flocks, s"/tmp/PFLOCK-SJ_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt", simba)
-*/
+
     // Closing all...
     logger.info("Closing app...")
     simba.close()
