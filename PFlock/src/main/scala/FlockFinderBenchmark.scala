@@ -171,12 +171,13 @@ object FlockFinderBenchmark {
             .groupBy("flockID")
             .agg(collect_list($"id"), collect_list($"x"), collect_list($"y"))
           val P_prime = P.map { p =>
+            val fid = p.getLong(0)
             val ids = p.getList[Long](1).asScala.toList.mkString(" ")
             val Xs = p.getList[Double](2).asScala.toList
             val Ys = p.getList[Double](3).asScala.toList
             val d = getMaximalDistance(Xs zip Ys)
 
-            (ids, Xs, Ys, d)
+            (ids, Xs, Ys, d, fid)
           }
           logger.warn(s"P_prime: ${P_prime.count()}")
 
@@ -185,15 +186,58 @@ object FlockFinderBenchmark {
             .cache()
           logger.warn(s"F1: ${F1.count()}")
 
-          val F2_prime = P_prime.filter(_._4 > epsilon * split)
-            .map { p =>
-              val ids = p._1.split(" ").map(_.toLong)
-              val points = p._2 zip p._3 zip ids
-              points.map(p => ST_Point(p._2, p._1._1, p._1._2, t))
-            }
-          logger.warn(s"F2_prime: ${F2_prime.count()}")
 
-          val F2 = computeMaximalDisks(F2_prime, epsilon, mu, simba)
+          /***/
+          import org.apache.spark.sql.expressions.Window;
+          val Points_prime = P_prime.filter(_._4 > epsilon * split)
+            .map(p => (p._1, p._2, p._3))
+            .toDF("ids", "xs", "ys")
+            .withColumn("fid",row_number().over(Window.orderBy("ids")))
+            .select("ids", "xs", "ys", "fid")
+          //Points_prime.show(truncate = false)
+          //val nPoints_prime = Points_prime.count()
+          //logger.warn(s"Points_Prime: $nPoints_prime")
+          val Points_prime1 = Points_prime.flatMap { p =>
+              val ids = p.getString(0).split(" ").map(_.toLong)
+              val Xs = p.getList[Double](1).asScala.toList
+              val Ys = p.getList[Double](2).asScala.toList
+              val fid = p.getInt(3)
+              val points = Xs zip Ys zip ids
+              points.map(p => (fid, s"${p._2},${p._1._1},${p._1._2}"))
+            }
+          //Points_prime1.show(truncate = false)
+          val nPoints_prime1 = Points_prime1.count()
+          //logger.warn(s"Points_Prime1: $nPoints_prime1")
+          val Points_prime2 =  Points_prime1.rdd
+            .keyBy(_._1)
+            .partitionBy(new FlockPartitioner(nPoints_prime1.toInt))
+            .map(_._2._2)
+          val Points_prime3 = Points_prime2.mapPartitionsWithIndex{ (i, p) =>
+              val points = p.map{ p =>
+                val arr = p.split(",")
+                ST_Point(arr(0).toLong, arr(1).toDouble, arr(2).toDouble,0)
+              }.toList
+              val pairs = getPairs(points, epsilon)
+              val centers = pairs.flatMap(computeCenters)
+              val disks = getDisks(points, centers, epsilon)
+              filterDisks(disks, mu).toIterator
+            }
+            .toDS()
+          //Points_prime3.show(truncate = false)
+          //val nPoints_prime3 = Points_prime3.count()
+          //logger.warn(s"Points_Prime1: $nPoints_prime3")
+          /***/
+
+          //val F2_prime = P_prime.filter(_._4 > epsilon * split)
+          //  .map { p =>
+          //    val ids = p._1.split(" ").map(_.toLong)
+          //    val points = p._2 zip p._3 zip ids
+          //    points.map(p => ST_Point(p._2, p._1._1, p._1._2, t))
+          //  }
+          //logger.warn(s"F2_prime: ${F2_prime.count()}")
+
+          //val F2 = computeMaximalDisks(F2_prime, epsilon, mu, simba)
+          val F2 = Points_prime3
             .map(ids => Flock(timestamp, timestamp + delta, ids))
             .cache()
           logger.warn(s"F2: ${F2.count()}")
@@ -339,41 +383,12 @@ object FlockFinderBenchmark {
     FinalFlocks
   }
 
-  private def computeMaximalDisksGetPairs(points: Dataset[List[ST_Point]], epsilon: Double, mu: Int, simba: SimbaSession): Dataset[String] = {
-    import simba.implicits._
-    import simba.simbaImplicits._
+  import org.apache.spark.Partitioner
+  class FlockPartitioner(override val numPartitions: Int) extends Partitioner {
 
-    points.flatMap{ p: List[ST_Point] =>
-        getPairs(p, epsilon).map(pair => s"${pair._1} <=> ${pair._1}")
-      }
-  }
-
-  private def computeMaximalDisksGetCenters(points: Dataset[List[ST_Point]], epsilon: Double, mu: Int, simba: SimbaSession): Dataset[String] = {
-    import simba.implicits._
-    import simba.simbaImplicits._
-
-    points.flatMap{ p: List[ST_Point] =>
-        val pairs = getPairs(p, epsilon)
-        val centers = pairs.flatMap(computeCenters)
-        
-        centers.map(center => s"${center.id},${center.x},${center.y}")
-      }
-  }
-
-  private def computeMaximalDisksGetDisks(points: Dataset[List[ST_Point]], epsilon: Double, mu: Int, simba: SimbaSession): Dataset[String] = {
-    import simba.implicits._
-    import simba.simbaImplicits._
-
-    points.flatMap{ p: List[ST_Point] =>
-        val pairs = getPairs(p, epsilon)
-        val centers = pairs.flatMap(computeCenters)
-        val disks = getDisks(p, centers, epsilon)
-        
-        disks.map{ disk => 
-            val ids = disk.mkString(" ")
-            s"$ids"
-          }
-      }
+    def getPartition(key: Any): Int = {
+      return key.asInstanceOf[Int]
+    }
   }
 
   private def computeMaximalDisks(points: Dataset[List[ST_Point]], epsilon: Double, mu: Int, simba: SimbaSession): Dataset[String] = {
