@@ -6,13 +6,13 @@ from datetime import datetime
 
 ## Reading arguments...
 parser = argparse.ArgumentParser()
-parser.add_argument("--min_epsilon",  "-e1",    default=30,                 help="Minimum epsilon...")
+parser.add_argument("--min_epsilon",  "-e1",    default=50,                 help="Minimum epsilon...")
 parser.add_argument("--max_epsilon",  "-e2",    default=50,                 help="Maximum epsilon...")
 parser.add_argument("--step_epsilon", "-se",  default=5,                  help="Step in epsilon...")
-parser.add_argument("--min_mu",       "-m1",    default=4,                  help="Minimum mu...")
+parser.add_argument("--min_mu",       "-m1",    default=5,                  help="Minimum mu...")
 parser.add_argument("--max_mu",       "-m2",    default=5,                  help="Maximum mu...")
 parser.add_argument("--step_mu",      "-sm",  default=1,                  help="Step in mu...")
-parser.add_argument("--min_delta",    "-d1",    default=4,                  help="Minimum delta...")
+parser.add_argument("--min_delta",    "-d1",    default=5,                  help="Minimum delta...")
 parser.add_argument("--max_delta",    "-d2",    default=5,                  help="Maximum delta...")
 parser.add_argument("--step_delta",   "-sd",  default=1,                  help="Step in delta...")
 parser.add_argument("--path",         "-p",   default="Datasets/Berlin/", help="URL path...")
@@ -54,7 +54,7 @@ def runFlockFinder(cores):
 
 CORES_PER_NODE = 7
 
-for NODES in [4]:
+for NODES in [3]:
   logging.warning("Setting {0} nodes...\n\n".format(NODES))
   setNodes(NODES)
   logging.warning("{0} nodes has been set...\n\n".format(NODES))
