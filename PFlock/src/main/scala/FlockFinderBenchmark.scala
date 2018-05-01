@@ -20,7 +20,6 @@ object FlockFinderBenchmark {
   private var timer: Long = System.currentTimeMillis()
   private var debug: Boolean = false
   private var print: Boolean = false
-  private var r2: Double = 0.0
   private var precision: Double = 0.001
   private var split: Double = 0.99
 
@@ -85,7 +84,7 @@ object FlockFinderBenchmark {
       .toList
     val nTimestamps = timestamps.length
     logging("Extracting timestamps", timer, nTimestamps, "timestamps")
-/*
+
     // Running MergeLast V2.0...
     logger.info(s"method=MergeLast,cores=$cores,epsilon=$epsilon,mu=$mu,delta=$delta,master=$master")
     val timerML = System.currentTimeMillis()
@@ -96,9 +95,9 @@ object FlockFinderBenchmark {
     // Printing results...
     if(print) printFlocks(flocks, "", simba)
     if(debug) saveFlocks(flocks, s"/tmp/PFLOCK_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt", simba)
-*/
+
     // Running SpatialJoin...
-    logger.info("=SpatialJoin Start=")
+    logger.info(s"method=SpatialJoin,cores=$cores,epsilon=$epsilon,mu=$mu,delta=$delta,master=$master")
     val timerSJ = System.currentTimeMillis()
     flocks = runSpatialJoin(pointset, timestamps, simba)
     nFlocks = flocks.count()
@@ -127,7 +126,7 @@ object FlockFinderBenchmark {
     val mu: Int = conf.mu()
     val distanceBetweenTimestamps: Double = conf.speed() * conf.delta()
     val epsilon: Double = conf.epsilon()
-    r2 = Math.pow(conf.epsilon() / 2.0, 2)
+    val r2 = Math.pow(epsilon / 2.0, 2)
 
     for(timestamp <- timestamps.slice(0, timestamps.length - delta)) {
       // Getting points at timestamp t ...
@@ -219,15 +218,66 @@ object FlockFinderBenchmark {
             .keyBy(_._1)
             .partitionBy(new FlockPartitioner(nPoints_prime1.toInt))
             .map(_._2._2)
+          
+/*
+          val nFlocks = Points_prime.count()
+          val nPoints = Points_prime2.count()
+          val nPairs = Points_prime2.mapPartitionsWithIndex{ (i, p) =>
+              val points = p.map{ p =>
+                val arr = p.split(",")
+                ST_Point(arr(0).toLong, arr(1).toDouble, arr(2).toDouble,0)
+              }.toList
+              val pairs   = getPairs(points, epsilon)
+              pairs.toIterator
+            }
+            .count()
+          val nCenters = Points_prime2.mapPartitionsWithIndex{ (i, p) =>
+              val points = p.map{ p =>
+                val arr = p.split(",")
+                ST_Point(arr(0).toLong, arr(1).toDouble, arr(2).toDouble,0)
+              }.toList
+              val pairs   = getPairs(points, epsilon)
+              val centers = pairs.flatMap(pair => computeCenters(pair, r2))
+              centers.toIterator
+            }
+            .count()
+          val nDisks = Points_prime2.mapPartitionsWithIndex{ (i, p) =>
+              val points = p.map{ p =>
+                val arr = p.split(",")
+                ST_Point(arr(0).toLong, arr(1).toDouble, arr(2).toDouble,0)
+              }.toList
+              val pairs   = getPairs(points, epsilon)
+              val centers = pairs.flatMap(pair => computeCenters(pair, r2))
+              val disks   = getDisks(points, centers, epsilon)
+              disks.toIterator
+            }
+            .count()
+          val nIDs = Points_prime2.mapPartitionsWithIndex{ (i, p) =>
+              val points = p.map{ p =>
+                val arr = p.split(",")
+                ST_Point(arr(0).toLong, arr(1).toDouble, arr(2).toDouble,0)
+              }.toList
+              val pairs   = getPairs(points, epsilon)
+              val centers = pairs.flatMap(pair => computeCenters(pair, r2))
+              val disks   = getDisks(points, centers, epsilon)
+              val ids     = filterDisks(disks, mu).toIterator
+              ids.toIterator
+            }
+            .count()
+            logger.warn(s"Flocks: $nFlocks Points: $nPoints Pairs: $nPairs Centers: $nCenters Disks: $nDisks IDs: $nIDs")
+*/
+
           val Points_prime3 = Points_prime2.mapPartitionsWithIndex{ (i, p) =>
               val points = p.map{ p =>
                 val arr = p.split(",")
                 ST_Point(arr(0).toLong, arr(1).toDouble, arr(2).toDouble,0)
               }.toList
-              val pairs = getPairs(points, epsilon)
-              val centers = pairs.flatMap(computeCenters)
-              val disks = getDisks(points, centers, epsilon)
-              filterDisks(disks, mu).toIterator
+              val pairs   = getPairs(points, epsilon)
+              val centers = pairs.flatMap(pair => computeCenters(pair, r2))
+              val disks   = getDisks(points, centers, epsilon)
+              val ids     = filterDisks(disks, mu).toIterator
+              
+              ids
             }
             .toDS()
           //Points_prime3.show(truncate = false)
@@ -242,8 +292,8 @@ object FlockFinderBenchmark {
           //    points.map(p => ST_Point(p._2, p._1._1, p._1._2, t))
           //  }
           //logger.warn(s"F2_prime: ${F2_prime.count()}")
-
           //val F2 = computeMaximalDisks(F2_prime, epsilon, mu, simba)
+
           val F2 = Points_prime3.distinct()
             .map(ids => Flock(timestamp, timestamp + delta, ids))
             .cache()
@@ -407,13 +457,13 @@ object FlockFinderBenchmark {
     import simba.implicits._
     import simba.simbaImplicits._
 
+    val r2 = Math.pow(epsilon / 2.0, 2)
     points.flatMap{ p: List[ST_Point] =>
         val pairs = getPairs(p, epsilon)
-        val centers = pairs.flatMap(computeCenters)
+        val centers = pairs.flatMap(pair => computeCenters(pair, r2))
         val disks = getDisks(p, centers, epsilon)
         filterDisks(disks, mu)
       }
-
   }
 
   def filterDisks(input: List[List[Long]], mu: Int): List[String] ={
@@ -466,7 +516,7 @@ object FlockFinderBenchmark {
     sqrt(pow(p1._1 - p2._1, 2) + pow(p1._2 - p2._2, 2))
   }
 
-  def computeCenters(pair: (ST_Point, ST_Point)): List[ST_Point] = {
+  def computeCenters(pair: (ST_Point, ST_Point), r2: Double): List[ST_Point] = {
     var centerPair = collection.mutable.ListBuffer[ST_Point]()
     val X: Double = pair._1.x - pair._2.x
     val Y: Double = pair._1.y - pair._2.y
