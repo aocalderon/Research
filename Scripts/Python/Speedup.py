@@ -6,7 +6,7 @@ from datetime import datetime
 
 ## Reading arguments...
 parser = argparse.ArgumentParser()
-parser.add_argument("--min_epsilon",  "-e1",    default=50,                 help="Minimum epsilon...")
+parser.add_argument("--min_epsilon",  "-e1",    default=40,                 help="Minimum epsilon...")
 parser.add_argument("--max_epsilon",  "-e2",    default=50,                 help="Maximum epsilon...")
 parser.add_argument("--step_epsilon", "-se",  default=5,                  help="Step in epsilon...")
 parser.add_argument("--min_mu",       "-m1",    default=5,                  help="Minimum mu...")
@@ -48,13 +48,12 @@ def runFlockFinder(cores):
       args.path, args.dataset, args.speed, args.partitions,
       cores
     )
-    logging.warning(command)
     subprocess.call(command, shell=True)
     logging.warning("Iteration {0} has ended...\n\n".format(i + 1))
 
 CORES_PER_NODE = 7
 
-for NODES in [3]:
+for NODES in [2]:
   logging.warning("Setting {0} nodes...\n\n".format(NODES))
   setNodes(NODES)
   logging.warning("{0} nodes has been set...\n\n".format(NODES))
