@@ -4,7 +4,7 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr, stringr, dplyr)
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 
-dataFile = paste0(RESEARCH_HOME, 'Scripts/Python/SpatialJoinRuns.out')
+dataFile = paste0(RESEARCH_HOME, 'Scripts/Python/SpatialJoinRuns2.out')
 
 lines = readLines(dataFile)
 records = c()
@@ -51,4 +51,4 @@ if(readData){
 
 data = data[, c("Method", "Cores", "Epsilon", "Mu", "Delta", "Time")]
 data = sqldf("SELECT Method, Cores, Epsilon, Mu, Delta, AVG(Time) AS Time FROM data GROUP BY 1, 2, 3, 4, 5 ORDER BY Cores DESC, Method, Epsilon, Mu, Delta")
-write.table(data, paste0(RESEARCH_HOME,"Scripts/R/SJvsML_Analysis/SpatialJoinTimes.csv"), row.names = F, col.names = F, sep = ',')
+write.table(data, paste0(RESEARCH_HOME,"Scripts/R/SJvsML_Analysis/SpatialJoin2Times.csv"), row.names = F, col.names = F, sep = ',')
