@@ -18,9 +18,10 @@ data$Mu      = as.numeric(as.character(data$Mu))
 data$Delta   = as.numeric(as.character(data$Delta))
 data$Time    = as.numeric(as.character(data$Time))
 
-muDefault    = 4
-deltaDefault = 4
-coresDefault = 21
+muDefault      = 4
+deltaDefault   = 4
+epsilonDefault = 35
+coresDefault   = 21
 
 dataDelta = data[data$Cores == coresDefault & data$Mu == muDefault, ]
 title = "Execution time by delta"
@@ -46,3 +47,14 @@ if(SAVE_PDF){
   plot(g)
 }
 
+dataSpeedup = data[data$Mu == muDefault & data$Delta == deltaDefault, ]
+title = "Speedup"
+g = ggplot(data=dataSpeedup, aes(x=factor(Cores), y=Time, fill=Method)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
+  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) +
+  facet_wrap(~Epsilon)
+if(SAVE_PDF){
+  ggsave("./SJvsMLbyCores.pdf", g)
+} else {
+  plot(g)
+}
