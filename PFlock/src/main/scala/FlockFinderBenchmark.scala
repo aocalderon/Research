@@ -131,19 +131,18 @@ object FlockFinderBenchmark {
     for(timestamp <- timestamps.slice(0, timestamps.length - delta)) {
       // Getting points at timestamp t ...
       timer = System.currentTimeMillis()
-      val C_t = getMaximalDisks(pointset, timestamp, simba)
+      var C_t = getMaximalDisks(pointset, timestamp, simba)
       val nC_t = C_t.count()
-      logging(s"Getting maximal disks: t=$timestamp...", timer, nC_t, "disks")
-
       // Getting points at timestamp t + delta ...
-      timer = System.currentTimeMillis()
-      val C_tPlusDelta = getMaximalDisks(pointset, timestamp + delta, simba)
+      var C_tPlusDelta = getMaximalDisks(pointset, timestamp + delta, simba)
       val nC_tPlusDelta = C_tPlusDelta.count()
-      logging(s"Getting maximal disks: t=${timestamp + delta}...", timer, nC_tPlusDelta, "disks")
+      logging(s"Getting disks...", timer, nC_t + nC_tPlusDelta, "disks")
 
       if(nC_t > 0 && nC_tPlusDelta > 0) {
         // Joining timestamps...
         timer = System.currentTimeMillis()
+				C_t = C_t.index(RTreeType, "ctRT", Array("x", "y"))
+				C_tPlusDelta = C_tPlusDelta.index(RTreeType, "ctRT", Array("x", "y"))
         F_prime = C_t.distanceJoin(C_tPlusDelta, Array("x", "y"), Array("x", "y"), distanceBetweenTimestamps)
           .map { r =>
             val start = r.getInt(0)
@@ -180,29 +179,18 @@ object FlockFinderBenchmark {
           }
           logger.warn(s"P_prime: ${P_prime.count()}")
 
-          //val PP1 = P_prime.filter(_._4 <= epsilon * split).map(p => (p._1, p._4)).toDF("ids", "d").orderBy("d", "ids")
-          //PP1.show(PP1.count().toInt, truncate = false)
-          //logger.warn(s"PP1: ${PP1.count()}")
-          //val PP2 = P_prime.filter(_._4 >  epsilon * split).map(p => (p._1, p._4)).toDF("ids", "d").orderBy("d", "ids")
-          //PP2.show(PP2.count().toInt, truncate = false)
-          //logger.warn(s"PP2: ${PP2.count()}")
-          
           val F1 = P_prime.filter(_._4 <= epsilon * split)
             .map(f => Flock(timestamp, timestamp + delta, f._1))
             .cache()
           logger.warn(s"F1: ${F1.count()}")
 
-
-          /***/
+          /************************************************************/
           import org.apache.spark.sql.expressions.Window;
           val Points_prime = P_prime.filter(_._4 > epsilon * split)
             .map(p => (p._1, p._2, p._3))
             .toDF("ids", "xs", "ys")
             .withColumn("fid",row_number().over(Window.orderBy("ids")))
             .select("ids", "xs", "ys", "fid")
-          //Points_prime.show(truncate = false)
-          //val nPoints_prime = Points_prime.count()
-          //logger.warn(s"Points_Prime: $nPoints_prime")
           val Points_prime1 = Points_prime.flatMap { p =>
               val ids = p.getString(0).split(" ").map(_.toLong)
               val Xs = p.getList[Double](1).asScala.toList
@@ -211,15 +199,13 @@ object FlockFinderBenchmark {
               val points = Xs zip Ys zip ids
               points.map(p => (fid, s"${p._2},${p._1._1},${p._1._2}"))
             }
-          //Points_prime1.show(truncate = false)
           val nPoints_prime1 = Points_prime1.count()
-          //logger.warn(s"Points_Prime1: $nPoints_prime1")
           val Points_prime2 =  Points_prime1.rdd
             .keyBy(_._1)
             .partitionBy(new FlockPartitioner(nPoints_prime1.toInt))
             .map(_._2._2)
           
-/*
+					/*
           val nFlocks = Points_prime.count()
           val nPoints = Points_prime2.count()
           val nPairs = Points_prime2.mapPartitionsWithIndex{ (i, p) =>
@@ -265,7 +251,7 @@ object FlockFinderBenchmark {
             }
             .count()
             logger.warn(s"Flocks: $nFlocks Points: $nPoints Pairs: $nPairs Centers: $nCenters Disks: $nDisks IDs: $nIDs")
-*/
+					*/
 
           val Points_prime3 = Points_prime2.mapPartitionsWithIndex{ (i, p) =>
               val points = p.map{ p =>
@@ -280,30 +266,13 @@ object FlockFinderBenchmark {
               ids
             }
             .toDS()
-          //Points_prime3.show(truncate = false)
-          //val nPoints_prime3 = Points_prime3.count()
-          //logger.warn(s"Points_Prime1: $nPoints_prime3")
-          /***/
-
-          //val F2_prime = P_prime.filter(_._4 > epsilon * split)
-          //  .map { p =>
-          //    val ids = p._1.split(" ").map(_.toLong)
-          //    val points = p._2 zip p._3 zip ids
-          //    points.map(p => ST_Point(p._2, p._1._1, p._1._2, t))
-          //  }
-          //logger.warn(s"F2_prime: ${F2_prime.count()}")
-          //val F2 = computeMaximalDisks(F2_prime, epsilon, mu, simba)
+          /************************************************************/
 
           val F2 = Points_prime3.distinct()
             .map(ids => Flock(timestamp, timestamp + delta, ids))
             .cache()
-          //F2.show(truncate = false)
-          //logger.warn(s"F2: ${F2.count()}")
           val F2_pruned = pruneFlocks(F2, simba)
-          //F2_pruned.show(truncate = false)
-          //logger.warn(s"F2_pruned: ${F2_pruned.count()}")
-          
-          
+                    
           F_prime = F1.union(F2_pruned)
           nF_prime = F_prime.count()
           logger.warn(s"F_prime: $nF_prime")
@@ -315,10 +284,10 @@ object FlockFinderBenchmark {
         FinalFlocks = FinalFlocks.union(F)
         nFinalFlocks = FinalFlocks.count()
       }
+      
     }
     // Reporting summary...
-    logger.warn("\n\nPFLOCK_ML\t%.1f\t%d\t%d\t%d\n"
-      .format(epsilon, mu, delta + 1, nFinalFlocks))
+    logger.warn("\n\nPFLOCK_ML\t%.1f\t%d\t%d\t%d\n".format(epsilon, mu, delta + 1, nFinalFlocks))
     
     FinalFlocks
   }
@@ -568,9 +537,7 @@ object FlockFinderBenchmark {
         "%d\t%f\t%f".format(datapoint.id, datapoint.x, datapoint.y)
       }
       .rdd
-      .cache()
-    val nPoints = points.count()
-    logging(s"Getting points at t=$t...", timer1, nPoints, "points")
+    if(debug) logging(s"Points at t=$t...", timer1, points.count(), "points")
 
     // Getting maximal disks at timestamp t ...
     val timer2 = System.currentTimeMillis()
@@ -582,9 +549,8 @@ object FlockFinderBenchmark {
         val y = disk(1).toDouble
         val ids = disk(2)
         Flock(t, t, ids, x, y)
-      }.toDS().cache()
-    val nC = C.count()
-    logging(s"Getting maximal disks at t=$t...", timer2, nC, "disks")
+      }.toDS()
+    if(debug) logging(s"Maximal disks at t=$t...", timer2, C.count(), "disks")
 
     C
   }
