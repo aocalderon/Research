@@ -27,7 +27,7 @@ if(readData){
       epsilon = strsplit(params[3], "=")[[1]][2]
       mu      = strsplit(params[4], "=")[[1]][2]
       delta   = strsplit(params[5], "=")[[1]][2]
-    } else if(grepl("Getting maximal disks", line) && !grepl("=", line)){
+    } else if(grepl("Getting maximal disks", line)){
       info = str_split_fixed(line, "->", 2)[2]
       params = str_split_fixed(info, "\\|", 3)
       stage = str_trim(str_split_fixed(params[1], ":", 2)[1])
@@ -58,4 +58,4 @@ if(readData){
 
 data = data[, c("Method", "Stage", "Cores", "Epsilon", "Mu", "Delta", "Time", "N")]
 data = sqldf("SELECT Method, Stage, Cores, Epsilon, Mu, Delta, AVG(Time), MAX(N) AS Time FROM data GROUP BY 1, 2, 3, 4, 5, 6 ORDER BY Cores DESC, Method, Epsilon, Mu, Delta")
-write.table(data, paste0(RESEARCH_HOME,"Scripts/R/SJvsML_Analysis/output.csv"), row.names = F, col.names = F, sep = ',')
+#write.table(data, paste0(RESEARCH_HOME,"Scripts/R/SJvsML_Analysis/output.csv"), row.names = F, col.names = F, sep = ',')
