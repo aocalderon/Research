@@ -4,7 +4,7 @@ class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
   val epsilon:    ScallopOption[Double] 	= opt[Double] 	(default = Some(10.0))
   val precision:  ScallopOption[Double] 	= opt[Double] 	(default = Some(0.001))
   val mu:         ScallopOption[Int]    	= opt[Int]    	(default = Some(4))
-  val partitions: ScallopOption[Int]    	= opt[Int]    	(default = Some(32))
+  val partitions: ScallopOption[Int]    	= opt[Int]    	(default = Some(1024))
   val cores:      ScallopOption[Int]    	= opt[Int]    	(default = Some(32))
   val master:     ScallopOption[String] 	= opt[String] 	(default = Some("spark://169.235.27.134:7077")) /* spark://169.235.27.134:7077 */
   val home:       ScallopOption[String] 	= opt[String] 	(default = Some("RESEARCH_HOME"))
@@ -21,8 +21,7 @@ class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
   val tstart:       	ScallopOption[Int]    	= opt[Int]    	(default = Some(0))
   val tend:         	ScallopOption[Int]    	= opt[Int]    	(default = Some(10))
   val cartesian:    	ScallopOption[Int]    	= opt[Int]    	(default = Some(2))
-  val speed:        	ScallopOption[Double] 	= opt[Double] 	(default = Some(2.0))
-  val split:        	ScallopOption[Double] 	= opt[Double] 	(default = Some(0.99))
+  val speed:        	ScallopOption[Double] 	= opt[Double] 	(default = Some(10.0))
   val time:         	ScallopOption[Double] 	= opt[Double] 	(default = Some(1.0))
   val logs:	        	ScallopOption[String] 	= opt[String] 	(default = Some("INFO"))
   val output:	      	ScallopOption[String] 	= opt[String] 	(default = Some("/tmp/"))
