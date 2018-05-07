@@ -5,7 +5,16 @@ EPSILON=$2
 MU=$3
 DELTA=$4
 
-ssh -i ~/.ssh/id_rsa -t acald013@bolt "runBFEandPFlock.py -f $DATASET -e $EPSILON -m $MU -d $DELTA"
+~/opt/BFE_Modified/build/flocks -m BFE \
+	-d $EPSILON \
+	-s $MU \
+	-l $DELTA \
+	-f $DATASET > /tmp/bfe.log
+
 FILENAME="BFE_E${EPSILON}_M${MU}_D${DELTA}.txt"
-scp -i ~/.ssh/id_rsa acald013@bolt.cs.ucr.edu:/home/csgrads/acald013/public_html/public/data/$FILENAME /tmp/$FILENAME           
+cat /tmp/bfe.log | grep -P "\d\, \d+\," > /tmp/$FILENAME
+
+cat /tmp/$FILENAME
+
+grep "Closing stream" /tmp/bfe.log
 
