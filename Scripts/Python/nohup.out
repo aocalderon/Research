@@ -1,491 +1,1887 @@
-2018-05-06 11:28:43,892 -> 
-
-Iteration Epsilon=40, Mu=3 and Delta=3 has started...
-2018-05-06 11:28:48,378 -> Starting app...
-Exception in thread "main" java.lang.IllegalArgumentException: requirement failed: Can only call getServletHandlers on a running MetricsSystem
-	at scala.Predef$.require(Predef.scala:224)
-	at org.apache.spark.metrics.MetricsSystem.getServletHandlers(MetricsSystem.scala:91)
-	at org.apache.spark.SparkContext.<init>(SparkContext.scala:524)
-	at org.apache.spark.SparkContext$.getOrCreate(SparkContext.scala:2313)
-	at org.apache.spark.sql.simba.SimbaSession$Builder$$anonfun$2.apply(SimbaSession.scala:174)
-	at org.apache.spark.sql.simba.SimbaSession$Builder$$anonfun$2.apply(SimbaSession.scala:166)
-	at scala.Option.getOrElse(Option.scala:121)
-	at org.apache.spark.sql.simba.SimbaSession$Builder.getOrCreate(SimbaSession.scala:166)
-	at FlockFinderBenchmark$.run(FlockFinderBenchmark.scala:46)
-	at FlockFinderBenchmark$.main(FlockFinderBenchmark.scala:724)
-	at FlockFinderBenchmark.main(FlockFinderBenchmark.scala)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.apache.spark.deploy.SparkSubmit$.org$apache$spark$deploy$SparkSubmit$$runMain(SparkSubmit.scala:738)
-	at org.apache.spark.deploy.SparkSubmit$.doRunMain$1(SparkSubmit.scala:187)
-	at org.apache.spark.deploy.SparkSubmit$.submit(SparkSubmit.scala:212)
-	at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:126)
-	at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
-PFLOCK vs BFE, 5041 / 5041, 100.00%, 40.0, 3, 3
-BFE vs PFLOCK, 5041 / 5041, 100.00%, 40.0, 3, 3
-bfe /home/acald013/Research/Datasets/Berlin/berlin0-5.tsv 40 3 3
-spark-submit --class FlockFinderBenchmark /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-2.0.jar --epsilon 40 --epsilon_max 40 --mu 3 --mu_max 3 --delta 3 --delta_max 3 --path Datasets/Berlin/ --dataset berlin0-5 --debug
-2018-05-06 11:29:52,392 -> 
-
-Iteration Epsilon=40, Mu=3 and Delta=3 has ended...
-2018-05-06 11:29:52,392 -> 
-
-Iteration Epsilon=45, Mu=3 and Delta=3 has started...
-2018-05-06 11:29:54,308 -> Starting app...
-2018-05-06 11:29:57,920 -> Starting session                                   |   3.61s |      0 
-2018-05-06 11:29:57,936 -> Setting paramaters                                 |   0.02s |      0 
-2018-05-06 11:30:01,644 -> Reading data                                       |   3.71s | 110376 points
-2018-05-06 11:30:05,494 -> Extracting timestamps                              |   3.85s |      6 timestamps
-2018-05-06 11:30:05,502 -> === MergeLast Start ===
-2018-05-06 11:30:09,618 -> Points at t=0...                                   |   3.94s |  18093 points
-2018-05-06 11:30:09,636 -> A.Setting mu=3,epsilon=45.0,cores=32,dataset=berlin0-5
-2018-05-06 11:30:09,683 -> [Partitions Info]Points;Before indexing;1
-2018-05-06 11:30:46,844 -> [Partitions Info]Points;After indexing;1023
-2018-05-06 11:30:46,844 -> B.Indexing points... [37.161s] [0 results]
-2018-05-06 11:30:54,952 -> C.Getting pairs... [8.108s] [10014 results]
-2018-05-06 11:30:57,520 -> D.Computing centers... [2.568s] [20028 results]
-2018-05-06 11:30:57,521 -> [Partitions Info]Centers;Before indexing;32
-2018-05-06 11:30:59,163 -> [Partitions Info]Centers;After indexing;1024
-2018-05-06 11:30:59,164 -> E.Indexing centers... [1.643s] [20028 results]
-2018-05-06 11:31:05,855 -> F.Getting disks... [6.691s] [20028 results]
-2018-05-06 11:31:06,512 -> G.Filtering less-than-mu disks... [0.657s] [8710 results]
-2018-05-06 11:31:12,312 -> H.Prunning duplicate candidates... [5.800s] [4633 results]
-2018-05-06 11:31:12,322 -> [Partitions Info]Candidates;Before indexing;200
-2018-05-06 11:31:12,837 -> I.Indexing candidates... [6.325s] [4633 results]
-2018-05-06 11:31:13,402 -> [Partitions Info]Candidates;After indexing;36
-2018-05-06 11:31:13,402 -> J.Getting expansions... [0.564s] [8454 results]
-2018-05-06 11:31:14,322 -> K.Finding maximal disks... [0.920s] [1679 results]
-2018-05-06 11:31:16,697 -> L.Prunning duplicates and subsets... [2.375s] [1661 results]
-2018-05-06 11:31:16,697 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2018-05-06 11:31:16,697 ->    berlin0-5,  45.0,    32,  3,  67.01,   10014,     20028,         4633,       1661
-2018-05-06 11:31:16,789 -> Dropping indices...[0.092s]
-2018-05-06 11:31:17,244 -> Maximal disks at t=0...                            |  67.63s |   1661 disks
-2018-05-06 11:31:21,106 -> Points at t=2...                                   |   3.55s |  18394 points
-2018-05-06 11:31:21,107 -> A.Setting mu=3,epsilon=45.0,cores=32,dataset=berlin0-5
-2018-05-06 11:31:22,244 -> [Partitions Info]Points;Before indexing;1
-2018-05-06 11:32:05,017 -> [Partitions Info]Points;After indexing;1024
-2018-05-06 11:32:05,017 -> B.Indexing points... [42.773s] [0 results]
-2018-05-06 11:32:10,251 -> C.Getting pairs... [5.234s] [10237 results]
-2018-05-06 11:32:11,803 -> D.Computing centers... [1.552s] [20474 results]
-2018-05-06 11:32:11,803 -> [Partitions Info]Centers;Before indexing;32
-2018-05-06 11:32:13,009 -> [Partitions Info]Centers;After indexing;1024
-2018-05-06 11:32:13,009 -> E.Indexing centers... [1.206s] [20474 results]
-2018-05-06 11:32:18,055 -> F.Getting disks... [5.046s] [20474 results]
-2018-05-06 11:32:18,393 -> G.Filtering less-than-mu disks... [0.338s] [8864 results]
-2018-05-06 11:32:22,362 -> H.Prunning duplicate candidates... [3.969s] [4732 results]
-2018-05-06 11:32:22,367 -> [Partitions Info]Candidates;Before indexing;200
-2018-05-06 11:32:22,773 -> I.Indexing candidates... [4.380s] [4732 results]
-2018-05-06 11:32:23,167 -> [Partitions Info]Candidates;After indexing;36
-2018-05-06 11:32:23,167 -> J.Getting expansions... [0.394s] [8433 results]
-2018-05-06 11:32:23,592 -> K.Finding maximal disks... [0.425s] [1675 results]
-2018-05-06 11:32:25,075 -> L.Prunning duplicates and subsets... [1.483s] [1665 results]
-2018-05-06 11:32:25,075 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2018-05-06 11:32:25,075 ->    berlin0-5,  45.0,    32,  3,  62.83,   10237,     20474,         4732,       1665
-2018-05-06 11:32:25,143 -> Dropping indices...[0.067s]
-2018-05-06 11:32:25,422 -> Maximal disks at t=2...                            |  64.32s |   1665 disks
-2018-05-06 11:32:25,673 -> 1.Getting disks                                    | 140.00s |   3326 disks
-2018-05-06 11:32:34,691 -> 2.Joining timestams                                |   9.02s |   3167 candidates
-2018-05-06 11:32:39,549 -> F1Count=2400,F2Count=767
-2018-05-06 11:38:02,394 -> 3.Checking internal timestamps                     | 327.70s |   1583 flocks
-2018-05-06 11:38:07,901 -> Points at t=1...                                   |   3.54s |  18245 points
-2018-05-06 11:38:07,901 -> A.Setting mu=3,epsilon=45.0,cores=32,dataset=berlin0-5
-2018-05-06 11:38:08,469 -> [Partitions Info]Points;Before indexing;1
-2018-05-06 11:38:47,368 -> [Partitions Info]Points;After indexing;1024
-2018-05-06 11:38:47,368 -> B.Indexing points... [38.899s] [0 results]
-2018-05-06 11:38:52,078 -> C.Getting pairs... [4.710s] [10135 results]
-2018-05-06 11:38:53,528 -> D.Computing centers... [1.450s] [20270 results]
-2018-05-06 11:38:53,528 -> [Partitions Info]Centers;Before indexing;32
-2018-05-06 11:38:54,530 -> [Partitions Info]Centers;After indexing;1023
-2018-05-06 11:38:54,531 -> E.Indexing centers... [1.002s] [20270 results]
-2018-05-06 11:38:59,004 -> F.Getting disks... [4.473s] [20270 results]
-2018-05-06 11:38:59,255 -> G.Filtering less-than-mu disks... [0.251s] [8776 results]
-2018-05-06 11:39:02,150 -> H.Prunning duplicate candidates... [2.895s] [4687 results]
-2018-05-06 11:39:02,154 -> [Partitions Info]Candidates;Before indexing;200
-2018-05-06 11:39:02,530 -> I.Indexing candidates... [3.275s] [4687 results]
-2018-05-06 11:39:02,743 -> [Partitions Info]Candidates;After indexing;36
-2018-05-06 11:39:02,743 -> J.Getting expansions... [0.213s] [8435 results]
-2018-05-06 11:39:03,081 -> K.Finding maximal disks... [0.338s] [1667 results]
-2018-05-06 11:39:04,672 -> L.Prunning duplicates and subsets... [1.591s] [1648 results]
-2018-05-06 11:39:04,672 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2018-05-06 11:39:04,672 ->    berlin0-5,  45.0,    32,  3,  56.20,   10135,     20270,         4687,       1648
-2018-05-06 11:39:04,807 -> Dropping indices...[0.135s]
-2018-05-06 11:39:05,151 -> Maximal disks at t=1...                            |  57.25s |   1648 disks
-2018-05-06 11:39:08,941 -> Points at t=3...                                   |   3.55s |  18548 points
-2018-05-06 11:39:08,942 -> A.Setting mu=3,epsilon=45.0,cores=32,dataset=berlin0-5
-2018-05-06 11:39:10,623 -> [Partitions Info]Points;Before indexing;1
-2018-05-06 11:39:57,991 -> [Partitions Info]Points;After indexing;993
-2018-05-06 11:39:57,991 -> B.Indexing points... [47.368s] [0 results]
-2018-05-06 11:40:07,586 -> C.Getting pairs... [9.595s] [10362 results]
-2018-05-06 11:40:09,009 -> D.Computing centers... [1.423s] [20724 results]
-2018-05-06 11:40:09,009 -> [Partitions Info]Centers;Before indexing;32
-2018-05-06 11:40:10,216 -> [Partitions Info]Centers;After indexing;993
-2018-05-06 11:40:10,216 -> E.Indexing centers... [1.207s] [20724 results]
-2018-05-06 11:40:17,158 -> F.Getting disks... [6.942s] [20724 results]
-2018-05-06 11:40:17,454 -> G.Filtering less-than-mu disks... [0.296s] [8962 results]
-2018-05-06 11:40:23,029 -> H.Prunning duplicate candidates... [5.575s] [4783 results]
-2018-05-06 11:40:23,033 -> [Partitions Info]Candidates;Before indexing;200
-2018-05-06 11:40:23,397 -> I.Indexing candidates... [5.943s] [4783 results]
-2018-05-06 11:40:23,625 -> [Partitions Info]Candidates;After indexing;36
-2018-05-06 11:40:23,625 -> J.Getting expansions... [0.228s] [8469 results]
-2018-05-06 11:40:23,841 -> K.Finding maximal disks... [0.216s] [1677 results]
-2018-05-06 11:40:25,958 -> L.Prunning duplicates and subsets... [2.117s] [1665 results]
-2018-05-06 11:40:25,958 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2018-05-06 11:40:25,958 ->    berlin0-5,  45.0,    32,  3,  75.34,   10362,     20724,         4783,       1665
-2018-05-06 11:40:26,130 -> Dropping indices...[0.172s]
-2018-05-06 11:40:26,459 -> Maximal disks at t=3...                            |  77.52s |   1665 disks
-2018-05-06 11:40:26,690 -> 1.Getting disks                                    | 142.33s |   3313 disks
-2018-05-06 11:40:33,859 -> 2.Joining timestams                                |   7.17s |   3165 candidates
-2018-05-06 11:40:36,698 -> F1Count=2444,F2Count=721
-2018-05-06 11:46:45,483 -> 3.Checking internal timestamps                     | 371.62s |   1567 flocks
-2018-05-06 11:46:52,615 -> Points at t=2...                                   |   3.52s |  18394 points
-2018-05-06 11:46:52,616 -> A.Setting mu=3,epsilon=45.0,cores=32,dataset=berlin0-5
-2018-05-06 11:46:53,737 -> [Partitions Info]Points;Before indexing;1
-2018-05-06 11:47:35,946 -> [Partitions Info]Points;After indexing;1024
-2018-05-06 11:47:35,946 -> B.Indexing points... [42.209s] [0 results]
-2018-05-06 11:47:40,527 -> C.Getting pairs... [4.581s] [10237 results]
-2018-05-06 11:47:41,882 -> D.Computing centers... [1.355s] [20474 results]
-2018-05-06 11:47:41,883 -> [Partitions Info]Centers;Before indexing;32
-2018-05-06 11:47:42,971 -> [Partitions Info]Centers;After indexing;1024
-2018-05-06 11:47:42,971 -> E.Indexing centers... [1.088s] [20474 results]
-2018-05-06 11:47:47,487 -> F.Getting disks... [4.515s] [20474 results]
-2018-05-06 11:47:47,770 -> G.Filtering less-than-mu disks... [0.283s] [8864 results]
-2018-05-06 11:47:51,263 -> H.Prunning duplicate candidates... [3.493s] [4732 results]
-2018-05-06 11:47:51,267 -> [Partitions Info]Candidates;Before indexing;200
-2018-05-06 11:47:51,641 -> I.Indexing candidates... [3.871s] [4732 results]
-2018-05-06 11:47:51,874 -> [Partitions Info]Candidates;After indexing;36
-2018-05-06 11:47:51,874 -> J.Getting expansions... [0.233s] [8433 results]
-2018-05-06 11:47:52,077 -> K.Finding maximal disks... [0.203s] [1675 results]
-2018-05-06 11:47:53,461 -> L.Prunning duplicates and subsets... [1.384s] [1665 results]
-2018-05-06 11:47:53,461 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2018-05-06 11:47:53,461 ->    berlin0-5,  45.0,    32,  3,  59.72,   10237,     20474,         4732,       1665
-2018-05-06 11:47:53,689 -> Dropping indices...[0.228s]
-2018-05-06 11:47:53,933 -> Maximal disks at t=2...                            |  61.32s |   1665 disks
-2018-05-06 11:47:57,679 -> Points at t=4...                                   |   3.52s |  18548 points
-2018-05-06 11:47:57,679 -> A.Setting mu=3,epsilon=45.0,cores=32,dataset=berlin0-5
-2018-05-06 11:47:59,909 -> [Partitions Info]Points;Before indexing;1
-2018-05-06 11:48:49,891 -> [Partitions Info]Points;After indexing;993
-2018-05-06 11:48:49,891 -> B.Indexing points... [49.982s] [0 results]
-2018-05-06 11:48:59,218 -> C.Getting pairs... [9.327s] [10357 results]
-2018-05-06 11:49:00,615 -> D.Computing centers... [1.397s] [20714 results]
-2018-05-06 11:49:00,615 -> [Partitions Info]Centers;Before indexing;32
-2018-05-06 11:49:01,770 -> [Partitions Info]Centers;After indexing;993
-2018-05-06 11:49:01,770 -> E.Indexing centers... [1.155s] [20714 results]
-2018-05-06 11:49:09,261 -> F.Getting disks... [7.491s] [20714 results]
-2018-05-06 11:49:09,535 -> G.Filtering less-than-mu disks... [0.274s] [8962 results]
-2018-05-06 11:49:14,304 -> H.Prunning duplicate candidates... [4.769s] [4786 results]
-2018-05-06 11:49:14,307 -> [Partitions Info]Candidates;Before indexing;200
-2018-05-06 11:49:14,658 -> I.Indexing candidates... [5.123s] [4786 results]
-2018-05-06 11:49:15,104 -> [Partitions Info]Candidates;After indexing;36
-2018-05-06 11:49:15,104 -> J.Getting expansions... [0.446s] [8483 results]
-2018-05-06 11:49:15,299 -> K.Finding maximal disks... [0.195s] [1666 results]
-2018-05-06 11:49:17,070 -> L.Prunning duplicates and subsets... [1.771s] [1659 results]
-2018-05-06 11:49:17,070 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2018-05-06 11:49:17,070 ->    berlin0-5,  45.0,    32,  3,  77.16,   10357,     20714,         4786,       1659
-2018-05-06 11:49:17,340 -> Dropping indices...[0.270s]
-2018-05-06 11:49:17,729 -> Maximal disks at t=4...                            |  80.05s |   1659 disks
-2018-05-06 11:49:17,975 -> 1.Getting disks                                    | 148.88s |   3324 disks
-2018-05-06 11:49:25,252 -> 2.Joining timestams                                |   7.28s |   3125 candidates
-2018-05-06 11:49:28,135 -> F1Count=2421,F2Count=704
-2018-05-06 11:56:42,386 -> 3.Checking internal timestamps                     | 437.13s |   1576 flocks
-2018-05-06 11:56:51,632 -> Points at t=3...                                   |   3.55s |  18548 points
-2018-05-06 11:56:51,633 -> A.Setting mu=3,epsilon=45.0,cores=32,dataset=berlin0-5
-2018-05-06 11:56:53,308 -> [Partitions Info]Points;Before indexing;1
-2018-05-06 11:57:40,651 -> [Partitions Info]Points;After indexing;993
-2018-05-06 11:57:40,651 -> B.Indexing points... [47.343s] [0 results]
-2018-05-06 11:57:50,368 -> C.Getting pairs... [9.717s] [10362 results]
-2018-05-06 11:57:51,777 -> D.Computing centers... [1.409s] [20724 results]
-2018-05-06 11:57:51,777 -> [Partitions Info]Centers;Before indexing;32
-2018-05-06 11:57:52,919 -> [Partitions Info]Centers;After indexing;993
-2018-05-06 11:57:52,919 -> E.Indexing centers... [1.142s] [20724 results]
-2018-05-06 11:57:59,841 -> F.Getting disks... [6.922s] [20724 results]
-2018-05-06 11:58:00,108 -> G.Filtering less-than-mu disks... [0.267s] [8962 results]
-2018-05-06 11:58:05,053 -> H.Prunning duplicate candidates... [4.945s] [4783 results]
-2018-05-06 11:58:05,057 -> [Partitions Info]Candidates;Before indexing;200
-2018-05-06 11:58:05,412 -> I.Indexing candidates... [5.304s] [4783 results]
-2018-05-06 11:58:05,664 -> [Partitions Info]Candidates;After indexing;36
-2018-05-06 11:58:05,664 -> J.Getting expansions... [0.252s] [8469 results]
-2018-05-06 11:58:05,865 -> K.Finding maximal disks... [0.201s] [1677 results]
-2018-05-06 11:58:07,960 -> L.Prunning duplicates and subsets... [2.095s] [1665 results]
-2018-05-06 11:58:07,960 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2018-05-06 11:58:07,961 ->    berlin0-5,  45.0,    32,  3,  74.65,   10362,     20724,         4783,       1665
-2018-05-06 11:58:08,282 -> Dropping indices...[0.320s]
-2018-05-06 11:58:08,550 -> Maximal disks at t=3...                            |  76.92s |   1665 disks
-2018-05-06 11:58:12,300 -> Points at t=5...                                   |   3.51s |  18548 points
-2018-05-06 11:58:12,306 -> A.Setting mu=3,epsilon=45.0,cores=32,dataset=berlin0-5
-2018-05-06 11:58:15,118 -> [Partitions Info]Points;Before indexing;1
-2018-05-06 11:59:09,468 -> [Partitions Info]Points;After indexing;993
-2018-05-06 11:59:09,469 -> B.Indexing points... [54.351s] [0 results]
-2018-05-06 11:59:19,017 -> C.Getting pairs... [9.548s] [10331 results]
-2018-05-06 11:59:20,456 -> D.Computing centers... [1.439s] [20662 results]
-2018-05-06 11:59:20,456 -> [Partitions Info]Centers;Before indexing;32
-2018-05-06 11:59:21,627 -> [Partitions Info]Centers;After indexing;993
-2018-05-06 11:59:21,627 -> E.Indexing centers... [1.171s] [20662 results]
-2018-05-06 11:59:28,401 -> F.Getting disks... [6.774s] [20662 results]
-2018-05-06 11:59:28,668 -> G.Filtering less-than-mu disks... [0.267s] [8962 results]
-2018-05-06 11:59:34,070 -> H.Prunning duplicate candidates... [5.402s] [4787 results]
-2018-05-06 11:59:34,074 -> [Partitions Info]Candidates;Before indexing;200
-2018-05-06 11:59:34,410 -> I.Indexing candidates... [5.742s] [4787 results]
-2018-05-06 11:59:34,633 -> [Partitions Info]Candidates;After indexing;36
-2018-05-06 11:59:34,633 -> J.Getting expansions... [0.223s] [8379 results]
-2018-05-06 11:59:34,828 -> K.Finding maximal disks... [0.195s] [1656 results]
-2018-05-06 11:59:36,854 -> L.Prunning duplicates and subsets... [2.026s] [1640 results]
-2018-05-06 11:59:36,854 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2018-05-06 11:59:36,854 ->    berlin0-5,  45.0,    32,  3,  81.74,   10331,     20662,         4787,       1640
-2018-05-06 11:59:37,270 -> Dropping indices...[0.416s]
-2018-05-06 11:59:37,593 -> Maximal disks at t=5...                            |  85.29s |   1640 disks
-2018-05-06 11:59:37,981 -> 1.Getting disks                                    | 169.90s |   3305 disks
-2018-05-06 11:59:45,601 -> 2.Joining timestams                                |   7.62s |   3057 candidates
-2018-05-06 11:59:49,108 -> F1Count=2359,F2Count=698
-2018-05-06 12:05:23,701 -> 3.Checking internal timestamps                     | 338.10s |   1585 flocks
-2018-05-06 12:05:30,754 -> 
-
-PFLOCK_ML	45.0	3	3	6311
-
-2018-05-06 12:05:37,964 -> Running MergeLast...                               | 2132.46s |   6311 flocks
-2018-05-06 12:05:37,964 -> method=MergeLast,cores=32,epsilon=45.0,mu=3,delta=3,time=2132.462,master=spark://169.235.27.134:7077
-2018-05-06 12:05:44,364 -> Closing app...
-0, 2, 4897 5019 5844 9637 11179 11845 12500 13716 15034
-PFLOCK vs BFE, 6310 / 6311, 99.98%, 45.0, 3, 3
-Differences saved at /tmp/NotFound-PFLOCK_E45.0_M3_D3.txt
-0, 2, 4897 5019 5844 11179 11845 12500 13716 15034
-0, 2, 4897 5019 5844 9637 11845 12500 13716 15034
-0, 2, 5019 5844 9637 11179 11845 12500 13716 15034
-BFE vs PFLOCK, 6310 / 6313, 99.95%, 45.0, 3, 3
-Differences saved at /tmp/NotFound-BFE_E45.0_M3_D3.txt
-bfe /home/acald013/Research/Datasets/Berlin/berlin0-5.tsv 45 3 3
-spark-submit --class FlockFinderBenchmark /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-2.0.jar --epsilon 45 --epsilon_max 45 --mu 3 --mu_max 3 --delta 3 --delta_max 3 --path Datasets/Berlin/ --dataset berlin0-5 --debug
-2018-05-06 12:05:47,112 -> 
-
-Iteration Epsilon=45, Mu=3 and Delta=3 has ended...
-2018-05-06 12:05:47,112 -> 
-
-Iteration Epsilon=50, Mu=3 and Delta=3 has started...
-2018-05-06 12:05:48,837 -> Starting app...
-2018-05-06 12:05:52,419 -> Starting session                                   |   3.58s |      0 
-2018-05-06 12:05:52,434 -> Setting paramaters                                 |   0.01s |      0 
-2018-05-06 12:05:55,428 -> Reading data                                       |   2.99s | 110376 points
-2018-05-06 12:05:58,699 -> Extracting timestamps                              |   3.27s |      6 timestamps
-2018-05-06 12:05:58,715 -> === MergeLast Start ===
-2018-05-06 12:06:02,778 -> Points at t=0...                                   |   3.87s |  18093 points
-2018-05-06 12:06:02,794 -> A.Setting mu=3,epsilon=50.0,cores=32,dataset=berlin0-5
-2018-05-06 12:06:02,841 -> [Partitions Info]Points;Before indexing;1
-2018-05-06 12:06:39,443 -> [Partitions Info]Points;After indexing;1023
-2018-05-06 12:06:39,443 -> B.Indexing points... [36.602s] [0 results]
-2018-05-06 12:06:47,292 -> C.Getting pairs... [7.849s] [11723 results]
-2018-05-06 12:06:49,697 -> D.Computing centers... [2.405s] [23446 results]
-2018-05-06 12:06:49,697 -> [Partitions Info]Centers;Before indexing;32
-2018-05-06 12:06:51,262 -> [Partitions Info]Centers;After indexing;1024
-2018-05-06 12:06:51,262 -> E.Indexing centers... [1.565s] [23446 results]
-2018-05-06 12:06:57,131 -> F.Getting disks... [5.869s] [23446 results]
-2018-05-06 12:06:57,587 -> G.Filtering less-than-mu disks... [0.456s] [11023 results]
-2018-05-06 12:07:02,159 -> H.Prunning duplicate candidates... [4.572s] [5963 results]
-2018-05-06 12:07:02,165 -> [Partitions Info]Candidates;Before indexing;200
-2018-05-06 12:07:02,702 -> I.Indexing candidates... [5.115s] [5963 results]
-2018-05-06 12:07:03,042 -> [Partitions Info]Candidates;After indexing;36
-2018-05-06 12:07:03,042 -> J.Getting expansions... [0.339s] [10760 results]
-2018-05-06 12:07:03,717 -> K.Finding maximal disks... [0.675s] [1933 results]
-2018-05-06 12:07:05,890 -> L.Prunning duplicates and subsets... [2.172s] [1918 results]
-2018-05-06 12:07:05,890 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2018-05-06 12:07:05,890 ->    berlin0-5,  50.0,    32,  3,  63.05,   11723,     23446,         5963,       1918
-2018-05-06 12:07:05,975 -> Dropping indices...[0.084s]
-2018-05-06 12:07:06,383 -> Maximal disks at t=0...                            |  63.60s |   1918 disks
-2018-05-06 12:07:10,369 -> Points at t=2...                                   |   3.69s |  18394 points
-2018-05-06 12:07:10,369 -> A.Setting mu=3,epsilon=50.0,cores=32,dataset=berlin0-5
-2018-05-06 12:07:11,542 -> [Partitions Info]Points;Before indexing;1
-2018-05-06 12:07:55,614 -> [Partitions Info]Points;After indexing;1024
-2018-05-06 12:07:55,614 -> B.Indexing points... [44.072s] [0 results]
-2018-05-06 12:08:00,773 -> C.Getting pairs... [5.159s] [12052 results]
-2018-05-06 12:08:02,282 -> D.Computing centers... [1.509s] [24104 results]
-2018-05-06 12:08:02,282 -> [Partitions Info]Centers;Before indexing;32
-2018-05-06 12:08:03,466 -> [Partitions Info]Centers;After indexing;1024
-2018-05-06 12:08:03,466 -> E.Indexing centers... [1.184s] [24104 results]
-2018-05-06 12:08:08,264 -> F.Getting disks... [4.798s] [24104 results]
-2018-05-06 12:08:08,577 -> G.Filtering less-than-mu disks... [0.313s] [11387 results]
-2018-05-06 12:08:11,992 -> H.Prunning duplicate candidates... [3.415s] [6172 results]
-2018-05-06 12:08:11,997 -> [Partitions Info]Candidates;Before indexing;200
-2018-05-06 12:08:12,382 -> I.Indexing candidates... [3.805s] [6172 results]
-2018-05-06 12:08:12,610 -> [Partitions Info]Candidates;After indexing;36
-2018-05-06 12:08:12,610 -> J.Getting expansions... [0.228s] [11031 results]
-2018-05-06 12:08:12,848 -> K.Finding maximal disks... [0.238s] [2024 results]
-2018-05-06 12:08:14,313 -> L.Prunning duplicates and subsets... [1.465s] [2011 results]
-2018-05-06 12:08:14,313 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2018-05-06 12:08:14,313 ->    berlin0-5,  50.0,    32,  3,  62.77,   12052,     24104,         6172,       2011
-2018-05-06 12:08:14,381 -> Dropping indices...[0.068s]
-2018-05-06 12:08:14,670 -> Maximal disks at t=2...                            |  64.30s |   2011 disks
-2018-05-06 12:08:14,941 -> 1.Getting disks                                    | 136.03s |   3929 disks
-2018-05-06 12:08:23,880 -> 2.Joining timestams                                |   8.94s |   3748 candidates
-2018-05-06 12:08:29,354 -> F1Count=2723,F2Count=1025
-2018-05-06 12:19:44,921 -> 3.Checking internal timestamps                     | 681.04s |   1859 flocks
-2018-05-06 12:19:51,509 -> Points at t=1...                                   |   3.73s |  18245 points
-2018-05-06 12:19:51,509 -> A.Setting mu=3,epsilon=50.0,cores=32,dataset=berlin0-5
-2018-05-06 12:19:52,115 -> [Partitions Info]Points;Before indexing;1
-2018-05-06 12:20:32,929 -> [Partitions Info]Points;After indexing;1024
-2018-05-06 12:20:32,929 -> B.Indexing points... [40.814s] [0 results]
-2018-05-06 12:20:37,792 -> C.Getting pairs... [4.862s] [11915 results]
-2018-05-06 12:20:39,173 -> D.Computing centers... [1.381s] [23830 results]
-2018-05-06 12:20:39,173 -> [Partitions Info]Centers;Before indexing;32
-2018-05-06 12:20:40,248 -> [Partitions Info]Centers;After indexing;1024
-2018-05-06 12:20:40,248 -> E.Indexing centers... [1.075s] [23830 results]
-2018-05-06 12:20:44,913 -> F.Getting disks... [4.665s] [23830 results]
-2018-05-06 12:20:45,205 -> G.Filtering less-than-mu disks... [0.292s] [11205 results]
-2018-05-06 12:20:48,664 -> H.Prunning duplicate candidates... [3.458s] [6090 results]
-2018-05-06 12:20:48,669 -> [Partitions Info]Candidates;Before indexing;200
-2018-05-06 12:20:49,051 -> I.Indexing candidates... [3.845s] [6090 results]
-2018-05-06 12:20:49,314 -> [Partitions Info]Candidates;After indexing;36
-2018-05-06 12:20:49,314 -> J.Getting expansions... [0.263s] [10886 results]
-2018-05-06 12:20:49,533 -> K.Finding maximal disks... [0.219s] [1970 results]
-2018-05-06 12:20:50,830 -> L.Prunning duplicates and subsets... [1.297s] [1951 results]
-2018-05-06 12:20:50,830 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2018-05-06 12:20:50,830 ->    berlin0-5,  50.0,    32,  3,  58.72,   11915,     23830,         6090,       1951
-2018-05-06 12:20:50,961 -> Dropping indices...[0.131s]
-2018-05-06 12:20:51,223 -> Maximal disks at t=1...                            |  59.71s |   1951 disks
-2018-05-06 12:20:55,215 -> Points at t=3...                                   |   3.73s |  18548 points
-2018-05-06 12:20:55,216 -> A.Setting mu=3,epsilon=50.0,cores=32,dataset=berlin0-5
-2018-05-06 12:20:57,002 -> [Partitions Info]Points;Before indexing;1
-2018-05-06 12:21:47,028 -> [Partitions Info]Points;After indexing;993
-2018-05-06 12:21:47,029 -> B.Indexing points... [50.027s] [0 results]
-2018-05-06 12:21:57,059 -> C.Getting pairs... [10.030s] [12212 results]
-2018-05-06 12:21:58,508 -> D.Computing centers... [1.449s] [24424 results]
-2018-05-06 12:21:58,508 -> [Partitions Info]Centers;Before indexing;32
-2018-05-06 12:21:59,598 -> [Partitions Info]Centers;After indexing;1023
-2018-05-06 12:21:59,598 -> E.Indexing centers... [1.090s] [24424 results]
-2018-05-06 12:22:06,449 -> F.Getting disks... [6.851s] [24424 results]
-2018-05-06 12:22:06,819 -> G.Filtering less-than-mu disks... [0.370s] [11539 results]
-2018-05-06 12:22:11,562 -> H.Prunning duplicate candidates... [4.743s] [6247 results]
-2018-05-06 12:22:11,566 -> [Partitions Info]Candidates;Before indexing;200
-2018-05-06 12:22:11,949 -> I.Indexing candidates... [5.130s] [6247 results]
-2018-05-06 12:22:12,227 -> [Partitions Info]Candidates;After indexing;36
-2018-05-06 12:22:12,227 -> J.Getting expansions... [0.278s] [11087 results]
-2018-05-06 12:22:12,465 -> K.Finding maximal disks... [0.238s] [2037 results]
-2018-05-06 12:22:15,130 -> L.Prunning duplicates and subsets... [2.665s] [2021 results]
-2018-05-06 12:22:15,130 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2018-05-06 12:22:15,130 ->    berlin0-5,  50.0,    32,  3,  78.13,   12212,     24424,         6247,       2021
-2018-05-06 12:22:15,308 -> Dropping indices...[0.178s]
-2018-05-06 12:22:15,619 -> Maximal disks at t=3...                            |  80.40s |   2021 disks
-2018-05-06 12:22:15,875 -> 1.Getting disks                                    | 148.09s |   3972 disks
-2018-05-06 12:22:24,380 -> 2.Joining timestams                                |   8.51s |   3902 candidates
-2018-05-06 12:22:28,217 -> F1Count=2845,F2Count=1057
-2018-05-06 12:36:24,042 -> 3.Checking internal timestamps                     | 839.66s |   1888 flocks
-2018-05-06 12:36:33,643 -> Points at t=2...                                   |   3.73s |  18394 points
-2018-05-06 12:36:33,643 -> A.Setting mu=3,epsilon=50.0,cores=32,dataset=berlin0-5
-2018-05-06 12:36:34,825 -> [Partitions Info]Points;Before indexing;1
-2018-05-06 12:37:19,200 -> [Partitions Info]Points;After indexing;1024
-2018-05-06 12:37:19,200 -> B.Indexing points... [44.375s] [0 results]
-2018-05-06 12:37:23,936 -> C.Getting pairs... [4.736s] [12052 results]
-2018-05-06 12:37:25,355 -> D.Computing centers... [1.419s] [24104 results]
-2018-05-06 12:37:25,355 -> [Partitions Info]Centers;Before indexing;32
-2018-05-06 12:37:26,432 -> [Partitions Info]Centers;After indexing;1024
-2018-05-06 12:37:26,433 -> E.Indexing centers... [1.077s] [24104 results]
-2018-05-06 12:37:31,027 -> F.Getting disks... [4.594s] [24104 results]
-2018-05-06 12:37:31,340 -> G.Filtering less-than-mu disks... [0.313s] [11387 results]
-2018-05-06 12:37:34,732 -> H.Prunning duplicate candidates... [3.392s] [6172 results]
-2018-05-06 12:37:34,736 -> [Partitions Info]Candidates;Before indexing;200
-2018-05-06 12:37:35,136 -> I.Indexing candidates... [3.796s] [6172 results]
-2018-05-06 12:37:35,369 -> [Partitions Info]Candidates;After indexing;36
-2018-05-06 12:37:35,369 -> J.Getting expansions... [0.233s] [11031 results]
-2018-05-06 12:37:35,582 -> K.Finding maximal disks... [0.212s] [2024 results]
-2018-05-06 12:37:36,815 -> L.Prunning duplicates and subsets... [1.233s] [2011 results]
-2018-05-06 12:37:36,815 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2018-05-06 12:37:36,816 ->    berlin0-5,  50.0,    32,  3,  61.99,   12052,     24104,         6172,       2011
-2018-05-06 12:37:37,069 -> Dropping indices...[0.253s]
-2018-05-06 12:37:37,478 -> Maximal disks at t=2...                            |  63.84s |   2011 disks
-2018-05-06 12:37:41,415 -> Points at t=4...                                   |   3.70s |  18548 points
-2018-05-06 12:37:41,416 -> A.Setting mu=3,epsilon=50.0,cores=32,dataset=berlin0-5
-2018-05-06 12:37:43,778 -> [Partitions Info]Points;Before indexing;1
-2018-05-06 12:38:37,064 -> [Partitions Info]Points;After indexing;993
-2018-05-06 12:38:37,064 -> B.Indexing points... [53.286s] [0 results]
-2018-05-06 12:38:46,849 -> C.Getting pairs... [9.785s] [12180 results]
-2018-05-06 12:38:48,168 -> D.Computing centers... [1.319s] [24360 results]
-2018-05-06 12:38:48,168 -> [Partitions Info]Centers;Before indexing;32
-2018-05-06 12:38:49,242 -> [Partitions Info]Centers;After indexing;1023
-2018-05-06 12:38:49,242 -> E.Indexing centers... [1.074s] [24360 results]
-2018-05-06 12:38:56,281 -> F.Getting disks... [7.039s] [24360 results]
-2018-05-06 12:38:56,545 -> G.Filtering less-than-mu disks... [0.264s] [11513 results]
-2018-05-06 12:39:01,409 -> H.Prunning duplicate candidates... [4.864s] [6217 results]
-2018-05-06 12:39:01,413 -> [Partitions Info]Candidates;Before indexing;200
-2018-05-06 12:39:01,818 -> I.Indexing candidates... [5.273s] [6217 results]
-2018-05-06 12:39:02,061 -> [Partitions Info]Candidates;After indexing;36
-2018-05-06 12:39:02,061 -> J.Getting expansions... [0.243s] [10981 results]
-2018-05-06 12:39:02,260 -> K.Finding maximal disks... [0.199s] [2036 results]
-2018-05-06 12:39:04,336 -> L.Prunning duplicates and subsets... [2.076s] [2020 results]
-2018-05-06 12:39:04,336 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2018-05-06 12:39:04,336 ->    berlin0-5,  50.0,    32,  3,  80.56,   12180,     24360,         6217,       2020
-2018-05-06 12:39:04,625 -> Dropping indices...[0.289s]
-2018-05-06 12:39:04,937 -> Maximal disks at t=4...                            |  83.52s |   2020 disks
-2018-05-06 12:39:05,177 -> 1.Getting disks                                    | 155.27s |   4031 disks
-2018-05-06 12:39:13,486 -> 2.Joining timestams                                |   8.31s |   3789 candidates
-2018-05-06 12:39:16,681 -> F1Count=2808,F2Count=981
-2018-05-06 12:48:10,135 -> 3.Checking internal timestamps                     | 536.65s |   1925 flocks
-2018-05-06 12:48:21,664 -> Points at t=3...                                   |   3.74s |  18548 points
-2018-05-06 12:48:21,665 -> A.Setting mu=3,epsilon=50.0,cores=32,dataset=berlin0-5
-2018-05-06 12:48:23,450 -> [Partitions Info]Points;Before indexing;1
-2018-05-06 12:49:13,224 -> [Partitions Info]Points;After indexing;993
-2018-05-06 12:49:13,224 -> B.Indexing points... [49.774s] [0 results]
-2018-05-06 12:49:23,126 -> C.Getting pairs... [9.902s] [12212 results]
-2018-05-06 12:49:24,436 -> D.Computing centers... [1.310s] [24424 results]
-2018-05-06 12:49:24,436 -> [Partitions Info]Centers;Before indexing;32
-2018-05-06 12:49:25,544 -> [Partitions Info]Centers;After indexing;1023
-2018-05-06 12:49:25,544 -> E.Indexing centers... [1.108s] [24424 results]
-2018-05-06 12:49:32,584 -> F.Getting disks... [7.040s] [24424 results]
-2018-05-06 12:49:32,873 -> G.Filtering less-than-mu disks... [0.289s] [11539 results]
-2018-05-06 12:49:37,728 -> H.Prunning duplicate candidates... [4.855s] [6247 results]
-2018-05-06 12:49:37,733 -> [Partitions Info]Candidates;Before indexing;200
-2018-05-06 12:49:38,169 -> I.Indexing candidates... [5.296s] [6247 results]
-2018-05-06 12:49:38,439 -> [Partitions Info]Candidates;After indexing;36
-2018-05-06 12:49:38,439 -> J.Getting expansions... [0.270s] [11087 results]
-2018-05-06 12:49:39,002 -> K.Finding maximal disks... [0.563s] [2037 results]
-2018-05-06 12:49:41,397 -> L.Prunning duplicates and subsets... [2.395s] [2021 results]
-2018-05-06 12:49:41,397 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2018-05-06 12:49:41,397 ->    berlin0-5,  50.0,    32,  3,  77.95,   12212,     24424,         6247,       2021
-2018-05-06 12:49:41,788 -> Dropping indices...[0.391s]
-2018-05-06 12:49:42,110 -> Maximal disks at t=3...                            |  80.45s |   2021 disks
-2018-05-06 12:49:46,098 -> Points at t=5...                                   |   3.74s |  18548 points
-2018-05-06 12:49:46,098 -> A.Setting mu=3,epsilon=50.0,cores=32,dataset=berlin0-5
-2018-05-06 12:49:49,075 -> [Partitions Info]Points;Before indexing;1
-2018-05-06 12:50:46,083 -> [Partitions Info]Points;After indexing;993
-2018-05-06 12:50:46,084 -> B.Indexing points... [57.009s] [0 results]
-2018-05-06 12:50:55,890 -> C.Getting pairs... [9.806s] [12157 results]
-2018-05-06 12:50:57,215 -> D.Computing centers... [1.325s] [24314 results]
-2018-05-06 12:50:57,215 -> [Partitions Info]Centers;Before indexing;32
-2018-05-06 12:50:58,310 -> [Partitions Info]Centers;After indexing;1024
-2018-05-06 12:50:58,310 -> E.Indexing centers... [1.095s] [24314 results]
-2018-05-06 12:51:05,466 -> F.Getting disks... [7.156s] [24314 results]
-2018-05-06 12:51:05,768 -> G.Filtering less-than-mu disks... [0.302s] [11479 results]
-2018-05-06 12:51:11,265 -> H.Prunning duplicate candidates... [5.497s] [6202 results]
-2018-05-06 12:51:11,269 -> [Partitions Info]Candidates;Before indexing;200
-2018-05-06 12:51:11,625 -> I.Indexing candidates... [5.857s] [6202 results]
-2018-05-06 12:51:11,949 -> [Partitions Info]Candidates;After indexing;36
-2018-05-06 12:51:11,949 -> J.Getting expansions... [0.324s] [10836 results]
-2018-05-06 12:51:12,190 -> K.Finding maximal disks... [0.241s] [2040 results]
-2018-05-06 12:51:14,235 -> L.Prunning duplicates and subsets... [2.045s] [2025 results]
-2018-05-06 12:51:14,235 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
-2018-05-06 12:51:14,235 ->    berlin0-5,  50.0,    32,  3,  85.16,   12157,     24314,         6202,       2025
-2018-05-06 12:51:14,667 -> Dropping indices...[0.432s]
-2018-05-06 12:51:14,935 -> Maximal disks at t=5...                            |  88.84s |   2025 disks
-2018-05-06 12:51:15,241 -> 1.Getting disks                                    | 177.31s |   4046 disks
-2018-05-06 12:51:23,683 -> 2.Joining timestams                                |   8.44s |   4030 candidates
-2018-05-06 12:51:26,778 -> F1Count=2954,F2Count=1076
-2018-05-06 13:05:49,336 -> 3.Checking internal timestamps                     | 865.65s |   1957 flocks
-2018-05-06 13:06:02,078 -> 
-
-PFLOCK_ML	50.0	3	3	7629
-
-2018-05-06 13:06:12,692 -> Running MergeLast...                               | 3613.98s |   7629 flocks
-2018-05-06 13:06:12,692 -> method=MergeLast,cores=32,epsilon=50.0,mu=3,delta=3,time=3613.977,master=spark://169.235.27.134:7077
-2018-05-06 13:06:22,234 -> Closing app...
-PFLOCK vs BFE, 7629 / 7629, 100.00%, 50.0, 3, 3
-1, 3, 5627 10922 18966
-BFE vs PFLOCK, 7629 / 7630, 99.99%, 50.0, 3, 3
-Differences saved at /tmp/NotFound-BFE_E50.0_M3_D3.txt
-bfe /home/acald013/Research/Datasets/Berlin/berlin0-5.tsv 50 3 3
-spark-submit --class FlockFinderBenchmark /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-2.0.jar --epsilon 50 --epsilon_max 50 --mu 3 --mu_max 3 --delta 3 --delta_max 3 --path Datasets/Berlin/ --dataset berlin0-5 --debug
-2018-05-06 13:06:24,820 -> 
-
-Iteration Epsilon=50, Mu=3 and Delta=3 has ended...
+2018-05-07 21:46:46,011 -> Setting 4 nodes...
 
 
-BFEandPFlockRunner.py has finished.
+acald013@dblab-rack12: no org.apache.spark.deploy.worker.Worker to stop
+acald013@dblab-rack15: no org.apache.spark.deploy.worker.Worker to stop
+acald013@dblab-rack14: no org.apache.spark.deploy.worker.Worker to stop
+acald013@dblab-rack11: no org.apache.spark.deploy.worker.Worker to stop
+no org.apache.spark.deploy.master.Master to stop
+starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack11.cs.ucr.edu.out
+acald013@dblab-rack15: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack15.out
+acald013@dblab-rack11: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack11.cs.ucr.edu.out
+acald013@dblab-rack14: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack14.cs.ucr.edu.out
+acald013@dblab-rack12: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack12.out
+2018-05-07 21:46:54,825 -> 4 nodes has been set...
 
-Run 'grep " vs " nohup.out' to see the results...
+
+2018-05-07 21:46:54,825 -> Running FlockFinder Benchmark...
+
+
+2018-05-07 21:46:54,825 -> Iteration 1 has started...
+2018-05-07 21:46:54,910 -> spark-submit --class FlockFinderBenchmark /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-2.0.jar --path Datasets/Berlin/ --dataset berlin0-10 --epsilon 40 --epsilon_max 50 --epsilon_step 5 --mu 3 --mu_max 3 --mu_step 1 --delta 3 --delta_max 7 --delta_step 2 --cores 28
+2018-05-07 21:46:56,688 -> Starting app...
+2018-05-07 21:46:59,914 -> Starting session                                   |   3.23s |      0 
+2018-05-07 21:46:59,934 -> Setting paramaters                                 |   0.02s |      0 
+2018-05-07 21:47:05,262 -> Reading data                                       |   5.33s | 203106 points
+2018-05-07 21:47:08,303 -> Extracting timestamps                              |   3.04s |     11 timestamps
+2018-05-07 21:47:08,312 -> === MergeLast Start ===
+2018-05-07 21:47:08,575 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 21:48:55,922 -> B.Indexing points... [107.206s] [0 results]
+2018-05-07 21:49:04,389 -> C.Getting pairs... [8.467s] [8340 results]
+2018-05-07 21:49:06,849 -> D.Computing centers... [2.459s] [16680 results]
+2018-05-07 21:49:08,524 -> E.Indexing centers... [1.675s] [16680 results]
+2018-05-07 21:49:15,012 -> F.Getting disks... [6.488s] [16680 results]
+2018-05-07 21:49:15,454 -> G.Filtering less-than-mu disks... [0.442s] [6562 results]
+2018-05-07 21:49:20,462 -> H.Prunning duplicate candidates... [5.008s] [3431 results]
+2018-05-07 21:49:20,943 -> I.Indexing candidates... [5.489s] [3431 results]
+2018-05-07 21:49:21,206 -> J.Getting expansions... [0.263s] [5673 results]
+2018-05-07 21:49:22,051 -> K.Finding maximal disks... [0.845s] [1319 results]
+2018-05-07 21:49:24,035 -> L.Prunning duplicates and subsets... [1.984s] [1303 results]
+2018-05-07 21:49:24,035 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 21:49:24,035 ->   berlin0-10,  40.0,    28,  3, 135.32,    8340,     16680,         3431,       1303
+2018-05-07 21:49:24,117 -> Dropping indices...[0.082s]
+2018-05-07 21:49:24,482 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 21:51:24,966 -> B.Indexing points... [117.820s] [0 results]
+2018-05-07 21:51:30,683 -> C.Getting pairs... [5.717s] [8573 results]
+2018-05-07 21:51:32,249 -> D.Computing centers... [1.566s] [17146 results]
+2018-05-07 21:51:33,499 -> E.Indexing centers... [1.250s] [17146 results]
+2018-05-07 21:51:38,612 -> F.Getting disks... [5.113s] [17146 results]
+2018-05-07 21:51:38,882 -> G.Filtering less-than-mu disks... [0.270s] [6793 results]
+2018-05-07 21:51:42,774 -> H.Prunning duplicate candidates... [3.892s] [3574 results]
+2018-05-07 21:51:43,193 -> I.Indexing candidates... [4.311s] [3574 results]
+2018-05-07 21:51:43,401 -> J.Getting expansions... [0.208s] [5983 results]
+2018-05-07 21:51:43,625 -> K.Finding maximal disks... [0.224s] [1342 results]
+2018-05-07 21:51:45,070 -> L.Prunning duplicates and subsets... [1.445s] [1334 results]
+2018-05-07 21:51:45,070 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 21:51:45,071 ->   berlin0-10,  40.0,    28,  3, 137.92,    8573,     17146,         3574,       1334
+2018-05-07 21:51:45,150 -> Dropping indices...[0.079s]
+2018-05-07 21:51:45,417 -> 1.Getting disks                                    | 276.92s |   2637 disks
+2018-05-07 21:51:52,791 -> 2.Joining timestams                                |   7.37s |   2370 candidates
+2018-05-07 21:51:57,715 -> F1Count=1098,F2Count=1272
+2018-05-07 21:55:11,327 -> 3.Checking internal timestamps                     | 198.54s |   1251 flocks
+2018-05-07 21:55:13,761 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 21:57:06,373 -> B.Indexing points... [111.310s] [0 results]
+2018-05-07 21:57:11,677 -> C.Getting pairs... [5.304s] [8486 results]
+2018-05-07 21:57:13,259 -> D.Computing centers... [1.582s] [16972 results]
+2018-05-07 21:57:14,466 -> E.Indexing centers... [1.207s] [16972 results]
+2018-05-07 21:57:19,475 -> F.Getting disks... [5.009s] [16972 results]
+2018-05-07 21:57:19,730 -> G.Filtering less-than-mu disks... [0.255s] [6701 results]
+2018-05-07 21:57:23,454 -> H.Prunning duplicate candidates... [3.724s] [3505 results]
+2018-05-07 21:57:23,847 -> I.Indexing candidates... [4.117s] [3505 results]
+2018-05-07 21:57:24,099 -> J.Getting expansions... [0.252s] [5806 results]
+2018-05-07 21:57:24,302 -> K.Finding maximal disks... [0.203s] [1335 results]
+2018-05-07 21:57:26,026 -> L.Prunning duplicates and subsets... [1.724s] [1327 results]
+2018-05-07 21:57:26,026 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 21:57:26,026 ->   berlin0-10,  40.0,    28,  3, 130.96,    8486,     16972,         3505,       1327
+2018-05-07 21:57:26,159 -> Dropping indices...[0.132s]
+2018-05-07 21:57:26,425 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 21:59:38,436 -> B.Indexing points... [128.081s] [0 results]
+2018-05-07 21:59:48,972 -> C.Getting pairs... [10.536s] [8696 results]
+2018-05-07 21:59:50,474 -> D.Computing centers... [1.502s] [17392 results]
+2018-05-07 21:59:51,582 -> E.Indexing centers... [1.108s] [17392 results]
+2018-05-07 21:59:58,967 -> F.Getting disks... [7.385s] [17392 results]
+2018-05-07 21:59:59,221 -> G.Filtering less-than-mu disks... [0.254s] [6866 results]
+2018-05-07 22:00:05,111 -> H.Prunning duplicate candidates... [5.890s] [3611 results]
+2018-05-07 22:00:05,460 -> I.Indexing candidates... [6.239s] [3611 results]
+2018-05-07 22:00:05,740 -> J.Getting expansions... [0.280s] [5996 results]
+2018-05-07 22:00:05,951 -> K.Finding maximal disks... [0.211s] [1337 results]
+2018-05-07 22:00:07,819 -> L.Prunning duplicates and subsets... [1.868s] [1332 results]
+2018-05-07 22:00:07,820 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 22:00:07,820 ->   berlin0-10,  40.0,    28,  3, 157.47,    8696,     17392,         3611,       1332
+2018-05-07 22:00:07,983 -> Dropping indices...[0.163s]
+2018-05-07 22:00:08,234 -> 1.Getting disks                                    | 294.49s |   2659 disks
+2018-05-07 22:00:15,586 -> 2.Joining timestams                                |   7.35s |   2287 candidates
+2018-05-07 22:00:18,654 -> F1Count=1023,F2Count=1264
+2018-05-07 22:03:31,033 -> 3.Checking internal timestamps                     | 195.45s |   1248 flocks
+2018-05-07 22:03:35,778 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 22:05:35,894 -> B.Indexing points... [117.488s] [0 results]
+2018-05-07 22:05:41,106 -> C.Getting pairs... [5.212s] [8573 results]
+2018-05-07 22:05:42,546 -> D.Computing centers... [1.440s] [17146 results]
+2018-05-07 22:05:43,732 -> E.Indexing centers... [1.186s] [17146 results]
+2018-05-07 22:05:48,936 -> F.Getting disks... [5.204s] [17146 results]
+2018-05-07 22:05:49,222 -> G.Filtering less-than-mu disks... [0.286s] [6793 results]
+2018-05-07 22:05:52,370 -> H.Prunning duplicate candidates... [3.148s] [3574 results]
+2018-05-07 22:05:52,768 -> I.Indexing candidates... [3.546s] [3574 results]
+2018-05-07 22:05:53,106 -> J.Getting expansions... [0.338s] [5983 results]
+2018-05-07 22:05:53,314 -> K.Finding maximal disks... [0.208s] [1342 results]
+2018-05-07 22:05:54,897 -> L.Prunning duplicates and subsets... [1.583s] [1334 results]
+2018-05-07 22:05:54,897 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 22:05:54,897 ->   berlin0-10,  40.0,    28,  3, 136.49,    8573,     17146,         3574,       1334
+2018-05-07 22:05:55,145 -> Dropping indices...[0.248s]
+2018-05-07 22:05:55,459 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 22:08:15,449 -> B.Indexing points... [134.789s] [0 results]
+2018-05-07 22:08:26,022 -> C.Getting pairs... [10.573s] [8698 results]
+2018-05-07 22:08:27,399 -> D.Computing centers... [1.377s] [17396 results]
+2018-05-07 22:08:28,602 -> E.Indexing centers... [1.202s] [17396 results]
+2018-05-07 22:08:35,863 -> F.Getting disks... [7.261s] [17396 results]
+2018-05-07 22:08:36,130 -> G.Filtering less-than-mu disks... [0.267s] [6856 results]
+2018-05-07 22:08:41,583 -> H.Prunning duplicate candidates... [5.453s] [3609 results]
+2018-05-07 22:08:42,091 -> I.Indexing candidates... [5.961s] [3609 results]
+2018-05-07 22:08:42,396 -> J.Getting expansions... [0.305s] [5830 results]
+2018-05-07 22:08:42,585 -> K.Finding maximal disks... [0.189s] [1336 results]
+2018-05-07 22:08:44,504 -> L.Prunning duplicates and subsets... [1.919s] [1328 results]
+2018-05-07 22:08:44,504 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 22:08:44,504 ->   berlin0-10,  40.0,    28,  3, 163.84,    8698,     17396,         3609,       1328
+2018-05-07 22:08:44,761 -> Dropping indices...[0.257s]
+2018-05-07 22:08:45,071 -> 1.Getting disks                                    | 309.31s |   2662 disks
+2018-05-07 22:08:53,099 -> 2.Joining timestams                                |   8.03s |   2373 candidates
+2018-05-07 22:08:56,258 -> F1Count=1078,F2Count=1295
+2018-05-07 22:12:34,036 -> 3.Checking internal timestamps                     | 220.94s |   1265 flocks
+2018-05-07 22:12:41,372 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 22:14:53,314 -> B.Indexing points... [128.112s] [0 results]
+2018-05-07 22:15:03,775 -> C.Getting pairs... [10.460s] [8696 results]
+2018-05-07 22:15:05,284 -> D.Computing centers... [1.509s] [17392 results]
+2018-05-07 22:15:06,432 -> E.Indexing centers... [1.148s] [17392 results]
+2018-05-07 22:15:14,037 -> F.Getting disks... [7.605s] [17392 results]
+2018-05-07 22:15:14,320 -> G.Filtering less-than-mu disks... [0.283s] [6866 results]
+2018-05-07 22:15:19,815 -> H.Prunning duplicate candidates... [5.494s] [3611 results]
+2018-05-07 22:15:20,245 -> I.Indexing candidates... [5.924s] [3611 results]
+2018-05-07 22:15:20,498 -> J.Getting expansions... [0.253s] [5996 results]
+2018-05-07 22:15:20,697 -> K.Finding maximal disks... [0.199s] [1337 results]
+2018-05-07 22:15:22,686 -> L.Prunning duplicates and subsets... [1.989s] [1332 results]
+2018-05-07 22:15:22,686 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 22:15:22,686 ->   berlin0-10,  40.0,    28,  3, 157.48,    8696,     17392,         3611,       1332
+2018-05-07 22:15:23,038 -> Dropping indices...[0.352s]
+2018-05-07 22:15:23,358 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 22:17:54,359 -> B.Indexing points... [144.576s] [0 results]
+2018-05-07 22:18:04,797 -> C.Getting pairs... [10.438s] [8662 results]
+2018-05-07 22:18:06,188 -> D.Computing centers... [1.391s] [17324 results]
+2018-05-07 22:18:07,410 -> E.Indexing centers... [1.222s] [17324 results]
+2018-05-07 22:18:14,795 -> F.Getting disks... [7.385s] [17324 results]
+2018-05-07 22:18:15,086 -> G.Filtering less-than-mu disks... [0.291s] [6852 results]
+2018-05-07 22:18:19,817 -> H.Prunning duplicate candidates... [4.731s] [3606 results]
+2018-05-07 22:18:20,201 -> I.Indexing candidates... [5.115s] [3606 results]
+2018-05-07 22:18:20,541 -> J.Getting expansions... [0.340s] [6013 results]
+2018-05-07 22:18:20,739 -> K.Finding maximal disks... [0.198s] [1327 results]
+2018-05-07 22:18:22,760 -> L.Prunning duplicates and subsets... [2.020s] [1317 results]
+2018-05-07 22:18:22,760 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 22:18:22,760 ->   berlin0-10,  40.0,    28,  3, 172.98,    8662,     17324,         3606,       1317
+2018-05-07 22:18:23,211 -> Dropping indices...[0.451s]
+2018-05-07 22:18:23,564 -> 1.Getting disks                                    | 342.22s |   2649 disks
+2018-05-07 22:18:31,887 -> 2.Joining timestams                                |   8.32s |   2343 candidates
+2018-05-07 22:18:35,424 -> F1Count=1063,F2Count=1280
+2018-05-07 22:21:39,915 -> 3.Checking internal timestamps                     | 188.03s |   1277 flocks
+2018-05-07 22:21:49,478 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 22:24:10,249 -> B.Indexing points... [135.632s] [0 results]
+2018-05-07 22:24:20,689 -> C.Getting pairs... [10.440s] [8698 results]
+2018-05-07 22:24:22,233 -> D.Computing centers... [1.544s] [17396 results]
+2018-05-07 22:24:23,325 -> E.Indexing centers... [1.092s] [17396 results]
+2018-05-07 22:24:30,752 -> F.Getting disks... [7.426s] [17396 results]
+2018-05-07 22:24:31,005 -> G.Filtering less-than-mu disks... [0.253s] [6856 results]
+2018-05-07 22:24:36,749 -> H.Prunning duplicate candidates... [5.744s] [3609 results]
+2018-05-07 22:24:37,161 -> I.Indexing candidates... [6.156s] [3609 results]
+2018-05-07 22:24:37,415 -> J.Getting expansions... [0.254s] [5830 results]
+2018-05-07 22:24:37,610 -> K.Finding maximal disks... [0.195s] [1336 results]
+2018-05-07 22:24:39,646 -> L.Prunning duplicates and subsets... [2.036s] [1328 results]
+2018-05-07 22:24:39,646 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 22:24:39,646 ->   berlin0-10,  40.0,    28,  3, 165.03,    8698,     17396,         3609,       1328
+2018-05-07 22:24:40,151 -> Dropping indices...[0.505s]
+2018-05-07 22:24:40,488 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 22:27:19,955 -> B.Indexing points... [151.742s] [0 results]
+2018-05-07 22:27:30,439 -> C.Getting pairs... [10.484s] [8673 results]
+2018-05-07 22:27:32,055 -> D.Computing centers... [1.616s] [17346 results]
+2018-05-07 22:27:33,133 -> E.Indexing centers... [1.078s] [17346 results]
+2018-05-07 22:27:40,665 -> F.Getting disks... [7.532s] [17346 results]
+2018-05-07 22:27:40,964 -> G.Filtering less-than-mu disks... [0.299s] [6836 results]
+2018-05-07 22:27:45,743 -> H.Prunning duplicate candidates... [4.779s] [3598 results]
+2018-05-07 22:27:46,155 -> I.Indexing candidates... [5.191s] [3598 results]
+2018-05-07 22:27:46,448 -> J.Getting expansions... [0.293s] [5819 results]
+2018-05-07 22:27:46,731 -> K.Finding maximal disks... [0.282s] [1339 results]
+2018-05-07 22:27:49,025 -> L.Prunning duplicates and subsets... [2.294s] [1325 results]
+2018-05-07 22:27:49,025 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 22:27:49,025 ->   berlin0-10,  40.0,    28,  3, 180.81,    8673,     17346,         3598,       1325
+2018-05-07 22:27:49,466 -> Dropping indices...[0.440s]
+2018-05-07 22:27:49,786 -> 1.Getting disks                                    | 360.33s |   2653 disks
+2018-05-07 22:27:57,187 -> 2.Joining timestams                                |   7.40s |   2336 candidates
+2018-05-07 22:28:00,240 -> F1Count=1070,F2Count=1266
+2018-05-07 22:31:27,159 -> 3.Checking internal timestamps                     | 209.97s |   1269 flocks
+2018-05-07 22:31:40,976 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 22:34:10,304 -> B.Indexing points... [142.864s] [0 results]
+2018-05-07 22:34:21,132 -> C.Getting pairs... [10.828s] [8662 results]
+2018-05-07 22:34:22,577 -> D.Computing centers... [1.445s] [17324 results]
+2018-05-07 22:34:23,947 -> E.Indexing centers... [1.370s] [17324 results]
+2018-05-07 22:34:31,200 -> F.Getting disks... [7.253s] [17324 results]
+2018-05-07 22:34:31,448 -> G.Filtering less-than-mu disks... [0.248s] [6852 results]
+2018-05-07 22:34:37,686 -> H.Prunning duplicate candidates... [6.237s] [3606 results]
+2018-05-07 22:34:38,069 -> I.Indexing candidates... [6.620s] [3606 results]
+2018-05-07 22:34:38,291 -> J.Getting expansions... [0.222s] [6013 results]
+2018-05-07 22:34:38,474 -> K.Finding maximal disks... [0.183s] [1327 results]
+2018-05-07 22:34:40,435 -> L.Prunning duplicates and subsets... [1.961s] [1317 results]
+2018-05-07 22:34:40,435 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 22:34:40,436 ->   berlin0-10,  40.0,    28,  3, 173.00,    8662,     17324,         3606,       1317
+2018-05-07 22:34:41,031 -> Dropping indices...[0.595s]
+2018-05-07 22:34:41,329 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 22:37:28,325 -> B.Indexing points... [158.044s] [0 results]
+2018-05-07 22:37:39,565 -> C.Getting pairs... [11.240s] [8677 results]
+2018-05-07 22:37:41,105 -> D.Computing centers... [1.540s] [17354 results]
+2018-05-07 22:37:42,216 -> E.Indexing centers... [1.110s] [17354 results]
+2018-05-07 22:37:49,934 -> F.Getting disks... [7.718s] [17354 results]
+2018-05-07 22:37:50,229 -> G.Filtering less-than-mu disks... [0.295s] [6816 results]
+2018-05-07 22:37:55,418 -> H.Prunning duplicate candidates... [5.189s] [3599 results]
+2018-05-07 22:37:55,797 -> I.Indexing candidates... [5.568s] [3599 results]
+2018-05-07 22:37:56,050 -> J.Getting expansions... [0.253s] [5901 results]
+2018-05-07 22:37:56,231 -> K.Finding maximal disks... [0.181s] [1311 results]
+2018-05-07 22:37:58,463 -> L.Prunning duplicates and subsets... [2.232s] [1303 results]
+2018-05-07 22:37:58,463 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 22:37:58,463 ->   berlin0-10,  40.0,    28,  3, 188.18,    8677,     17354,         3599,       1303
+2018-05-07 22:37:59,086 -> Dropping indices...[0.623s]
+2018-05-07 22:37:59,423 -> 1.Getting disks                                    | 378.47s |   2620 disks
+2018-05-07 22:38:06,872 -> 2.Joining timestams                                |   7.45s |   2224 candidates
+2018-05-07 22:38:10,284 -> F1Count=1001,F2Count=1223
+2018-05-07 22:41:30,566 -> 3.Checking internal timestamps                     | 203.69s |   1251 flocks
+2018-05-07 22:41:46,465 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 22:44:25,313 -> B.Indexing points... [151.046s] [0 results]
+2018-05-07 22:44:35,801 -> C.Getting pairs... [10.488s] [8673 results]
+2018-05-07 22:44:37,434 -> D.Computing centers... [1.633s] [17346 results]
+2018-05-07 22:44:38,523 -> E.Indexing centers... [1.089s] [17346 results]
+2018-05-07 22:44:46,248 -> F.Getting disks... [7.725s] [17346 results]
+2018-05-07 22:44:46,494 -> G.Filtering less-than-mu disks... [0.246s] [6836 results]
+2018-05-07 22:44:52,601 -> H.Prunning duplicate candidates... [6.107s] [3598 results]
+2018-05-07 22:44:52,984 -> I.Indexing candidates... [6.490s] [3598 results]
+2018-05-07 22:44:53,201 -> J.Getting expansions... [0.217s] [5819 results]
+2018-05-07 22:44:53,382 -> K.Finding maximal disks... [0.181s] [1339 results]
+2018-05-07 22:44:55,496 -> L.Prunning duplicates and subsets... [2.114s] [1325 results]
+2018-05-07 22:44:55,496 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 22:44:55,496 ->   berlin0-10,  40.0,    28,  3, 181.23,    8673,     17346,         3598,       1325
+2018-05-07 22:44:56,155 -> Dropping indices...[0.659s]
+2018-05-07 22:44:56,451 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 22:47:48,340 -> B.Indexing points... [161.704s] [0 results]
+2018-05-07 22:47:55,051 -> C.Getting pairs... [6.711s] [8686 results]
+2018-05-07 22:47:56,550 -> D.Computing centers... [1.499s] [17372 results]
+2018-05-07 22:47:57,763 -> E.Indexing centers... [1.213s] [17372 results]
+2018-05-07 22:48:04,495 -> F.Getting disks... [6.731s] [17372 results]
+2018-05-07 22:48:04,937 -> G.Filtering less-than-mu disks... [0.442s] [6856 results]
+2018-05-07 22:48:09,042 -> H.Prunning duplicate candidates... [4.104s] [3627 results]
+2018-05-07 22:48:09,515 -> I.Indexing candidates... [4.577s] [3627 results]
+2018-05-07 22:48:09,913 -> J.Getting expansions... [0.398s] [5898 results]
+2018-05-07 22:48:10,188 -> K.Finding maximal disks... [0.274s] [1334 results]
+2018-05-07 22:48:11,992 -> L.Prunning duplicates and subsets... [1.803s] [1322 results]
+2018-05-07 22:48:11,992 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 22:48:11,992 ->   berlin0-10,  40.0,    28,  3, 185.36,    8686,     17372,         3627,       1322
+2018-05-07 22:48:12,703 -> Dropping indices...[0.711s]
+2018-05-07 22:48:13,039 -> 1.Getting disks                                    | 386.59s |   2647 disks
+2018-05-07 22:48:21,993 -> 2.Joining timestams                                |   8.95s |   2175 candidates
+2018-05-07 22:48:25,109 -> F1Count=958,F2Count=1217
+2018-05-07 22:50:30,094 -> 3.Checking internal timestamps                     | 128.10s |   1261 flocks
+2018-05-07 22:50:46,749 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 22:53:35,652 -> B.Indexing points... [159.841s] [0 results]
+2018-05-07 22:53:46,824 -> C.Getting pairs... [11.172s] [8677 results]
+2018-05-07 22:53:48,487 -> D.Computing centers... [1.663s] [17354 results]
+2018-05-07 22:53:49,685 -> E.Indexing centers... [1.197s] [17354 results]
+2018-05-07 22:53:57,122 -> F.Getting disks... [7.437s] [17354 results]
+2018-05-07 22:53:57,450 -> G.Filtering less-than-mu disks... [0.328s] [6816 results]
+2018-05-07 22:54:02,859 -> H.Prunning duplicate candidates... [5.409s] [3599 results]
+2018-05-07 22:54:03,279 -> I.Indexing candidates... [5.829s] [3599 results]
+2018-05-07 22:54:03,522 -> J.Getting expansions... [0.243s] [5901 results]
+2018-05-07 22:54:03,701 -> K.Finding maximal disks... [0.179s] [1311 results]
+2018-05-07 22:54:05,584 -> L.Prunning duplicates and subsets... [1.882s] [1303 results]
+2018-05-07 22:54:05,584 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 22:54:05,584 ->   berlin0-10,  40.0,    28,  3, 189.77,    8677,     17354,         3599,       1303
+2018-05-07 22:54:06,351 -> Dropping indices...[0.767s]
+2018-05-07 22:54:06,622 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 22:57:03,445 -> B.Indexing points... [165.611s] [0 results]
+2018-05-07 22:57:14,694 -> C.Getting pairs... [11.249s] [8692 results]
+2018-05-07 22:57:16,175 -> D.Computing centers... [1.481s] [17384 results]
+2018-05-07 22:57:17,328 -> E.Indexing centers... [1.153s] [17384 results]
+2018-05-07 22:57:25,320 -> F.Getting disks... [7.992s] [17384 results]
+2018-05-07 22:57:25,627 -> G.Filtering less-than-mu disks... [0.307s] [6884 results]
+2018-05-07 22:57:30,767 -> H.Prunning duplicate candidates... [5.140s] [3645 results]
+2018-05-07 22:57:31,133 -> I.Indexing candidates... [5.506s] [3645 results]
+2018-05-07 22:57:31,452 -> J.Getting expansions... [0.319s] [5932 results]
+2018-05-07 22:57:31,684 -> K.Finding maximal disks... [0.232s] [1336 results]
+2018-05-07 22:57:33,970 -> L.Prunning duplicates and subsets... [2.285s] [1328 results]
+2018-05-07 22:57:33,970 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 22:57:33,970 ->   berlin0-10,  40.0,    28,  3, 196.14,    8692,     17384,         3645,       1328
+2018-05-07 22:57:34,744 -> Dropping indices...[0.774s]
+2018-05-07 22:57:35,051 -> 1.Getting disks                                    | 408.32s |   2631 disks
+2018-05-07 22:57:43,845 -> 2.Joining timestams                                |   8.79s |   2074 candidates
+2018-05-07 22:57:48,941 -> F1Count=893,F2Count=1181
+2018-05-07 23:00:40,850 -> 3.Checking internal timestamps                     | 177.01s |   1254 flocks
+2018-05-07 23:00:59,812 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:03:51,716 -> B.Indexing points... [161.569s] [0 results]
+2018-05-07 23:03:58,607 -> C.Getting pairs... [6.890s] [8686 results]
+2018-05-07 23:04:00,072 -> D.Computing centers... [1.465s] [17372 results]
+2018-05-07 23:04:01,380 -> E.Indexing centers... [1.308s] [17372 results]
+2018-05-07 23:04:09,459 -> F.Getting disks... [8.078s] [17372 results]
+2018-05-07 23:04:09,943 -> G.Filtering less-than-mu disks... [0.483s] [6856 results]
+2018-05-07 23:04:14,318 -> H.Prunning duplicate candidates... [4.375s] [3627 results]
+2018-05-07 23:04:14,771 -> I.Indexing candidates... [4.828s] [3627 results]
+2018-05-07 23:04:15,099 -> J.Getting expansions... [0.328s] [5898 results]
+2018-05-07 23:04:15,324 -> K.Finding maximal disks... [0.225s] [1334 results]
+2018-05-07 23:04:17,318 -> L.Prunning duplicates and subsets... [1.994s] [1322 results]
+2018-05-07 23:04:17,318 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:04:17,318 ->   berlin0-10,  40.0,    28,  3, 187.17,    8686,     17372,         3627,       1322
+2018-05-07 23:04:18,152 -> Dropping indices...[0.834s]
+2018-05-07 23:04:18,544 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:07:20,049 -> B.Indexing points... [170.027s] [0 results]
+2018-05-07 23:07:31,268 -> C.Getting pairs... [11.219s] [8713 results]
+2018-05-07 23:07:32,694 -> D.Computing centers... [1.426s] [17426 results]
+2018-05-07 23:07:33,836 -> E.Indexing centers... [1.141s] [17426 results]
+2018-05-07 23:07:41,608 -> F.Getting disks... [7.772s] [17426 results]
+2018-05-07 23:07:41,873 -> G.Filtering less-than-mu disks... [0.265s] [6894 results]
+2018-05-07 23:07:46,918 -> H.Prunning duplicate candidates... [5.045s] [3633 results]
+2018-05-07 23:07:47,342 -> I.Indexing candidates... [5.469s] [3633 results]
+2018-05-07 23:07:47,618 -> J.Getting expansions... [0.275s] [5915 results]
+2018-05-07 23:07:47,814 -> K.Finding maximal disks... [0.196s] [1319 results]
+2018-05-07 23:07:50,341 -> L.Prunning duplicates and subsets... [2.527s] [1310 results]
+2018-05-07 23:07:50,341 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:07:50,341 ->   berlin0-10,  40.0,    28,  3, 200.32,    8713,     17426,         3633,       1310
+2018-05-07 23:07:51,199 -> Dropping indices...[0.858s]
+2018-05-07 23:07:51,436 -> 1.Getting disks                                    | 411.64s |   2632 disks
+2018-05-07 23:08:00,529 -> 2.Joining timestams                                |   9.09s |   2054 candidates
+2018-05-07 23:08:03,410 -> F1Count=881,F2Count=1173
+2018-05-07 23:09:44,893 -> 3.Checking internal timestamps                     | 104.36s |   1268 flocks
+2018-05-07 23:10:06,141 -> 
+
+PFLOCK_ML	40.0	3	3	11344
+
+2018-05-07 23:10:28,225 -> Running MergeLast...                               | 4999.91s |  11344 flocks
+2018-05-07 23:10:28,226 -> method=MergeLast,cores=28,epsilon=40.0,mu=3,delta=3,time=4999.914,master=spark://169.235.27.134:7077
+2018-05-07 23:10:28,226 -> === SpatialJoin Start ===
+2018-05-07 23:10:39,763 -> Reporting locations...                             |  11.28s |  18093 points
+2018-05-07 23:10:39,764 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:10:44,840 -> B.Indexing points... [5.037s] [0 results]
+2018-05-07 23:10:50,117 -> C.Getting pairs... [5.277s] [8340 results]
+2018-05-07 23:10:51,696 -> D.Computing centers... [1.579s] [16680 results]
+2018-05-07 23:10:52,838 -> E.Indexing centers... [1.142s] [16680 results]
+2018-05-07 23:10:59,731 -> F.Getting disks... [6.892s] [16680 results]
+2018-05-07 23:11:00,175 -> G.Filtering less-than-mu disks... [0.444s] [6562 results]
+2018-05-07 23:11:04,219 -> H.Prunning duplicate candidates... [4.043s] [3431 results]
+2018-05-07 23:11:04,605 -> I.Indexing candidates... [4.429s] [3431 results]
+2018-05-07 23:11:05,037 -> J.Getting expansions... [0.432s] [5673 results]
+2018-05-07 23:11:05,297 -> K.Finding maximal disks... [0.260s] [1319 results]
+2018-05-07 23:11:06,670 -> L.Prunning duplicates and subsets... [1.373s] [1303 results]
+2018-05-07 23:11:06,670 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:11:06,670 ->   berlin0-10,  40.0,    28,  3,  26.87,    8340,     16680,         3431,       1303
+2018-05-07 23:11:07,585 -> Dropping indices...[0.915s]
+2018-05-07 23:11:07,903 -> 1.Set of disks for t_i...                          |  28.14s |   1303 disks
+2018-05-07 23:11:08,219 -> 4.Found flocks...                                  |   0.32s |      0 flocks
+2018-05-07 23:11:08,949 -> 5.Updating times...                                |   0.44s |   1303 flocks
+2018-05-07 23:11:09,932 -> 6.Filter phase...                                  |   0.98s |   1303 flocks
+2018-05-07 23:11:21,126 -> Reporting locations...                             |  11.19s |  18245 points
+2018-05-07 23:11:21,126 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:11:25,876 -> B.Indexing points... [4.731s] [0 results]
+2018-05-07 23:11:31,562 -> C.Getting pairs... [5.686s] [8486 results]
+2018-05-07 23:11:33,131 -> D.Computing centers... [1.569s] [16972 results]
+2018-05-07 23:11:34,250 -> E.Indexing centers... [1.119s] [16972 results]
+2018-05-07 23:11:39,226 -> F.Getting disks... [4.976s] [16972 results]
+2018-05-07 23:11:39,486 -> G.Filtering less-than-mu disks... [0.260s] [6701 results]
+2018-05-07 23:11:43,292 -> H.Prunning duplicate candidates... [3.806s] [3505 results]
+2018-05-07 23:11:43,643 -> I.Indexing candidates... [4.157s] [3505 results]
+2018-05-07 23:11:43,884 -> J.Getting expansions... [0.241s] [5806 results]
+2018-05-07 23:11:44,059 -> K.Finding maximal disks... [0.175s] [1335 results]
+2018-05-07 23:11:45,522 -> L.Prunning duplicates and subsets... [1.463s] [1327 results]
+2018-05-07 23:11:45,522 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:11:45,522 ->   berlin0-10,  40.0,    28,  3,  24.38,    8486,     16972,         3505,       1327
+2018-05-07 23:11:46,482 -> Dropping indices...[0.960s]
+2018-05-07 23:11:46,815 -> 1.Set of disks for t_i...                          |  25.69s |   1327 disks
+2018-05-07 23:11:51,773 -> 2.Distance Join phase...                           |   4.96s |   3533 combinations
+2018-05-07 23:12:33,136 -> 3.Getting candidates...                            |  41.36s |   1286 candidates
+2018-05-07 23:12:33,935 -> 4.Found flocks...                                  |   0.80s |      0 flocks
+2018-05-07 23:12:36,631 -> 5.Updating times...                                |   1.55s |   1286 flocks
+2018-05-07 23:12:39,126 -> 6.Filter phase...                                  |   2.50s |   1406 flocks
+2018-05-07 23:12:50,216 -> Reporting locations...                             |  11.09s |  18394 points
+2018-05-07 23:12:50,216 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:12:55,258 -> B.Indexing points... [5.022s] [0 results]
+2018-05-07 23:13:00,627 -> C.Getting pairs... [5.369s] [8573 results]
+2018-05-07 23:13:02,091 -> D.Computing centers... [1.464s] [17146 results]
+2018-05-07 23:13:03,181 -> E.Indexing centers... [1.090s] [17146 results]
+2018-05-07 23:13:08,438 -> F.Getting disks... [5.256s] [17146 results]
+2018-05-07 23:13:08,709 -> G.Filtering less-than-mu disks... [0.271s] [6793 results]
+2018-05-07 23:13:11,702 -> H.Prunning duplicate candidates... [2.993s] [3574 results]
+2018-05-07 23:13:12,047 -> I.Indexing candidates... [3.338s] [3574 results]
+2018-05-07 23:13:12,278 -> J.Getting expansions... [0.231s] [5983 results]
+2018-05-07 23:13:12,462 -> K.Finding maximal disks... [0.184s] [1342 results]
+2018-05-07 23:13:14,233 -> L.Prunning duplicates and subsets... [1.770s] [1334 results]
+2018-05-07 23:13:14,233 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:13:14,233 ->   berlin0-10,  40.0,    28,  3,  24.00,    8573,     17146,         3574,       1334
+2018-05-07 23:13:15,218 -> Dropping indices...[0.985s]
+2018-05-07 23:13:15,567 -> 1.Set of disks for t_i...                          |  25.35s |   1334 disks
+2018-05-07 23:13:24,296 -> 2.Distance Join phase...                           |   8.73s |   4016 combinations
+2018-05-07 23:14:07,739 -> 3.Getting candidates...                            |  43.44s |   1371 candidates
+2018-05-07 23:14:08,721 -> 4.Found flocks...                                  |   0.98s |   1251 flocks
+2018-05-07 23:14:12,243 -> 5.Updating times...                                |   1.69s |   1371 flocks
+2018-05-07 23:14:15,112 -> 6.Filter phase...                                  |   2.87s |   1495 flocks
+2018-05-07 23:14:25,898 -> Reporting locations...                             |  10.79s |  18548 points
+2018-05-07 23:14:25,899 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:14:32,223 -> B.Indexing points... [6.306s] [0 results]
+2018-05-07 23:14:43,328 -> C.Getting pairs... [11.105s] [8696 results]
+2018-05-07 23:14:44,797 -> D.Computing centers... [1.469s] [17392 results]
+2018-05-07 23:14:45,902 -> E.Indexing centers... [1.105s] [17392 results]
+2018-05-07 23:14:53,620 -> F.Getting disks... [7.717s] [17392 results]
+2018-05-07 23:14:53,911 -> G.Filtering less-than-mu disks... [0.291s] [6866 results]
+2018-05-07 23:14:59,030 -> H.Prunning duplicate candidates... [5.119s] [3611 results]
+2018-05-07 23:14:59,504 -> I.Indexing candidates... [5.593s] [3611 results]
+2018-05-07 23:14:59,767 -> J.Getting expansions... [0.262s] [5996 results]
+2018-05-07 23:14:59,957 -> K.Finding maximal disks... [0.190s] [1337 results]
+2018-05-07 23:15:02,468 -> L.Prunning duplicates and subsets... [2.511s] [1332 results]
+2018-05-07 23:15:02,468 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:15:02,468 ->   berlin0-10,  40.0,    28,  3,  36.55,    8696,     17392,         3611,       1332
+2018-05-07 23:15:03,628 -> Dropping indices...[1.160s]
+2018-05-07 23:15:03,917 -> 1.Set of disks for t_i...                          |  38.02s |   1332 disks
+2018-05-07 23:15:13,828 -> 2.Distance Join phase...                           |   9.91s |   4397 combinations
+2018-05-07 23:16:28,051 -> 3.Getting candidates...                            |  74.22s |   1379 candidates
+2018-05-07 23:16:29,500 -> 4.Found flocks...                                  |   1.45s |   1248 flocks
+2018-05-07 23:16:34,862 -> 5.Updating times...                                |   2.51s |   1379 flocks
+2018-05-07 23:16:38,184 -> 6.Filter phase...                                  |   3.32s |   1491 flocks
+2018-05-07 23:16:48,959 -> Reporting locations...                             |  10.78s |  18548 points
+2018-05-07 23:16:48,960 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:16:55,387 -> B.Indexing points... [6.407s] [0 results]
+2018-05-07 23:17:09,031 -> C.Getting pairs... [13.644s] [8698 results]
+2018-05-07 23:17:10,537 -> D.Computing centers... [1.506s] [17396 results]
+2018-05-07 23:17:11,731 -> E.Indexing centers... [1.194s] [17396 results]
+2018-05-07 23:17:19,154 -> F.Getting disks... [7.422s] [17396 results]
+2018-05-07 23:17:19,403 -> G.Filtering less-than-mu disks... [0.249s] [6856 results]
+2018-05-07 23:17:24,903 -> H.Prunning duplicate candidates... [5.500s] [3609 results]
+2018-05-07 23:17:25,303 -> I.Indexing candidates... [5.900s] [3609 results]
+2018-05-07 23:17:25,610 -> J.Getting expansions... [0.307s] [5830 results]
+2018-05-07 23:17:25,840 -> K.Finding maximal disks... [0.230s] [1336 results]
+2018-05-07 23:17:27,952 -> L.Prunning duplicates and subsets... [2.112s] [1328 results]
+2018-05-07 23:17:27,952 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:17:27,952 ->   berlin0-10,  40.0,    28,  3,  38.97,    8698,     17396,         3609,       1328
+2018-05-07 23:17:29,142 -> Dropping indices...[1.190s]
+2018-05-07 23:17:29,448 -> 1.Set of disks for t_i...                          |  40.49s |   1328 disks
+2018-05-07 23:17:39,156 -> 2.Distance Join phase...                           |   9.71s |   4275 combinations
+2018-05-07 23:18:23,842 -> 3.Getting candidates...                            |  44.69s |   1376 candidates
+2018-05-07 23:18:25,389 -> 4.Found flocks...                                  |   1.55s |   1265 flocks
+2018-05-07 23:18:31,537 -> 5.Updating times...                                |   2.58s |   1376 flocks
+2018-05-07 23:18:34,989 -> 6.Filter phase...                                  |   3.45s |   1472 flocks
+2018-05-07 23:18:46,073 -> Reporting locations...                             |  11.08s |  18548 points
+2018-05-07 23:18:46,073 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:18:53,311 -> B.Indexing points... [7.220s] [0 results]
+2018-05-07 23:19:03,834 -> C.Getting pairs... [10.523s] [8662 results]
+2018-05-07 23:19:05,503 -> D.Computing centers... [1.668s] [17324 results]
+2018-05-07 23:19:06,695 -> E.Indexing centers... [1.192s] [17324 results]
+2018-05-07 23:19:14,456 -> F.Getting disks... [7.761s] [17324 results]
+2018-05-07 23:19:14,722 -> G.Filtering less-than-mu disks... [0.266s] [6852 results]
+2018-05-07 23:19:20,830 -> H.Prunning duplicate candidates... [6.107s] [3606 results]
+2018-05-07 23:19:21,183 -> I.Indexing candidates... [6.460s] [3606 results]
+2018-05-07 23:19:21,447 -> J.Getting expansions... [0.264s] [6013 results]
+2018-05-07 23:19:21,620 -> K.Finding maximal disks... [0.173s] [1327 results]
+2018-05-07 23:19:24,071 -> L.Prunning duplicates and subsets... [2.450s] [1317 results]
+2018-05-07 23:19:24,071 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:19:24,071 ->   berlin0-10,  40.0,    28,  3,  37.98,    8662,     17324,         3606,       1317
+2018-05-07 23:19:25,459 -> Dropping indices...[1.388s]
+2018-05-07 23:19:25,840 -> 1.Set of disks for t_i...                          |  39.77s |   1317 disks
+2018-05-07 23:19:36,556 -> 2.Distance Join phase...                           |  10.72s |   4131 combinations
+2018-05-07 23:20:22,024 -> 3.Getting candidates...                            |  45.47s |   1377 candidates
+2018-05-07 23:20:23,868 -> 4.Found flocks...                                  |   1.84s |   1277 flocks
+2018-05-07 23:20:31,556 -> 5.Updating times...                                |   3.21s |   1377 flocks
+2018-05-07 23:20:35,582 -> 6.Filter phase...                                  |   4.03s |   1454 flocks
+2018-05-07 23:20:46,773 -> Reporting locations...                             |  11.19s |  18546 points
+2018-05-07 23:20:46,773 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:20:53,207 -> B.Indexing points... [6.415s] [0 results]
+2018-05-07 23:21:04,911 -> C.Getting pairs... [11.704s] [8673 results]
+2018-05-07 23:21:06,309 -> D.Computing centers... [1.398s] [17346 results]
+2018-05-07 23:21:07,620 -> E.Indexing centers... [1.310s] [17346 results]
+2018-05-07 23:21:15,007 -> F.Getting disks... [7.387s] [17346 results]
+2018-05-07 23:21:15,288 -> G.Filtering less-than-mu disks... [0.281s] [6836 results]
+2018-05-07 23:21:21,491 -> H.Prunning duplicate candidates... [6.203s] [3598 results]
+2018-05-07 23:21:21,832 -> I.Indexing candidates... [6.544s] [3598 results]
+2018-05-07 23:21:22,057 -> J.Getting expansions... [0.225s] [5819 results]
+2018-05-07 23:21:22,328 -> K.Finding maximal disks... [0.227s] [1339 results]
+2018-05-07 23:21:24,302 -> L.Prunning duplicates and subsets... [1.974s] [1325 results]
+2018-05-07 23:21:24,302 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:21:24,302 ->   berlin0-10,  40.0,    28,  3,  37.51,    8673,     17346,         3598,       1325
+2018-05-07 23:21:25,707 -> Dropping indices...[1.405s]
+2018-05-07 23:21:26,035 -> 1.Set of disks for t_i...                          |  39.26s |   1325 disks
+2018-05-07 23:21:36,934 -> 2.Distance Join phase...                           |  10.90s |   4115 combinations
+2018-05-07 23:22:24,803 -> 3.Getting candidates...                            |  47.87s |   1354 candidates
+2018-05-07 23:22:26,741 -> 4.Found flocks...                                  |   1.94s |   1269 flocks
+2018-05-07 23:22:36,054 -> 5.Updating times...                                |   3.31s |   1354 flocks
+2018-05-07 23:22:40,184 -> 6.Filter phase...                                  |   4.13s |   1428 flocks
+2018-05-07 23:22:51,138 -> Reporting locations...                             |  10.95s |  18546 points
+2018-05-07 23:22:51,138 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:22:57,664 -> B.Indexing points... [6.507s] [0 results]
+2018-05-07 23:23:09,169 -> C.Getting pairs... [11.505s] [8677 results]
+2018-05-07 23:23:10,610 -> D.Computing centers... [1.441s] [17354 results]
+2018-05-07 23:23:11,957 -> E.Indexing centers... [1.347s] [17354 results]
+2018-05-07 23:23:19,281 -> F.Getting disks... [7.324s] [17354 results]
+2018-05-07 23:23:19,589 -> G.Filtering less-than-mu disks... [0.308s] [6816 results]
+2018-05-07 23:23:25,742 -> H.Prunning duplicate candidates... [6.153s] [3599 results]
+2018-05-07 23:23:26,156 -> I.Indexing candidates... [6.567s] [3599 results]
+2018-05-07 23:23:26,368 -> J.Getting expansions... [0.212s] [5901 results]
+2018-05-07 23:23:26,536 -> K.Finding maximal disks... [0.168s] [1311 results]
+2018-05-07 23:23:28,403 -> L.Prunning duplicates and subsets... [1.867s] [1303 results]
+2018-05-07 23:23:28,403 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:23:28,403 ->   berlin0-10,  40.0,    28,  3,  37.25,    8677,     17354,         3599,       1303
+2018-05-07 23:23:29,885 -> Dropping indices...[1.482s]
+2018-05-07 23:23:30,167 -> 1.Set of disks for t_i...                          |  39.03s |   1303 disks
+2018-05-07 23:23:41,289 -> 2.Distance Join phase...                           |  11.12s |   3672 combinations
+2018-05-07 23:24:22,639 -> 3.Getting candidates...                            |  41.35s |   1328 candidates
+2018-05-07 23:24:24,712 -> 4.Found flocks...                                  |   2.07s |   1251 flocks
+2018-05-07 23:24:35,470 -> 5.Updating times...                                |   3.02s |   1328 flocks
+2018-05-07 23:24:39,653 -> 6.Filter phase...                                  |   4.18s |   1395 flocks
+2018-05-07 23:24:50,652 -> Reporting locations...                             |  11.00s |  18546 points
+2018-05-07 23:24:50,653 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:24:54,654 -> B.Indexing points... [3.982s] [0 results]
+2018-05-07 23:25:01,993 -> C.Getting pairs... [7.339s] [8686 results]
+2018-05-07 23:25:03,518 -> D.Computing centers... [1.525s] [17372 results]
+2018-05-07 23:25:04,926 -> E.Indexing centers... [1.407s] [17372 results]
+2018-05-07 23:25:10,790 -> F.Getting disks... [5.864s] [17372 results]
+2018-05-07 23:25:11,065 -> G.Filtering less-than-mu disks... [0.275s] [6856 results]
+2018-05-07 23:25:15,761 -> H.Prunning duplicate candidates... [4.696s] [3627 results]
+2018-05-07 23:25:16,173 -> I.Indexing candidates... [5.108s] [3627 results]
+2018-05-07 23:25:16,444 -> J.Getting expansions... [0.270s] [5898 results]
+2018-05-07 23:25:16,622 -> K.Finding maximal disks... [0.178s] [1334 results]
+2018-05-07 23:25:18,403 -> L.Prunning duplicates and subsets... [1.781s] [1322 results]
+2018-05-07 23:25:18,403 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:25:18,403 ->   berlin0-10,  40.0,    28,  3,  27.73,    8686,     17372,         3627,       1322
+2018-05-07 23:25:19,994 -> Dropping indices...[1.591s]
+2018-05-07 23:25:20,321 -> 1.Set of disks for t_i...                          |  29.67s |   1322 disks
+2018-05-07 23:25:32,226 -> 2.Distance Join phase...                           |  11.91s |   3563 combinations
+2018-05-07 23:26:10,204 -> 3.Getting candidates...                            |  37.98s |   1331 candidates
+2018-05-07 23:26:11,983 -> 4.Found flocks...                                  |   1.78s |   1261 flocks
+2018-05-07 23:26:23,388 -> 5.Updating times...                                |   2.45s |   1331 flocks
+2018-05-07 23:26:26,722 -> 6.Filter phase...                                  |   3.33s |   1425 flocks
+2018-05-07 23:26:37,310 -> Reporting locations...                             |  10.59s |  18546 points
+2018-05-07 23:26:37,310 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:26:43,440 -> B.Indexing points... [6.093s] [0 results]
+2018-05-07 23:26:54,321 -> C.Getting pairs... [10.881s] [8692 results]
+2018-05-07 23:26:56,894 -> D.Computing centers... [2.573s] [17384 results]
+2018-05-07 23:26:58,021 -> E.Indexing centers... [1.127s] [17384 results]
+2018-05-07 23:27:06,364 -> F.Getting disks... [8.343s] [17384 results]
+2018-05-07 23:27:06,672 -> G.Filtering less-than-mu disks... [0.308s] [6884 results]
+2018-05-07 23:27:11,371 -> H.Prunning duplicate candidates... [4.699s] [3645 results]
+2018-05-07 23:27:11,724 -> I.Indexing candidates... [5.052s] [3645 results]
+2018-05-07 23:27:11,938 -> J.Getting expansions... [0.214s] [5932 results]
+2018-05-07 23:27:12,116 -> K.Finding maximal disks... [0.177s] [1336 results]
+2018-05-07 23:27:14,520 -> L.Prunning duplicates and subsets... [2.404s] [1328 results]
+2018-05-07 23:27:14,521 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:27:14,521 ->   berlin0-10,  40.0,    28,  3,  37.18,    8692,     17384,         3645,       1328
+2018-05-07 23:27:16,285 -> Dropping indices...[1.764s]
+2018-05-07 23:27:16,619 -> 1.Set of disks for t_i...                          |  39.31s |   1328 disks
+2018-05-07 23:27:28,914 -> 2.Distance Join phase...                           |  12.30s |   3623 combinations
+2018-05-07 23:28:30,153 -> 3.Getting candidates...                            |  61.24s |   1353 candidates
+2018-05-07 23:28:32,427 -> 4.Found flocks...                                  |   2.27s |   1254 flocks
+2018-05-07 23:28:45,777 -> 5.Updating times...                                |   3.44s |   1353 flocks
+2018-05-07 23:28:50,139 -> 6.Filter phase...                                  |   4.36s |   1437 flocks
+2018-05-07 23:29:00,733 -> Reporting locations...                             |  10.59s |  18546 points
+2018-05-07 23:29:00,733 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:29:06,688 -> B.Indexing points... [5.918s] [0 results]
+2018-05-07 23:29:18,286 -> C.Getting pairs... [11.598s] [8713 results]
+2018-05-07 23:29:20,311 -> D.Computing centers... [2.025s] [17426 results]
+2018-05-07 23:29:21,422 -> E.Indexing centers... [1.111s] [17426 results]
+2018-05-07 23:29:31,572 -> F.Getting disks... [10.150s] [17426 results]
+2018-05-07 23:29:31,954 -> G.Filtering less-than-mu disks... [0.382s] [6894 results]
+2018-05-07 23:29:36,719 -> H.Prunning duplicate candidates... [4.765s] [3633 results]
+2018-05-07 23:29:37,111 -> I.Indexing candidates... [5.157s] [3633 results]
+2018-05-07 23:29:37,421 -> J.Getting expansions... [0.310s] [5915 results]
+2018-05-07 23:29:37,739 -> K.Finding maximal disks... [0.318s] [1319 results]
+2018-05-07 23:29:40,204 -> L.Prunning duplicates and subsets... [2.465s] [1310 results]
+2018-05-07 23:29:40,204 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:29:40,204 ->   berlin0-10,  40.0,    28,  3,  39.43,    8713,     17426,         3633,       1310
+2018-05-07 23:29:41,898 -> Dropping indices...[1.694s]
+2018-05-07 23:29:42,252 -> 1.Set of disks for t_i...                          |  41.52s |   1310 disks
+2018-05-07 23:29:54,807 -> 2.Distance Join phase...                           |  12.56s |   3452 combinations
+2018-05-07 23:30:35,738 -> 3.Getting candidates...                            |  40.93s |   1357 candidates
+2018-05-07 23:30:38,049 -> 4.Found flocks...                                  |   2.31s |   1268 flocks
+2018-05-07 23:30:51,194 -> 5.Updating times...                                |   3.28s |   1357 flocks
+2018-05-07 23:30:55,590 -> 6.Filter phase...                                  |   4.40s |   1435 flocks
+2018-05-07 23:30:55,590 -> 
+
+PFLOCK_SJ	40.0	3	3	11344
+
+2018-05-07 23:31:03,772 -> Running SpatialJoin...                             | 1235.55s |  11344 flocks
+2018-05-07 23:31:03,773 -> method=SpatialJoin,cores=28,epsilon=40.0,mu=3,delta=3,time=1235.547,master=spark://169.235.27.134:7077
+2018-05-07 23:31:03,773 -> === MergeLast Start ===
+2018-05-07 23:31:03,844 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:32:45,874 -> B.Indexing points... [102.010s] [0 results]
+2018-05-07 23:32:51,986 -> C.Getting pairs... [6.112s] [8340 results]
+2018-05-07 23:32:53,456 -> D.Computing centers... [1.470s] [16680 results]
+2018-05-07 23:32:54,737 -> E.Indexing centers... [1.281s] [16680 results]
+2018-05-07 23:32:59,865 -> F.Getting disks... [5.128s] [16680 results]
+2018-05-07 23:33:00,115 -> G.Filtering less-than-mu disks... [0.250s] [6562 results]
+2018-05-07 23:33:03,944 -> H.Prunning duplicate candidates... [3.829s] [3431 results]
+2018-05-07 23:33:04,324 -> I.Indexing candidates... [4.209s] [3431 results]
+2018-05-07 23:33:04,657 -> J.Getting expansions... [0.333s] [5673 results]
+2018-05-07 23:33:04,840 -> K.Finding maximal disks... [0.182s] [1319 results]
+2018-05-07 23:33:06,006 -> L.Prunning duplicates and subsets... [1.166s] [1303 results]
+2018-05-07 23:33:06,006 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:33:06,006 ->   berlin0-10,  40.0,    28,  3, 122.14,    8340,     16680,         3431,       1303
+2018-05-07 23:33:07,832 -> Dropping indices...[1.826s]
+2018-05-07 23:33:08,114 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:35:08,582 -> B.Indexing points... [117.895s] [0 results]
+2018-05-07 23:35:14,026 -> C.Getting pairs... [5.444s] [8573 results]
+2018-05-07 23:35:15,680 -> D.Computing centers... [1.654s] [17146 results]
+2018-05-07 23:35:16,844 -> E.Indexing centers... [1.164s] [17146 results]
+2018-05-07 23:35:22,391 -> F.Getting disks... [5.547s] [17146 results]
+2018-05-07 23:35:22,694 -> G.Filtering less-than-mu disks... [0.303s] [6793 results]
+2018-05-07 23:35:26,088 -> H.Prunning duplicate candidates... [3.394s] [3574 results]
+2018-05-07 23:35:26,466 -> I.Indexing candidates... [3.772s] [3574 results]
+2018-05-07 23:35:26,720 -> J.Getting expansions... [0.254s] [5983 results]
+2018-05-07 23:35:26,903 -> K.Finding maximal disks... [0.183s] [1342 results]
+2018-05-07 23:35:28,278 -> L.Prunning duplicates and subsets... [1.375s] [1334 results]
+2018-05-07 23:35:28,278 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:35:28,278 ->   berlin0-10,  40.0,    28,  3, 137.59,    8573,     17146,         3574,       1334
+2018-05-07 23:35:30,135 -> Dropping indices...[1.857s]
+2018-05-07 23:35:30,430 -> 1.Getting disks                                    | 266.60s |   2637 disks
+2018-05-07 23:35:38,920 -> 2.Joining timestams                                |   8.49s |   2370 candidates
+2018-05-07 23:35:42,444 -> F1Count=1412,F2Count=958
+2018-05-07 23:39:28,715 -> 3.Checking internal timestamps                     | 229.80s |   1252 flocks
+2018-05-07 23:39:31,714 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:41:24,391 -> B.Indexing points... [111.366s] [0 results]
+2018-05-07 23:41:30,333 -> C.Getting pairs... [5.942s] [8486 results]
+2018-05-07 23:41:32,118 -> D.Computing centers... [1.785s] [16972 results]
+2018-05-07 23:41:33,349 -> E.Indexing centers... [1.231s] [16972 results]
+2018-05-07 23:41:39,278 -> F.Getting disks... [5.929s] [16972 results]
+2018-05-07 23:41:39,579 -> G.Filtering less-than-mu disks... [0.301s] [6701 results]
+2018-05-07 23:41:43,047 -> H.Prunning duplicate candidates... [3.468s] [3505 results]
+2018-05-07 23:41:43,493 -> I.Indexing candidates... [3.914s] [3505 results]
+2018-05-07 23:41:43,741 -> J.Getting expansions... [0.248s] [5806 results]
+2018-05-07 23:41:43,916 -> K.Finding maximal disks... [0.175s] [1335 results]
+2018-05-07 23:41:45,394 -> L.Prunning duplicates and subsets... [1.477s] [1327 results]
+2018-05-07 23:41:45,395 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:41:45,395 ->   berlin0-10,  40.0,    28,  3, 132.37,    8486,     16972,         3505,       1327
+2018-05-07 23:41:47,350 -> Dropping indices...[1.955s]
+2018-05-07 23:41:47,698 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:44:00,888 -> B.Indexing points... [129.254s] [0 results]
+2018-05-07 23:44:12,503 -> C.Getting pairs... [11.615s] [8696 results]
+2018-05-07 23:44:14,289 -> D.Computing centers... [1.786s] [17392 results]
+2018-05-07 23:44:15,452 -> E.Indexing centers... [1.163s] [17392 results]
+2018-05-07 23:44:22,943 -> F.Getting disks... [7.491s] [17392 results]
+2018-05-07 23:44:23,345 -> G.Filtering less-than-mu disks... [0.402s] [6866 results]
+2018-05-07 23:44:29,254 -> H.Prunning duplicate candidates... [5.909s] [3611 results]
+2018-05-07 23:44:29,635 -> I.Indexing candidates... [6.290s] [3611 results]
+2018-05-07 23:44:30,071 -> J.Getting expansions... [0.436s] [5996 results]
+2018-05-07 23:44:30,242 -> K.Finding maximal disks... [0.171s] [1337 results]
+2018-05-07 23:44:32,263 -> L.Prunning duplicates and subsets... [2.021s] [1332 results]
+2018-05-07 23:44:32,263 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:44:32,263 ->   berlin0-10,  40.0,    28,  3, 160.63,    8696,     17392,         3611,       1332
+2018-05-07 23:44:34,277 -> Dropping indices...[2.013s]
+2018-05-07 23:44:34,635 -> 1.Getting disks                                    | 302.94s |   2659 disks
+2018-05-07 23:44:43,034 -> 2.Joining timestams                                |   8.40s |   2287 candidates
+2018-05-07 23:44:47,202 -> F1Count=1358,F2Count=929
+2018-05-07 23:46:51,987 -> 3.Checking internal timestamps                     | 128.95s |   1247 flocks
+2018-05-07 23:46:56,756 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:48:59,168 -> B.Indexing points... [118.390s] [0 results]
+2018-05-07 23:49:05,121 -> C.Getting pairs... [5.953s] [8573 results]
+2018-05-07 23:49:06,670 -> D.Computing centers... [1.549s] [17146 results]
+2018-05-07 23:49:07,843 -> E.Indexing centers... [1.173s] [17146 results]
+2018-05-07 23:49:13,473 -> F.Getting disks... [5.630s] [17146 results]
+2018-05-07 23:49:13,724 -> G.Filtering less-than-mu disks... [0.251s] [6793 results]
+2018-05-07 23:49:17,831 -> H.Prunning duplicate candidates... [4.107s] [3574 results]
+2018-05-07 23:49:18,195 -> I.Indexing candidates... [4.471s] [3574 results]
+2018-05-07 23:49:18,476 -> J.Getting expansions... [0.281s] [5983 results]
+2018-05-07 23:49:18,647 -> K.Finding maximal disks... [0.171s] [1342 results]
+2018-05-07 23:49:20,070 -> L.Prunning duplicates and subsets... [1.423s] [1334 results]
+2018-05-07 23:49:20,070 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:49:20,071 ->   berlin0-10,  40.0,    28,  3, 139.29,    8573,     17146,         3574,       1334
+2018-05-07 23:49:22,091 -> Dropping indices...[2.020s]
+2018-05-07 23:49:22,392 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:51:43,504 -> B.Indexing points... [135.920s] [0 results]
+2018-05-07 23:51:54,224 -> C.Getting pairs... [10.720s] [8698 results]
+2018-05-07 23:51:55,704 -> D.Computing centers... [1.479s] [17396 results]
+2018-05-07 23:51:56,823 -> E.Indexing centers... [1.119s] [17396 results]
+2018-05-07 23:52:04,959 -> F.Getting disks... [8.136s] [17396 results]
+2018-05-07 23:52:05,267 -> G.Filtering less-than-mu disks... [0.308s] [6856 results]
+2018-05-07 23:52:10,452 -> H.Prunning duplicate candidates... [5.185s] [3609 results]
+2018-05-07 23:52:10,833 -> I.Indexing candidates... [5.566s] [3609 results]
+2018-05-07 23:52:11,101 -> J.Getting expansions... [0.268s] [5830 results]
+2018-05-07 23:52:11,342 -> K.Finding maximal disks... [0.241s] [1336 results]
+2018-05-07 23:52:14,746 -> L.Prunning duplicates and subsets... [3.403s] [1328 results]
+2018-05-07 23:52:14,746 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:52:14,746 ->   berlin0-10,  40.0,    28,  3, 167.16,    8698,     17396,         3609,       1328
+2018-05-07 23:52:16,821 -> Dropping indices...[2.075s]
+2018-05-07 23:52:17,133 -> 1.Getting disks                                    | 320.39s |   2662 disks
+2018-05-07 23:52:25,400 -> 2.Joining timestams                                |   8.27s |   2373 candidates
+2018-05-07 23:52:28,422 -> F1Count=1429,F2Count=944
+2018-05-07 23:55:24,154 -> 3.Checking internal timestamps                     | 178.75s |   1265 flocks
+2018-05-07 23:55:30,823 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-07 23:57:42,343 -> B.Indexing points... [127.656s] [0 results]
+2018-05-07 23:57:53,760 -> C.Getting pairs... [11.417s] [8696 results]
+2018-05-07 23:57:55,775 -> D.Computing centers... [2.015s] [17392 results]
+2018-05-07 23:57:56,850 -> E.Indexing centers... [1.075s] [17392 results]
+2018-05-07 23:58:05,493 -> F.Getting disks... [8.643s] [17392 results]
+2018-05-07 23:58:05,793 -> G.Filtering less-than-mu disks... [0.300s] [6866 results]
+2018-05-07 23:58:11,568 -> H.Prunning duplicate candidates... [5.775s] [3611 results]
+2018-05-07 23:58:11,964 -> I.Indexing candidates... [6.171s] [3611 results]
+2018-05-07 23:58:12,221 -> J.Getting expansions... [0.257s] [5996 results]
+2018-05-07 23:58:12,396 -> K.Finding maximal disks... [0.175s] [1337 results]
+2018-05-07 23:58:15,966 -> L.Prunning duplicates and subsets... [3.569s] [1332 results]
+2018-05-07 23:58:15,966 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-07 23:58:15,966 ->   berlin0-10,  40.0,    28,  3, 161.28,    8696,     17392,         3611,       1332
+2018-05-07 23:58:18,133 -> Dropping indices...[2.167s]
+2018-05-07 23:58:18,389 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 00:00:49,172 -> B.Indexing points... [144.321s] [0 results]
+2018-05-08 00:00:59,655 -> C.Getting pairs... [10.460s] [8662 results]
+2018-05-08 00:01:01,697 -> D.Computing centers... [2.042s] [17324 results]
+2018-05-08 00:01:02,833 -> E.Indexing centers... [1.136s] [17324 results]
+2018-05-08 00:01:10,976 -> F.Getting disks... [8.143s] [17324 results]
+2018-05-08 00:01:11,293 -> G.Filtering less-than-mu disks... [0.316s] [6852 results]
+2018-05-08 00:01:16,244 -> H.Prunning duplicate candidates... [4.951s] [3606 results]
+2018-05-08 00:01:16,614 -> I.Indexing candidates... [5.321s] [3606 results]
+2018-05-08 00:01:16,855 -> J.Getting expansions... [0.241s] [6013 results]
+2018-05-08 00:01:17,030 -> K.Finding maximal disks... [0.175s] [1327 results]
+2018-05-08 00:01:18,989 -> L.Prunning duplicates and subsets... [1.959s] [1317 results]
+2018-05-08 00:01:18,989 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 00:01:18,989 ->   berlin0-10,  40.0,    28,  3, 174.14,    8662,     17324,         3606,       1317
+2018-05-08 00:01:21,168 -> Dropping indices...[2.178s]
+2018-05-08 00:01:21,478 -> 1.Getting disks                                    | 350.67s |   2649 disks
+2018-05-08 00:01:29,832 -> 2.Joining timestams                                |   8.35s |   2343 candidates
+2018-05-08 00:01:33,129 -> F1Count=1390,F2Count=953
+2018-05-08 00:05:28,728 -> 3.Checking internal timestamps                     | 238.90s |   1276 flocks
+2018-05-08 00:05:37,493 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 00:07:58,297 -> B.Indexing points... [135.496s] [0 results]
+2018-05-08 00:08:10,244 -> C.Getting pairs... [11.947s] [8698 results]
+2018-05-08 00:08:11,699 -> D.Computing centers... [1.454s] [17396 results]
+2018-05-08 00:08:13,086 -> E.Indexing centers... [1.387s] [17396 results]
+2018-05-08 00:08:20,421 -> F.Getting disks... [7.335s] [17396 results]
+2018-05-08 00:08:20,682 -> G.Filtering less-than-mu disks... [0.261s] [6856 results]
+2018-05-08 00:08:29,559 -> H.Prunning duplicate candidates... [8.877s] [3609 results]
+2018-05-08 00:08:29,997 -> I.Indexing candidates... [9.315s] [3609 results]
+2018-05-08 00:08:30,256 -> J.Getting expansions... [0.258s] [5830 results]
+2018-05-08 00:08:30,468 -> K.Finding maximal disks... [0.212s] [1336 results]
+2018-05-08 00:08:32,770 -> L.Prunning duplicates and subsets... [2.302s] [1328 results]
+2018-05-08 00:08:32,770 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 00:08:32,770 ->   berlin0-10,  40.0,    28,  3, 169.97,    8698,     17396,         3609,       1328
+2018-05-08 00:08:35,015 -> Dropping indices...[2.245s]
+2018-05-08 00:08:35,311 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 00:11:15,034 -> B.Indexing points... [152.017s] [0 results]
+2018-05-08 00:11:26,766 -> C.Getting pairs... [11.732s] [8673 results]
+2018-05-08 00:11:28,172 -> D.Computing centers... [1.406s] [17346 results]
+2018-05-08 00:11:29,393 -> E.Indexing centers... [1.221s] [17346 results]
+2018-05-08 00:11:37,777 -> F.Getting disks... [8.384s] [17346 results]
+2018-05-08 00:11:38,025 -> G.Filtering less-than-mu disks... [0.248s] [6836 results]
+2018-05-08 00:11:43,498 -> H.Prunning duplicate candidates... [5.473s] [3598 results]
+2018-05-08 00:11:43,878 -> I.Indexing candidates... [5.853s] [3598 results]
+2018-05-08 00:11:44,153 -> J.Getting expansions... [0.274s] [5819 results]
+2018-05-08 00:11:44,350 -> K.Finding maximal disks... [0.197s] [1339 results]
+2018-05-08 00:11:47,604 -> L.Prunning duplicates and subsets... [3.254s] [1325 results]
+2018-05-08 00:11:47,605 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 00:11:47,605 ->   berlin0-10,  40.0,    28,  3, 184.59,    8673,     17346,         3598,       1325
+2018-05-08 00:11:49,815 -> Dropping indices...[2.210s]
+2018-05-08 00:11:50,046 -> 1.Getting disks                                    | 372.61s |   2653 disks
+2018-05-08 00:11:57,489 -> 2.Joining timestams                                |   7.44s |   2336 candidates
+2018-05-08 00:12:00,949 -> F1Count=1410,F2Count=926
+2018-05-08 00:15:49,701 -> 3.Checking internal timestamps                     | 232.21s |   1269 flocks
+2018-05-08 00:16:00,363 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 00:18:30,775 -> B.Indexing points... [143.930s] [0 results]
+2018-05-08 00:18:42,153 -> C.Getting pairs... [11.378s] [8662 results]
+2018-05-08 00:18:43,604 -> D.Computing centers... [1.451s] [17324 results]
+2018-05-08 00:18:44,755 -> E.Indexing centers... [1.151s] [17324 results]
+2018-05-08 00:18:53,608 -> F.Getting disks... [8.853s] [17324 results]
+2018-05-08 00:18:53,901 -> G.Filtering less-than-mu disks... [0.293s] [6852 results]
+2018-05-08 00:18:59,058 -> H.Prunning duplicate candidates... [5.157s] [3606 results]
+2018-05-08 00:18:59,483 -> I.Indexing candidates... [5.582s] [3606 results]
+2018-05-08 00:18:59,747 -> J.Getting expansions... [0.264s] [6013 results]
+2018-05-08 00:18:59,922 -> K.Finding maximal disks... [0.175s] [1327 results]
+2018-05-08 00:19:02,003 -> L.Prunning duplicates and subsets... [2.081s] [1317 results]
+2018-05-08 00:19:02,003 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 00:19:02,003 ->   berlin0-10,  40.0,    28,  3, 175.16,    8662,     17324,         3606,       1317
+2018-05-08 00:19:04,298 -> Dropping indices...[2.295s]
+2018-05-08 00:19:04,607 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 00:21:52,640 -> B.Indexing points... [159.120s] [0 results]
+2018-05-08 00:22:02,986 -> C.Getting pairs... [10.346s] [8677 results]
+2018-05-08 00:22:05,012 -> D.Computing centers... [2.026s] [17354 results]
+2018-05-08 00:22:06,126 -> E.Indexing centers... [1.114s] [17354 results]
+2018-05-08 00:22:14,308 -> F.Getting disks... [8.182s] [17354 results]
+2018-05-08 00:22:14,572 -> G.Filtering less-than-mu disks... [0.264s] [6816 results]
+2018-05-08 00:22:20,579 -> H.Prunning duplicate candidates... [6.007s] [3599 results]
+2018-05-08 00:22:20,936 -> I.Indexing candidates... [6.364s] [3599 results]
+2018-05-08 00:22:21,145 -> J.Getting expansions... [0.209s] [5901 results]
+2018-05-08 00:22:21,317 -> K.Finding maximal disks... [0.172s] [1311 results]
+2018-05-08 00:22:23,341 -> L.Prunning duplicates and subsets... [2.024s] [1303 results]
+2018-05-08 00:22:23,341 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 00:22:23,341 ->   berlin0-10,  40.0,    28,  3, 189.82,    8677,     17354,         3599,       1303
+2018-05-08 00:22:25,789 -> Dropping indices...[2.448s]
+2018-05-08 00:22:26,061 -> 1.Getting disks                                    | 385.71s |   2620 disks
+2018-05-08 00:22:34,410 -> 2.Joining timestams                                |   8.35s |   2224 candidates
+2018-05-08 00:22:38,163 -> F1Count=1311,F2Count=913
+2018-05-08 00:25:56,146 -> 3.Checking internal timestamps                     | 201.74s |   1250 flocks
+2018-05-08 00:26:09,246 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 00:28:48,504 -> B.Indexing points... [151.324s] [0 results]
+2018-05-08 00:29:00,440 -> C.Getting pairs... [11.936s] [8673 results]
+2018-05-08 00:29:01,902 -> D.Computing centers... [1.461s] [17346 results]
+2018-05-08 00:29:03,067 -> E.Indexing centers... [1.164s] [17346 results]
+2018-05-08 00:29:11,479 -> F.Getting disks... [8.412s] [17346 results]
+2018-05-08 00:29:11,789 -> G.Filtering less-than-mu disks... [0.310s] [6836 results]
+2018-05-08 00:29:17,989 -> H.Prunning duplicate candidates... [6.200s] [3598 results]
+2018-05-08 00:29:18,460 -> I.Indexing candidates... [6.670s] [3598 results]
+2018-05-08 00:29:18,757 -> J.Getting expansions... [0.297s] [5819 results]
+2018-05-08 00:29:18,946 -> K.Finding maximal disks... [0.189s] [1339 results]
+2018-05-08 00:29:21,289 -> L.Prunning duplicates and subsets... [2.342s] [1325 results]
+2018-05-08 00:29:21,289 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 00:29:21,289 ->   berlin0-10,  40.0,    28,  3, 184.11,    8673,     17346,         3598,       1325
+2018-05-08 00:29:23,683 -> Dropping indices...[2.394s]
+2018-05-08 00:29:23,995 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 00:32:18,923 -> B.Indexing points... [164.551s] [0 results]
+2018-05-08 00:32:25,819 -> C.Getting pairs... [6.859s] [8686 results]
+2018-05-08 00:32:27,557 -> D.Computing centers... [1.738s] [17372 results]
+2018-05-08 00:32:29,055 -> E.Indexing centers... [1.498s] [17372 results]
+2018-05-08 00:32:35,425 -> F.Getting disks... [6.370s] [17372 results]
+2018-05-08 00:32:35,678 -> G.Filtering less-than-mu disks... [0.253s] [6856 results]
+2018-05-08 00:32:39,549 -> H.Prunning duplicate candidates... [3.871s] [3627 results]
+2018-05-08 00:32:39,898 -> I.Indexing candidates... [4.220s] [3627 results]
+2018-05-08 00:32:40,108 -> J.Getting expansions... [0.210s] [5898 results]
+2018-05-08 00:32:40,340 -> K.Finding maximal disks... [0.232s] [1334 results]
+2018-05-08 00:32:42,880 -> L.Prunning duplicates and subsets... [2.540s] [1322 results]
+2018-05-08 00:32:42,880 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 00:32:42,881 ->   berlin0-10,  40.0,    28,  3, 188.51,    8686,     17372,         3627,       1322
+2018-05-08 00:32:45,352 -> Dropping indices...[2.471s]
+2018-05-08 00:32:45,738 -> 1.Getting disks                                    | 396.51s |   2647 disks
+2018-05-08 00:32:53,989 -> 2.Joining timestams                                |   8.25s |   2175 candidates
+2018-05-08 00:32:57,824 -> F1Count=1287,F2Count=888
+2018-05-08 00:36:12,635 -> 3.Checking internal timestamps                     | 198.65s |   1263 flocks
+2018-05-08 00:36:26,670 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 00:39:15,484 -> B.Indexing points... [159.726s] [0 results]
+2018-05-08 00:39:27,385 -> C.Getting pairs... [11.901s] [8677 results]
+2018-05-08 00:39:28,830 -> D.Computing centers... [1.445s] [17354 results]
+2018-05-08 00:39:30,056 -> E.Indexing centers... [1.226s] [17354 results]
+2018-05-08 00:39:37,868 -> F.Getting disks... [7.812s] [17354 results]
+2018-05-08 00:39:38,173 -> G.Filtering less-than-mu disks... [0.305s] [6816 results]
+2018-05-08 00:39:43,733 -> H.Prunning duplicate candidates... [5.560s] [3599 results]
+2018-05-08 00:39:44,226 -> I.Indexing candidates... [6.053s] [3599 results]
+2018-05-08 00:39:44,548 -> J.Getting expansions... [0.322s] [5901 results]
+2018-05-08 00:39:44,731 -> K.Finding maximal disks... [0.183s] [1311 results]
+2018-05-08 00:39:47,552 -> L.Prunning duplicates and subsets... [2.821s] [1303 results]
+2018-05-08 00:39:47,552 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 00:39:47,552 ->   berlin0-10,  40.0,    28,  3, 191.79,    8677,     17354,         3599,       1303
+2018-05-08 00:39:50,129 -> Dropping indices...[2.577s]
+2018-05-08 00:39:50,473 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 00:42:50,124 -> B.Indexing points... [168.594s] [0 results]
+2018-05-08 00:43:01,710 -> C.Getting pairs... [11.586s] [8692 results]
+2018-05-08 00:43:03,600 -> D.Computing centers... [1.890s] [17384 results]
+2018-05-08 00:43:05,068 -> E.Indexing centers... [1.468s] [17384 results]
+2018-05-08 00:43:13,433 -> F.Getting disks... [8.365s] [17384 results]
+2018-05-08 00:43:13,799 -> G.Filtering less-than-mu disks... [0.365s] [6884 results]
+2018-05-08 00:43:19,344 -> H.Prunning duplicate candidates... [5.545s] [3645 results]
+2018-05-08 00:43:19,773 -> I.Indexing candidates... [5.973s] [3645 results]
+2018-05-08 00:43:20,070 -> J.Getting expansions... [0.297s] [5932 results]
+2018-05-08 00:43:20,325 -> K.Finding maximal disks... [0.255s] [1336 results]
+2018-05-08 00:43:24,926 -> L.Prunning duplicates and subsets... [4.601s] [1328 results]
+2018-05-08 00:43:24,926 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 00:43:24,926 ->   berlin0-10,  40.0,    28,  3, 203.40,    8692,     17384,         3645,       1328
+2018-05-08 00:43:27,560 -> Dropping indices...[2.634s]
+2018-05-08 00:43:27,865 -> 1.Getting disks                                    | 421.21s |   2631 disks
+2018-05-08 00:43:37,297 -> 2.Joining timestams                                |   9.43s |   2074 candidates
+2018-05-08 00:43:41,003 -> F1Count=1213,F2Count=861
+2018-05-08 00:45:39,749 -> 3.Checking internal timestamps                     | 122.45s |   1254 flocks
+2018-05-08 00:45:55,967 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 00:48:50,448 -> B.Indexing points... [164.025s] [0 results]
+2018-05-08 00:48:57,367 -> C.Getting pairs... [6.919s] [8686 results]
+2018-05-08 00:48:59,265 -> D.Computing centers... [1.898s] [17372 results]
+2018-05-08 00:49:00,561 -> E.Indexing centers... [1.296s] [17372 results]
+2018-05-08 00:49:07,937 -> F.Getting disks... [7.376s] [17372 results]
+2018-05-08 00:49:08,375 -> G.Filtering less-than-mu disks... [0.438s] [6856 results]
+2018-05-08 00:49:13,320 -> H.Prunning duplicate candidates... [4.945s] [3627 results]
+2018-05-08 00:49:13,951 -> I.Indexing candidates... [5.576s] [3627 results]
+2018-05-08 00:49:14,285 -> J.Getting expansions... [0.334s] [5898 results]
+2018-05-08 00:49:14,541 -> K.Finding maximal disks... [0.256s] [1334 results]
+2018-05-08 00:49:16,384 -> L.Prunning duplicates and subsets... [1.843s] [1322 results]
+2018-05-08 00:49:16,384 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 00:49:16,384 ->   berlin0-10,  40.0,    28,  3, 189.96,    8686,     17372,         3627,       1322
+2018-05-08 00:49:19,136 -> Dropping indices...[2.752s]
+2018-05-08 00:49:19,492 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 00:52:21,195 -> B.Indexing points... [170.082s] [0 results]
+2018-05-08 00:52:32,925 -> C.Getting pairs... [11.729s] [8713 results]
+2018-05-08 00:52:34,750 -> D.Computing centers... [1.825s] [17426 results]
+2018-05-08 00:52:35,932 -> E.Indexing centers... [1.182s] [17426 results]
+2018-05-08 00:52:43,678 -> F.Getting disks... [7.746s] [17426 results]
+2018-05-08 00:52:44,015 -> G.Filtering less-than-mu disks... [0.337s] [6894 results]
+2018-05-08 00:52:49,427 -> H.Prunning duplicate candidates... [5.412s] [3633 results]
+2018-05-08 00:52:49,782 -> I.Indexing candidates... [5.767s] [3633 results]
+2018-05-08 00:52:50,093 -> J.Getting expansions... [0.311s] [5915 results]
+2018-05-08 00:52:50,402 -> K.Finding maximal disks... [0.308s] [1319 results]
+2018-05-08 00:52:53,133 -> L.Prunning duplicates and subsets... [2.731s] [1310 results]
+2018-05-08 00:52:53,144 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 00:52:53,144 ->   berlin0-10,  40.0,    28,  3, 202.03,    8713,     17426,         3633,       1310
+2018-05-08 00:52:55,822 -> Dropping indices...[2.678s]
+2018-05-08 00:52:56,219 -> 1.Getting disks                                    | 420.27s |   2632 disks
+2018-05-08 00:53:06,165 -> 2.Joining timestams                                |   9.95s |   2054 candidates
+2018-05-08 00:53:10,000 -> F1Count=1182,F2Count=872
+2018-05-08 00:54:52,039 -> 3.Checking internal timestamps                     | 105.87s |   1269 flocks
+2018-05-08 00:55:13,928 -> 
+
+PFLOCK_ML	45.0	3	3	11345
+
+2018-05-08 00:55:40,752 -> Running MergeLast...                               | 5076.98s |  11345 flocks
+2018-05-08 00:55:40,776 -> method=MergeLast,cores=28,epsilon=45.0,mu=3,delta=3,time=5077.003,master=spark://169.235.27.134:7077
+2018-05-08 00:55:40,776 -> === SpatialJoin Start ===
+2018-05-08 00:55:52,228 -> Reporting locations...                             |  11.28s |  18093 points
+2018-05-08 00:55:52,228 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 00:55:57,156 -> B.Indexing points... [4.899s] [0 results]
+2018-05-08 00:56:03,417 -> C.Getting pairs... [6.261s] [8340 results]
+2018-05-08 00:56:04,947 -> D.Computing centers... [1.530s] [16680 results]
+2018-05-08 00:56:06,344 -> E.Indexing centers... [1.396s] [16680 results]
+2018-05-08 00:56:12,379 -> F.Getting disks... [6.035s] [16680 results]
+2018-05-08 00:56:12,644 -> G.Filtering less-than-mu disks... [0.265s] [6562 results]
+2018-05-08 00:56:16,474 -> H.Prunning duplicate candidates... [3.830s] [3431 results]
+2018-05-08 00:56:16,835 -> I.Indexing candidates... [4.191s] [3431 results]
+2018-05-08 00:56:17,059 -> J.Getting expansions... [0.224s] [5673 results]
+2018-05-08 00:56:17,377 -> K.Finding maximal disks... [0.318s] [1319 results]
+2018-05-08 00:56:18,736 -> L.Prunning duplicates and subsets... [1.359s] [1303 results]
+2018-05-08 00:56:18,736 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 00:56:18,736 ->   berlin0-10,  40.0,    28,  3,  26.48,    8340,     16680,         3431,       1303
+2018-05-08 00:56:21,662 -> Dropping indices...[2.926s]
+2018-05-08 00:56:22,165 -> 1.Set of disks for t_i...                          |  29.94s |   1303 disks
+2018-05-08 00:56:22,515 -> 4.Found flocks...                                  |   0.35s |      0 flocks
+2018-05-08 00:56:23,362 -> 5.Updating times...                                |   0.52s |   1303 flocks
+2018-05-08 00:56:24,385 -> 6.Filter phase...                                  |   1.02s |   1303 flocks
+2018-05-08 00:56:35,568 -> Reporting locations...                             |  11.18s |  18245 points
+2018-05-08 00:56:35,568 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 00:56:40,905 -> B.Indexing points... [5.319s] [0 results]
+2018-05-08 00:56:46,540 -> C.Getting pairs... [5.635s] [8486 results]
+2018-05-08 00:56:48,413 -> D.Computing centers... [1.872s] [16972 results]
+2018-05-08 00:56:49,564 -> E.Indexing centers... [1.151s] [16972 results]
+2018-05-08 00:56:55,882 -> F.Getting disks... [6.318s] [16972 results]
+2018-05-08 00:56:56,276 -> G.Filtering less-than-mu disks... [0.394s] [6701 results]
+2018-05-08 00:57:00,948 -> H.Prunning duplicate candidates... [4.672s] [3505 results]
+2018-05-08 00:57:01,386 -> I.Indexing candidates... [5.110s] [3505 results]
+2018-05-08 00:57:01,999 -> J.Getting expansions... [0.613s] [5806 results]
+2018-05-08 00:57:02,264 -> K.Finding maximal disks... [0.265s] [1335 results]
+2018-05-08 00:57:03,945 -> L.Prunning duplicates and subsets... [1.681s] [1327 results]
+2018-05-08 00:57:03,945 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 00:57:03,946 ->   berlin0-10,  40.0,    28,  3,  28.36,    8486,     16972,         3505,       1327
+2018-05-08 00:57:06,758 -> Dropping indices...[2.812s]
+2018-05-08 00:57:07,230 -> 1.Set of disks for t_i...                          |  31.66s |   1327 disks
+2018-05-08 00:57:13,181 -> 2.Distance Join phase...                           |   5.95s |   3533 combinations
+2018-05-08 00:57:44,980 -> 3.Getting candidates...                            |  31.80s |   1286 candidates
+2018-05-08 00:57:45,820 -> 4.Found flocks...                                  |   0.84s |      0 flocks
+2018-05-08 00:57:48,748 -> 5.Updating times...                                |   1.87s |   1286 flocks
+2018-05-08 00:57:51,292 -> 6.Filter phase...                                  |   2.54s |   1406 flocks
+2018-05-08 00:58:02,195 -> Reporting locations...                             |  10.90s |  18394 points
+2018-05-08 00:58:02,196 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 00:58:07,486 -> B.Indexing points... [5.271s] [0 results]
+2018-05-08 00:58:13,696 -> C.Getting pairs... [6.210s] [8573 results]
+2018-05-08 00:58:15,164 -> D.Computing centers... [1.468s] [17146 results]
+2018-05-08 00:58:16,723 -> E.Indexing centers... [1.559s] [17146 results]
+2018-05-08 00:58:22,373 -> F.Getting disks... [5.650s] [17146 results]
+2018-05-08 00:58:22,722 -> G.Filtering less-than-mu disks... [0.349s] [6793 results]
+2018-05-08 00:58:26,082 -> H.Prunning duplicate candidates... [3.360s] [3574 results]
+2018-05-08 00:58:26,497 -> I.Indexing candidates... [3.775s] [3574 results]
+2018-05-08 00:58:26,761 -> J.Getting expansions... [0.264s] [5983 results]
+2018-05-08 00:58:26,989 -> K.Finding maximal disks... [0.228s] [1342 results]
+2018-05-08 00:58:28,945 -> L.Prunning duplicates and subsets... [1.956s] [1334 results]
+2018-05-08 00:58:28,945 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 00:58:28,945 ->   berlin0-10,  40.0,    28,  3,  26.73,    8573,     17146,         3574,       1334
+2018-05-08 00:58:31,896 -> Dropping indices...[2.951s]
+2018-05-08 00:58:32,317 -> 1.Set of disks for t_i...                          |  30.12s |   1334 disks
+2018-05-08 00:58:41,168 -> 2.Distance Join phase...                           |   8.85s |   4016 combinations
+2018-05-08 00:59:24,612 -> 3.Getting candidates...                            |  43.44s |   1371 candidates
+2018-05-08 00:59:25,611 -> 4.Found flocks...                                  |   1.00s |   1251 flocks
+2018-05-08 00:59:29,491 -> 5.Updating times...                                |   1.73s |   1371 flocks
+2018-05-08 00:59:32,451 -> 6.Filter phase...                                  |   2.96s |   1495 flocks
+2018-05-08 00:59:43,203 -> Reporting locations...                             |  10.75s |  18548 points
+2018-05-08 00:59:43,203 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 00:59:49,638 -> B.Indexing points... [6.416s] [0 results]
+2018-05-08 01:00:02,146 -> C.Getting pairs... [12.508s] [8696 results]
+2018-05-08 01:00:03,970 -> D.Computing centers... [1.824s] [17392 results]
+2018-05-08 01:00:05,169 -> E.Indexing centers... [1.199s] [17392 results]
+2018-05-08 01:00:13,343 -> F.Getting disks... [8.174s] [17392 results]
+2018-05-08 01:00:13,639 -> G.Filtering less-than-mu disks... [0.296s] [6866 results]
+2018-05-08 01:00:18,760 -> H.Prunning duplicate candidates... [5.121s] [3611 results]
+2018-05-08 01:00:19,172 -> I.Indexing candidates... [5.532s] [3611 results]
+2018-05-08 01:00:19,535 -> J.Getting expansions... [0.363s] [5996 results]
+2018-05-08 01:00:19,731 -> K.Finding maximal disks... [0.196s] [1337 results]
+2018-05-08 01:00:21,908 -> L.Prunning duplicates and subsets... [2.177s] [1332 results]
+2018-05-08 01:00:21,908 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:00:21,908 ->   berlin0-10,  40.0,    28,  3,  38.69,    8696,     17392,         3611,       1332
+2018-05-08 01:00:24,926 -> Dropping indices...[3.018s]
+2018-05-08 01:00:25,322 -> 1.Set of disks for t_i...                          |  42.12s |   1332 disks
+2018-05-08 01:00:35,429 -> 2.Distance Join phase...                           |  10.11s |   4397 combinations
+2018-05-08 01:01:21,604 -> 3.Getting candidates...                            |  46.18s |   1379 candidates
+2018-05-08 01:01:23,124 -> 4.Found flocks...                                  |   1.52s |   1248 flocks
+2018-05-08 01:01:29,432 -> 5.Updating times...                                |   2.82s |   1379 flocks
+2018-05-08 01:01:33,492 -> 6.Filter phase...                                  |   4.06s |   1491 flocks
+2018-05-08 01:01:44,566 -> Reporting locations...                             |  11.07s |  18548 points
+2018-05-08 01:01:44,567 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:01:51,868 -> B.Indexing points... [7.282s] [0 results]
+2018-05-08 01:02:05,087 -> C.Getting pairs... [13.219s] [8698 results]
+2018-05-08 01:02:06,852 -> D.Computing centers... [1.765s] [17396 results]
+2018-05-08 01:02:07,948 -> E.Indexing centers... [1.096s] [17396 results]
+2018-05-08 01:02:15,985 -> F.Getting disks... [8.037s] [17396 results]
+2018-05-08 01:02:16,489 -> G.Filtering less-than-mu disks... [0.504s] [6856 results]
+2018-05-08 01:02:22,066 -> H.Prunning duplicate candidates... [5.577s] [3609 results]
+2018-05-08 01:02:22,461 -> I.Indexing candidates... [5.972s] [3609 results]
+2018-05-08 01:02:22,681 -> J.Getting expansions... [0.220s] [5830 results]
+2018-05-08 01:02:22,846 -> K.Finding maximal disks... [0.165s] [1336 results]
+2018-05-08 01:02:25,036 -> L.Prunning duplicates and subsets... [2.190s] [1328 results]
+2018-05-08 01:02:25,036 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:02:25,036 ->   berlin0-10,  40.0,    28,  3,  40.45,    8698,     17396,         3609,       1328
+2018-05-08 01:02:28,121 -> Dropping indices...[3.085s]
+2018-05-08 01:02:28,451 -> 1.Set of disks for t_i...                          |  43.88s |   1328 disks
+2018-05-08 01:02:38,163 -> 2.Distance Join phase...                           |   9.71s |   4275 combinations
+2018-05-08 01:03:49,485 -> 3.Getting candidates...                            |  71.32s |   1376 candidates
+2018-05-08 01:03:51,069 -> 4.Found flocks...                                  |   1.58s |   1265 flocks
+2018-05-08 01:03:57,873 -> 5.Updating times...                                |   2.87s |   1376 flocks
+2018-05-08 01:04:01,760 -> 6.Filter phase...                                  |   3.89s |   1472 flocks
+2018-05-08 01:04:12,599 -> Reporting locations...                             |  10.84s |  18548 points
+2018-05-08 01:04:12,599 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:04:24,066 -> B.Indexing points... [11.449s] [0 results]
+2018-05-08 01:04:38,131 -> C.Getting pairs... [14.065s] [8662 results]
+2018-05-08 01:04:39,964 -> D.Computing centers... [1.833s] [17324 results]
+2018-05-08 01:04:41,240 -> E.Indexing centers... [1.276s] [17324 results]
+2018-05-08 01:04:49,897 -> F.Getting disks... [8.657s] [17324 results]
+2018-05-08 01:04:50,213 -> G.Filtering less-than-mu disks... [0.316s] [6852 results]
+2018-05-08 01:04:56,782 -> H.Prunning duplicate candidates... [6.569s] [3606 results]
+2018-05-08 01:04:57,162 -> I.Indexing candidates... [6.949s] [3606 results]
+2018-05-08 01:04:57,380 -> J.Getting expansions... [0.218s] [6013 results]
+2018-05-08 01:04:57,549 -> K.Finding maximal disks... [0.169s] [1327 results]
+2018-05-08 01:05:00,455 -> L.Prunning duplicates and subsets... [2.906s] [1317 results]
+2018-05-08 01:05:00,455 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:05:00,455 ->   berlin0-10,  40.0,    28,  3,  47.84,    8662,     17324,         3606,       1317
+2018-05-08 01:05:03,678 -> Dropping indices...[3.223s]
+2018-05-08 01:05:04,100 -> 1.Set of disks for t_i...                          |  51.50s |   1317 disks
+2018-05-08 01:05:14,809 -> 2.Distance Join phase...                           |  10.71s |   4131 combinations
+2018-05-08 01:06:28,238 -> 3.Getting candidates...                            |  73.43s |   1377 candidates
+2018-05-08 01:06:29,952 -> 4.Found flocks...                                  |   1.71s |   1277 flocks
+2018-05-08 01:06:37,938 -> 5.Updating times...                                |   2.93s |   1377 flocks
+2018-05-08 01:06:42,137 -> 6.Filter phase...                                  |   4.20s |   1454 flocks
+2018-05-08 01:06:52,974 -> Reporting locations...                             |  10.84s |  18546 points
+2018-05-08 01:06:52,974 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:07:00,721 -> B.Indexing points... [7.728s] [0 results]
+2018-05-08 01:07:11,998 -> C.Getting pairs... [11.277s] [8673 results]
+2018-05-08 01:07:13,758 -> D.Computing centers... [1.760s] [17346 results]
+2018-05-08 01:07:14,913 -> E.Indexing centers... [1.155s] [17346 results]
+2018-05-08 01:07:23,464 -> F.Getting disks... [8.551s] [17346 results]
+2018-05-08 01:07:23,776 -> G.Filtering less-than-mu disks... [0.312s] [6836 results]
+2018-05-08 01:07:29,386 -> H.Prunning duplicate candidates... [5.610s] [3598 results]
+2018-05-08 01:07:30,187 -> I.Indexing candidates... [6.411s] [3598 results]
+2018-05-08 01:07:30,447 -> J.Getting expansions... [0.259s] [5819 results]
+2018-05-08 01:07:30,624 -> K.Finding maximal disks... [0.177s] [1339 results]
+2018-05-08 01:07:32,682 -> L.Prunning duplicates and subsets... [2.057s] [1325 results]
+2018-05-08 01:07:32,682 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:07:32,682 ->   berlin0-10,  40.0,    28,  3,  39.69,    8673,     17346,         3598,       1325
+2018-05-08 01:07:36,008 -> Dropping indices...[3.326s]
+2018-05-08 01:07:36,398 -> 1.Set of disks for t_i...                          |  43.42s |   1325 disks
+2018-05-08 01:07:47,857 -> 2.Distance Join phase...                           |  11.46s |   4115 combinations
+2018-05-08 01:08:45,003 -> 3.Getting candidates...                            |  57.15s |   1354 candidates
+2018-05-08 01:08:46,967 -> 4.Found flocks...                                  |   1.96s |   1269 flocks
+2018-05-08 01:08:56,413 -> 5.Updating times...                                |   3.35s |   1354 flocks
+2018-05-08 01:09:00,671 -> 6.Filter phase...                                  |   4.26s |   1428 flocks
+2018-05-08 01:09:11,651 -> Reporting locations...                             |  10.98s |  18546 points
+2018-05-08 01:09:11,651 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:09:18,029 -> B.Indexing points... [6.360s] [0 results]
+2018-05-08 01:09:30,483 -> C.Getting pairs... [12.454s] [8677 results]
+2018-05-08 01:09:32,620 -> D.Computing centers... [2.137s] [17354 results]
+2018-05-08 01:09:33,721 -> E.Indexing centers... [1.101s] [17354 results]
+2018-05-08 01:09:42,086 -> F.Getting disks... [8.365s] [17354 results]
+2018-05-08 01:09:42,410 -> G.Filtering less-than-mu disks... [0.324s] [6816 results]
+2018-05-08 01:09:48,769 -> H.Prunning duplicate candidates... [6.359s] [3599 results]
+2018-05-08 01:09:49,138 -> I.Indexing candidates... [6.728s] [3599 results]
+2018-05-08 01:09:49,385 -> J.Getting expansions... [0.247s] [5901 results]
+2018-05-08 01:09:49,558 -> K.Finding maximal disks... [0.173s] [1311 results]
+2018-05-08 01:09:51,675 -> L.Prunning duplicates and subsets... [2.117s] [1303 results]
+2018-05-08 01:09:51,675 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:09:51,675 ->   berlin0-10,  40.0,    28,  3,  40.01,    8677,     17354,         3599,       1303
+2018-05-08 01:09:55,008 -> Dropping indices...[3.333s]
+2018-05-08 01:09:55,359 -> 1.Set of disks for t_i...                          |  43.71s |   1303 disks
+2018-05-08 01:10:07,198 -> 2.Distance Join phase...                           |  11.84s |   3672 combinations
+2018-05-08 01:10:47,383 -> 3.Getting candidates...                            |  40.19s |   1328 candidates
+2018-05-08 01:10:49,446 -> 4.Found flocks...                                  |   2.06s |   1251 flocks
+2018-05-08 01:11:01,454 -> 5.Updating times...                                |   5.59s |   1328 flocks
+2018-05-08 01:11:05,844 -> 6.Filter phase...                                  |   4.39s |   1395 flocks
+2018-05-08 01:11:16,806 -> Reporting locations...                             |  10.96s |  18546 points
+2018-05-08 01:11:16,806 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:11:20,797 -> B.Indexing points... [3.972s] [0 results]
+2018-05-08 01:11:29,143 -> C.Getting pairs... [8.346s] [8686 results]
+2018-05-08 01:11:31,119 -> D.Computing centers... [1.976s] [17372 results]
+2018-05-08 01:11:32,506 -> E.Indexing centers... [1.387s] [17372 results]
+2018-05-08 01:11:38,646 -> F.Getting disks... [6.140s] [17372 results]
+2018-05-08 01:11:38,903 -> G.Filtering less-than-mu disks... [0.257s] [6856 results]
+2018-05-08 01:11:43,568 -> H.Prunning duplicate candidates... [4.554s] [3627 results]
+2018-05-08 01:11:43,945 -> I.Indexing candidates... [4.931s] [3627 results]
+2018-05-08 01:11:44,176 -> J.Getting expansions... [0.231s] [5898 results]
+2018-05-08 01:11:44,375 -> K.Finding maximal disks... [0.198s] [1334 results]
+2018-05-08 01:11:46,889 -> L.Prunning duplicates and subsets... [2.514s] [1322 results]
+2018-05-08 01:11:46,889 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:11:46,889 ->   berlin0-10,  40.0,    28,  3,  30.06,    8686,     17372,         3627,       1322
+2018-05-08 01:11:50,369 -> Dropping indices...[3.480s]
+2018-05-08 01:11:50,758 -> 1.Set of disks for t_i...                          |  33.95s |   1322 disks
+2018-05-08 01:12:03,470 -> 2.Distance Join phase...                           |  12.71s |   3563 combinations
+2018-05-08 01:12:41,272 -> 3.Getting candidates...                            |  37.80s |   1331 candidates
+2018-05-08 01:12:43,043 -> 4.Found flocks...                                  |   1.77s |   1261 flocks
+2018-05-08 01:12:53,679 -> 5.Updating times...                                |   2.61s |   1331 flocks
+2018-05-08 01:12:57,156 -> 6.Filter phase...                                  |   3.48s |   1425 flocks
+2018-05-08 01:13:07,995 -> Reporting locations...                             |  10.84s |  18546 points
+2018-05-08 01:13:07,995 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:13:14,717 -> B.Indexing points... [6.686s] [0 results]
+2018-05-08 01:13:26,533 -> C.Getting pairs... [11.816s] [8692 results]
+2018-05-08 01:13:28,043 -> D.Computing centers... [1.510s] [17384 results]
+2018-05-08 01:13:29,106 -> E.Indexing centers... [1.063s] [17384 results]
+2018-05-08 01:13:37,449 -> F.Getting disks... [8.343s] [17384 results]
+2018-05-08 01:13:37,707 -> G.Filtering less-than-mu disks... [0.258s] [6884 results]
+2018-05-08 01:13:42,890 -> H.Prunning duplicate candidates... [5.183s] [3645 results]
+2018-05-08 01:13:43,572 -> I.Indexing candidates... [5.865s] [3645 results]
+2018-05-08 01:13:43,863 -> J.Getting expansions... [0.291s] [5932 results]
+2018-05-08 01:13:44,160 -> K.Finding maximal disks... [0.297s] [1336 results]
+2018-05-08 01:13:46,933 -> L.Prunning duplicates and subsets... [2.773s] [1328 results]
+2018-05-08 01:13:46,933 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:13:46,933 ->   berlin0-10,  40.0,    28,  3,  38.90,    8692,     17384,         3645,       1328
+2018-05-08 01:13:50,641 -> Dropping indices...[3.708s]
+2018-05-08 01:13:51,056 -> 1.Set of disks for t_i...                          |  43.06s |   1328 disks
+2018-05-08 01:14:09,001 -> 2.Distance Join phase...                           |  17.95s |   3623 combinations
+2018-05-08 01:15:34,035 -> 3.Getting candidates...                            |  84.89s |   1353 candidates
+2018-05-08 01:15:36,500 -> 4.Found flocks...                                  |   2.33s |   1254 flocks
+2018-05-08 01:15:55,279 -> 5.Updating times...                                |   4.01s |   1353 flocks
+2018-05-08 01:16:03,775 -> 6.Filter phase...                                  |   8.45s |   1437 flocks
+2018-05-08 01:16:14,891 -> Reporting locations...                             |  11.07s |  18546 points
+2018-05-08 01:16:14,891 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:16:22,383 -> B.Indexing points... [7.172s] [0 results]
+2018-05-08 01:16:34,681 -> C.Getting pairs... [12.298s] [8713 results]
+2018-05-08 01:16:36,714 -> D.Computing centers... [2.033s] [17426 results]
+2018-05-08 01:16:37,963 -> E.Indexing centers... [1.249s] [17426 results]
+2018-05-08 01:16:47,323 -> F.Getting disks... [9.360s] [17426 results]
+2018-05-08 01:16:47,712 -> G.Filtering less-than-mu disks... [0.389s] [6894 results]
+2018-05-08 01:16:53,813 -> H.Prunning duplicate candidates... [6.101s] [3633 results]
+2018-05-08 01:16:54,258 -> I.Indexing candidates... [6.546s] [3633 results]
+2018-05-08 01:16:54,714 -> J.Getting expansions... [0.456s] [5915 results]
+2018-05-08 01:16:56,292 -> K.Finding maximal disks... [1.577s] [1319 results]
+2018-05-08 01:17:06,251 -> L.Prunning duplicates and subsets... [9.959s] [1310 results]
+2018-05-08 01:17:06,251 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:17:06,251 ->   berlin0-10,  40.0,    28,  3,  51.04,    8713,     17426,         3633,       1310
+2018-05-08 01:17:10,000 -> Dropping indices...[3.749s]
+2018-05-08 01:17:10,475 -> 1.Set of disks for t_i...                          |  55.58s |   1310 disks
+2018-05-08 01:17:23,827 -> 2.Distance Join phase...                           |  13.35s |   3452 combinations
+2018-05-08 01:18:05,255 -> 3.Getting candidates...                            |  41.43s |   1357 candidates
+2018-05-08 01:18:07,586 -> 4.Found flocks...                                  |   2.33s |   1268 flocks
+2018-05-08 01:18:20,960 -> 5.Updating times...                                |   3.27s |   1357 flocks
+2018-05-08 01:18:25,736 -> 6.Filter phase...                                  |   4.78s |   1435 flocks
+2018-05-08 01:18:25,736 -> 
+
+PFLOCK_SJ	45.0	3	3	11344
+
+2018-05-08 01:18:35,094 -> Running SpatialJoin...                             | 1374.32s |  11344 flocks
+2018-05-08 01:18:35,094 -> method=SpatialJoin,cores=28,epsilon=45.0,mu=3,delta=3,time=1374.318,master=spark://169.235.27.134:7077
+2018-05-08 01:18:35,094 -> === MergeLast Start ===
+2018-05-08 01:18:35,176 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:20:18,165 -> B.Indexing points... [102.942s] [0 results]
+2018-05-08 01:20:25,293 -> C.Getting pairs... [7.128s] [8340 results]
+2018-05-08 01:20:27,135 -> D.Computing centers... [1.842s] [16680 results]
+2018-05-08 01:20:28,614 -> E.Indexing centers... [1.479s] [16680 results]
+2018-05-08 01:20:33,915 -> F.Getting disks... [5.301s] [16680 results]
+2018-05-08 01:20:34,755 -> G.Filtering less-than-mu disks... [0.840s] [6562 results]
+2018-05-08 01:20:41,473 -> H.Prunning duplicate candidates... [6.718s] [3431 results]
+2018-05-08 01:20:41,883 -> I.Indexing candidates... [7.128s] [3431 results]
+2018-05-08 01:20:42,205 -> J.Getting expansions... [0.322s] [5673 results]
+2018-05-08 01:20:42,135 -> K.Finding maximal disks... [-0.087s] [1319 results]
+2018-05-08 01:20:43,663 -> L.Prunning duplicates and subsets... [1.528s] [1303 results]
+2018-05-08 01:20:43,663 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:20:43,663 ->   berlin0-10,  40.0,    28,  3, 128.44,    8340,     16680,         3431,       1303
+2018-05-08 01:20:47,606 -> Dropping indices...[3.943s]
+2018-05-08 01:20:47,996 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:22:49,658 -> B.Indexing points... [119.054s] [0 results]
+2018-05-08 01:22:56,850 -> C.Getting pairs... [7.192s] [8573 results]
+2018-05-08 01:22:58,356 -> D.Computing centers... [1.506s] [17146 results]
+2018-05-08 01:22:59,837 -> E.Indexing centers... [1.481s] [17146 results]
+2018-05-08 01:23:05,654 -> F.Getting disks... [5.817s] [17146 results]
+2018-05-08 01:23:05,952 -> G.Filtering less-than-mu disks... [0.298s] [6793 results]
+2018-05-08 01:23:11,868 -> H.Prunning duplicate candidates... [5.916s] [3574 results]
+2018-05-08 01:23:12,250 -> I.Indexing candidates... [6.298s] [3574 results]
+2018-05-08 01:23:12,552 -> J.Getting expansions... [0.302s] [5983 results]
+2018-05-08 01:23:12,802 -> K.Finding maximal disks... [0.249s] [1342 results]
+2018-05-08 01:23:14,330 -> L.Prunning duplicates and subsets... [1.528s] [1334 results]
+2018-05-08 01:23:14,330 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:23:14,330 ->   berlin0-10,  40.0,    28,  3, 143.73,    8573,     17146,         3574,       1334
+2018-05-08 01:23:18,136 -> Dropping indices...[3.806s]
+2018-05-08 01:23:18,540 -> 1.Getting disks                                    | 283.42s |   2637 disks
+2018-05-08 01:23:28,822 -> 2.Joining timestams                                |  10.28s |   2370 candidates
+2018-05-08 01:23:33,429 -> F1Count=1821,F2Count=549
+2018-05-08 01:25:43,160 -> 3.Checking internal timestamps                     | 134.34s |   1252 flocks
+2018-05-08 01:25:46,564 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:27:38,900 -> B.Indexing points... [110.819s] [0 results]
+2018-05-08 01:27:44,160 -> C.Getting pairs... [5.259s] [8486 results]
+2018-05-08 01:27:46,389 -> D.Computing centers... [2.228s] [16972 results]
+2018-05-08 01:27:47,492 -> E.Indexing centers... [1.103s] [16972 results]
+2018-05-08 01:27:53,201 -> F.Getting disks... [5.709s] [16972 results]
+2018-05-08 01:27:53,523 -> G.Filtering less-than-mu disks... [0.322s] [6701 results]
+2018-05-08 01:28:09,604 -> H.Prunning duplicate candidates... [16.081s] [3505 results]
+2018-05-08 01:28:10,263 -> I.Indexing candidates... [16.740s] [3505 results]
+2018-05-08 01:28:10,623 -> J.Getting expansions... [0.360s] [5806 results]
+2018-05-08 01:28:10,856 -> K.Finding maximal disks... [0.233s] [1335 results]
+2018-05-08 01:28:12,991 -> L.Prunning duplicates and subsets... [2.135s] [1327 results]
+2018-05-08 01:28:12,991 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:28:12,991 ->   berlin0-10,  40.0,    28,  3, 144.91,    8486,     16972,         3505,       1327
+2018-05-08 01:28:16,987 -> Dropping indices...[3.996s]
+2018-05-08 01:28:17,529 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:30:31,282 -> B.Indexing points... [129.850s] [0 results]
+2018-05-08 01:30:41,955 -> C.Getting pairs... [10.652s] [8696 results]
+2018-05-08 01:30:44,135 -> D.Computing centers... [2.180s] [17392 results]
+2018-05-08 01:30:45,604 -> E.Indexing centers... [1.469s] [17392 results]
+2018-05-08 01:30:53,960 -> F.Getting disks... [8.356s] [17392 results]
+2018-05-08 01:30:54,209 -> G.Filtering less-than-mu disks... [0.249s] [6866 results]
+2018-05-08 01:31:01,578 -> H.Prunning duplicate candidates... [7.369s] [3611 results]
+2018-05-08 01:31:02,113 -> I.Indexing candidates... [7.904s] [3611 results]
+2018-05-08 01:31:02,380 -> J.Getting expansions... [0.267s] [5996 results]
+2018-05-08 01:31:02,630 -> K.Finding maximal disks... [0.250s] [1337 results]
+2018-05-08 01:31:04,783 -> L.Prunning duplicates and subsets... [2.153s] [1332 results]
+2018-05-08 01:31:04,783 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:31:04,783 ->   berlin0-10,  40.0,    28,  3, 163.35,    8696,     17392,         3611,       1332
+2018-05-08 01:31:08,774 -> Dropping indices...[3.990s]
+2018-05-08 01:31:09,177 -> 1.Getting disks                                    | 322.63s |   2659 disks
+2018-05-08 01:31:18,389 -> 2.Joining timestams                                |   9.21s |   2287 candidates
+2018-05-08 01:31:21,904 -> F1Count=1727,F2Count=560
+2018-05-08 01:33:15,246 -> 3.Checking internal timestamps                     | 116.86s |   1247 flocks
+2018-05-08 01:33:19,856 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:35:21,741 -> B.Indexing points... [119.111s] [0 results]
+2018-05-08 01:35:29,107 -> C.Getting pairs... [7.366s] [8573 results]
+2018-05-08 01:35:30,605 -> D.Computing centers... [1.498s] [17146 results]
+2018-05-08 01:35:32,057 -> E.Indexing centers... [1.452s] [17146 results]
+2018-05-08 01:35:38,132 -> F.Getting disks... [6.075s] [17146 results]
+2018-05-08 01:35:38,431 -> G.Filtering less-than-mu disks... [0.298s] [6793 results]
+2018-05-08 01:35:55,093 -> H.Prunning duplicate candidates... [16.662s] [3574 results]
+2018-05-08 01:35:55,595 -> I.Indexing candidates... [17.164s] [3574 results]
+2018-05-08 01:35:56,077 -> J.Getting expansions... [0.482s] [5983 results]
+2018-05-08 01:35:56,318 -> K.Finding maximal disks... [0.241s] [1342 results]
+2018-05-08 01:35:58,618 -> L.Prunning duplicates and subsets... [2.300s] [1334 results]
+2018-05-08 01:35:58,618 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:35:58,618 ->   berlin0-10,  40.0,    28,  3, 155.99,    8573,     17146,         3574,       1334
+2018-05-08 01:36:02,651 -> Dropping indices...[4.033s]
+2018-05-08 01:36:02,995 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:38:23,737 -> B.Indexing points... [135.518s] [0 results]
+2018-05-08 01:38:36,700 -> C.Getting pairs... [12.963s] [8698 results]
+2018-05-08 01:38:38,328 -> D.Computing centers... [1.628s] [17396 results]
+2018-05-08 01:38:39,509 -> E.Indexing centers... [1.181s] [17396 results]
+2018-05-08 01:38:48,000 -> F.Getting disks... [8.491s] [17396 results]
+2018-05-08 01:38:48,318 -> G.Filtering less-than-mu disks... [0.318s] [6856 results]
+2018-05-08 01:38:54,975 -> H.Prunning duplicate candidates... [6.657s] [3609 results]
+2018-05-08 01:38:55,426 -> I.Indexing candidates... [7.107s] [3609 results]
+2018-05-08 01:38:55,738 -> J.Getting expansions... [0.312s] [5830 results]
+2018-05-08 01:38:55,907 -> K.Finding maximal disks... [0.169s] [1336 results]
+2018-05-08 01:38:59,500 -> L.Prunning duplicates and subsets... [3.593s] [1328 results]
+2018-05-08 01:38:59,500 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:38:59,500 ->   berlin0-10,  40.0,    28,  3, 171.28,    8698,     17396,         3609,       1328
+2018-05-08 01:39:03,652 -> Dropping indices...[4.152s]
+2018-05-08 01:39:03,971 -> 1.Getting disks                                    | 344.13s |   2662 disks
+2018-05-08 01:39:12,344 -> 2.Joining timestams                                |   8.37s |   2373 candidates
+2018-05-08 01:39:15,966 -> F1Count=1797,F2Count=576
+2018-05-08 01:41:33,911 -> 3.Checking internal timestamps                     | 141.57s |   1265 flocks
+2018-05-08 01:41:41,010 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:43:52,867 -> B.Indexing points... [127.759s] [0 results]
+2018-05-08 01:44:05,674 -> C.Getting pairs... [12.807s] [8696 results]
+2018-05-08 01:44:07,401 -> D.Computing centers... [1.727s] [17392 results]
+2018-05-08 01:44:08,561 -> E.Indexing centers... [1.160s] [17392 results]
+2018-05-08 01:44:17,788 -> F.Getting disks... [9.227s] [17392 results]
+2018-05-08 01:44:18,292 -> G.Filtering less-than-mu disks... [0.504s] [6866 results]
+2018-05-08 01:44:24,282 -> H.Prunning duplicate candidates... [5.989s] [3611 results]
+2018-05-08 01:44:24,701 -> I.Indexing candidates... [6.408s] [3611 results]
+2018-05-08 01:44:25,313 -> J.Getting expansions... [0.611s] [5996 results]
+2018-05-08 01:44:25,555 -> K.Finding maximal disks... [0.241s] [1337 results]
+2018-05-08 01:44:27,827 -> L.Prunning duplicates and subsets... [2.272s] [1332 results]
+2018-05-08 01:44:27,827 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:44:27,827 ->   berlin0-10,  40.0,    28,  3, 162.72,    8696,     17392,         3611,       1332
+2018-05-08 01:44:31,986 -> Dropping indices...[4.159s]
+2018-05-08 01:44:32,312 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:47:09,918 -> B.Indexing points... [151.164s] [0 results]
+2018-05-08 01:47:22,766 -> C.Getting pairs... [12.848s] [8662 results]
+2018-05-08 01:47:24,763 -> D.Computing centers... [1.997s] [17324 results]
+2018-05-08 01:47:26,110 -> E.Indexing centers... [1.347s] [17324 results]
+2018-05-08 01:47:34,369 -> F.Getting disks... [8.259s] [17324 results]
+2018-05-08 01:47:34,725 -> G.Filtering less-than-mu disks... [0.356s] [6852 results]
+2018-05-08 01:47:41,438 -> H.Prunning duplicate candidates... [6.713s] [3606 results]
+2018-05-08 01:47:41,798 -> I.Indexing candidates... [7.073s] [3606 results]
+2018-05-08 01:47:42,010 -> J.Getting expansions... [0.212s] [6013 results]
+2018-05-08 01:47:42,183 -> K.Finding maximal disks... [0.173s] [1327 results]
+2018-05-08 01:47:44,401 -> L.Prunning duplicates and subsets... [2.218s] [1317 results]
+2018-05-08 01:47:44,401 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:47:44,401 ->   berlin0-10,  40.0,    28,  3, 185.65,    8662,     17324,         3606,       1317
+2018-05-08 01:47:48,543 -> Dropping indices...[4.142s]
+2018-05-08 01:47:48,845 -> 1.Getting disks                                    | 367.98s |   2649 disks
+2018-05-08 01:47:57,809 -> 2.Joining timestams                                |   8.96s |   2343 candidates
+2018-05-08 01:48:00,895 -> F1Count=1767,F2Count=576
+2018-05-08 01:51:51,306 -> 3.Checking internal timestamps                     | 233.50s |   1276 flocks
+2018-05-08 01:51:58,661 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:54:21,592 -> B.Indexing points... [137.673s] [0 results]
+2018-05-08 01:54:32,136 -> C.Getting pairs... [10.544s] [8698 results]
+2018-05-08 01:54:35,017 -> D.Computing centers... [2.881s] [17396 results]
+2018-05-08 01:54:36,248 -> E.Indexing centers... [1.231s] [17396 results]
+2018-05-08 01:54:45,755 -> F.Getting disks... [9.507s] [17396 results]
+2018-05-08 01:54:46,034 -> G.Filtering less-than-mu disks... [0.279s] [6856 results]
+2018-05-08 01:54:53,859 -> H.Prunning duplicate candidates... [7.824s] [3609 results]
+2018-05-08 01:54:54,223 -> I.Indexing candidates... [8.188s] [3609 results]
+2018-05-08 01:54:54,459 -> J.Getting expansions... [0.236s] [5830 results]
+2018-05-08 01:54:54,626 -> K.Finding maximal disks... [0.165s] [1336 results]
+2018-05-08 01:54:57,190 -> L.Prunning duplicates and subsets... [2.564s] [1328 results]
+2018-05-08 01:54:57,190 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:54:57,190 ->   berlin0-10,  40.0,    28,  3, 173.27,    8698,     17396,         3609,       1328
+2018-05-08 01:55:01,471 -> Dropping indices...[4.281s]
+2018-05-08 01:55:01,792 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 01:57:41,194 -> B.Indexing points... [151.484s] [0 results]
+2018-05-08 01:57:51,713 -> C.Getting pairs... [10.519s] [8673 results]
+2018-05-08 01:57:54,515 -> D.Computing centers... [2.802s] [17346 results]
+2018-05-08 01:57:55,643 -> E.Indexing centers... [1.128s] [17346 results]
+2018-05-08 01:58:04,635 -> F.Getting disks... [8.992s] [17346 results]
+2018-05-08 01:58:04,948 -> G.Filtering less-than-mu disks... [0.313s] [6836 results]
+2018-05-08 01:58:10,269 -> H.Prunning duplicate candidates... [5.321s] [3598 results]
+2018-05-08 01:58:10,702 -> I.Indexing candidates... [5.754s] [3598 results]
+2018-05-08 01:58:10,951 -> J.Getting expansions... [0.249s] [5819 results]
+2018-05-08 01:58:11,127 -> K.Finding maximal disks... [0.175s] [1339 results]
+2018-05-08 01:58:13,228 -> L.Prunning duplicates and subsets... [2.101s] [1325 results]
+2018-05-08 01:58:13,228 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 01:58:13,228 ->   berlin0-10,  40.0,    28,  3, 183.52,    8673,     17346,         3598,       1325
+2018-05-08 01:58:17,518 -> Dropping indices...[4.290s]
+2018-05-08 01:58:17,864 -> 1.Getting disks                                    | 379.21s |   2653 disks
+2018-05-08 01:58:26,356 -> 2.Joining timestams                                |   8.49s |   2336 candidates
+2018-05-08 01:58:30,002 -> F1Count=1767,F2Count=569
+2018-05-08 02:01:52,800 -> 3.Checking internal timestamps                     | 206.44s |   1269 flocks
+2018-05-08 02:02:01,585 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 02:04:30,704 -> B.Indexing points... [142.537s] [0 results]
+2018-05-08 02:04:43,691 -> C.Getting pairs... [12.987s] [8662 results]
+2018-05-08 02:04:45,311 -> D.Computing centers... [1.620s] [17324 results]
+2018-05-08 02:04:46,914 -> E.Indexing centers... [1.603s] [17324 results]
+2018-05-08 02:04:54,937 -> F.Getting disks... [8.022s] [17324 results]
+2018-05-08 02:04:55,208 -> G.Filtering less-than-mu disks... [0.271s] [6852 results]
+2018-05-08 02:05:02,863 -> H.Prunning duplicate candidates... [7.655s] [3606 results]
+2018-05-08 02:05:03,452 -> I.Indexing candidates... [8.244s] [3606 results]
+2018-05-08 02:05:03,662 -> J.Getting expansions... [0.209s] [6013 results]
+2018-05-08 02:05:03,827 -> K.Finding maximal disks... [0.165s] [1327 results]
+2018-05-08 02:05:05,905 -> L.Prunning duplicates and subsets... [2.078s] [1317 results]
+2018-05-08 02:05:05,905 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 02:05:05,905 ->   berlin0-10,  40.0,    28,  3, 177.74,    8662,     17324,         3606,       1317
+2018-05-08 02:05:10,372 -> Dropping indices...[4.467s]
+2018-05-08 02:05:10,705 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 02:07:58,638 -> B.Indexing points... [158.865s] [0 results]
+2018-05-08 02:08:09,151 -> C.Getting pairs... [10.513s] [8677 results]
+2018-05-08 02:08:11,611 -> D.Computing centers... [2.459s] [17354 results]
+2018-05-08 02:08:12,909 -> E.Indexing centers... [1.298s] [17354 results]
+2018-05-08 02:08:21,157 -> F.Getting disks... [8.248s] [17354 results]
+2018-05-08 02:08:21,530 -> G.Filtering less-than-mu disks... [0.372s] [6816 results]
+2018-05-08 02:08:29,500 -> H.Prunning duplicate candidates... [7.970s] [3599 results]
+2018-05-08 02:08:29,908 -> I.Indexing candidates... [8.378s] [3599 results]
+2018-05-08 02:08:30,151 -> J.Getting expansions... [0.243s] [5901 results]
+2018-05-08 02:08:30,327 -> K.Finding maximal disks... [0.176s] [1311 results]
+2018-05-08 02:08:32,233 -> L.Prunning duplicates and subsets... [1.906s] [1303 results]
+2018-05-08 02:08:32,233 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 02:08:32,233 ->   berlin0-10,  40.0,    28,  3, 192.46,    8677,     17354,         3599,       1303
+2018-05-08 02:08:36,749 -> Dropping indices...[4.516s]
+2018-05-08 02:08:37,068 -> 1.Getting disks                                    | 395.50s |   2620 disks
+2018-05-08 02:08:45,466 -> 2.Joining timestams                                |   8.40s |   2224 candidates
+2018-05-08 02:08:49,871 -> F1Count=1709,F2Count=515
+2018-05-08 02:12:03,809 -> 3.Checking internal timestamps                     | 198.34s |   1250 flocks
+2018-05-08 02:12:13,928 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 02:14:53,131 -> B.Indexing points... [151.217s] [0 results]
+2018-05-08 02:15:06,384 -> C.Getting pairs... [13.253s] [8673 results]
+2018-05-08 02:15:08,121 -> D.Computing centers... [1.736s] [17346 results]
+2018-05-08 02:15:09,602 -> E.Indexing centers... [1.481s] [17346 results]
+2018-05-08 02:15:17,573 -> F.Getting disks... [7.971s] [17346 results]
+2018-05-08 02:15:17,889 -> G.Filtering less-than-mu disks... [0.316s] [6836 results]
+2018-05-08 02:15:24,774 -> H.Prunning duplicate candidates... [6.885s] [3598 results]
+2018-05-08 02:15:25,180 -> I.Indexing candidates... [7.291s] [3598 results]
+2018-05-08 02:15:25,495 -> J.Getting expansions... [0.315s] [5819 results]
+2018-05-08 02:15:25,667 -> K.Finding maximal disks... [0.172s] [1339 results]
+2018-05-08 02:15:28,578 -> L.Prunning duplicates and subsets... [2.910s] [1325 results]
+2018-05-08 02:15:28,578 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 02:15:28,578 ->   berlin0-10,  40.0,    28,  3, 186.66,    8673,     17346,         3598,       1325
+2018-05-08 02:15:33,077 -> Dropping indices...[4.499s]
+2018-05-08 02:15:33,428 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 02:18:31,646 -> B.Indexing points... [167.822s] [0 results]
+2018-05-08 02:18:38,714 -> C.Getting pairs... [7.068s] [8686 results]
+2018-05-08 02:18:46,562 -> D.Computing centers... [7.848s] [17372 results]
+2018-05-08 02:18:47,663 -> E.Indexing centers... [1.101s] [17372 results]
+2018-05-08 02:18:55,575 -> F.Getting disks... [7.855s] [17372 results]
+2018-05-08 02:18:56,053 -> G.Filtering less-than-mu disks... [0.478s] [6856 results]
+2018-05-08 02:19:01,314 -> H.Prunning duplicate candidates... [5.261s] [3627 results]
+2018-05-08 02:19:01,801 -> I.Indexing candidates... [5.748s] [3627 results]
+2018-05-08 02:19:02,188 -> J.Getting expansions... [0.387s] [5898 results]
+2018-05-08 02:19:02,458 -> K.Finding maximal disks... [0.270s] [1334 results]
+2018-05-08 02:19:04,529 -> L.Prunning duplicates and subsets... [2.071s] [1322 results]
+2018-05-08 02:19:04,529 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 02:19:04,529 ->   berlin0-10,  40.0,    28,  3, 200.71,    8686,     17372,         3627,       1322
+2018-05-08 02:19:08,984 -> Dropping indices...[4.455s]
+2018-05-08 02:19:09,371 -> 1.Getting disks                                    | 415.46s |   2647 disks
+2018-05-08 02:19:19,869 -> 2.Joining timestams                                |  10.50s |   2175 candidates
+2018-05-08 02:19:23,798 -> F1Count=1664,F2Count=511
+2018-05-08 02:21:21,939 -> 3.Checking internal timestamps                     | 122.07s |   1263 flocks
+2018-05-08 02:21:33,908 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 02:24:20,987 -> B.Indexing points... [157.639s] [0 results]
+2018-05-08 02:24:32,173 -> C.Getting pairs... [11.185s] [8677 results]
+2018-05-08 02:24:34,922 -> D.Computing centers... [2.749s] [17354 results]
+2018-05-08 02:24:36,149 -> E.Indexing centers... [1.227s] [17354 results]
+2018-05-08 02:24:45,128 -> F.Getting disks... [8.979s] [17354 results]
+2018-05-08 02:24:45,457 -> G.Filtering less-than-mu disks... [0.329s] [6816 results]
+2018-05-08 02:24:51,661 -> H.Prunning duplicate candidates... [6.204s] [3599 results]
+2018-05-08 02:24:52,094 -> I.Indexing candidates... [6.637s] [3599 results]
+2018-05-08 02:24:52,347 -> J.Getting expansions... [0.253s] [5901 results]
+2018-05-08 02:24:52,521 -> K.Finding maximal disks... [0.174s] [1311 results]
+2018-05-08 02:24:54,583 -> L.Prunning duplicates and subsets... [2.062s] [1303 results]
+2018-05-08 02:24:54,583 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 02:24:54,583 ->   berlin0-10,  40.0,    28,  3, 191.24,    8677,     17354,         3599,       1303
+2018-05-08 02:24:59,236 -> Dropping indices...[4.653s]
+2018-05-08 02:24:59,585 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 02:28:02,603 -> B.Indexing points... [171.670s] [0 results]
+2018-05-08 02:28:21,334 -> C.Getting pairs... [18.669s] [8692 results]
+2018-05-08 02:28:23,366 -> D.Computing centers... [2.032s] [17384 results]
+2018-05-08 02:28:25,027 -> E.Indexing centers... [1.661s] [17384 results]
+2018-05-08 02:28:34,025 -> F.Getting disks... [8.998s] [17384 results]
+2018-05-08 02:28:34,428 -> G.Filtering less-than-mu disks... [0.403s] [6884 results]
+2018-05-08 02:28:44,847 -> H.Prunning duplicate candidates... [10.419s] [3645 results]
+2018-05-08 02:28:45,492 -> I.Indexing candidates... [11.064s] [3645 results]
+2018-05-08 02:28:46,127 -> J.Getting expansions... [0.635s] [5932 results]
+2018-05-08 02:28:46,366 -> K.Finding maximal disks... [0.239s] [1336 results]
+2018-05-08 02:28:50,456 -> L.Prunning duplicates and subsets... [4.090s] [1328 results]
+2018-05-08 02:28:50,456 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 02:28:50,456 ->   berlin0-10,  40.0,    28,  3, 219.52,    8692,     17384,         3645,       1328
+2018-05-08 02:29:01,781 -> Dropping indices...[11.324s]
+2018-05-08 02:29:02,245 -> 1.Getting disks                                    | 448.35s |   2631 disks
+2018-05-08 02:29:11,567 -> 2.Joining timestams                                |   9.32s |   2074 candidates
+2018-05-08 02:29:15,306 -> F1Count=1600,F2Count=474
+2018-05-08 02:32:13,983 -> 3.Checking internal timestamps                     | 182.42s |   1254 flocks
+2018-05-08 02:32:27,098 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 02:35:19,710 -> B.Indexing points... [161.993s] [0 results]
+2018-05-08 02:35:28,866 -> C.Getting pairs... [9.156s] [8686 results]
+2018-05-08 02:35:30,628 -> D.Computing centers... [1.762s] [17372 results]
+2018-05-08 02:35:31,792 -> E.Indexing centers... [1.164s] [17372 results]
+2018-05-08 02:35:39,158 -> F.Getting disks... [7.366s] [17372 results]
+2018-05-08 02:35:39,400 -> G.Filtering less-than-mu disks... [0.242s] [6856 results]
+2018-05-08 02:35:45,364 -> H.Prunning duplicate candidates... [5.964s] [3627 results]
+2018-05-08 02:35:46,005 -> I.Indexing candidates... [6.605s] [3627 results]
+2018-05-08 02:35:46,573 -> J.Getting expansions... [0.568s] [5898 results]
+2018-05-08 02:35:46,966 -> K.Finding maximal disks... [0.393s] [1334 results]
+2018-05-08 02:35:50,136 -> L.Prunning duplicates and subsets... [3.169s] [1322 results]
+2018-05-08 02:35:50,136 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 02:35:50,137 ->   berlin0-10,  40.0,    28,  3, 192.42,    8686,     17372,         3627,       1322
+2018-05-08 02:35:54,822 -> Dropping indices...[4.684s]
+2018-05-08 02:35:55,292 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 02:38:57,446 -> B.Indexing points... [170.526s] [0 results]
+2018-05-08 02:39:09,892 -> C.Getting pairs... [12.445s] [8713 results]
+2018-05-08 02:39:11,462 -> D.Computing centers... [1.570s] [17426 results]
+2018-05-08 02:39:13,216 -> E.Indexing centers... [1.645s] [17426 results]
+2018-05-08 02:39:20,858 -> F.Getting disks... [7.642s] [17426 results]
+2018-05-08 02:39:21,110 -> G.Filtering less-than-mu disks... [0.252s] [6894 results]
+2018-05-08 02:39:27,438 -> H.Prunning duplicate candidates... [6.328s] [3633 results]
+2018-05-08 02:39:27,798 -> I.Indexing candidates... [6.688s] [3633 results]
+2018-05-08 02:39:28,025 -> J.Getting expansions... [0.227s] [5915 results]
+2018-05-08 02:39:28,198 -> K.Finding maximal disks... [0.172s] [1319 results]
+2018-05-08 02:39:30,579 -> L.Prunning duplicates and subsets... [2.381s] [1310 results]
+2018-05-08 02:39:30,579 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 02:39:30,579 ->   berlin0-10,  40.0,    28,  3, 203.66,    8713,     17426,         3633,       1310
+2018-05-08 02:39:35,576 -> Dropping indices...[4.997s]
+2018-05-08 02:39:35,916 -> 1.Getting disks                                    | 428.83s |   2632 disks
+2018-05-08 02:39:44,233 -> 2.Joining timestams                                |   8.32s |   2054 candidates
+2018-05-08 02:39:50,211 -> F1Count=1534,F2Count=520
+2018-05-08 02:42:41,851 -> 3.Checking internal timestamps                     | 177.62s |   1269 flocks
+2018-05-08 02:42:58,667 -> 
+
+PFLOCK_ML	50.0	3	3	11345
+
+2018-05-08 02:43:11,812 -> Running MergeLast...                               | 5076.72s |  11345 flocks
+2018-05-08 02:43:11,812 -> method=MergeLast,cores=28,epsilon=50.0,mu=3,delta=3,time=5076.718,master=spark://169.235.27.134:7077
+2018-05-08 02:43:11,812 -> === SpatialJoin Start ===
+2018-05-08 02:43:22,778 -> Reporting locations...                             |  10.92s |  18093 points
+2018-05-08 02:43:22,778 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 02:43:29,096 -> B.Indexing points... [6.281s] [0 results]
+2018-05-08 02:44:25,920 -> C.Getting pairs... [56.824s] [8340 results]
+2018-05-08 02:44:32,072 -> D.Computing centers... [6.120s] [16680 results]
+2018-05-08 02:44:33,873 -> E.Indexing centers... [1.801s] [16680 results]
+2018-05-08 02:44:40,306 -> F.Getting disks... [6.433s] [16680 results]
+2018-05-08 02:44:40,644 -> G.Filtering less-than-mu disks... [0.338s] [6562 results]
+2018-05-08 02:44:45,029 -> H.Prunning duplicate candidates... [4.385s] [3431 results]
+2018-05-08 02:44:45,476 -> I.Indexing candidates... [4.832s] [3431 results]
+2018-05-08 02:44:45,754 -> J.Getting expansions... [0.277s] [5673 results]
+2018-05-08 02:44:46,018 -> K.Finding maximal disks... [0.264s] [1319 results]
+2018-05-08 02:44:48,712 -> L.Prunning duplicates and subsets... [2.694s] [1303 results]
+2018-05-08 02:44:48,712 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 02:44:48,712 ->   berlin0-10,  40.0,    28,  3,  85.90,    8340,     16680,         3431,       1303
+2018-05-08 02:44:53,537 -> Dropping indices...[4.824s]
+2018-05-08 02:44:53,872 -> 1.Set of disks for t_i...                          |  91.09s |   1303 disks
+2018-05-08 02:44:54,195 -> 4.Found flocks...                                  |   0.32s |      0 flocks
+2018-05-08 02:44:54,995 -> 5.Updating times...                                |   0.49s |   1303 flocks
+2018-05-08 02:44:55,998 -> 6.Filter phase...                                  |   1.00s |   1303 flocks
+2018-05-08 02:45:07,271 -> Reporting locations...                             |  11.27s |  18245 points
+2018-05-08 02:45:07,272 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 02:45:12,546 -> B.Indexing points... [5.238s] [0 results]
+2018-05-08 02:45:20,579 -> C.Getting pairs... [8.033s] [8486 results]
+2018-05-08 02:45:23,051 -> D.Computing centers... [2.472s] [16972 results]
+2018-05-08 02:45:24,258 -> E.Indexing centers... [1.206s] [16972 results]
+2018-05-08 02:45:31,537 -> F.Getting disks... [7.279s] [16972 results]
+2018-05-08 02:45:31,837 -> G.Filtering less-than-mu disks... [0.300s] [6701 results]
+2018-05-08 02:45:36,069 -> H.Prunning duplicate candidates... [4.232s] [3505 results]
+2018-05-08 02:45:36,448 -> I.Indexing candidates... [4.611s] [3505 results]
+2018-05-08 02:45:36,694 -> J.Getting expansions... [0.246s] [5806 results]
+2018-05-08 02:45:36,871 -> K.Finding maximal disks... [0.177s] [1335 results]
+2018-05-08 02:45:38,304 -> L.Prunning duplicates and subsets... [1.432s] [1327 results]
+2018-05-08 02:45:38,304 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 02:45:38,304 ->   berlin0-10,  40.0,    28,  3,  31.00,    8486,     16972,         3505,       1327
+2018-05-08 02:45:43,053 -> Dropping indices...[4.749s]
+2018-05-08 02:45:43,481 -> 1.Set of disks for t_i...                          |  36.21s |   1327 disks
+2018-05-08 02:45:49,039 -> 2.Distance Join phase...                           |   5.56s |   3533 combinations
+2018-05-08 02:46:24,322 -> 3.Getting candidates...                            |  35.28s |   1286 candidates
+2018-05-08 02:46:25,402 -> 4.Found flocks...                                  |   1.05s |      0 flocks
+2018-05-08 02:46:29,772 -> 5.Updating times...                                |   2.97s |   1286 flocks
+2018-05-08 02:46:33,009 -> 6.Filter phase...                                  |   3.20s |   1406 flocks
+2018-05-08 02:46:43,971 -> Reporting locations...                             |  10.96s |  18394 points
+2018-05-08 02:46:43,972 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 02:46:49,317 -> B.Indexing points... [5.311s] [0 results]
+2018-05-08 02:47:35,634 -> C.Getting pairs... [46.317s] [8573 results]
+2018-05-08 02:47:42,683 -> D.Computing centers... [7.004s] [17146 results]
+2018-05-08 02:47:44,593 -> E.Indexing centers... [1.910s] [17146 results]
+2018-05-08 02:47:55,115 -> F.Getting disks... [10.521s] [17146 results]
+2018-05-08 02:47:55,776 -> G.Filtering less-than-mu disks... [0.618s] [6793 results]
+2018-05-08 02:48:00,401 -> H.Prunning duplicate candidates... [4.625s] [3574 results]
+2018-05-08 02:48:00,835 -> I.Indexing candidates... [5.059s] [3574 results]
+2018-05-08 02:48:01,177 -> J.Getting expansions... [0.342s] [5983 results]
+2018-05-08 02:48:01,476 -> K.Finding maximal disks... [0.299s] [1342 results]
+2018-05-08 02:48:03,026 -> L.Prunning duplicates and subsets... [1.549s] [1334 results]
+2018-05-08 02:48:03,026 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 02:48:03,026 ->   berlin0-10,  40.0,    28,  3,  79.02,    8573,     17146,         3574,       1334
+2018-05-08 02:48:07,956 -> Dropping indices...[4.930s]
+2018-05-08 02:48:08,443 -> 1.Set of disks for t_i...                          |  84.47s |   1334 disks
+2018-05-08 02:48:19,822 -> 2.Distance Join phase...                           |  11.38s |   4016 combinations
+2018-05-08 02:49:33,666 -> 3.Getting candidates...                            |  73.84s |   1371 candidates
+2018-05-08 02:49:34,714 -> 4.Found flocks...                                  |   1.05s |   1251 flocks
+2018-05-08 02:49:40,100 -> 5.Updating times...                                |   1.67s |   1371 flocks
+2018-05-08 02:49:44,879 -> 6.Filter phase...                                  |   4.78s |   1495 flocks
+2018-05-08 02:49:55,907 -> Reporting locations...                             |  11.03s |  18548 points
+2018-05-08 02:49:55,907 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 02:50:02,488 -> B.Indexing points... [6.562s] [0 results]
+2018-05-08 02:50:16,148 -> C.Getting pairs... [13.660s] [8696 results]
+2018-05-08 02:50:19,116 -> D.Computing centers... [2.968s] [17392 results]
+2018-05-08 02:50:20,263 -> E.Indexing centers... [1.147s] [17392 results]
+2018-05-08 02:50:29,823 -> F.Getting disks... [9.560s] [17392 results]
+2018-05-08 02:50:30,163 -> G.Filtering less-than-mu disks... [0.340s] [6866 results]
+2018-05-08 02:50:35,800 -> H.Prunning duplicate candidates... [5.637s] [3611 results]
+2018-05-08 02:50:36,177 -> I.Indexing candidates... [6.014s] [3611 results]
+2018-05-08 02:50:36,524 -> J.Getting expansions... [0.347s] [5996 results]
+2018-05-08 02:50:37,468 -> K.Finding maximal disks... [0.943s] [1337 results]
+2018-05-08 02:50:41,445 -> L.Prunning duplicates and subsets... [3.977s] [1332 results]
+2018-05-08 02:50:41,445 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 02:50:41,445 ->   berlin0-10,  40.0,    28,  3,  45.52,    8696,     17392,         3611,       1332
+2018-05-08 02:50:46,374 -> Dropping indices...[4.929s]
+2018-05-08 02:50:46,737 -> 1.Set of disks for t_i...                          |  50.83s |   1332 disks
+2018-05-08 02:51:16,341 -> 2.Distance Join phase...                           |  29.60s |   4397 combinations
+2018-05-08 02:52:10,297 -> 3.Getting candidates...                            |  53.93s |   1379 candidates
+2018-05-08 02:52:13,959 -> 4.Found flocks...                                  |   3.62s |   1248 flocks
+2018-05-08 02:52:24,502 -> 5.Updating times...                                |   5.96s |   1379 flocks
+2018-05-08 02:52:34,347 -> 6.Filter phase...                                  |   9.85s |   1491 flocks
+2018-05-08 02:52:45,260 -> Reporting locations...                             |  10.90s |  18548 points
+2018-05-08 02:52:45,260 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 02:52:52,030 -> B.Indexing points... [6.734s] [0 results]
+2018-05-08 02:53:06,434 -> C.Getting pairs... [14.404s] [8698 results]
+2018-05-08 02:53:09,067 -> D.Computing centers... [2.633s] [17396 results]
+2018-05-08 02:53:10,837 -> E.Indexing centers... [1.770s] [17396 results]
+2018-05-08 02:53:19,777 -> F.Getting disks... [8.940s] [17396 results]
+2018-05-08 02:53:20,182 -> G.Filtering less-than-mu disks... [0.404s] [6856 results]
+2018-05-08 02:53:28,335 -> H.Prunning duplicate candidates... [8.153s] [3609 results]
+2018-05-08 02:53:28,995 -> I.Indexing candidates... [8.813s] [3609 results]
+2018-05-08 02:53:30,525 -> J.Getting expansions... [1.530s] [5830 results]
+2018-05-08 02:53:30,982 -> K.Finding maximal disks... [0.457s] [1336 results]
+2018-05-08 02:53:33,062 -> L.Prunning duplicates and subsets... [2.079s] [1328 results]
+2018-05-08 02:53:33,062 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 02:53:33,063 ->   berlin0-10,  40.0,    28,  3,  47.77,    8698,     17396,         3609,       1328
+2018-05-08 02:53:38,208 -> Dropping indices...[5.145s]
+2018-05-08 02:53:38,563 -> 1.Set of disks for t_i...                          |  53.30s |   1328 disks
+2018-05-08 02:53:52,516 -> 2.Distance Join phase...                           |  13.95s |   4275 combinations
+2018-05-08 02:54:39,787 -> 3.Getting candidates...                            |  47.27s |   1376 candidates
+2018-05-08 02:54:42,067 -> 4.Found flocks...                                  |   2.24s |   1265 flocks
+2018-05-08 02:54:52,724 -> 5.Updating times...                                |   3.96s |   1376 flocks
+2018-05-08 02:55:16,033 -> 6.Filter phase...                                  |  23.28s |   1472 flocks
+2018-05-08 02:55:28,070 -> Reporting locations...                             |  12.04s |  18548 points
+2018-05-08 02:55:28,071 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 02:55:35,054 -> B.Indexing points... [6.850s] [0 results]
+2018-05-08 02:55:49,114 -> C.Getting pairs... [14.060s] [8662 results]
+2018-05-08 02:55:50,743 -> D.Computing centers... [1.629s] [17324 results]
+2018-05-08 02:55:52,771 -> E.Indexing centers... [2.028s] [17324 results]
+2018-05-08 02:56:02,682 -> F.Getting disks... [9.911s] [17324 results]
+2018-05-08 02:56:03,105 -> G.Filtering less-than-mu disks... [0.423s] [6852 results]
+2018-05-08 02:56:16,169 -> H.Prunning duplicate candidates... [13.064s] [3606 results]
+2018-05-08 02:56:16,733 -> I.Indexing candidates... [13.628s] [3606 results]
+2018-05-08 02:56:17,603 -> J.Getting expansions... [0.870s] [6013 results]
+2018-05-08 02:56:17,944 -> K.Finding maximal disks... [0.340s] [1327 results]
+2018-05-08 02:56:20,570 -> L.Prunning duplicates and subsets... [2.625s] [1317 results]
+2018-05-08 02:56:20,570 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 02:56:20,570 ->   berlin0-10,  40.0,    28,  3,  52.37,    8662,     17324,         3606,       1317
+2018-05-08 02:56:25,808 -> Dropping indices...[5.238s]
+2018-05-08 02:56:26,337 -> 1.Set of disks for t_i...                          |  58.27s |   1317 disks
+2018-05-08 02:56:42,559 -> 2.Distance Join phase...                           |  16.22s |   4131 combinations
+2018-05-08 02:57:29,341 -> 3.Getting candidates...                            |  46.77s |   1377 candidates
+2018-05-08 02:57:31,163 -> 4.Found flocks...                                  |   1.82s |   1277 flocks
+2018-05-08 02:57:40,443 -> 5.Updating times...                                |   2.78s |   1377 flocks
+2018-05-08 02:57:46,153 -> 6.Filter phase...                                  |   5.71s |   1454 flocks
+2018-05-08 02:57:57,123 -> Reporting locations...                             |  10.90s |  18546 points
+2018-05-08 02:57:57,123 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 02:58:04,046 -> B.Indexing points... [6.896s] [0 results]
+2018-05-08 02:58:18,000 -> C.Getting pairs... [13.954s] [8673 results]
+2018-05-08 02:58:19,830 -> D.Computing centers... [1.830s] [17346 results]
+2018-05-08 02:58:22,226 -> E.Indexing centers... [2.396s] [17346 results]
+2018-05-08 02:58:30,529 -> F.Getting disks... [8.303s] [17346 results]
+2018-05-08 02:58:30,870 -> G.Filtering less-than-mu disks... [0.340s] [6836 results]
+2018-05-08 02:58:40,179 -> H.Prunning duplicate candidates... [9.308s] [3598 results]
+2018-05-08 02:58:40,950 -> I.Indexing candidates... [10.079s] [3598 results]
+2018-05-08 02:58:41,288 -> J.Getting expansions... [0.338s] [5819 results]
+2018-05-08 02:58:41,715 -> K.Finding maximal disks... [0.427s] [1339 results]
+2018-05-08 02:58:44,847 -> L.Prunning duplicates and subsets... [3.131s] [1325 results]
+2018-05-08 02:58:44,847 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 02:58:44,847 ->   berlin0-10,  40.0,    28,  3,  47.70,    8673,     17346,         3598,       1325
+2018-05-08 02:58:50,212 -> Dropping indices...[5.365s]
+2018-05-08 02:58:50,661 -> 1.Set of disks for t_i...                          |  53.54s |   1325 disks
+2018-05-08 02:59:04,688 -> 2.Distance Join phase...                           |  14.03s |   4115 combinations
+2018-05-08 02:59:49,825 -> 3.Getting candidates...                            |  45.14s |   1354 candidates
+2018-05-08 02:59:51,655 -> 4.Found flocks...                                  |   1.83s |   1269 flocks
+2018-05-08 03:00:02,726 -> 5.Updating times...                                |   4.50s |   1354 flocks
+2018-05-08 03:00:07,528 -> 6.Filter phase...                                  |   4.80s |   1428 flocks
+2018-05-08 03:00:18,479 -> Reporting locations...                             |  10.95s |  18546 points
+2018-05-08 03:00:18,479 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 03:00:26,798 -> B.Indexing points... [8.248s] [0 results]
+2018-05-08 03:00:38,899 -> C.Getting pairs... [12.101s] [8677 results]
+2018-05-08 03:00:42,153 -> D.Computing centers... [3.254s] [17354 results]
+2018-05-08 03:00:43,374 -> E.Indexing centers... [1.220s] [17354 results]
+2018-05-08 03:00:53,378 -> F.Getting disks... [10.004s] [17354 results]
+2018-05-08 03:00:53,647 -> G.Filtering less-than-mu disks... [0.268s] [6816 results]
+2018-05-08 03:01:02,771 -> H.Prunning duplicate candidates... [9.124s] [3599 results]
+2018-05-08 03:01:03,145 -> I.Indexing candidates... [9.498s] [3599 results]
+2018-05-08 03:01:03,608 -> J.Getting expansions... [0.463s] [5901 results]
+2018-05-08 03:01:03,886 -> K.Finding maximal disks... [0.278s] [1311 results]
+2018-05-08 03:01:06,137 -> L.Prunning duplicates and subsets... [2.251s] [1303 results]
+2018-05-08 03:01:06,137 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 03:01:06,137 ->   berlin0-10,  40.0,    28,  3,  47.59,    8677,     17354,         3599,       1303
+2018-05-08 03:01:11,580 -> Dropping indices...[5.442s]
+2018-05-08 03:01:11,965 -> 1.Set of disks for t_i...                          |  53.49s |   1303 disks
+2018-05-08 03:01:24,613 -> 2.Distance Join phase...                           |  12.65s |   3672 combinations
+2018-05-08 03:02:10,180 -> 3.Getting candidates...                            |  45.57s |   1328 candidates
+2018-05-08 03:02:12,884 -> 4.Found flocks...                                  |   2.70s |   1251 flocks
+2018-05-08 03:02:26,078 -> 5.Updating times...                                |   5.00s |   1328 flocks
+2018-05-08 03:02:32,582 -> 6.Filter phase...                                  |   6.50s |   1395 flocks
+2018-05-08 03:02:43,514 -> Reporting locations...                             |  10.93s |  18546 points
+2018-05-08 03:02:43,514 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 03:02:49,549 -> B.Indexing points... [5.981s] [0 results]
+2018-05-08 03:03:06,583 -> C.Getting pairs... [17.022s] [8686 results]
+2018-05-08 03:03:13,329 -> D.Computing centers... [6.653s] [17372 results]
+2018-05-08 03:03:14,744 -> E.Indexing centers... [1.415s] [17372 results]
+2018-05-08 03:03:22,954 -> F.Getting disks... [8.209s] [17372 results]
+2018-05-08 03:03:23,436 -> G.Filtering less-than-mu disks... [0.481s] [6856 results]
+2018-05-08 03:03:31,346 -> H.Prunning duplicate candidates... [7.910s] [3627 results]
+2018-05-08 03:03:32,708 -> I.Indexing candidates... [9.272s] [3627 results]
+2018-05-08 03:03:33,633 -> J.Getting expansions... [0.925s] [5898 results]
+2018-05-08 03:03:33,903 -> K.Finding maximal disks... [0.270s] [1334 results]
+2018-05-08 03:03:36,913 -> L.Prunning duplicates and subsets... [3.010s] [1322 results]
+2018-05-08 03:03:36,914 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 03:03:36,914 ->   berlin0-10,  40.0,    28,  3,  53.35,    8686,     17372,         3627,       1322
+2018-05-08 03:03:42,489 -> Dropping indices...[5.575s]
+2018-05-08 03:03:42,912 -> 1.Set of disks for t_i...                          |  59.40s |   1322 disks
+2018-05-08 03:03:57,807 -> 2.Distance Join phase...                           |  14.90s |   3563 combinations
+2018-05-08 03:04:40,238 -> 3.Getting candidates...                            |  42.43s |   1331 candidates
+2018-05-08 03:04:42,069 -> 4.Found flocks...                                  |   1.83s |   1261 flocks
+2018-05-08 03:06:54,949 -> 5.Updating times...                                |  15.50s |   1331 flocks
+2018-05-08 03:07:05,883 -> 6.Filter phase...                                  |  10.88s |   1425 flocks
+2018-05-08 03:07:16,713 -> Reporting locations...                             |  10.78s |  18546 points
+2018-05-08 03:07:16,739 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 03:07:24,263 -> B.Indexing points... [7.388s] [0 results]
+2018-05-08 03:07:41,510 -> C.Getting pairs... [17.213s] [8692 results]
+2018-05-08 03:07:43,841 -> D.Computing centers... [2.295s] [17384 results]
+2018-05-08 03:07:46,223 -> E.Indexing centers... [2.382s] [17384 results]
+2018-05-08 03:07:56,841 -> F.Getting disks... [10.618s] [17384 results]
+2018-05-08 03:07:57,408 -> G.Filtering less-than-mu disks... [0.567s] [6884 results]
+2018-05-08 03:08:04,188 -> H.Prunning duplicate candidates... [6.780s] [3645 results]
+2018-05-08 03:08:04,544 -> I.Indexing candidates... [7.136s] [3645 results]
+2018-05-08 03:08:05,437 -> J.Getting expansions... [0.893s] [5932 results]
+2018-05-08 03:08:05,731 -> K.Finding maximal disks... [0.294s] [1336 results]
+2018-05-08 03:08:09,483 -> L.Prunning duplicates and subsets... [3.752s] [1328 results]
+2018-05-08 03:08:09,483 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 03:08:09,483 ->   berlin0-10,  40.0,    28,  3,  52.61,    8692,     17384,         3645,       1328
+2018-05-08 03:08:15,828 -> Dropping indices...[6.345s]
+2018-05-08 03:08:16,266 -> 1.Set of disks for t_i...                          |  59.53s |   1328 disks
+2018-05-08 03:08:28,559 -> 2.Distance Join phase...                           |  12.29s |   3623 combinations
+2018-05-08 03:09:14,524 -> 3.Getting candidates...                            |  45.96s |   1353 candidates
+2018-05-08 03:09:17,002 -> 4.Found flocks...                                  |   2.48s |   1254 flocks
+2018-05-08 03:09:34,360 -> 5.Updating times...                                |   4.64s |   1353 flocks
+2018-05-08 03:09:39,610 -> 6.Filter phase...                                  |   5.25s |   1437 flocks
+2018-05-08 03:09:50,512 -> Reporting locations...                             |  10.90s |  18546 points
+2018-05-08 03:09:50,513 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 03:09:58,422 -> B.Indexing points... [7.868s] [0 results]
+2018-05-08 03:10:12,990 -> C.Getting pairs... [14.568s] [8713 results]
+2018-05-08 03:10:14,845 -> D.Computing centers... [1.855s] [17426 results]
+2018-05-08 03:10:15,932 -> E.Indexing centers... [1.086s] [17426 results]
+2018-05-08 03:10:25,962 -> F.Getting disks... [10.030s] [17426 results]
+2018-05-08 03:10:26,265 -> G.Filtering less-than-mu disks... [0.303s] [6894 results]
+2018-05-08 03:10:33,339 -> H.Prunning duplicate candidates... [7.074s] [3633 results]
+2018-05-08 03:10:34,179 -> I.Indexing candidates... [7.914s] [3633 results]
+2018-05-08 03:10:34,489 -> J.Getting expansions... [0.310s] [5915 results]
+2018-05-08 03:10:34,777 -> K.Finding maximal disks... [0.278s] [1319 results]
+2018-05-08 03:10:37,777 -> L.Prunning duplicates and subsets... [3.000s] [1310 results]
+2018-05-08 03:10:37,777 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 03:10:37,777 ->   berlin0-10,  40.0,    28,  3,  47.22,    8713,     17426,         3633,       1310
+2018-05-08 03:10:43,610 -> Dropping indices...[5.833s]
+2018-05-08 03:10:43,963 -> 1.Set of disks for t_i...                          |  53.45s |   1310 disks
+2018-05-08 03:10:58,176 -> 2.Distance Join phase...                           |  14.21s |   3452 combinations
+2018-05-08 03:12:04,115 -> 3.Getting candidates...                            |  65.94s |   1357 candidates
+2018-05-08 03:12:06,444 -> 4.Found flocks...                                  |   2.33s |   1268 flocks
+2018-05-08 03:12:30,530 -> 5.Updating times...                                |   4.91s |   1357 flocks
+2018-05-08 03:12:36,083 -> 6.Filter phase...                                  |   5.51s |   1435 flocks
+2018-05-08 03:12:36,083 -> 
+
+PFLOCK_SJ	50.0	3	3	11344
+
+2018-05-08 03:12:51,002 -> Running SpatialJoin...                             | 1779.19s |  11344 flocks
+2018-05-08 03:12:51,002 -> method=SpatialJoin,cores=28,epsilon=50.0,mu=3,delta=3,time=1779.19,master=spark://169.235.27.134:7077
+2018-05-08 03:12:51,024 -> === MergeLast Start ===
+2018-05-08 03:12:51,168 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 03:14:35,463 -> B.Indexing points... [104.251s] [0 results]
+2018-05-08 03:14:42,695 -> C.Getting pairs... [7.232s] [8340 results]
+2018-05-08 03:14:44,821 -> D.Computing centers... [2.126s] [16680 results]
+2018-05-08 03:14:46,340 -> E.Indexing centers... [1.519s] [16680 results]
+2018-05-08 03:14:52,819 -> F.Getting disks... [6.479s] [16680 results]
+2018-05-08 03:14:53,448 -> G.Filtering less-than-mu disks... [0.629s] [6562 results]
+2018-05-08 03:14:58,902 -> H.Prunning duplicate candidates... [5.453s] [3431 results]
+2018-05-08 03:14:59,371 -> I.Indexing candidates... [5.922s] [3431 results]
+2018-05-08 03:14:59,672 -> J.Getting expansions... [0.301s] [5673 results]
+2018-05-08 03:14:59,946 -> K.Finding maximal disks... [0.274s] [1319 results]
+2018-05-08 03:15:01,294 -> L.Prunning duplicates and subsets... [1.348s] [1303 results]
+2018-05-08 03:15:01,294 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 03:15:01,295 ->   berlin0-10,  40.0,    28,  3, 130.08,    8340,     16680,         3431,       1303
+2018-05-08 03:15:07,742 -> Dropping indices...[6.447s]
+2018-05-08 03:15:08,171 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 03:18:26,885 -> B.Indexing points... [193.419s] [0 results]
+2018-05-08 03:18:38,301 -> C.Getting pairs... [11.379s] [8698 results]
+2018-05-08 03:18:48,026 -> D.Computing centers... [9.705s] [17396 results]
+2018-05-08 03:18:49,999 -> E.Indexing centers... [1.973s] [17396 results]
+2018-05-08 03:19:02,016 -> F.Getting disks... [12.017s] [17396 results]
+2018-05-08 03:19:03,148 -> G.Filtering less-than-mu disks... [1.132s] [6856 results]
+2018-05-08 03:19:12,309 -> H.Prunning duplicate candidates... [9.161s] [3609 results]
+2018-05-08 03:19:12,830 -> I.Indexing candidates... [9.682s] [3609 results]
+2018-05-08 03:19:13,229 -> J.Getting expansions... [0.399s] [5830 results]
+2018-05-08 03:19:13,586 -> K.Finding maximal disks... [0.357s] [1336 results]
+2018-05-08 03:19:17,471 -> L.Prunning duplicates and subsets... [3.885s] [1328 results]
+2018-05-08 03:19:17,471 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 03:19:17,471 ->   berlin0-10,  40.0,    28,  3, 244.01,    8698,     17396,         3609,       1328
+2018-05-08 03:19:23,394 -> Dropping indices...[5.923s]
+2018-05-08 03:19:23,871 -> 1.Getting disks                                    | 392.74s |   2631 disks
+2018-05-08 03:19:34,326 -> 2.Joining timestams                                |  10.46s |   2320 candidates
+2018-05-08 03:19:40,371 -> F1Count=1145,F2Count=1175
+2018-05-08 03:20:08,279 -> F1Count=1158,F2Count=1163
+2018-05-08 03:20:53,173 -> F1Count=1156,F2Count=1165
+2018-05-08 03:24:58,445 -> 3.Checking internal timestamps                     | 324.12s |   1180 flocks
+2018-05-08 03:25:05,912 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 03:26:59,965 -> B.Indexing points... [112.468s] [0 results]
+2018-05-08 03:27:08,130 -> C.Getting pairs... [8.165s] [8486 results]
+2018-05-08 03:27:10,874 -> D.Computing centers... [2.744s] [16972 results]
+2018-05-08 03:27:12,073 -> E.Indexing centers... [1.199s] [16972 results]
+2018-05-08 03:27:18,882 -> F.Getting disks... [6.808s] [16972 results]
+2018-05-08 03:27:19,145 -> G.Filtering less-than-mu disks... [0.263s] [6701 results]
+2018-05-08 03:27:24,307 -> H.Prunning duplicate candidates... [5.162s] [3505 results]
+2018-05-08 03:27:24,771 -> I.Indexing candidates... [5.626s] [3505 results]
+2018-05-08 03:27:25,126 -> J.Getting expansions... [0.355s] [5806 results]
+2018-05-08 03:27:25,407 -> K.Finding maximal disks... [0.280s] [1335 results]
+2018-05-08 03:27:28,534 -> L.Prunning duplicates and subsets... [3.127s] [1327 results]
+2018-05-08 03:27:28,534 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 03:27:28,534 ->   berlin0-10,  40.0,    28,  3, 141.04,    8486,     16972,         3505,       1327
+2018-05-08 03:27:34,626 -> Dropping indices...[6.092s]
+2018-05-08 03:27:34,949 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 03:30:05,555 -> B.Indexing points... [144.194s] [0 results]
+2018-05-08 03:30:19,233 -> C.Getting pairs... [13.678s] [8662 results]
+2018-05-08 03:30:21,740 -> D.Computing centers... [2.507s] [17324 results]
+2018-05-08 03:30:23,306 -> E.Indexing centers... [1.566s] [17324 results]
+2018-05-08 03:30:32,410 -> F.Getting disks... [9.104s] [17324 results]
+2018-05-08 03:30:32,674 -> G.Filtering less-than-mu disks... [0.264s] [6852 results]
+2018-05-08 03:30:46,931 -> H.Prunning duplicate candidates... [14.257s] [3606 results]
+2018-05-08 03:30:47,387 -> I.Indexing candidates... [14.713s] [3606 results]
+2018-05-08 03:30:48,564 -> J.Getting expansions... [1.176s] [6013 results]
+2018-05-08 03:30:48,758 -> K.Finding maximal disks... [0.194s] [1327 results]
+2018-05-08 03:30:50,813 -> L.Prunning duplicates and subsets... [2.055s] [1317 results]
+2018-05-08 03:30:50,813 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 03:30:50,813 ->   berlin0-10,  40.0,    28,  3, 189.45,    8662,     17324,         3606,       1317
+2018-05-08 03:30:56,883 -> Dropping indices...[6.070s]
+2018-05-08 03:30:57,400 -> 1.Getting disks                                    | 351.61s |   2644 disks
+2018-05-08 03:31:08,018 -> 2.Joining timestams                                |  10.62s |   2268 candidates
+2018-05-08 03:31:12,117 -> F1Count=1103,F2Count=1165
+2018-05-08 03:32:21,644 -> F1Count=1106,F2Count=1165
+2018-05-08 03:33:29,655 -> F1Count=1112,F2Count=1161
+2018-05-08 03:36:44,873 -> 3.Checking internal timestamps                     | 336.86s |   1192 flocks
+2018-05-08 03:36:57,387 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 03:38:59,211 -> B.Indexing points... [119.027s] [0 results]
+2018-05-08 03:39:07,604 -> C.Getting pairs... [8.393s] [8573 results]
+2018-05-08 03:39:10,587 -> D.Computing centers... [2.983s] [17146 results]
+2018-05-08 03:39:12,239 -> E.Indexing centers... [1.652s] [17146 results]
+2018-05-08 03:39:20,814 -> F.Getting disks... [8.575s] [17146 results]
+2018-05-08 03:39:21,197 -> G.Filtering less-than-mu disks... [0.383s] [6793 results]
+2018-05-08 03:39:27,158 -> H.Prunning duplicate candidates... [5.961s] [3574 results]
+2018-05-08 03:39:27,794 -> I.Indexing candidates... [6.597s] [3574 results]
+2018-05-08 03:39:28,115 -> J.Getting expansions... [0.321s] [5983 results]
+2018-05-08 03:39:28,358 -> K.Finding maximal disks... [0.242s] [1342 results]
+2018-05-08 03:39:30,964 -> L.Prunning duplicates and subsets... [2.606s] [1334 results]
+2018-05-08 03:39:30,964 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 03:39:30,964 ->   berlin0-10,  40.0,    28,  3, 150.78,    8573,     17146,         3574,       1334
+2018-05-08 03:39:37,784 -> Dropping indices...[6.820s]
+2018-05-08 03:39:38,228 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 03:48:17,645 -> B.Indexing points... [511.737s] [0 results]
+2018-05-08 03:49:11,340 -> C.Getting pairs... [53.630s] [8673 results]
+2018-05-08 03:49:13,830 -> D.Computing centers... [2.490s] [17346 results]
+2018-05-08 03:49:15,676 -> E.Indexing centers... [1.846s] [17346 results]
+2018-05-08 03:49:24,291 -> F.Getting disks... [8.615s] [17346 results]
+2018-05-08 03:49:24,756 -> G.Filtering less-than-mu disks... [0.465s] [6836 results]
+2018-05-08 03:49:31,339 -> H.Prunning duplicate candidates... [6.583s] [3598 results]
+2018-05-08 03:49:31,819 -> I.Indexing candidates... [7.063s] [3598 results]
+2018-05-08 03:49:32,079 -> J.Getting expansions... [0.260s] [5819 results]
+2018-05-08 03:49:32,791 -> K.Finding maximal disks... [0.712s] [1339 results]
+2018-05-08 03:49:35,126 -> L.Prunning duplicates and subsets... [2.335s] [1325 results]
+2018-05-08 03:49:35,126 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 03:49:35,126 ->   berlin0-10,  40.0,    28,  3, 589.22,    8673,     17346,         3598,       1325
+2018-05-08 03:49:35,199 -> Dropping indices...[0.073s]
+2018-05-08 03:49:35,491 -> 1.Getting disks                                    | 758.19s |   2659 disks
+2018-05-08 03:50:56,330 -> 2.Joining timestams                                |  80.84s |   2268 candidates
+2018-05-08 03:51:01,942 -> F1Count=1074,F2Count=1194
+2018-05-08 03:51:15,426 -> F1Count=1092,F2Count=1175
+2018-05-08 03:52:02,597 -> F1Count=1089,F2Count=1178
+2018-05-08 03:55:00,982 -> 3.Checking internal timestamps                     | 244.64s |   1213 flocks
+2018-05-08 04:04:18,277 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 04:06:44,416 -> B.Indexing points... [141.706s] [0 results]
+2018-05-08 04:06:55,459 -> C.Getting pairs... [11.006s] [8696 results]
+2018-05-08 04:06:57,699 -> D.Computing centers... [2.240s] [17392 results]
+2018-05-08 04:06:58,847 -> E.Indexing centers... [1.148s] [17392 results]
+2018-05-08 04:07:06,222 -> F.Getting disks... [7.374s] [17392 results]
+2018-05-08 04:07:06,465 -> G.Filtering less-than-mu disks... [0.243s] [6866 results]
+2018-05-08 04:07:13,639 -> H.Prunning duplicate candidates... [7.174s] [3611 results]
+2018-05-08 04:07:14,131 -> I.Indexing candidates... [7.666s] [3611 results]
+2018-05-08 04:07:14,570 -> J.Getting expansions... [0.439s] [5996 results]
+2018-05-08 04:07:15,248 -> K.Finding maximal disks... [0.678s] [1337 results]
+2018-05-08 04:07:17,813 -> L.Prunning duplicates and subsets... [2.565s] [1332 results]
+2018-05-08 04:07:17,813 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 04:07:17,813 ->   berlin0-10,  40.0,    28,  3, 175.10,    8696,     17392,         3611,       1332
+2018-05-08 04:07:18,140 -> Dropping indices...[0.327s]
+2018-05-08 04:07:18,442 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 04:10:22,515 -> B.Indexing points... [174.234s] [0 results]
+2018-05-08 04:10:33,292 -> C.Getting pairs... [10.777s] [8677 results]
+2018-05-08 04:10:35,001 -> D.Computing centers... [1.709s] [17354 results]
+2018-05-08 04:10:36,180 -> E.Indexing centers... [1.179s] [17354 results]
+2018-05-08 04:10:43,631 -> F.Getting disks... [7.451s] [17354 results]
+2018-05-08 04:10:43,889 -> G.Filtering less-than-mu disks... [0.257s] [6816 results]
+2018-05-08 04:10:49,885 -> H.Prunning duplicate candidates... [5.996s] [3599 results]
+2018-05-08 04:10:50,275 -> I.Indexing candidates... [6.386s] [3599 results]
+2018-05-08 04:10:50,539 -> J.Getting expansions... [0.264s] [5901 results]
+2018-05-08 04:10:50,771 -> K.Finding maximal disks... [0.232s] [1311 results]
+2018-05-08 04:10:52,985 -> L.Prunning duplicates and subsets... [2.214s] [1303 results]
+2018-05-08 04:10:52,985 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 04:10:52,985 ->   berlin0-10,  40.0,    28,  3, 204.70,    8677,     17354,         3599,       1303
+2018-05-08 04:10:53,339 -> Dropping indices...[0.354s]
+2018-05-08 04:10:53,602 -> 1.Getting disks                                    | 395.43s |   2635 disks
+2018-05-08 04:11:00,680 -> 2.Joining timestams                                |   7.08s |   2194 candidates
+2018-05-08 04:11:03,748 -> F1Count=1053,F2Count=1141
+2018-05-08 04:11:16,682 -> F1Count=1057,F2Count=1138
+2018-05-08 04:11:41,217 -> F1Count=1071,F2Count=1126
+2018-05-08 04:14:00,159 -> 3.Checking internal timestamps                     | 179.48s |   1216 flocks
+2018-05-08 04:14:09,989 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 04:16:46,844 -> B.Indexing points... [150.996s] [0 results]
+2018-05-08 04:16:57,885 -> C.Getting pairs... [11.004s] [8698 results]
+2018-05-08 04:26:31,859 -> D.Computing centers... [573.945s] [17396 results]
+2018-05-08 04:26:35,134 -> E.Indexing centers... [3.209s] [17396 results]
+2018-05-08 04:26:44,123 -> F.Getting disks... [8.989s] [17396 results]
+2018-05-08 04:26:44,780 -> G.Filtering less-than-mu disks... [0.657s] [6856 results]
+2018-05-08 04:27:17,359 -> H.Prunning duplicate candidates... [32.578s] [3609 results]
+2018-05-08 04:27:17,966 -> I.Indexing candidates... [33.185s] [3609 results]
+2018-05-08 04:27:18,362 -> J.Getting expansions... [0.395s] [5830 results]
+2018-05-08 04:27:18,960 -> K.Finding maximal disks... [0.598s] [1336 results]
+2018-05-08 04:27:22,776 -> L.Prunning duplicates and subsets... [3.816s] [1328 results]
+2018-05-08 04:27:22,776 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 04:27:22,776 ->   berlin0-10,  40.0,    28,  3, 786.93,    8698,     17396,         3609,       1328
+2018-05-08 04:27:22,990 -> Dropping indices...[0.214s]
+2018-05-08 04:27:23,520 -> A.Setting mu=3,epsilon=40.0,cores=28,dataset=berlin0-10
+2018-05-08 04:28:46,036 -> B.Indexing points... [77.729s] [0 results]
+2018-05-08 04:28:52,654 -> C.Getting pairs... [6.617s] [8686 results]
+2018-05-08 04:28:54,209 -> D.Computing centers... [1.555s] [17372 results]
+2018-05-08 04:28:55,470 -> E.Indexing centers... [1.260s] [17372 results]
+2018-05-08 04:29:01,242 -> F.Getting disks... [5.772s] [17372 results]
+2018-05-08 04:29:01,613 -> G.Filtering less-than-mu disks... [0.371s] [6856 results]
+2018-05-08 04:29:05,786 -> H.Prunning duplicate candidates... [4.173s] [3627 results]
+2018-05-08 04:29:06,170 -> I.Indexing candidates... [4.557s] [3627 results]
+2018-05-08 04:29:06,411 -> J.Getting expansions... [0.241s] [5898 results]
+2018-05-08 04:29:06,874 -> K.Finding maximal disks... [0.463s] [1334 results]
+2018-05-08 04:29:08,535 -> L.Prunning duplicates and subsets... [1.661s] [1322 results]
+2018-05-08 04:29:08,535 ->      Dataset,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals
+2018-05-08 04:29:08,535 ->   berlin0-10,  40.0,    28,  3, 100.23,    8686,     17372,         3627,       1322
+2018-05-08 04:29:08,615 -> Dropping indices...[0.080s]
+2018-05-08 04:29:09,033 -> 1.Getting disks                                    | 899.24s |   2650 disks
+2018-05-08 04:29:17,805 -> 2.Joining timestams                                |   8.77s |   2191 candidates
+2018-05-08 04:29:24,033 -> F1Count=1034,F2Count=1157
+2018-05-08 04:29:53,235 -> F1Count=1051,F2Count=1143
+2018-05-08 04:30:41,265 -> F1Count=1030,F2Count=1164
+2018-05-08 04:41:44,175 -> 3.Checking internal timestamps                     | 746.37s |   1213 flocks
