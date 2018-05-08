@@ -1,0 +1,49 @@
+2018-05-07 09:29:27,089 -> Setting 2 nodes...
+
+
+acald013@dblab-rack15: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack12: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack14: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack11: stopping org.apache.spark.deploy.worker.Worker
+stopping org.apache.spark.deploy.master.Master
+starting org.apache.spark.deploy.master.Master, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.master.Master-1-dblab-rack11.cs.ucr.edu.out
+acald013@dblab-rack12: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack12.out
+acald013@dblab-rack14: starting org.apache.spark.deploy.worker.Worker, logging to /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/logs/spark-acald013-org.apache.spark.deploy.worker.Worker-1-dblab-rack14.cs.ucr.edu.out
+2018-05-07 09:29:34,261 -> 2 nodes has been set...
+
+
+2018-05-07 09:29:34,261 -> Running FlockFinder Benchmark...
+
+
+2018-05-07 09:29:34,262 -> Iteration 1 has started...
+2018-05-07 09:29:34,337 -> spark-submit --class FlockFinderBenchmark /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-2.0.jar --path Datasets/Berlin/ --dataset berlin0-10 --speed 10 --epsilon 40 --mu 3 --delta 3 --cores 14 --partitions 1024
+2018-05-07 09:29:36,103 -> Starting app...
+2018-05-07 09:29:39,225 -> Starting session                                   |   3.12s |      0 
+2018-05-07 09:29:39,235 -> Setting paramaters                                 |   0.01s |      0 
+2018-05-07 09:29:42,650 -> Reading data                                       |   3.42s | 203106 points
+2018-05-07 09:29:44,277 -> Extracting timestamps                              |   1.63s |     11 timestamps
+2018-05-07 09:29:44,282 -> Closing app...
+2018-05-07 09:29:44,440 -> spark-submit --class FlockFinderBenchmark /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-2.0.jar --path Datasets/Berlin/ --dataset berlin0-10 --speed 10 --epsilon 45 --mu 3 --delta 3 --cores 14 --partitions 1024
+2018-05-07 09:29:46,046 -> Starting app...
+2018-05-07 09:29:48,353 -> Starting session                                   |   2.31s |      0 
+2018-05-07 09:29:48,369 -> Setting paramaters                                 |   0.02s |      0 
+2018-05-07 09:29:51,432 -> Reading data                                       |   3.06s | 203106 points
+2018-05-07 09:29:53,134 -> Extracting timestamps                              |   1.70s |     11 timestamps
+2018-05-07 09:29:53,140 -> Closing app...
+2018-05-07 09:29:53,590 -> spark-submit --class FlockFinderBenchmark /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-2.0.jar --path Datasets/Berlin/ --dataset berlin0-10 --speed 10 --epsilon 50 --mu 3 --delta 3 --cores 14 --partitions 1024
+2018-05-07 09:29:55,158 -> Starting app...
+2018-05-07 09:29:57,908 -> Starting session                                   |   2.75s |      0 
+2018-05-07 09:29:57,920 -> Setting paramaters                                 |   0.01s |      0 
+2018-05-07 09:30:00,983 -> Reading data                                       |   3.06s | 203106 points
+2018-05-07 09:30:02,376 -> Extracting timestamps                              |   1.39s |     11 timestamps
+2018-05-07 09:30:02,382 -> Closing app...
+2018-05-07 09:30:02,843 -> Iteration 1 has ended...
+
+
+2018-05-07 09:30:02,843 -> FlockFinder Benchmark has been run...
+
+
+acald013@dblab-rack12: stopping org.apache.spark.deploy.worker.Worker
+acald013@dblab-rack14: stopping org.apache.spark.deploy.worker.Worker
+stopping org.apache.spark.deploy.master.Master
+2018-05-07 09:30:03,067 -> *** Everything is done!!! ***

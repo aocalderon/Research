@@ -36,10 +36,7 @@ min_delta     = int(args.min_delta)
 max_delta     = int(args.max_delta)
 step_delta    = int(args.step_delta)
 
-for delta in range(min_delta, max_delta + 1, step_delta):
-  for mu in range(min_mu, max_mu + 1, step_mu):
-    for epsilon in range(min_epsilon, max_epsilon + 1, step_epsilon):
-      command = "spark-submit --class FlockFinderBenchmark {0} --path {1} --dataset {2} --speed {3} --epsilon {4} --mu {5} --delta {6} --cores {7} --partitions {8}".format(
-        pflock_jar, args.path, args.dataset, args.speed, epsilon, mu, delta, args.cores, args.partitions)
-      logging.warning(command)
-      subprocess.call(command, shell=True)
+command = "spark-submit --class FlockFinderBenchmark {0} --path {1} --dataset {2} --epsilon {3} --epsilon_max {4} --epsilon_step {5} --mu {6} --mu_max {7} --mu_step {8} --delta {9} --delta_max {10} --delta_step {11} --cores {12}".format(
+pflock_jar, args.path, args.dataset, min_epsilon, max_epsilon, step_epsilon, min_mu, max_mu, step_mu, min_delta, max_delta, step_delta, args.cores)
+logging.warning(command)
+subprocess.call(command, shell=True)
