@@ -6,8 +6,8 @@ from datetime import datetime
 
 ## Reading arguments...
 parser = argparse.ArgumentParser()
-parser.add_argument("--min_epsilon",  "-e1",    default=40,                 help="Minimum epsilon...")
-parser.add_argument("--max_epsilon",  "-e2",    default=50,                 help="Maximum epsilon...")
+parser.add_argument("--min_epsilon",  "-e1",    default=5,                 help="Minimum epsilon...")
+parser.add_argument("--max_epsilon",  "-e2",    default=30,                 help="Maximum epsilon...")
 parser.add_argument("--step_epsilon", "-se",  default=5,                  help="Step in epsilon...")
 parser.add_argument("--min_mu",       "-m1",    default=3,                  help="Minimum mu...")
 parser.add_argument("--max_mu",       "-m2",    default=3,                  help="Maximum mu...")
@@ -16,7 +16,7 @@ parser.add_argument("--min_delta",    "-d1",    default=3,                  help
 parser.add_argument("--max_delta",    "-d2",    default=7,                  help="Maximum delta...")
 parser.add_argument("--step_delta",   "-sd",  default=2,                  help="Step in delta...")
 parser.add_argument("--path",         "-p",   default="Datasets/Berlin/", help="URL path...")
-parser.add_argument("--dataset",      "-i",   default="berlin0-10",       help="Point dataset...")
+parser.add_argument("--dataset",      "-i",   default="berlin0-7",       help="Point dataset...")
 parser.add_argument("--speed",        "-s",   default=10,                 help="PFlock speed between timestamps...")
 parser.add_argument("--partitions",   "-n",   default=1024,               help="PFlock number of partitions...")
 parser.add_argument("--iterations",   "-x",   default=1,                  help="Number of iterations...")

@@ -140,10 +140,10 @@ object FlockFinderBenchmark {
     for(timestamp <- timestamps.slice(0, timestamps.length - delta)) {
       // Getting points at timestamp t ...
       timer = System.currentTimeMillis()
-      var C_t = getMaximalDisks(pointset, timestamp, simba)
+      var C_t = getMaximalDisks(pointset, timestamp, epsilon, mu, simba)
       val nC_t = C_t.count()
       // Getting points at timestamp t + delta ...
-      var C_tPlusDelta = getMaximalDisks(pointset, timestamp + delta, simba)
+      var C_tPlusDelta = getMaximalDisks(pointset, timestamp + delta, epsilon, mu, simba)
       val nC_tPlusDelta = C_tPlusDelta.count()
       logging(s"1.Getting disks", timer, nC_t + nC_tPlusDelta, "disks")
 
@@ -341,7 +341,7 @@ object FlockFinderBenchmark {
       // Set of disks for t_i...
       timer = System.currentTimeMillis()
       val C: Dataset[Flock] = MaximalFinderExpansion
-        .run(currentPoints, simba, conf)
+        .run(currentPoints, epsilon, mu, simba, conf)
         .map{ m =>
           val disk = m.split(";")
           val x = disk(0).toDouble
@@ -539,7 +539,7 @@ object FlockFinderBenchmark {
       .as[FlockPoints]
   }
 
-  def getMaximalDisks(pointset: Dataset[ST_Point], t: Int, simba: SimbaSession): Dataset[Flock] ={
+  def getMaximalDisks(pointset: Dataset[ST_Point], t: Int, epsilon: Double, mu: Int, simba: SimbaSession): Dataset[Flock] ={
     import simba.implicits._
     import simba.simbaImplicits._
     // Getting points at timestamp t ...
@@ -555,7 +555,7 @@ object FlockFinderBenchmark {
     // Getting maximal disks at timestamp t ...
     val timer2 = System.currentTimeMillis()
     val C: Dataset[Flock] = MaximalFinderExpansion
-      .run(points, simba, conf)
+      .run(points, epsilon, mu, simba, conf)
       .map{ m =>
         val disk = m.split(";")
         val x = disk(0).toDouble
