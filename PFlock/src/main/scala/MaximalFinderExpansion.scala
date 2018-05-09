@@ -31,11 +31,11 @@ object MaximalFinderExpansion {
   case class BBox(minx: Double, miny: Double, maxx: Double, maxy: Double)
 
   def run(pointsRDD: RDD[String]
+      , epsilon: Double
+      , mu : Int  
       , simba: SimbaSession
       , conf: Conf): RDD[String] = {
     // A.Setting variables...
-    val mu = conf.mu()
-    val epsilon = conf.epsilon()
     val separator = conf.separator()
     val debug = conf.debug()
     var maximals3: RDD[String] = simba.sparkContext.emptyRDD
@@ -275,7 +275,7 @@ object MaximalFinderExpansion {
         )
       )
       logger.info("%12s,%6.1f,%6d,%3d,%7.2f,%8d,%10d,%13d,%11d".
-        format( conf.dataset(), conf.epsilon(), conf.cores(), conf.mu(), totalTime,
+        format( conf.dataset(), epsilon, conf.cores(), mu, totalTime,
           nPairs, nDisks, nCandidates, nMaximals
         )
       )
@@ -408,7 +408,9 @@ object MaximalFinderExpansion {
     // Running MaximalFinder...
     logger.info("Lauching MaximalFinder at %s...".format(DateTime.now.toLocalTime.toString))
     val start = System.currentTimeMillis()
-    val disks = MaximalFinderExpansion.run(points, simba, conf)
+    val epsilon = conf.epsilon()
+    val mu = conf.mu()
+    val disks = MaximalFinderExpansion.run(points, epsilon, mu, simba, conf)
     val end = System.currentTimeMillis()
     logger.info("Finishing MaximalFinder at %s...".format(DateTime.now.toLocalTime.toString))
     logger.info("Total time for MaximalFinder: %.3fms...".format((end - start)/1000.0))
