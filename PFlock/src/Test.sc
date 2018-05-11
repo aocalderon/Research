@@ -1,5 +1,5 @@
-val Xs = List(1.0, 2.0, 3.0, 4.0, 5.0)
-val Ys = List(1.0, 2.0, 3.0, 4.0, 5.0)
+val Xs = List(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
+val Ys = List(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
 
 val p = Xs.zip(Ys)
 val d = getDistanceMatrix(p)
