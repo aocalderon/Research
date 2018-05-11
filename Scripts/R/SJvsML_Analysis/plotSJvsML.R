@@ -33,26 +33,26 @@ if(SAVE_PDF){
   plot(g)
 }
  
-dataMu = data[data$Cores == coresDefault & data$Delta == deltaDefault, ]
-title = "Execution time by mu"
-g = ggplot(data=dataMu, aes(x=factor(Epsilon), y=Time, fill=Method)) +
-  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
-  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) +
-  facet_wrap(~Mu)
-if(SAVE_PDF){
-  ggsave("./SJvsMLbyMu.pdf", g)
-} else {
-  plot(g)
-}
-
-dataSpeedup = data[data$Mu == muDefault & data$Delta == deltaDefault, ]
-title = "Speedup"
-g = ggplot(data=dataSpeedup, aes(x=factor(Cores), y=Time, fill=Method)) +
-  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
-  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) +
-  facet_wrap(~Epsilon)
-if(SAVE_PDF){
-  ggsave("./SJvsMLbyCores.pdf", g)
-} else {
-  plot(g)
-}
+# dataMu = data[data$Cores == coresDefault & data$Delta == deltaDefault, ]
+# title = "Execution time by mu"
+# g = ggplot(data=dataMu, aes(x=factor(Epsilon), y=Time, fill=Method)) +
+#   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
+#   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) +
+#   facet_wrap(~Mu)
+# if(SAVE_PDF){
+#   ggsave("./SJvsMLbyMu.pdf", g)
+# } else {
+#   plot(g)
+# }
+# 
+# dataSpeedup = data[data$Mu == muDefault & data$Delta == deltaDefault, ]
+# title = "Speedup"
+# g = ggplot(data=dataSpeedup, aes(x=factor(Cores), y=Time, fill=Method)) +
+#   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
+#   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) +
+#   facet_wrap(~Epsilon)
+# if(SAVE_PDF){
+#   ggsave("./SJvsMLbyCores.pdf", g)
+# } else {
+#   plot(g)
+# }
