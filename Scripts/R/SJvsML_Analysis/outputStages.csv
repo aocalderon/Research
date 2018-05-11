@@ -1,0 +1,147 @@
+"MergeLast",28,5,3,3,"",0
+"MergeLast",28,5,3,5,"",0
+"MergeLast",28,5,3,7,"",0
+"MergeLast",28,10,3,3,"",0
+"MergeLast",28,10,3,5,"",0
+"MergeLast",28,10,3,7,"",0
+"MergeLast",28,15,3,3,"",0
+"MergeLast",28,15,3,5,"",0
+"MergeLast",28,20,3,3,"",0
+"MergeLast",28,20,3,5,"",0
+"MergeLast",28,25,3,3,"",0
+"MergeLast",28,25,3,5,"",0
+"MergeLast",28,30,3,3,"",0
+"MergeLast",28,30,3,5,"",0
+"MergeLast",28,5,3,3,"1.Getting disks",154.248333333333
+"MergeLast",28,5,3,5,"1.Getting disks",173.55
+"MergeLast",28,5,3,7,"1.Getting disks",2023.49
+"MergeLast",28,10,3,3,"1.Getting disks",155.29
+"MergeLast",28,10,3,5,"1.Getting disks",181.2375
+"MergeLast",28,10,3,7,"1.Getting disks",2048.5
+"MergeLast",28,15,3,3,"1.Getting disks",159.716666666667
+"MergeLast",28,15,3,5,"1.Getting disks",232.695
+"MergeLast",28,20,3,3,"1.Getting disks",164.13
+"MergeLast",28,20,3,5,"1.Getting disks",344.14
+"MergeLast",28,25,3,3,"1.Getting disks",171.328333333333
+"MergeLast",28,25,3,5,"1.Getting disks",943.68
+"MergeLast",28,30,3,3,"1.Getting disks",181.208333333333
+"MergeLast",28,30,3,5,"1.Getting disks",521.02
+"MergeLast",28,5,3,3,"2.Joining timestams",2.13666666666667
+"MergeLast",28,5,3,5,"2.Joining timestams",5.015
+"MergeLast",28,5,3,7,"2.Joining timestams",4.525
+"MergeLast",28,10,3,3,"2.Joining timestams",2.51
+"MergeLast",28,10,3,5,"2.Joining timestams",4.54
+"MergeLast",28,10,3,7,"2.Joining timestams",4.05
+"MergeLast",28,15,3,3,"2.Joining timestams",3.49166666666667
+"MergeLast",28,15,3,5,"2.Joining timestams",4.62
+"MergeLast",28,20,3,3,"2.Joining timestams",4.625
+"MergeLast",28,20,3,5,"2.Joining timestams",4.69
+"MergeLast",28,25,3,3,"2.Joining timestams",6.84333333333333
+"MergeLast",28,25,3,5,"2.Joining timestams",24.15
+"MergeLast",28,30,3,3,"2.Joining timestams",7.91666666666667
+"MergeLast",28,30,3,5,"2.Joining timestams",10.3275
+"MergeLast",28,5,3,3,"3.Checking internal timestamps",3.81
+"MergeLast",28,5,3,5,"3.Checking internal timestamps",19.3725
+"MergeLast",28,5,3,7,"3.Checking internal timestamps",77.05
+"MergeLast",28,10,3,3,"3.Checking internal timestamps",4.71166666666667
+"MergeLast",28,10,3,5,"3.Checking internal timestamps",21.375
+"MergeLast",28,10,3,7,"3.Checking internal timestamps",1831.67
+"MergeLast",28,15,3,3,"3.Checking internal timestamps",8.35666666666667
+"MergeLast",28,15,3,5,"3.Checking internal timestamps",30.82
+"MergeLast",28,20,3,3,"3.Checking internal timestamps",9.74666666666667
+"MergeLast",28,20,3,5,"3.Checking internal timestamps",45.8425
+"MergeLast",28,25,3,3,"3.Checking internal timestamps",14.9133333333333
+"MergeLast",28,25,3,5,"3.Checking internal timestamps",140.835
+"MergeLast",28,30,3,3,"3.Checking internal timestamps",28.44
+"MergeLast",28,30,3,5,"3.Checking internal timestamps",88.7125
+"SpatialJoin",28,5,3,3,"",0
+"SpatialJoin",28,5,3,5,"",0
+"SpatialJoin",28,5,3,7,"",0
+"SpatialJoin",28,10,3,3,"",0
+"SpatialJoin",28,10,3,5,"",0
+"SpatialJoin",28,15,3,3,"",0
+"SpatialJoin",28,15,3,5,"",0
+"SpatialJoin",28,20,3,3,"",0
+"SpatialJoin",28,20,3,5,"",0
+"SpatialJoin",28,25,3,3,"",0
+"SpatialJoin",28,25,3,5,"",0
+"SpatialJoin",28,30,3,3,"",0
+"SpatialJoin",28,30,3,5,"",0
+"SpatialJoin",28,5,3,3,"1.Set of disks for t_i...",25.0475
+"SpatialJoin",28,5,3,5,"1.Set of disks for t_i...",53.81625
+"SpatialJoin",28,5,3,7,"1.Set of disks for t_i...",64.00625
+"SpatialJoin",28,10,3,3,"1.Set of disks for t_i...",27.40375
+"SpatialJoin",28,10,3,5,"1.Set of disks for t_i...",38.58375
+"SpatialJoin",28,15,3,3,"1.Set of disks for t_i...",29.92625
+"SpatialJoin",28,15,3,5,"1.Set of disks for t_i...",28.16875
+"SpatialJoin",28,20,3,3,"1.Set of disks for t_i...",32.98125
+"SpatialJoin",28,20,3,5,"1.Set of disks for t_i...",34.93625
+"SpatialJoin",28,25,3,3,"1.Set of disks for t_i...",38.42625
+"SpatialJoin",28,25,3,5,"1.Set of disks for t_i...",122.1075
+"SpatialJoin",28,30,3,3,"1.Set of disks for t_i...",54.1375
+"SpatialJoin",28,30,3,5,"1.Set of disks for t_i...",466.77125
+"SpatialJoin",28,5,3,3,"2.Distance Join phase...",3.49857142857143
+"SpatialJoin",28,5,3,5,"2.Distance Join phase...",4.22
+"SpatialJoin",28,5,3,7,"2.Distance Join phase...",16.2414285714286
+"SpatialJoin",28,10,3,3,"2.Distance Join phase...",5.71857142857143
+"SpatialJoin",28,10,3,5,"2.Distance Join phase...",7.83285714285714
+"SpatialJoin",28,15,3,3,"2.Distance Join phase...",7.49285714285714
+"SpatialJoin",28,15,3,5,"2.Distance Join phase...",8.43
+"SpatialJoin",28,20,3,3,"2.Distance Join phase...",8.26285714285714
+"SpatialJoin",28,20,3,5,"2.Distance Join phase...",9.34142857142857
+"SpatialJoin",28,25,3,3,"2.Distance Join phase...",8.81285714285714
+"SpatialJoin",28,25,3,5,"2.Distance Join phase...",67.1128571428571
+"SpatialJoin",28,30,3,3,"2.Distance Join phase...",11.5214285714286
+"SpatialJoin",28,30,3,5,"2.Distance Join phase...",70.28
+"SpatialJoin",28,5,3,3,"3.Getting candidates...",1.79142857142857
+"SpatialJoin",28,5,3,5,"3.Getting candidates...",2.03714285714286
+"SpatialJoin",28,5,3,7,"3.Getting candidates...",3.79
+"SpatialJoin",28,10,3,3,"3.Getting candidates...",3.19571428571429
+"SpatialJoin",28,10,3,5,"3.Getting candidates...",4.76285714285714
+"SpatialJoin",28,15,3,3,"3.Getting candidates...",4.68571428571429
+"SpatialJoin",28,15,3,5,"3.Getting candidates...",5.31142857142857
+"SpatialJoin",28,20,3,3,"3.Getting candidates...",5.55285714285714
+"SpatialJoin",28,20,3,5,"3.Getting candidates...",6.80714285714286
+"SpatialJoin",28,25,3,3,"3.Getting candidates...",8.11571428571429
+"SpatialJoin",28,25,3,5,"3.Getting candidates...",10.7971428571429
+"SpatialJoin",28,30,3,3,"3.Getting candidates...",15.33
+"SpatialJoin",28,30,3,5,"3.Getting candidates...",20.9385714285714
+"SpatialJoin",28,5,3,3,"4.Found flocks...",0.45375
+"SpatialJoin",28,5,3,5,"4.Found flocks...",0.48625
+"SpatialJoin",28,5,3,7,"4.Found flocks...",0.56125
+"SpatialJoin",28,10,3,3,"4.Found flocks...",0.74125
+"SpatialJoin",28,10,3,5,"4.Found flocks...",1.485
+"SpatialJoin",28,15,3,3,"4.Found flocks...",0.945
+"SpatialJoin",28,15,3,5,"4.Found flocks...",1.055
+"SpatialJoin",28,20,3,3,"4.Found flocks...",1.2425
+"SpatialJoin",28,20,3,5,"4.Found flocks...",1.36375
+"SpatialJoin",28,25,3,3,"4.Found flocks...",1.1675
+"SpatialJoin",28,25,3,5,"4.Found flocks...",1.15875
+"SpatialJoin",28,30,3,3,"4.Found flocks...",1.29
+"SpatialJoin",28,30,3,5,"4.Found flocks...",1.475
+"SpatialJoin",28,5,3,3,"5.Updating times...",0.5225
+"SpatialJoin",28,5,3,5,"5.Updating times...",0.80625
+"SpatialJoin",28,5,3,7,"5.Updating times...",0.625
+"SpatialJoin",28,10,3,3,"5.Updating times...",1.04
+"SpatialJoin",28,10,3,5,"5.Updating times...",1.31
+"SpatialJoin",28,15,3,3,"5.Updating times...",1.50375
+"SpatialJoin",28,15,3,5,"5.Updating times...",1.74125
+"SpatialJoin",28,20,3,3,"5.Updating times...",1.865
+"SpatialJoin",28,20,3,5,"5.Updating times...",2.23625
+"SpatialJoin",28,25,3,3,"5.Updating times...",2.14125
+"SpatialJoin",28,25,3,5,"5.Updating times...",2.09625
+"SpatialJoin",28,30,3,3,"5.Updating times...",2.1275
+"SpatialJoin",28,30,3,5,"5.Updating times...",5.115
+"SpatialJoin",28,5,3,3,"6.Filter phase...",0.76375
+"SpatialJoin",28,5,3,5,"6.Filter phase...",0.955
+"SpatialJoin",28,5,3,7,"6.Filter phase...",1.04125
+"SpatialJoin",28,10,3,3,"6.Filter phase...",1.62375
+"SpatialJoin",28,10,3,5,"6.Filter phase...",2.175
+"SpatialJoin",28,15,3,3,"6.Filter phase...",2.38
+"SpatialJoin",28,15,3,5,"6.Filter phase...",2.8075
+"SpatialJoin",28,20,3,3,"6.Filter phase...",2.645
+"SpatialJoin",28,20,3,5,"6.Filter phase...",3.1025
+"SpatialJoin",28,25,3,3,"6.Filter phase...",3.03875
+"SpatialJoin",28,25,3,5,"6.Filter phase...",3.25875
+"SpatialJoin",28,30,3,3,"6.Filter phase...",3.2825
+"SpatialJoin",28,30,3,5,"6.Filter phase...",3.8775
