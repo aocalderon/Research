@@ -92,7 +92,7 @@ object FlockFinderBenchmark {
     logging("Extracting timestamps", timer, nTimestamps, "timestamps")
 
     for(d <- delta_min to delta_max by delta_step; m <- mu_min to mu_max by mu_step; e <- epsilon_min to epsilon_max by epsilon_step){
-      // Running MergeLast V2.0...
+      // Running MergeLast v2.0...
       logger.info("=== MergeLast Start ===")
       val startML = System.currentTimeMillis()
       flocks = runMergeLast(pointset, timestamps, e, m, d, simba)
@@ -105,7 +105,7 @@ object FlockFinderBenchmark {
       if(debug) saveFlocks(flocks, s"/tmp/PFLOCK_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt", simba)
 
       // Running SpatialJoin...
-      
+      /*
       logger.info("=== SpatialJoin Start ===")
       val startSJ = System.currentTimeMillis()
       flocks = runSpatialJoin(pointset, timestamps, e, m, d, simba)
@@ -116,7 +116,7 @@ object FlockFinderBenchmark {
       // Printing results...
       if(print) printFlocks(flocks, "", simba)
       if(debug) saveFlocks(flocks, s"/tmp/PFLOCK-SJ_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt", simba)
-      
+      */
     }
     // Closing all...
     logger.info("Closing app...")
@@ -136,14 +136,15 @@ object FlockFinderBenchmark {
     val delta: Int = delta_prime - 1
     val distanceBetweenTimestamps: Double = conf.speed() * delta_prime
     val r2 = Math.pow(epsilon / 2.0, 2)
+    val maximalDisksCache = collection.mutable.Map[Int, Dataset[Flock]]()
 
     for(timestamp <- timestamps.slice(0, timestamps.length - delta)) {
       // Getting points at timestamp t ...
       timer = System.currentTimeMillis()
-      var C_t = getMaximalDisks(pointset, timestamp, epsilon, mu, simba)
+      var C_t = maximalDisksCache.getOrElseUpdate(timestamp, getMaximalDisks(pointset, timestamp, epsilon, mu, simba))
       val nC_t = C_t.count()
       // Getting points at timestamp t + delta ...
-      var C_tPlusDelta = getMaximalDisks(pointset, timestamp + delta, epsilon, mu, simba)
+      var C_tPlusDelta = maximalDisksCache.getOrElseUpdate(timestamp + delta, getMaximalDisks(pointset, timestamp + delta, epsilon, mu, simba))
       val nC_tPlusDelta = C_tPlusDelta.count()
       logging(s"1.Getting disks", timer, nC_t + nC_tPlusDelta, "disks")
 
@@ -187,13 +188,6 @@ object FlockFinderBenchmark {
             (ids, Xs, Ys, d, fid)
           }
 
-          /*
-          val F1_prime = P_prime.filter(d =>  (d._4._1 < epsilon && d._4._2 < epsilon * splitEpsilon))
-          val nF1 = F1_prime.count()
-          val F2_prime = P_prime.filter(d => !(d._4._1 < epsilon && d._4._2 < epsilon * splitEpsilon))
-          val nF2 = F2_prime.count()
-          */
-          
           val F1_prime = P_prime.filter(d => d._4 <= epsilon * splitEpsilon)
           val nF1 = F1_prime.count()
           val F2_prime = P_prime.filter(d => d._4 >  epsilon * splitEpsilon)
@@ -202,7 +196,6 @@ object FlockFinderBenchmark {
           val F1 = F1_prime.map(f => Flock(timestamp, timestamp + delta, f._1))
           var F2 = simba.sparkContext.emptyRDD[Flock].toDS()
           
-          /************************************************************/
           if(nF2 > 0){
             import org.apache.spark.sql.expressions.Window;
             val FX1_prime = F2_prime.map(p => (p._1, p._2, p._3))
@@ -237,56 +230,6 @@ object FlockFinderBenchmark {
               .toDS()
             F2 = FX_prime.map(f => Flock(timestamp, timestamp + delta, f))
           }
-					/*
-          val nFlocks = Points_prime.count()
-          val nPoints = Points_prime2.count()
-          val nPairs = Points_prime2.mapPartitionsWithIndex{ (i, p) =>
-              val points = p.map{ p =>
-                val arr = p.split(",")
-                ST_Point(arr(0).toLong, arr(1).toDouble, arr(2).toDouble,0)
-              }.toList
-              val pairs   = getPairs(points, epsilon)
-              pairs.toIterator
-            }
-            .count()
-          val nCenters = Points_prime2.mapPartitionsWithIndex{ (i, p) =>
-              val points = p.map{ p =>
-                val arr = p.split(",")
-                ST_Point(arr(0).toLong, arr(1).toDouble, arr(2).toDouble,0)
-              }.toList
-              val pairs   = getPairs(points, epsilon)
-              val centers = pairs.flatMap(pair => computeCenters(pair, r2))
-              centers.toIterator
-            }
-            .count()
-          val nDisks = Points_prime2.mapPartitionsWithIndex{ (i, p) =>
-              val points = p.map{ p =>
-                val arr = p.split(",")
-                ST_Point(arr(0).toLong, arr(1).toDouble, arr(2).toDouble,0)
-              }.toList
-              val pairs   = getPairs(points, epsilon)
-              val centers = pairs.flatMap(pair => computeCenters(pair, r2))
-              val disks   = getDisks(points, centers, epsilon)
-              disks.toIterator
-            }
-            .count()
-          val nIDs = Points_prime2.mapPartitionsWithIndex{ (i, p) =>
-              val points = p.map{ p =>
-                val arr = p.split(",")
-                ST_Point(arr(0).toLong, arr(1).toDouble, arr(2).toDouble,0)
-              }.toList
-              val pairs   = getPairs(points, epsilon)
-              val centers = pairs.flatMap(pair => computeCenters(pair, r2))
-              val disks   = getDisks(points, centers, epsilon)
-              val ids     = filterDisks(disks, mu).toIterator
-              ids.toIterator
-            }
-            .count()
-            logger.warn(s"Flocks: $nFlocks Points: $nPoints Pairs: $nPairs Centers: $nCenters Disks: $nDisks IDs: $nIDs")
-					*/
-
-          /************************************************************/
-                    
           F_prime = F1.union(F2)
           nF_prime = F_prime.count()
         }
@@ -299,7 +242,7 @@ object FlockFinderBenchmark {
         C_t.dropIndex()
         C_tPlusDelta.dropIndex()
       }
-      
+      maximalDisksCache.remove(timestamp)
     }
     // Reporting summary...
     logger.warn("\n\nPFLOCK_ML\t%.1f\t%d\t%d\t%d\n".format(epsilon, mu, delta + 1, nFinalFlocks))
