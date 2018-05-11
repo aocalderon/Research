@@ -4,13 +4,11 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(ggplot2, data.table, foreach, sqldf, tidyr, stringr, dplyr)
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 PATH = "Scripts/R/SJvsML_Analysis/"
-SAVE_PDF = T
+SAVE_PDF = F
 W = 6
 H = 6
 
-dataSJ = read.csv(paste0(RESEARCH_HOME, PATH, 'SpatialJoinTimes.csv'), header = F)
-dataML = read.csv(paste0(RESEARCH_HOME, PATH, 'MergeLastTimes.csv'), header = F)
-data = rbind(dataSJ, dataML) 
+data = read.csv(paste0(RESEARCH_HOME, PATH, 'output.csv'), header = F)
 names(data) = c("Method", "Cores", "Epsilon", "Mu", "Delta", "Time")
 data$Cores   = as.numeric(as.character(data$Cores))
 data$Epsilon = as.numeric(as.character(data$Epsilon))
@@ -18,10 +16,10 @@ data$Mu      = as.numeric(as.character(data$Mu))
 data$Delta   = as.numeric(as.character(data$Delta))
 data$Time    = as.numeric(as.character(data$Time))
 
-muDefault      = 4
-deltaDefault   = 4
-epsilonDefault = 35
-coresDefault   = 21
+muDefault      = 3
+deltaDefault   = 5
+epsilonDefault = 10
+coresDefault   = 28
 
 dataDelta = data[data$Cores == coresDefault & data$Mu == muDefault, ]
 title = "Execution time by delta"
