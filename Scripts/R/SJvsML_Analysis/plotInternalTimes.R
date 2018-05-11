@@ -22,7 +22,7 @@ deltaDefault   = 5
 epsilonDefault = 10
 coresDefault   = 28
 
-dataDelta = data[data$Cores == coresDefault & data$Mu == muDefault & data$Method == "MergeLast" & data$Delta < 7
+dataDelta = data[data$Cores == coresDefault & data$Mu == muDefault & data$Method == "MergeLast" & data$Delta < 10
                  , c("Epsilon", "Stage", "Time", "Delta")]
 title = "Execution time by delta"
 g = ggplot(data=dataDelta, aes(x=factor(Epsilon), y=Time, fill=Stage)) +
