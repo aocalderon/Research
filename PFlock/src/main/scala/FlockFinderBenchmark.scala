@@ -79,7 +79,8 @@ object FlockFinderBenchmark {
       .cache()
     val nPointset = pointset.count()
     logging("Reading data", timer, nPointset, "points")
-
+    if(debug) pointset.show(10, truncate=false)
+    
     // Extracting timestamps...
     timer = System.currentTimeMillis()
     val timestamps = pointset
