@@ -6,17 +6,17 @@ from datetime import datetime
 
 ## Reading arguments...
 parser = argparse.ArgumentParser()
-parser.add_argument("--min_epsilon",  "-e1",    default=5,                 help="Minimum epsilon...")
+parser.add_argument("--min_epsilon",  "-e1",    default=10,                 help="Minimum epsilon...")
 parser.add_argument("--max_epsilon",  "-e2",    default=30,                 help="Maximum epsilon...")
-parser.add_argument("--step_epsilon", "-se",  default=5,                  help="Step in epsilon...")
-parser.add_argument("--min_mu",       "-m1",    default=3,                  help="Minimum mu...")
-parser.add_argument("--max_mu",       "-m2",    default=3,                  help="Maximum mu...")
+parser.add_argument("--step_epsilon", "-se",  default=10,                  help="Step in epsilon...")
+parser.add_argument("--min_mu",       "-m1",    default=4,                  help="Minimum mu...")
+parser.add_argument("--max_mu",       "-m2",    default=4,                  help="Maximum mu...")
 parser.add_argument("--step_mu",      "-sm",  default=1,                  help="Step in mu...")
-parser.add_argument("--min_delta",    "-d1",    default=3,                  help="Minimum delta...")
-parser.add_argument("--max_delta",    "-d2",    default=7,                  help="Maximum delta...")
+parser.add_argument("--min_delta",    "-d1",    default=5,                  help="Minimum delta...")
+parser.add_argument("--max_delta",    "-d2",    default=5,                  help="Maximum delta...")
 parser.add_argument("--step_delta",   "-sd",  default=2,                  help="Step in delta...")
 parser.add_argument("--path",         "-p",   default="Datasets/Berlin/", help="URL path...")
-parser.add_argument("--dataset",      "-i",   default="berlin0-7",       help="Point dataset...")
+parser.add_argument("--dataset",      "-i",   default="berlin0-10",       help="Point dataset...")
 parser.add_argument("--speed",        "-s",   default=10,                 help="PFlock speed between timestamps...")
 parser.add_argument("--partitions",   "-n",   default=1024,               help="PFlock number of partitions...")
 parser.add_argument("--iterations",   "-x",   default=1,                  help="Number of iterations...")
@@ -53,7 +53,7 @@ def runFlockFinder(cores):
 
 CORES_PER_NODE = 7
 
-for NODES in [4,3,2]:
+for NODES in [4]:
   logging.warning("Setting {0} nodes...\n\n".format(NODES))
   setNodes(NODES)
   logging.warning("{0} nodes has been set...\n\n".format(NODES))
