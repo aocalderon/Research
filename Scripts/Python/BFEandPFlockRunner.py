@@ -34,7 +34,7 @@ for delta in range(min_delta, max_delta + 1, step_delta):
   for epsilon in range(min_epsilon, max_epsilon + 1, step_epsilon):
     for mu in range(min_mu, max_mu + 1, step_mu):
       logging.warning("\n\nIteration Epsilon={0}, Mu={1} and Delta={2} has started...".format(epsilon, mu, delta))
-      command = "{0} -p {1} -i {2} -e {3} -m {4} -d {5} --no_bfe".format(runner_script
+      command = "{0} -p {1} -i {2} -e {3} -m {4} -d {5}".format(runner_script
       , args.path
       , args.dataset
       , epsilon

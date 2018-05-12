@@ -395,26 +395,27 @@ object MaximalFinderExpansion {
       .config("simba.index.partitions",conf.partitions().toString)
       .config("spark.cores.max",conf.cores().toString)
       .getOrCreate()
+    import simba.implicits._
     logger.info("Starting session... [%.3fs]".format((System.currentTimeMillis() - timer)/1000.0))
     // Reading...
     timer = System.currentTimeMillis()
     phd_home = scala.util.Properties.envOrElse(conf.home(), "/home/acald013/Research/")
     val filename = "%s%s%s.%s".format(phd_home, conf.path(), conf.dataset(), conf.extension())
     val points = simba.sparkContext.
-      textFile(filename, conf.cores()).
+      textFile(filename).
       cache()
     nPoints = points.count()
-    logger.info("Reading dataset... [%.3fs]".format((System.currentTimeMillis() - timer)/1000.0))
+    logger.info("Reading dataset... [%.3fs] [%d points]".format((System.currentTimeMillis() - timer)/1000.0, nPoints))
     // Running MaximalFinder...
     logger.info("Lauching MaximalFinder at %s...".format(DateTime.now.toLocalTime.toString))
     val start = System.currentTimeMillis()
     val epsilon = conf.epsilon()
     val mu = conf.mu()
     val disks = MaximalFinderExpansion.run(points, epsilon, mu, simba, conf)
+    if(conf.debug()) disks.toDF().show(disks.count().toInt, truncate = false)
     val end = System.currentTimeMillis()
     logger.info("Finishing MaximalFinder at %s...".format(DateTime.now.toLocalTime.toString))
     logger.info("Total time for MaximalFinder: %.3fms...".format((end - start)/1000.0))
-    disks.collect().sorted.foreach(println)
     // Closing session...
     timer = System.currentTimeMillis()
     simba.close

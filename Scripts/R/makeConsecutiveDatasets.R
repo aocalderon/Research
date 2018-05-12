@@ -6,7 +6,8 @@ pacman::p_load(data.table, sqldf)
 # Setting global variables...
 ###################
 
-RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
+# RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
+RESEARCH_HOME = "/home/acald013/Research/"
 PATH = "Datasets/"
 DATASET = "test"
 EXTENSION = ".tsv"
@@ -61,7 +62,7 @@ data = data[ , list(id = min(id)), by = c('x', 'y', 't')]
 ###################
 # Writing back...
 ###################
-TIMESTAMPS = 2
+TIMESTAMPS = 5
 #DATASET = "Berlin/berlin"
 DATASET = "test"
 for(i in seq(0,TIMESTAMPS)){
