@@ -92,7 +92,6 @@ object FlockFinderBenchmark {
     logging("Extracting timestamps", timer, nTimestamps, "timestamps")
 
     for(d <- delta_min to delta_max by delta_step; m <- mu_min to mu_max by mu_step; e <- epsilon_min to epsilon_max by epsilon_step){
-/*
       // Running MergeLast v2.0...
       logger.info("=== MergeLast Start ===")
       val startML = System.currentTimeMillis()
@@ -104,7 +103,7 @@ object FlockFinderBenchmark {
       // Printing results...
       if(print) printFlocks(flocks, "", simba)
       if(debug) saveFlocks(flocks, s"/tmp/PFLOCK_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt", simba)
-*/
+
       // Running SpatialJoin...
       logger.info("=== SpatialJoin Start ===")
       val startSJ = System.currentTimeMillis()
@@ -116,7 +115,6 @@ object FlockFinderBenchmark {
       // Printing results...
       if(print) printFlocks(flocks, "", simba)
       if(debug) saveFlocks(flocks, s"/tmp/PFLOCK-SJ_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt", simba)
-
     }
     // Closing all...
     logger.info("Closing app...")
