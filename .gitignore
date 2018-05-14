@@ -3,6 +3,9 @@ PFlock/target/*
 PFlock/project/*
 PFlock/metastore_db/*
 PFlock/spark-warehouse/*
+PFlock/.ensime
+PFlock/ensime.sbt
+PFlock/.ensime_cache/*
 
 Script/Scala/FlockChecker/.idea/*
 Script/Scala/FlockChecker/target/*

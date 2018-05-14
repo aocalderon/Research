@@ -1,4 +1,4 @@
-[0m[[0minfo[0m] [0mUpdating {file:/home/acald013/Research/Scripts/Scala/FlockChecker/}flockchecker...[0m
+[0m[[0minfo[0m] [0mUpdating {file:/home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/}flockchecker...[0m
 [0m[[0mdebug[0m] [0m:: resolving dependencies :: UCR-DBLab#flockchecker_2.11;0.1[0m
 [0m[[0mdebug[0m] [0m	confs: [compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool][0m
 [0m[[0mdebug[0m] [0m	validate = true[0m
@@ -579,19 +579,19 @@
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.11;1.0.4!scala-xml_2.11.jar(bundle)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4!scala-parser-combinators_2.11.jar(bundle)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] jline#jline;2.12.1!jline.jar[0m
-[0m[[0mdebug[0m] [0m:: resolution report :: resolve 171ms :: artifacts dl 3ms[0m
-[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 compile produced in /home/acald013/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-compile.xml[0m
-[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 runtime produced in /home/acald013/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-runtime.xml[0m
-[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 test produced in /home/acald013/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-test.xml[0m
-[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 provided produced in /home/acald013/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-provided.xml[0m
-[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 optional produced in /home/acald013/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-optional.xml[0m
-[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 compile-internal produced in /home/acald013/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-compile-internal.xml[0m
-[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 runtime-internal produced in /home/acald013/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-runtime-internal.xml[0m
-[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 test-internal produced in /home/acald013/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-test-internal.xml[0m
-[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 plugin produced in /home/acald013/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-plugin.xml[0m
-[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 sources produced in /home/acald013/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-sources.xml[0m
-[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 docs produced in /home/acald013/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-docs.xml[0m
-[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 pom produced in /home/acald013/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-pom.xml[0m
-[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 scala-tool produced in /home/acald013/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-scala-tool.xml[0m
-[0m[[0mdebug[0m] [0m	resolve done (171ms resolve - 3ms download)[0m
+[0m[[0mdebug[0m] [0m:: resolution report :: resolve 645ms :: artifacts dl 49ms[0m
+[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 compile produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-compile.xml[0m
+[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 runtime produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-runtime.xml[0m
+[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 test produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-test.xml[0m
+[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 provided produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-provided.xml[0m
+[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 optional produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-optional.xml[0m
+[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 compile-internal produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-compile-internal.xml[0m
+[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 runtime-internal produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-runtime-internal.xml[0m
+[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 test-internal produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-test-internal.xml[0m
+[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 plugin produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-plugin.xml[0m
+[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 sources produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-sources.xml[0m
+[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 docs produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-docs.xml[0m
+[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 pom produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-pom.xml[0m
+[0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 scala-tool produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-scala-tool.xml[0m
+[0m[[0mdebug[0m] [0m	resolve done (645ms resolve - 49ms download)[0m
 [0m[[0minfo[0m] [0mDone updating.[0m
