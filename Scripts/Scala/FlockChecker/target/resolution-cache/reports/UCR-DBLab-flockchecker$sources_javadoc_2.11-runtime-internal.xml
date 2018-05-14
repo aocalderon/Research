@@ -7,7 +7,7 @@
 		revision="0.1"
 		conf="runtime-internal"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20180513175904"/>
+		date="20180513223104"/>
 	<dependencies>
 		<module organisation="joda-time" name="joda-time">
 			<revision name="2.9.9" status="release" pubdate="20170323063313" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.joda.org/joda-time/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="3">
@@ -30,7 +30,7 @@
 				<metadata-artifact status="no" details="" size="6434" time="0" location="/home/and/.ivy2/cache/org.joda/joda-convert/ivy-1.8.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/joda/joda-convert/1.8.1/joda-convert-1.8.1.pom"/>
 				<caller organisation="UCR-DBLab" name="flockchecker$sources_javadoc_2.11" conf="compile, runtime-internal, runtime, optional" rev="1.8.1" rev-constraint-default="1.8.1" rev-constraint-dynamic="1.8.1" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="joda-convert" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="101952" time="285" location="/home/and/.ivy2/cache/org.joda/joda-convert/docs/joda-convert-1.8.1-javadoc.jar">
+					<artifact name="joda-convert" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="101952" time="0" location="/home/and/.ivy2/cache/org.joda/joda-convert/docs/joda-convert-1.8.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/joda/joda-convert/1.8.1/joda-convert-1.8.1-javadoc.jar"/>
 					</artifact>
 					<artifact name="joda-convert" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="45686" time="0" location="/home/and/.ivy2/cache/org.joda/joda-convert/srcs/joda-convert-1.8.1-sources.jar">
@@ -63,7 +63,7 @@
 					<artifact name="slf4j-jdk14" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="9771" time="0" location="/home/and/.ivy2/cache/org.slf4j/slf4j-jdk14/srcs/slf4j-jdk14-1.7.25-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/slf4j/slf4j-jdk14/1.7.25/slf4j-jdk14-1.7.25-sources.jar"/>
 					</artifact>
-					<artifact name="slf4j-jdk14" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="62295" time="3115" location="/home/and/.ivy2/cache/org.slf4j/slf4j-jdk14/docs/slf4j-jdk14-1.7.25-javadoc.jar">
+					<artifact name="slf4j-jdk14" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="62295" time="0" location="/home/and/.ivy2/cache/org.slf4j/slf4j-jdk14/docs/slf4j-jdk14-1.7.25-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/slf4j/slf4j-jdk14/1.7.25/slf4j-jdk14-1.7.25-javadoc.jar"/>
 					</artifact>
 				</artifacts>
@@ -75,7 +75,7 @@
 				<metadata-artifact status="no" details="" size="5199" time="0" location="/home/and/.ivy2/cache/org.slf4j/slf4j-api/ivy-1.7.25.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.pom"/>
 				<caller organisation="UCR-DBLab" name="flockchecker$sources_javadoc_2.11" conf="compile, runtime-internal, runtime, optional" rev="1.7.25" rev-constraint-default="1.7.25" rev-constraint-dynamic="1.7.25" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="slf4j-api" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="248922" time="271" location="/home/and/.ivy2/cache/org.slf4j/slf4j-api/docs/slf4j-api-1.7.25-javadoc.jar">
+					<artifact name="slf4j-api" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="248922" time="0" location="/home/and/.ivy2/cache/org.slf4j/slf4j-api/docs/slf4j-api-1.7.25-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25-javadoc.jar"/>
 					</artifact>
 					<artifact name="slf4j-api" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="55539" time="0" location="/home/and/.ivy2/cache/org.slf4j/slf4j-api/srcs/slf4j-api-1.7.25-sources.jar">
