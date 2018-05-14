@@ -3,6 +3,7 @@ organization := "UCR-DBLab"
 version := "2.0"
 
 scalaVersion := "2.11.8"
+scalaVersion in ThisBuild := "2.11.8"
 
 libraryDependencies += "org.apache.spark" %% "spark-core" % "2.1.0"
 libraryDependencies += "com.typesafe" % "config" % "1.3.2"
@@ -15,7 +16,7 @@ libraryDependencies += "com.github.filosganga" % "geogson-core" % "1.2.21"
 resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/releases"
 libraryDependencies += "com.storm-enroute" %% "scalameter-core" % "0.8.2"
 
-libraryDependencies += "fr.liglab.jlcm" % "jLCM" % "1.7.0" 
+libraryDependencies += "fr.liglab.jlcm" % "jLCM" % "1.7.0"
 //libraryDependencies += "org.wvlet.airframe" %% "airframe-log" % "0.24"
 //libraryDependencies += "com.groupon.sparklint" % "sparklint-spark210_2.11" % "1.0.9-SNAPSHOT"
 
