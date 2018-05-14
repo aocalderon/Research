@@ -1298,33 +1298,15 @@
 [0m[[0mdebug[0m] [0m	resolved ivy file produced in cache[0m
 [0m[[0mdebug[0m] [0m:: downloading artifacts ::[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.slf4j#slf4j-jdk14;1.7.25!slf4j-jdk14.jar(src)[0m
-[0m[[0mdebug[0m] [0m		tried /home/and/.ivy2/local/org.slf4j/slf4j-jdk14/1.7.25/docs/slf4j-jdk14-javadoc.jar[0m
-[0m[[0mdebug[0m] [0m		tried https://repo1.maven.org/maven2/org/slf4j/slf4j-jdk14/1.7.25/slf4j-jdk14-1.7.25-javadoc.jar[0m
-[0m[[0minfo[0m] [0mdownloading https://repo1.maven.org/maven2/org/slf4j/slf4j-jdk14/1.7.25/slf4j-jdk14-1.7.25-javadoc.jar ...[0m
-[0m[[0mdebug[0m] [0m	public: downloading https://repo1.maven.org/maven2/org/slf4j/slf4j-jdk14/1.7.25/slf4j-jdk14-1.7.25-javadoc.jar[0m
-[0m[[0mdebug[0m] [0m	public: downloading https://repo1.maven.org/maven2/org/slf4j/slf4j-jdk14/1.7.25/slf4j-jdk14-1.7.25-javadoc.jar.sha1[0m
-[0m[[0mdebug[0m] [0msha1 OK for https://repo1.maven.org/maven2/org/slf4j/slf4j-jdk14/1.7.25/slf4j-jdk14-1.7.25-javadoc.jar[0m
-[0m[[0minfo[0m] [0m	[SUCCESSFUL ] org.slf4j#slf4j-jdk14;1.7.25!slf4j-jdk14.jar(doc) (3115ms)[0m
+[0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.slf4j#slf4j-jdk14;1.7.25!slf4j-jdk14.jar(doc)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang#scala-library;2.11.8!scala-library.jar(src)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang#scala-library;2.11.8!scala-library.jar(doc)[0m
-[0m[[0mdebug[0m] [0m		tried /home/and/.ivy2/local/org.joda/joda-convert/1.8.1/docs/joda-convert-javadoc.jar[0m
+[0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.joda#joda-convert;1.8.1!joda-convert.jar(doc)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.joda#joda-convert;1.8.1!joda-convert.jar(src)[0m
-[0m[[0mdebug[0m] [0m		tried https://repo1.maven.org/maven2/org/joda/joda-convert/1.8.1/joda-convert-1.8.1-javadoc.jar[0m
-[0m[[0minfo[0m] [0mdownloading https://repo1.maven.org/maven2/org/joda/joda-convert/1.8.1/joda-convert-1.8.1-javadoc.jar ...[0m
-[0m[[0mdebug[0m] [0m	public: downloading https://repo1.maven.org/maven2/org/joda/joda-convert/1.8.1/joda-convert-1.8.1-javadoc.jar[0m
-[0m[[0mdebug[0m] [0m	public: downloading https://repo1.maven.org/maven2/org/joda/joda-convert/1.8.1/joda-convert-1.8.1-javadoc.jar.sha1[0m
-[0m[[0mdebug[0m] [0msha1 OK for https://repo1.maven.org/maven2/org/joda/joda-convert/1.8.1/joda-convert-1.8.1-javadoc.jar[0m
-[0m[[0minfo[0m] [0m	[SUCCESSFUL ] org.joda#joda-convert;1.8.1!joda-convert.jar(doc) (285ms)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] joda-time#joda-time;2.9.9!joda-time.jar(doc)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] joda-time#joda-time;2.9.9!joda-time.jar(src)[0m
-[0m[[0mdebug[0m] [0m		tried /home/and/.ivy2/local/org.slf4j/slf4j-api/1.7.25/docs/slf4j-api-javadoc.jar[0m
+[0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.slf4j#slf4j-api;1.7.25!slf4j-api.jar(doc)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.slf4j#slf4j-api;1.7.25!slf4j-api.jar(src)[0m
-[0m[[0mdebug[0m] [0m		tried https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25-javadoc.jar[0m
-[0m[[0minfo[0m] [0mdownloading https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25-javadoc.jar ...[0m
-[0m[[0mdebug[0m] [0m	public: downloading https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25-javadoc.jar[0m
-[0m[[0mdebug[0m] [0m	public: downloading https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25-javadoc.jar.sha1[0m
-[0m[[0mdebug[0m] [0msha1 OK for https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25-javadoc.jar[0m
-[0m[[0minfo[0m] [0m	[SUCCESSFUL ] org.slf4j#slf4j-api;1.7.25!slf4j-api.jar(doc) (271ms)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4!scala-parser-combinators_2.11.jar(doc)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4!scala-parser-combinators_2.11.jar(src)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang#scala-compiler;2.11.8!scala-compiler.jar(src)[0m
@@ -1335,7 +1317,7 @@
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] jline#jline;2.12.1!jline.jar(doc)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang#scala-reflect;2.11.8!scala-reflect.jar(doc)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang#scala-reflect;2.11.8!scala-reflect.jar(src)[0m
-[0m[[0mdebug[0m] [0m:: resolution report :: resolve 141ms :: artifacts dl 4052ms[0m
+[0m[[0mdebug[0m] [0m:: resolution report :: resolve 595ms :: artifacts dl 40ms[0m
 [0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker$sources_javadoc_2.11;0.1 compile produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker$sources_javadoc_2.11-compile.xml[0m
 [0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker$sources_javadoc_2.11;0.1 runtime produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker$sources_javadoc_2.11-runtime.xml[0m
 [0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker$sources_javadoc_2.11;0.1 test produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker$sources_javadoc_2.11-test.xml[0m
@@ -1349,4 +1331,4 @@
 [0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker$sources_javadoc_2.11;0.1 docs produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker$sources_javadoc_2.11-docs.xml[0m
 [0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker$sources_javadoc_2.11;0.1 pom produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker$sources_javadoc_2.11-pom.xml[0m
 [0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker$sources_javadoc_2.11;0.1 scala-tool produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker$sources_javadoc_2.11-scala-tool.xml[0m
-[0m[[0mdebug[0m] [0m	resolve done (141ms resolve - 4052ms download)[0m
+[0m[[0mdebug[0m] [0m	resolve done (595ms resolve - 40ms download)[0m

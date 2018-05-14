@@ -579,7 +579,7 @@
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.11;1.0.4!scala-xml_2.11.jar(bundle)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4!scala-parser-combinators_2.11.jar(bundle)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] jline#jline;2.12.1!jline.jar[0m
-[0m[[0mdebug[0m] [0m:: resolution report :: resolve 645ms :: artifacts dl 49ms[0m
+[0m[[0mdebug[0m] [0m:: resolution report :: resolve 459ms :: artifacts dl 5ms[0m
 [0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 compile produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-compile.xml[0m
 [0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 runtime produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-runtime.xml[0m
 [0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 test produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-test.xml[0m
@@ -593,5 +593,5 @@
 [0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 docs produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-docs.xml[0m
 [0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 pom produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-pom.xml[0m
 [0m[[0mdebug[0m] [0m	report for UCR-DBLab#flockchecker_2.11;0.1 scala-tool produced in /home/and/Documents/PhD/Research/Scripts/Scala/FlockChecker/target/resolution-cache/reports/UCR-DBLab-flockchecker_2.11-scala-tool.xml[0m
-[0m[[0mdebug[0m] [0m	resolve done (645ms resolve - 49ms download)[0m
+[0m[[0mdebug[0m] [0m	resolve done (459ms resolve - 5ms download)[0m
 [0m[[0minfo[0m] [0mDone updating.[0m
