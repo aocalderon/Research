@@ -25,6 +25,7 @@ object FlockChecker {
     val flocks1 = readFile(path1)
     val flocks2 = readFile(path2)
 
+    import scala.language.postfixOps
     val notFound = flocks1 filterNot (flocks2 contains)
     val fails = notFound.length
     notFound.foreach(println)
@@ -43,11 +44,17 @@ object FlockChecker {
     }
   }
 
+  def testingAtom(info: Double): String = {
+    val l: List[String] = List("apple", "lemon", "pineapple")
+
+    l.mkString("\n")
+  }
+
   def main(args: Array[String]): Unit = {
     val path1 = args(0)
     val path2 = args(1)
     val params = path2.split("/").last.split("\\.").head.split("_")
-    epsilon = params(1).substring(1).toInt
+    epsilon = params(1).substring(1).toDouble
     mu = params(2).substring(1).toInt
     delta = params(3).substring(1).toInt
 
