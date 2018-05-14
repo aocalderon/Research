@@ -12,7 +12,7 @@ object MaximalDistanceFinder {
   val logger: Logger = LoggerFactory.getLogger("myLogger")
   var conf: Conf = new Conf(Array.empty[String])
   var timer: Long = 0L
-  
+
   case class ST_Point(id: Long, x: Double, y: Double, t: Int = -1)
   case class Flock(start: Int, end: Int, ids: String, x: Double = 0.0, y: Double = 0.0)
 
@@ -33,7 +33,7 @@ object MaximalDistanceFinder {
       .config("spark.cores.max", cores)
       .getOrCreate()
     simba.sparkContext.setLogLevel(conf.logs())
-    
+
     import simba.implicits._
     import simba.simbaImplicits._
     var flocks: Dataset[Flock] = simba.sparkContext.emptyRDD[Flock].toDS
@@ -65,7 +65,7 @@ object MaximalDistanceFinder {
       .cache()
     val nPointset = pointset.count()
     logging("Reading data", timer, nPointset, "points")
-    
+
     // Distance self-join
     timer = System.currentTimeMillis()
     val sample = pointset.filter(_.t == 0).sample(false, 0.5, 42).cache()
@@ -78,31 +78,31 @@ object MaximalDistanceFinder {
     val nJoin = join.count()
     join.orderBy("id1", "id2").show(truncate = false)
     logging("Self-join", timer, nJoin, "pairs")
-    
+
     // Group By
     timer = System.currentTimeMillis()
     val groups = join.groupBy("id1").agg(collect_list("id2").as("ids"), collect_list("x2").as("xs"), collect_list("y2").as("ys")).select("id1", "ids", "xs", "ys")
       .filter(g => g.getList[Long](1).size >= mu)
-      .map{ g => 
+      .map{ g =>
         val fid = g.getLong(0)
         val ids = g.getList[Long](1).asScala.toList
         val Xs  = g.getList[Double](2).asScala.toList
         val Ys  = g.getList[Double](3).asScala.toList
         val points = ids.zip(Xs.zip(Ys)).map(p => s"${p._1},${p._2._1},${p._2._2}").mkString(";")
-        
+
         (fid, points)
       }
       .toDF("fid", "points")
     val nGroups = groups.count()
     groups.orderBy("fid").show(truncate = false)
     logging("Self-join", timer, nGroups, "groups")
-    
+
     // Mesuring maximum distance...
     timer = System.currentTimeMillis()
-    val distances = groups.map{ g => 
+    val distances = groups.map{ g =>
         val fid = g.getLong(0)
         val points = g.getString(1).split(";")
-          .map{ p => 
+          .map{ p =>
             val m = p.split(",")
             ST_Point(m(0).toLong, m(1).toDouble, m(2).toDouble)
           }
@@ -116,7 +116,7 @@ object MaximalDistanceFinder {
     logging("Mesuring maximum distance...", timer, nDistances, "distances")
     
   }
-  
+
   def getMaximalDistance(p: Array[ST_Point]): (Long, Long, Double) ={
     val n: Int = p.length
     var id1: Long = 0
@@ -141,7 +141,7 @@ object MaximalDistanceFinder {
   def dist(p1: ST_Point, p2: ST_Point): Double ={
     sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2))
   }
-  
+
   def logging(msg: String, timer: Long, n: Long = 0, tag: String = ""): Unit ={
     logger.info("%-50s | %6.2fs | %6d %s".format(msg, (System.currentTimeMillis() - timer)/1000.0, n, tag))
   }
