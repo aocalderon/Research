@@ -1,0 +1,242 @@
+0;SpatialJoin;30;3;5;B.Indexing points...;5.149;18093;24.31
+0;SpatialJoin;30;3;5;C.Getting pairs...;5.688;5511;24.31
+0;SpatialJoin;30;3;5;D.Computing centers...;1.455;11022;24.31
+0;SpatialJoin;30;3;5;E.Indexing centers...;1.019;11022;24.31
+0;SpatialJoin;30;3;5;F.Getting disks...;5.524;11022;24.31
+0;SpatialJoin;30;3;5;G.Filtering less-than-mu disks...;0.242;3372;24.31
+0;SpatialJoin;30;3;5;H.Prunning duplicate candidates...;3.191;1700;24.31
+0;SpatialJoin;30;3;5;I.Indexing candidates...;3.573;1700;24.31
+0;SpatialJoin;30;3;5;J.Getting expansions...;0.246;2699;24.31
+0;SpatialJoin;30;3;5;K.Finding maximal disks...;0.153;752;24.31
+0;SpatialJoin;30;3;5;L.Prunning duplicates and subsets...;1.263;749;24.31
+1;SpatialJoin;30;3;5;B.Indexing points...;5.51;18245;25.87
+1;SpatialJoin;30;3;5;C.Getting pairs...;5.679;5629;25.87
+1;SpatialJoin;30;3;5;D.Computing centers...;1.524;11258;25.87
+1;SpatialJoin;30;3;5;E.Indexing centers...;1.04;11258;25.87
+1;SpatialJoin;30;3;5;F.Getting disks...;5.881;11258;25.87
+1;SpatialJoin;30;3;5;G.Filtering less-than-mu disks...;0.297;3500;25.87
+1;SpatialJoin;30;3;5;H.Prunning duplicate candidates...;3.544;1778;25.87
+1;SpatialJoin;30;3;5;I.Indexing candidates...;4.038;1778;25.87
+1;SpatialJoin;30;3;5;J.Getting expansions...;0.308;2890;25.87
+1;SpatialJoin;30;3;5;K.Finding maximal disks...;0.184;770;25.87
+1;SpatialJoin;30;3;5;L.Prunning duplicates and subsets...;1.405;767;25.87
+2;SpatialJoin;30;3;5;B.Indexing points...;5.25;18394;24.28
+2;SpatialJoin;30;3;5;C.Getting pairs...;5.807;5701;24.28
+2;SpatialJoin;30;3;5;D.Computing centers...;1.605;11402;24.28
+2;SpatialJoin;30;3;5;E.Indexing centers...;1.077;11402;24.28
+2;SpatialJoin;30;3;5;F.Getting disks...;5.321;11402;24.28
+2;SpatialJoin;30;3;5;G.Filtering less-than-mu disks...;0.287;3535;24.28
+2;SpatialJoin;30;3;5;H.Prunning duplicate candidates...;2.628;1807;24.28
+2;SpatialJoin;30;3;5;I.Indexing candidates...;3.123;1807;24.28
+2;SpatialJoin;30;3;5;J.Getting expansions...;0.354;2902;24.28
+2;SpatialJoin;30;3;5;K.Finding maximal disks...;0.162;776;24.28
+2;SpatialJoin;30;3;5;L.Prunning duplicates and subsets...;1.295;774;24.28
+3;SpatialJoin;30;3;5;B.Indexing points...;7.259;18548;38.91
+3;SpatialJoin;30;3;5;C.Getting pairs...;11.61;5768;38.91
+3;SpatialJoin;30;3;5;D.Computing centers...;1.624;11536;38.91
+3;SpatialJoin;30;3;5;E.Indexing centers...;1.113;11536;38.91
+3;SpatialJoin;30;3;5;F.Getting disks...;7.666;11536;38.91
+3;SpatialJoin;30;3;5;G.Filtering less-than-mu disks...;0.264;3584;38.91
+3;SpatialJoin;30;3;5;H.Prunning duplicate candidates...;5.998;1848;38.91
+3;SpatialJoin;30;3;5;I.Indexing candidates...;6.341;1848;38.91
+3;SpatialJoin;30;3;5;J.Getting expansions...;0.275;3000;38.91
+3;SpatialJoin;30;3;5;K.Finding maximal disks...;0.27;787;38.91
+3;SpatialJoin;30;3;5;L.Prunning duplicates and subsets...;2.489;785;38.91
+4;SpatialJoin;30;3;5;B.Indexing points...;7.357;18548;42.26
+4;SpatialJoin;30;3;5;C.Getting pairs...;11.183;5775;42.26
+4;SpatialJoin;30;3;5;D.Computing centers...;1.853;11550;42.26
+4;SpatialJoin;30;3;5;E.Indexing centers...;1.015;11550;42.26
+4;SpatialJoin;30;3;5;F.Getting disks...;8.036;11550;42.26
+4;SpatialJoin;30;3;5;G.Filtering less-than-mu disks...;0.274;3606;42.26
+4;SpatialJoin;30;3;5;H.Prunning duplicate candidates...;9.46;1867;42.26
+4;SpatialJoin;30;3;5;I.Indexing candidates...;10.017;1867;42.26
+4;SpatialJoin;30;3;5;J.Getting expansions...;0.274;3005;42.26
+4;SpatialJoin;30;3;5;K.Finding maximal disks...;0.246;795;42.26
+4;SpatialJoin;30;3;5;L.Prunning duplicates and subsets...;2.004;788;42.26
+5;SpatialJoin;30;3;5;B.Indexing points...;6.983;18548;38.13
+5;SpatialJoin;30;3;5;C.Getting pairs...;11.65;5765;38.13
+5;SpatialJoin;30;3;5;D.Computing centers...;1.37;11530;38.13
+5;SpatialJoin;30;3;5;E.Indexing centers...;1.092;11530;38.13
+5;SpatialJoin;30;3;5;F.Getting disks...;8.461;11530;38.13
+5;SpatialJoin;30;3;5;G.Filtering less-than-mu disks...;0.268;3620;38.13
+5;SpatialJoin;30;3;5;H.Prunning duplicate candidates...;4.882;1858;38.13
+5;SpatialJoin;30;3;5;I.Indexing candidates...;5.271;1858;38.13
+5;SpatialJoin;30;3;5;J.Getting expansions...;0.322;2980;38.13
+5;SpatialJoin;30;3;5;K.Finding maximal disks...;0.171;788;38.13
+5;SpatialJoin;30;3;5;L.Prunning duplicates and subsets...;2.543;785;38.13
+6;SpatialJoin;30;3;5;B.Indexing points...;7.148;18546;36.36
+6;SpatialJoin;30;3;5;C.Getting pairs...;10.268;5758;36.36
+6;SpatialJoin;30;3;5;D.Computing centers...;2.016;11516;36.36
+6;SpatialJoin;30;3;5;E.Indexing centers...;1.028;11516;36.36
+6;SpatialJoin;30;3;5;F.Getting disks...;7.669;11516;36.36
+6;SpatialJoin;30;3;5;G.Filtering less-than-mu disks...;0.269;3615;36.36
+6;SpatialJoin;30;3;5;H.Prunning duplicate candidates...;5.23;1861;36.36
+6;SpatialJoin;30;3;5;I.Indexing candidates...;5.655;1861;36.36
+6;SpatialJoin;30;3;5;J.Getting expansions...;0.303;3020;36.36
+6;SpatialJoin;30;3;5;K.Finding maximal disks...;0.167;782;36.36
+6;SpatialJoin;30;3;5;L.Prunning duplicates and subsets...;1.831;776;36.36
+7;SpatialJoin;30;3;5;B.Indexing points...;6.941;18546;38.49
+7;SpatialJoin;30;3;5;C.Getting pairs...;12.15;5788;38.49
+7;SpatialJoin;30;3;5;D.Computing centers...;1.584;11576;38.49
+7;SpatialJoin;30;3;5;E.Indexing centers...;1.225;11576;38.49
+7;SpatialJoin;30;3;5;F.Getting disks...;6.929;11576;38.49
+7;SpatialJoin;30;3;5;G.Filtering less-than-mu disks...;0.215;3654;38.49
+7;SpatialJoin;30;3;5;H.Prunning duplicate candidates...;6.563;1872;38.49
+7;SpatialJoin;30;3;5;I.Indexing candidates...;6.966;1872;38.49
+7;SpatialJoin;30;3;5;J.Getting expansions...;0.236;2960;38.49
+7;SpatialJoin;30;3;5;K.Finding maximal disks...;0.226;786;38.49
+7;SpatialJoin;30;3;5;L.Prunning duplicates and subsets...;2.02;782;38.49
+8;SpatialJoin;30;3;5;B.Indexing points...;4.166;18546;27.52
+8;SpatialJoin;30;3;5;C.Getting pairs...;7.661;5791;27.52
+8;SpatialJoin;30;3;5;D.Computing centers...;1.506;11582;27.52
+8;SpatialJoin;30;3;5;E.Indexing centers...;1.202;11582;27.52
+8;SpatialJoin;30;3;5;F.Getting disks...;5.986;11582;27.52
+8;SpatialJoin;30;3;5;G.Filtering less-than-mu disks...;0.333;3639;27.52
+8;SpatialJoin;30;3;5;H.Prunning duplicate candidates...;4.095;1848;27.52
+8;SpatialJoin;30;3;5;I.Indexing candidates...;4.516;1848;27.52
+8;SpatialJoin;30;3;5;J.Getting expansions...;0.332;2887;27.52
+8;SpatialJoin;30;3;5;K.Finding maximal disks...;0.251;790;27.52
+8;SpatialJoin;30;3;5;L.Prunning duplicates and subsets...;1.57;785;27.52
+9;SpatialJoin;30;3;5;B.Indexing points...;5.898;18546;36.12
+9;SpatialJoin;30;3;5;C.Getting pairs...;11.23;5802;36.12
+9;SpatialJoin;30;3;5;D.Computing centers...;1.413;11604;36.12
+9;SpatialJoin;30;3;5;E.Indexing centers...;1.034;11604;36.12
+9;SpatialJoin;30;3;5;F.Getting disks...;8.356;11604;36.12
+9;SpatialJoin;30;3;5;G.Filtering less-than-mu disks...;0.268;3660;36.12
+9;SpatialJoin;30;3;5;H.Prunning duplicate candidates...;4.952;1856;36.12
+9;SpatialJoin;30;3;5;I.Indexing candidates...;5.442;1856;36.12
+9;SpatialJoin;30;3;5;J.Getting expansions...;0.319;2942;36.12
+9;SpatialJoin;30;3;5;K.Finding maximal disks...;0.201;796;36.12
+9;SpatialJoin;30;3;5;L.Prunning duplicates and subsets...;1.958;789;36.12
+10;SpatialJoin;30;3;5;B.Indexing points...;6.166;18546;36.76
+10;SpatialJoin;30;3;5;C.Getting pairs...;11.75;5797;36.76
+10;SpatialJoin;30;3;5;D.Computing centers...;1.573;11594;36.76
+10;SpatialJoin;30;3;5;E.Indexing centers...;1.308;11594;36.76
+10;SpatialJoin;30;3;5;F.Getting disks...;7.498;11594;36.76
+10;SpatialJoin;30;3;5;G.Filtering less-than-mu disks...;0.365;3645;36.76
+10;SpatialJoin;30;3;5;H.Prunning duplicate candidates...;5.275;1845;36.76
+10;SpatialJoin;30;3;5;I.Indexing candidates...;5.609;1845;36.76
+10;SpatialJoin;30;3;5;J.Getting expansions...;0.195;2902;36.76
+10;SpatialJoin;30;3;5;K.Finding maximal disks...;0.164;781;36.76
+10;SpatialJoin;30;3;5;L.Prunning duplicates and subsets...;2.128;776;36.76
+0;MergeLast;30;3;5;B.Indexing points...;142.805;18093;169.09
+0;MergeLast;30;3;5;C.Getting pairs...;7.626;5511;169.09
+0;MergeLast;30;3;5;D.Computing centers...;2.233;11022;169.09
+0;MergeLast;30;3;5;E.Indexing centers...;1.431;11022;169.09
+0;MergeLast;30;3;5;F.Getting disks...;5.911;11022;169.09
+0;MergeLast;30;3;5;G.Filtering less-than-mu disks...;0.457;3372;169.09
+0;MergeLast;30;3;5;H.Prunning duplicate candidates...;4.931;1700;169.09
+0;MergeLast;30;3;5;I.Indexing candidates...;5.461;1700;169.09
+0;MergeLast;30;3;5;J.Getting expansions...;0.255;2699;169.09
+0;MergeLast;30;3;5;K.Finding maximal disks...;0.794;752;169.09
+0;MergeLast;30;3;5;L.Prunning duplicates and subsets...;2.112;749;169.09
+1;MergeLast;30;3;5;B.Indexing points...;115.021;18245;133.04
+1;MergeLast;30;3;5;C.Getting pairs...;5.074;5629;133.04
+1;MergeLast;30;3;5;D.Computing centers...;1.374;11258;133.04
+1;MergeLast;30;3;5;E.Indexing centers...;1.106;11258;133.04
+1;MergeLast;30;3;5;F.Getting disks...;4.88;11258;133.04
+1;MergeLast;30;3;5;G.Filtering less-than-mu disks...;0.23;3500;133.04
+1;MergeLast;30;3;5;H.Prunning duplicate candidates...;3.118;1778;133.04
+1;MergeLast;30;3;5;I.Indexing candidates...;3.517;1778;133.04
+1;MergeLast;30;3;5;J.Getting expansions...;0.198;2890;133.04
+1;MergeLast;30;3;5;K.Finding maximal disks...;0.178;770;133.04
+1;MergeLast;30;3;5;L.Prunning duplicates and subsets...;1.461;767;133.04
+2;MergeLast;30;3;5;B.Indexing points...;123.255;18394;140.71
+2;MergeLast;30;3;5;C.Getting pairs...;5.096;5701;140.71
+2;MergeLast;30;3;5;D.Computing centers...;1.427;11402;140.71
+2;MergeLast;30;3;5;E.Indexing centers...;1.033;11402;140.71
+2;MergeLast;30;3;5;F.Getting disks...;4.856;11402;140.71
+2;MergeLast;30;3;5;G.Filtering less-than-mu disks...;0.238;3535;140.71
+2;MergeLast;30;3;5;H.Prunning duplicate candidates...;2.647;1807;140.71
+2;MergeLast;30;3;5;I.Indexing candidates...;3;1807;140.71
+2;MergeLast;30;3;5;J.Getting expansions...;0.221;2902;140.71
+2;MergeLast;30;3;5;K.Finding maximal disks...;0.161;776;140.71
+2;MergeLast;30;3;5;L.Prunning duplicates and subsets...;1.425;774;140.71
+3;MergeLast;30;3;5;B.Indexing points...;131.298;18548;159.87
+3;MergeLast;30;3;5;C.Getting pairs...;10.435;5768;159.87
+3;MergeLast;30;3;5;D.Computing centers...;1.496;11536;159.87
+3;MergeLast;30;3;5;E.Indexing centers...;1.02;11536;159.87
+3;MergeLast;30;3;5;F.Getting disks...;7.22;11536;159.87
+3;MergeLast;30;3;5;G.Filtering less-than-mu disks...;0.342;3584;159.87
+3;MergeLast;30;3;5;H.Prunning duplicate candidates...;5.285;1848;159.87
+3;MergeLast;30;3;5;I.Indexing candidates...;5.793;1848;159.87
+3;MergeLast;30;3;5;J.Getting expansions...;0.181;3000;159.87
+3;MergeLast;30;3;5;K.Finding maximal disks...;0.159;787;159.87
+3;MergeLast;30;3;5;L.Prunning duplicates and subsets...;1.922;785;159.87
+4;MergeLast;30;3;5;B.Indexing points...;140.948;18548;170.75
+4;MergeLast;30;3;5;C.Getting pairs...;10.712;5775;170.75
+4;MergeLast;30;3;5;D.Computing centers...;1.582;11550;170.75
+4;MergeLast;30;3;5;E.Indexing centers...;1.189;11550;170.75
+4;MergeLast;30;3;5;F.Getting disks...;7.268;11550;170.75
+4;MergeLast;30;3;5;G.Filtering less-than-mu disks...;0.306;3606;170.75
+4;MergeLast;30;3;5;H.Prunning duplicate candidates...;5.605;1867;170.75
+4;MergeLast;30;3;5;I.Indexing candidates...;5.996;1867;170.75
+4;MergeLast;30;3;5;J.Getting expansions...;0.206;3005;170.75
+4;MergeLast;30;3;5;K.Finding maximal disks...;0.2;795;170.75
+4;MergeLast;30;3;5;L.Prunning duplicates and subsets...;2.345;788;170.75
+5;MergeLast;30;3;5;B.Indexing points...;150.028;18548;178.22
+5;MergeLast;30;3;5;C.Getting pairs...;10.367;5765;178.22
+5;MergeLast;30;3;5;D.Computing centers...;1.386;11530;178.22
+5;MergeLast;30;3;5;E.Indexing centers...;1.065;11530;178.22
+5;MergeLast;30;3;5;F.Getting disks...;7.214;11530;178.22
+5;MergeLast;30;3;5;G.Filtering less-than-mu disks...;0.292;3620;178.22
+5;MergeLast;30;3;5;H.Prunning duplicate candidates...;5.039;1858;178.22
+5;MergeLast;30;3;5;I.Indexing candidates...;5.532;1858;178.22
+5;MergeLast;30;3;5;J.Getting expansions...;0.212;2980;178.22
+5;MergeLast;30;3;5;K.Finding maximal disks...;0.175;788;178.22
+5;MergeLast;30;3;5;L.Prunning duplicates and subsets...;1.951;785;178.22
+6;MergeLast;30;3;5;B.Indexing points...;155.852;18546;183.82
+6;MergeLast;30;3;5;C.Getting pairs...;10.419;5758;183.82
+6;MergeLast;30;3;5;D.Computing centers...;1.474;11516;183.82
+6;MergeLast;30;3;5;E.Indexing centers...;0.999;11516;183.82
+6;MergeLast;30;3;5;F.Getting disks...;6.987;11516;183.82
+6;MergeLast;30;3;5;G.Filtering less-than-mu disks...;0.268;3615;183.82
+6;MergeLast;30;3;5;H.Prunning duplicate candidates...;5.09;1861;183.82
+6;MergeLast;30;3;5;I.Indexing candidates...;5.451;1861;183.82
+6;MergeLast;30;3;5;J.Getting expansions...;0.207;3020;183.82
+6;MergeLast;30;3;5;K.Finding maximal disks...;0.164;782;183.82
+6;MergeLast;30;3;5;L.Prunning duplicates and subsets...;1.997;776;183.82
+7;MergeLast;30;3;5;B.Indexing points...;162.32;18546;191.2
+7;MergeLast;30;3;5;C.Getting pairs...;10.739;5788;191.2
+7;MergeLast;30;3;5;D.Computing centers...;1.363;11576;191.2
+7;MergeLast;30;3;5;E.Indexing centers...;1.019;11576;191.2
+7;MergeLast;30;3;5;F.Getting disks...;7.317;11576;191.2
+7;MergeLast;30;3;5;G.Filtering less-than-mu disks...;0.265;3654;191.2
+7;MergeLast;30;3;5;H.Prunning duplicate candidates...;5.249;1872;191.2
+7;MergeLast;30;3;5;I.Indexing candidates...;5.617;1872;191.2
+7;MergeLast;30;3;5;J.Getting expansions...;0.212;2960;191.2
+7;MergeLast;30;3;5;K.Finding maximal disks...;0.199;786;191.2
+7;MergeLast;30;3;5;L.Prunning duplicates and subsets...;2.149;782;191.2
+8;MergeLast;30;3;5;B.Indexing points...;168.844;18546;190.66
+8;MergeLast;30;3;5;C.Getting pairs...;6.935;5791;190.66
+8;MergeLast;30;3;5;D.Computing centers...;1.484;11582;190.66
+8;MergeLast;30;3;5;E.Indexing centers...;1.026;11582;190.66
+8;MergeLast;30;3;5;F.Getting disks...;5.632;11582;190.66
+8;MergeLast;30;3;5;G.Filtering less-than-mu disks...;0.336;3639;190.66
+8;MergeLast;30;3;5;H.Prunning duplicate candidates...;3.439;1848;190.66
+8;MergeLast;30;3;5;I.Indexing candidates...;3.782;1848;190.66
+8;MergeLast;30;3;5;J.Getting expansions...;0.185;2887;190.66
+8;MergeLast;30;3;5;K.Finding maximal disks...;0.162;790;190.66
+8;MergeLast;30;3;5;L.Prunning duplicates and subsets...;2.274;785;190.66
+9;MergeLast;30;3;5;B.Indexing points...;175.366;18546;204.99
+9;MergeLast;30;3;5;C.Getting pairs...;10.81;5802;204.99
+9;MergeLast;30;3;5;D.Computing centers...;1.433;11604;204.99
+9;MergeLast;30;3;5;E.Indexing centers...;1.016;11604;204.99
+9;MergeLast;30;3;5;F.Getting disks...;7.777;11604;204.99
+9;MergeLast;30;3;5;G.Filtering less-than-mu disks...;0.266;3660;204.99
+9;MergeLast;30;3;5;H.Prunning duplicate candidates...;5.027;1856;204.99
+9;MergeLast;30;3;5;I.Indexing candidates...;5.441;1856;204.99
+9;MergeLast;30;3;5;J.Getting expansions...;0.234;2942;204.99
+9;MergeLast;30;3;5;K.Finding maximal disks...;0.214;796;204.99
+9;MergeLast;30;3;5;L.Prunning duplicates and subsets...;2.427;789;204.99
+10;MergeLast;30;3;5;B.Indexing points...;177.19;18546;207.94
+10;MergeLast;30;3;5;C.Getting pairs...;12.302;5797;207.94
+10;MergeLast;30;3;5;D.Computing centers...;1.476;11594;207.94
+10;MergeLast;30;3;5;E.Indexing centers...;1.074;11594;207.94
+10;MergeLast;30;3;5;F.Getting disks...;7.774;11594;207.94
+10;MergeLast;30;3;5;G.Filtering less-than-mu disks...;0.267;3645;207.94
+10;MergeLast;30;3;5;H.Prunning duplicate candidates...;4.751;1845;207.94
+10;MergeLast;30;3;5;I.Indexing candidates...;5.129;1845;207.94
+10;MergeLast;30;3;5;J.Getting expansions...;0.383;2902;207.94
+10;MergeLast;30;3;5;K.Finding maximal disks...;0.197;781;207.94
+10;MergeLast;30;3;5;L.Prunning duplicates and subsets...;2.071;776;207.94
