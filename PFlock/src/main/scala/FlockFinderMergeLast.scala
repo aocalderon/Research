@@ -103,7 +103,7 @@ object FlockFinderMergeLast {
       logger.info(s"method=MergeLast,cores=$cores,epsilon=$e,mu=$m,delta=$d,time=$timeML,master=$master")
       // Printing results...
       if(print) printFlocks(flocks, "", simba)
-      if(debug) saveFlocks(flocks, s"/tmp/PFLOCK-ML_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt", simba)
+      if(debug) saveFlocks(flocks, s"/tmp/PFLOCK_E${conf.epsilon().toInt}_M${conf.mu()}_D${conf.delta()}.txt", simba)
 
     }
     // Closing all...
@@ -562,6 +562,6 @@ object FlockFinderMergeLast {
     conf = new Conf(args)
     precision = conf.precision()
 
-    FlockFinderBenchmark.run()
+    FlockFinderMergeLast.run()
   }
 }
