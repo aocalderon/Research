@@ -443,6 +443,6 @@ object FlockFinderSpatialJoin {
     conf = new Conf(args)
     precision = conf.precision()
 
-    FlockFinderBenchmark.run()
+    FlockFinderSpatialJoin.run()
   }
 }
