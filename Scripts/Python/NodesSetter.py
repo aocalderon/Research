@@ -19,10 +19,11 @@ def setNodes(n):
   subprocess.call("{0}/sbin/stop-all.sh".format(spark_home), shell=True)
   slaves = open("{0}/conf/slaves".format(spark_home), "w")
   slaves.write("\n".join(nodes[0:n]))
+  slaves.write("\n")
   slaves.close()
   subprocess.call("{0}/sbin/start-all.sh".format(spark_home), shell=True)
 
-n = ars.nodes
-logging.warning("Setting {0} nodes...\n\n".format(n))
+n = int(args.nodes)
+logging.warning("Setting {0} nodes...".format(n))
 setNodes(n)
-logging.warning("{0} nodes has been set...\n\n".format(n))
+logging.warning("{0} nodes has been set...".format(n))
