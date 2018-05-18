@@ -127,14 +127,66 @@ object FlockFinderMergeLast {
     val maximalDisksCache = collection.mutable.Map[Int, Dataset[Flock]]()
 
     for(timestamp <- timestamps.slice(0, timestamps.length - delta)) {
-      // Getting points at timestamp t ...
+      // Reported location for trajectories in time t_i...
       timer = System.currentTimeMillis()
-      var C_t = maximalDisksCache.getOrElseUpdate(timestamp, getMaximalDisks(pointset, timestamp, epsilon, mu, simba))
+      val currentPoints = pointset
+        .filter(datapoint => datapoint.t == timestamp)
+        .map{ datapoint =>
+          "%d\t%f\t%f".format(datapoint.id, datapoint.x, datapoint.y)
+        }
+        .rdd
+        .cache()
+      val nCurrentPoints = currentPoints.count()
+      logging(s"Reporting locations at t=${timestamp}...", timer, nCurrentPoints, "points")
+
+      // Set of disks for t_i...
+      timer = System.currentTimeMillis()
+      var C_t: Dataset[Flock] = maximalDisksCache.getOrElseUpdate(timestamp,
+        MaximalFinderExpansion.run(currentPoints, epsilon, mu, simba, conf, timestamp)
+          .map{ m =>
+            val disk = m.split(";")
+            val x = disk(0).toDouble
+            val y = disk(1).toDouble
+            val ids = disk(2)
+            Flock(timestamp, timestamp, ids, x, y)
+          }.toDS()
+      )
       val nC_t = C_t.count()
-      // Getting points at timestamp t + delta ...
-      var C_tPlusDelta = maximalDisksCache.getOrElseUpdate(timestamp + delta, getMaximalDisks(pointset, timestamp + delta, epsilon, mu, simba))
+      logging("1.Set of disks for t_i...", timer, nC_t, "disks")
+
+      // Reported location for trajectories in time t_i+delta...
+      timer = System.currentTimeMillis()
+      val deltaPoints = pointset
+        .filter(datapoint => datapoint.t == timestamp + delta)
+        .map{ datapoint =>
+          "%d\t%f\t%f".format(datapoint.id, datapoint.x, datapoint.y)
+        }
+        .rdd
+        .cache()
+      val nDeltaPoints = deltaPoints.count()
+      logging(s"Reporting locations at t=${timestamp+delta}...", timer, nDeltaPoints, "points")
+
+      // Set of disks for t_i+delta...
+      timer = System.currentTimeMillis()
+      var C_tPlusDelta: Dataset[Flock] = maximalDisksCache.getOrElseUpdate(timestamp + delta,
+        MaximalFinderExpansion.run(deltaPoints, epsilon, mu, simba, conf, timestamp + delta)
+          .map{ m =>
+            val disk = m.split(";")
+            val x = disk(0).toDouble
+            val y = disk(1).toDouble
+            val ids = disk(2)
+            Flock(timestamp, timestamp, ids, x, y)
+          }.toDS()
+      )
       val nC_tPlusDelta = C_tPlusDelta.count()
-      logging(s"1.Getting disks", timer, nC_t + nC_tPlusDelta, "disks")
+      logging("2.Set of disks for t_i+delta...", timer, nC_t, "disks")
+
+
+      // Getting points at timestamp t + delta ...
+      //timer = System.currentTimeMillis()
+      //var C_tPlusDelta = maximalDisksCache.getOrElseUpdate(timestamp + delta, getMaximalDisks(pointset, timestamp + delta, epsilon, mu, simba))
+      //val nC_tPlusDelta = C_tPlusDelta.count()
+      //logging(s"1.Getting disks", timer, nC_t + nC_tPlusDelta, "disks")
 
       if(nC_t > 0 && nC_tPlusDelta > 0) {
         // Joining timestamps...
@@ -159,12 +211,14 @@ object FlockFinderMergeLast {
           .index(RTreeType, "f_primeRT", Array("x", "y"))
           .cache()
         nF_prime = F_prime.count()
-        logging(s"2.Joining timestams", timer, nF_prime, "candidates")
+        logging(s"3.Joining timestams", timer, nF_prime, "candidates")
         // if(debug) F_prime.orderBy("ids").show(nF_prime.toInt, truncate = false)
 
         // Checking internal timestamps...
-        timer = System.currentTimeMillis()
+        val timerCIT = System.currentTimeMillis()
         for (t <- Range(timestamp + 1, timestamp + delta)) {
+          // Distance Join phase with previous potential flocks...
+          timer = System.currentTimeMillis()
           val P = getFlockPoints(F_prime, simba).as("c").join(pointset.filter(_.t == t).as("p"), $"c.pointID" === $"p.id", "left")
             .groupBy("flockID")
             .agg(collect_list($"id"), collect_list($"x"), collect_list($"y"))
@@ -215,14 +269,12 @@ object FlockFinderMergeLast {
             val timeMF = (System.currentTimeMillis - timerMF) / 1000.0
             logger.info(s"MaximalFinder finishes in ${timeMF}s...")
           }
-          // Distance Join phase with previous potential flocks...
-          timer = System.currentTimeMillis()
           val fDS = F1.union(F2).index(RTreeType, "fdsRT", Array("x", "y"))
           val join = F_prime.distanceJoin(fDS, Array("x", "y"), Array("x", "y"), distanceBetweenTimestamps)
           val nJoin = join.count()
-          logging("3.Distance Join phase...", timer, nJoin, "combinations")
+          logging("4.Distance Join phase...", timer, nJoin, "combinations")
 
-          // At least mu...
+          // 5.Getting candidates...
           timer = System.currentTimeMillis()
           val U_prime = join
             .map { tuple =>
@@ -241,15 +293,15 @@ object FlockFinderMergeLast {
             .map(_._1).as[Flock]
           val U = pruneFlocks(U_prime, simba).cache()
           val nU = U.count()
-          logging("4.Getting candidates...", timer, nU, "candidates")
 
           F_prime = U
           nF_prime = F_prime.count()
           logger.info(s"Timestamp $t checked...")
+          logging("5.Getting candidates...", timer, nU, "candidates")
         }
         val F = F_prime
         val nF = F.count()
-        logging("5.Checking internal timestamps", timer, nF, "flocks")
+        logging("Checking internal timestamps", timerCIT, nF, "flocks")
 
         FinalFlocks = FinalFlocks.union(F)
         nFinalFlocks = FinalFlocks.count()
@@ -388,6 +440,7 @@ object FlockFinderMergeLast {
         "%d\t%f\t%f".format(datapoint.id, datapoint.x, datapoint.y)
       }
       .rdd
+      .cache
     if(debug) logging(s"Points at t=$t...", timer1, points.count(), "points")
 
     // Getting maximal disks at timestamp t ...

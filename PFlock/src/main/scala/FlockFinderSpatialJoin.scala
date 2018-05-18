@@ -145,7 +145,7 @@ object FlockFinderSpatialJoin {
       // Set of disks for t_i...
       timer = System.currentTimeMillis()
       val C: Dataset[Flock] = MaximalFinderExpansion
-        .run(currentPoints, epsilon, mu, simba, conf)
+        .run(currentPoints, epsilon, mu, simba, conf, timestamp)
         .map{ m =>
           val disk = m.split(";")
           val x = disk(0).toDouble
