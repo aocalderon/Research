@@ -13,6 +13,7 @@ Script/Scala/FlockChecker/project/*
 Script/Scala/FlockChecker/metastore_db/*
 Script/Scala/FlockChecker/spark-warehouse/*
 
+ensime*
 *.cache
 *.log
 *.class
