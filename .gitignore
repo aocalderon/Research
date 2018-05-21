@@ -13,6 +13,12 @@ Script/Scala/FlockChecker/project/*
 Script/Scala/FlockChecker/metastore_db/*
 Script/Scala/FlockChecker/spark-warehouse/*
 
+Script/Scala/SimbaTemplate/.idea/*
+Script/Scala/SimbaTemplate/target/*
+Script/Scala/SimbaTemplate/project/*
+Script/Scala/SimbaTemplate/metastore_db/*
+Script/Scala/SimbaTemplate/spark-warehouse/*
+
 ensime*
 *.cache
 *.log
