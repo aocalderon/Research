@@ -1,8 +1,3 @@
-
-import $ivy.`org.apache.spark::spark-sql:2.1.0`
-import $ivy.`InitialDLab:simba_2.11:1.0`
-import $ivy.`org.slf4j:slf4j-jdk14:1.7.25`
-
 import org.slf4j.{Logger, LoggerFactory}
 import org.apache.spark.sql.simba.{Dataset, SimbaSession}
 import org.apache.spark.sql.simba.index.RTreeType
@@ -12,14 +7,8 @@ import org.apache.spark.sql.functions._
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 
-
 // spark://169.235.27.134:7077
-val simba = SimbaSession.builder()
-      .master("local[10]")
-      .appName("MaximalDistanceFinder")
-      .config("simba.index.partitions", 1024)
-      .config("spark.cores.max", 32)
-      .getOrCreate()
+val simba = SimbaSession.builder().master("local[*]").appName("MaximalDistanceFinder").config("simba.index.partitions", 1024).config("spark.cores.max", 32).getOrCreate()
 
 val logger: Logger = LoggerFactory.getLogger("myLogger")
 var timer: Long = 0L
@@ -39,15 +28,8 @@ val point_schema = StructType(Array(id, x, y, t))
 
 val filename = "/home/and/Documents/PhD/Research/Datasets/Berlin/berlin0-2.tsv"
 
-val pointset = simba.read
-      .option("header", "false")
-      .option("sep", "\t")
-      .schema(point_schema)
-      .csv(filename)
-      .as[ST_Point]
-      .cache()
+val pointset = simba.read.option("header", "false").option("sep", "\t").schema(point_schema).csv(filename).as[ST_Point].cache()
 val nPointset = pointset.count()
-
 
 val epsilon = 50
 val sample = pointset.filter(_.t == 0).sample(false, 0.5, 42).cache()
@@ -59,6 +41,5 @@ p2.index(RTreeType, "rtP2", Array("x2", "y2"))
 val join = p1.distanceJoin(p2, Array("x1", "y1"), Array("x2", "y2"), epsilon).filter(j => j.getLong(0) < j.getLong(3)).cache()
 val nJoin = join.count()
 join.orderBy("id1", "id2").show(truncate = false)
-
 
 simba.close()
