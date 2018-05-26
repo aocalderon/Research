@@ -20,5 +20,5 @@ libraryDependencies += "fr.liglab.jlcm" % "jLCM" % "1.7.0"
 //libraryDependencies += "org.wvlet.airframe" %% "airframe-log" % "0.24"
 //libraryDependencies += "com.groupon.sparklint" % "sparklint-spark210_2.11" % "1.0.9-SNAPSHOT"
 
-mainClass in (Compile, run) := Some("FlockFinder")
-mainClass in (Compile, packageBin) := Some("FlockFinder")
+mainClass in (Compile, run) := Some("FlockFinderMergeLast")
+mainClass in (Compile, packageBin) := Some("FlockFinderMergeLast")
