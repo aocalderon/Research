@@ -33,7 +33,7 @@ if(args.bfe):
 
 pflock = "{0}{1}".format(research_home, "PFlock/target/scala-2.11/pflock_2.11-2.0.jar")
 ## Running PFlock...
-command = "spark-submit --class FlockFinderBenchmark {0} --epsilon {1} --epsilon_max {1} --mu {2} --mu_max {2} --delta {3} --delta_max {3} --path {4} --dataset {5} --debug".format(pflock, epsilon, mu, delta, path, dataset)
+command = "spark-submit --class FlockFinderMergeLast {0} --epsilon {1} --epsilon_max {1} --mu {2} --mu_max {2} --delta {3} --delta_max {3} --path {4} --dataset {5} --debug".format(pflock, epsilon, mu, delta, path, dataset)
 print(command)
 if(args.pflock):
   subprocess.call(command, shell=True)

@@ -15,6 +15,7 @@ object FlockFinderMergeLast {
 
   case class ST_Point(id: Long, x: Double, y: Double, t: Int = -1)
   case class Flock(start: Int, end: Int, ids: String, x: Double = 0.0, y: Double = 0.0)
+  case class Disk(ids: String, length: Int, x: Double, y: Double)
   case class FlockPoints(flockID: Long, pointID: Long)
 
   private var timer: Long = System.currentTimeMillis()
@@ -61,10 +62,7 @@ object FlockFinderMergeLast {
     val dataset: String = conf.dataset()
     val extension: String = conf.extension()
     val home: String = scala.util.Properties.envOrElse(conf.home(), "/home/and/Documents/PhD/Research/")
-    val point_schema = ScalaReflection
-      .schemaFor[ST_Point]
-      .dataType
-      .asInstanceOf[StructType]
+    val point_schema = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
     logging("Setting paramaters", timer)
 
     // Reading data...
@@ -196,31 +194,44 @@ object FlockFinderMergeLast {
           .cache()
         nF_prime = F_prime.count()
         logging(s"3.Joining timestams", timer, nF_prime, "candidates")
-        // if(debug) F_prime.orderBy("ids").show(nF_prime.toInt, truncate = false)
+        if(debug) F_prime.orderBy("ids").show(nF_prime.toInt, truncate = false)
 
         // Checking internal timestamps...
         val timerCIT = System.currentTimeMillis()
         val pointset_prime = pointset.filter($"t" > timestamp && $"t" < timestamp + delta)
-        for (t <- Range(timestamp + 1, timestamp + delta)) {
-          // Distance Join phase with previous potential flocks...
-          timer = System.currentTimeMillis()
-          val P = getFlockPoints(F_prime, simba).as("c")
-            .join(pointset_prime.as("p"), $"c.pointID" === $"p.id", "left")
-            .groupBy("flockID")
-            .agg(collect_list($"id"), collect_list($"x"), collect_list($"y"), collect_list($"t"))
-          val P_prime = P.map { p =>
-            val fid = p.getLong(0)
-            val ids = p.getList[Long](1).asScala.toList
-            val Xs = p.getList[Double](2).asScala.toList
-            val Ys = p.getList[Double](3).asScala.toList
-            val ts = p.getList[Int](4).asScala.toList
-            val d = getMaximalDistance(Xs zip Ys)
 
-            (fid, ids, Xs, Ys, ts)
-          }
-          P_prime.show(10, truncate = false)
+        // Distance Join phase with previous potential flocks...
+        val P = getFlockPoints(F_prime, simba).as("c")
+          .join(pointset_prime.as("p"), $"c.pointID" === $"p.id", "left")
+          .groupBy("flockID")
+          .agg(collect_list($"id"), collect_list($"x"), collect_list($"y"), collect_list($"t"))
+        val P_prime = P.map { p =>
+          val fid = p.getLong(0)
+          val ids = p.getList[Long](1).asScala.toList
+          val Xs = p.getList[Double](2).asScala.toList
+          val Ys = p.getList[Double](3).asScala.toList
+          val ts = p.getList[Int](4).asScala.toList
+
+          val points = ids.zip(Xs).zip(Ys).zip(ts).map(m => ST_Point(m._1._1._1, m._1._1._2, m._1._2, m._2)).sortBy(_.t)
+
+          (fid, points)
         }
-        val F = F_prime
+        val F_temp = P_prime.map{ f =>
+              val fid = f._1
+              val flocks = computeMaximalDisks(f._2, epsilon: Double, mu: Int, simba: SimbaSession)
+              (fid, flocks)
+          }.
+          filter(!_._2.isEmpty).
+          flatMap(_._2).
+          map(f => Flock(timestamp, timestamp + delta, f.ids, f.x, f.y)).
+          cache
+        val nF_temp = F_temp.count()
+        if(debug){
+          println(s"F_temp count: $nF_temp")
+          F_temp.orderBy($"ids").show(nF_temp.toInt, truncate = false)
+        }
+        
+        val F =  pruneFlocks(F_temp, simba)
         val nF = F.count()
         logging("Checking internal timestamps", timerCIT, nF, "flocks")
 
@@ -244,48 +255,83 @@ object FlockFinderMergeLast {
       return key.asInstanceOf[Int]
     }
   }
-
-  private def computeMaximalDisks2(points: Dataset[List[ST_Point]], epsilon: Double, mu: Int, simba: SimbaSession): Dataset[String] = {
-    import simba.implicits._
-    import simba.simbaImplicits._
-
-    val r2 = Math.pow(epsilon / 2.0, 2)
-    points.flatMap{ p: List[ST_Point] =>
-        val pairs = getPairs(p, epsilon)
-        val centers = pairs.flatMap(pair => computeCenters(pair, r2))
-        val disks = getDisks(p, centers, epsilon)
-        filterDisks(disks, mu)
-      }
+  implicit class Crossable[X](xs: Traversable[X]) {
+    def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
   }
 
-  def filterDisks(input: List[List[Long]], mu: Int): List[String] ={
-    var ids = new collection.mutable.ListBuffer[(List[Long], Boolean)]()
-    for( disk <- input.filter(_.lengthCompare(mu) >= 0) ){ ids += Tuple2(disk, true) }
-    for(i <- ids.indices){
-      for(j <- ids.indices){
-        if(i != j & ids(i)._2){
-          val ids1 = ids(i)._1
-          val ids2 = ids(j)._1
-          if(ids(j)._2 & ids1.forall(ids2.contains)){
-            ids(i) = Tuple2(ids(i)._1, false)
+  def computeMaximalDisks(points: List[ST_Point], epsilon: Double, mu: Int, simba: SimbaSession): List[Flock] = {
+    val flockList = ListBuffer[List[Flock]]()
+    val timestamps = points.map(_.t).distinct
+    val r2 = Math.pow(epsilon / 2.0, 2)
+
+    for(timestamp <- timestamps){
+      val p = points.filter(_.t == timestamp)
+      val pairs = getPairs(p, epsilon)
+      val centers = pairs.flatMap(pair => computeCenters(pair, r2))
+      var disks = getDisks(p, centers, epsilon)
+      disks = filterDisks(disks, mu)
+
+      flockList += disks.map(d => Flock(timestamp, timestamp, d.ids, d.x, d.y))
+    }
+
+    var f = flockList.head
+    for(f_prime <- flockList.tail){
+      f = f.cross(f_prime).map { f => 
+        val start = f._1.start
+        val end = f._2.end
+        val ids1 = f._1.ids.split(" ").map(_.toLong)
+        val ids2 = f._2.ids.split(" ").map(_.toLong)
+        val ids = ids1.intersect(ids2)
+        val len = ids.length
+        val x = f._2.x
+        val y = f._2.y
+
+        (Flock(start, end, ids.sorted.mkString(" "), x, y), len)
+      }.
+      toList.
+      filter(_._2 >= mu).
+      map(_._1)
+
+    }
+
+    f
+  }
+
+  def filterDisks(candidates: List[Disk], mu: Int): List[Disk] ={
+    var valids = new collection.mutable.ListBuffer[(Disk, Boolean)]()
+    for( candidate <- candidates.filter(_.length >= mu) ){ valids += Tuple2(candidate, true) }
+    for(i <- valids.indices){
+      for(j <- valids.indices){
+        if(i != j & valids(i)._2){
+          val ids1 = valids(i)._1.ids.split(" ")
+          val ids2 = valids(j)._1.ids.split(" ")
+          if(valids(j)._2 & ids1.forall(ids2.contains)){
+            valids(i) = Tuple2(valids(i)._1, false)
           }
-          if(ids(i)._2 & ids2.forall(ids1.contains)){
-            ids(j) = Tuple2(ids(j)._1, false)
+          if(valids(i)._2 & ids2.forall(ids1.contains)){
+            valids(j) = Tuple2(valids(j)._1, false)
           }
         }
       }
     }
 
-    ids.filter(_._2).map(_._1.sorted.mkString(" ")).toList
+    valids.filter(_._2).map(_._1).toList
   }
 
-  def getDisks(points: List[ST_Point], centers: List[ST_Point], epsilon: Double): List[List[Long]] ={
+  def getDisks(points: List[ST_Point], centers: List[ST_Point], epsilon: Double): List[Disk] ={
+    val t = points.map(_.t).head
     val PointCenter = for{ p <- points; c <- centers } yield (p, c)
     PointCenter.map(d => (d._2, d._1.id, dist( (d._1.x, d._1.y), (d._2.x, d._2.y) ))) // Getting the distance between centers and points...
       .filter(_._3 <= (epsilon / 2.0) + precision) // Filtering out those greater than epsilon / 2...
       .map(d => ( (d._1.x, d._1.y), d._2 )) // Selecting center and point ID...
       .groupBy(_._1) // Grouping by the center...
-      .map(_._2.map(_._2)) // Selecting just the list of IDs...
+      .map { disk => // Selecting just the list of IDs...
+        val center = disk._1
+        val ids = disk._2.map(_._2)
+        val len = ids.length
+
+        Disk(ids.mkString(" "), len, center._1, center._2)
+      } 
       .toList
   }
 

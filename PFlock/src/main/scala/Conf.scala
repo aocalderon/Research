@@ -6,7 +6,7 @@ class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
   val mu:         ScallopOption[Int]    	= opt[Int]    	(default = Some(4))
   val partitions: ScallopOption[Int]    	= opt[Int]    	(default = Some(1024))
   val cores:      ScallopOption[Int]    	= opt[Int]    	(default = Some(32))
-  val master:     ScallopOption[String] 	= opt[String] 	(default = Some("local[*]")) /* spark://169.235.27.134:7077 */
+  val master:     ScallopOption[String] 	= opt[String] 	(default = Some("spark://169.235.27.134:7077")) /* spark://169.235.27.134:7077 */
   val home:       ScallopOption[String] 	= opt[String] 	(default = Some("RESEARCH_HOME"))
   val path:       ScallopOption[String] 	= opt[String] 	(default = Some("Datasets/Berlin/"))
   val valpath:    ScallopOption[String] 	= opt[String] 	(default = Some("Validation/"))
