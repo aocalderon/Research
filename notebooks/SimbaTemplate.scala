@@ -1,19 +1,13 @@
-import org.slf4j.{Logger, LoggerFactory}
 import org.apache.spark.sql.simba.{Dataset, SimbaSession}
 import org.apache.spark.sql.simba.index.RTreeType
 import org.apache.spark.sql.types.{StructType, StructField, LongType, DoubleType, IntegerType}
 
 import org.apache.spark.sql.functions._
 import scala.collection.JavaConverters._
-import scala.collection.mutable.ListBuffer
 
 // spark://169.235.27.134:7077
 val simba = SimbaSession.builder().master("local[*]").appName("MaximalDistanceFinder").config("simba.index.partitions", 1024).config("spark.cores.max", 32).getOrCreate()
 
-val logger: Logger = LoggerFactory.getLogger("myLogger")
-var timer: Long = 0L
-
-org.apache.spark.sql.catalyst.encoders.OuterScopes.addOuterScope(this)
 case class ST_Point(id: Long, x: Double, y: Double, t: Int = -1)
 case class Flock(start: Int, end: Int, ids: String, x: Double = 0.0, y: Double = 0.0)
 
