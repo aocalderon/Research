@@ -1,4 +1,4 @@
-import org.apache.spark.sql.simba.SimbaSession
+import org.apache.spark.sql.simba.
 
 object Combiner {
   val MU: Int = 3
@@ -12,6 +12,9 @@ object Combiner {
       .config("spark.cores.max", "4")
       .getOrCreate()
     simba.sparkContext.setLogLevel("ERROR")
+
+
+
     val f0 = simba.sparkContext
       .textFile("file:///home/and/Documents/PhD/Code/Y3Q1/Datasets/s1.txt")
       .map(_.split(",").toList.map(_.trim.toInt))
