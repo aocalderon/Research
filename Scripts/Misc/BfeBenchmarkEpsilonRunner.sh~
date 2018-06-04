@@ -1,0 +1,35 @@
+#!/bin/bash
+
+DATASET="/home/acald013/Research/Datasets/Berlin/berlin0-10.tsv"
+MU=4
+DELTA=5
+
+./BfeBenchmark.sh $DATASET 10 $MU $DELTA
+./BfeBenchmark.sh $DATASET 15 $MU $DELTA
+./BfeBenchmark.sh $DATASET 20 $MU $DELTA
+./BfeBenchmark.sh $DATASET 25 $MU $DELTA
+./BfeBenchmark.sh $DATASET 30 $MU $DELTA
+
+./BfeBenchmark.sh $DATASET 10 $MU $DELTA
+./BfeBenchmark.sh $DATASET 15 $MU $DELTA
+./BfeBenchmark.sh $DATASET 20 $MU $DELTA
+./BfeBenchmark.sh $DATASET 25 $MU $DELTA
+./BfeBenchmark.sh $DATASET 30 $MU $DELTA
+
+./BfeBenchmark.sh $DATASET 10 $MU $DELTA
+./BfeBenchmark.sh $DATASET 15 $MU $DELTA
+./BfeBenchmark.sh $DATASET 20 $MU $DELTA
+./BfeBenchmark.sh $DATASET 25 $MU $DELTA
+./BfeBenchmark.sh $DATASET 30 $MU $DELTA
+
+./BfeBenchmark.sh $DATASET 10 $MU $DELTA
+./BfeBenchmark.sh $DATASET 15 $MU $DELTA
+./BfeBenchmark.sh $DATASET 20 $MU $DELTA
+./BfeBenchmark.sh $DATASET 25 $MU $DELTA
+./BfeBenchmark.sh $DATASET 30 $MU $DELTA
+
+./BfeBenchmark.sh $DATASET 10 $MU $DELTA
+./BfeBenchmark.sh $DATASET 15 $MU $DELTA
+./BfeBenchmark.sh $DATASET 20 $MU $DELTA
+./BfeBenchmark.sh $DATASET 25 $MU $DELTA
+./BfeBenchmark.sh $DATASET 30 $MU $DELTA
