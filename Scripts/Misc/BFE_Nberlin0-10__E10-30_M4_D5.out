@@ -1,0 +1,200 @@
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:29:17 PDT 2018;RUN=1528072157;EPSILON=10;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m43.559s
+user	0m41.687s
+sys	0m1.834s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 62
+totalTime(ms):	42970	timeSearch:	10	timeSetTest:	0	timeJoin:	0	timeBuildIdx:	41660	totalAnswers:	62
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:30:00 PDT 2018;RUN=1528072200;EPSILON=10;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:30:00 PDT 2018;RUN=1528072200;EPSILON=15;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m40.140s
+user	0m39.348s
+sys	0m0.792s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 201
+totalTime(ms):	39760	timeSearch:	0	timeSetTest:	30	timeJoin:	10	timeBuildIdx:	39160	totalAnswers:	201
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:30:41 PDT 2018;RUN=1528072241;EPSILON=15;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:30:41 PDT 2018;RUN=1528072241;EPSILON=20;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m41.016s
+user	0m40.569s
+sys	0m0.447s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 458
+totalTime(ms):	40730	timeSearch:	0	timeSetTest:	50	timeJoin:	70	timeBuildIdx:	40250	totalAnswers:	458
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:31:22 PDT 2018;RUN=1528072282;EPSILON=20;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:31:22 PDT 2018;RUN=1528072282;EPSILON=25;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m40.370s
+user	0m40.077s
+sys	0m0.293s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 761
+totalTime(ms):	40080	timeSearch:	30	timeSetTest:	200	timeJoin:	210	timeBuildIdx:	39430	totalAnswers:	761
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:32:02 PDT 2018;RUN=1528072322;EPSILON=25;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:32:02 PDT 2018;RUN=1528072322;EPSILON=30;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m41.267s
+user	0m41.062s
+sys	0m0.226s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 1329
+totalTime(ms):	41040	timeSearch:	0	timeSetTest:	500	timeJoin:	650	timeBuildIdx:	39670	totalAnswers:	1329
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:32:43 PDT 2018;RUN=1528072363;EPSILON=30;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:32:43 PDT 2018;RUN=1528072363;EPSILON=10;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m43.145s
+user	0m41.355s
+sys	0m1.789s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 62
+totalTime(ms):	42580	timeSearch:	10	timeSetTest:	10	timeJoin:	0	timeBuildIdx:	41300	totalAnswers:	62
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:33:26 PDT 2018;RUN=1528072406;EPSILON=10;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:33:26 PDT 2018;RUN=1528072406;EPSILON=15;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m40.071s
+user	0m39.317s
+sys	0m0.755s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 201
+totalTime(ms):	39730	timeSearch:	0	timeSetTest:	0	timeJoin:	20	timeBuildIdx:	39110	totalAnswers:	201
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:34:06 PDT 2018;RUN=1528072446;EPSILON=15;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:34:06 PDT 2018;RUN=1528072446;EPSILON=20;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m40.978s
+user	0m40.538s
+sys	0m0.440s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 458
+totalTime(ms):	40680	timeSearch:	0	timeSetTest:	70	timeJoin:	100	timeBuildIdx:	40210	totalAnswers:	458
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:34:47 PDT 2018;RUN=1528072487;EPSILON=20;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:34:47 PDT 2018;RUN=1528072487;EPSILON=25;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m40.250s
+user	0m39.948s
+sys	0m0.302s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 761
+totalTime(ms):	40030	timeSearch:	40	timeSetTest:	190	timeJoin:	220	timeBuildIdx:	39340	totalAnswers:	761
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:35:28 PDT 2018;RUN=1528072528;EPSILON=25;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:35:28 PDT 2018;RUN=1528072528;EPSILON=30;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m41.305s
+user	0m41.075s
+sys	0m0.230s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 1329
+totalTime(ms):	41070	timeSearch:	20	timeSetTest:	530	timeJoin:	710	timeBuildIdx:	39660	totalAnswers:	1329
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:36:09 PDT 2018;RUN=1528072569;EPSILON=30;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:36:09 PDT 2018;RUN=1528072569;EPSILON=10;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m43.126s
+user	0m41.343s
+sys	0m1.784s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 62
+totalTime(ms):	42560	timeSearch:	0	timeSetTest:	0	timeJoin:	0	timeBuildIdx:	41260	totalAnswers:	62
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:36:52 PDT 2018;RUN=1528072612;EPSILON=10;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:36:52 PDT 2018;RUN=1528072612;EPSILON=15;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m40.275s
+user	0m39.509s
+sys	0m0.766s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 201
+totalTime(ms):	39870	timeSearch:	0	timeSetTest:	10	timeJoin:	10	timeBuildIdx:	39290	totalAnswers:	201
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:37:32 PDT 2018;RUN=1528072652;EPSILON=15;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:37:32 PDT 2018;RUN=1528072652;EPSILON=20;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m41.460s
+user	0m40.525s
+sys	0m0.449s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 458
+totalTime(ms):	40660	timeSearch:	10	timeSetTest:	90	timeJoin:	70	timeBuildIdx:	40190	totalAnswers:	458
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:38:14 PDT 2018;RUN=1528072694;EPSILON=20;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:38:14 PDT 2018;RUN=1528072694;EPSILON=25;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m40.235s
+user	0m39.940s
+sys	0m0.294s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 761
+totalTime(ms):	39920	timeSearch:	30	timeSetTest:	190	timeJoin:	240	timeBuildIdx:	39330	totalAnswers:	761
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:38:54 PDT 2018;RUN=1528072734;EPSILON=25;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:38:54 PDT 2018;RUN=1528072734;EPSILON=30;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m41.330s
+user	0m41.120s
+sys	0m0.210s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 1329
+totalTime(ms):	41080	timeSearch:	20	timeSetTest:	500	timeJoin:	670	timeBuildIdx:	39700	totalAnswers:	1329
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:39:36 PDT 2018;RUN=1528072776;EPSILON=30;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:39:36 PDT 2018;RUN=1528072776;EPSILON=10;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m43.165s
+user	0m41.355s
+sys	0m1.810s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 62
+totalTime(ms):	42610	timeSearch:	0	timeSetTest:	10	timeJoin:	0	timeBuildIdx:	41330	totalAnswers:	62
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:40:19 PDT 2018;RUN=1528072819;EPSILON=10;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:40:19 PDT 2018;RUN=1528072819;EPSILON=15;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m40.008s
+user	0m39.243s
+sys	0m0.780s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 201
+totalTime(ms):	39680	timeSearch:	10	timeSetTest:	0	timeJoin:	0	timeBuildIdx:	39080	totalAnswers:	201
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:40:59 PDT 2018;RUN=1528072859;EPSILON=15;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:40:59 PDT 2018;RUN=1528072859;EPSILON=20;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m40.721s
+user	0m40.271s
+sys	0m0.450s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 458
+totalTime(ms):	40400	timeSearch:	20	timeSetTest:	90	timeJoin:	80	timeBuildIdx:	39920	totalAnswers:	458
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:41:39 PDT 2018;RUN=1528072899;EPSILON=20;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:41:39 PDT 2018;RUN=1528072899;EPSILON=25;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m40.252s
+user	0m39.965s
+sys	0m0.287s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 761
+totalTime(ms):	39970	timeSearch:	10	timeSetTest:	200	timeJoin:	200	timeBuildIdx:	39330	totalAnswers:	761
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:42:20 PDT 2018;RUN=1528072940;EPSILON=25;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:42:20 PDT 2018;RUN=1528072940;EPSILON=30;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m41.373s
+user	0m41.137s
+sys	0m0.236s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 1329
+totalTime(ms):	41100	timeSearch:	30	timeSetTest:	530	timeJoin:	660	timeBuildIdx:	39740	totalAnswers:	1329
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:43:01 PDT 2018;RUN=1528072981;EPSILON=30;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:43:01 PDT 2018;RUN=1528072981;EPSILON=10;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m43.432s
+user	0m41.653s
+sys	0m1.779s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 62
+totalTime(ms):	42880	timeSearch:	0	timeSetTest:	10	timeJoin:	0	timeBuildIdx:	41590	totalAnswers:	62
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:43:45 PDT 2018;RUN=1528073025;EPSILON=10;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:43:45 PDT 2018;RUN=1528073025;EPSILON=15;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m39.994s
+user	0m39.201s
+sys	0m0.794s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 201
+totalTime(ms):	39580	timeSearch:	0	timeSetTest:	20	timeJoin:	40	timeBuildIdx:	39000	totalAnswers:	201
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:44:25 PDT 2018;RUN=1528073065;EPSILON=15;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:44:25 PDT 2018;RUN=1528073065;EPSILON=20;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m40.892s
+user	0m40.458s
+sys	0m0.433s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 458
+totalTime(ms):	40580	timeSearch:	0	timeSetTest:	90	timeJoin:	100	timeBuildIdx:	40100	totalAnswers:	458
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:45:05 PDT 2018;RUN=1528073105;EPSILON=20;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:45:05 PDT 2018;RUN=1528073105;EPSILON=25;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m40.184s
+user	0m39.879s
+sys	0m0.305s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 761
+totalTime(ms):	39870	timeSearch:	0	timeSetTest:	190	timeJoin:	220	timeBuildIdx:	39250	totalAnswers:	761
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:45:46 PDT 2018;RUN=1528073146;EPSILON=25;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:45:46 PDT 2018;RUN=1528073146;EPSILON=30;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=Start
+
+real	0m41.283s
+user	0m41.050s
+sys	0m0.233s
+Closing stream: /home/acald013/Research/Datasets/Berlin/berlin0-10.tsv Total answers: 1329
+totalTime(ms):	41040	timeSearch:	10	timeSetTest:	530	timeJoin:	660	timeBuildIdx:	39690	totalAnswers:	1329
+FLOCKFINDER=bfe;TIME=Sun Jun  3 17:46:27 PDT 2018;RUN=1528073187;EPSILON=30;MU=4;DELTA=5;SCRIPT=BfeBenchmark;EVENT=End
