@@ -168,7 +168,7 @@ object FlockFinderMergeLast {
             Flock(timestamp, timestamp, ids, x, y)
           }.toDS())
       val nC_tPlusDelta = C_tPlusDelta.count()
-      logging("2.Set of disks for t_i+delta...", timer, nC_t, "disks")
+      logging("2.Set of disks for t_i+delta...", timer, nC_tPlusDelta, "disks")
 
       if(nC_t > 0 && nC_tPlusDelta > 0) {
         // Joining timestamps...
@@ -194,7 +194,7 @@ object FlockFinderMergeLast {
           .cache()
         nF_prime = F_prime.count()
         logging(s"3.Joining timestams", timer, nF_prime, "candidates")
-        if(debug) F_prime.orderBy("ids").show(nF_prime.toInt, truncate = false)
+        if(debug) F_prime.orderBy("ids").show(10, truncate = false)
 
         // Checking internal timestamps...
         val timerCIT = System.currentTimeMillis()
@@ -205,6 +205,7 @@ object FlockFinderMergeLast {
           .join(pointset_prime.as("p"), $"c.pointID" === $"p.id", "left")
           .groupBy("flockID")
           .agg(collect_list($"id"), collect_list($"x"), collect_list($"y"), collect_list($"t"))
+        if(debug) logger.warn("Extracting points from raw data...")
         val P_prime = P.map { p =>
           val fid = p.getLong(0)
           val ids = p.getList[Long](1).asScala.toList
@@ -216,6 +217,7 @@ object FlockFinderMergeLast {
 
           (fid, points)
         }
+        if(debug) logger.warn("Making ST_Points...")
         val F_temp = P_prime.map{ f =>
               val fid = f._1
               val flocks = computeMaximalDisks(f._2, epsilon: Double, mu: Int, simba: SimbaSession)
@@ -227,11 +229,12 @@ object FlockFinderMergeLast {
           cache
         val nF_temp = F_temp.count()
         if(debug){
-          println(s"F_temp count: $nF_temp")
-          F_temp.orderBy($"ids").show(nF_temp.toInt, truncate = false)
+          logger.warn(s"F_temp count: $nF_temp")
+          F_temp.orderBy($"ids").show(10, truncate = false)
         }
         
-        val F =  pruneFlocks(F_temp, simba)
+        //val F =  pruneFlocks(F_temp, simba)
+        val F =  F_temp
         val nF = F.count()
         logging("Checking internal timestamps", timerCIT, nF, "flocks")
 
