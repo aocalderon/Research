@@ -1,4 +1,4 @@
-import org.apache.spark.sql.simba.
+import org.apache.spark.sql.simba.SimbaSession
 
 object Combiner {
   val MU: Int = 3
