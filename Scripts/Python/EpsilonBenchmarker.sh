@@ -33,9 +33,9 @@ python3 NodesSetter.py -n $NODES
 CORES=$(($NODES * $CORES_PER_NODE))
 spark-submit --class FlockFinderMergeLast $JAR_FILE \
 --path $DATAPATH --dataset $DATASET \
---epsilon $ESTART --epsilon_max $EEND --epsilon_step $ESTEP \
---mu $M --mu_max $M --mu_step 1 \
---delta $D --delta_max $D --delta_step 1 \
+--epsilon $E --epsilon_max $E \
+--mu $M --mu_max $M \
+--delta $D --delta_max $D \
 --cores $CORES
 $SPARK_HOME/sbin/stop-all.sh
 TIMESTAMP=`date`
