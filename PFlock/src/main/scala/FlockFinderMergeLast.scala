@@ -17,6 +17,7 @@ object FlockFinderMergeLast {
   case class Flock(start: Int, end: Int, ids: String, x: Double = 0.0, y: Double = 0.0)
   case class Disk(ids: String, length: Int, x: Double, y: Double)
   case class FlockPoints(flockID: Long, pointID: Long)
+  case class Candidate(id: Long, x: Double, y: Double, items: String)
 
   private var timer: Long = System.currentTimeMillis()
   private var debug: Boolean = false
@@ -114,7 +115,7 @@ object FlockFinderMergeLast {
     var F_prime: Dataset[Flock] = simba.sparkContext.emptyRDD[Flock].toDS()
     var nF_prime: Long = 0
     val delta: Int = delta_prime - 1
-    val distanceBetweenTimestamps: Double = conf.speed() * delta_prime
+    val distanceBetweenTimestamps: Double = conf.speed()
     val r2 = Math.pow(epsilon / 2.0, 2)
     val maximalDisksCache = collection.mutable.Map[Int, Dataset[Flock]]()
 
@@ -234,7 +235,7 @@ object FlockFinderMergeLast {
         }
         
         //val F =  pruneFlocks(F_temp, simba)
-        val F =  F_temp
+        val F =  pruneFlocksByExpansions(F_temp, epsilon, mu, simba).map(f => Flock(timestamp, timestamp + delta, f.ids, f.x, f.y))
         val nF = F.count()
         logging("Checking internal timestamps", timerCIT, nF, "flocks")
 
@@ -249,6 +250,173 @@ object FlockFinderMergeLast {
     logger.warn("\n\nPFLOCK_ML\t%.1f\t%d\t%d\t%d\n".format(epsilon, mu, delta + 1, nFinalFlocks))
     
     FinalFlocks
+  }
+
+  import org.apache.spark.sql.simba.index.{RTree, RTreeType}
+  import org.apache.spark.sql.simba.partitioner.STRPartitioner
+  import org.apache.spark.sql.simba.spatial.{MBR, Point}
+  import org.apache.spark.Partitioner
+
+  class ExpansionPartitioner(partitions: Long) extends Partitioner{
+    override def numPartitions: Int = partitions.toInt
+
+    override def getPartition(key: Any): Int = {
+      key.asInstanceOf[Int]
+    }
+  }
+  
+  def pruneFlocksByExpansions(flocks: Dataset[Flock], epsilon: Double, mu: Int, simba: SimbaSession): Dataset[Flock] = {
+    // Indexing candidates...
+    var timer = System.currentTimeMillis()
+    import simba.implicits._
+    import simba.simbaImplicits._
+    val debug = false
+    val sampleRate = 0.01
+    val dimensions = 2
+
+    val candidates = flocks.map(f => Candidate(0, f.x, f.y, f.ids)).cache
+    val nCandidates = candidates.count()
+    var candidatesNumPartitions: Int = candidates.rdd.getNumPartitions
+    if(debug) logger.warn("[Partitions Info]Candidates;Before indexing;%d".format(candidatesNumPartitions))
+    val pointCandidate = candidates.map{ candidate =>
+        ( new Point(Array(candidate.x, candidate.y)), candidate)
+      }
+      .rdd
+      .cache()
+    val candidatesSampleRate: Double = sampleRate
+    val candidatesDimension: Int = dimensions
+    val candidatesTransferThreshold: Long = 800 * 1024 * 1024
+    val candidatesMaxEntriesPerNode: Int = 25
+    candidatesNumPartitions = nCandidates.toInt / 100
+    val candidatesPartitioner: STRPartitioner = new STRPartitioner(candidatesNumPartitions
+      , candidatesSampleRate
+      , candidatesDimension
+      , candidatesTransferThreshold
+      , candidatesMaxEntriesPerNode
+      , pointCandidate)
+    logging("Indexing candidates...", timer, nCandidates, "candidates")
+
+    // Getting expansions...
+    timer = System.currentTimeMillis()
+    val expandedMBRs = candidatesPartitioner.mbrBound
+      .map{ mbr =>
+        val mins = new Point( Array(mbr._1.low.coord(0) - epsilon, mbr._1.low.coord(1) - epsilon) )
+        val maxs = new Point( Array(mbr._1.high.coord(0) + epsilon, mbr._1.high.coord(1) + epsilon) )
+        ( MBR(mins, maxs), mbr._2, 1 )
+      }
+
+    val expandedRTree = RTree(expandedMBRs, candidatesMaxEntriesPerNode)
+    candidatesNumPartitions = expandedMBRs.length
+    val candidates2 = pointCandidate.flatMap{ candidate =>
+      expandedRTree.circleRange(candidate._1, 0.0)
+        .map{ mbr => 
+          ( mbr._2, candidate._2 )
+        }
+      }
+      .partitionBy(new ExpansionPartitioner(candidatesNumPartitions))
+      .map(_._2)
+      .cache()
+    val nCandidates2 = candidates2.count()
+
+    candidatesNumPartitions = candidates2.getNumPartitions
+    logging("Getting expansions...", timer, candidatesNumPartitions, "expansions")
+
+    // Finding local maximals...
+    timer = System.currentTimeMillis()
+    val maximals = candidates2
+      .mapPartitionsWithIndex{ (partitionIndex, partitionCandidates) =>
+          val transactions = partitionCandidates
+            .map { candidate =>
+              candidate.items
+              .split(" ")
+              .map(new Integer(_))
+              .toList.asJava
+            }.toList.asJava
+          val algorithm = new AlgoFPMax
+          val maximals = algorithm.runAlgorithm(transactions, 1)
+
+          maximals.getItemsets(mu)
+            .asScala
+            .map(m => (partitionIndex, m.asScala.toList.sorted.mkString(" ")))
+            .toIterator
+      }.cache()
+    var nMaximals = maximals.map(_._2).distinct().count()
+    logging("Finding local maximals...", timer, nMaximals, "local maximals")
+
+    // Prunning duplicates and subsets...
+    timer = System.currentTimeMillis()
+    val EMBRs = expandedMBRs.map{ mbr =>
+        mbr._2 -> "%f;%f;%f;%f".format(mbr._1.low.coord(0),mbr._1.low.coord(1),mbr._1.high.coord(0),mbr._1.high.coord(1))
+    }.toMap
+    val maximals2 = maximals.toDF("pid", "ids").join(flocks, "ids").
+      select($"pid", $"ids", $"x", $"y").
+      map{ m =>
+        val pid = m.getInt(0)
+        val MBRCoordinates = EMBRs(pid)
+        val ids = m.getString(1)
+        val x   = m.getDouble(2)
+        val y   = m.getDouble(3)
+        val maximal = "%s;%f;%f;%d".format(ids, x, y, pid)
+        (maximal, MBRCoordinates)
+      }.
+      map(m => (m._1, m._2, isNotInExpansionArea(m._1, m._2, epsilon))).cache()
+
+    val maximalFlocks = maximals2.filter(m => m._3).
+      map(m => m._1).//distinct().
+      map{ m =>
+        val arr = m.split(";")
+        val ids = arr(0)
+        val x   = arr(1).toDouble
+        val y   = arr(2).toDouble
+
+        Flock(0, 0, ids, x, y)
+      }.as[Flock].cache
+
+    val bordersX = simba.createDataset(candidatesPartitioner.mbrBound.
+      flatMap{ mbr =>
+        val x1 = mbr._1.low.coord(0)
+        val x2 = mbr._1.high.coord(0)
+
+        List(x1, x2)
+      }.distinct.sorted.drop(1).dropRight(1)).toDF("x")
+    val bordersY = simba.createDataset(candidatesPartitioner.mbrBound.
+      flatMap{ mbr =>
+        val y1 = mbr._1.low.coord(1)
+        val y2 = mbr._1.high.coord(1)
+
+        List(y1, y2)
+      }.distinct.sorted.drop(1).dropRight(1)).toDF("y")
+
+    val duplicateX = bordersX.
+      join(right = maximalFlocks, usingColumns = Seq("x"), joinType = "inner").
+      select($"start", $"end", $"ids", $"x", $"y").as[Flock].cache
+    val duplicateY = bordersY.
+      join(right = maximalFlocks, usingColumns = Seq("y"), joinType = "inner").
+      select($"start", $"end", $"ids", $"x", $"y").as[Flock].cache
+    val duplicates = duplicateX.union(duplicateY).cache
+    val prunedFlocks = maximalFlocks.except(duplicates).union(duplicateX.distinct).union(duplicateY.distinct).cache
+    val nPrunedFlocks = prunedFlocks.count()
+
+    logging("Prunning duplicates and subsets...", timer, nPrunedFlocks, "flocks")
+    prunedFlocks.show(100, truncate = false)
+
+    prunedFlocks
+  }
+
+  def isNotInExpansionArea(maximalString: String, coordinatesString: String, epsilon: Double): Boolean = {
+    val maximal = maximalString.split(";")
+    val x = maximal(1).toDouble
+    val y = maximal(2).toDouble
+    val coordinates = coordinatesString.split(";")
+    val min_x = coordinates(0).toDouble
+    val min_y = coordinates(1).toDouble
+    val max_x = coordinates(2).toDouble
+    val max_y = coordinates(3).toDouble
+
+    x <= (max_x - epsilon) &&
+      x >= (min_x + epsilon) &&
+      y <= (max_y - epsilon) &&
+      y >= (min_y + epsilon)
   }
 
   import org.apache.spark.Partitioner

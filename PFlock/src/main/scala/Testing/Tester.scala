@@ -38,7 +38,7 @@ object Tester {
 
     // Reading data...
     timer = System.currentTimeMillis()
-    val flocks = readingData("/home/acald013/Research/Datasets/Flocks1.txt", simba).cache
+    val flocks = readingData("/home/acald013/Research/Datasets/Flocks0.txt", simba).cache
     val nFlocks = flocks.count()
     flocks.show(flocks.count().toInt, truncate = false)
     logging("Reading data...", timer, nFlocks, "flocks")
@@ -104,8 +104,8 @@ object Tester {
       , pointCandidate)
     logging("Indexing candidates...", timer, nCandidates, "candidates")
 
-logger.warn(s"Number of partitions: ${candidatesPartitioner.mbrBound.length}")
-candidatesPartitioner.mbrBound.foreach(println)
+//logger.warn(s"Number of partitions: ${candidatesPartitioner.mbrBound.length}")
+//candidatesPartitioner.mbrBound.foreach(println)
 
     // Getting expansions...
     timer = System.currentTimeMillis()
@@ -116,8 +116,8 @@ candidatesPartitioner.mbrBound.foreach(println)
         ( MBR(mins, maxs), mbr._2, 1 )
       }
 
-logger.warn(s"Number of partitions: ${expandedMBRs.length}")
-expandedMBRs.foreach(println)
+//logger.warn(s"Number of partitions: ${expandedMBRs.length}")
+//expandedMBRs.foreach(println)
 
     val expandedRTree = RTree(expandedMBRs, candidatesMaxEntriesPerNode)
     candidatesNumPartitions = expandedMBRs.length
@@ -132,8 +132,8 @@ expandedMBRs.foreach(println)
       .cache()
     val nCandidates2 = candidates2.count()
 
-candidates2.mapPartitionsWithIndex((i, p) => p.map(m => (m.x, m.y, m.items, i))).
-  toDF("x", "y", "ids", "pid").orderBy($"ids").show(100, truncate = false)
+//candidates2.mapPartitionsWithIndex((i, p) => p.map(m => (m.x, m.y, m.items, i))).
+  //toDF("x", "y", "ids", "pid").orderBy($"ids").show(100, truncate = false)
 
     candidatesNumPartitions = candidates2.getNumPartitions
     logging("Getting expansions...", timer, candidatesNumPartitions, "expansions")
@@ -160,7 +160,7 @@ candidates2.mapPartitionsWithIndex((i, p) => p.map(m => (m.x, m.y, m.items, i)))
     var nMaximals = maximals.map(_._2).distinct().count()
     logging("Finding local maximals...", timer, nMaximals, "local maximals")
 
-maximals.map(m => (m._1, m._2)).toDF("pid", "ids").orderBy($"ids").show(100, truncate = false)
+//maximals.map(m => (m._1, m._2)).toDF("pid", "ids").orderBy($"ids").show(100, truncate = false)
 
     // Prunning duplicates and subsets...
     timer = System.currentTimeMillis()
@@ -180,9 +180,9 @@ maximals.map(m => (m._1, m._2)).toDF("pid", "ids").orderBy($"ids").show(100, tru
       }.
       map(m => (m._1, m._2, isNotInExpansionArea(m._1, m._2, epsilon))).cache()
 
-maximals2.toDF("A","B","C").orderBy($"A").show(100, truncate = false)
+//maximals2.toDF("A","B","C").orderBy($"A").show(100, truncate = false)
 
-    val prunedFlocks = maximals2.filter(m => m._3).
+    val maximalFlocks = maximals2.filter(m => m._3).
       map(m => m._1).//distinct().
       map{ m =>
         val arr = m.split(";")
@@ -192,8 +192,6 @@ maximals2.toDF("A","B","C").orderBy($"A").show(100, truncate = false)
 
         Flock(0, 0, ids, x, y)
       }.as[Flock].cache
-    val nPrunedFlocks = prunedFlocks.count()
-    logging("Prunning duplicates and subsets...", timer, nPrunedFlocks, "flocks")
 
     val bordersX = simba.createDataset(candidatesPartitioner.mbrBound.
       flatMap{ mbr =>
@@ -210,10 +208,18 @@ maximals2.toDF("A","B","C").orderBy($"A").show(100, truncate = false)
         List(y1, y2)
       }.distinct.sorted.drop(1).dropRight(1)).toDF("y")
 
-    bordersX.show()
-    bordersY.show()
-    prunedFlocks.join(bordersX, "x").show()
-    prunedFlocks.join(bordersY, "y").show()
+    val duplicateX = bordersX.
+      join(right = maximalFlocks, usingColumns = Seq("x"), joinType = "inner").
+      select($"start", $"end", $"ids", $"x", $"y").as[Flock].cache
+    val duplicateY = bordersY.
+      join(right = maximalFlocks, usingColumns = Seq("y"), joinType = "inner").
+      select($"start", $"end", $"ids", $"x", $"y").as[Flock].cache
+    val duplicates = duplicateX.union(duplicateY).cache
+    val prunedFlocks = maximalFlocks.except(duplicates).union(duplicateX.distinct).union(duplicateY.distinct).cache
+    val nPrunedFlocks = prunedFlocks.count()
+
+    logging("Prunning duplicates and subsets...", timer, nPrunedFlocks, "flocks")
+    prunedFlocks.show(100, truncate = false)
 
     prunedFlocks
   }

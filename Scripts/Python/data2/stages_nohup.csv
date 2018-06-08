@@ -1,0 +1,1802 @@
+1;291;MergeLast;30.0;4;3;0.Reporting locations;5.63
+1;307;MergeLast;30.0;4;3;1.Set of disks for t_i;31.31
+1;308;MergeLast;30.0;4;3;0.Reporting locations;4.98
+1;324;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;20.51
+1;325;MergeLast;30.0;4;3;3.Joining timestams;8.55
+1;326;MergeLast;30.0;4;3;4.Checking internals;11.68
+1;327;MergeLast;30.0;4;3;0.Reporting locations;4.91
+1;343;MergeLast;30.0;4;3;1.Set of disks for t_i;19.58
+1;344;MergeLast;30.0;4;3;0.Reporting locations;4.93
+1;360;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;35.6
+1;361;MergeLast;30.0;4;3;3.Joining timestams;7.04
+1;362;MergeLast;30.0;4;3;4.Checking internals;9.44
+1;363;MergeLast;30.0;4;3;0.Reporting locations;4.89
+1;364;MergeLast;30.0;4;3;1.Set of disks for t_i;0.19
+1;365;MergeLast;30.0;4;3;0.Reporting locations;4.94
+1;381;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;34.83
+1;382;MergeLast;30.0;4;3;3.Joining timestams;7.26
+1;383;MergeLast;30.0;4;3;4.Checking internals;9.93
+1;384;MergeLast;30.0;4;3;0.Reporting locations;4.96
+1;385;MergeLast;30.0;4;3;1.Set of disks for t_i;0.19
+1;386;MergeLast;30.0;4;3;0.Reporting locations;4.93
+1;402;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;34.61
+1;403;MergeLast;30.0;4;3;3.Joining timestams;7.15
+1;404;MergeLast;30.0;4;3;4.Checking internals;9.29
+1;405;MergeLast;30.0;4;3;0.Reporting locations;4.93
+1;406;MergeLast;30.0;4;3;1.Set of disks for t_i;0.25
+1;407;MergeLast;30.0;4;3;0.Reporting locations;4.9
+1;423;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;35.22
+1;424;MergeLast;30.0;4;3;3.Joining timestams;7.09
+1;425;MergeLast;30.0;4;3;4.Checking internals;9.48
+1;426;MergeLast;30.0;4;3;0.Reporting locations;4.91
+1;427;MergeLast;30.0;4;3;1.Set of disks for t_i;0.19
+1;428;MergeLast;30.0;4;3;0.Reporting locations;4.86
+1;444;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;35.38
+1;445;MergeLast;30.0;4;3;3.Joining timestams;7.26
+1;446;MergeLast;30.0;4;3;4.Checking internals;9.73
+1;447;MergeLast;30.0;4;3;0.Reporting locations;5.04
+1;448;MergeLast;30.0;4;3;1.Set of disks for t_i;0.2
+1;449;MergeLast;30.0;4;3;0.Reporting locations;4.93
+1;465;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;23.95
+1;466;MergeLast;30.0;4;3;3.Joining timestams;6.8
+1;467;MergeLast;30.0;4;3;4.Checking internals;9.45
+1;468;MergeLast;30.0;4;3;0.Reporting locations;4.92
+1;469;MergeLast;30.0;4;3;1.Set of disks for t_i;0.24
+1;470;MergeLast;30.0;4;3;0.Reporting locations;4.8
+1;486;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;32.3
+1;487;MergeLast;30.0;4;3;3.Joining timestams;8.08
+1;488;MergeLast;30.0;4;3;4.Checking internals;9.34
+1;489;MergeLast;30.0;4;3;0.Reporting locations;4.88
+1;490;MergeLast;30.0;4;3;1.Set of disks for t_i;0.2
+1;491;MergeLast;30.0;4;3;0.Reporting locations;4.78
+1;507;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;32.65
+1;508;MergeLast;30.0;4;3;3.Joining timestams;6.8
+1;509;MergeLast;30.0;4;3;4.Checking internals;9.2
+1;514;MergeLast;30.0;4;3;Running MergeLast;592.78
+3;883;MergeLast;30.0;4;3;0.Reporting locations;5.44
+3;899;MergeLast;30.0;4;3;1.Set of disks for t_i;30.91
+3;900;MergeLast;30.0;4;3;0.Reporting locations;4.92
+3;916;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;22.45
+3;917;MergeLast;30.0;4;3;3.Joining timestams;8.19
+3;918;MergeLast;30.0;4;3;4.Checking internals;11.81
+3;919;MergeLast;30.0;4;3;0.Reporting locations;4.74
+3;935;MergeLast;30.0;4;3;1.Set of disks for t_i;19.12
+3;936;MergeLast;30.0;4;3;0.Reporting locations;4.7
+3;952;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;33.77
+3;953;MergeLast;30.0;4;3;3.Joining timestams;7.06
+3;954;MergeLast;30.0;4;3;4.Checking internals;9.45
+3;955;MergeLast;30.0;4;3;0.Reporting locations;4.73
+3;956;MergeLast;30.0;4;3;1.Set of disks for t_i;0.24
+3;957;MergeLast;30.0;4;3;0.Reporting locations;4.69
+3;973;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;33.9
+3;974;MergeLast;30.0;4;3;3.Joining timestams;7.85
+3;975;MergeLast;30.0;4;3;4.Checking internals;9.39
+3;976;MergeLast;30.0;4;3;0.Reporting locations;4.76
+3;977;MergeLast;30.0;4;3;1.Set of disks for t_i;0.25
+3;978;MergeLast;30.0;4;3;0.Reporting locations;4.8
+3;994;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;33.45
+3;995;MergeLast;30.0;4;3;3.Joining timestams;7.66
+3;996;MergeLast;30.0;4;3;4.Checking internals;9.32
+3;997;MergeLast;30.0;4;3;0.Reporting locations;4.79
+3;998;MergeLast;30.0;4;3;1.Set of disks for t_i;0.24
+3;999;MergeLast;30.0;4;3;0.Reporting locations;4.73
+3;1015;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;33.68
+3;1016;MergeLast;30.0;4;3;3.Joining timestams;7.28
+3;1017;MergeLast;30.0;4;3;4.Checking internals;9.3
+3;1018;MergeLast;30.0;4;3;0.Reporting locations;4.74
+3;1019;MergeLast;30.0;4;3;1.Set of disks for t_i;0.24
+3;1020;MergeLast;30.0;4;3;0.Reporting locations;4.73
+3;1036;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;34.36
+3;1037;MergeLast;30.0;4;3;3.Joining timestams;6.89
+3;1038;MergeLast;30.0;4;3;4.Checking internals;9.08
+3;1039;MergeLast;30.0;4;3;0.Reporting locations;4.78
+3;1040;MergeLast;30.0;4;3;1.Set of disks for t_i;0.22
+3;1041;MergeLast;30.0;4;3;0.Reporting locations;4.6
+3;1057;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;24.58
+3;1058;MergeLast;30.0;4;3;3.Joining timestams;7.38
+3;1059;MergeLast;30.0;4;3;4.Checking internals;8.99
+3;1060;MergeLast;30.0;4;3;0.Reporting locations;4.78
+3;1061;MergeLast;30.0;4;3;1.Set of disks for t_i;0.25
+3;1062;MergeLast;30.0;4;3;0.Reporting locations;4.56
+3;1078;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;32.11
+3;1079;MergeLast;30.0;4;3;3.Joining timestams;7.81
+3;1080;MergeLast;30.0;4;3;4.Checking internals;10.05
+3;1081;MergeLast;30.0;4;3;0.Reporting locations;4.64
+3;1082;MergeLast;30.0;4;3;1.Set of disks for t_i;0.23
+3;1083;MergeLast;30.0;4;3;0.Reporting locations;4.56
+3;1099;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;31.93
+3;1100;MergeLast;30.0;4;3;3.Joining timestams;7.46
+3;1101;MergeLast;30.0;4;3;4.Checking internals;9.03
+3;1106;MergeLast;30.0;4;3;Running MergeLast;584.45
+5;1406;MergeLast;30.0;4;3;0.Reporting locations;5.16
+5;1422;MergeLast;30.0;4;3;1.Set of disks for t_i;31.64
+5;1423;MergeLast;30.0;4;3;0.Reporting locations;5.29
+5;1439;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;22.04
+5;1440;MergeLast;30.0;4;3;3.Joining timestams;9.02
+5;1441;MergeLast;30.0;4;3;4.Checking internals;12.14
+5;1442;MergeLast;30.0;4;3;0.Reporting locations;5.21
+5;1458;MergeLast;30.0;4;3;1.Set of disks for t_i;20.46
+5;1459;MergeLast;30.0;4;3;0.Reporting locations;5.11
+5;1475;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;33.52
+5;1476;MergeLast;30.0;4;3;3.Joining timestams;7.9
+5;1477;MergeLast;30.0;4;3;4.Checking internals;9.68
+5;1478;MergeLast;30.0;4;3;0.Reporting locations;5.16
+5;1479;MergeLast;30.0;4;3;1.Set of disks for t_i;0.25
+5;1480;MergeLast;30.0;4;3;0.Reporting locations;5.06
+5;1496;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;31.67
+5;1497;MergeLast;30.0;4;3;3.Joining timestams;7.51
+5;1498;MergeLast;30.0;4;3;4.Checking internals;9.86
+5;1499;MergeLast;30.0;4;3;0.Reporting locations;5.15
+5;1500;MergeLast;30.0;4;3;1.Set of disks for t_i;0.25
+5;1501;MergeLast;30.0;4;3;0.Reporting locations;5.1
+5;1517;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;31.7
+5;1518;MergeLast;30.0;4;3;3.Joining timestams;7.46
+5;1519;MergeLast;30.0;4;3;4.Checking internals;9.7
+5;1520;MergeLast;30.0;4;3;0.Reporting locations;5.17
+5;1521;MergeLast;30.0;4;3;1.Set of disks for t_i;0.26
+5;1522;MergeLast;30.0;4;3;0.Reporting locations;5.22
+5;1538;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;32.24
+5;1539;MergeLast;30.0;4;3;3.Joining timestams;7.3
+5;1540;MergeLast;30.0;4;3;4.Checking internals;9.89
+5;1541;MergeLast;30.0;4;3;0.Reporting locations;5.17
+5;1542;MergeLast;30.0;4;3;1.Set of disks for t_i;0.27
+5;1543;MergeLast;30.0;4;3;0.Reporting locations;5.13
+5;1559;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;32.36
+5;1560;MergeLast;30.0;4;3;3.Joining timestams;7.36
+5;1561;MergeLast;30.0;4;3;4.Checking internals;9.69
+5;1562;MergeLast;30.0;4;3;0.Reporting locations;5.14
+5;1563;MergeLast;30.0;4;3;1.Set of disks for t_i;0.35
+5;1564;MergeLast;30.0;4;3;0.Reporting locations;5.04
+5;1580;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;22.49
+5;1581;MergeLast;30.0;4;3;3.Joining timestams;7.02
+5;1582;MergeLast;30.0;4;3;4.Checking internals;9.86
+5;1583;MergeLast;30.0;4;3;0.Reporting locations;5.39
+5;1584;MergeLast;30.0;4;3;1.Set of disks for t_i;0.26
+5;1585;MergeLast;30.0;4;3;0.Reporting locations;5.21
+5;1601;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;34.34
+5;1602;MergeLast;30.0;4;3;3.Joining timestams;7.97
+5;1603;MergeLast;30.0;4;3;4.Checking internals;9.74
+5;1604;MergeLast;30.0;4;3;0.Reporting locations;5.25
+5;1605;MergeLast;30.0;4;3;1.Set of disks for t_i;0.25
+5;1606;MergeLast;30.0;4;3;0.Reporting locations;5.15
+5;1622;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;33.61
+5;1623;MergeLast;30.0;4;3;3.Joining timestams;6.94
+5;1624;MergeLast;30.0;4;3;4.Checking internals;9.62
+5;1629;MergeLast;30.0;4;3;Running MergeLast;593.13
+7;1929;MergeLast;30.0;4;3;0.Reporting locations;5.28
+7;1945;MergeLast;30.0;4;3;1.Set of disks for t_i;31.92
+7;1946;MergeLast;30.0;4;3;0.Reporting locations;4.72
+7;1962;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;21.73
+7;1963;MergeLast;30.0;4;3;3.Joining timestams;8.0
+7;1964;MergeLast;30.0;4;3;4.Checking internals;11.83
+7;1965;MergeLast;30.0;4;3;0.Reporting locations;4.95
+7;1981;MergeLast;30.0;4;3;1.Set of disks for t_i;19.92
+7;1982;MergeLast;30.0;4;3;0.Reporting locations;4.8
+7;1998;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;32.52
+7;1999;MergeLast;30.0;4;3;3.Joining timestams;7.08
+7;2000;MergeLast;30.0;4;3;4.Checking internals;9.23
+7;2001;MergeLast;30.0;4;3;0.Reporting locations;4.77
+7;2002;MergeLast;30.0;4;3;1.Set of disks for t_i;0.28
+7;2003;MergeLast;30.0;4;3;0.Reporting locations;4.79
+7;2019;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;32.39
+7;2020;MergeLast;30.0;4;3;3.Joining timestams;7.64
+7;2021;MergeLast;30.0;4;3;4.Checking internals;9.36
+7;2022;MergeLast;30.0;4;3;0.Reporting locations;4.78
+7;2023;MergeLast;30.0;4;3;1.Set of disks for t_i;0.25
+7;2024;MergeLast;30.0;4;3;0.Reporting locations;4.83
+7;2040;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;31.43
+7;2041;MergeLast;30.0;4;3;3.Joining timestams;7.42
+7;2042;MergeLast;30.0;4;3;4.Checking internals;9.61
+7;2043;MergeLast;30.0;4;3;0.Reporting locations;4.84
+7;2044;MergeLast;30.0;4;3;1.Set of disks for t_i;0.25
+7;2045;MergeLast;30.0;4;3;0.Reporting locations;4.81
+7;2061;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;31.64
+7;2062;MergeLast;30.0;4;3;3.Joining timestams;7.82
+7;2063;MergeLast;30.0;4;3;4.Checking internals;9.31
+7;2064;MergeLast;30.0;4;3;0.Reporting locations;4.85
+7;2065;MergeLast;30.0;4;3;1.Set of disks for t_i;0.27
+7;2066;MergeLast;30.0;4;3;0.Reporting locations;4.79
+7;2082;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;32.0
+7;2083;MergeLast;30.0;4;3;3.Joining timestams;7.04
+7;2084;MergeLast;30.0;4;3;4.Checking internals;9.16
+7;2085;MergeLast;30.0;4;3;0.Reporting locations;4.83
+7;2086;MergeLast;30.0;4;3;1.Set of disks for t_i;0.25
+7;2087;MergeLast;30.0;4;3;0.Reporting locations;4.75
+7;2103;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;22.47
+7;2104;MergeLast;30.0;4;3;3.Joining timestams;7.11
+7;2105;MergeLast;30.0;4;3;4.Checking internals;8.91
+7;2106;MergeLast;30.0;4;3;0.Reporting locations;4.87
+7;2107;MergeLast;30.0;4;3;1.Set of disks for t_i;0.26
+7;2108;MergeLast;30.0;4;3;0.Reporting locations;4.63
+7;2124;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;33.65
+7;2125;MergeLast;30.0;4;3;3.Joining timestams;7.54
+7;2126;MergeLast;30.0;4;3;4.Checking internals;9.57
+7;2127;MergeLast;30.0;4;3;0.Reporting locations;4.75
+7;2128;MergeLast;30.0;4;3;1.Set of disks for t_i;0.28
+7;2129;MergeLast;30.0;4;3;0.Reporting locations;4.67
+7;2145;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;32.94
+7;2146;MergeLast;30.0;4;3;3.Joining timestams;7.93
+7;2147;MergeLast;30.0;4;3;4.Checking internals;9.0
+7;2152;MergeLast;30.0;4;3;Running MergeLast;577.23
+9;2452;MergeLast;30.0;4;3;0.Reporting locations;5.0
+9;2468;MergeLast;30.0;4;3;1.Set of disks for t_i;32.64
+9;2469;MergeLast;30.0;4;3;0.Reporting locations;5.67
+9;2485;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;22.04
+9;2486;MergeLast;30.0;4;3;3.Joining timestams;8.53
+9;2487;MergeLast;30.0;4;3;4.Checking internals;12.28
+9;2488;MergeLast;30.0;4;3;0.Reporting locations;4.8
+9;2504;MergeLast;30.0;4;3;1.Set of disks for t_i;19.78
+9;2505;MergeLast;30.0;4;3;0.Reporting locations;4.82
+9;2521;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;32.81
+9;2522;MergeLast;30.0;4;3;3.Joining timestams;7.15
+9;2523;MergeLast;30.0;4;3;4.Checking internals;9.56
+9;2524;MergeLast;30.0;4;3;0.Reporting locations;5.69
+9;2525;MergeLast;30.0;4;3;1.Set of disks for t_i;0.25
+9;2526;MergeLast;30.0;4;3;0.Reporting locations;4.76
+9;2542;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;32.32
+9;2543;MergeLast;30.0;4;3;3.Joining timestams;7.36
+9;2544;MergeLast;30.0;4;3;4.Checking internals;9.56
+9;2545;MergeLast;30.0;4;3;0.Reporting locations;4.78
+9;2546;MergeLast;30.0;4;3;1.Set of disks for t_i;0.26
+9;2547;MergeLast;30.0;4;3;0.Reporting locations;4.8
+9;2563;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;31.71
+9;2564;MergeLast;30.0;4;3;3.Joining timestams;7.32
+9;2565;MergeLast;30.0;4;3;4.Checking internals;9.59
+9;2566;MergeLast;30.0;4;3;0.Reporting locations;4.79
+9;2567;MergeLast;30.0;4;3;1.Set of disks for t_i;0.45
+9;2568;MergeLast;30.0;4;3;0.Reporting locations;4.87
+9;2584;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;31.8
+9;2585;MergeLast;30.0;4;3;3.Joining timestams;7.54
+9;2586;MergeLast;30.0;4;3;4.Checking internals;9.49
+9;2587;MergeLast;30.0;4;3;0.Reporting locations;4.79
+9;2588;MergeLast;30.0;4;3;1.Set of disks for t_i;0.24
+9;2589;MergeLast;30.0;4;3;0.Reporting locations;4.8
+9;2605;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;31.8
+9;2606;MergeLast;30.0;4;3;3.Joining timestams;7.37
+9;2607;MergeLast;30.0;4;3;4.Checking internals;9.65
+9;2608;MergeLast;30.0;4;3;0.Reporting locations;4.8
+9;2609;MergeLast;30.0;4;3;1.Set of disks for t_i;0.25
+9;2610;MergeLast;30.0;4;3;0.Reporting locations;4.7
+9;2626;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;23.31
+9;2627;MergeLast;30.0;4;3;3.Joining timestams;7.55
+9;2628;MergeLast;30.0;4;3;4.Checking internals;9.4
+9;2629;MergeLast;30.0;4;3;0.Reporting locations;4.82
+9;2630;MergeLast;30.0;4;3;1.Set of disks for t_i;0.27
+9;2631;MergeLast;30.0;4;3;0.Reporting locations;4.68
+9;2647;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;33.49
+9;2648;MergeLast;30.0;4;3;3.Joining timestams;7.52
+9;2649;MergeLast;30.0;4;3;4.Checking internals;9.3
+9;2650;MergeLast;30.0;4;3;0.Reporting locations;4.73
+9;2651;MergeLast;30.0;4;3;1.Set of disks for t_i;0.26
+9;2652;MergeLast;30.0;4;3;0.Reporting locations;4.64
+9;2668;MergeLast;30.0;4;3;2.Set of disks for t_i+delta;34.45
+9;2669;MergeLast;30.0;4;3;3.Joining timestams;7.84
+9;2670;MergeLast;30.0;4;3;4.Checking internals;9.99
+9;2675;MergeLast;30.0;4;3;Running MergeLast;585.75
+11;2975;MergeLast;30.0;3;5;0.Reporting locations;5.45
+11;2991;MergeLast;30.0;3;5;1.Set of disks for t_i;32.76
+11;2992;MergeLast;30.0;3;5;0.Reporting locations;5.18
+11;3008;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;36.79
+11;3009;MergeLast;30.0;3;5;3.Joining timestams;18.5
+11;3010;MergeLast;30.0;3;5;4.Checking internals;21.41
+11;3011;MergeLast;30.0;3;5;0.Reporting locations;5.2
+11;3027;MergeLast;30.0;3;5;1.Set of disks for t_i;20.57
+11;3028;MergeLast;30.0;3;5;0.Reporting locations;5.12
+11;3044;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;35.29
+11;3045;MergeLast;30.0;3;5;3.Joining timestams;17.87
+11;3046;MergeLast;30.0;3;5;4.Checking internals;20.64
+11;3047;MergeLast;30.0;3;5;0.Reporting locations;5.21
+11;3063;MergeLast;30.0;3;5;1.Set of disks for t_i;19.35
+11;3064;MergeLast;30.0;3;5;0.Reporting locations;5.15
+11;3080;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;34.83
+11;3081;MergeLast;30.0;3;5;3.Joining timestams;18.48
+11;3082;MergeLast;30.0;3;5;4.Checking internals;19.79
+11;3083;MergeLast;30.0;3;5;0.Reporting locations;5.11
+11;3099;MergeLast;30.0;3;5;1.Set of disks for t_i;33.58
+11;3100;MergeLast;30.0;3;5;0.Reporting locations;5.22
+11;3116;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;35.32
+11;3117;MergeLast;30.0;3;5;3.Joining timestams;17.2
+11;3118;MergeLast;30.0;3;5;4.Checking internals;17.53
+11;3119;MergeLast;30.0;3;5;0.Reporting locations;5.32
+11;3120;MergeLast;30.0;3;5;1.Set of disks for t_i;0.27
+11;3121;MergeLast;30.0;3;5;0.Reporting locations;5.09
+11;3137;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;25.96
+11;3138;MergeLast;30.0;3;5;3.Joining timestams;20.76
+11;3139;MergeLast;30.0;3;5;4.Checking internals;18.46
+11;3140;MergeLast;30.0;3;5;0.Reporting locations;5.26
+11;3141;MergeLast;30.0;3;5;1.Set of disks for t_i;0.25
+11;3142;MergeLast;30.0;3;5;0.Reporting locations;5.05
+11;3158;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;32.15
+11;3159;MergeLast;30.0;3;5;3.Joining timestams;17.41
+11;3160;MergeLast;30.0;3;5;4.Checking internals;20.32
+11;3161;MergeLast;30.0;3;5;0.Reporting locations;5.2
+11;3162;MergeLast;30.0;3;5;1.Set of disks for t_i;0.24
+11;3163;MergeLast;30.0;3;5;0.Reporting locations;5.02
+11;3179;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;32.73
+11;3180;MergeLast;30.0;3;5;3.Joining timestams;19.2
+11;3181;MergeLast;30.0;3;5;4.Checking internals;18.39
+11;3186;MergeLast;30.0;3;5;Running MergeLast;689.32
+14;3758;MergeLast;30.0;7;5;0.Reporting locations;8.03
+14;3774;MergeLast;30.0;7;5;1.Set of disks for t_i;31.48
+14;3775;MergeLast;30.0;7;5;0.Reporting locations;5.48
+14;3791;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;34.06
+14;3792;MergeLast;30.0;7;5;3.Joining timestams;4.31
+14;3793;MergeLast;30.0;7;5;4.Checking internals;11.07
+14;3794;MergeLast;30.0;7;5;0.Reporting locations;4.94
+14;3810;MergeLast;30.0;7;5;1.Set of disks for t_i;19.38
+14;3811;MergeLast;30.0;7;5;0.Reporting locations;4.87
+14;3827;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;31.47
+14;3828;MergeLast;30.0;7;5;3.Joining timestams;4.52
+14;3829;MergeLast;30.0;7;5;4.Checking internals;11.43
+14;3830;MergeLast;30.0;7;5;0.Reporting locations;4.92
+14;3846;MergeLast;30.0;7;5;1.Set of disks for t_i;18.48
+14;3847;MergeLast;30.0;7;5;0.Reporting locations;4.9
+14;3863;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;31.7
+14;3864;MergeLast;30.0;7;5;3.Joining timestams;3.46
+14;3865;MergeLast;30.0;7;5;4.Checking internals;9.28
+14;3866;MergeLast;30.0;7;5;0.Reporting locations;4.97
+14;3882;MergeLast;30.0;7;5;1.Set of disks for t_i;30.53
+14;3883;MergeLast;30.0;7;5;0.Reporting locations;4.95
+14;3899;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;31.99
+14;3900;MergeLast;30.0;7;5;3.Joining timestams;3.71
+14;3901;MergeLast;30.0;7;5;4.Checking internals;9.38
+14;3902;MergeLast;30.0;7;5;0.Reporting locations;4.91
+14;3903;MergeLast;30.0;7;5;1.Set of disks for t_i;0.24
+14;3904;MergeLast;30.0;7;5;0.Reporting locations;4.85
+14;3920;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;24.22
+14;3921;MergeLast;30.0;7;5;3.Joining timestams;3.78
+14;3922;MergeLast;30.0;7;5;4.Checking internals;9.24
+14;3923;MergeLast;30.0;7;5;0.Reporting locations;4.96
+14;3924;MergeLast;30.0;7;5;1.Set of disks for t_i;0.25
+14;3925;MergeLast;30.0;7;5;0.Reporting locations;4.77
+14;3941;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;34.63
+14;3942;MergeLast;30.0;7;5;3.Joining timestams;3.63
+14;3943;MergeLast;30.0;7;5;4.Checking internals;9.63
+14;3944;MergeLast;30.0;7;5;0.Reporting locations;4.91
+14;3945;MergeLast;30.0;7;5;1.Set of disks for t_i;0.25
+14;3946;MergeLast;30.0;7;5;0.Reporting locations;4.79
+14;3962;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;34.68
+14;3963;MergeLast;30.0;7;5;3.Joining timestams;3.88
+14;3964;MergeLast;30.0;7;5;4.Checking internals;9.3
+14;3969;MergeLast;30.0;7;5;Running MergeLast;500.87
+16;4269;MergeLast;30.0;3;5;0.Reporting locations;5.58
+16;4285;MergeLast;30.0;3;5;1.Set of disks for t_i;34.32
+16;4286;MergeLast;30.0;3;5;0.Reporting locations;4.94
+16;4302;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;33.67
+16;4303;MergeLast;30.0;3;5;3.Joining timestams;19.35
+16;4304;MergeLast;30.0;3;5;4.Checking internals;21.4
+16;4305;MergeLast;30.0;3;5;0.Reporting locations;4.81
+16;4321;MergeLast;30.0;3;5;1.Set of disks for t_i;20.3
+16;4322;MergeLast;30.0;3;5;0.Reporting locations;4.76
+16;4338;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;32.6
+16;4339;MergeLast;30.0;3;5;3.Joining timestams;17.54
+16;4340;MergeLast;30.0;3;5;4.Checking internals;22.23
+16;4341;MergeLast;30.0;3;5;0.Reporting locations;4.76
+16;4357;MergeLast;30.0;3;5;1.Set of disks for t_i;19.18
+16;4358;MergeLast;30.0;3;5;0.Reporting locations;4.76
+16;4374;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;32.25
+16;4375;MergeLast;30.0;3;5;3.Joining timestams;17.35
+16;4376;MergeLast;30.0;3;5;4.Checking internals;19.13
+16;4377;MergeLast;30.0;3;5;0.Reporting locations;4.79
+16;4393;MergeLast;30.0;3;5;1.Set of disks for t_i;31.08
+16;4394;MergeLast;30.0;3;5;0.Reporting locations;4.78
+16;4410;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;32.57
+16;4411;MergeLast;30.0;3;5;3.Joining timestams;17.23
+16;4412;MergeLast;30.0;3;5;4.Checking internals;19.1
+16;4413;MergeLast;30.0;3;5;0.Reporting locations;4.79
+16;4414;MergeLast;30.0;3;5;1.Set of disks for t_i;0.26
+16;4415;MergeLast;30.0;3;5;0.Reporting locations;4.75
+16;4431;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;23.0
+16;4432;MergeLast;30.0;3;5;3.Joining timestams;17.82
+16;4433;MergeLast;30.0;3;5;4.Checking internals;19.81
+16;4434;MergeLast;30.0;3;5;0.Reporting locations;4.77
+16;4435;MergeLast;30.0;3;5;1.Set of disks for t_i;0.27
+16;4436;MergeLast;30.0;3;5;0.Reporting locations;4.6
+16;4452;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;34.23
+16;4453;MergeLast;30.0;3;5;3.Joining timestams;17.75
+16;4454;MergeLast;30.0;3;5;4.Checking internals;17.97
+16;4455;MergeLast;30.0;3;5;0.Reporting locations;4.84
+16;4456;MergeLast;30.0;3;5;1.Set of disks for t_i;0.27
+16;4457;MergeLast;30.0;3;5;0.Reporting locations;4.6
+16;4473;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;33.21
+16;4474;MergeLast;30.0;3;5;3.Joining timestams;18.48
+16;4475;MergeLast;30.0;3;5;4.Checking internals;17.62
+16;4480;MergeLast;30.0;3;5;Running MergeLast;668.43
+18;4780;MergeLast;30.0;7;5;0.Reporting locations;5.47
+18;4796;MergeLast;30.0;7;5;1.Set of disks for t_i;31.04
+18;4797;MergeLast;30.0;7;5;0.Reporting locations;4.89
+18;4813;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;33.42
+18;4814;MergeLast;30.0;7;5;3.Joining timestams;4.51
+18;4815;MergeLast;30.0;7;5;4.Checking internals;11.17
+18;4816;MergeLast;30.0;7;5;0.Reporting locations;4.72
+18;4832;MergeLast;30.0;7;5;1.Set of disks for t_i;19.37
+18;4833;MergeLast;30.0;7;5;0.Reporting locations;4.69
+18;4849;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;31.48
+18;4850;MergeLast;30.0;7;5;3.Joining timestams;4.19
+18;4851;MergeLast;30.0;7;5;4.Checking internals;8.64
+18;4852;MergeLast;30.0;7;5;0.Reporting locations;4.75
+18;4868;MergeLast;30.0;7;5;1.Set of disks for t_i;18.64
+18;4869;MergeLast;30.0;7;5;0.Reporting locations;4.72
+18;4885;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;31.26
+18;4886;MergeLast;30.0;7;5;3.Joining timestams;3.6
+18;4887;MergeLast;30.0;7;5;4.Checking internals;8.65
+18;4888;MergeLast;30.0;7;5;0.Reporting locations;4.73
+18;4904;MergeLast;30.0;7;5;1.Set of disks for t_i;30.18
+18;4905;MergeLast;30.0;7;5;0.Reporting locations;4.74
+18;4921;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;31.05
+18;4922;MergeLast;30.0;7;5;3.Joining timestams;3.89
+18;4923;MergeLast;30.0;7;5;4.Checking internals;8.76
+18;4924;MergeLast;30.0;7;5;0.Reporting locations;4.74
+18;4925;MergeLast;30.0;7;5;1.Set of disks for t_i;0.31
+18;4926;MergeLast;30.0;7;5;0.Reporting locations;4.67
+18;4942;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;21.53
+18;4943;MergeLast;30.0;7;5;3.Joining timestams;3.86
+18;4944;MergeLast;30.0;7;5;4.Checking internals;8.68
+18;4945;MergeLast;30.0;7;5;0.Reporting locations;4.77
+18;4946;MergeLast;30.0;7;5;1.Set of disks for t_i;0.24
+18;4947;MergeLast;30.0;7;5;0.Reporting locations;4.61
+18;4963;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;32.37
+18;4964;MergeLast;30.0;7;5;3.Joining timestams;3.63
+18;4965;MergeLast;30.0;7;5;4.Checking internals;8.65
+18;4966;MergeLast;30.0;7;5;0.Reporting locations;4.8
+18;4967;MergeLast;30.0;7;5;1.Set of disks for t_i;0.27
+18;4968;MergeLast;30.0;7;5;0.Reporting locations;4.69
+18;4984;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;32.92
+18;4985;MergeLast;30.0;7;5;3.Joining timestams;3.8
+18;4986;MergeLast;30.0;7;5;4.Checking internals;8.82
+18;4991;MergeLast;30.0;7;5;Running MergeLast;480.42
+20;5291;MergeLast;30.0;3;5;0.Reporting locations;5.24
+20;5307;MergeLast;30.0;3;5;1.Set of disks for t_i;32.09
+20;5308;MergeLast;30.0;3;5;0.Reporting locations;5.31
+20;5324;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;35.35
+20;5325;MergeLast;30.0;3;5;3.Joining timestams;18.42
+20;5326;MergeLast;30.0;3;5;4.Checking internals;22.03
+20;5327;MergeLast;30.0;3;5;0.Reporting locations;5.21
+20;5343;MergeLast;30.0;3;5;1.Set of disks for t_i;20.32
+20;5344;MergeLast;30.0;3;5;0.Reporting locations;5.21
+20;5360;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;34.19
+20;5361;MergeLast;30.0;3;5;3.Joining timestams;16.89
+20;5362;MergeLast;30.0;3;5;4.Checking internals;18.11
+20;5363;MergeLast;30.0;3;5;0.Reporting locations;5.21
+20;5379;MergeLast;30.0;3;5;1.Set of disks for t_i;18.91
+20;5380;MergeLast;30.0;3;5;0.Reporting locations;5.22
+20;5396;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;34.13
+20;5397;MergeLast;30.0;3;5;3.Joining timestams;18.07
+20;5398;MergeLast;30.0;3;5;4.Checking internals;17.87
+20;5399;MergeLast;30.0;3;5;0.Reporting locations;5.31
+20;5415;MergeLast;30.0;3;5;1.Set of disks for t_i;34.19
+20;5416;MergeLast;30.0;3;5;0.Reporting locations;5.51
+20;5432;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;34.43
+20;5433;MergeLast;30.0;3;5;3.Joining timestams;17.37
+20;5434;MergeLast;30.0;3;5;4.Checking internals;18.4
+20;5435;MergeLast;30.0;3;5;0.Reporting locations;5.26
+20;5436;MergeLast;30.0;3;5;1.Set of disks for t_i;0.22
+20;5437;MergeLast;30.0;3;5;0.Reporting locations;5.29
+20;5453;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;24.01
+20;5454;MergeLast;30.0;3;5;3.Joining timestams;18.02
+20;5455;MergeLast;30.0;3;5;4.Checking internals;23.35
+20;5456;MergeLast;30.0;3;5;0.Reporting locations;5.35
+20;5457;MergeLast;30.0;3;5;1.Set of disks for t_i;0.25
+20;5458;MergeLast;30.0;3;5;0.Reporting locations;5.2
+20;5474;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;33.59
+20;5475;MergeLast;30.0;3;5;3.Joining timestams;17.49
+20;5476;MergeLast;30.0;3;5;4.Checking internals;19.52
+20;5477;MergeLast;30.0;3;5;0.Reporting locations;5.34
+20;5478;MergeLast;30.0;3;5;1.Set of disks for t_i;0.23
+20;5479;MergeLast;30.0;3;5;0.Reporting locations;5.21
+20;5495;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;33.2
+20;5496;MergeLast;30.0;3;5;3.Joining timestams;18.28
+20;5497;MergeLast;30.0;3;5;4.Checking internals;18.35
+20;5502;MergeLast;30.0;3;5;Running MergeLast;681.96
+22;5802;MergeLast;30.0;7;5;0.Reporting locations;5.54
+22;5818;MergeLast;30.0;7;5;1.Set of disks for t_i;30.84
+22;5819;MergeLast;30.0;7;5;0.Reporting locations;6.29
+22;5835;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;34.8
+22;5836;MergeLast;30.0;7;5;3.Joining timestams;4.4
+22;5837;MergeLast;30.0;7;5;4.Checking internals;12.29
+22;5838;MergeLast;30.0;7;5;0.Reporting locations;5.41
+22;5854;MergeLast;30.0;7;5;1.Set of disks for t_i;19.85
+22;5855;MergeLast;30.0;7;5;0.Reporting locations;5.44
+22;5871;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;32.07
+22;5872;MergeLast;30.0;7;5;3.Joining timestams;4.69
+22;5873;MergeLast;30.0;7;5;4.Checking internals;9.92
+22;5874;MergeLast;30.0;7;5;0.Reporting locations;5.39
+22;5890;MergeLast;30.0;7;5;1.Set of disks for t_i;18.98
+22;5891;MergeLast;30.0;7;5;0.Reporting locations;5.39
+22;5907;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;32.9
+22;5908;MergeLast;30.0;7;5;3.Joining timestams;3.73
+22;5909;MergeLast;30.0;7;5;4.Checking internals;9.94
+22;5910;MergeLast;30.0;7;5;0.Reporting locations;5.39
+22;5926;MergeLast;30.0;7;5;1.Set of disks for t_i;30.91
+22;5927;MergeLast;30.0;7;5;0.Reporting locations;5.4
+22;5943;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;31.99
+22;5944;MergeLast;30.0;7;5;3.Joining timestams;3.99
+22;5945;MergeLast;30.0;7;5;4.Checking internals;10.0
+22;5946;MergeLast;30.0;7;5;0.Reporting locations;5.4
+22;5947;MergeLast;30.0;7;5;1.Set of disks for t_i;0.24
+22;5948;MergeLast;30.0;7;5;0.Reporting locations;5.33
+22;5964;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;21.87
+22;5965;MergeLast;30.0;7;5;3.Joining timestams;3.74
+22;5966;MergeLast;30.0;7;5;4.Checking internals;9.9
+22;5967;MergeLast;30.0;7;5;0.Reporting locations;5.42
+22;5968;MergeLast;30.0;7;5;1.Set of disks for t_i;0.24
+22;5969;MergeLast;30.0;7;5;0.Reporting locations;5.21
+22;5985;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;32.72
+22;5986;MergeLast;30.0;7;5;3.Joining timestams;3.55
+22;5987;MergeLast;30.0;7;5;4.Checking internals;9.83
+22;5988;MergeLast;30.0;7;5;0.Reporting locations;5.42
+22;5989;MergeLast;30.0;7;5;1.Set of disks for t_i;0.25
+22;5990;MergeLast;30.0;7;5;0.Reporting locations;5.22
+22;6006;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;32.35
+22;6007;MergeLast;30.0;7;5;3.Joining timestams;3.86
+22;6008;MergeLast;30.0;7;5;4.Checking internals;9.93
+22;6013;MergeLast;30.0;7;5;Running MergeLast;504.31
+24;6313;MergeLast;30.0;3;5;0.Reporting locations;5.66
+24;6329;MergeLast;30.0;3;5;1.Set of disks for t_i;31.62
+24;6330;MergeLast;30.0;3;5;0.Reporting locations;5.66
+24;6346;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;35.91
+24;6347;MergeLast;30.0;3;5;3.Joining timestams;18.71
+24;6348;MergeLast;30.0;3;5;4.Checking internals;23.21
+24;6349;MergeLast;30.0;3;5;0.Reporting locations;5.25
+24;6365;MergeLast;30.0;3;5;1.Set of disks for t_i;20.49
+24;6366;MergeLast;30.0;3;5;0.Reporting locations;5.28
+24;6382;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;35.07
+24;6383;MergeLast;30.0;3;5;3.Joining timestams;18.13
+24;6384;MergeLast;30.0;3;5;4.Checking internals;18.5
+24;6385;MergeLast;30.0;3;5;0.Reporting locations;5.33
+24;6401;MergeLast;30.0;3;5;1.Set of disks for t_i;18.71
+24;6402;MergeLast;30.0;3;5;0.Reporting locations;5.23
+24;6418;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;35.18
+24;6419;MergeLast;30.0;3;5;3.Joining timestams;17.9
+24;6420;MergeLast;30.0;3;5;4.Checking internals;20.34
+24;6421;MergeLast;30.0;3;5;0.Reporting locations;5.26
+24;6437;MergeLast;30.0;3;5;1.Set of disks for t_i;34.15
+24;6438;MergeLast;30.0;3;5;0.Reporting locations;5.22
+24;6454;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;35.87
+24;6455;MergeLast;30.0;3;5;3.Joining timestams;17.19
+24;6456;MergeLast;30.0;3;5;4.Checking internals;23.44
+24;6457;MergeLast;30.0;3;5;0.Reporting locations;5.27
+24;6458;MergeLast;30.0;3;5;1.Set of disks for t_i;0.24
+24;6459;MergeLast;30.0;3;5;0.Reporting locations;5.21
+24;6475;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;24.62
+24;6476;MergeLast;30.0;3;5;3.Joining timestams;17.63
+24;6477;MergeLast;30.0;3;5;4.Checking internals;20.04
+24;6478;MergeLast;30.0;3;5;0.Reporting locations;5.27
+24;6479;MergeLast;30.0;3;5;1.Set of disks for t_i;0.2
+24;6480;MergeLast;30.0;3;5;0.Reporting locations;5.06
+24;6496;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;32.98
+24;6497;MergeLast;30.0;3;5;3.Joining timestams;16.55
+24;6498;MergeLast;30.0;3;5;4.Checking internals;18.58
+24;6499;MergeLast;30.0;3;5;0.Reporting locations;5.28
+24;6500;MergeLast;30.0;3;5;1.Set of disks for t_i;0.27
+24;6501;MergeLast;30.0;3;5;0.Reporting locations;5.12
+24;6517;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;33.81
+24;6518;MergeLast;30.0;3;5;3.Joining timestams;17.73
+24;6519;MergeLast;30.0;3;5;4.Checking internals;16.85
+24;6524;MergeLast;30.0;3;5;Running MergeLast;689.05
+26;6824;MergeLast;30.0;7;5;0.Reporting locations;5.35
+26;6840;MergeLast;30.0;7;5;1.Set of disks for t_i;31.08
+26;6841;MergeLast;30.0;7;5;0.Reporting locations;5.85
+26;6857;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;35.88
+26;6858;MergeLast;30.0;7;5;3.Joining timestams;4.34
+26;6859;MergeLast;30.0;7;5;4.Checking internals;11.33
+26;6860;MergeLast;30.0;7;5;0.Reporting locations;5.07
+26;6876;MergeLast;30.0;7;5;1.Set of disks for t_i;19.92
+26;6877;MergeLast;30.0;7;5;0.Reporting locations;5.1
+26;6893;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;31.97
+26;6894;MergeLast;30.0;7;5;3.Joining timestams;4.27
+26;6895;MergeLast;30.0;7;5;4.Checking internals;9.24
+26;6896;MergeLast;30.0;7;5;0.Reporting locations;5.03
+26;6912;MergeLast;30.0;7;5;1.Set of disks for t_i;19.06
+26;6913;MergeLast;30.0;7;5;0.Reporting locations;5.07
+26;6929;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;31.9
+26;6930;MergeLast;30.0;7;5;3.Joining timestams;3.51
+26;6931;MergeLast;30.0;7;5;4.Checking internals;9.21
+26;6932;MergeLast;30.0;7;5;0.Reporting locations;5.03
+26;6948;MergeLast;30.0;7;5;1.Set of disks for t_i;30.58
+26;6949;MergeLast;30.0;7;5;0.Reporting locations;5.06
+26;6965;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;32.22
+26;6966;MergeLast;30.0;7;5;3.Joining timestams;3.82
+26;6967;MergeLast;30.0;7;5;4.Checking internals;9.32
+26;6968;MergeLast;30.0;7;5;0.Reporting locations;5.04
+26;6969;MergeLast;30.0;7;5;1.Set of disks for t_i;0.3
+26;6970;MergeLast;30.0;7;5;0.Reporting locations;5.01
+26;6986;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;22.29
+26;6987;MergeLast;30.0;7;5;3.Joining timestams;3.95
+26;6988;MergeLast;30.0;7;5;4.Checking internals;9.26
+26;6989;MergeLast;30.0;7;5;0.Reporting locations;5.11
+26;6990;MergeLast;30.0;7;5;1.Set of disks for t_i;0.26
+26;6991;MergeLast;30.0;7;5;0.Reporting locations;4.91
+26;7007;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;33.88
+26;7008;MergeLast;30.0;7;5;3.Joining timestams;3.56
+26;7009;MergeLast;30.0;7;5;4.Checking internals;9.13
+26;7010;MergeLast;30.0;7;5;0.Reporting locations;5.08
+26;7011;MergeLast;30.0;7;5;1.Set of disks for t_i;0.25
+26;7012;MergeLast;30.0;7;5;0.Reporting locations;4.95
+26;7028;MergeLast;30.0;7;5;2.Set of disks for t_i+delta;34.58
+26;7029;MergeLast;30.0;7;5;3.Joining timestams;3.98
+26;7030;MergeLast;30.0;7;5;4.Checking internals;9.26
+26;7035;MergeLast;30.0;7;5;Running MergeLast;498.51
+28;7335;MergeLast;30.0;3;5;0.Reporting locations;5.76
+28;7351;MergeLast;30.0;3;5;1.Set of disks for t_i;30.7
+28;7352;MergeLast;30.0;3;5;0.Reporting locations;6.47
+28;7368;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;35.31
+28;7369;MergeLast;30.0;3;5;3.Joining timestams;17.8
+28;7370;MergeLast;30.0;3;5;4.Checking internals;22.45
+28;7371;MergeLast;30.0;3;5;0.Reporting locations;5.62
+28;7387;MergeLast;30.0;3;5;1.Set of disks for t_i;20.54
+28;7388;MergeLast;30.0;3;5;0.Reporting locations;5.72
+28;7404;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;33.36
+28;7405;MergeLast;30.0;3;5;3.Joining timestams;17.66
+28;7406;MergeLast;30.0;3;5;4.Checking internals;22.41
+28;7407;MergeLast;30.0;3;5;0.Reporting locations;5.6
+28;7423;MergeLast;30.0;3;5;1.Set of disks for t_i;19.16
+28;7424;MergeLast;30.0;3;5;0.Reporting locations;5.71
+28;7440;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;32.4
+28;7441;MergeLast;30.0;3;5;3.Joining timestams;17.13
+28;7442;MergeLast;30.0;3;5;4.Checking internals;20.34
+28;7443;MergeLast;30.0;3;5;0.Reporting locations;5.56
+28;7459;MergeLast;30.0;3;5;1.Set of disks for t_i;31.24
+28;7460;MergeLast;30.0;3;5;0.Reporting locations;5.58
+28;7476;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;33.02
+28;7477;MergeLast;30.0;3;5;3.Joining timestams;17.69
+28;7478;MergeLast;30.0;3;5;4.Checking internals;20.55
+28;7479;MergeLast;30.0;3;5;0.Reporting locations;5.54
+28;7480;MergeLast;30.0;3;5;1.Set of disks for t_i;0.28
+28;7481;MergeLast;30.0;3;5;0.Reporting locations;5.48
+28;7497;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;23.85
+28;7498;MergeLast;30.0;3;5;3.Joining timestams;17.54
+28;7499;MergeLast;30.0;3;5;4.Checking internals;20.54
+28;7500;MergeLast;30.0;3;5;0.Reporting locations;5.62
+28;7501;MergeLast;30.0;3;5;1.Set of disks for t_i;0.27
+28;7502;MergeLast;30.0;3;5;0.Reporting locations;5.46
+28;7518;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;34.85
+28;7519;MergeLast;30.0;3;5;3.Joining timestams;17.32
+28;7520;MergeLast;30.0;3;5;4.Checking internals;19.21
+28;7521;MergeLast;30.0;3;5;0.Reporting locations;5.61
+28;7522;MergeLast;30.0;3;5;1.Set of disks for t_i;0.29
+28;7523;MergeLast;30.0;3;5;0.Reporting locations;5.42
+28;7539;MergeLast;30.0;3;5;2.Set of disks for t_i+delta;34.58
+28;7540;MergeLast;30.0;3;5;3.Joining timestams;18.55
+28;7541;MergeLast;30.0;3;5;4.Checking internals;18.91
+28;7546;MergeLast;30.0;3;5;Running MergeLast;687.89
+0;19;SpatialJoin;30.0;4;3;0.Reporting locations;5.34
+0;35;SpatialJoin;30.0;4;3;1.Set of disks for t_i;31.44
+0;36;SpatialJoin;30.0;4;3;4.Found flocks;0.4
+0;37;SpatialJoin;30.0;4;3;5.Updating times;0.45
+0;38;SpatialJoin;30.0;4;3;6.Filter phase;0.92
+0;39;SpatialJoin;30.0;4;3;0.Reporting locations;5.04
+0;55;SpatialJoin;30.0;4;3;1.Set of disks for t_i;20.2
+0;56;SpatialJoin;30.0;4;3;2.Distance Join phase;3.51
+0;57;SpatialJoin;30.0;4;3;3.Getting candidates;3.09
+0;58;SpatialJoin;30.0;4;3;4.Found flocks;0.81
+0;59;SpatialJoin;30.0;4;3;5.Updating times;1.47
+0;60;SpatialJoin;30.0;4;3;6.Filter phase;2.71
+0;61;SpatialJoin;30.0;4;3;0.Reporting locations;5.02
+0;77;SpatialJoin;30.0;4;3;1.Set of disks for t_i;19.13
+0;78;SpatialJoin;30.0;4;3;2.Distance Join phase;7.24
+0;79;SpatialJoin;30.0;4;3;3.Getting candidates;4.85
+0;80;SpatialJoin;30.0;4;3;4.Found flocks;0.7
+0;81;SpatialJoin;30.0;4;3;5.Updating times;1.17
+0;82;SpatialJoin;30.0;4;3;6.Filter phase;2.02
+0;83;SpatialJoin;30.0;4;3;0.Reporting locations;4.96
+0;99;SpatialJoin;30.0;4;3;1.Set of disks for t_i;33.35
+0;100;SpatialJoin;30.0;4;3;2.Distance Join phase;7.12
+0;101;SpatialJoin;30.0;4;3;3.Getting candidates;4.31
+0;102;SpatialJoin;30.0;4;3;4.Found flocks;1.44
+0;103;SpatialJoin;30.0;4;3;5.Updating times;1.57
+0;104;SpatialJoin;30.0;4;3;6.Filter phase;2.32
+0;105;SpatialJoin;30.0;4;3;0.Reporting locations;4.98
+0;121;SpatialJoin;30.0;4;3;1.Set of disks for t_i;32.62
+0;122;SpatialJoin;30.0;4;3;2.Distance Join phase;7.75
+0;123;SpatialJoin;30.0;4;3;3.Getting candidates;4.62
+0;124;SpatialJoin;30.0;4;3;4.Found flocks;0.95
+0;125;SpatialJoin;30.0;4;3;5.Updating times;1.4
+0;126;SpatialJoin;30.0;4;3;6.Filter phase;2.35
+0;127;SpatialJoin;30.0;4;3;0.Reporting locations;4.98
+0;143;SpatialJoin;30.0;4;3;1.Set of disks for t_i;33.1
+0;144;SpatialJoin;30.0;4;3;2.Distance Join phase;8.1
+0;145;SpatialJoin;30.0;4;3;3.Getting candidates;5.07
+0;146;SpatialJoin;30.0;4;3;4.Found flocks;1.1
+0;147;SpatialJoin;30.0;4;3;5.Updating times;1.62
+0;148;SpatialJoin;30.0;4;3;6.Filter phase;2.51
+0;149;SpatialJoin;30.0;4;3;0.Reporting locations;4.93
+0;165;SpatialJoin;30.0;4;3;1.Set of disks for t_i;32.99
+0;166;SpatialJoin;30.0;4;3;2.Distance Join phase;8.87
+0;167;SpatialJoin;30.0;4;3;3.Getting candidates;5.04
+0;168;SpatialJoin;30.0;4;3;4.Found flocks;1.15
+0;169;SpatialJoin;30.0;4;3;5.Updating times;1.61
+0;170;SpatialJoin;30.0;4;3;6.Filter phase;2.52
+0;171;SpatialJoin;30.0;4;3;0.Reporting locations;4.93
+0;187;SpatialJoin;30.0;4;3;1.Set of disks for t_i;34.48
+0;188;SpatialJoin;30.0;4;3;2.Distance Join phase;8.49
+0;189;SpatialJoin;30.0;4;3;3.Getting candidates;5.1
+0;190;SpatialJoin;30.0;4;3;4.Found flocks;1.35
+0;191;SpatialJoin;30.0;4;3;5.Updating times;1.74
+0;192;SpatialJoin;30.0;4;3;6.Filter phase;2.67
+0;193;SpatialJoin;30.0;4;3;0.Reporting locations;4.91
+0;209;SpatialJoin;30.0;4;3;1.Set of disks for t_i;24.62
+0;210;SpatialJoin;30.0;4;3;2.Distance Join phase;9.56
+0;211;SpatialJoin;30.0;4;3;3.Getting candidates;5.41
+0;212;SpatialJoin;30.0;4;3;4.Found flocks;1.36
+0;213;SpatialJoin;30.0;4;3;5.Updating times;1.85
+0;214;SpatialJoin;30.0;4;3;6.Filter phase;2.58
+0;215;SpatialJoin;30.0;4;3;0.Reporting locations;4.84
+0;231;SpatialJoin;30.0;4;3;1.Set of disks for t_i;34.25
+0;232;SpatialJoin;30.0;4;3;2.Distance Join phase;9.69
+0;233;SpatialJoin;30.0;4;3;3.Getting candidates;5.85
+0;234;SpatialJoin;30.0;4;3;4.Found flocks;1.67
+0;235;SpatialJoin;30.0;4;3;5.Updating times;2.39
+0;236;SpatialJoin;30.0;4;3;6.Filter phase;3.63
+0;237;SpatialJoin;30.0;4;3;0.Reporting locations;4.84
+0;253;SpatialJoin;30.0;4;3;1.Set of disks for t_i;32.43
+0;254;SpatialJoin;30.0;4;3;2.Distance Join phase;11.74
+0;255;SpatialJoin;30.0;4;3;3.Getting candidates;6.36
+0;256;SpatialJoin;30.0;4;3;4.Found flocks;1.57
+0;257;SpatialJoin;30.0;4;3;5.Updating times;2.0
+0;258;SpatialJoin;30.0;4;3;6.Filter phase;2.8
+0;263;SpatialJoin;30.0;4;3;Running SpatialJoin;618.67
+2;542;SpatialJoin;30.0;4;3;0.Reporting locations;5.43
+2;558;SpatialJoin;30.0;4;3;1.Set of disks for t_i;31.25
+2;559;SpatialJoin;30.0;4;3;4.Found flocks;0.37
+2;560;SpatialJoin;30.0;4;3;5.Updating times;0.53
+2;561;SpatialJoin;30.0;4;3;6.Filter phase;0.92
+2;562;SpatialJoin;30.0;4;3;0.Reporting locations;4.59
+2;578;SpatialJoin;30.0;4;3;1.Set of disks for t_i;26.14
+2;579;SpatialJoin;30.0;4;3;2.Distance Join phase;4.04
+2;580;SpatialJoin;30.0;4;3;3.Getting candidates;3.44
+2;581;SpatialJoin;30.0;4;3;4.Found flocks;0.76
+2;582;SpatialJoin;30.0;4;3;5.Updating times;1.59
+2;583;SpatialJoin;30.0;4;3;6.Filter phase;2.82
+2;584;SpatialJoin;30.0;4;3;0.Reporting locations;4.5
+2;600;SpatialJoin;30.0;4;3;1.Set of disks for t_i;19.46
+2;601;SpatialJoin;30.0;4;3;2.Distance Join phase;7.67
+2;602;SpatialJoin;30.0;4;3;3.Getting candidates;4.87
+2;603;SpatialJoin;30.0;4;3;4.Found flocks;0.75
+2;604;SpatialJoin;30.0;4;3;5.Updating times;1.08
+2;605;SpatialJoin;30.0;4;3;6.Filter phase;1.98
+2;606;SpatialJoin;30.0;4;3;0.Reporting locations;4.41
+2;622;SpatialJoin;30.0;4;3;1.Set of disks for t_i;31.08
+2;623;SpatialJoin;30.0;4;3;2.Distance Join phase;6.71
+2;624;SpatialJoin;30.0;4;3;3.Getting candidates;4.39
+2;625;SpatialJoin;30.0;4;3;4.Found flocks;0.92
+2;626;SpatialJoin;30.0;4;3;5.Updating times;1.34
+2;627;SpatialJoin;30.0;4;3;6.Filter phase;2.3
+2;628;SpatialJoin;30.0;4;3;0.Reporting locations;4.47
+2;644;SpatialJoin;30.0;4;3;1.Set of disks for t_i;30.45
+2;645;SpatialJoin;30.0;4;3;2.Distance Join phase;7.78
+2;646;SpatialJoin;30.0;4;3;3.Getting candidates;4.86
+2;647;SpatialJoin;30.0;4;3;4.Found flocks;1.02
+2;648;SpatialJoin;30.0;4;3;5.Updating times;1.51
+2;649;SpatialJoin;30.0;4;3;6.Filter phase;2.49
+2;650;SpatialJoin;30.0;4;3;0.Reporting locations;4.44
+2;666;SpatialJoin;30.0;4;3;1.Set of disks for t_i;30.42
+2;667;SpatialJoin;30.0;4;3;2.Distance Join phase;7.99
+2;668;SpatialJoin;30.0;4;3;3.Getting candidates;4.97
+2;669;SpatialJoin;30.0;4;3;4.Found flocks;1.24
+2;670;SpatialJoin;30.0;4;3;5.Updating times;1.58
+2;671;SpatialJoin;30.0;4;3;6.Filter phase;2.63
+2;672;SpatialJoin;30.0;4;3;0.Reporting locations;4.49
+2;688;SpatialJoin;30.0;4;3;1.Set of disks for t_i;31.78
+2;689;SpatialJoin;30.0;4;3;2.Distance Join phase;8.91
+2;690;SpatialJoin;30.0;4;3;3.Getting candidates;5.11
+2;691;SpatialJoin;30.0;4;3;4.Found flocks;1.23
+2;692;SpatialJoin;30.0;4;3;5.Updating times;1.6
+2;693;SpatialJoin;30.0;4;3;6.Filter phase;2.59
+2;694;SpatialJoin;30.0;4;3;0.Reporting locations;4.46
+2;710;SpatialJoin;30.0;4;3;1.Set of disks for t_i;30.7
+2;711;SpatialJoin;30.0;4;3;2.Distance Join phase;8.45
+2;712;SpatialJoin;30.0;4;3;3.Getting candidates;5.19
+2;713;SpatialJoin;30.0;4;3;4.Found flocks;1.34
+2;714;SpatialJoin;30.0;4;3;5.Updating times;1.73
+2;715;SpatialJoin;30.0;4;3;6.Filter phase;2.85
+2;716;SpatialJoin;30.0;4;3;0.Reporting locations;4.32
+2;732;SpatialJoin;30.0;4;3;1.Set of disks for t_i;23.12
+2;733;SpatialJoin;30.0;4;3;2.Distance Join phase;9.59
+2;734;SpatialJoin;30.0;4;3;3.Getting candidates;5.27
+2;735;SpatialJoin;30.0;4;3;4.Found flocks;1.37
+2;736;SpatialJoin;30.0;4;3;5.Updating times;1.83
+2;737;SpatialJoin;30.0;4;3;6.Filter phase;2.81
+2;738;SpatialJoin;30.0;4;3;0.Reporting locations;4.31
+2;754;SpatialJoin;30.0;4;3;1.Set of disks for t_i;33.52
+2;755;SpatialJoin;30.0;4;3;2.Distance Join phase;9.75
+2;756;SpatialJoin;30.0;4;3;3.Getting candidates;5.8
+2;757;SpatialJoin;30.0;4;3;4.Found flocks;1.76
+2;758;SpatialJoin;30.0;4;3;5.Updating times;2.6
+2;759;SpatialJoin;30.0;4;3;6.Filter phase;3.57
+2;760;SpatialJoin;30.0;4;3;0.Reporting locations;4.28
+2;776;SpatialJoin;30.0;4;3;1.Set of disks for t_i;33.81
+2;777;SpatialJoin;30.0;4;3;2.Distance Join phase;11.89
+2;778;SpatialJoin;30.0;4;3;3.Getting candidates;6.29
+2;779;SpatialJoin;30.0;4;3;4.Found flocks;1.61
+2;780;SpatialJoin;30.0;4;3;5.Updating times;1.99
+2;781;SpatialJoin;30.0;4;3;6.Filter phase;2.63
+2;786;SpatialJoin;30.0;4;3;Running SpatialJoin;612.99
+4;1134;SpatialJoin;30.0;4;3;0.Reporting locations;5.3
+4;1150;SpatialJoin;30.0;4;3;1.Set of disks for t_i;31.6
+4;1151;SpatialJoin;30.0;4;3;4.Found flocks;0.36
+4;1152;SpatialJoin;30.0;4;3;5.Updating times;0.47
+4;1153;SpatialJoin;30.0;4;3;6.Filter phase;1.01
+4;1154;SpatialJoin;30.0;4;3;0.Reporting locations;5.78
+4;1170;SpatialJoin;30.0;4;3;1.Set of disks for t_i;21.02
+4;1171;SpatialJoin;30.0;4;3;2.Distance Join phase;3.46
+4;1172;SpatialJoin;30.0;4;3;3.Getting candidates;3.19
+4;1173;SpatialJoin;30.0;4;3;4.Found flocks;0.82
+4;1174;SpatialJoin;30.0;4;3;5.Updating times;1.45
+4;1175;SpatialJoin;30.0;4;3;6.Filter phase;2.73
+4;1176;SpatialJoin;30.0;4;3;0.Reporting locations;5.3
+4;1192;SpatialJoin;30.0;4;3;1.Set of disks for t_i;18.65
+4;1193;SpatialJoin;30.0;4;3;2.Distance Join phase;7.32
+4;1194;SpatialJoin;30.0;4;3;3.Getting candidates;4.8
+4;1195;SpatialJoin;30.0;4;3;4.Found flocks;0.78
+4;1196;SpatialJoin;30.0;4;3;5.Updating times;1.16
+4;1197;SpatialJoin;30.0;4;3;6.Filter phase;2.02
+4;1198;SpatialJoin;30.0;4;3;0.Reporting locations;5.09
+4;1214;SpatialJoin;30.0;4;3;1.Set of disks for t_i;32.55
+4;1215;SpatialJoin;30.0;4;3;2.Distance Join phase;6.68
+4;1216;SpatialJoin;30.0;4;3;3.Getting candidates;4.32
+4;1217;SpatialJoin;30.0;4;3;4.Found flocks;0.97
+4;1218;SpatialJoin;30.0;4;3;5.Updating times;1.33
+4;1219;SpatialJoin;30.0;4;3;6.Filter phase;2.48
+4;1220;SpatialJoin;30.0;4;3;0.Reporting locations;5.02
+4;1236;SpatialJoin;30.0;4;3;1.Set of disks for t_i;32.35
+4;1237;SpatialJoin;30.0;4;3;2.Distance Join phase;7.76
+4;1238;SpatialJoin;30.0;4;3;3.Getting candidates;5.03
+4;1239;SpatialJoin;30.0;4;3;4.Found flocks;0.94
+4;1240;SpatialJoin;30.0;4;3;5.Updating times;1.49
+4;1241;SpatialJoin;30.0;4;3;6.Filter phase;2.46
+4;1242;SpatialJoin;30.0;4;3;0.Reporting locations;5.08
+4;1258;SpatialJoin;30.0;4;3;1.Set of disks for t_i;32.21
+4;1259;SpatialJoin;30.0;4;3;2.Distance Join phase;7.87
+4;1260;SpatialJoin;30.0;4;3;3.Getting candidates;4.98
+4;1261;SpatialJoin;30.0;4;3;4.Found flocks;1.07
+4;1262;SpatialJoin;30.0;4;3;5.Updating times;1.64
+4;1263;SpatialJoin;30.0;4;3;6.Filter phase;2.62
+4;1264;SpatialJoin;30.0;4;3;0.Reporting locations;5.35
+4;1280;SpatialJoin;30.0;4;3;1.Set of disks for t_i;32.69
+4;1281;SpatialJoin;30.0;4;3;2.Distance Join phase;8.79
+4;1282;SpatialJoin;30.0;4;3;3.Getting candidates;6.33
+4;1283;SpatialJoin;30.0;4;3;4.Found flocks;1.18
+4;1284;SpatialJoin;30.0;4;3;5.Updating times;1.63
+4;1285;SpatialJoin;30.0;4;3;6.Filter phase;2.4
+4;1286;SpatialJoin;30.0;4;3;0.Reporting locations;5.02
+4;1302;SpatialJoin;30.0;4;3;1.Set of disks for t_i;31.83
+4;1303;SpatialJoin;30.0;4;3;2.Distance Join phase;8.41
+4;1304;SpatialJoin;30.0;4;3;3.Getting candidates;5.09
+4;1305;SpatialJoin;30.0;4;3;4.Found flocks;1.23
+4;1306;SpatialJoin;30.0;4;3;5.Updating times;1.73
+4;1307;SpatialJoin;30.0;4;3;6.Filter phase;2.72
+4;1308;SpatialJoin;30.0;4;3;0.Reporting locations;4.93
+4;1324;SpatialJoin;30.0;4;3;1.Set of disks for t_i;23.83
+4;1325;SpatialJoin;30.0;4;3;2.Distance Join phase;9.51
+4;1326;SpatialJoin;30.0;4;3;3.Getting candidates;5.3
+4;1327;SpatialJoin;30.0;4;3;4.Found flocks;1.34
+4;1328;SpatialJoin;30.0;4;3;5.Updating times;1.76
+4;1329;SpatialJoin;30.0;4;3;6.Filter phase;2.75
+4;1330;SpatialJoin;30.0;4;3;0.Reporting locations;4.91
+4;1346;SpatialJoin;30.0;4;3;1.Set of disks for t_i;33.54
+4;1347;SpatialJoin;30.0;4;3;2.Distance Join phase;10.88
+4;1348;SpatialJoin;30.0;4;3;3.Getting candidates;5.86
+4;1349;SpatialJoin;30.0;4;3;4.Found flocks;1.71
+4;1350;SpatialJoin;30.0;4;3;5.Updating times;2.5
+4;1351;SpatialJoin;30.0;4;3;6.Filter phase;3.77
+4;1352;SpatialJoin;30.0;4;3;0.Reporting locations;4.87
+4;1368;SpatialJoin;30.0;4;3;1.Set of disks for t_i;33.58
+4;1369;SpatialJoin;30.0;4;3;2.Distance Join phase;11.65
+4;1370;SpatialJoin;30.0;4;3;3.Getting candidates;6.37
+4;1371;SpatialJoin;30.0;4;3;4.Found flocks;1.53
+4;1372;SpatialJoin;30.0;4;3;5.Updating times;2.18
+4;1373;SpatialJoin;30.0;4;3;6.Filter phase;2.82
+4;1378;SpatialJoin;30.0;4;3;Running SpatialJoin;618.3
+6;1657;SpatialJoin;30.0;4;3;0.Reporting locations;5.23
+6;1673;SpatialJoin;30.0;4;3;1.Set of disks for t_i;29.89
+6;1674;SpatialJoin;30.0;4;3;4.Found flocks;0.4
+6;1675;SpatialJoin;30.0;4;3;5.Updating times;0.47
+6;1676;SpatialJoin;30.0;4;3;6.Filter phase;0.88
+6;1677;SpatialJoin;30.0;4;3;0.Reporting locations;4.93
+6;1693;SpatialJoin;30.0;4;3;1.Set of disks for t_i;21.24
+6;1694;SpatialJoin;30.0;4;3;2.Distance Join phase;3.79
+6;1695;SpatialJoin;30.0;4;3;3.Getting candidates;3.19
+6;1696;SpatialJoin;30.0;4;3;4.Found flocks;0.75
+6;1697;SpatialJoin;30.0;4;3;5.Updating times;1.44
+6;1698;SpatialJoin;30.0;4;3;6.Filter phase;2.83
+6;1699;SpatialJoin;30.0;4;3;0.Reporting locations;4.87
+6;1715;SpatialJoin;30.0;4;3;1.Set of disks for t_i;18.99
+6;1716;SpatialJoin;30.0;4;3;2.Distance Join phase;7.29
+6;1717;SpatialJoin;30.0;4;3;3.Getting candidates;4.84
+6;1718;SpatialJoin;30.0;4;3;4.Found flocks;0.77
+6;1719;SpatialJoin;30.0;4;3;5.Updating times;1.22
+6;1720;SpatialJoin;30.0;4;3;6.Filter phase;2.11
+6;1721;SpatialJoin;30.0;4;3;0.Reporting locations;4.87
+6;1737;SpatialJoin;30.0;4;3;1.Set of disks for t_i;32.74
+6;1738;SpatialJoin;30.0;4;3;2.Distance Join phase;6.65
+6;1739;SpatialJoin;30.0;4;3;3.Getting candidates;4.38
+6;1740;SpatialJoin;30.0;4;3;4.Found flocks;0.92
+6;1741;SpatialJoin;30.0;4;3;5.Updating times;1.42
+6;1742;SpatialJoin;30.0;4;3;6.Filter phase;2.22
+6;1743;SpatialJoin;30.0;4;3;0.Reporting locations;4.86
+6;1759;SpatialJoin;30.0;4;3;1.Set of disks for t_i;32.06
+6;1760;SpatialJoin;30.0;4;3;2.Distance Join phase;7.49
+6;1761;SpatialJoin;30.0;4;3;3.Getting candidates;4.67
+6;1762;SpatialJoin;30.0;4;3;4.Found flocks;0.94
+6;1763;SpatialJoin;30.0;4;3;5.Updating times;1.53
+6;1764;SpatialJoin;30.0;4;3;6.Filter phase;2.29
+6;1765;SpatialJoin;30.0;4;3;0.Reporting locations;4.8
+6;1781;SpatialJoin;30.0;4;3;1.Set of disks for t_i;32.37
+6;1782;SpatialJoin;30.0;4;3;2.Distance Join phase;7.82
+6;1783;SpatialJoin;30.0;4;3;3.Getting candidates;4.93
+6;1784;SpatialJoin;30.0;4;3;4.Found flocks;1.04
+6;1785;SpatialJoin;30.0;4;3;5.Updating times;1.77
+6;1786;SpatialJoin;30.0;4;3;6.Filter phase;2.52
+6;1787;SpatialJoin;30.0;4;3;0.Reporting locations;4.82
+6;1803;SpatialJoin;30.0;4;3;1.Set of disks for t_i;32.46
+6;1804;SpatialJoin;30.0;4;3;2.Distance Join phase;8.6
+6;1805;SpatialJoin;30.0;4;3;3.Getting candidates;5.04
+6;1806;SpatialJoin;30.0;4;3;4.Found flocks;1.14
+6;1807;SpatialJoin;30.0;4;3;5.Updating times;1.64
+6;1808;SpatialJoin;30.0;4;3;6.Filter phase;2.61
+6;1809;SpatialJoin;30.0;4;3;0.Reporting locations;4.81
+6;1825;SpatialJoin;30.0;4;3;1.Set of disks for t_i;32.95
+6;1826;SpatialJoin;30.0;4;3;2.Distance Join phase;8.36
+6;1827;SpatialJoin;30.0;4;3;3.Getting candidates;5.43
+6;1828;SpatialJoin;30.0;4;3;4.Found flocks;1.27
+6;1829;SpatialJoin;30.0;4;3;5.Updating times;1.76
+6;1830;SpatialJoin;30.0;4;3;6.Filter phase;2.58
+6;1831;SpatialJoin;30.0;4;3;0.Reporting locations;4.66
+6;1847;SpatialJoin;30.0;4;3;1.Set of disks for t_i;25.05
+6;1848;SpatialJoin;30.0;4;3;2.Distance Join phase;10.15
+6;1849;SpatialJoin;30.0;4;3;3.Getting candidates;5.23
+6;1850;SpatialJoin;30.0;4;3;4.Found flocks;1.33
+6;1851;SpatialJoin;30.0;4;3;5.Updating times;1.89
+6;1852;SpatialJoin;30.0;4;3;6.Filter phase;2.64
+6;1853;SpatialJoin;30.0;4;3;0.Reporting locations;4.7
+6;1869;SpatialJoin;30.0;4;3;1.Set of disks for t_i;30.84
+6;1870;SpatialJoin;30.0;4;3;2.Distance Join phase;9.3
+6;1871;SpatialJoin;30.0;4;3;3.Getting candidates;5.74
+6;1872;SpatialJoin;30.0;4;3;4.Found flocks;1.66
+6;1873;SpatialJoin;30.0;4;3;5.Updating times;2.5
+6;1874;SpatialJoin;30.0;4;3;6.Filter phase;3.54
+6;1875;SpatialJoin;30.0;4;3;0.Reporting locations;4.7
+6;1891;SpatialJoin;30.0;4;3;1.Set of disks for t_i;31.66
+6;1892;SpatialJoin;30.0;4;3;2.Distance Join phase;11.38
+6;1893;SpatialJoin;30.0;4;3;3.Getting candidates;6.56
+6;1894;SpatialJoin;30.0;4;3;4.Found flocks;1.62
+6;1895;SpatialJoin;30.0;4;3;5.Updating times;1.98
+6;1896;SpatialJoin;30.0;4;3;6.Filter phase;2.94
+6;1901;SpatialJoin;30.0;4;3;Running SpatialJoin;608.7
+8;2180;SpatialJoin;30.0;4;3;0.Reporting locations;5.17
+8;2196;SpatialJoin;30.0;4;3;1.Set of disks for t_i;32.34
+8;2197;SpatialJoin;30.0;4;3;4.Found flocks;0.4
+8;2198;SpatialJoin;30.0;4;3;5.Updating times;0.49
+8;2199;SpatialJoin;30.0;4;3;6.Filter phase;0.91
+8;2200;SpatialJoin;30.0;4;3;0.Reporting locations;5.37
+8;2216;SpatialJoin;30.0;4;3;1.Set of disks for t_i;20.9
+8;2217;SpatialJoin;30.0;4;3;2.Distance Join phase;3.66
+8;2218;SpatialJoin;30.0;4;3;3.Getting candidates;3.2
+8;2219;SpatialJoin;30.0;4;3;4.Found flocks;0.74
+8;2220;SpatialJoin;30.0;4;3;5.Updating times;1.4
+8;2221;SpatialJoin;30.0;4;3;6.Filter phase;2.71
+8;2222;SpatialJoin;30.0;4;3;0.Reporting locations;4.98
+8;2238;SpatialJoin;30.0;4;3;1.Set of disks for t_i;19.13
+8;2239;SpatialJoin;30.0;4;3;2.Distance Join phase;7.38
+8;2240;SpatialJoin;30.0;4;3;3.Getting candidates;5.14
+8;2241;SpatialJoin;30.0;4;3;4.Found flocks;0.73
+8;2242;SpatialJoin;30.0;4;3;5.Updating times;1.26
+8;2243;SpatialJoin;30.0;4;3;6.Filter phase;2.02
+8;2244;SpatialJoin;30.0;4;3;0.Reporting locations;4.97
+8;2260;SpatialJoin;30.0;4;3;1.Set of disks for t_i;31.29
+8;2261;SpatialJoin;30.0;4;3;2.Distance Join phase;6.67
+8;2262;SpatialJoin;30.0;4;3;3.Getting candidates;4.4
+8;2263;SpatialJoin;30.0;4;3;4.Found flocks;0.92
+8;2264;SpatialJoin;30.0;4;3;5.Updating times;1.33
+8;2265;SpatialJoin;30.0;4;3;6.Filter phase;2.26
+8;2266;SpatialJoin;30.0;4;3;0.Reporting locations;4.95
+8;2282;SpatialJoin;30.0;4;3;1.Set of disks for t_i;30.99
+8;2283;SpatialJoin;30.0;4;3;2.Distance Join phase;7.58
+8;2284;SpatialJoin;30.0;4;3;3.Getting candidates;5.1
+8;2285;SpatialJoin;30.0;4;3;4.Found flocks;0.93
+8;2286;SpatialJoin;30.0;4;3;5.Updating times;1.61
+8;2287;SpatialJoin;30.0;4;3;6.Filter phase;2.35
+8;2288;SpatialJoin;30.0;4;3;0.Reporting locations;4.95
+8;2304;SpatialJoin;30.0;4;3;1.Set of disks for t_i;30.49
+8;2305;SpatialJoin;30.0;4;3;2.Distance Join phase;8.05
+8;2306;SpatialJoin;30.0;4;3;3.Getting candidates;5.02
+8;2307;SpatialJoin;30.0;4;3;4.Found flocks;1.05
+8;2308;SpatialJoin;30.0;4;3;5.Updating times;1.79
+8;2309;SpatialJoin;30.0;4;3;6.Filter phase;2.56
+8;2310;SpatialJoin;30.0;4;3;0.Reporting locations;5.15
+8;2326;SpatialJoin;30.0;4;3;1.Set of disks for t_i;31.91
+8;2327;SpatialJoin;30.0;4;3;2.Distance Join phase;9.7
+8;2328;SpatialJoin;30.0;4;3;3.Getting candidates;5.13
+8;2329;SpatialJoin;30.0;4;3;4.Found flocks;1.12
+8;2330;SpatialJoin;30.0;4;3;5.Updating times;1.56
+8;2331;SpatialJoin;30.0;4;3;6.Filter phase;2.52
+8;2332;SpatialJoin;30.0;4;3;0.Reporting locations;4.96
+8;2348;SpatialJoin;30.0;4;3;1.Set of disks for t_i;31.34
+8;2349;SpatialJoin;30.0;4;3;2.Distance Join phase;8.41
+8;2350;SpatialJoin;30.0;4;3;3.Getting candidates;5.06
+8;2351;SpatialJoin;30.0;4;3;4.Found flocks;1.28
+8;2352;SpatialJoin;30.0;4;3;5.Updating times;1.88
+8;2353;SpatialJoin;30.0;4;3;6.Filter phase;2.66
+8;2354;SpatialJoin;30.0;4;3;0.Reporting locations;4.9
+8;2370;SpatialJoin;30.0;4;3;1.Set of disks for t_i;23.25
+8;2371;SpatialJoin;30.0;4;3;2.Distance Join phase;9.4
+8;2372;SpatialJoin;30.0;4;3;3.Getting candidates;5.2
+8;2373;SpatialJoin;30.0;4;3;4.Found flocks;1.34
+8;2374;SpatialJoin;30.0;4;3;5.Updating times;1.97
+8;2375;SpatialJoin;30.0;4;3;6.Filter phase;2.62
+8;2376;SpatialJoin;30.0;4;3;0.Reporting locations;4.82
+8;2392;SpatialJoin;30.0;4;3;1.Set of disks for t_i;33.62
+8;2393;SpatialJoin;30.0;4;3;2.Distance Join phase;10.75
+8;2394;SpatialJoin;30.0;4;3;3.Getting candidates;6.0
+8;2395;SpatialJoin;30.0;4;3;4.Found flocks;1.67
+8;2396;SpatialJoin;30.0;4;3;5.Updating times;2.41
+8;2397;SpatialJoin;30.0;4;3;6.Filter phase;3.73
+8;2398;SpatialJoin;30.0;4;3;0.Reporting locations;4.85
+8;2414;SpatialJoin;30.0;4;3;1.Set of disks for t_i;33.72
+8;2415;SpatialJoin;30.0;4;3;2.Distance Join phase;11.62
+8;2416;SpatialJoin;30.0;4;3;3.Getting candidates;6.28
+8;2417;SpatialJoin;30.0;4;3;4.Found flocks;1.56
+8;2418;SpatialJoin;30.0;4;3;5.Updating times;2.03
+8;2419;SpatialJoin;30.0;4;3;6.Filter phase;2.66
+8;2424;SpatialJoin;30.0;4;3;Running SpatialJoin;610.61
+10;2703;SpatialJoin;30.0;3;5;0.Reporting locations;14.07
+10;2719;SpatialJoin;30.0;3;5;1.Set of disks for t_i;35.42
+10;2720;SpatialJoin;30.0;3;5;4.Found flocks;0.43
+10;2721;SpatialJoin;30.0;3;5;5.Updating times;0.58
+10;2722;SpatialJoin;30.0;3;5;6.Filter phase;1.02
+10;2723;SpatialJoin;30.0;3;5;0.Reporting locations;13.56
+10;2739;SpatialJoin;30.0;3;5;1.Set of disks for t_i;23.94
+10;2740;SpatialJoin;30.0;3;5;2.Distance Join phase;4.26
+10;2741;SpatialJoin;30.0;3;5;3.Getting candidates;8.22
+10;2742;SpatialJoin;30.0;3;5;4.Found flocks;0.74
+10;2743;SpatialJoin;30.0;3;5;5.Updating times;1.48
+10;2744;SpatialJoin;30.0;3;5;6.Filter phase;2.67
+10;2745;SpatialJoin;30.0;3;5;0.Reporting locations;13.94
+10;2761;SpatialJoin;30.0;3;5;1.Set of disks for t_i;23.17
+10;2762;SpatialJoin;30.0;3;5;2.Distance Join phase;8.72
+10;2763;SpatialJoin;30.0;3;5;3.Getting candidates;14.87
+10;2764;SpatialJoin;30.0;3;5;4.Found flocks;0.92
+10;2765;SpatialJoin;30.0;3;5;5.Updating times;1.63
+10;2766;SpatialJoin;30.0;3;5;6.Filter phase;2.94
+10;2767;SpatialJoin;30.0;3;5;0.Reporting locations;13.6
+10;2783;SpatialJoin;30.0;3;5;1.Set of disks for t_i;32.58
+10;2784;SpatialJoin;30.0;3;5;2.Distance Join phase;9.45
+10;2785;SpatialJoin;30.0;3;5;3.Getting candidates;17.28
+10;2786;SpatialJoin;30.0;3;5;4.Found flocks;1.01
+10;2787;SpatialJoin;30.0;3;5;5.Updating times;1.74
+10;2788;SpatialJoin;30.0;3;5;6.Filter phase;2.74
+10;2789;SpatialJoin;30.0;3;5;0.Reporting locations;13.68
+10;2805;SpatialJoin;30.0;3;5;1.Set of disks for t_i;32.14
+10;2806;SpatialJoin;30.0;3;5;2.Distance Join phase;9.78
+10;2807;SpatialJoin;30.0;3;5;3.Getting candidates;18.8
+10;2808;SpatialJoin;30.0;3;5;4.Found flocks;1.06
+10;2809;SpatialJoin;30.0;3;5;5.Updating times;1.75
+10;2810;SpatialJoin;30.0;3;5;6.Filter phase;3.66
+10;2811;SpatialJoin;30.0;3;5;0.Reporting locations;13.88
+10;2827;SpatialJoin;30.0;3;5;1.Set of disks for t_i;32.6
+10;2828;SpatialJoin;30.0;3;5;2.Distance Join phase;10.45
+10;2829;SpatialJoin;30.0;3;5;3.Getting candidates;25.46
+10;2830;SpatialJoin;30.0;3;5;4.Found flocks;1.32
+10;2831;SpatialJoin;30.0;3;5;5.Updating times;1.91
+10;2832;SpatialJoin;30.0;3;5;6.Filter phase;3.02
+10;2833;SpatialJoin;30.0;3;5;0.Reporting locations;13.68
+10;2849;SpatialJoin;30.0;3;5;1.Set of disks for t_i;33.23
+10;2850;SpatialJoin;30.0;3;5;2.Distance Join phase;10.45
+10;2851;SpatialJoin;30.0;3;5;3.Getting candidates;15.84
+10;2852;SpatialJoin;30.0;3;5;4.Found flocks;1.31
+10;2853;SpatialJoin;30.0;3;5;5.Updating times;2.03
+10;2854;SpatialJoin;30.0;3;5;6.Filter phase;3.07
+10;2855;SpatialJoin;30.0;3;5;0.Reporting locations;13.48
+10;2871;SpatialJoin;30.0;3;5;1.Set of disks for t_i;33.91
+10;2872;SpatialJoin;30.0;3;5;2.Distance Join phase;10.96
+10;2873;SpatialJoin;30.0;3;5;3.Getting candidates;21.8
+10;2874;SpatialJoin;30.0;3;5;4.Found flocks;1.55
+10;2875;SpatialJoin;30.0;3;5;5.Updating times;2.07
+10;2876;SpatialJoin;30.0;3;5;6.Filter phase;3.43
+10;2877;SpatialJoin;30.0;3;5;0.Reporting locations;13.79
+10;2893;SpatialJoin;30.0;3;5;1.Set of disks for t_i;33.17
+10;2894;SpatialJoin;30.0;3;5;2.Distance Join phase;12.06
+10;2895;SpatialJoin;30.0;3;5;3.Getting candidates;21.97
+10;2896;SpatialJoin;30.0;3;5;4.Found flocks;1.52
+10;2897;SpatialJoin;30.0;3;5;5.Updating times;2.16
+10;2898;SpatialJoin;30.0;3;5;6.Filter phase;3.31
+10;2899;SpatialJoin;30.0;3;5;0.Reporting locations;13.39
+10;2915;SpatialJoin;30.0;3;5;1.Set of disks for t_i;32.79
+10;2916;SpatialJoin;30.0;3;5;2.Distance Join phase;12.35
+10;2917;SpatialJoin;30.0;3;5;3.Getting candidates;21.24
+10;2918;SpatialJoin;30.0;3;5;4.Found flocks;1.84
+10;2919;SpatialJoin;30.0;3;5;5.Updating times;2.44
+10;2920;SpatialJoin;30.0;3;5;6.Filter phase;3.42
+10;2921;SpatialJoin;30.0;3;5;0.Reporting locations;13.29
+10;2937;SpatialJoin;30.0;3;5;1.Set of disks for t_i;34.68
+10;2938;SpatialJoin;30.0;3;5;2.Distance Join phase;12.76
+10;2939;SpatialJoin;30.0;3;5;3.Getting candidates;18.51
+10;2940;SpatialJoin;30.0;3;5;4.Found flocks;1.68
+10;2941;SpatialJoin;30.0;3;5;5.Updating times;2.26
+10;2942;SpatialJoin;30.0;3;5;6.Filter phase;3.67
+10;2947;SpatialJoin;30.0;3;5;Running SpatialJoin;907.6
+12;3214;SpatialJoin;30.0;2;5;0.Reporting locations;5.52
+12;3230;SpatialJoin;30.0;2;5;1.Set of disks for t_i;32.88
+12;3231;SpatialJoin;30.0;2;5;4.Found flocks;0.48
+12;3232;SpatialJoin;30.0;2;5;5.Updating times;0.53
+12;3233;SpatialJoin;30.0;2;5;6.Filter phase;1.2
+12;3234;SpatialJoin;30.0;2;5;0.Reporting locations;4.57
+12;3250;SpatialJoin;30.0;2;5;1.Set of disks for t_i;22.36
+12;3251;SpatialJoin;30.0;2;5;2.Distance Join phase;4.82
+12;3252;SpatialJoin;30.0;2;5;3.Getting candidates;859.06
+12;3253;SpatialJoin;30.0;2;5;4.Found flocks;0.84
+12;3254;SpatialJoin;30.0;2;5;5.Updating times;1.43
+12;3255;SpatialJoin;30.0;2;5;6.Filter phase;2.9
+12;3256;SpatialJoin;30.0;2;5;0.Reporting locations;4.62
+12;3272;SpatialJoin;30.0;2;5;1.Set of disks for t_i;21.24
+12;3273;SpatialJoin;30.0;2;5;2.Distance Join phase;8.33
+12;3274;SpatialJoin;30.0;2;5;3.Getting candidates;564.91
+12;3275;SpatialJoin;30.0;2;5;4.Found flocks;0.98
+12;3276;SpatialJoin;30.0;2;5;5.Updating times;1.51
+12;3277;SpatialJoin;30.0;2;5;6.Filter phase;2.51
+12;3278;SpatialJoin;30.0;2;5;0.Reporting locations;4.62
+12;3294;SpatialJoin;30.0;2;5;1.Set of disks for t_i;35.83
+12;3295;SpatialJoin;30.0;2;5;2.Distance Join phase;8.53
+12;3296;SpatialJoin;30.0;2;5;3.Getting candidates;776.15
+12;3297;SpatialJoin;30.0;2;5;4.Found flocks;1.42
+12;3298;SpatialJoin;30.0;2;5;5.Updating times;2.4
+12;3299;SpatialJoin;30.0;2;5;6.Filter phase;3.26
+12;3300;SpatialJoin;30.0;2;5;0.Reporting locations;4.72
+12;3316;SpatialJoin;30.0;2;5;1.Set of disks for t_i;35.42
+12;3317;SpatialJoin;30.0;2;5;2.Distance Join phase;8.89
+12;3318;SpatialJoin;30.0;2;5;3.Getting candidates;851.96
+12;3319;SpatialJoin;30.0;2;5;4.Found flocks;1.59
+12;3320;SpatialJoin;30.0;2;5;5.Updating times;2.5
+12;3321;SpatialJoin;30.0;2;5;6.Filter phase;3.21
+12;3322;SpatialJoin;30.0;2;5;0.Reporting locations;4.6
+12;3338;SpatialJoin;30.0;2;5;1.Set of disks for t_i;35.13
+12;3339;SpatialJoin;30.0;2;5;2.Distance Join phase;9.49
+12;3340;SpatialJoin;30.0;2;5;3.Getting candidates;869.35
+12;3341;SpatialJoin;30.0;2;5;4.Found flocks;1.76
+12;3342;SpatialJoin;30.0;2;5;5.Updating times;3.12
+12;3343;SpatialJoin;30.0;2;5;6.Filter phase;3.95
+12;3344;SpatialJoin;30.0;2;5;0.Reporting locations;4.65
+12;3360;SpatialJoin;30.0;2;5;1.Set of disks for t_i;35.61
+12;3361;SpatialJoin;30.0;2;5;2.Distance Join phase;10.07
+12;3362;SpatialJoin;30.0;2;5;3.Getting candidates;705.74
+12;3363;SpatialJoin;30.0;2;5;4.Found flocks;1.84
+12;3364;SpatialJoin;30.0;2;5;5.Updating times;3.24
+12;3365;SpatialJoin;30.0;2;5;6.Filter phase;4.0
+12;3366;SpatialJoin;30.0;2;5;0.Reporting locations;4.64
+12;3382;SpatialJoin;30.0;2;5;1.Set of disks for t_i;35.79
+12;3383;SpatialJoin;30.0;2;5;2.Distance Join phase;10.48
+12;3384;SpatialJoin;30.0;2;5;3.Getting candidates;1204.72
+12;3385;SpatialJoin;30.0;2;5;4.Found flocks;1.38
+12;3386;SpatialJoin;30.0;2;5;5.Updating times;1.97
+12;3387;SpatialJoin;30.0;2;5;6.Filter phase;3.15
+12;3388;SpatialJoin;30.0;2;5;0.Reporting locations;4.49
+12;3404;SpatialJoin;30.0;2;5;1.Set of disks for t_i;25.82
+12;3405;SpatialJoin;30.0;2;5;2.Distance Join phase;11.65
+12;3406;SpatialJoin;30.0;2;5;3.Getting candidates;824.8
+12;3407;SpatialJoin;30.0;2;5;4.Found flocks;2.13
+12;3408;SpatialJoin;30.0;2;5;5.Updating times;3.29
+12;3409;SpatialJoin;30.0;2;5;6.Filter phase;4.24
+12;3410;SpatialJoin;30.0;2;5;0.Reporting locations;4.46
+12;3426;SpatialJoin;30.0;2;5;1.Set of disks for t_i;32.82
+12;3427;SpatialJoin;30.0;2;5;2.Distance Join phase;12.27
+12;3428;SpatialJoin;30.0;2;5;3.Getting candidates;837.33
+12;3429;SpatialJoin;30.0;2;5;4.Found flocks;2.18
+12;3430;SpatialJoin;30.0;2;5;5.Updating times;3.04
+12;3431;SpatialJoin;30.0;2;5;6.Filter phase;4.03
+12;3432;SpatialJoin;30.0;2;5;0.Reporting locations;4.41
+12;3448;SpatialJoin;30.0;2;5;1.Set of disks for t_i;32.62
+12;3449;SpatialJoin;30.0;2;5;2.Distance Join phase;11.68
+12;3450;SpatialJoin;30.0;2;5;3.Getting candidates;789.16
+12;3451;SpatialJoin;30.0;2;5;4.Found flocks;2.2
+12;3452;SpatialJoin;30.0;2;5;5.Updating times;3.27
+12;3453;SpatialJoin;30.0;2;5;6.Filter phase;4.39
+12;3458;SpatialJoin;30.0;2;5;Running SpatialJoin;8919.59
+13;3486;SpatialJoin;30.0;7;5;0.Reporting locations;5.99
+13;3502;SpatialJoin;30.0;7;5;1.Set of disks for t_i;31.47
+13;3503;SpatialJoin;30.0;7;5;4.Found flocks;0.43
+13;3504;SpatialJoin;30.0;7;5;5.Updating times;0.46
+13;3505;SpatialJoin;30.0;7;5;6.Filter phase;0.9
+13;3506;SpatialJoin;30.0;7;5;0.Reporting locations;5.44
+13;3522;SpatialJoin;30.0;7;5;1.Set of disks for t_i;20.54
+13;3523;SpatialJoin;30.0;7;5;2.Distance Join phase;3.05
+13;3524;SpatialJoin;30.0;7;5;3.Getting candidates;1.8
+13;3525;SpatialJoin;30.0;7;5;4.Found flocks;0.28
+13;3526;SpatialJoin;30.0;7;5;5.Updating times;0.41
+13;3527;SpatialJoin;30.0;7;5;6.Filter phase;0.79
+13;3528;SpatialJoin;30.0;7;5;0.Reporting locations;5.32
+13;3544;SpatialJoin;30.0;7;5;1.Set of disks for t_i;18.75
+13;3545;SpatialJoin;30.0;7;5;2.Distance Join phase;3.07
+13;3546;SpatialJoin;30.0;7;5;3.Getting candidates;1.67
+13;3547;SpatialJoin;30.0;7;5;4.Found flocks;0.38
+13;3548;SpatialJoin;30.0;7;5;5.Updating times;0.5
+13;3549;SpatialJoin;30.0;7;5;6.Filter phase;0.89
+13;3550;SpatialJoin;30.0;7;5;0.Reporting locations;4.91
+13;3566;SpatialJoin;30.0;7;5;1.Set of disks for t_i;31.7
+13;3567;SpatialJoin;30.0;7;5;2.Distance Join phase;3.89
+13;3568;SpatialJoin;30.0;7;5;3.Getting candidates;2.02
+13;3569;SpatialJoin;30.0;7;5;4.Found flocks;0.48
+13;3570;SpatialJoin;30.0;7;5;5.Updating times;0.63
+13;3571;SpatialJoin;30.0;7;5;6.Filter phase;0.96
+13;3572;SpatialJoin;30.0;7;5;0.Reporting locations;4.91
+13;3588;SpatialJoin;30.0;7;5;1.Set of disks for t_i;31.35
+13;3589;SpatialJoin;30.0;7;5;2.Distance Join phase;4.12
+13;3590;SpatialJoin;30.0;7;5;3.Getting candidates;2.16
+13;3591;SpatialJoin;30.0;7;5;4.Found flocks;0.52
+13;3592;SpatialJoin;30.0;7;5;5.Updating times;0.76
+13;3593;SpatialJoin;30.0;7;5;6.Filter phase;1.05
+13;3594;SpatialJoin;30.0;7;5;0.Reporting locations;4.92
+13;3610;SpatialJoin;30.0;7;5;1.Set of disks for t_i;30.51
+13;3611;SpatialJoin;30.0;7;5;2.Distance Join phase;4.56
+13;3612;SpatialJoin;30.0;7;5;3.Getting candidates;2.2
+13;3613;SpatialJoin;30.0;7;5;4.Found flocks;0.59
+13;3614;SpatialJoin;30.0;7;5;5.Updating times;0.73
+13;3615;SpatialJoin;30.0;7;5;6.Filter phase;1.06
+13;3616;SpatialJoin;30.0;7;5;0.Reporting locations;4.88
+13;3632;SpatialJoin;30.0;7;5;1.Set of disks for t_i;30.59
+13;3633;SpatialJoin;30.0;7;5;2.Distance Join phase;4.91
+13;3634;SpatialJoin;30.0;7;5;3.Getting candidates;2.29
+13;3635;SpatialJoin;30.0;7;5;4.Found flocks;0.66
+13;3636;SpatialJoin;30.0;7;5;5.Updating times;0.91
+13;3637;SpatialJoin;30.0;7;5;6.Filter phase;1.11
+13;3638;SpatialJoin;30.0;7;5;0.Reporting locations;4.92
+13;3654;SpatialJoin;30.0;7;5;1.Set of disks for t_i;31.06
+13;3655;SpatialJoin;30.0;7;5;2.Distance Join phase;5.39
+13;3656;SpatialJoin;30.0;7;5;3.Getting candidates;2.48
+13;3657;SpatialJoin;30.0;7;5;4.Found flocks;0.73
+13;3658;SpatialJoin;30.0;7;5;5.Updating times;0.9
+13;3659;SpatialJoin;30.0;7;5;6.Filter phase;1.19
+13;3660;SpatialJoin;30.0;7;5;0.Reporting locations;4.78
+13;3676;SpatialJoin;30.0;7;5;1.Set of disks for t_i;21.23
+13;3677;SpatialJoin;30.0;7;5;2.Distance Join phase;5.26
+13;3678;SpatialJoin;30.0;7;5;3.Getting candidates;2.45
+13;3679;SpatialJoin;30.0;7;5;4.Found flocks;0.8
+13;3680;SpatialJoin;30.0;7;5;5.Updating times;0.93
+13;3681;SpatialJoin;30.0;7;5;6.Filter phase;1.21
+13;3682;SpatialJoin;30.0;7;5;0.Reporting locations;4.74
+13;3698;SpatialJoin;30.0;7;5;1.Set of disks for t_i;30.25
+13;3699;SpatialJoin;30.0;7;5;2.Distance Join phase;6.13
+13;3700;SpatialJoin;30.0;7;5;3.Getting candidates;2.63
+13;3701;SpatialJoin;30.0;7;5;4.Found flocks;0.89
+13;3702;SpatialJoin;30.0;7;5;5.Updating times;1.1
+13;3703;SpatialJoin;30.0;7;5;6.Filter phase;1.35
+13;3704;SpatialJoin;30.0;7;5;0.Reporting locations;4.73
+13;3720;SpatialJoin;30.0;7;5;1.Set of disks for t_i;30.44
+13;3721;SpatialJoin;30.0;7;5;2.Distance Join phase;6.13
+13;3722;SpatialJoin;30.0;7;5;3.Getting candidates;2.82
+13;3723;SpatialJoin;30.0;7;5;4.Found flocks;0.95
+13;3724;SpatialJoin;30.0;7;5;5.Updating times;1.15
+13;3725;SpatialJoin;30.0;7;5;6.Filter phase;1.5
+13;3730;SpatialJoin;30.0;7;5;Running SpatialJoin;475.96
+15;3997;SpatialJoin;30.0;3;5;0.Reporting locations;5.94
+15;4013;SpatialJoin;30.0;3;5;1.Set of disks for t_i;32.29
+15;4014;SpatialJoin;30.0;3;5;4.Found flocks;0.4
+15;4015;SpatialJoin;30.0;3;5;5.Updating times;0.54
+15;4016;SpatialJoin;30.0;3;5;6.Filter phase;0.99
+15;4017;SpatialJoin;30.0;3;5;0.Reporting locations;5.97
+15;4033;SpatialJoin;30.0;3;5;1.Set of disks for t_i;21.55
+15;4034;SpatialJoin;30.0;3;5;2.Distance Join phase;4.33
+15;4035;SpatialJoin;30.0;3;5;3.Getting candidates;10.85
+15;4036;SpatialJoin;30.0;3;5;4.Found flocks;0.77
+15;4037;SpatialJoin;30.0;3;5;5.Updating times;1.32
+15;4038;SpatialJoin;30.0;3;5;6.Filter phase;2.58
+15;4039;SpatialJoin;30.0;3;5;0.Reporting locations;5.0
+15;4055;SpatialJoin;30.0;3;5;1.Set of disks for t_i;19.43
+15;4056;SpatialJoin;30.0;3;5;2.Distance Join phase;8.52
+15;4057;SpatialJoin;30.0;3;5;3.Getting candidates;14.51
+15;4058;SpatialJoin;30.0;3;5;4.Found flocks;0.95
+15;4059;SpatialJoin;30.0;3;5;5.Updating times;1.54
+15;4060;SpatialJoin;30.0;3;5;6.Filter phase;2.71
+15;4061;SpatialJoin;30.0;3;5;0.Reporting locations;5.04
+15;4077;SpatialJoin;30.0;3;5;1.Set of disks for t_i;31.39
+15;4078;SpatialJoin;30.0;3;5;2.Distance Join phase;9.27
+15;4079;SpatialJoin;30.0;3;5;3.Getting candidates;14.52
+15;4080;SpatialJoin;30.0;3;5;4.Found flocks;0.96
+15;4081;SpatialJoin;30.0;3;5;5.Updating times;1.55
+15;4082;SpatialJoin;30.0;3;5;6.Filter phase;2.69
+15;4083;SpatialJoin;30.0;3;5;0.Reporting locations;4.98
+15;4099;SpatialJoin;30.0;3;5;1.Set of disks for t_i;31.3
+15;4100;SpatialJoin;30.0;3;5;2.Distance Join phase;9.28
+15;4101;SpatialJoin;30.0;3;5;3.Getting candidates;23.06
+15;4102;SpatialJoin;30.0;3;5;4.Found flocks;1.04
+15;4103;SpatialJoin;30.0;3;5;5.Updating times;1.58
+15;4104;SpatialJoin;30.0;3;5;6.Filter phase;2.77
+15;4105;SpatialJoin;30.0;3;5;0.Reporting locations;4.99
+15;4121;SpatialJoin;30.0;3;5;1.Set of disks for t_i;31.03
+15;4122;SpatialJoin;30.0;3;5;2.Distance Join phase;9.94
+15;4123;SpatialJoin;30.0;3;5;3.Getting candidates;21.39
+15;4124;SpatialJoin;30.0;3;5;4.Found flocks;1.17
+15;4125;SpatialJoin;30.0;3;5;5.Updating times;1.85
+15;4126;SpatialJoin;30.0;3;5;6.Filter phase;3.16
+15;4127;SpatialJoin;30.0;3;5;0.Reporting locations;4.98
+15;4143;SpatialJoin;30.0;3;5;1.Set of disks for t_i;32.03
+15;4144;SpatialJoin;30.0;3;5;2.Distance Join phase;10.45
+15;4145;SpatialJoin;30.0;3;5;3.Getting candidates;15.88
+15;4146;SpatialJoin;30.0;3;5;4.Found flocks;1.28
+15;4147;SpatialJoin;30.0;3;5;5.Updating times;1.93
+15;4148;SpatialJoin;30.0;3;5;6.Filter phase;2.91
+15;4149;SpatialJoin;30.0;3;5;0.Reporting locations;5.28
+15;4165;SpatialJoin;30.0;3;5;1.Set of disks for t_i;32.29
+15;4166;SpatialJoin;30.0;3;5;2.Distance Join phase;11.88
+15;4167;SpatialJoin;30.0;3;5;3.Getting candidates;19.97
+15;4168;SpatialJoin;30.0;3;5;4.Found flocks;1.5
+15;4169;SpatialJoin;30.0;3;5;5.Updating times;2.03
+15;4170;SpatialJoin;30.0;3;5;6.Filter phase;3.17
+15;4171;SpatialJoin;30.0;3;5;0.Reporting locations;4.93
+15;4187;SpatialJoin;30.0;3;5;1.Set of disks for t_i;21.5
+15;4188;SpatialJoin;30.0;3;5;2.Distance Join phase;11.53
+15;4189;SpatialJoin;30.0;3;5;3.Getting candidates;17.91
+15;4190;SpatialJoin;30.0;3;5;4.Found flocks;1.48
+15;4191;SpatialJoin;30.0;3;5;5.Updating times;2.24
+15;4192;SpatialJoin;30.0;3;5;6.Filter phase;3.09
+15;4193;SpatialJoin;30.0;3;5;0.Reporting locations;4.86
+15;4209;SpatialJoin;30.0;3;5;1.Set of disks for t_i;32.48
+15;4210;SpatialJoin;30.0;3;5;2.Distance Join phase;11.61
+15;4211;SpatialJoin;30.0;3;5;3.Getting candidates;18.33
+15;4212;SpatialJoin;30.0;3;5;4.Found flocks;1.59
+15;4213;SpatialJoin;30.0;3;5;5.Updating times;2.16
+15;4214;SpatialJoin;30.0;3;5;6.Filter phase;3.49
+15;4215;SpatialJoin;30.0;3;5;0.Reporting locations;4.82
+15;4231;SpatialJoin;30.0;3;5;1.Set of disks for t_i;34.06
+15;4232;SpatialJoin;30.0;3;5;2.Distance Join phase;12.24
+15;4233;SpatialJoin;30.0;3;5;3.Getting candidates;19.24
+15;4234;SpatialJoin;30.0;3;5;4.Found flocks;1.7
+15;4235;SpatialJoin;30.0;3;5;5.Updating times;2.3
+15;4236;SpatialJoin;30.0;3;5;6.Filter phase;3.37
+15;4241;SpatialJoin;30.0;3;5;Running SpatialJoin;769.3
+17;4508;SpatialJoin;30.0;7;5;0.Reporting locations;5.15
+17;4524;SpatialJoin;30.0;7;5;1.Set of disks for t_i;30.85
+17;4525;SpatialJoin;30.0;7;5;4.Found flocks;0.4
+17;4526;SpatialJoin;30.0;7;5;5.Updating times;0.4
+17;4527;SpatialJoin;30.0;7;5;6.Filter phase;0.81
+17;4528;SpatialJoin;30.0;7;5;0.Reporting locations;5.24
+17;4544;SpatialJoin;30.0;7;5;1.Set of disks for t_i;21.33
+17;4545;SpatialJoin;30.0;7;5;2.Distance Join phase;3.06
+17;4546;SpatialJoin;30.0;7;5;3.Getting candidates;1.87
+17;4547;SpatialJoin;30.0;7;5;4.Found flocks;0.28
+17;4548;SpatialJoin;30.0;7;5;5.Updating times;0.39
+17;4549;SpatialJoin;30.0;7;5;6.Filter phase;0.76
+17;4550;SpatialJoin;30.0;7;5;0.Reporting locations;5.16
+17;4566;SpatialJoin;30.0;7;5;1.Set of disks for t_i;19.06
+17;4567;SpatialJoin;30.0;7;5;2.Distance Join phase;3.02
+17;4568;SpatialJoin;30.0;7;5;3.Getting candidates;1.69
+17;4569;SpatialJoin;30.0;7;5;4.Found flocks;0.42
+17;4570;SpatialJoin;30.0;7;5;5.Updating times;0.51
+17;4571;SpatialJoin;30.0;7;5;6.Filter phase;0.93
+17;4572;SpatialJoin;30.0;7;5;0.Reporting locations;5.06
+17;4588;SpatialJoin;30.0;7;5;1.Set of disks for t_i;33.13
+17;4589;SpatialJoin;30.0;7;5;2.Distance Join phase;3.84
+17;4590;SpatialJoin;30.0;7;5;3.Getting candidates;1.96
+17;4591;SpatialJoin;30.0;7;5;4.Found flocks;0.45
+17;4592;SpatialJoin;30.0;7;5;5.Updating times;0.58
+17;4593;SpatialJoin;30.0;7;5;6.Filter phase;1.01
+17;4594;SpatialJoin;30.0;7;5;0.Reporting locations;5.05
+17;4610;SpatialJoin;30.0;7;5;1.Set of disks for t_i;33.05
+17;4611;SpatialJoin;30.0;7;5;2.Distance Join phase;4.37
+17;4612;SpatialJoin;30.0;7;5;3.Getting candidates;2.15
+17;4613;SpatialJoin;30.0;7;5;4.Found flocks;0.53
+17;4614;SpatialJoin;30.0;7;5;5.Updating times;0.65
+17;4615;SpatialJoin;30.0;7;5;6.Filter phase;1.02
+17;4616;SpatialJoin;30.0;7;5;0.Reporting locations;5.03
+17;4632;SpatialJoin;30.0;7;5;1.Set of disks for t_i;32.34
+17;4633;SpatialJoin;30.0;7;5;2.Distance Join phase;4.53
+17;4634;SpatialJoin;30.0;7;5;3.Getting candidates;2.2
+17;4635;SpatialJoin;30.0;7;5;4.Found flocks;0.62
+17;4636;SpatialJoin;30.0;7;5;5.Updating times;0.87
+17;4637;SpatialJoin;30.0;7;5;6.Filter phase;1.12
+17;4638;SpatialJoin;30.0;7;5;0.Reporting locations;5.12
+17;4654;SpatialJoin;30.0;7;5;1.Set of disks for t_i;32.92
+17;4655;SpatialJoin;30.0;7;5;2.Distance Join phase;4.73
+17;4656;SpatialJoin;30.0;7;5;3.Getting candidates;2.33
+17;4657;SpatialJoin;30.0;7;5;4.Found flocks;0.65
+17;4658;SpatialJoin;30.0;7;5;5.Updating times;0.95
+17;4659;SpatialJoin;30.0;7;5;6.Filter phase;1.1
+17;4660;SpatialJoin;30.0;7;5;0.Reporting locations;5.01
+17;4676;SpatialJoin;30.0;7;5;1.Set of disks for t_i;33.04
+17;4677;SpatialJoin;30.0;7;5;2.Distance Join phase;5.07
+17;4678;SpatialJoin;30.0;7;5;3.Getting candidates;2.48
+17;4679;SpatialJoin;30.0;7;5;4.Found flocks;0.73
+17;4680;SpatialJoin;30.0;7;5;5.Updating times;0.82
+17;4681;SpatialJoin;30.0;7;5;6.Filter phase;1.17
+17;4682;SpatialJoin;30.0;7;5;0.Reporting locations;4.94
+17;4698;SpatialJoin;30.0;7;5;1.Set of disks for t_i;23.41
+17;4699;SpatialJoin;30.0;7;5;2.Distance Join phase;5.11
+17;4700;SpatialJoin;30.0;7;5;3.Getting candidates;2.38
+17;4701;SpatialJoin;30.0;7;5;4.Found flocks;0.79
+17;4702;SpatialJoin;30.0;7;5;5.Updating times;1.08
+17;4703;SpatialJoin;30.0;7;5;6.Filter phase;1.2
+17;4704;SpatialJoin;30.0;7;5;0.Reporting locations;4.99
+17;4720;SpatialJoin;30.0;7;5;1.Set of disks for t_i;30.29
+17;4721;SpatialJoin;30.0;7;5;2.Distance Join phase;5.06
+17;4722;SpatialJoin;30.0;7;5;3.Getting candidates;2.68
+17;4723;SpatialJoin;30.0;7;5;4.Found flocks;0.9
+17;4724;SpatialJoin;30.0;7;5;5.Updating times;0.96
+17;4725;SpatialJoin;30.0;7;5;6.Filter phase;1.25
+17;4726;SpatialJoin;30.0;7;5;0.Reporting locations;4.93
+17;4742;SpatialJoin;30.0;7;5;1.Set of disks for t_i;30.82
+17;4743;SpatialJoin;30.0;7;5;2.Distance Join phase;5.9
+17;4744;SpatialJoin;30.0;7;5;3.Getting candidates;2.88
+17;4745;SpatialJoin;30.0;7;5;4.Found flocks;0.95
+17;4746;SpatialJoin;30.0;7;5;5.Updating times;1.17
+17;4747;SpatialJoin;30.0;7;5;6.Filter phase;1.38
+17;4752;SpatialJoin;30.0;7;5;Running SpatialJoin;485.9
+19;5019;SpatialJoin;30.0;3;5;0.Reporting locations;6.19
+19;5035;SpatialJoin;30.0;3;5;1.Set of disks for t_i;33.17
+19;5036;SpatialJoin;30.0;3;5;4.Found flocks;0.44
+19;5037;SpatialJoin;30.0;3;5;5.Updating times;0.49
+19;5038;SpatialJoin;30.0;3;5;6.Filter phase;1.01
+19;5039;SpatialJoin;30.0;3;5;0.Reporting locations;6.12
+19;5055;SpatialJoin;30.0;3;5;1.Set of disks for t_i;22.98
+19;5056;SpatialJoin;30.0;3;5;2.Distance Join phase;4.31
+19;5057;SpatialJoin;30.0;3;5;3.Getting candidates;8.87
+19;5058;SpatialJoin;30.0;3;5;4.Found flocks;0.75
+19;5059;SpatialJoin;30.0;3;5;5.Updating times;1.55
+19;5060;SpatialJoin;30.0;3;5;6.Filter phase;2.72
+19;5061;SpatialJoin;30.0;3;5;0.Reporting locations;5.32
+19;5077;SpatialJoin;30.0;3;5;1.Set of disks for t_i;19.49
+19;5078;SpatialJoin;30.0;3;5;2.Distance Join phase;8.53
+19;5079;SpatialJoin;30.0;3;5;3.Getting candidates;15.28
+19;5080;SpatialJoin;30.0;3;5;4.Found flocks;0.91
+19;5081;SpatialJoin;30.0;3;5;5.Updating times;1.61
+19;5082;SpatialJoin;30.0;3;5;6.Filter phase;2.82
+19;5083;SpatialJoin;30.0;3;5;0.Reporting locations;5.34
+19;5099;SpatialJoin;30.0;3;5;1.Set of disks for t_i;32.15
+19;5100;SpatialJoin;30.0;3;5;2.Distance Join phase;9.41
+19;5101;SpatialJoin;30.0;3;5;3.Getting candidates;17.23
+19;5102;SpatialJoin;30.0;3;5;4.Found flocks;0.98
+19;5103;SpatialJoin;30.0;3;5;5.Updating times;1.58
+19;5104;SpatialJoin;30.0;3;5;6.Filter phase;2.73
+19;5105;SpatialJoin;30.0;3;5;0.Reporting locations;5.35
+19;5121;SpatialJoin;30.0;3;5;1.Set of disks for t_i;30.87
+19;5122;SpatialJoin;30.0;3;5;2.Distance Join phase;9.78
+19;5123;SpatialJoin;30.0;3;5;3.Getting candidates;19.02
+19;5124;SpatialJoin;30.0;3;5;4.Found flocks;1.07
+19;5125;SpatialJoin;30.0;3;5;5.Updating times;1.71
+19;5126;SpatialJoin;30.0;3;5;6.Filter phase;2.87
+19;5127;SpatialJoin;30.0;3;5;0.Reporting locations;5.36
+19;5143;SpatialJoin;30.0;3;5;1.Set of disks for t_i;31.73
+19;5144;SpatialJoin;30.0;3;5;2.Distance Join phase;10.32
+19;5145;SpatialJoin;30.0;3;5;3.Getting candidates;17.6
+19;5146;SpatialJoin;30.0;3;5;4.Found flocks;1.51
+19;5147;SpatialJoin;30.0;3;5;5.Updating times;1.9
+19;5148;SpatialJoin;30.0;3;5;6.Filter phase;3.02
+19;5149;SpatialJoin;30.0;3;5;0.Reporting locations;5.35
+19;5165;SpatialJoin;30.0;3;5;1.Set of disks for t_i;31.39
+19;5166;SpatialJoin;30.0;3;5;2.Distance Join phase;12.0
+19;5167;SpatialJoin;30.0;3;5;3.Getting candidates;20.45
+19;5168;SpatialJoin;30.0;3;5;4.Found flocks;1.35
+19;5169;SpatialJoin;30.0;3;5;5.Updating times;2.07
+19;5170;SpatialJoin;30.0;3;5;6.Filter phase;3.76
+19;5171;SpatialJoin;30.0;3;5;0.Reporting locations;5.35
+19;5187;SpatialJoin;30.0;3;5;1.Set of disks for t_i;32.12
+19;5188;SpatialJoin;30.0;3;5;2.Distance Join phase;11.06
+19;5189;SpatialJoin;30.0;3;5;3.Getting candidates;20.0
+19;5190;SpatialJoin;30.0;3;5;4.Found flocks;1.58
+19;5191;SpatialJoin;30.0;3;5;5.Updating times;2.12
+19;5192;SpatialJoin;30.0;3;5;6.Filter phase;4.82
+19;5193;SpatialJoin;30.0;3;5;0.Reporting locations;5.29
+19;5209;SpatialJoin;30.0;3;5;1.Set of disks for t_i;21.96
+19;5210;SpatialJoin;30.0;3;5;2.Distance Join phase;12.14
+19;5211;SpatialJoin;30.0;3;5;3.Getting candidates;21.77
+19;5212;SpatialJoin;30.0;3;5;4.Found flocks;1.65
+19;5213;SpatialJoin;30.0;3;5;5.Updating times;2.09
+19;5214;SpatialJoin;30.0;3;5;6.Filter phase;3.38
+19;5215;SpatialJoin;30.0;3;5;0.Reporting locations;5.18
+19;5231;SpatialJoin;30.0;3;5;1.Set of disks for t_i;32.68
+19;5232;SpatialJoin;30.0;3;5;2.Distance Join phase;12.32
+19;5233;SpatialJoin;30.0;3;5;3.Getting candidates;19.84
+19;5234;SpatialJoin;30.0;3;5;4.Found flocks;1.7
+19;5235;SpatialJoin;30.0;3;5;5.Updating times;2.46
+19;5236;SpatialJoin;30.0;3;5;6.Filter phase;3.45
+19;5237;SpatialJoin;30.0;3;5;0.Reporting locations;5.2
+19;5253;SpatialJoin;30.0;3;5;1.Set of disks for t_i;32.96
+19;5254;SpatialJoin;30.0;3;5;2.Distance Join phase;12.92
+19;5255;SpatialJoin;30.0;3;5;3.Getting candidates;18.07
+19;5256;SpatialJoin;30.0;3;5;4.Found flocks;1.75
+19;5257;SpatialJoin;30.0;3;5;5.Updating times;2.54
+19;5258;SpatialJoin;30.0;3;5;6.Filter phase;3.44
+19;5263;SpatialJoin;30.0;3;5;Running SpatialJoin;788.41
+21;5530;SpatialJoin;30.0;7;5;0.Reporting locations;5.7
+21;5546;SpatialJoin;30.0;7;5;1.Set of disks for t_i;32.1
+21;5547;SpatialJoin;30.0;7;5;4.Found flocks;0.4
+21;5548;SpatialJoin;30.0;7;5;5.Updating times;0.53
+21;5549;SpatialJoin;30.0;7;5;6.Filter phase;0.96
+21;5550;SpatialJoin;30.0;7;5;0.Reporting locations;4.91
+21;5566;SpatialJoin;30.0;7;5;1.Set of disks for t_i;21.28
+21;5567;SpatialJoin;30.0;7;5;2.Distance Join phase;3.03
+21;5568;SpatialJoin;30.0;7;5;3.Getting candidates;1.82
+21;5569;SpatialJoin;30.0;7;5;4.Found flocks;0.38
+21;5570;SpatialJoin;30.0;7;5;5.Updating times;0.41
+21;5571;SpatialJoin;30.0;7;5;6.Filter phase;0.72
+21;5572;SpatialJoin;30.0;7;5;0.Reporting locations;4.87
+21;5588;SpatialJoin;30.0;7;5;1.Set of disks for t_i;19.41
+21;5589;SpatialJoin;30.0;7;5;2.Distance Join phase;2.77
+21;5590;SpatialJoin;30.0;7;5;3.Getting candidates;1.68
+21;5591;SpatialJoin;30.0;7;5;4.Found flocks;0.37
+21;5592;SpatialJoin;30.0;7;5;5.Updating times;0.5
+21;5593;SpatialJoin;30.0;7;5;6.Filter phase;0.87
+21;5594;SpatialJoin;30.0;7;5;0.Reporting locations;4.89
+21;5610;SpatialJoin;30.0;7;5;1.Set of disks for t_i;31.92
+21;5611;SpatialJoin;30.0;7;5;2.Distance Join phase;3.7
+21;5612;SpatialJoin;30.0;7;5;3.Getting candidates;1.94
+21;5613;SpatialJoin;30.0;7;5;4.Found flocks;0.48
+21;5614;SpatialJoin;30.0;7;5;5.Updating times;0.7
+21;5615;SpatialJoin;30.0;7;5;6.Filter phase;0.95
+21;5616;SpatialJoin;30.0;7;5;0.Reporting locations;5.06
+21;5632;SpatialJoin;30.0;7;5;1.Set of disks for t_i;30.94
+21;5633;SpatialJoin;30.0;7;5;2.Distance Join phase;4.05
+21;5634;SpatialJoin;30.0;7;5;3.Getting candidates;2.13
+21;5635;SpatialJoin;30.0;7;5;4.Found flocks;0.52
+21;5636;SpatialJoin;30.0;7;5;5.Updating times;0.71
+21;5637;SpatialJoin;30.0;7;5;6.Filter phase;1.01
+21;5638;SpatialJoin;30.0;7;5;0.Reporting locations;4.95
+21;5654;SpatialJoin;30.0;7;5;1.Set of disks for t_i;30.86
+21;5655;SpatialJoin;30.0;7;5;2.Distance Join phase;4.66
+21;5656;SpatialJoin;30.0;7;5;3.Getting candidates;2.2
+21;5657;SpatialJoin;30.0;7;5;4.Found flocks;0.59
+21;5658;SpatialJoin;30.0;7;5;5.Updating times;0.76
+21;5659;SpatialJoin;30.0;7;5;6.Filter phase;1.06
+21;5660;SpatialJoin;30.0;7;5;0.Reporting locations;4.89
+21;5676;SpatialJoin;30.0;7;5;1.Set of disks for t_i;30.93
+21;5677;SpatialJoin;30.0;7;5;2.Distance Join phase;4.77
+21;5678;SpatialJoin;30.0;7;5;3.Getting candidates;2.28
+21;5679;SpatialJoin;30.0;7;5;4.Found flocks;0.73
+21;5680;SpatialJoin;30.0;7;5;5.Updating times;0.82
+21;5681;SpatialJoin;30.0;7;5;6.Filter phase;1.14
+21;5682;SpatialJoin;30.0;7;5;0.Reporting locations;4.86
+21;5698;SpatialJoin;30.0;7;5;1.Set of disks for t_i;31.05
+21;5699;SpatialJoin;30.0;7;5;2.Distance Join phase;5.13
+21;5700;SpatialJoin;30.0;7;5;3.Getting candidates;2.42
+21;5701;SpatialJoin;30.0;7;5;4.Found flocks;0.73
+21;5702;SpatialJoin;30.0;7;5;5.Updating times;0.91
+21;5703;SpatialJoin;30.0;7;5;6.Filter phase;1.29
+21;5704;SpatialJoin;30.0;7;5;0.Reporting locations;4.74
+21;5720;SpatialJoin;30.0;7;5;1.Set of disks for t_i;21.18
+21;5721;SpatialJoin;30.0;7;5;2.Distance Join phase;4.99
+21;5722;SpatialJoin;30.0;7;5;3.Getting candidates;2.58
+21;5723;SpatialJoin;30.0;7;5;4.Found flocks;0.82
+21;5724;SpatialJoin;30.0;7;5;5.Updating times;0.9
+21;5725;SpatialJoin;30.0;7;5;6.Filter phase;1.2
+21;5726;SpatialJoin;30.0;7;5;0.Reporting locations;4.68
+21;5742;SpatialJoin;30.0;7;5;1.Set of disks for t_i;32.48
+21;5743;SpatialJoin;30.0;7;5;2.Distance Join phase;5.18
+21;5744;SpatialJoin;30.0;7;5;3.Getting candidates;2.52
+21;5745;SpatialJoin;30.0;7;5;4.Found flocks;0.86
+21;5746;SpatialJoin;30.0;7;5;5.Updating times;1.05
+21;5747;SpatialJoin;30.0;7;5;6.Filter phase;1.28
+21;5748;SpatialJoin;30.0;7;5;0.Reporting locations;4.74
+21;5764;SpatialJoin;30.0;7;5;1.Set of disks for t_i;31.08
+21;5765;SpatialJoin;30.0;7;5;2.Distance Join phase;5.97
+21;5766;SpatialJoin;30.0;7;5;3.Getting candidates;2.75
+21;5767;SpatialJoin;30.0;7;5;4.Found flocks;1.0
+21;5768;SpatialJoin;30.0;7;5;5.Updating times;1.1
+21;5769;SpatialJoin;30.0;7;5;6.Filter phase;1.39
+21;5774;SpatialJoin;30.0;7;5;Running SpatialJoin;477.49
+23;6041;SpatialJoin;30.0;3;5;0.Reporting locations;5.74
+23;6057;SpatialJoin;30.0;3;5;1.Set of disks for t_i;33.52
+23;6058;SpatialJoin;30.0;3;5;4.Found flocks;0.41
+23;6059;SpatialJoin;30.0;3;5;5.Updating times;0.52
+23;6060;SpatialJoin;30.0;3;5;6.Filter phase;0.95
+23;6061;SpatialJoin;30.0;3;5;0.Reporting locations;5.59
+23;6077;SpatialJoin;30.0;3;5;1.Set of disks for t_i;22.29
+23;6078;SpatialJoin;30.0;3;5;2.Distance Join phase;4.15
+23;6079;SpatialJoin;30.0;3;5;3.Getting candidates;9.94
+23;6080;SpatialJoin;30.0;3;5;4.Found flocks;0.74
+23;6081;SpatialJoin;30.0;3;5;5.Updating times;1.44
+23;6082;SpatialJoin;30.0;3;5;6.Filter phase;2.91
+23;6083;SpatialJoin;30.0;3;5;0.Reporting locations;5.59
+23;6099;SpatialJoin;30.0;3;5;1.Set of disks for t_i;20.26
+23;6100;SpatialJoin;30.0;3;5;2.Distance Join phase;8.24
+23;6101;SpatialJoin;30.0;3;5;3.Getting candidates;14.76
+23;6102;SpatialJoin;30.0;3;5;4.Found flocks;0.9
+23;6103;SpatialJoin;30.0;3;5;5.Updating times;1.52
+23;6104;SpatialJoin;30.0;3;5;6.Filter phase;2.88
+23;6105;SpatialJoin;30.0;3;5;0.Reporting locations;5.16
+23;6121;SpatialJoin;30.0;3;5;1.Set of disks for t_i;31.37
+23;6122;SpatialJoin;30.0;3;5;2.Distance Join phase;9.25
+23;6123;SpatialJoin;30.0;3;5;3.Getting candidates;15.64
+23;6124;SpatialJoin;30.0;3;5;4.Found flocks;0.97
+23;6125;SpatialJoin;30.0;3;5;5.Updating times;1.57
+23;6126;SpatialJoin;30.0;3;5;6.Filter phase;2.74
+23;6127;SpatialJoin;30.0;3;5;0.Reporting locations;5.13
+23;6143;SpatialJoin;30.0;3;5;1.Set of disks for t_i;30.98
+23;6144;SpatialJoin;30.0;3;5;2.Distance Join phase;9.42
+23;6145;SpatialJoin;30.0;3;5;3.Getting candidates;21.75
+23;6146;SpatialJoin;30.0;3;5;4.Found flocks;1.03
+23;6147;SpatialJoin;30.0;3;5;5.Updating times;1.64
+23;6148;SpatialJoin;30.0;3;5;6.Filter phase;2.83
+23;6149;SpatialJoin;30.0;3;5;0.Reporting locations;5.16
+23;6165;SpatialJoin;30.0;3;5;1.Set of disks for t_i;31.01
+23;6166;SpatialJoin;30.0;3;5;2.Distance Join phase;9.88
+23;6167;SpatialJoin;30.0;3;5;3.Getting candidates;21.79
+23;6168;SpatialJoin;30.0;3;5;4.Found flocks;1.21
+23;6169;SpatialJoin;30.0;3;5;5.Updating times;1.88
+23;6170;SpatialJoin;30.0;3;5;6.Filter phase;3.06
+23;6171;SpatialJoin;30.0;3;5;0.Reporting locations;5.11
+23;6187;SpatialJoin;30.0;3;5;1.Set of disks for t_i;32.27
+23;6188;SpatialJoin;30.0;3;5;2.Distance Join phase;10.26
+23;6189;SpatialJoin;30.0;3;5;3.Getting candidates;19.44
+23;6190;SpatialJoin;30.0;3;5;4.Found flocks;1.36
+23;6191;SpatialJoin;30.0;3;5;5.Updating times;2.32
+23;6192;SpatialJoin;30.0;3;5;6.Filter phase;2.92
+23;6193;SpatialJoin;30.0;3;5;0.Reporting locations;5.12
+23;6209;SpatialJoin;30.0;3;5;1.Set of disks for t_i;31.94
+23;6210;SpatialJoin;30.0;3;5;2.Distance Join phase;10.56
+23;6211;SpatialJoin;30.0;3;5;3.Getting candidates;21.55
+23;6212;SpatialJoin;30.0;3;5;4.Found flocks;1.52
+23;6213;SpatialJoin;30.0;3;5;5.Updating times;1.99
+23;6214;SpatialJoin;30.0;3;5;6.Filter phase;3.38
+23;6215;SpatialJoin;30.0;3;5;0.Reporting locations;5.04
+23;6231;SpatialJoin;30.0;3;5;1.Set of disks for t_i;23.51
+23;6232;SpatialJoin;30.0;3;5;2.Distance Join phase;11.75
+23;6233;SpatialJoin;30.0;3;5;3.Getting candidates;17.4
+23;6234;SpatialJoin;30.0;3;5;4.Found flocks;1.51
+23;6235;SpatialJoin;30.0;3;5;5.Updating times;2.07
+23;6236;SpatialJoin;30.0;3;5;6.Filter phase;3.31
+23;6237;SpatialJoin;30.0;3;5;0.Reporting locations;4.98
+23;6253;SpatialJoin;30.0;3;5;1.Set of disks for t_i;33.23
+23;6254;SpatialJoin;30.0;3;5;2.Distance Join phase;11.4
+23;6255;SpatialJoin;30.0;3;5;3.Getting candidates;16.86
+23;6256;SpatialJoin;30.0;3;5;4.Found flocks;1.64
+23;6257;SpatialJoin;30.0;3;5;5.Updating times;2.3
+23;6258;SpatialJoin;30.0;3;5;6.Filter phase;3.45
+23;6259;SpatialJoin;30.0;3;5;0.Reporting locations;5.02
+23;6275;SpatialJoin;30.0;3;5;1.Set of disks for t_i;31.72
+23;6276;SpatialJoin;30.0;3;5;2.Distance Join phase;12.18
+23;6277;SpatialJoin;30.0;3;5;3.Getting candidates;19.77
+23;6278;SpatialJoin;30.0;3;5;4.Found flocks;1.68
+23;6279;SpatialJoin;30.0;3;5;5.Updating times;2.34
+23;6280;SpatialJoin;30.0;3;5;6.Filter phase;3.55
+23;6285;SpatialJoin;30.0;3;5;Running SpatialJoin;777.27
+25;6552;SpatialJoin;30.0;7;5;0.Reporting locations;5.47
+25;6568;SpatialJoin;30.0;7;5;1.Set of disks for t_i;32.18
+25;6569;SpatialJoin;30.0;7;5;4.Found flocks;0.43
+25;6570;SpatialJoin;30.0;7;5;5.Updating times;0.45
+25;6571;SpatialJoin;30.0;7;5;6.Filter phase;0.92
+25;6572;SpatialJoin;30.0;7;5;0.Reporting locations;5.49
+25;6588;SpatialJoin;30.0;7;5;1.Set of disks for t_i;21.17
+25;6589;SpatialJoin;30.0;7;5;2.Distance Join phase;3.06
+25;6590;SpatialJoin;30.0;7;5;3.Getting candidates;1.98
+25;6591;SpatialJoin;30.0;7;5;4.Found flocks;0.27
+25;6592;SpatialJoin;30.0;7;5;5.Updating times;0.38
+25;6593;SpatialJoin;30.0;7;5;6.Filter phase;0.72
+25;6594;SpatialJoin;30.0;7;5;0.Reporting locations;5.73
+25;6610;SpatialJoin;30.0;7;5;1.Set of disks for t_i;19.01
+25;6611;SpatialJoin;30.0;7;5;2.Distance Join phase;3.07
+25;6612;SpatialJoin;30.0;7;5;3.Getting candidates;1.68
+25;6613;SpatialJoin;30.0;7;5;4.Found flocks;0.36
+25;6614;SpatialJoin;30.0;7;5;5.Updating times;0.51
+25;6615;SpatialJoin;30.0;7;5;6.Filter phase;0.95
+25;6616;SpatialJoin;30.0;7;5;0.Reporting locations;5.27
+25;6632;SpatialJoin;30.0;7;5;1.Set of disks for t_i;31.09
+25;6633;SpatialJoin;30.0;7;5;2.Distance Join phase;3.79
+25;6634;SpatialJoin;30.0;7;5;3.Getting candidates;1.95
+25;6635;SpatialJoin;30.0;7;5;4.Found flocks;0.45
+25;6636;SpatialJoin;30.0;7;5;5.Updating times;0.57
+25;6637;SpatialJoin;30.0;7;5;6.Filter phase;0.99
+25;6638;SpatialJoin;30.0;7;5;0.Reporting locations;5.3
+25;6654;SpatialJoin;30.0;7;5;1.Set of disks for t_i;31.59
+25;6655;SpatialJoin;30.0;7;5;2.Distance Join phase;4.01
+25;6656;SpatialJoin;30.0;7;5;3.Getting candidates;2.11
+25;6657;SpatialJoin;30.0;7;5;4.Found flocks;0.51
+25;6658;SpatialJoin;30.0;7;5;5.Updating times;0.69
+25;6659;SpatialJoin;30.0;7;5;6.Filter phase;1.01
+25;6660;SpatialJoin;30.0;7;5;0.Reporting locations;5.3
+25;6676;SpatialJoin;30.0;7;5;1.Set of disks for t_i;31.28
+25;6677;SpatialJoin;30.0;7;5;2.Distance Join phase;4.45
+25;6678;SpatialJoin;30.0;7;5;3.Getting candidates;2.24
+25;6679;SpatialJoin;30.0;7;5;4.Found flocks;0.59
+25;6680;SpatialJoin;30.0;7;5;5.Updating times;0.74
+25;6681;SpatialJoin;30.0;7;5;6.Filter phase;1.07
+25;6682;SpatialJoin;30.0;7;5;0.Reporting locations;5.29
+25;6698;SpatialJoin;30.0;7;5;1.Set of disks for t_i;31.42
+25;6699;SpatialJoin;30.0;7;5;2.Distance Join phase;4.88
+25;6700;SpatialJoin;30.0;7;5;3.Getting candidates;2.42
+25;6701;SpatialJoin;30.0;7;5;4.Found flocks;0.65
+25;6702;SpatialJoin;30.0;7;5;5.Updating times;0.82
+25;6703;SpatialJoin;30.0;7;5;6.Filter phase;1.07
+25;6704;SpatialJoin;30.0;7;5;0.Reporting locations;5.32
+25;6720;SpatialJoin;30.0;7;5;1.Set of disks for t_i;31.77
+25;6721;SpatialJoin;30.0;7;5;2.Distance Join phase;5.25
+25;6722;SpatialJoin;30.0;7;5;3.Getting candidates;2.33
+25;6723;SpatialJoin;30.0;7;5;4.Found flocks;0.72
+25;6724;SpatialJoin;30.0;7;5;5.Updating times;0.8
+25;6725;SpatialJoin;30.0;7;5;6.Filter phase;1.13
+25;6726;SpatialJoin;30.0;7;5;0.Reporting locations;5.19
+25;6742;SpatialJoin;30.0;7;5;1.Set of disks for t_i;20.82
+25;6743;SpatialJoin;30.0;7;5;2.Distance Join phase;4.9
+25;6744;SpatialJoin;30.0;7;5;3.Getting candidates;2.46
+25;6745;SpatialJoin;30.0;7;5;4.Found flocks;0.78
+25;6746;SpatialJoin;30.0;7;5;5.Updating times;0.94
+25;6747;SpatialJoin;30.0;7;5;6.Filter phase;1.18
+25;6748;SpatialJoin;30.0;7;5;0.Reporting locations;5.1
+25;6764;SpatialJoin;30.0;7;5;1.Set of disks for t_i;31.38
+25;6765;SpatialJoin;30.0;7;5;2.Distance Join phase;5.22
+25;6766;SpatialJoin;30.0;7;5;3.Getting candidates;2.54
+25;6767;SpatialJoin;30.0;7;5;4.Found flocks;0.86
+25;6768;SpatialJoin;30.0;7;5;5.Updating times;0.99
+25;6769;SpatialJoin;30.0;7;5;6.Filter phase;1.23
+25;6770;SpatialJoin;30.0;7;5;0.Reporting locations;5.1
+25;6786;SpatialJoin;30.0;7;5;1.Set of disks for t_i;32.69
+25;6787;SpatialJoin;30.0;7;5;2.Distance Join phase;5.82
+25;6788;SpatialJoin;30.0;7;5;3.Getting candidates;2.71
+25;6789;SpatialJoin;30.0;7;5;4.Found flocks;0.95
+25;6790;SpatialJoin;30.0;7;5;5.Updating times;1.09
+25;6791;SpatialJoin;30.0;7;5;6.Filter phase;1.38
+25;6796;SpatialJoin;30.0;7;5;Running SpatialJoin;482.27
+27;7063;SpatialJoin;30.0;3;5;0.Reporting locations;5.09
+27;7079;SpatialJoin;30.0;3;5;1.Set of disks for t_i;30.79
+27;7080;SpatialJoin;30.0;3;5;4.Found flocks;0.46
+27;7081;SpatialJoin;30.0;3;5;5.Updating times;0.47
+27;7082;SpatialJoin;30.0;3;5;6.Filter phase;0.94
+27;7083;SpatialJoin;30.0;3;5;0.Reporting locations;4.77
+27;7099;SpatialJoin;30.0;3;5;1.Set of disks for t_i;21.74
+27;7100;SpatialJoin;30.0;3;5;2.Distance Join phase;4.55
+27;7101;SpatialJoin;30.0;3;5;3.Getting candidates;9.93
+27;7102;SpatialJoin;30.0;3;5;4.Found flocks;0.82
+27;7103;SpatialJoin;30.0;3;5;5.Updating times;1.41
+27;7104;SpatialJoin;30.0;3;5;6.Filter phase;2.71
+27;7105;SpatialJoin;30.0;3;5;0.Reporting locations;4.69
+27;7121;SpatialJoin;30.0;3;5;1.Set of disks for t_i;20.78
+27;7122;SpatialJoin;30.0;3;5;2.Distance Join phase;8.33
+27;7123;SpatialJoin;30.0;3;5;3.Getting candidates;14.97
+27;7124;SpatialJoin;30.0;3;5;4.Found flocks;0.93
+27;7125;SpatialJoin;30.0;3;5;5.Updating times;1.52
+27;7126;SpatialJoin;30.0;3;5;6.Filter phase;2.88
+27;7127;SpatialJoin;30.0;3;5;0.Reporting locations;4.74
+27;7143;SpatialJoin;30.0;3;5;1.Set of disks for t_i;32.9
+27;7144;SpatialJoin;30.0;3;5;2.Distance Join phase;9.15
+27;7145;SpatialJoin;30.0;3;5;3.Getting candidates;16.96
+27;7146;SpatialJoin;30.0;3;5;4.Found flocks;1.06
+27;7147;SpatialJoin;30.0;3;5;5.Updating times;1.6
+27;7148;SpatialJoin;30.0;3;5;6.Filter phase;2.67
+27;7149;SpatialJoin;30.0;3;5;0.Reporting locations;4.63
+27;7165;SpatialJoin;30.0;3;5;1.Set of disks for t_i;33.03
+27;7166;SpatialJoin;30.0;3;5;2.Distance Join phase;9.75
+27;7167;SpatialJoin;30.0;3;5;3.Getting candidates;20.95
+27;7168;SpatialJoin;30.0;3;5;4.Found flocks;1.25
+27;7169;SpatialJoin;30.0;3;5;5.Updating times;1.7
+27;7170;SpatialJoin;30.0;3;5;6.Filter phase;2.83
+27;7171;SpatialJoin;30.0;3;5;0.Reporting locations;4.63
+27;7187;SpatialJoin;30.0;3;5;1.Set of disks for t_i;34.07
+27;7188;SpatialJoin;30.0;3;5;2.Distance Join phase;10.32
+27;7189;SpatialJoin;30.0;3;5;3.Getting candidates;22.28
+27;7190;SpatialJoin;30.0;3;5;4.Found flocks;1.25
+27;7191;SpatialJoin;30.0;3;5;5.Updating times;1.83
+27;7192;SpatialJoin;30.0;3;5;6.Filter phase;3.03
+27;7193;SpatialJoin;30.0;3;5;0.Reporting locations;4.7
+27;7209;SpatialJoin;30.0;3;5;1.Set of disks for t_i;34.72
+27;7210;SpatialJoin;30.0;3;5;2.Distance Join phase;10.51
+27;7211;SpatialJoin;30.0;3;5;3.Getting candidates;15.69
+27;7212;SpatialJoin;30.0;3;5;4.Found flocks;1.32
+27;7213;SpatialJoin;30.0;3;5;5.Updating times;2.03
+27;7214;SpatialJoin;30.0;3;5;6.Filter phase;2.88
+27;7215;SpatialJoin;30.0;3;5;0.Reporting locations;4.67
+27;7231;SpatialJoin;30.0;3;5;1.Set of disks for t_i;33.62
+27;7232;SpatialJoin;30.0;3;5;2.Distance Join phase;11.28
+27;7233;SpatialJoin;30.0;3;5;3.Getting candidates;19.96
+27;7234;SpatialJoin;30.0;3;5;4.Found flocks;1.57
+27;7235;SpatialJoin;30.0;3;5;5.Updating times;2.05
+27;7236;SpatialJoin;30.0;3;5;6.Filter phase;4.69
+27;7237;SpatialJoin;30.0;3;5;0.Reporting locations;4.63
+27;7253;SpatialJoin;30.0;3;5;1.Set of disks for t_i;25.75
+27;7254;SpatialJoin;30.0;3;5;2.Distance Join phase;12.45
+27;7255;SpatialJoin;30.0;3;5;3.Getting candidates;16.31
+27;7256;SpatialJoin;30.0;3;5;4.Found flocks;1.68
+27;7257;SpatialJoin;30.0;3;5;5.Updating times;2.15
+27;7258;SpatialJoin;30.0;3;5;6.Filter phase;3.46
+27;7259;SpatialJoin;30.0;3;5;0.Reporting locations;4.56
+27;7275;SpatialJoin;30.0;3;5;1.Set of disks for t_i;33.77
+27;7276;SpatialJoin;30.0;3;5;2.Distance Join phase;12.4
+27;7277;SpatialJoin;30.0;3;5;3.Getting candidates;19.26
+27;7278;SpatialJoin;30.0;3;5;4.Found flocks;1.76
+27;7279;SpatialJoin;30.0;3;5;5.Updating times;2.37
+27;7280;SpatialJoin;30.0;3;5;6.Filter phase;3.59
+27;7281;SpatialJoin;30.0;3;5;0.Reporting locations;4.59
+27;7297;SpatialJoin;30.0;3;5;1.Set of disks for t_i;32.91
+27;7298;SpatialJoin;30.0;3;5;2.Distance Join phase;13.08
+27;7299;SpatialJoin;30.0;3;5;3.Getting candidates;19.62
+27;7300;SpatialJoin;30.0;3;5;4.Found flocks;1.8
+27;7301;SpatialJoin;30.0;3;5;5.Updating times;2.44
+27;7302;SpatialJoin;30.0;3;5;6.Filter phase;3.58
+27;7307;SpatialJoin;30.0;3;5;Running SpatialJoin;788.99
