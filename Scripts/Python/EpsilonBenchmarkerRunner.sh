@@ -1,8 +1,9 @@
 #!/usr/bin/bash
 
-./EpsilonBenchmarker.sh 100
-./EpsilonBenchmarker.sh 150
-./EpsilonBenchmarker.sh 200
+./EpsilonBenchmarker.sh 60
+./EpsilonBenchmarker.sh 70
+./EpsilonBenchmarker.sh 80
+./EpsilonBenchmarker.sh 90
 #./EpsilonBenchmarker.sh 15
 #./EpsilonBenchmarker.sh 20
 #./EpsilonBenchmarker.sh 25
