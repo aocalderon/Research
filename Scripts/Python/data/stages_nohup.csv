@@ -1,0 +1,355 @@
+0;19;MergeLast;100.0;4;5;0.Reporting locations;5.73
+0;35;MergeLast;100.0;4;5;1.Set of disks for t_i;62.12
+0;36;MergeLast;100.0;4;5;0.Reporting locations;4.99
+0;52;MergeLast;100.0;4;5;2.Set of disks for t_i+delta;63.35
+0;53;MergeLast;100.0;4;5;3.Joining timestams;21.88
+0;54;MergeLast;100.0;4;5;Indexing candidates;1.07
+0;55;MergeLast;100.0;4;5;Getting expansions;0.19
+0;56;MergeLast;100.0;4;5;Finding local maximals;0.27
+0;57;MergeLast;100.0;4;5;Prunning duplicates and subsets;2.46
+0;164;MergeLast;100.0;4;5;4.Checking internals;17.18
+0;165;MergeLast;100.0;4;5;0.Reporting locations;4.7
+0;181;MergeLast;100.0;4;5;1.Set of disks for t_i;27.25
+0;182;MergeLast;100.0;4;5;0.Reporting locations;4.7
+0;198;MergeLast;100.0;4;5;2.Set of disks for t_i+delta;109.19
+0;199;MergeLast;100.0;4;5;3.Joining timestams;21.04
+0;200;MergeLast;100.0;4;5;Indexing candidates;1.05
+0;201;MergeLast;100.0;4;5;Getting expansions;0.18
+0;202;MergeLast;100.0;4;5;Finding local maximals;0.4
+0;203;MergeLast;100.0;4;5;Prunning duplicates and subsets;1.61
+0;310;MergeLast;100.0;4;5;4.Checking internals;15.59
+0;311;MergeLast;100.0;4;5;0.Reporting locations;4.74
+0;327;MergeLast;100.0;4;5;1.Set of disks for t_i;28.93
+0;328;MergeLast;100.0;4;5;0.Reporting locations;4.76
+0;344;MergeLast;100.0;4;5;2.Set of disks for t_i+delta;40.77
+0;345;MergeLast;100.0;4;5;3.Joining timestams;20.16
+0;346;MergeLast;100.0;4;5;Indexing candidates;1.19
+0;347;MergeLast;100.0;4;5;Getting expansions;0.26
+0;348;MergeLast;100.0;4;5;Finding local maximals;0.4
+0;349;MergeLast;100.0;4;5;Prunning duplicates and subsets;1.52
+0;456;MergeLast;100.0;4;5;4.Checking internals;13.53
+0;457;MergeLast;100.0;4;5;0.Reporting locations;4.71
+0;473;MergeLast;100.0;4;5;1.Set of disks for t_i;39.36
+0;474;MergeLast;100.0;4;5;0.Reporting locations;4.73
+0;490;MergeLast;100.0;4;5;2.Set of disks for t_i+delta;79.18
+0;491;MergeLast;100.0;4;5;3.Joining timestams;20.61
+0;492;MergeLast;100.0;4;5;Indexing candidates;0.98
+0;493;MergeLast;100.0;4;5;Getting expansions;0.17
+0;494;MergeLast;100.0;4;5;Finding local maximals;0.31
+0;495;MergeLast;100.0;4;5;Prunning duplicates and subsets;1.51
+0;602;MergeLast;100.0;4;5;4.Checking internals;14.87
+0;603;MergeLast;100.0;4;5;0.Reporting locations;4.67
+0;604;MergeLast;100.0;4;5;1.Set of disks for t_i;0.32
+0;605;MergeLast;100.0;4;5;0.Reporting locations;4.6
+0;621;MergeLast;100.0;4;5;2.Set of disks for t_i+delta;42.75
+0;622;MergeLast;100.0;4;5;3.Joining timestams;20.9
+0;623;MergeLast;100.0;4;5;Indexing candidates;1.01
+0;624;MergeLast;100.0;4;5;Getting expansions;0.18
+0;625;MergeLast;100.0;4;5;Finding local maximals;0.29
+0;626;MergeLast;100.0;4;5;Prunning duplicates and subsets;1.59
+0;733;MergeLast;100.0;4;5;4.Checking internals;17.47
+0;734;MergeLast;100.0;4;5;0.Reporting locations;4.74
+0;735;MergeLast;100.0;4;5;1.Set of disks for t_i;0.32
+0;736;MergeLast;100.0;4;5;0.Reporting locations;4.58
+0;752;MergeLast;100.0;4;5;2.Set of disks for t_i+delta;43.75
+0;753;MergeLast;100.0;4;5;3.Joining timestams;20.61
+0;754;MergeLast;100.0;4;5;Indexing candidates;1.15
+0;755;MergeLast;100.0;4;5;Getting expansions;0.18
+0;756;MergeLast;100.0;4;5;Finding local maximals;0.51
+0;757;MergeLast;100.0;4;5;Prunning duplicates and subsets;1.57
+0;864;MergeLast;100.0;4;5;4.Checking internals;15.51
+0;865;MergeLast;100.0;4;5;0.Reporting locations;4.69
+0;866;MergeLast;100.0;4;5;1.Set of disks for t_i;0.3
+0;867;MergeLast;100.0;4;5;0.Reporting locations;4.77
+0;883;MergeLast;100.0;4;5;2.Set of disks for t_i+delta;44.62
+0;884;MergeLast;100.0;4;5;3.Joining timestams;20.5
+0;885;MergeLast;100.0;4;5;Indexing candidates;1.09
+0;886;MergeLast;100.0;4;5;Getting expansions;0.29
+0;887;MergeLast;100.0;4;5;Finding local maximals;0.28
+0;888;MergeLast;100.0;4;5;Prunning duplicates and subsets;1.45
+0;995;MergeLast;100.0;4;5;4.Checking internals;13.84
+0;1000;MergeLast;100.0;4;5;Running MergeLast;927.88
+1;1028;MergeLast;60.0;4;5;0.Reporting locations;5.34
+1;1044;MergeLast;60.0;4;5;1.Set of disks for t_i;35.3
+1;1045;MergeLast;60.0;4;5;0.Reporting locations;5.18
+1;1061;MergeLast;60.0;4;5;2.Set of disks for t_i+delta;36.78
+1;1062;MergeLast;60.0;4;5;3.Joining timestams;16.74
+1;1063;MergeLast;60.0;4;5;Indexing candidates;1.25
+1;1064;MergeLast;60.0;4;5;Getting expansions;0.25
+1;1065;MergeLast;60.0;4;5;Finding local maximals;0.23
+1;1066;MergeLast;60.0;4;5;Prunning duplicates and subsets;1.95
+1;1148;MergeLast;60.0;4;5;4.Checking internals;15.23
+1;1149;MergeLast;60.0;4;5;0.Reporting locations;5.08
+1;1165;MergeLast;60.0;4;5;1.Set of disks for t_i;21.7
+1;1166;MergeLast;60.0;4;5;0.Reporting locations;5.11
+1;1182;MergeLast;60.0;4;5;2.Set of disks for t_i+delta;35.03
+1;1183;MergeLast;60.0;4;5;3.Joining timestams;14.9
+1;1184;MergeLast;60.0;4;5;Indexing candidates;0.88
+1;1185;MergeLast;60.0;4;5;Getting expansions;0.17
+1;1186;MergeLast;60.0;4;5;Finding local maximals;0.23
+1;1187;MergeLast;60.0;4;5;Prunning duplicates and subsets;1.39
+1;1260;MergeLast;60.0;4;5;4.Checking internals;12.96
+1;1261;MergeLast;60.0;4;5;0.Reporting locations;5.14
+1;1277;MergeLast;60.0;4;5;1.Set of disks for t_i;21.39
+1;1278;MergeLast;60.0;4;5;0.Reporting locations;5.1
+1;1294;MergeLast;60.0;4;5;2.Set of disks for t_i+delta;33.92
+1;1295;MergeLast;60.0;4;5;3.Joining timestams;14.22
+1;1296;MergeLast;60.0;4;5;Indexing candidates;0.91
+1;1297;MergeLast;60.0;4;5;Getting expansions;0.17
+1;1298;MergeLast;60.0;4;5;Finding local maximals;0.22
+1;1299;MergeLast;60.0;4;5;Prunning duplicates and subsets;1.6
+1;1370;MergeLast;60.0;4;5;4.Checking internals;12.81
+1;1371;MergeLast;60.0;4;5;0.Reporting locations;5.14
+1;1387;MergeLast;60.0;4;5;1.Set of disks for t_i;32.96
+1;1388;MergeLast;60.0;4;5;0.Reporting locations;5.12
+1;1404;MergeLast;60.0;4;5;2.Set of disks for t_i+delta;35.37
+1;1405;MergeLast;60.0;4;5;3.Joining timestams;14.23
+1;1406;MergeLast;60.0;4;5;Indexing candidates;0.95
+1;1407;MergeLast;60.0;4;5;Getting expansions;0.16
+1;1408;MergeLast;60.0;4;5;Finding local maximals;0.23
+1;1409;MergeLast;60.0;4;5;Prunning duplicates and subsets;1.43
+1;1478;MergeLast;60.0;4;5;4.Checking internals;12.97
+1;1479;MergeLast;60.0;4;5;0.Reporting locations;5.1
+1;1480;MergeLast;60.0;4;5;1.Set of disks for t_i;0.3
+1;1481;MergeLast;60.0;4;5;0.Reporting locations;5.07
+1;1497;MergeLast;60.0;4;5;2.Set of disks for t_i+delta;28.21
+1;1498;MergeLast;60.0;4;5;3.Joining timestams;18.97
+1;1499;MergeLast;60.0;4;5;Indexing candidates;0.89
+1;1500;MergeLast;60.0;4;5;Getting expansions;0.17
+1;1501;MergeLast;60.0;4;5;Finding local maximals;0.23
+1;1502;MergeLast;60.0;4;5;Prunning duplicates and subsets;1.35
+1;1575;MergeLast;60.0;4;5;4.Checking internals;12.73
+1;1576;MergeLast;60.0;4;5;0.Reporting locations;5.15
+1;1577;MergeLast;60.0;4;5;1.Set of disks for t_i;0.29
+1;1578;MergeLast;60.0;4;5;0.Reporting locations;5.01
+1;1594;MergeLast;60.0;4;5;2.Set of disks for t_i+delta;37.98
+1;1595;MergeLast;60.0;4;5;3.Joining timestams;14.46
+1;1596;MergeLast;60.0;4;5;Indexing candidates;0.98
+1;1597;MergeLast;60.0;4;5;Getting expansions;0.18
+1;1598;MergeLast;60.0;4;5;Finding local maximals;0.22
+1;1599;MergeLast;60.0;4;5;Prunning duplicates and subsets;1.48
+1;1672;MergeLast;60.0;4;5;4.Checking internals;14.54
+1;1673;MergeLast;60.0;4;5;0.Reporting locations;5.2
+1;1674;MergeLast;60.0;4;5;1.Set of disks for t_i;0.31
+1;1675;MergeLast;60.0;4;5;0.Reporting locations;5.0
+1;1691;MergeLast;60.0;4;5;2.Set of disks for t_i+delta;37.58
+1;1692;MergeLast;60.0;4;5;3.Joining timestams;14.15
+1;1693;MergeLast;60.0;4;5;Indexing candidates;0.93
+1;1694;MergeLast;60.0;4;5;Getting expansions;0.16
+1;1695;MergeLast;60.0;4;5;Finding local maximals;0.22
+1;1696;MergeLast;60.0;4;5;Prunning duplicates and subsets;1.28
+1;1766;MergeLast;60.0;4;5;4.Checking internals;12.58
+1;1771;MergeLast;60.0;4;5;Running MergeLast;654.96
+2;1799;MergeLast;70.0;4;5;0.Reporting locations;8.16
+2;1815;MergeLast;70.0;4;5;1.Set of disks for t_i;34.41
+2;1816;MergeLast;70.0;4;5;0.Reporting locations;5.93
+2;1832;MergeLast;70.0;4;5;2.Set of disks for t_i+delta;37.9
+2;1833;MergeLast;70.0;4;5;3.Joining timestams;19.68
+2;1834;MergeLast;70.0;4;5;Indexing candidates;1.15
+2;1835;MergeLast;70.0;4;5;Getting expansions;0.2
+2;1836;MergeLast;70.0;4;5;Finding local maximals;0.25
+2;1837;MergeLast;70.0;4;5;Prunning duplicates and subsets;2.11
+2;1929;MergeLast;70.0;4;5;4.Checking internals;15.91
+2;1930;MergeLast;70.0;4;5;0.Reporting locations;4.99
+2;1946;MergeLast;70.0;4;5;1.Set of disks for t_i;21.63
+2;1947;MergeLast;70.0;4;5;0.Reporting locations;5.05
+2;1963;MergeLast;70.0;4;5;2.Set of disks for t_i+delta;34.07
+2;1964;MergeLast;70.0;4;5;3.Joining timestams;19.88
+2;1965;MergeLast;70.0;4;5;Indexing candidates;0.92
+2;1966;MergeLast;70.0;4;5;Getting expansions;0.23
+2;1967;MergeLast;70.0;4;5;Finding local maximals;0.26
+2;1968;MergeLast;70.0;4;5;Prunning duplicates and subsets;1.53
+2;2058;MergeLast;70.0;4;5;4.Checking internals;13.1
+2;2059;MergeLast;70.0;4;5;0.Reporting locations;5.33
+2;2075;MergeLast;70.0;4;5;1.Set of disks for t_i;21.05
+2;2076;MergeLast;70.0;4;5;0.Reporting locations;5.25
+2;2092;MergeLast;70.0;4;5;2.Set of disks for t_i+delta;34.84
+2;2093;MergeLast;70.0;4;5;3.Joining timestams;19.01
+2;2094;MergeLast;70.0;4;5;Indexing candidates;0.89
+2;2095;MergeLast;70.0;4;5;Getting expansions;0.17
+2;2096;MergeLast;70.0;4;5;Finding local maximals;0.24
+2;2097;MergeLast;70.0;4;5;Prunning duplicates and subsets;1.55
+2;2201;MergeLast;70.0;4;5;4.Checking internals;13.05
+2;2202;MergeLast;70.0;4;5;0.Reporting locations;5.27
+2;2218;MergeLast;70.0;4;5;1.Set of disks for t_i;34.07
+2;2219;MergeLast;70.0;4;5;0.Reporting locations;5.32
+2;2235;MergeLast;70.0;4;5;2.Set of disks for t_i+delta;35.18
+2;2236;MergeLast;70.0;4;5;3.Joining timestams;20.52
+2;2237;MergeLast;70.0;4;5;Indexing candidates;1.04
+2;2238;MergeLast;70.0;4;5;Getting expansions;0.2
+2;2239;MergeLast;70.0;4;5;Finding local maximals;0.27
+2;2240;MergeLast;70.0;4;5;Prunning duplicates and subsets;1.79
+2;2347;MergeLast;70.0;4;5;4.Checking internals;13.6
+2;2348;MergeLast;70.0;4;5;0.Reporting locations;5.3
+2;2349;MergeLast;70.0;4;5;1.Set of disks for t_i;0.31
+2;2350;MergeLast;70.0;4;5;0.Reporting locations;5.2
+2;2366;MergeLast;70.0;4;5;2.Set of disks for t_i+delta;26.31
+2;2367;MergeLast;70.0;4;5;3.Joining timestams;19.0
+2;2368;MergeLast;70.0;4;5;Indexing candidates;0.96
+2;2369;MergeLast;70.0;4;5;Getting expansions;0.17
+2;2370;MergeLast;70.0;4;5;Finding local maximals;0.32
+2;2371;MergeLast;70.0;4;5;Prunning duplicates and subsets;1.63
+2;2478;MergeLast;70.0;4;5;4.Checking internals;13.37
+2;2479;MergeLast;70.0;4;5;0.Reporting locations;5.28
+2;2480;MergeLast;70.0;4;5;1.Set of disks for t_i;0.38
+2;2481;MergeLast;70.0;4;5;0.Reporting locations;5.13
+2;2497;MergeLast;70.0;4;5;2.Set of disks for t_i+delta;36.55
+2;2498;MergeLast;70.0;4;5;3.Joining timestams;17.86
+2;2499;MergeLast;70.0;4;5;Indexing candidates;0.97
+2;2500;MergeLast;70.0;4;5;Getting expansions;0.17
+2;2501;MergeLast;70.0;4;5;Finding local maximals;0.24
+2;2502;MergeLast;70.0;4;5;Prunning duplicates and subsets;1.41
+2;2609;MergeLast;70.0;4;5;4.Checking internals;12.95
+2;2610;MergeLast;70.0;4;5;0.Reporting locations;5.29
+2;2611;MergeLast;70.0;4;5;1.Set of disks for t_i;0.3
+2;2612;MergeLast;70.0;4;5;0.Reporting locations;5.13
+2;2628;MergeLast;70.0;4;5;2.Set of disks for t_i+delta;37.46
+2;2629;MergeLast;70.0;4;5;3.Joining timestams;18.01
+2;2630;MergeLast;70.0;4;5;Indexing candidates;0.96
+2;2631;MergeLast;70.0;4;5;Getting expansions;0.17
+2;2632;MergeLast;70.0;4;5;Finding local maximals;0.26
+2;2633;MergeLast;70.0;4;5;Prunning duplicates and subsets;1.55
+2;2731;MergeLast;70.0;4;5;4.Checking internals;13.7
+2;2736;MergeLast;70.0;4;5;Running MergeLast;686.39
+3;2764;MergeLast;80.0;4;5;0.Reporting locations;5.21
+3;2780;MergeLast;80.0;4;5;1.Set of disks for t_i;36.04
+3;2781;MergeLast;80.0;4;5;0.Reporting locations;4.89
+3;2797;MergeLast;80.0;4;5;2.Set of disks for t_i+delta;40.61
+3;2798;MergeLast;80.0;4;5;3.Joining timestams;17.79
+3;2799;MergeLast;80.0;4;5;Indexing candidates;1.21
+3;2800;MergeLast;80.0;4;5;Getting expansions;0.21
+3;2801;MergeLast;80.0;4;5;Finding local maximals;0.25
+3;2802;MergeLast;80.0;4;5;Prunning duplicates and subsets;1.94
+3;2909;MergeLast;80.0;4;5;4.Checking internals;16.02
+3;2910;MergeLast;80.0;4;5;0.Reporting locations;4.85
+3;2926;MergeLast;80.0;4;5;1.Set of disks for t_i;23.01
+3;2927;MergeLast;80.0;4;5;0.Reporting locations;4.96
+3;2943;MergeLast;80.0;4;5;2.Set of disks for t_i+delta;36.61
+3;2944;MergeLast;80.0;4;5;3.Joining timestams;17.47
+3;2945;MergeLast;80.0;4;5;Indexing candidates;0.99
+3;2946;MergeLast;80.0;4;5;Getting expansions;0.18
+3;2947;MergeLast;80.0;4;5;Finding local maximals;0.25
+3;2948;MergeLast;80.0;4;5;Prunning duplicates and subsets;1.43
+3;3055;MergeLast;80.0;4;5;4.Checking internals;13.86
+3;3056;MergeLast;80.0;4;5;0.Reporting locations;4.86
+3;3072;MergeLast;80.0;4;5;1.Set of disks for t_i;21.69
+3;3073;MergeLast;80.0;4;5;0.Reporting locations;4.89
+3;3089;MergeLast;80.0;4;5;2.Set of disks for t_i+delta;37.88
+3;3090;MergeLast;80.0;4;5;3.Joining timestams;16.43
+3;3091;MergeLast;80.0;4;5;Indexing candidates;0.98
+3;3092;MergeLast;80.0;4;5;Getting expansions;0.18
+3;3093;MergeLast;80.0;4;5;Finding local maximals;0.24
+3;3094;MergeLast;80.0;4;5;Prunning duplicates and subsets;1.64
+3;3201;MergeLast;80.0;4;5;4.Checking internals;12.83
+3;3202;MergeLast;80.0;4;5;0.Reporting locations;4.77
+3;3218;MergeLast;80.0;4;5;1.Set of disks for t_i;37.08
+3;3219;MergeLast;80.0;4;5;0.Reporting locations;4.84
+3;3235;MergeLast;80.0;4;5;2.Set of disks for t_i+delta;37.98
+3;3236;MergeLast;80.0;4;5;3.Joining timestams;16.64
+3;3237;MergeLast;80.0;4;5;Indexing candidates;0.97
+3;3238;MergeLast;80.0;4;5;Getting expansions;0.19
+3;3239;MergeLast;80.0;4;5;Finding local maximals;0.27
+3;3240;MergeLast;80.0;4;5;Prunning duplicates and subsets;1.77
+3;3347;MergeLast;80.0;4;5;4.Checking internals;13.41
+3;3348;MergeLast;80.0;4;5;0.Reporting locations;4.88
+3;3349;MergeLast;80.0;4;5;1.Set of disks for t_i;0.32
+3;3350;MergeLast;80.0;4;5;0.Reporting locations;4.68
+3;3366;MergeLast;80.0;4;5;2.Set of disks for t_i+delta;27.53
+3;3367;MergeLast;80.0;4;5;3.Joining timestams;16.5
+3;3368;MergeLast;80.0;4;5;Indexing candidates;1.17
+3;3369;MergeLast;80.0;4;5;Getting expansions;0.17
+3;3370;MergeLast;80.0;4;5;Finding local maximals;0.24
+3;3371;MergeLast;80.0;4;5;Prunning duplicates and subsets;1.54
+3;3478;MergeLast;80.0;4;5;4.Checking internals;13.27
+3;3479;MergeLast;80.0;4;5;0.Reporting locations;4.87
+3;3480;MergeLast;80.0;4;5;1.Set of disks for t_i;0.3
+3;3481;MergeLast;80.0;4;5;0.Reporting locations;4.63
+3;3497;MergeLast;80.0;4;5;2.Set of disks for t_i+delta;35.15
+3;3498;MergeLast;80.0;4;5;3.Joining timestams;18.16
+3;3499;MergeLast;80.0;4;5;Indexing candidates;0.93
+3;3500;MergeLast;80.0;4;5;Getting expansions;0.18
+3;3501;MergeLast;80.0;4;5;Finding local maximals;0.25
+3;3502;MergeLast;80.0;4;5;Prunning duplicates and subsets;1.42
+3;3609;MergeLast;80.0;4;5;4.Checking internals;12.75
+3;3610;MergeLast;80.0;4;5;0.Reporting locations;4.81
+3;3611;MergeLast;80.0;4;5;1.Set of disks for t_i;0.29
+3;3612;MergeLast;80.0;4;5;0.Reporting locations;4.67
+3;3628;MergeLast;80.0;4;5;2.Set of disks for t_i+delta;35.92
+3;3629;MergeLast;80.0;4;5;3.Joining timestams;16.61
+3;3630;MergeLast;80.0;4;5;Indexing candidates;0.96
+3;3631;MergeLast;80.0;4;5;Getting expansions;0.3
+3;3632;MergeLast;80.0;4;5;Finding local maximals;0.25
+3;3633;MergeLast;80.0;4;5;Prunning duplicates and subsets;1.43
+3;3740;MergeLast;80.0;4;5;4.Checking internals;12.72
+3;3745;MergeLast;80.0;4;5;Running MergeLast;677.86
+4;3773;MergeLast;90.0;4;5;0.Reporting locations;5.32
+4;3789;MergeLast;90.0;4;5;1.Set of disks for t_i;50.1
+4;3790;MergeLast;90.0;4;5;0.Reporting locations;5.11
+4;3806;MergeLast;90.0;4;5;2.Set of disks for t_i+delta;39.6
+4;3807;MergeLast;90.0;4;5;3.Joining timestams;24.52
+4;3808;MergeLast;90.0;4;5;Indexing candidates;1.26
+4;3809;MergeLast;90.0;4;5;Getting expansions;0.25
+4;3810;MergeLast;90.0;4;5;Finding local maximals;0.32
+4;3811;MergeLast;90.0;4;5;Prunning duplicates and subsets;1.93
+4;3918;MergeLast;90.0;4;5;4.Checking internals;15.62
+4;3919;MergeLast;90.0;4;5;0.Reporting locations;4.9
+4;3935;MergeLast;90.0;4;5;1.Set of disks for t_i;32.22
+4;3936;MergeLast;90.0;4;5;0.Reporting locations;4.98
+4;3952;MergeLast;90.0;4;5;2.Set of disks for t_i+delta;38.79
+4;3953;MergeLast;90.0;4;5;3.Joining timestams;24.66
+4;3954;MergeLast;90.0;4;5;Indexing candidates;1.01
+4;3955;MergeLast;90.0;4;5;Getting expansions;0.18
+4;3956;MergeLast;90.0;4;5;Finding local maximals;0.26
+4;3957;MergeLast;90.0;4;5;Prunning duplicates and subsets;1.59
+4;4064;MergeLast;90.0;4;5;4.Checking internals;13.57
+4;4065;MergeLast;90.0;4;5;0.Reporting locations;4.86
+4;4081;MergeLast;90.0;4;5;1.Set of disks for t_i;27.64
+4;4082;MergeLast;90.0;4;5;0.Reporting locations;4.9
+4;4098;MergeLast;90.0;4;5;2.Set of disks for t_i+delta;37.22
+4;4099;MergeLast;90.0;4;5;3.Joining timestams;24.47
+4;4100;MergeLast;90.0;4;5;Indexing candidates;1.01
+4;4101;MergeLast;90.0;4;5;Getting expansions;0.18
+4;4102;MergeLast;90.0;4;5;Finding local maximals;0.26
+4;4103;MergeLast;90.0;4;5;Prunning duplicates and subsets;1.89
+4;4210;MergeLast;90.0;4;5;4.Checking internals;13.54
+4;4211;MergeLast;90.0;4;5;0.Reporting locations;4.87
+4;4227;MergeLast;90.0;4;5;1.Set of disks for t_i;42.55
+4;4228;MergeLast;90.0;4;5;0.Reporting locations;4.96
+4;4244;MergeLast;90.0;4;5;2.Set of disks for t_i+delta;38.73
+4;4245;MergeLast;90.0;4;5;3.Joining timestams;29.14
+4;4246;MergeLast;90.0;4;5;Indexing candidates;1.0
+4;4247;MergeLast;90.0;4;5;Getting expansions;0.17
+4;4248;MergeLast;90.0;4;5;Finding local maximals;0.28
+4;4249;MergeLast;90.0;4;5;Prunning duplicates and subsets;1.52
+4;4356;MergeLast;90.0;4;5;4.Checking internals;14.36
+4;4357;MergeLast;90.0;4;5;0.Reporting locations;4.86
+4;4358;MergeLast;90.0;4;5;1.Set of disks for t_i;0.32
+4;4359;MergeLast;90.0;4;5;0.Reporting locations;4.8
+4;4375;MergeLast;90.0;4;5;2.Set of disks for t_i+delta;36.26
+4;4376;MergeLast;90.0;4;5;3.Joining timestams;29.49
+4;4377;MergeLast;90.0;4;5;Indexing candidates;0.96
+4;4378;MergeLast;90.0;4;5;Getting expansions;0.18
+4;4379;MergeLast;90.0;4;5;Finding local maximals;0.25
+4;4380;MergeLast;90.0;4;5;Prunning duplicates and subsets;1.62
+4;4487;MergeLast;90.0;4;5;4.Checking internals;14.39
+4;4488;MergeLast;90.0;4;5;0.Reporting locations;4.92
+4;4489;MergeLast;90.0;4;5;1.Set of disks for t_i;0.33
+4;4490;MergeLast;90.0;4;5;0.Reporting locations;4.77
+4;4506;MergeLast;90.0;4;5;2.Set of disks for t_i+delta;39.14
+4;4507;MergeLast;90.0;4;5;3.Joining timestams;25.01
+4;4508;MergeLast;90.0;4;5;Indexing candidates;0.99
+4;4509;MergeLast;90.0;4;5;Getting expansions;0.18
+4;4510;MergeLast;90.0;4;5;Finding local maximals;0.26
+4;4511;MergeLast;90.0;4;5;Prunning duplicates and subsets;1.66
+4;4618;MergeLast;90.0;4;5;4.Checking internals;14.38
+4;4619;MergeLast;90.0;4;5;0.Reporting locations;5.41
+4;4620;MergeLast;90.0;4;5;1.Set of disks for t_i;0.33
+4;4621;MergeLast;90.0;4;5;0.Reporting locations;4.8
+4;4637;MergeLast;90.0;4;5;2.Set of disks for t_i+delta;38.34
+4;4638;MergeLast;90.0;4;5;3.Joining timestams;25.84
+4;4639;MergeLast;90.0;4;5;Indexing candidates;0.99
+4;4640;MergeLast;90.0;4;5;Getting expansions;0.18
+4;4641;MergeLast;90.0;4;5;Finding local maximals;0.25
+4;4642;MergeLast;90.0;4;5;Prunning duplicates and subsets;2.02
+4;4749;MergeLast;90.0;4;5;4.Checking internals;14.44
+4;4754;MergeLast;90.0;4;5;Running MergeLast;798.87
