@@ -8,8 +8,8 @@ NODES=4
 DATAPATH="Datasets/Berlin/"
 DATASET="berlin0-10"
 E=$1
-M=4
-D=5
+M=5
+D=6
 
 #ID=`date +%s`
 #TIMESTAMP=`date`
