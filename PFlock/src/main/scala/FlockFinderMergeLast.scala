@@ -398,7 +398,6 @@ object FlockFinderMergeLast {
     val nPrunedFlocks = prunedFlocks.count()
 
     logging("Prunning duplicates and subsets...", timer, nPrunedFlocks, "flocks")
-    prunedFlocks.show(100, truncate = false)
 
     prunedFlocks
   }
