@@ -8,11 +8,7 @@ import org.apache.spark.sql.types.StructType
   */
 
 object Partitioner {
-
-  case class SP_Point(id: Int, x: Double, y: Double)
-
-  val master: String = "local[*]"
-  val logs: String = "INFO"
+  case class SP_Point(tid: Int, oid: Int, x: Double, y: Double, t: String)
   
   def toWKT(minx: Double, miny: Double, maxx: Double, maxy: Double): String = "POLYGON (( %f %f, %f %f, %f %f, %f %f, %f %f ))".
     format(
@@ -24,53 +20,28 @@ object Partitioner {
     )  
 
   def main(args: Array[String]): Unit = {
-    val dataset: String = "B80K"
-    val path: String = "Y3Q1/Datasets/"
-    val extension: String = "csv"
-    val partitions: String = "10"
-
     val simba = SimbaSession
       .builder()
-      .master(master)
+      .master("local[*]")
       .appName("Partitioner")
-      .config("simba.index.partitions", partitions)
+      .config("simba.index.partitions", "10")
       .getOrCreate()
 
     import simba.implicits._
     import simba.simbaImplicits._
-    simba.sparkContext.setLogLevel(logs)
     
-    val POINT_SCHEMA = ScalaReflection.schemaFor[Partitioner.SP_Point].
-        dataType.
-        asInstanceOf[StructType]
+    val schema = ScalaReflection.schemaFor[SP_Point].dataType.asInstanceOf[StructType]
             
-    val phd_home = scala.util.Properties.
-        envOrElse("PHD_HOME", "/home/and/Documents/PhD/Code/")
-	val filename = s"$phd_home$path$dataset.$extension"
-    val points = simba.
-        read.option("header", "false").
-        schema(POINT_SCHEMA).csv(filename).
-        as[Partitioner.SP_Point]
+    val filename = "/tmp/t.csv"
+    val points = simba.read.option("header", "false").schema(schema).csv(filename). as[SP_Point].cache
     println(points.count())
+    //val sample = points.sample(false, 0.5)//.range(Array("x", "y"), Array(-339220.0, 4444725.0), Array(-309375.0, 4478070.0)).as[SP_Point].cache
+    //println(sample.count())
     println(points.rdd.getNumPartitions)
-    points.index(RTreeType, "rt", Array("x", "y"))
-    println(points.rdd.getNumPartitions)
-    
-	val midx = 25241
-	val midy1 = 21078
-	val midy2 = 20834
-    val delta = 50.5
-    val data = points.rdd.mapPartitionsWithIndex{ (index, data) =>
-      data.
-      filter{ point => 
-          (point.x < midx-delta && point.y > midy1+delta) || 
-          (point.x < midx-delta && point.y < midy1-delta) || 
-          (point.x > midx+delta && point.y > midy2+delta) || 
-          (point.x > midx+delta && point.y < midy2-delta) 
-      }.
-      map(point => (index, point.id, point.x, point.y)).toIterator
-    }
-    val mbrs = points.rdd.mapPartitionsWithIndex{ (index, iterator) =>
+    val data = points.index(RTreeType, "rtSample", Array("x", "y")).cache
+    println(data.rdd.getNumPartitions)
+
+    val mbrs = data.rdd.mapPartitionsWithIndex{ (index, iterator) =>
       var min_x: Double = Double.MaxValue
       var min_y: Double = Double.MaxValue
       var max_x: Double = Double.MinValue
@@ -99,33 +70,9 @@ object Partitioner {
     }
     mbrs.foreach(println)	
     
-	import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
-	var writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/B20K_a.csv")))
-    data.
-      filter(point => point._1 == 0).
-      map(point => "%d,%f,%f\n".format(point._2, point._3, point._4)).
-      collect.toList.foreach(writer.write)
-    writer.close()	
-
-	writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/B20K_b.csv")))
-    data.
-      filter(point => point._1 == 1).
-      map(point => "%d,%f,%f\n".format(point._2, point._3, point._4)).
-      collect.toList.foreach(writer.write)
-    writer.close()	
-	
-	writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/B20K_c.csv")))
-    data.
-      filter(point => point._1 == 2).
-      map(point => "%d,%f,%f\n".format(point._2, point._3, point._4)).
-      collect.toList.foreach(writer.write)
-    writer.close()	
-
-	writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/B20K_d.csv")))
-    data.
-      filter(point => point._1 == 3).    
-      map(point => "%d,%f,%f\n".format(point._2, point._3, point._4)).
-      collect.toList.foreach(writer.write)
+    import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
+    var writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/tmp/mbrs.wkt")))
+    mbrs.map(mbr => s"$mbr\n").collect.foreach(writer.write)
     writer.close()	
 
     simba.stop()
