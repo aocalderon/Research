@@ -5,6 +5,7 @@ CORES_PER_NODE=7
 SCRIPT_NAME="EpsilonBenchmarker"
 
 NODES=4
+PARTITIONS=1500
 DATAPATH="Datasets/Berlin/"
 DATASET="berlin0-10"
 E=$1
@@ -37,7 +38,7 @@ spark-submit --class FlockFinderMergeLast $JAR_FILE \
 --epsilon $E --epsilon_max $E \
 --mu $M --mu_max $M \
 --delta $D --delta_max $D \
---cores $CORES
+--cores $CORES --partitions $PARTITIONS
 END=`date +%s`
 TIMER=$(($END - $START))
 $SPARK_HOME/sbin/stop-all.sh
