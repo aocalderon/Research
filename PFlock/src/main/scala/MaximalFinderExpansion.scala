@@ -118,7 +118,7 @@ object MaximalFinderExpansion {
     // G.Filtering less-than-mu disks...
     timer = System.currentTimeMillis()
     val filteredDisks = disks
-      .filter(row => row.getList[Long](3).size() >= mu)
+      .filter(row => row.getList[Long](3).asScala.toList.distinct.length >= mu)
       .rdd
       .cache()
     val nFilteredDisks = filteredDisks.count()
@@ -127,7 +127,7 @@ object MaximalFinderExpansion {
     timer = System.currentTimeMillis()
     val candidatePoints = filteredDisks
       .map{ c =>
-        ( c.getLong(0), c.getList[Long](3).asScala )
+        ( c.getLong(0), c.getList[Long](3).asScala.toList.distinct.sorted )
       }
       .toDF("cid", "items")
       .withColumn("pid", explode($"items"))
@@ -141,12 +141,13 @@ object MaximalFinderExpansion {
         Candidate( 0
           , (c.getDouble(1) + c.getDouble(3)) / 2.0
           , (c.getDouble(2) + c.getDouble(4)) / 2.0
-          , c.getList[Long](5).asScala.sorted.mkString(" ") 
+          , c.getList[Long](5).asScala.toList.distinct.sorted.mkString(" ") 
         )
       }
       .distinct()
       .cache()
     val nCandidates = candidates.count()
+    candidates.show(nCandidates.toInt, truncate = false)
     logger.info("G.Prunning duplicate candidates... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidates))
     // I.Indexing candidates... 
     if(nCandidates > 0){
@@ -194,11 +195,32 @@ object MaximalFinderExpansion {
       candidatesNumPartitions = candidates2.getNumPartitions
       if(debug) logger.info("[Partitions Info]Candidates;After indexing;%d".format(candidatesNumPartitions))
       logger.info("I.Getting expansions... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidates2))
+
+      ////////////////////////////////////////////////////////////
+      if(debug){
+        val datasets = candidates2.mapPartitionsWithIndex{ (partitionIndex, partitionCandidates) =>
+          partitionCandidates.map{ m =>
+            val ids = m.items.split(" ").map(_.toLong).distinct.mkString(" ")
+
+            s"$partitionIndex,$ids"
+          }
+        }
+        new java.io.PrintWriter("/tmp/Dataset.txt") {
+          val w = datasets.collect().map(line => s"$line\n").mkString(" ")
+          write(w)
+          close()
+        }
+      }
+      ////////////////////////////////////////////////////////////
+
       // K.Finding maximal disks...
       timer = System.currentTimeMillis()
       val method = conf.method()
       val maximals = candidates2
         .mapPartitionsWithIndex{ (partitionIndex, partitionCandidates) =>
+          if(debug){
+            partitionCandidates.map(m => s"$partitionIndex,$m")
+          }
           var maximalsIterator: Iterator[(Int, List[Long])] = null
           if(method == "fpmax"){
             val transactions = partitionCandidates
@@ -255,7 +277,7 @@ object MaximalFinderExpansion {
           val MBRCoordinates = EMBRs(m.getInt(0))
           val x = (m.getDouble(2) + m.getDouble(4)) / 2.0
           val y = (m.getDouble(3) + m.getDouble(5)) / 2.0
-          val pids = m.getList[Long](6).asScala.sorted.mkString(" ")
+          val pids = m.getList[Long](6).asScala.toList.distinct.sorted.mkString(" ")
           val maximal = "%f;%f;%s".format(x, y, pids)
           (maximal, MBRCoordinates)
         }
@@ -414,7 +436,10 @@ object MaximalFinderExpansion {
     val epsilon = conf.epsilon()
     val mu = conf.mu()
     val disks = MaximalFinderExpansion.run(points, epsilon, mu, simba, conf)
-    if(conf.debug()) disks.toDF().show(disks.count().toInt, truncate = false)
+    if(conf.debug()){
+      logger.info("Showing final set of maximal disks...\n\n")
+      disks.toDF().show(disks.count().toInt, truncate = false)
+    }
     val end = System.currentTimeMillis()
     logger.info("Finishing MaximalFinder at %s...".format(DateTime.now.toLocalTime.toString))
     logger.info("Total time for MaximalFinder: %.3fms...".format((end - start)/1000.0))
