@@ -69,17 +69,25 @@ object FPMaxTester {
       .groupBy("pid").agg(collect_list("items"))
       .cache()
     val nPartitions = partitions.count()
-    val datasets = partitions.filter($"pid" < 3).map(p => (p.getInt(0), p.getList[String](1).asScala.toList.mkString("\n")))
+    val datasets = partitions.filter($"pid" < nPartitions).map(p => (p.getInt(0), p.getList[String](1).asScala.toList.mkString("\n")))
     logger.info(s"Number of partitions: $nPartitions")
     // Running MaximalFinder...
     logger.info("Lauching MaximalFinder at %s...".format(DateTime.now.toLocalTime.toString))
     val start = System.currentTimeMillis()
-
+    println("\n")
+    
     for(dataset <- datasets.collect()){
-      val disks = FPMaxTester.test(dataset._2.split("\n").toList, simba)
-      disks.show(false)
+      println("\n")
       val p = dataset._1
-      logger.info(s"Partition # $p")
+      logger.info(s"FPMax for partition # $p start...")
+      val start = System.currentTimeMillis()
+      val patterns = FPMaxTester.test(dataset._2.split("\n").toList, simba)
+      val nPatterns = patterns.count()
+      val end = System.currentTimeMillis()
+      logger.info(s"FPMax for partition # $p end...")
+      patterns.show(5, false)
+      logger.info(s"Partition=$p Patterns=$nPatterns Time=${(end - start)/1000.0}s")
+      println("\n")
     }
 
     val end = System.currentTimeMillis()
