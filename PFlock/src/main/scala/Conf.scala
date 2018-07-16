@@ -32,6 +32,7 @@ class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
   val mu_step:	  	ScallopOption[Int]    	= opt[Int]    	(default = Some(1))
   val delta_max:   	ScallopOption[Int]    	= opt[Int]	(default = Some(3))
   val delta_step:  	ScallopOption[Int]    	= opt[Int]    	(default = Some(1))
+  val expansion_size:   ScallopOption[Int]      = opt[Int]      (default = Some(120))
 
   verify()
 }

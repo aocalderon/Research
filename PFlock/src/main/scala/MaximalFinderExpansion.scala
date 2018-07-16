@@ -40,12 +40,14 @@ object MaximalFinderExpansion {
     val separator = conf.separator()
     val debug = conf.debug()
     var maximals3: RDD[String] = simba.sparkContext.emptyRDD
-
+    val ExpansionSize = conf.expansion_size()
+    val dataset = conf.dataset()
+    val delta = conf.delta()
 
     import simba.implicits._
     import simba.simbaImplicits._
     logger.info("Setting mu=%d,epsilon=%.1f,cores=%d,timestamp=%d,dataset=%s"
-      .format(mu, epsilon, conf.cores(), timestamp, conf.dataset()))
+      .format(mu, epsilon, conf.cores(), timestamp, dataset))
     if(pointsRDD.isEmpty()) return maximals3
     val startTime = System.currentTimeMillis()
     // B.Indexing points...
@@ -147,7 +149,7 @@ object MaximalFinderExpansion {
       .distinct()
       .cache()
     val nCandidates = candidates.count()
-    candidates.show(nCandidates.toInt, truncate = false)
+    //candidates.show(nCandidates.toInt, truncate = false)
     logger.info("G.Prunning duplicate candidates... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidates))
     // I.Indexing candidates... 
     if(nCandidates > 0){
@@ -162,7 +164,7 @@ object MaximalFinderExpansion {
       val candidatesDimension: Int = dimensions
       val candidatesTransferThreshold: Long = 800 * 1024 * 1024
       val candidatesMaxEntriesPerNode: Int = 25
-      candidatesNumPartitions = conf.cores()
+      candidatesNumPartitions = ( nCandidates.toInt / ExpansionSize ).toInt
       val candidatesPartitioner: STRPartitioner = new STRPartitioner(candidatesNumPartitions
         , candidatesSampleRate
         , candidatesDimension
@@ -205,7 +207,7 @@ object MaximalFinderExpansion {
             s"$partitionIndex,$ids"
           }
         }
-        new java.io.PrintWriter("/tmp/Dataset.txt") {
+        new java.io.PrintWriter(s"/tmp/Datasets_${dataset}_${epsilon}_${mu}_${delta}_${timestamp}.txt") {
           val w = datasets.collect().map(line => s"$line\n").mkString(" ")
           write(w)
           close()
@@ -218,9 +220,6 @@ object MaximalFinderExpansion {
       val method = conf.method()
       val maximals = candidates2
         .mapPartitionsWithIndex{ (partitionIndex, partitionCandidates) =>
-          if(debug){
-            partitionCandidates.map(m => s"$partitionIndex,$m")
-          }
           var maximalsIterator: Iterator[(Int, List[Long])] = null
           if(method == "fpmax"){
             val transactions = partitionCandidates
@@ -436,7 +435,7 @@ object MaximalFinderExpansion {
     val epsilon = conf.epsilon()
     val mu = conf.mu()
     val disks = MaximalFinderExpansion.run(points, epsilon, mu, simba, conf)
-    if(conf.debug()){
+    if(conf.print()){
       logger.info("Showing final set of maximal disks...\n\n")
       disks.toDF().show(disks.count().toInt, truncate = false)
     }
