@@ -53,11 +53,11 @@ object FPMaxTester {
       .getOrCreate()
     import simba.implicits._
     import simba.simbaImplicits._
-    logger.info("Starting session... [%.3fs]".format((System.currentTimeMillis() - timer)/1000.0))
+    //logger.info("Starting session... [%.3fs]".format((System.currentTimeMillis() - timer)/1000.0))
     // Reading...
     timer = System.currentTimeMillis()
-    phd_home = scala.util.Properties.envOrElse(conf.home(), "/home/acald013/Research/")
-    val filename = "%s%s%s.%s".format(phd_home, conf.path(), "fpmax", "txt")
+    phd_home = scala.util.Properties.envOrElse(conf.home(), "/home/and/Documents/PhD/Research/")
+    val filename = "%s%s%s.%s".format(phd_home, conf.path(), "Datasets_berlin0-10_110.0_5_6_0", "txt")
     val lines = simba.sparkContext.
       textFile(filename).
       cache()
@@ -70,24 +70,28 @@ object FPMaxTester {
       .cache()
     val nPartitions = partitions.count()
     val datasets = partitions.filter($"pid" < nPartitions).map(p => (p.getInt(0), p.getList[String](1).asScala.toList.mkString("\n")))
-    logger.info(s"Number of partitions: $nPartitions")
+    //logger.info(s"Number of partitions: $nPartitions")
     // Running MaximalFinder...
-    logger.info("Lauching MaximalFinder at %s...".format(DateTime.now.toLocalTime.toString))
+    //logger.info("Lauching MaximalFinder at %s...".format(DateTime.now.toLocalTime.toString))
     val start = System.currentTimeMillis()
-    println("\n")
+    //println("\n")
     
     for(dataset <- datasets.collect()){
-      println("\n")
+      //println("\n")
       val p = dataset._1
-      logger.info(s"FPMax for partition # $p start...")
+      //logger.info(s"FPMax for partition # $p start...")
       val start = System.currentTimeMillis()
-      val patterns = FPMaxTester.test(dataset._2.split("\n").toList, simba)
+      val data = dataset._2.split("\n").toList
+      val lengths = data.map(_.split(" ").length)
+      val max = lengths.max
+      val min = lengths.min
+      val mean = lengths.reduce(_ + _) / lengths.length * 1.0
+      val patterns = FPMaxTester.test(data, simba)
       val nPatterns = patterns.count()
       val end = System.currentTimeMillis()
-      logger.info(s"FPMax for partition # $p end...")
-      patterns.show(5, false)
-      logger.info(s"Partition=$p Patterns=$nPatterns Time=${(end - start)/1000.0}s")
-      println("\n")
+      //logger.info(s"FPMax for partition # $p end...")
+      //patterns.show(5, false)
+      println(s"Record,$p,$nPatterns,$max,$min,$mean,${(end - start)/1000.0}")
     }
 
     val end = System.currentTimeMillis()
