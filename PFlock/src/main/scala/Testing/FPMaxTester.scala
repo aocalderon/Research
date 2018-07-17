@@ -57,7 +57,7 @@ object FPMaxTester {
     // Reading...
     timer = System.currentTimeMillis()
     phd_home = scala.util.Properties.envOrElse(conf.home(), "/home/and/Documents/PhD/Research/")
-    val filename = "%s%s%s.%s".format(phd_home, conf.path(), "Datasets_berlin0-10_110.0_5_6_0", "txt")
+    val filename = "%s%s%s.%s".format(phd_home, conf.path(), conf.dataset(), conf.extension())
     val lines = simba.sparkContext.
       textFile(filename).
       cache()
