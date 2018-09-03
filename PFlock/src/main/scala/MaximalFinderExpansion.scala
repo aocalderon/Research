@@ -154,7 +154,7 @@ object MaximalFinderExpansion {
     // I.Indexing candidates... 
     if(nCandidates > 0){
       var candidatesNumPartitions: Int = candidates.rdd.getNumPartitions
-      if(debug) logger.info("[Partitions Info]Candidates;Before indexing;%d".format(candidatesNumPartitions))
+      logger.info("[Partitions Info]Candidates;Before indexing;%d".format(candidatesNumPartitions))
       val pointCandidate = candidates.map{ candidate =>
           ( new Point(Array(candidate.x, candidate.y)), candidate)
         }
@@ -195,7 +195,7 @@ object MaximalFinderExpansion {
         .cache()
       val nCandidates2 = candidates2.count()
       candidatesNumPartitions = candidates2.getNumPartitions
-      if(debug) logger.info("[Partitions Info]Candidates;After indexing;%d".format(candidatesNumPartitions))
+      logger.info("[Partitions Info]Candidates;After indexing;%d".format(candidatesNumPartitions))
       logger.info("I.Getting expansions... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nCandidates2))
 
       ////////////////////////////////////////////////////////////
