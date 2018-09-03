@@ -1,0 +1,4 @@
+f = open("lcm.log", "r")
+for line in f:
+    print(line.split(" ").sort)
+
