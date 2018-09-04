@@ -1,5 +1,6 @@
 import scala.collection.mutable
 import scala.collection.Map
+import scala.collection.mutable.ListBuffer
 
 object LCMmax {
   case class Item(item: Int, count: Int)
@@ -8,20 +9,14 @@ object LCMmax {
   var uniqueElements: List[Int] = List.empty[Int]
 
   def main(args: Array[String]): Unit = {
-    val T: List[Transaction] = List(
-      new Transaction(List(1, 2, 5, 7, 9)),
-      new Transaction(List(1, 3, 5, 7, 9)),
-      new Transaction(List(2, 4, 1, 3)),
-      new Transaction(List(1, 3, 4, 5, 6)),
-      new Transaction(List(1, 2)),
-      new Transaction(List(2, 1)),
-      new Transaction(List(1, 7, 2, 3, 4, 5, 8, 9)),
-      new Transaction(List(6, 1, 2)),
-      new Transaction(List(4, 5, 6)),
-      new Transaction(List(8, 2, 5)),
-      new Transaction(List(9, 2, 1)),
-      new Transaction(List(1, 2, 4, 8, 9))
-    )
+    import scala.io.Source
+
+    val filename = "transactions.csv"
+    val transaction_buffer: ListBuffer[Transaction] = new ListBuffer()
+    for (line <- Source.fromFile(filename).getLines) {
+      transaction_buffer += new Transaction(line.split(" ").map(_.toInt).toList)
+    }
+    val T = transaction_buffer.toList
 
     uniqueElements = T.flatMap(_.items).distinct.sorted
     buckets = occurrenceDeliver(T)
