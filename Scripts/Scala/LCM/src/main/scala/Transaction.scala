@@ -33,4 +33,6 @@ class Transaction(elements: List[Int]) extends Ordered[Transaction] {
   override def equals(obj: scala.Any): Boolean = this.items.equals(obj.asInstanceOf[Transaction].items)
 
   def compare(that: Transaction): Int = this.items.mkString(" ").compare(that.items.mkString(" "))
+
+  def toItemset: Itemset = new Itemset(this.items)
 }
