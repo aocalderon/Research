@@ -1,10 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/home/acald013/Research/Scripts/Scala/LCM/src/main/scala/LCMmax.scala:3:8: object ListBuffer is not a member of package collection[0m
-[0m[[0m[31merror[0m] [0m[0mimport scala.collection.ListBuffer[0m
-[0m[[0m[31merror[0m] [0m[0m       ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/acald013/Research/Scripts/Scala/LCM/src/main/scala/LCMmax.scala:30:29: not found: type ListBuffer[0m
-[0m[[0m[31merror[0m] [0m[0m    val transaction_buffer: ListBuffer[Transaction] = new ListBuffer()[0m
-[0m[[0m[31merror[0m] [0m[0m                            ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/acald013/Research/Scripts/Scala/LCM/src/main/scala/LCMmax.scala:30:59: not found: type ListBuffer[0m
-[0m[[0m[31merror[0m] [0m[0m    val transaction_buffer: ListBuffer[Transaction] = new ListBuffer()[0m
-[0m[[0m[31merror[0m] [0m[0m                                                          ^[0m
-[0m[[0m[31merror[0m] [0m[0mthree errors found[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/LCM/src/main/scala/LCMmax.scala:96:5: not found: value logger[0m
+[0m[[0m[31merror[0m] [0m[0m    logger.info("%-50s | %6.2fs | %6d %s".format(msg, (System.currentTimeMillis() - timer)/1000.0, n, tag))[0m
+[0m[[0m[31merror[0m] [0m[0m    ^[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m
