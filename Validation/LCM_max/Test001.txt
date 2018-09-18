@@ -1,0 +1,3006 @@
+
+Running test with LCMinput_0.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 160
+ Max memory usage: 8.35614013671875 mb 
+ Maximal frequent itemset count : 35
+ Total time ~ 39 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 35
+ Total time ~: 22 ms
+ Max memory:9.636138916015625
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_1.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 232
+ Max memory usage: 11.556289672851562 mb 
+ Maximal frequent itemset count : 59
+ Total time ~ 22 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 59
+ Total time ~: 9 ms
+ Max memory:12.836341857910156
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_2.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 179
+ Max memory usage: 14.116371154785156 mb 
+ Maximal frequent itemset count : 50
+ Total time ~ 7 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 50
+ Total time ~: 4 ms
+ Max memory:14.756393432617188
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_3.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 144
+ Max memory usage: 16.03650665283203 mb 
+ Maximal frequent itemset count : 42
+ Total time ~ 7 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 42
+ Total time ~: 2 ms
+ Max memory:16.676528930664062
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_4.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 274
+ Max memory usage: 17.96417236328125 mb 
+ Maximal frequent itemset count : 38
+ Total time ~ 13 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 38
+ Total time ~: 9 ms
+ Max memory:19.884689331054688
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_5.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 649
+ Max memory usage: 29.48480987548828 mb 
+ Maximal frequent itemset count : 60
+ Total time ~ 33 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 60
+ Total time ~: 58 ms
+ Max memory:32.0
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_6.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 634
+ Max memory usage: 24.518898010253906 mb 
+ Maximal frequent itemset count : 67
+ Total time ~ 26 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 67
+ Total time ~: 54 ms
+ Max memory:33.94098663330078
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_7.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 596
+ Max memory usage: 19.48088836669922 mb 
+ Maximal frequent itemset count : 68
+ Total time ~ 26 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 68
+ Total time ~: 27 ms
+ Max memory:28.954910278320312
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_8.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 707
+ Max memory usage: 30.218040466308594 mb 
+ Maximal frequent itemset count : 69
+ Total time ~ 37 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 69
+ Total time ~: 46 ms
+ Max memory:23.588363647460938
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_9.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 561
+ Max memory usage: 31.1219482421875 mb 
+ Maximal frequent itemset count : 46
+ Total time ~ 21 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 46
+ Total time ~: 61 ms
+ Max memory:33.6119384765625
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_10.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 500
+ Max memory usage: 21.683120727539062 mb 
+ Maximal frequent itemset count : 43
+ Total time ~ 21 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 43
+ Total time ~: 49 ms
+ Max memory:36.85340881347656
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_11.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 515
+ Max memory usage: 43.17382049560547 mb 
+ Maximal frequent itemset count : 52
+ Total time ~ 18 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 52
+ Total time ~: 47 ms
+ Max memory:58.41773986816406
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_12.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 692
+ Max memory usage: 59.68183135986328 mb 
+ Maximal frequent itemset count : 96
+ Total time ~ 63 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 96
+ Total time ~: 69 ms
+ Max memory:37.164329528808594
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_13.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 672
+ Max memory usage: 38.434242248535156 mb 
+ Maximal frequent itemset count : 88
+ Total time ~ 93 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 88
+ Total time ~: 59 ms
+ Max memory:27.077880859375
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_14.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 235
+ Max memory usage: 29.62444305419922 mb 
+ Maximal frequent itemset count : 39
+ Total time ~ 16 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 39
+ Total time ~: 9 ms
+ Max memory:29.62444305419922
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_15.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 244
+ Max memory usage: 32.17096710205078 mb 
+ Maximal frequent itemset count : 45
+ Total time ~ 3 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 45
+ Total time ~: 3 ms
+ Max memory:32.17096710205078
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_16.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 173
+ Max memory usage: 34.71747589111328 mb 
+ Maximal frequent itemset count : 29
+ Total time ~ 2 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 29
+ Total time ~: 3 ms
+ Max memory:34.71747589111328
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_17.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 271
+ Max memory usage: 37.26398468017578 mb 
+ Maximal frequent itemset count : 59
+ Total time ~ 3 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 59
+ Total time ~: 4 ms
+ Max memory:37.26398468017578
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_18.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 272
+ Max memory usage: 39.810546875 mb 
+ Maximal frequent itemset count : 39
+ Total time ~ 11 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 39
+ Total time ~: 5 ms
+ Max memory:39.810546875
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_19.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 671
+ Max memory usage: 49.99665832519531 mb 
+ Maximal frequent itemset count : 67
+ Total time ~ 39 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 67
+ Total time ~: 63 ms
+ Max memory:65.2763671875
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_20.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 539
+ Max memory usage: 75.46240234375 mb 
+ Maximal frequent itemset count : 52
+ Total time ~ 45 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 52
+ Total time ~: 109 ms
+ Max memory:90.74214172363281
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_21.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 765
+ Max memory usage: 100.92830657958984 mb 
+ Maximal frequent itemset count : 78
+ Total time ~ 27 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 78
+ Total time ~: 54 ms
+ Max memory:118.82832336425781
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_22.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 773
+ Max memory usage: 129.01445770263672 mb 
+ Maximal frequent itemset count : 71
+ Total time ~ 35 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 71
+ Total time ~: 122 ms
+ Max memory:129.61192321777344
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_23.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 460
+ Max memory usage: 24.342864990234375 mb 
+ Maximal frequent itemset count : 36
+ Total time ~ 12 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 36
+ Total time ~: 49 ms
+ Max memory:37.099273681640625
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_24.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 174
+ Max memory usage: 39.65052032470703 mb 
+ Maximal frequent itemset count : 36
+ Total time ~ 2 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 36
+ Total time ~: 4 ms
+ Max memory:39.65052032470703
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_25.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 592
+ Max memory usage: 60.060394287109375 mb 
+ Maximal frequent itemset count : 66
+ Total time ~ 45 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 66
+ Total time ~: 62 ms
+ Max memory:83.02220153808594
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_26.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 545
+ Max memory usage: 100.88090515136719 mb 
+ Maximal frequent itemset count : 57
+ Total time ~ 33 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 57
+ Total time ~: 59 ms
+ Max memory:123.84257507324219
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_27.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 573
+ Max memory usage: 123.84257507324219 mb 
+ Maximal frequent itemset count : 58
+ Total time ~ 38 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 58
+ Total time ~: 60 ms
+ Max memory:37.29396057128906
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_28.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 565
+ Max memory usage: 57.72815704345703 mb 
+ Maximal frequent itemset count : 59
+ Total time ~ 37 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 59
+ Total time ~: 60 ms
+ Max memory:83.27172088623047
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_29.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 747
+ Max memory usage: 108.81449127197266 mb 
+ Maximal frequent itemset count : 85
+ Total time ~ 43 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 85
+ Total time ~: 70 ms
+ Max memory:129.2487564086914
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_30.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 266
+ Max memory usage: 134.35735321044922 mb 
+ Maximal frequent itemset count : 27
+ Total time ~ 4 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 27
+ Total time ~: 9 ms
+ Max memory:139.4659194946289
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_31.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 350
+ Max memory usage: 139.4659194946289 mb 
+ Maximal frequent itemset count : 39
+ Total time ~ 7 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 39
+ Total time ~: 10 ms
+ Max memory:144.5745391845703
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_32.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 231
+ Max memory usage: 144.5745391845703 mb 
+ Maximal frequent itemset count : 25
+ Total time ~ 5 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 25
+ Total time ~: 8 ms
+ Max memory:149.6832275390625
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_33.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 312
+ Max memory usage: 149.6832275390625 mb 
+ Maximal frequent itemset count : 45
+ Total time ~ 6 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 45
+ Total time ~: 10 ms
+ Max memory:154.7917938232422
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_34.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 268
+ Max memory usage: 154.7917938232422 mb 
+ Maximal frequent itemset count : 56
+ Total time ~ 2 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 56
+ Total time ~: 5 ms
+ Max memory:159.90036010742188
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_35.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 147
+ Max memory usage: 159.90036010742188 mb 
+ Maximal frequent itemset count : 19
+ Total time ~ 2 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 19
+ Total time ~: 3 ms
+ Max memory:159.90036010742188
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_36.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 255
+ Max memory usage: 159.90036010742188 mb 
+ Maximal frequent itemset count : 39
+ Total time ~ 3 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 39
+ Total time ~: 4 ms
+ Max memory:165.00897979736328
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_37.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 183
+ Max memory usage: 165.00897979736328 mb 
+ Maximal frequent itemset count : 18
+ Total time ~ 3 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 18
+ Total time ~: 3 ms
+ Max memory:165.00897979736328
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_38.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 396
+ Max memory usage: 170.11752319335938 mb 
+ Maximal frequent itemset count : 72
+ Total time ~ 6 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 72
+ Total time ~: 14 ms
+ Max memory:170.11752319335938
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_39.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 251
+ Max memory usage: 175.2261199951172 mb 
+ Maximal frequent itemset count : 34
+ Total time ~ 5 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 34
+ Total time ~: 10 ms
+ Max memory:175.2261199951172
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_40.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 407
+ Max memory usage: 180.33470153808594 mb 
+ Maximal frequent itemset count : 61
+ Total time ~ 6 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 61
+ Total time ~: 13 ms
+ Max memory:185.44326782226562
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_41.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1577
+ Max memory usage: 185.44326782226562 mb 
+ Maximal frequent itemset count : 104
+ Total time ~ 10631 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 104
+ Total time ~: 1952 ms
+ Max memory:272.6432647705078
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_42.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2900
+ Max memory usage: 245.974853515625 mb 
+ Maximal frequent itemset count : 179
+ Total time ~ 38981 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 179
+ Total time ~: 7616 ms
+ Max memory:245.974853515625
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_43.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2627
+ Max memory usage: 238.6529541015625 mb 
+ Maximal frequent itemset count : 163
+ Total time ~ 43401 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 163
+ Total time ~: 7125 ms
+ Max memory:395.51318359375
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_44.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1858
+ Max memory usage: 139.2542953491211 mb 
+ Maximal frequent itemset count : 130
+ Total time ~ 9560 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 130
+ Total time ~: 4963 ms
+ Max memory:207.71436309814453
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_45.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1694
+ Max memory usage: 170.76453399658203 mb 
+ Maximal frequent itemset count : 139
+ Total time ~ 138398 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 139
+ Total time ~: 3396 ms
+ Max memory:314.60469818115234
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_46.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 198
+ Max memory usage: 194.48479461669922 mb 
+ Maximal frequent itemset count : 31
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 31
+ Total time ~: 3 ms
+ Max memory:194.48479461669922
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_47.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 155
+ Max memory usage: 198.47471618652344 mb 
+ Maximal frequent itemset count : 41
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 41
+ Total time ~: 3 ms
+ Max memory:198.47471618652344
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_48.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1949
+ Max memory usage: 202.46469116210938 mb 
+ Maximal frequent itemset count : 129
+ Total time ~ 4054 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 129
+ Total time ~: 3370 ms
+ Max memory:220.3805389404297
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_49.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2277
+ Max memory usage: 153.31210327148438 mb 
+ Maximal frequent itemset count : 133
+ Total time ~ 39479 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 133
+ Total time ~: 5421 ms
+ Max memory:162.31221771240234
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_50.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2412
+ Max memory usage: 95.75513458251953 mb 
+ Maximal frequent itemset count : 147
+ Total time ~ 58033 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 147
+ Total time ~: 6254 ms
+ Max memory:164.17507934570312
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_51.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2462
+ Max memory usage: 183.02389526367188 mb 
+ Maximal frequent itemset count : 152
+ Total time ~ 46109 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 152
+ Total time ~: 6639 ms
+ Max memory:213.45751953125
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_52.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2768
+ Max memory usage: 117.1883544921875 mb 
+ Maximal frequent itemset count : 168
+ Total time ~ 42777 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 168
+ Total time ~: 7180 ms
+ Max memory:170.49396514892578
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_53.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2721
+ Max memory usage: 165.47370147705078 mb 
+ Maximal frequent itemset count : 159
+ Total time ~ 41476 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 159
+ Total time ~: 7046 ms
+ Max memory:303.7938537597656
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_54.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2649
+ Max memory usage: 146.19478607177734 mb 
+ Maximal frequent itemset count : 151
+ Total time ~ 42109 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 151
+ Total time ~: 6919 ms
+ Max memory:177.49523162841797
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_55.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2550
+ Max memory usage: 93.9698486328125 mb 
+ Maximal frequent itemset count : 147
+ Total time ~ 41860 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 147
+ Total time ~: 7244 ms
+ Max memory:174.25455474853516
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_56.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2498
+ Max memory usage: 108.7529525756836 mb 
+ Maximal frequent itemset count : 145
+ Total time ~ 42981 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 145
+ Total time ~: 7172 ms
+ Max memory:192.00324249267578
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_57.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2400
+ Max memory usage: 166.75946044921875 mb 
+ Maximal frequent itemset count : 146
+ Total time ~ 44017 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 146
+ Total time ~: 7033 ms
+ Max memory:192.23947143554688
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_58.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2298
+ Max memory usage: 165.3125991821289 mb 
+ Maximal frequent itemset count : 137
+ Total time ~ 48042 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 137
+ Total time ~: 6992 ms
+ Max memory:241.2726287841797
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_59.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1925
+ Max memory usage: 147.5811004638672 mb 
+ Maximal frequent itemset count : 128
+ Total time ~ 9778 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 128
+ Total time ~: 5258 ms
+ Max memory:249.8211898803711
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_60.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1584
+ Max memory usage: 104.96219635009766 mb 
+ Maximal frequent itemset count : 119
+ Total time ~ 4691 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 119
+ Total time ~: 2648 ms
+ Max memory:75.29483795166016
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_61.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1180
+ Max memory usage: 36.98931121826172 mb 
+ Maximal frequent itemset count : 82
+ Total time ~ 145 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 82
+ Total time ~: 1364 ms
+ Max memory:101.60209655761719
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_62.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1868
+ Max memory usage: 81.71392059326172 mb 
+ Maximal frequent itemset count : 111
+ Total time ~ 4164 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 111
+ Total time ~: 3289 ms
+ Max memory:104.27381896972656
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_63.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2329
+ Max memory usage: 158.52413940429688 mb 
+ Maximal frequent itemset count : 142
+ Total time ~ 44024 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 142
+ Total time ~: 6012 ms
+ Max memory:250.43699645996094
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_64.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2489
+ Max memory usage: 135.67679595947266 mb 
+ Maximal frequent itemset count : 161
+ Total time ~ 48881 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 161
+ Total time ~: 7041 ms
+ Max memory:168.81920623779297
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_65.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2727
+ Max memory usage: 57.96349334716797 mb 
+ Maximal frequent itemset count : 171
+ Total time ~ 40783 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 171
+ Total time ~: 7014 ms
+ Max memory:143.2133560180664
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_66.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2701
+ Max memory usage: 91.39656066894531 mb 
+ Maximal frequent itemset count : 176
+ Total time ~ 41671 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 176
+ Total time ~: 6759 ms
+ Max memory:162.89620208740234
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_67.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2765
+ Max memory usage: 67.43444061279297 mb 
+ Maximal frequent itemset count : 175
+ Total time ~ 39663 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 175
+ Total time ~: 6738 ms
+ Max memory:141.35416412353516
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_68.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2677
+ Max memory usage: 143.91270446777344 mb 
+ Maximal frequent itemset count : 166
+ Total time ~ 39206 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 166
+ Total time ~: 6631 ms
+ Max memory:176.03243255615234
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_69.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2624
+ Max memory usage: 115.67211151123047 mb 
+ Maximal frequent itemset count : 166
+ Total time ~ 39200 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 166
+ Total time ~: 6667 ms
+ Max memory:129.47189331054688
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_70.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1848
+ Max memory usage: 100.39472198486328 mb 
+ Maximal frequent itemset count : 131
+ Total time ~ 8858 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 131
+ Total time ~: 4563 ms
+ Max memory:140.51388549804688
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_71.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1438
+ Max memory usage: 83.63639831542969 mb 
+ Maximal frequent itemset count : 127
+ Total time ~ 28633 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 127
+ Total time ~: 2003 ms
+ Max memory:122.57622528076172
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_72.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1326
+ Max memory usage: 89.26571655273438 mb 
+ Maximal frequent itemset count : 82
+ Total time ~ 4407 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 82
+ Total time ~: 2306 ms
+ Max memory:155.34575653076172
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_73.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1372
+ Max memory usage: 121.4415054321289 mb 
+ Maximal frequent itemset count : 77
+ Total time ~ 4288 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 77
+ Total time ~: 2328 ms
+ Max memory:200.04151153564453
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_74.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1457
+ Max memory usage: 128.58289337158203 mb 
+ Maximal frequent itemset count : 80
+ Total time ~ 2939 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 80
+ Total time ~: 2460 ms
+ Max memory:70.85527801513672
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_75.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1468
+ Max memory usage: 39.760108947753906 mb 
+ Maximal frequent itemset count : 81
+ Total time ~ 3019 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 81
+ Total time ~: 2425 ms
+ Max memory:146.77093505859375
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_76.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1470
+ Max memory usage: 106.07368469238281 mb 
+ Maximal frequent itemset count : 82
+ Total time ~ 3094 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 82
+ Total time ~: 2420 ms
+ Max memory:137.34686279296875
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_77.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1501
+ Max memory usage: 72.51460266113281 mb 
+ Maximal frequent itemset count : 83
+ Total time ~ 3075 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 83
+ Total time ~: 2452 ms
+ Max memory:101.41483306884766
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_78.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1495
+ Max memory usage: 89.93014526367188 mb 
+ Maximal frequent itemset count : 84
+ Total time ~ 3041 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 84
+ Total time ~: 2415 ms
+ Max memory:127.48324584960938
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_79.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1468
+ Max memory usage: 93.03239440917969 mb 
+ Maximal frequent itemset count : 82
+ Total time ~ 3040 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 82
+ Total time ~: 2418 ms
+ Max memory:118.41867065429688
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_80.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1472
+ Max memory usage: 72.20951080322266 mb 
+ Maximal frequent itemset count : 85
+ Total time ~ 3023 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 85
+ Total time ~: 2425 ms
+ Max memory:130.29530334472656
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_81.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1428
+ Max memory usage: 80.7152328491211 mb 
+ Maximal frequent itemset count : 79
+ Total time ~ 3011 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 79
+ Total time ~: 2364 ms
+ Max memory:231.157958984375
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_82.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1212
+ Max memory usage: 198.73291015625 mb 
+ Maximal frequent itemset count : 67
+ Total time ~ 1551 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 67
+ Total time ~: 2196 ms
+ Max memory:203.18124389648438
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_83.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 627
+ Max memory usage: 119.20458984375 mb 
+ Maximal frequent itemset count : 79
+ Total time ~ 6 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 79
+ Total time ~: 25 ms
+ Max memory:127.63501739501953
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_84.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 128
+ Max memory usage: 130.44493865966797 mb 
+ Maximal frequent itemset count : 30
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 30
+ Total time ~: 1 ms
+ Max memory:130.44493865966797
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_85.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1636
+ Max memory usage: 133.25484466552734 mb 
+ Maximal frequent itemset count : 106
+ Total time ~ 3015 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 106
+ Total time ~: 2412 ms
+ Max memory:153.99057006835938
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_86.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1568
+ Max memory usage: 104.2245101928711 mb 
+ Maximal frequent itemset count : 92
+ Total time ~ 3073 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 92
+ Total time ~: 2400 ms
+ Max memory:173.5701675415039
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_87.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 2592
+ Max memory usage: 150.14222717285156 mb 
+ Maximal frequent itemset count : 172
+ Total time ~ 3140 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 172
+ Total time ~: 2681 ms
+ Max memory:84.53876495361328
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_88.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1032
+ Max memory usage: 15.133758544921875 mb 
+ Maximal frequent itemset count : 60
+ Total time ~ 106 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 60
+ Total time ~: 221 ms
+ Max memory:64.15406036376953
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_89.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1021
+ Max memory usage: 56.14318084716797 mb 
+ Maximal frequent itemset count : 60
+ Total time ~ 110 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 60
+ Total time ~: 217 ms
+ Max memory:84.57466125488281
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_90.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 998
+ Max memory usage: 86.13153839111328 mb 
+ Maximal frequent itemset count : 87
+ Total time ~ 105 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 87
+ Total time ~: 188 ms
+ Max memory:99.73221588134766
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_91.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 531
+ Max memory usage: 31.491897583007812 mb 
+ Maximal frequent itemset count : 68
+ Total time ~ 5 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 68
+ Total time ~: 24 ms
+ Max memory:42.0521240234375
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_92.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 464
+ Max memory usage: 47.33203125 mb 
+ Maximal frequent itemset count : 46
+ Total time ~ 4 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 46
+ Total time ~: 23 ms
+ Max memory:57.89246368408203
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_93.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 469
+ Max memory usage: 63.17242431640625 mb 
+ Maximal frequent itemset count : 48
+ Total time ~ 4 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 48
+ Total time ~: 23 ms
+ Max memory:73.7327880859375
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_94.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 586
+ Max memory usage: 79.25436401367188 mb 
+ Maximal frequent itemset count : 56
+ Total time ~ 6 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 56
+ Total time ~: 26 ms
+ Max memory:89.8141098022461
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_95.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 280
+ Max memory usage: 91.57410430908203 mb 
+ Maximal frequent itemset count : 44
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 44
+ Total time ~: 4 ms
+ Max memory:93.3341293334961
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_96.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 148
+ Max memory usage: 93.3341293334961 mb 
+ Maximal frequent itemset count : 29
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 29
+ Total time ~: 2 ms
+ Max memory:95.0940933227539
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_97.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 836
+ Max memory usage: 96.6102066040039 mb 
+ Maximal frequent itemset count : 104
+ Total time ~ 109 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 104
+ Total time ~: 144 ms
+ Max memory:92.75797271728516
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_98.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 943
+ Max memory usage: 94.79664611816406 mb 
+ Maximal frequent itemset count : 64
+ Total time ~ 57 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 64
+ Total time ~: 191 ms
+ Max memory:132.40393829345703
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_99.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1102
+ Max memory usage: 115.64066314697266 mb 
+ Maximal frequent itemset count : 73
+ Total time ~ 103 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 73
+ Total time ~: 218 ms
+ Max memory:127.43773651123047
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_100.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1105
+ Max memory usage: 93.69889068603516 mb 
+ Maximal frequent itemset count : 72
+ Total time ~ 97 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 72
+ Total time ~: 216 ms
+ Max memory:119.7276382446289
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_101.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1107
+ Max memory usage: 66.75186920166016 mb 
+ Maximal frequent itemset count : 75
+ Total time ~ 99 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 75
+ Total time ~: 216 ms
+ Max memory:112.55237579345703
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_102.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1109
+ Max memory usage: 61.967689514160156 mb 
+ Maximal frequent itemset count : 74
+ Total time ~ 98 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 74
+ Total time ~: 213 ms
+ Max memory:105.66791534423828
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_103.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1100
+ Max memory usage: 82.04780578613281 mb 
+ Maximal frequent itemset count : 74
+ Total time ~ 108 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 74
+ Total time ~: 217 ms
+ Max memory:99.84809112548828
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_104.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 1034
+ Max memory usage: 87.7962875366211 mb 
+ Maximal frequent itemset count : 87
+ Total time ~ 103 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 87
+ Total time ~: 189 ms
+ Max memory:101.16787719726562
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_105.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 330
+ Max memory usage: 105.16778564453125 mb 
+ Maximal frequent itemset count : 66
+ Total time ~ 2 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 66
+ Total time ~: 5 ms
+ Max memory:105.16778564453125
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_106.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 242
+ Max memory usage: 107.1677474975586 mb 
+ Maximal frequent itemset count : 33
+ Total time ~ 2 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 33
+ Total time ~: 3 ms
+ Max memory:109.16773223876953
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_107.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 266
+ Max memory usage: 111.0914535522461 mb 
+ Maximal frequent itemset count : 44
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 44
+ Total time ~: 3 ms
+ Max memory:111.0914535522461
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_108.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 201
+ Max memory usage: 12.982421875 mb 
+ Maximal frequent itemset count : 38
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 38
+ Total time ~: 2 ms
+ Max memory:12.982421875
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_109.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 168
+ Max memory usage: 14.912460327148438 mb 
+ Maximal frequent itemset count : 42
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 42
+ Total time ~: 2 ms
+ Max memory:14.912460327148438
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_110.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 294
+ Max memory usage: 18.772384643554688 mb 
+ Maximal frequent itemset count : 56
+ Total time ~ 3 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 56
+ Total time ~: 5 ms
+ Max memory:20.702346801757812
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_111.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 261
+ Max memory usage: 22.632301330566406 mb 
+ Maximal frequent itemset count : 35
+ Total time ~ 3 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 35
+ Total time ~: 4 ms
+ Max memory:24.562294006347656
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_112.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 740
+ Max memory usage: 30.352256774902344 mb 
+ Maximal frequent itemset count : 73
+ Total time ~ 5 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 73
+ Total time ~: 31 ms
+ Max memory:43.86210632324219
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_113.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 513
+ Max memory usage: 47.722267150878906 mb 
+ Maximal frequent itemset count : 45
+ Total time ~ 4 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 45
+ Total time ~: 25 ms
+ Max memory:57.37220764160156
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_114.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 507
+ Max memory usage: 61.23212432861328 mb 
+ Maximal frequent itemset count : 44
+ Total time ~ 4 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 44
+ Total time ~: 25 ms
+ Max memory:72.81222534179688
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_115.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 551
+ Max memory usage: 76.6721420288086 mb 
+ Maximal frequent itemset count : 46
+ Total time ~ 4 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 46
+ Total time ~: 25 ms
+ Max memory:88.25212097167969
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_116.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 573
+ Max memory usage: 92.1120834350586 mb 
+ Maximal frequent itemset count : 54
+ Total time ~ 4 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 54
+ Total time ~: 28 ms
+ Max memory:103.69208526611328
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_117.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 384
+ Max memory usage: 105.62203979492188 mb 
+ Maximal frequent itemset count : 50
+ Total time ~ 4 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 50
+ Total time ~: 20 ms
+ Max memory:107.552001953125
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_118.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 181
+ Max memory usage: 16.855140686035156 mb 
+ Maximal frequent itemset count : 29
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 29
+ Total time ~: 2 ms
+ Max memory:16.855140686035156
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_119.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 140
+ Max memory usage: 16.855140686035156 mb 
+ Maximal frequent itemset count : 33
+ Total time ~ 0 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 33
+ Total time ~: 2 ms
+ Max memory:18.715110778808594
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_120.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 124
+ Max memory usage: 18.715110778808594 mb 
+ Maximal frequent itemset count : 46
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 46
+ Total time ~: 2 ms
+ Max memory:18.715110778808594
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_121.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 160
+ Max memory usage: 20.58270263671875 mb 
+ Maximal frequent itemset count : 28
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 28
+ Total time ~: 2 ms
+ Max memory:20.58270263671875
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_122.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 231
+ Max memory usage: 22.442703247070312 mb 
+ Maximal frequent itemset count : 52
+ Total time ~ 2 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 52
+ Total time ~: 3 ms
+ Max memory:22.442703247070312
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_123.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 255
+ Max memory usage: 24.30267333984375 mb 
+ Maximal frequent itemset count : 50
+ Total time ~ 2 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 50
+ Total time ~: 4 ms
+ Max memory:26.23621368408203
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_124.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 213
+ Max memory usage: 28.09618377685547 mb 
+ Maximal frequent itemset count : 37
+ Total time ~ 2 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 37
+ Total time ~: 3 ms
+ Max memory:29.956153869628906
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_125.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 324
+ Max memory usage: 31.816116333007812 mb 
+ Maximal frequent itemset count : 71
+ Total time ~ 3 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 71
+ Total time ~: 6 ms
+ Max memory:33.67608642578125
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_126.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 253
+ Max memory usage: 35.53606414794922 mb 
+ Maximal frequent itemset count : 67
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 67
+ Total time ~: 3 ms
+ Max memory:35.53606414794922
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_127.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 206
+ Max memory usage: 37.39605712890625 mb 
+ Maximal frequent itemset count : 49
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 49
+ Total time ~: 3 ms
+ Max memory:39.25614929199219
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_128.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 210
+ Max memory usage: 39.42218017578125 mb 
+ Maximal frequent itemset count : 56
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 56
+ Total time ~: 3 ms
+ Max memory:41.28215026855469
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_129.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 274
+ Max memory usage: 41.28215026855469 mb 
+ Maximal frequent itemset count : 50
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 50
+ Total time ~: 5 ms
+ Max memory:43.142303466796875
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_130.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 192
+ Max memory usage: 45.01007843017578 mb 
+ Maximal frequent itemset count : 22
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 22
+ Total time ~: 4 ms
+ Max memory:46.87004852294922
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_131.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 247
+ Max memory usage: 48.730010986328125 mb 
+ Maximal frequent itemset count : 47
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 47
+ Total time ~: 4 ms
+ Max memory:50.58998107910156
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_132.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 120
+ Max memory usage: 50.58998107910156 mb 
+ Maximal frequent itemset count : 40
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 40
+ Total time ~: 1 ms
+ Max memory:50.58998107910156
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_133.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 140
+ Max memory usage: 52.44995880126953 mb 
+ Maximal frequent itemset count : 46
+ Total time ~ 0 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 46
+ Total time ~: 2 ms
+ Max memory:52.44995880126953
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_134.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 176
+ Max memory usage: 52.44995880126953 mb 
+ Maximal frequent itemset count : 26
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 26
+ Total time ~: 3 ms
+ Max memory:54.38390350341797
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_135.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 272
+ Max memory usage: 56.24390411376953 mb 
+ Maximal frequent itemset count : 39
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 39
+ Total time ~: 4 ms
+ Max memory:58.10387420654297
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_136.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 208
+ Max memory usage: 59.963836669921875 mb 
+ Maximal frequent itemset count : 50
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 50
+ Total time ~: 2 ms
+ Max memory:59.963836669921875
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_137.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 151
+ Max memory usage: 61.82379913330078 mb 
+ Maximal frequent itemset count : 47
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 47
+ Total time ~: 2 ms
+ Max memory:61.82379913330078
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_138.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 144
+ Max memory usage: 61.82379913330078 mb 
+ Maximal frequent itemset count : 42
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 42
+ Total time ~: 2 ms
+ Max memory:63.68376922607422
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_139.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 256
+ Max memory usage: 63.68376922607422 mb 
+ Maximal frequent itemset count : 72
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 72
+ Total time ~: 4 ms
+ Max memory:65.54376983642578
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_140.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 242
+ Max memory usage: 67.40377044677734 mb 
+ Maximal frequent itemset count : 74
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 74
+ Total time ~: 3 ms
+ Max memory:67.40377044677734
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_141.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 155
+ Max memory usage: 69.26373291015625 mb 
+ Maximal frequent itemset count : 52
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 52
+ Total time ~: 2 ms
+ Max memory:69.26373291015625
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Running test with LCMinput_142.txt
+
+=============  FP-Max v0.96r14  - STATS =============
+ Transactions count from database : 154
+ Max memory usage: 71.12371063232422 mb 
+ Maximal frequent itemset count : 51
+ Total time ~ 1 ms
+===================================================
+========== LCM - STATS ============
+ Freq. closed itemsets count: 51
+ Total time ~: 1 ms
+ Max memory:71.12371063232422
+=====================================
+
+
+============================
+  Results are identical!!!  
+============================
+
+
+
+Process finished with exit code 0
+

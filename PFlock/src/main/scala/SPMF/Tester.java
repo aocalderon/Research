@@ -15,7 +15,7 @@ public class Tester {
 		// Setting variables...
 		Map< Integer, Set<List<Integer>> > map = new TreeMap<>();
         // Reading file...
-        String input = "/tmp/DB80K_E100.0_M50_Maximals.txt";
+        String input = "/home/and/Documents/PhD/Research/Validation/LCM_max/input/LCMinput_41.txt";
         //String input = arg[0];
         logger.info(input);
         //String algorithm = arg[1];
