@@ -109,9 +109,9 @@ public class AlgoLCM {
 		        }
 		        // save the frequent closed itemset
 		    	int supportPe = transactionsPe.size();
-		    	if(supportPe == 1) {
+		    	//if(supportPe == 1) {
 					output(itemset, supportPe);
-				}
+				//}
 				// perform database reduction
 				anyTimeDatabaseReductionClosed(transactionsPe, j, frequentItems, e);
 		    	// Find frequent items in transactions containing P
