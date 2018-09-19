@@ -7,7 +7,7 @@ import logging
 logging.basicConfig(format="%(asctime)s -> LOG %(message)s")
 research_home  = os.environ['RESEARCH_HOME']
 input_path     = "Validation/LCM_max/input"
-input_file     = "Datasets_berlin0-10_110.0_5_6_0.txt" 
+input_file     = "Datasets_berlin0-10_110.0_5_6_10.txt" 
 input_url      = "{}/{}/{}".format(research_home, input_path, input_file)
 lcm_scala      = "Scripts/Scala/LCM/target/scala-2.11/lcm_2.11-0.1.jar"
 lcm_path       = "{}/{}".format(research_home, lcm_scala)
@@ -24,7 +24,7 @@ for line in f.readlines():
     if old_id != cur_id:
         test_in.close()
         test_name = "{}/{}/LCMinput_{}.txt".format(research_home, input_path, cur_id)
-        #print("Saving {}...".format(test_name))
+        print("Saving {}...".format(test_name))
         test_in = open(test_name,'w')
         tests.append(test_name)
         old_id = cur_id

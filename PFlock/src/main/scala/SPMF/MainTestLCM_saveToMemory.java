@@ -29,7 +29,7 @@ import java.util.Set;
  */
 public class MainTestLCM_saveToMemory {
 	public static void main(String [] arg) throws IOException{
-		String input = "/opt/LCM/T568.dat";
+		String input = "/home/and/Documents/PhD/Research/PFlock/src/main/scala/SPMF/test.txt";
 		String separator = ",";
 		BufferedReader reader = new BufferedReader(new FileReader(input));
 		String line;
@@ -48,8 +48,6 @@ public class MainTestLCM_saveToMemory {
 
 		AlgoLCM algoLCM = new AlgoLCM();
 		Itemsets closed = algoLCM.runAlgorithm(support, dataset);
-		for(List<Integer> maximal : closed.getMaximalItemsets1(1)){
-			System.out.println(maximal.toString().replace("[", "").replace("]", "").replace(",", "") + " (1)");
-		}
+		closed.printItemsets();
 	}
 }
