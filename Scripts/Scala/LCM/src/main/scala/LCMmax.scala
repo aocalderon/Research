@@ -1,4 +1,3 @@
-
 import scala.collection.mutable
 import scala.collection.Map
 import scala.collection.mutable.ListBuffer
@@ -31,38 +30,84 @@ object LCMmax {
       write(patterns.toList.mkString("\n"))
       close()
     }
+    patterns.toList.foreach(println)
   }
 
   def backtracking(P: Itemset, buckets: Map[Int, List[Transaction]]): Itemset = {
-    val timer = System.currentTimeMillis()
-    val I = buckets.map(b => Item(b._1, b._2.size)).toList.sortBy(i => i.item).map(_.item)//.filter(_ > P.tail())
-
+    //val timer = System.currentTimeMillis()
+    val I = buckets.keys.toList
     if(I.nonEmpty){
-      I.foreach{ e =>
-        val P_prime = P.U(e)
-        P_prime.count = buckets(e).size
-        P_prime.setDenotation(buckets(e).toSet)
+      for(e <- I.sorted){
+        //println(s"Watching $e...")
+        if(P.nonEmpty && P.contains(e) >= 0) {
+        } else {
+          val P_prime = P.U(e)
+          P_prime.count = buckets(e).size
+          val d = buckets(e).toSet.map{ t: Transaction =>
+            new Transaction(t.items, t.contains(e))
+          }
+          P_prime.setDenotation(d)
 
-        val isPPC = P.prefix(e).equals(P_prime.prefix(e)) && P_prime.items.equals(P_prime.closure)
-        //println(s"Is $P_prime PPC? $isPPC")
+          //val isPPC = P.prefix(e).equals(P_prime.prefix(e)) && P_prime.items.equals(P_prime.closure)
+          //println(s"Is $P_prime PPC? $isPPC")
 
-        if(isPPC && P_prime.count == 1 /*e > j*/){
-          //println(P_prime.toString)
-          patterns += P_prime.toString
+          val isPPC = isPPCExtension(P_prime, e)
+
+          if(isPPC /* && P_prime.count == 1 */ ){
+            println(new Itemset(P_prime.closure).toString)
+            patterns += P_prime.toString
+          }
+
+          val T_prime = buckets(e).map(t => new Transaction(t.items/*.filter(_ > e)*/))
+          val I_prime = T_prime.flatMap(_.items.filter(_ > e)).distinct
+          val buckets_prime = occurrenceDeliver(T_prime, I_prime, e)
+
+          //buckets_prime.keys.map( k => s"$k : ${buckets_prime.get(k).mkString(" ")}" ).foreach(println)
+          //println()
+          val newP = new Itemset(P_prime.closure)
+          //println(newP.toString)
+
+          backtracking(newP, buckets_prime)
         }
-
-        val T_prime = buckets(e).map(t => new Transaction(t.items/*.filter(_ > e)*/))
-        val I_prime = T_prime.flatMap(_.items.filter(_ > e)).distinct
-        val buckets_prime = occurrenceDeliver(T_prime, I_prime)
-
-        backtracking(P_prime, buckets_prime)
       }
     }
-    logging(s"Backtracking for ${P}...", timer, tag=s"$P")
+    //logging(s"Backtracking for $P...", timer, tag=s"$P")
+
     P
   }
 
-  def occurrenceDeliver(t_prime: List[Transaction], i_prime: List[Int]): scala.collection.Map[Int, List[Transaction]] = {
+  def isItemInAllTransactionsExceptFirst(denotation: Set[Transaction], item: Integer): Boolean = {
+    var i = 1
+    while ( {
+      i < denotation.size
+    }) {
+      if (denotation.toList(i).contains(item)  == -1) return false
+
+      {
+        i += 1; i - 1
+      }
+    }
+    true
+  }
+
+  private def isPPCExtension(p: Itemset, e: Integer): Boolean = { // We do a loop on each item i of the first transaction
+    if (p.denotation.isEmpty) return false
+    val firstTrans: Transaction = p.denotation.toList.head
+    val firstTransaction = firstTrans.items
+    var i: Int = 0
+    while (i < firstTrans.offset) {
+      val item: Integer = firstTransaction(i)
+      // if p does not contain item i < e and item i is present in all transactions,
+      // then it PUe is not a ppc
+      if (item < e && (p.nonEmpty() || p.contains(e) == -1) && isItemInAllTransactionsExceptFirst(p.denotation, item)) { //&& isItemInAllTransactions(transactionsPe, item)) {
+        return false
+      }
+      i += 1
+    }
+    true
+  }
+
+  def occurrenceDeliver(t_prime: List[Transaction], i_prime: List[Int], e: Int): scala.collection.Map[Int, List[Transaction]] = {
     var b_prime = new mutable.HashMap[Int, List[Transaction]]()
     for (t <- t_prime) {
       for (i <- i_prime) {

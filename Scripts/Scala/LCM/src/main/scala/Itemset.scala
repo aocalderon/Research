@@ -11,15 +11,12 @@ class Itemset(i: List[Int]) {
 
   def U(e: Int): Itemset = { new Itemset(this.items :+ e) }
 
+  def nonEmpty(): Boolean = { items.nonEmpty }
+
   override def toString: String = s"${items.mkString(" ")}"
 
   def denotationMinusClosure(): List[Transaction] = {
     denotation.map(_.items.filterNot(closure.toSet)).map(d => new Transaction(d)).toList
-  }
-
-  def clo(): Itemset = {
-    if(denotation.isEmpty) new Itemset(List.empty[Int])
-    else this.denotation.map(_.toItemset).reduce((a, b) => new Itemset(a.items.intersect(b.items)))
   }
 
   def setDenotation(d: Set[Transaction]): Unit = {

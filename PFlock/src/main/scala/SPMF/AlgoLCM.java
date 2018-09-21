@@ -120,10 +120,7 @@ public class AlgoLCM {
 				List<Integer> newFrequentItems = new ArrayList<>();
 		    	for (int k = j+1; k < frequentItems.size(); k++) {
 		        	Integer itemK =  frequentItems.get(k);
-		        	int supportK = buckets[itemK].size();
-		            if(supportK >= minsupRelative) {
-		            	newFrequentItems.add(itemK);
-		            }
+	            	newFrequentItems.add(itemK);
 		        }
 				// recursive call
 				backtrackingLCM(itemset, transactionsPe, newFrequentItems, tailPositionInPe);
@@ -241,6 +238,7 @@ public class AlgoLCM {
         	// then it PUe is not a ppc
             if(item < e && (p == null || !containsByBinarySearch(p,item))
                     && isItemInAllTransactionsExceptFirst(transactionsPe, item)) {
+                    //&& isItemInAllTransactions(transactionsPe, item)) {
                 return false;
             }
         }

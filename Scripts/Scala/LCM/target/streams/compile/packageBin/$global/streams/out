@@ -16,6 +16,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/Itemset$$anonfun$denotationMinusClosure$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	LCMmax$$anonfun$main$2.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/LCMmax$$anonfun$main$2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	LCMmax$$anonfun$backtracking$1$$anonfun$apply$3.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/LCMmax$$anonfun$backtracking$1$$anonfun$apply$3.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	LCMmax$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/LCMmax$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	LCMmax$$anonfun$backtracking$1.class[0m
@@ -24,10 +26,12 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/Itemset$$anonfun$setClosure$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	LCMmax$$anonfun$3.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/LCMmax$$anonfun$3.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	LCMmax$$anonfun$occurrenceDeliver$1$$anonfun$apply$3.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/LCMmax$$anonfun$occurrenceDeliver$1$$anonfun$apply$3.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	LCMmax$Item.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/LCMmax$Item.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	LCMmax$$anonfun$occurrenceDeliver$3$$anonfun$apply$6.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/LCMmax$$anonfun$occurrenceDeliver$3$$anonfun$apply$6.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	LCMmax$$anonfun$backtracking$1$$anonfun$apply$4.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/LCMmax$$anonfun$backtracking$1$$anonfun$apply$4.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Itemset$$anonfun$clo$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/Itemset$$anonfun$clo$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	LCMmax$$anonfun$backtracking$1$$anonfun$5$$anonfun$apply$1.class[0m
@@ -40,8 +44,6 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/LCMmax$$anonfun$occurrenceDeliver$4.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	LCMmax$$anonfun$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/LCMmax$$anonfun$1.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	LCMmax$$anonfun$occurrenceDeliver$3$$anonfun$apply$4.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/LCMmax$$anonfun$occurrenceDeliver$3$$anonfun$apply$4.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Itemset$$anonfun$clo$2.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/Itemset$$anonfun$clo$2.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	LCMmax$$anonfun$2.class[0m
@@ -52,6 +54,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/LCMmax$$anonfun$backtracking$1$$anonfun$4.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	LCMmax$Item$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/LCMmax$Item$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	LCMmax$$anonfun$occurrenceDeliver$1$$anonfun$apply$5.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/LCMmax$$anonfun$occurrenceDeliver$1$$anonfun$apply$5.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Itemset$$anonfun$denotationMinusClosure$2.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/classes/Itemset$$anonfun$denotationMinusClosure$2.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	LCMmax$.class[0m
