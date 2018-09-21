@@ -1,10 +1,15 @@
-class Transaction(elements: List[Int]) extends Ordered[Transaction] {
+class Transaction(elements: List[Int], e: Int = 0) extends Ordered[Transaction] {
   var items: List[Int] = elements.sorted
   var len: Int = items.length
+  var offset: Int = e
 
-  def prefix(i: Int): List[Int] = {
-    items.slice(0, i)
-  }
+  def prefix(i: Int): List[Int] = { items.slice(0, i) }
+
+  override def equals(obj: scala.Any): Boolean = this.items.equals(obj.asInstanceOf[Transaction].items)
+
+  def compare(that: Transaction): Int = this.items.mkString(" ").compare(that.items.mkString(" "))
+
+  def toItemset: Itemset = new Itemset(this.items)
 
   override def toString: String = s"{${items.mkString(" ")}}"
 
@@ -25,14 +30,8 @@ class Transaction(elements: List[Int]) extends Ordered[Transaction] {
   override def hashCode: Int = {
     val prime = 31
     var result = 1
-    result = prime * result + items.hashCode
-    result = prime * result + (if (items == null) 0 else items.hashCode)
+    result = prime * result + elements.hashCode
+    result = prime * result + (if (elements == null) 0 else elements.hashCode)
     result
   }
-
-  override def equals(obj: scala.Any): Boolean = this.items.equals(obj.asInstanceOf[Transaction].items)
-
-  def compare(that: Transaction): Int = this.items.mkString(" ").compare(that.items.mkString(" "))
-
-  def toItemset: Itemset = new Itemset(this.items)
 }

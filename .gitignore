@@ -19,6 +19,9 @@ Script/Scala/SimbaTemplate/project/*
 Script/Scala/SimbaTemplate/metastore_db/*
 Script/Scala/SimbaTemplate/spark-warehouse/*
 
+Scripts/Scala/LCM/target/*
+Scripts/Scala/LCM/project/*
+
 ensime*
 *.cache
 *.log

@@ -29,8 +29,8 @@ import java.util.Set;
  */
 public class MainTestLCM_saveToMemory {
 	public static void main(String [] arg) throws IOException{
-		String input = "/home/and/Documents/PhD/Research/PFlock/src/main/scala/SPMF/test.txt";
-		String separator = ",";
+		String input = "/home/and/Documents/PhD/Research/Validation/LCM_max/test.dat";
+		String separator = " ";
 		BufferedReader reader = new BufferedReader(new FileReader(input));
 		String line;
 		Set<List<Integer>> transactions = new HashSet<>();
