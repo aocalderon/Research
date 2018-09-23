@@ -78,14 +78,11 @@ object LCMmax {
 
   def isItemInAllTransactionsExceptFirst(denotation: Set[Transaction], item: Integer): Boolean = {
     var i = 1
-    while ( {
-      i < denotation.size
-    }) {
-      if (denotation.toList(i).contains(item)  == -1) return false
-
-      {
-        i += 1; i - 1
+    while (i < denotation.size) {
+      if (denotation.toList(i).contains(item)  == -1){
+        return false
       }
+      i += 1
     }
     true
   }

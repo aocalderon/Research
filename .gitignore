@@ -21,6 +21,7 @@ Script/Scala/SimbaTemplate/spark-warehouse/*
 
 Scripts/Scala/LCM/target/*
 Scripts/Scala/LCM/project/*
+Scripts/Scala/LCM/.idea/*
 
 ensime*
 *.cache
