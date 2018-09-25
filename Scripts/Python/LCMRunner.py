@@ -32,9 +32,8 @@ for line in f.readlines():
 test_in.close()
 logging.warning("Done!!!")
 
-tests = tests[0:10]
+tests = tests[25:75]
 for test in tests:
-    #print("Running lcm _M {} 1 {}".format(test, output_url))
     logging.warning("Running LCMuno...")
     fid = test.split("/")[-1].split("_")[-1].split(".")[0]
     output_path    = "Validation/LCM_max/output"
@@ -55,7 +54,6 @@ for test in tests:
     output_sort.close()
     logging.warning("Done!!!")
     
-    #print("Running scala {} {} {}".format(lcm_scala, test, lcmand_url))
     logging.warning("Running LCMand...")
     output_path    = "Validation/LCM_max/output"
     output_file    = "LCMand_{}.txt".format(fid)
@@ -70,7 +68,6 @@ for test in tests:
     call(['sort', lcmand_url, '-o', lcmand_sorted])
     logging.warning("Done!!!")
 
-    #print("Diff between LCM_uno and LCM_and on {}...".format(test))
     logging.warning("Applying Diff...")
     call(['diff', '-s', lcmuno_sorted, lcmand_sorted])
     logging.warning("Done!!!")

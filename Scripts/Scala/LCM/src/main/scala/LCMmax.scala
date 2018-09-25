@@ -1,6 +1,7 @@
 import scala.collection.mutable
 import scala.collection.Map
 import scala.collection.mutable.ListBuffer
+import scala.util.Try
 
 object LCMmax {
   case class Item(item: Int, count: Int)
@@ -8,11 +9,15 @@ object LCMmax {
   var buckets: Map[Int, List[Transaction]] = Map.empty
   var uniqueElements: List[Int] = List.empty[Int]
   var patterns: ListBuffer[String] = new ListBuffer[String]()
+  var debug: Boolean = true
 
   def main(args: Array[String]): Unit = {
     import scala.io.Source
 
     val filename = args(0)
+    val output = args(1)
+    debug = Try(args(2).toBoolean).getOrElse(false)
+
     val transaction_buffer: ListBuffer[Transaction] = new ListBuffer()
     for (line <- Source.fromFile(filename).getLines) {
       transaction_buffer += new Transaction(line.split(" ").map(_.toInt).toList)
@@ -25,12 +30,10 @@ object LCMmax {
     val P = new Itemset(List.empty)
     backtracking(P, buckets)
     
-    val output = args(1)
     new java.io.PrintWriter(output) {
       write(patterns.toList.mkString("\n"))
       close()
     }
-    patterns.toList.foreach(println)
   }
 
   def backtracking(P: Itemset, buckets: Map[Int, List[Transaction]]): Itemset = {
@@ -45,14 +48,16 @@ object LCMmax {
             new Transaction(t.items, t.contains(e))
           }
           P_prime.setDenotation(d)
-
           P_prime = P_prime.getClosure
-
           val isPPC = isPPCExtension(P, P_prime, e)
 
-          if(isPPC /* && P_prime.count == 1 */ ){
-            patterns += P_prime.toString
-
+          if(isPPC){
+            if(P_prime.count == 1){
+              var pattern = s"${P_prime.toString}"
+              if(debug) pattern = s"${P_prime.toString}: ${P_prime.count}"
+              patterns += pattern
+              if(debug) println(pattern)
+            }
             val T_prime = buckets(e).map(t => new Transaction(t.items))
             val I_prime = T_prime.flatMap(_.items.filter(_ > e)).distinct
             val buckets_prime = occurrenceDeliver(T_prime, I_prime, e)
@@ -66,7 +71,7 @@ object LCMmax {
     P
   }
 
-  private def isPPCExtension(P: Itemset, P_prime: Itemset, e: Integer): Boolean = { // We do a loop on each item i of the first transaction
+  private def isPPCExtension(P: Itemset, P_prime: Itemset, e: Integer): Boolean = {
     if(P_prime != P_prime.closure) return false
     if(e > P.tail && P_prime.prefix(e - 1) == P.prefix(e - 1))
       true
