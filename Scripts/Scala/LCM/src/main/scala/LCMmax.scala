@@ -34,74 +34,44 @@ object LCMmax {
   }
 
   def backtracking(P: Itemset, buckets: Map[Int, List[Transaction]]): Itemset = {
-    //val timer = System.currentTimeMillis()
-    val I = buckets.keys.toList
+    val I = buckets.keys.toList.sorted
     if(I.nonEmpty){
-      for(e <- I.sorted){
-        //println(s"Watching $e...")
+      for(e <- I){
         if(P.nonEmpty && P.contains(e) >= 0) {
         } else {
-          val P_prime = P.U(e)
+          var P_prime = P.U(e)
           P_prime.count = buckets(e).size
           val d = buckets(e).toSet.map{ t: Transaction =>
             new Transaction(t.items, t.contains(e))
           }
           P_prime.setDenotation(d)
 
-          //val isPPC = P.prefix(e).equals(P_prime.prefix(e)) && P_prime.items.equals(P_prime.closure)
-          //println(s"Is $P_prime PPC? $isPPC")
+          P_prime = P_prime.getClosure
 
-          val isPPC = isPPCExtension(P_prime, e)
+          val isPPC = isPPCExtension(P, P_prime, e)
 
           if(isPPC /* && P_prime.count == 1 */ ){
-            println(new Itemset(P_prime.closure).toString)
             patterns += P_prime.toString
+
+            val T_prime = buckets(e).map(t => new Transaction(t.items))
+            val I_prime = T_prime.flatMap(_.items.filter(_ > e)).distinct
+            val buckets_prime = occurrenceDeliver(T_prime, I_prime, e)
+
+            backtracking(P_prime, buckets_prime)
           }
-
-          val T_prime = buckets(e).map(t => new Transaction(t.items/*.filter(_ > e)*/))
-          val I_prime = T_prime.flatMap(_.items.filter(_ > e)).distinct
-          val buckets_prime = occurrenceDeliver(T_prime, I_prime, e)
-
-          //buckets_prime.keys.map( k => s"$k : ${buckets_prime.get(k).mkString(" ")}" ).foreach(println)
-          //println()
-          val newP = new Itemset(P_prime.closure)
-          //println(newP.toString)
-
-          backtracking(newP, buckets_prime)
         }
       }
     }
-    //logging(s"Backtracking for $P...", timer, tag=s"$P")
 
     P
   }
 
-  def isItemInAllTransactionsExceptFirst(denotation: Set[Transaction], item: Integer): Boolean = {
-    var i = 1
-    while (i < denotation.size) {
-      if (denotation.toList(i).contains(item)  == -1){
-        return false
-      }
-      i += 1
-    }
-    true
-  }
-
-  private def isPPCExtension(p: Itemset, e: Integer): Boolean = { // We do a loop on each item i of the first transaction
-    if (p.denotation.isEmpty) return false
-    val firstTrans: Transaction = p.denotation.toList.head
-    val firstTransaction = firstTrans.items
-    var i: Int = 0
-    while (i < firstTrans.offset) {
-      val item: Integer = firstTransaction(i)
-      // if p does not contain item i < e and item i is present in all transactions,
-      // then it PUe is not a ppc
-      if (item < e && (p.nonEmpty() || p.contains(e) == -1) && isItemInAllTransactionsExceptFirst(p.denotation, item)) { //&& isItemInAllTransactions(transactionsPe, item)) {
-        return false
-      }
-      i += 1
-    }
-    true
+  private def isPPCExtension(P: Itemset, P_prime: Itemset, e: Integer): Boolean = { // We do a loop on each item i of the first transaction
+    if(P_prime != P_prime.closure) return false
+    if(e > P.tail && P_prime.prefix(e - 1) == P.prefix(e - 1))
+      true
+    else
+      false
   }
 
   def occurrenceDeliver(t_prime: List[Transaction], i_prime: List[Int], e: Int): scala.collection.Map[Int, List[Transaction]] = {

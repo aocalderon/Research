@@ -1,22 +1,40 @@
+import util.control.Breaks._
+
 class Itemset(i: List[Int]) {
   val items: List[Int] = i.sorted
   var len: Int = items.size
   var count: Int = 0
   var denotation: Set[Transaction] = Set.empty[Transaction]
-  var closure: List[Int] = List.empty[Int]
+  var closure: Itemset = _
 
-  def prefix(i: Int): List[Int] = { items.filter(_ < i) }
-
-  def tail(): Int = { if(items.isEmpty) 0 else items(len - 1) }
+  def prefix(i: Int): Itemset = new Itemset(items.filter(_ <= i))
 
   def U(e: Int): Itemset = { new Itemset(this.items :+ e) }
 
   def nonEmpty(): Boolean = { items.nonEmpty }
 
+  def isEmpty: Boolean = { items.isEmpty }
+
   override def toString: String = s"${items.mkString(" ")}"
 
+  def tail(): Int = {
+    if(this.items.isEmpty) return 0
+    val smeti = this.items.reverse
+    var i = smeti.head
+    for(j <- smeti){
+      val P_j = this.prefix(j)
+      P_j.setDenotation(this.denotation)
+      if(!P_j.closure.items.equals(this.items)){
+        break
+      }
+      i = j
+    }
+
+    i
+  }
+
   def denotationMinusClosure(): List[Transaction] = {
-    denotation.map(_.items.filterNot(closure.toSet)).map(d => new Transaction(d)).toList
+    denotation.map(_.items.filterNot(closure.items.toSet)).map(d => new Transaction(d)).toList
   }
 
   def setDenotation(d: Set[Transaction]): Unit = {
@@ -24,7 +42,14 @@ class Itemset(i: List[Int]) {
     this.closure = setClosure()
   }
 
-  private def setClosure(): List[Int] = this.denotation.map(_.items).reduce((a, b) => a.intersect(b))
+  private def setClosure(): Itemset = new Itemset(this.denotation.map(_.items).reduce((a, b) => a.intersect(b)))
+
+  def getClosure: Itemset = {
+    val newP = this.closure
+    newP.setDenotation(this.denotation)
+
+    newP
+  }
 
   override def hashCode: Int = {
     val prime = 31
