@@ -47,6 +47,7 @@ class Itemset(i: List[Int]) {
   def getClosure: Itemset = {
     val newP = this.closure
     newP.setDenotation(this.denotation)
+    newP.count = this.count
 
     newP
   }
