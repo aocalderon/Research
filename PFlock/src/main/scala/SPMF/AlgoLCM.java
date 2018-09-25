@@ -31,11 +31,10 @@ public class AlgoLCM {
 	// the start time and end time of the last algorithm execution
 	private long startTimestamp;
 	private long endTimestamp;
-	private int minsupRelative;
 	// Buckets for occurence delivery
 	// Recall that each bucket correspond to an item
     // and contains the transactions where the items appears.
-	private List<Transaction>[] buckets;
+	private List[] buckets;
 
 	public Itemsets runAlgorithm(int minimumSupport, Transactions dataset){
 		// record the start time
@@ -47,19 +46,18 @@ public class AlgoLCM {
 		MemoryLogger.getInstance().reset();
 		// convert from an absolute minsup to a relative minsup by multiplying
 		// by the database size
-		this.minsupRelative = minimumSupport;
 		// Create the initial occurrence array for the dataset
 		performFirstOccurenceDelivery(dataset);
 		// Remove infrequent items from transactions by using support calculated using
 		// the buckets. Recall that each bucket correspond to an item
 		// and contains the transactions where the items appears.
 		for(Transaction transaction : dataset.getTransactions()) {
-			transaction.removeInfrequentItems(buckets, minsupRelative);
+			transaction.removeInfrequentItems(buckets, minimumSupport);
 		}
 		// Create the array of all frequent items.
 		List<Integer> allItems = new ArrayList<>();
 		for(Integer item : dataset.getUniqueItems()) {
-			if(buckets[item].size() >= minsupRelative) {
+			if(buckets[item].size() >= minimumSupport) {
 				allItems.add(item);
 			}
 		}
@@ -109,9 +107,9 @@ public class AlgoLCM {
 		        }
 		        // save the frequent closed itemset
 		    	int supportPe = transactionsPe.size();
-		    	//if(supportPe == 1) {
+		    	if(supportPe == 1) {
 					output(itemset, supportPe);
-				//}
+				}
 				// perform database reduction
 				anyTimeDatabaseReductionClosed(transactionsPe, j, frequentItems, e);
 		    	// Find frequent items in transactions containing P
@@ -133,10 +131,8 @@ public class AlgoLCM {
 		buckets = new List[dataset.getMaxItem() + 1];
 		for (Integer item : dataset.uniqueItems) buckets[item] = new ArrayList<>();
 		for (Transaction transaction : dataset.getTransactions()) {
-			for (Integer item : transaction.getItems()) {
-				// for each item get its bucket and add the current transaction
-				buckets[item].add(transaction);
-			}
+			// for each item get its bucket and add the current transaction
+			for (Integer item : transaction.getItems()) buckets[item].add(transaction);
 		}
 	}
 
@@ -151,10 +147,8 @@ public class AlgoLCM {
 			// we consider each item I  of the transaction such that  itemI > e
 			for(int i = transaction.getItems().length-1; i >transaction.getOffset(); i--) {
 				Integer item = transaction.getItems()[i];
-				if(item > e && frequentItems.contains(item)) {
-					// we add the transaction to the bucket of the itemI
-					buckets[item].add(transaction);
-				}
+				// we add the transaction to the bucket of the itemI
+				if(item > e && frequentItems.contains(item)) buckets[item].add(transaction);
 			}
 		}
 	}

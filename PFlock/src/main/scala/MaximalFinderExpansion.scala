@@ -245,8 +245,8 @@ object MaximalFinderExpansion {
               }.toSet.asJava
             val LCM = new AlgoLCM
             val data = new Transactions(transactions)
-            val closed = LCM.runAlgorithm(1, data)
-            maximalsIterator = closed.getMaximalItemsets1(mu)
+            val maximals = LCM.runAlgorithm(1, data)
+            maximalsIterator = maximals.getItemsets(mu)
               .asScala
               .map(m => (partitionIndex, m.asScala.toList.map(_.toLong).sorted))
               .toIterator

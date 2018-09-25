@@ -101,9 +101,10 @@ public class Tester2 {
 
     public static void main(String[] arg) throws IOException {
         Tester2 test = new Tester2();
-        int n = 155;
+        int start = 43;
+        int end   = 43;
 
-        for(int i = 0; i <= n; i++) {
+        for(int i = start; i <= end; i++) {
             String input = "/home/and/Documents/PhD/Research/Validation/LCM_max/input/LCMinput_" + i + ".txt";
             System.out.println("\nRunning test with LCMinput_" + i + ".txt\n");
             test.runTests(input);
