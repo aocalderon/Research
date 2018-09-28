@@ -7,10 +7,11 @@ import logging
 logging.basicConfig(format="%(asctime)s -> LOG %(message)s")
 research_home  = os.environ['RESEARCH_HOME']
 input_path     = "Validation/LCM_max/input"
-input_file     = "Datasets_berlin0-10_110.0_5_6_10.txt" 
+input_file     = "Datasets_berlin0-0_110.0_5_1_-1.txt" 
 input_url      = "{}/{}/{}".format(research_home, input_path, input_file)
 lcm_scala      = "Scripts/Scala/LCM/target/scala-2.11/lcm_2.11-0.1.jar"
 lcm_path       = "{}/{}".format(research_home, lcm_scala)
+debug          = True
 
 logging.warning("Extracting datasets...")
 tests = []
@@ -32,14 +33,14 @@ for line in f.readlines():
 test_in.close()
 logging.warning("Done!!!")
 
-tests = tests[25:75]
+tests = tests[0:42]
 for test in tests:
     logging.warning("Running LCMuno...")
     fid = test.split("/")[-1].split("_")[-1].split(".")[0]
     output_path    = "Validation/LCM_max/output"
     output_file    = "LCMuno_{}_unsorted.txt".format(fid)
     output_url     = "{}/{}/{}".format(research_home, output_path, output_file)
-    call(['time','lcm', '_M', test, '1', output_url])
+    call(['lcm', '_M', test, '1', output_url])
     logging.warning("Done!!!")
     
     logging.warning("Sorting LCMuno output...")
@@ -58,7 +59,9 @@ for test in tests:
     output_path    = "Validation/LCM_max/output"
     output_file    = "LCMand_{}.txt".format(fid)
     lcmand_url     = "{}/{}/{}".format(research_home, output_path, output_file)
-    call(['time', 'scala', lcm_path, test, lcmand_url])
+    if(debug):
+        print("{} {} {} {}".format('scala', lcm_path, test, lcmand_url))
+    call(['scala', lcm_path, test, lcmand_url])
     logging.warning("Done!!!")
     
     logging.warning("Sorting files...")

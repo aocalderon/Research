@@ -4,7 +4,7 @@
 		module="lcm-build"
 		revision="0.1.0-SNAPSHOT"
 		status="integration"
-		publication="20180924212035"
+		publication="20180926115128"
 		e:sbtVersion="1.0" e:scalaVersion="2.12"
 	>
 		<description>
