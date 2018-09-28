@@ -285,23 +285,23 @@
 [0m[[0m[0mdebug[0m] [0m[0mignoring unhandled DependencyDescriptorMediator: class sbt.internal.librarymanagement.IvyScalaUtil$OverrideScalaMediator[0m
 [0m[[0m[0mdebug[0m] [0m[0m	resolved ivy file produced in cache[0m
 [0m[[0m[0mdebug[0m] [0m[0m:: downloading artifacts ::[0m
-[0m[[0m[0mdebug[0m] [0m[0m	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.11;1.0.4!scala-xml_2.11.jar(bundle)[0m
 [0m[[0m[0mdebug[0m] [0m[0m	[NOT REQUIRED] org.scala-lang#scala-library;2.11.8!scala-library.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.11;1.0.4!scala-xml_2.11.jar(bundle)[0m
 [0m[[0m[0mdebug[0m] [0m[0m	[NOT REQUIRED] jline#jline;2.12.1!jline.jar[0m
-[0m[[0m[0mdebug[0m] [0m[0m	[NOT REQUIRED] org.scala-lang#scala-compiler;2.11.8!scala-compiler.jar[0m
 [0m[[0m[0mdebug[0m] [0m[0m	[NOT REQUIRED] org.scala-lang#scala-reflect;2.11.8!scala-reflect.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	[NOT REQUIRED] org.scala-lang#scala-compiler;2.11.8!scala-compiler.jar[0m
 [0m[[0m[0mdebug[0m] [0m[0m	[NOT REQUIRED] org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4!scala-parser-combinators_2.11.jar(bundle)[0m
-[0m[[0m[0mdebug[0m] [0m[0m:: resolution report :: resolve 196ms :: artifacts dl 18ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 compile produced in /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-compile.xml[0m
-[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 runtime produced in /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-runtime.xml[0m
-[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 test produced in /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-test.xml[0m
-[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 provided produced in /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-provided.xml[0m
-[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 optional produced in /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-optional.xml[0m
-[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 compile-internal produced in /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-compile-internal.xml[0m
-[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 runtime-internal produced in /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-runtime-internal.xml[0m
-[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 test-internal produced in /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-test-internal.xml[0m
-[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 plugin produced in /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-plugin.xml[0m
-[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 pom produced in /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-pom.xml[0m
-[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 scala-tool produced in /home/and/Documents/PhD/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-scala-tool.xml[0m
-[0m[[0m[0mdebug[0m] [0m[0m	resolve done (196ms resolve - 18ms download)[0m
+[0m[[0m[0mdebug[0m] [0m[0m:: resolution report :: resolve 147ms :: artifacts dl 3ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 compile produced in /home/acald013/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-compile.xml[0m
+[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 runtime produced in /home/acald013/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-runtime.xml[0m
+[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 test produced in /home/acald013/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-test.xml[0m
+[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 provided produced in /home/acald013/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-provided.xml[0m
+[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 optional produced in /home/acald013/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-optional.xml[0m
+[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 compile-internal produced in /home/acald013/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-compile-internal.xml[0m
+[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 runtime-internal produced in /home/acald013/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-runtime-internal.xml[0m
+[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 test-internal produced in /home/acald013/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-test-internal.xml[0m
+[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 plugin produced in /home/acald013/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-plugin.xml[0m
+[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 pom produced in /home/acald013/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-pom.xml[0m
+[0m[[0m[0mdebug[0m] [0m[0m	report for default#lcm_2.11;0.1 scala-tool produced in /home/acald013/Research/Scripts/Scala/LCM/target/scala-2.11/resolution-cache/reports/default-lcm_2.11-scala-tool.xml[0m
+[0m[[0m[0mdebug[0m] [0m[0m	resolve done (147ms resolve - 3ms download)[0m
 [0m[[0m[0minfo[0m] [0m[0mDone updating.[0m
