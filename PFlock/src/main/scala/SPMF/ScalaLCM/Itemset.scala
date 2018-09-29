@@ -1,3 +1,5 @@
+package SPMF.ScalaLCM
+
 import util.control.Breaks._
 
 class Itemset(i: List[Int]) {
