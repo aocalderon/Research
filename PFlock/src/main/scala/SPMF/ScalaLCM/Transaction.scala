@@ -1,3 +1,5 @@
+package SPMF.ScalaLCM
+
 class Transaction(elements: List[Int], e: Int = 0) extends Ordered[Transaction] {
   var items: List[Int] = elements.sorted
   var len: Int = items.length

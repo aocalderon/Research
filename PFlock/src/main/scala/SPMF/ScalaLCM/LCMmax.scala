@@ -1,3 +1,5 @@
+package SPMF.ScalaLCM
+
 import scala.collection.mutable
 import scala.collection.Map
 import scala.collection.mutable.ListBuffer
@@ -54,7 +56,6 @@ object LCMmax {
           if(isPPC){
             if(P_prime.count == 1){
               var pattern = s"${P_prime.toString}"
-              if(debug) pattern = s"${P_prime.toString}: ${P_prime.count}"
               patterns += pattern
               if(debug) println(pattern)
             }
