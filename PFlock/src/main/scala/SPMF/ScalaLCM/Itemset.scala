@@ -4,6 +4,7 @@ import util.control.Breaks._
 
 class Itemset(i: List[Int]) {
   val items: List[Int] = i.sorted
+  var clo_tail: Int = -1
   var len: Int = items.size
   var count: Int = 0
   var denotation: Set[Transaction] = Set.empty[Transaction]
@@ -35,16 +36,10 @@ class Itemset(i: List[Int]) {
     i
   }
 
-  def denotationMinusClosure(): List[Transaction] = {
-    denotation.map(_.items.filterNot(closure.items.toSet)).map(d => new Transaction(d)).toList
-  }
-
   def setDenotation(d: Set[Transaction]): Unit = {
     this.denotation = d
-    this.closure = setClosure()
+    this.closure = new Itemset(this.denotation.map(_.items).reduce((a, b) => a.intersect(b)))
   }
-
-  private def setClosure(): Itemset = new Itemset(this.denotation.map(_.items).reduce((a, b) => a.intersect(b)))
 
   def getClosure: Itemset = {
     val newP = this.closure

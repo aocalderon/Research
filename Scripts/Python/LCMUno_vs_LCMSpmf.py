@@ -42,7 +42,7 @@ test_in.close()
 logging.warning("Done!!!")
 logging.warning("{} has been read...".format(input_file))
 
-# tests = tests[0:3]
+tests = tests[0:15]
 for test in tests:
     logging.warning("Running LCMuno...")
     fid = test.split("/")[-1].split("_")[-1].split(".")[0]

@@ -50,7 +50,7 @@ test_in.close()
 input_id = input_file.split('_')[-1].split(".")[0]
 logging.warning("{} has been read...".format(input_file))
 
-#tests = tests[0:3]
+#tests = tests[0:40]
 for test in tests:
     test_id = test.split('_')[-1].split(".")[0]
     run_id = "D{}-{}".format(input_id, test_id)
