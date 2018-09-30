@@ -74,7 +74,9 @@ object LCMmax {
 
   private def isPPCExtension(P: Itemset, P_prime: Itemset, e: Integer): Boolean = {
     if(P_prime != P_prime.closure) return false
-    if(e > P.tail && P_prime.prefix(e - 1) == P.prefix(e - 1))
+    P.clo_tail = P.contains(e)
+    //if(e > P.tail && P_prime.prefix(e - 1) == P.prefix(e - 1))
+    if(e > P.clo_tail && P_prime.prefix(e - 1) == P.prefix(e - 1))
       true
     else
       false
