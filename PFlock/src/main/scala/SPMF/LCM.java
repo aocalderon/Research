@@ -75,6 +75,7 @@ public class LCM {
             }
         }
         runner.savePatterns(patterns, output);
+        lcm.getN();
     }
 }
 

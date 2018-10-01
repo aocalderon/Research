@@ -35,6 +35,7 @@ public class AlgoLCM {
 	// Recall that each bucket correspond to an item
     // and contains the transactions where the items appears.
 	private List[] buckets;
+	private int n = 0;
 
 	public Itemsets runAlgorithm(int minimumSupport, Transactions dataset){
 		// record the start time
@@ -74,6 +75,7 @@ public class AlgoLCM {
 	}
 
 	private void backtrackingLCM(List<Integer> p, List<Transaction> transactionsOfP, List<Integer> frequentItems, int tailPosInP) {
+		long timeRecursion = System.currentTimeMillis();
         // for each frequent item e
 		for (int j = 0; j < frequentItems.size(); j++) {
 			Integer e = frequentItems.get(j);
@@ -109,7 +111,10 @@ public class AlgoLCM {
 		    	int supportPe = transactionsPe.size();
 		    	if(supportPe == 1) {
 					output(itemset, supportPe);
+					System.out.println(itemset);
 				}
+
+				//long timeDBReduction = System.currentTimeMillis();
 				// perform database reduction
 				anyTimeDatabaseReductionClosed(transactionsPe, j, frequentItems, e);
 		    	// Find frequent items in transactions containing P
@@ -120,10 +125,13 @@ public class AlgoLCM {
 		        	Integer itemK =  frequentItems.get(k);
 	            	newFrequentItems.add(itemK);
 		        }
+		        //System.out.println(n + ". DB Reduction... " + (System.currentTimeMillis() - timeDBReduction));
 				// recursive call
 				backtrackingLCM(itemset, transactionsPe, newFrequentItems, tailPositionInPe);
 			}
 		}
+		n = n + 1;
+		System.out.println(n + "," + (System.currentTimeMillis() - timeRecursion));
 		MemoryLogger.getInstance().checkMemory();
     }
 
@@ -279,5 +287,9 @@ public class AlgoLCM {
 		System.out.println(" Total time ~: " + (endTimestamp - startTimestamp) + " ms");
 		System.out.println(" Max memory:" + MemoryLogger.getInstance().getMaxMemory());
 		System.out.println("=====================================");
+	}
+
+	public void getN(){
+    	System.out.println("Number of recursions: " + n);
 	}
 }
