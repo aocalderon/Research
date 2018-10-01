@@ -9,7 +9,9 @@ from datetime import datetime as d
 ## Reading arguments...
 parser = argparse.ArgumentParser()
 parser.add_argument("--input_file", "-i", required=True, help="Input file...")
-parser.add_argument("--debug", "-d", default=False, help="Activate debug mode.")
+parser.add_argument("--debug", "-d", default=False, help="Activate debug mode...")
+parser.add_argument("--start", "-s", default=0, help="Start index...")
+parser.add_argument("--end", "-e", default=0, help="End index...")
 args = parser.parse_args()
 logging.basicConfig(format="%(asctime)s -> %(message)s")
 
@@ -29,6 +31,8 @@ lcm_java_class  = "--class SPMF.LCM"
 fpmax_class     = "--class SPMF.FPMax"
 lcm_scala_class = "--class SPMF.ScalaLCM.LCMmax"
 debug           = args.debug
+start           = int(args.start)
+end             = int(args.end)
 
 logging.warning("Reading {}...".format(input_file))
 tests = []
@@ -50,7 +54,9 @@ test_in.close()
 input_id = input_file.split('_')[-1].split(".")[0]
 logging.warning("{} has been read...".format(input_file))
 
-#tests = tests[0:40]
+if(end == 0):
+    end = len(tests)
+tests = tests[start:end]
 for test in tests:
     test_id = test.split('_')[-1].split(".")[0]
     run_id = "D{}-{}".format(input_id, test_id)

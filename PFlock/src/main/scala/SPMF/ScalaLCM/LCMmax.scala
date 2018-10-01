@@ -12,7 +12,7 @@ object LCMmax {
   var uniqueElements: List[Int] = List.empty[Int]
   var patterns: ListBuffer[String] = new ListBuffer[String]()
   var n: Int = 0
-  var debug: Boolean = true
+  var debug: Boolean = false
 
   def main(args: Array[String]): Unit = {
     import scala.io.Source
@@ -48,8 +48,7 @@ object LCMmax {
     if(I.nonEmpty){
       for(e <- I){
         if(P.nonEmpty && P.contains(e) >= 0) {
-        } else {
-//33564,11452
+        } else { //33564,11452
           val time1 = System.currentTimeMillis()
           var P_prime = P.U(e)
           P_prime.count = buckets(e).size
@@ -74,8 +73,7 @@ object LCMmax {
 
             backtracking(P_prime, buckets_prime)
           }
-          println(s"$n,${System.currentTimeMillis() - time1}")
-
+          if(debug) println(s"$n,${System.currentTimeMillis() - time1}")
         }
       }
     }

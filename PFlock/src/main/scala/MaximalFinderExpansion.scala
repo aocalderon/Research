@@ -256,6 +256,22 @@ object MaximalFinderExpansion {
         .cache()
       var nMaximals = maximals.map(_._2.mkString(" ")).distinct().count()
       logger.info("J.Finding maximal disks... [%.3fs] [%d results]".format((System.currentTimeMillis() - timer)/1000.0, nMaximals))
+
+      //////////////////////////////////////////////////////////////
+      if(debug){
+        val patterns = maximals.map{ p =>
+          val pid = p._1
+          val pat = p._2.mkString(" ")
+          s"$pid,$pat"
+        }
+        new java.io.PrintWriter(s"/tmp/Patterns_${dataset}_${epsilon}_${mu}_${delta}_${timestamp}.txt") {
+          val w = patterns.collect().map(line => s"$line\n").mkString(" ")
+          write(w)
+          close()
+        }
+      }
+      //////////////////////////////////////////////////////////////
+
       // L.Prunning duplicates and subsets...
       timer = System.currentTimeMillis()
       val EMBRs = expandedMBRs.map{ mbr =>

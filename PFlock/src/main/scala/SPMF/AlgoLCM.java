@@ -111,7 +111,7 @@ public class AlgoLCM {
 		    	int supportPe = transactionsPe.size();
 		    	if(supportPe == 1) {
 					output(itemset, supportPe);
-					System.out.println(itemset);
+					//System.out.println(itemset);
 				}
 
 				//long timeDBReduction = System.currentTimeMillis();
@@ -131,7 +131,7 @@ public class AlgoLCM {
 			}
 		}
 		n = n + 1;
-		System.out.println(n + "," + (System.currentTimeMillis() - timeRecursion));
+		//System.out.println(n + "," + (System.currentTimeMillis() - timeRecursion));
 		MemoryLogger.getInstance().checkMemory();
     }
 
