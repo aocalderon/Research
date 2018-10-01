@@ -11,6 +11,7 @@ object LCMmax {
   var buckets: Map[Int, List[Transaction]] = Map.empty
   var uniqueElements: List[Int] = List.empty[Int]
   var patterns: ListBuffer[String] = new ListBuffer[String]()
+  var n: Int = 0
   var debug: Boolean = true
 
   def main(args: Array[String]): Unit = {
@@ -31,6 +32,8 @@ object LCMmax {
     
     val P = new Itemset(List.empty)
     backtracking(P, buckets)
+
+    printN()
     
     new java.io.PrintWriter(output) {
       write(patterns.toList.mkString("\n"))
@@ -38,12 +41,16 @@ object LCMmax {
     }
   }
 
-  def backtracking(P: Itemset, buckets: Map[Int, List[Transaction]]): Itemset = {
+  def backtracking(P: Itemset, buckets: Map[Int, List[Transaction]]): Unit = {
+    //val timeRecursion = System.currentTimeMillis()
+    n = n + 1
     val I = buckets.keys.toList.sorted
     if(I.nonEmpty){
       for(e <- I){
         if(P.nonEmpty && P.contains(e) >= 0) {
         } else {
+//33564,11452
+          val time1 = System.currentTimeMillis()
           var P_prime = P.U(e)
           P_prime.count = buckets(e).size
           val d = buckets(e).toSet.map{ t: Transaction =>
@@ -51,6 +58,7 @@ object LCMmax {
           }
           P_prime.setDenotation(d)
           P_prime = P_prime.getClosure
+
           val isPPC = isPPCExtension(P, P_prime, e)
 
           if(isPPC){
@@ -59,23 +67,24 @@ object LCMmax {
               patterns += pattern
               if(debug) println(pattern)
             }
+            //val timeOcurrence = System.currentTimeMillis()
             val T_prime = buckets(e).map(t => new Transaction(t.items))
             val I_prime = T_prime.flatMap(_.items.filter(_ > e)).distinct
             val buckets_prime = occurrenceDeliver(T_prime, I_prime, e)
 
             backtracking(P_prime, buckets_prime)
           }
+          println(s"$n,${System.currentTimeMillis() - time1}")
+
         }
       }
     }
-
-    P
+    //println(s"$n,${System.currentTimeMillis() - timeRecursion}")
   }
 
   private def isPPCExtension(P: Itemset, P_prime: Itemset, e: Integer): Boolean = {
     if(P_prime != P_prime.closure) return false
     P.clo_tail = P.contains(e)
-    //if(e > P.tail && P_prime.prefix(e - 1) == P.prefix(e - 1))
     if(e > P.clo_tail && P_prime.prefix(e - 1) == P.prefix(e - 1))
       true
     else
@@ -112,7 +121,11 @@ object LCMmax {
     buckets.mapValues(_.distinct)
   }
 
-  def logging(msg: String, timer: Long, n: Long = 0, tag: String = ""): Unit ={
+  def logging(msg: String, timer: Long, n: Long = 0, tag: String = ""): Unit = {
     println("%-50s | %6.2fs | %6d %s".format(msg, (System.currentTimeMillis() - timer)/1000.0, n, tag))
+  }
+
+  def printN(): Unit = {
+    println(s"Number of recursions: $n")
   }
 }

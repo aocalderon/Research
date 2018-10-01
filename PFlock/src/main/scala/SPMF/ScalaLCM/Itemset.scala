@@ -1,7 +1,5 @@
 package SPMF.ScalaLCM
 
-import util.control.Breaks._
-
 class Itemset(i: List[Int]) {
   val items: List[Int] = i.sorted
   var clo_tail: Int = -1
@@ -19,22 +17,6 @@ class Itemset(i: List[Int]) {
   def isEmpty: Boolean = { items.isEmpty }
 
   override def toString: String = s"${items.mkString(" ")}"
-
-  def tail(): Int = {
-    if(this.items.isEmpty) return 0
-    val smeti = this.items.reverse
-    var i = smeti.head
-    for(j <- smeti){
-      val P_j = this.prefix(j)
-      P_j.setDenotation(this.denotation)
-      if(!P_j.closure.items.equals(this.items)){
-        break
-      }
-      i = j
-    }
-
-    i
-  }
 
   def setDenotation(d: Set[Transaction]): Unit = {
     this.denotation = d
@@ -60,7 +42,24 @@ class Itemset(i: List[Int]) {
   override def equals(obj: scala.Any): Boolean = this.items.equals(obj.asInstanceOf[Itemset].items)
 
   def contains(item: Integer): Int = {
+    if (items.isEmpty || item > items.last) return -1
     var low = 0
+    var high = len - 1
+    while ( {
+      high >= low
+    }) {
+      val middle = (low + high) >>> 1 // divide by 2
+      if (items(middle) == item) return middle
+      if (items(middle) < item) low = middle + 1
+      if (items(middle) > item) high = middle - 1
+    }
+    -1
+  }
+
+
+  def containsAfter(item: Integer, after: Int): Int = {
+    if (items.isEmpty || item > items.last) return -1
+    var low = after + 1
     var high = len - 1
     while ( {
       high >= low
