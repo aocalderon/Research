@@ -1,0 +1,17 @@
+#!/bin/bash
+
+EMAIL='pedro.stanaka@gmail.com'
+MACHINE=$(hostname -f)
+DATASET=dummy_test
+
+
+MAILER="extras/notification-email/sendmail.php notification:mailer "
+PHP=$(which php5)
+
+${PHP} ${MAILER} \
+    ${EMAIL} \
+    "This is a test sent by the machine $MACHINE. Finished processing the dataset $DATASET"  \
+    "$MACHINE - notification system"
+
+
+
