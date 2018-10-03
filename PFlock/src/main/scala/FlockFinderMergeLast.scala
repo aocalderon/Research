@@ -23,7 +23,7 @@ object FlockFinderMergeLast {
   private var debug: Boolean = false
   private var print: Boolean = false
   private var precision: Double = 0.001
-  private var splitEpsilon: Double = 0.0 //0.7071
+  private var splitEpsilon: Double = 0.0
 
   def run(): Unit = {
     // Starting a session...
@@ -31,13 +31,16 @@ object FlockFinderMergeLast {
     val partitions = conf.partitions()
     val cores = conf.cores()
     val epsilon_min = conf.epsilon()
-    val epsilon_max = conf.epsilon_max()
+    var epsilon_max = conf.epsilon_max()
+    if(epsilon_max < epsilon_min){ epsilon_max = epsilon_min }
     val epsilon_step = conf.epsilon_step()
     val mu_min = conf.mu()
-    val mu_max = conf.mu_max()
+    var mu_max = conf.mu_max()
+    if(mu_max < mu_min){ mu_max = mu_min }
     val mu_step = conf.mu_step()
     val delta_min = conf.delta()
-    val delta_max = conf.delta_max()
+    var delta_max = conf.delta_max()
+    if(delta_max < delta_min){ delta_max = delta_min }
     val delta_step = conf.delta_step()
 
     val simba = SimbaSession.builder()
@@ -115,7 +118,7 @@ object FlockFinderMergeLast {
     var F_prime: Dataset[Flock] = simba.sparkContext.emptyRDD[Flock].toDS()
     var nF_prime: Long = 0
     val delta: Int = delta_prime - 1
-    val distanceBetweenTimestamps: Double = conf.speed()
+    val distanceBetweenTimestamps: Double = conf.speed() * delta
     val r2 = Math.pow(epsilon / 2.0, 2)
     val maximalDisksCache = collection.mutable.Map[Int, Dataset[Flock]]()
 
