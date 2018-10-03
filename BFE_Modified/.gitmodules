@@ -1,0 +1,3 @@
+[submodule "extras/notification-email"]
+	path = extras/notification-email
+	url = https://github.com/pedro-stanaka/mailer-cli.git

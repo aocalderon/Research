@@ -1,0 +1,104 @@
+NroFlk: 4	LenFlk: 10	DistFlk: 0.7	BFE
+totalTime(ms):	1482.59	timeSearch:	65.62	timeSetTest:	312.012	timeJoin:	470.105	timeBuildIdx:	323.205	totalAnswers:	452
+totalPairs:	57116	totalCenters:	111798	totalClusters:	6369
+****************************************************************
+NroFlk: 6	LenFlk: 10	DistFlk: 0.7	BFE
+totalTime(ms):	832.929	timeSearch:	52.159	timeSetTest:	102.069	timeJoin:	95.605	timeBuildIdx:	305.573	totalAnswers:	88
+totalPairs:	35535	totalCenters:	69508	totalClusters:	1994
+****************************************************************
+NroFlk: 8	LenFlk: 10	DistFlk: 0.7	BFE
+totalTime(ms):	678.086	timeSearch:	34.875	timeSetTest:	40.956	timeJoin:	25.298	timeBuildIdx:	310.36	totalAnswers:	5
+totalPairs:	20300	totalCenters:	39696	totalClusters:	641
+****************************************************************
+NroFlk: 10	LenFlk: 10	DistFlk: 0.7	BFE
+totalTime(ms):	607.869	timeSearch:	22.278	timeSetTest:	21.307	timeJoin:	8.044	timeBuildIdx:	303.563	totalAnswers:	0
+totalPairs:	10530	totalCenters:	20512	totalClusters:	213
+****************************************************************
+NroFlk: 12	LenFlk: 10	DistFlk: 0.7	BFE
+totalTime(ms):	567.527	timeSearch:	14.041	timeSetTest:	15.023	timeJoin:	3.381	timeBuildIdx:	296.801	totalAnswers:	0
+totalPairs:	5436	totalCenters:	10546	totalClusters:	67
+****************************************************************
+NroFlk: 14	LenFlk: 10	DistFlk: 0.7	BFE
+totalTime(ms):	549.41	timeSearch:	8.727	timeSetTest:	9.456	timeJoin:	1.545	timeBuildIdx:	295.822	totalAnswers:	0
+totalPairs:	2116	totalCenters:	4060	totalClusters:	20
+****************************************************************
+NroFlk: 16	LenFlk: 10	DistFlk: 0.7	BFE
+totalTime(ms):	537.794	timeSearch:	6.753	timeSetTest:	6.049	timeJoin:	1.093	timeBuildIdx:	292.825	totalAnswers:	0
+totalPairs:	1316	totalCenters:	2518	totalClusters:	9
+****************************************************************
+NroFlk: 18	LenFlk: 10	DistFlk: 0.7	BFE
+totalTime(ms):	521.068	timeSearch:	5.781	timeSetTest:	5.059	timeJoin:	1.015	timeBuildIdx:	285.034	totalAnswers:	0
+totalPairs:	924	totalCenters:	1776	totalClusters:	8
+****************************************************************
+NroFlk: 20	LenFlk: 10	DistFlk: 0.7	BFE
+totalTime(ms):	518.411	timeSearch:	5.701	timeSetTest:	3.869	timeJoin:	1.035	timeBuildIdx:	285.27	totalAnswers:	0
+totalPairs:	825	totalCenters:	1580	totalClusters:	7
+****************************************************************
+NroFlk: 5	LenFlk: 10	DistFlk: 0.3	BFE
+totalTime(ms):	3744.12	timeSearch:	12.291	timeSetTest:	30.077	timeJoin:	15.429	timeBuildIdx:	1591.39	totalAnswers:	0
+totalPairs:	8869	totalCenters:	16858	totalClusters:	725
+****************************************************************
+NroFlk: 5	LenFlk: 10	DistFlk: 0.4	BFE
+totalTime(ms):	2087.43	timeSearch:	21.195	timeSetTest:	53.825	timeJoin:	28.486	timeBuildIdx:	871.644	totalAnswers:	16
+totalPairs:	15381	totalCenters:	29620	totalClusters:	1203
+****************************************************************
+NroFlk: 5	LenFlk: 10	DistFlk: 0.5	BFE
+totalTime(ms):	1360.31	timeSearch:	31.436	timeSetTest:	71.542	timeJoin:	58.768	timeBuildIdx:	564.582	totalAnswers:	58
+totalPairs:	24073	totalCenters:	46736	totalClusters:	1860
+****************************************************************
+NroFlk: 5	LenFlk: 10	DistFlk: 0.6	BFE
+totalTime(ms):	1029.2	timeSearch:	42.664	timeSetTest:	108.383	timeJoin:	111.687	timeBuildIdx:	386.761	totalAnswers:	136
+totalPairs:	34528	totalCenters:	67366	totalClusters:	2678
+****************************************************************
+NroFlk: 5	LenFlk: 10	DistFlk: 0.7	BFE
+totalTime(ms):	1026.55	timeSearch:	57.201	timeSetTest:	177.897	timeJoin:	206.916	timeBuildIdx:	300.273	totalAnswers:	186
+totalPairs:	45781	totalCenters:	89606	totalClusters:	3523
+****************************************************************
+NroFlk: 5	LenFlk: 10	DistFlk: 0.8	BFE
+totalTime(ms):	1176.16	timeSearch:	76.351	timeSetTest:	266.712	timeJoin:	350.323	timeBuildIdx:	242.892	totalAnswers:	298
+totalPairs:	58446	totalCenters:	114694	totalClusters:	4587
+****************************************************************
+NroFlk: 5	LenFlk: 10	DistFlk: 0.9	BFE
+totalTime(ms):	1535.1	timeSearch:	91.911	timeSetTest:	393.892	timeJoin:	632.485	timeBuildIdx:	205.682	totalAnswers:	496
+totalPairs:	72322	totalCenters:	142182	totalClusters:	5767
+****************************************************************
+NroFlk: 5	LenFlk: 10	DistFlk: 1	BFE
+totalTime(ms):	2168.78	timeSearch:	115.887	timeSetTest:	560.972	timeJoin:	1091.92	timeBuildIdx:	193.955	totalAnswers:	706
+totalPairs:	86708	totalCenters:	170832	totalClusters:	6998
+****************************************************************
+NroFlk: 5	LenFlk: 4	DistFlk: 0.7	BFE
+totalTime(ms):	1018.45	timeSearch:	59.315	timeSetTest:	183.276	timeJoin:	179.752	timeBuildIdx:	305.946	totalAnswers:	1247
+totalPairs:	45781	totalCenters:	89606	totalClusters:	3523
+****************************************************************
+NroFlk: 5	LenFlk: 6	DistFlk: 0.7	BFE
+totalTime(ms):	1010.65	timeSearch:	57.125	timeSetTest:	174.561	timeJoin:	197.47	timeBuildIdx:	299.927	totalAnswers:	645
+totalPairs:	45781	totalCenters:	89606	totalClusters:	3523
+****************************************************************
+NroFlk: 5	LenFlk: 8	DistFlk: 0.7	BFE
+totalTime(ms):	1023.51	timeSearch:	58.73	timeSetTest:	175.944	timeJoin:	206.767	timeBuildIdx:	299.758	totalAnswers:	319
+totalPairs:	45781	totalCenters:	89606	totalClusters:	3523
+****************************************************************
+NroFlk: 5	LenFlk: 10	DistFlk: 0.7	BFE
+totalTime(ms):	1033.81	timeSearch:	57.701	timeSetTest:	178.164	timeJoin:	206.468	timeBuildIdx:	303.792	totalAnswers:	186
+totalPairs:	45781	totalCenters:	89606	totalClusters:	3523
+****************************************************************
+NroFlk: 5	LenFlk: 12	DistFlk: 0.7	BFE
+totalTime(ms):	1070.68	timeSearch:	56.601	timeSetTest:	170.948	timeJoin:	205.299	timeBuildIdx:	334.656	totalAnswers:	129
+totalPairs:	45781	totalCenters:	89606	totalClusters:	3523
+****************************************************************
+NroFlk: 5	LenFlk: 14	DistFlk: 0.7	BFE
+totalTime(ms):	1132.53	timeSearch:	58.609	timeSetTest:	182.081	timeJoin:	203.311	timeBuildIdx:	375.226	totalAnswers:	95
+totalPairs:	45781	totalCenters:	89606	totalClusters:	3523
+****************************************************************
+NroFlk: 5	LenFlk: 16	DistFlk: 0.7	BFE
+totalTime(ms):	1103.23	timeSearch:	62.88	timeSetTest:	186.854	timeJoin:	210.497	timeBuildIdx:	332.684	totalAnswers:	72
+totalPairs:	45781	totalCenters:	89606	totalClusters:	3523
+****************************************************************
+NroFlk: 5	LenFlk: 18	DistFlk: 0.7	BFE
+totalTime(ms):	1077.72	timeSearch:	53.71	timeSetTest:	156.252	timeJoin:	200.57	timeBuildIdx:	352.158	totalAnswers:	52
+totalPairs:	45781	totalCenters:	89606	totalClusters:	3523
+****************************************************************
+NroFlk: 5	LenFlk: 20	DistFlk: 0.7	BFE
+totalTime(ms):	1064.97	timeSearch:	58.514	timeSetTest:	177.807	timeJoin:	200.695	timeBuildIdx:	335.481	totalAnswers:	34
+totalPairs:	45781	totalCenters:	89606	totalClusters:	3523
+****************************************************************############# END - BFE #############
