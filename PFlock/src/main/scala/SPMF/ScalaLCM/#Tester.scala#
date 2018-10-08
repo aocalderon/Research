@@ -77,6 +77,7 @@ object Tester{
         .map(m => (partition_id, m.asScala.toList.map(_.toLong).sorted))
         .toIterator
     }
+
     val globalTransactions = LCMpatterns.map(_._2.mkString(" ").split(" ").map(new Integer(_)).toList.asJava).collect().toSet.asJava
     val globalLCM = new AlgoLCM
     val globalData = new SPMF.Transactions(globalTransactions)
@@ -84,7 +85,7 @@ object Tester{
     val globalPatterns = globalMaximals.getItemsets(mu).asScala.map(_.asScala.toList.map(_.toLong).sorted).toList
 
     val nGlobalPatterns = globalPatterns.size
-    log("Finding maximal patterns LCM...", timer, s"$nGlobalPatterns patterns.")
+    log("Finding global patterns LCM...", timer, s"$nGlobalPatterns patterns.")
   }
 
   def log(msg: String, timer: Long, tag: String = ""): Unit = {
