@@ -379,7 +379,7 @@ object MaximalFinder {
 							new Integer(id.trim)
 						}.
 						sorted.toList.asJava
-					}.toSet.asJava
+					}.toList.asJava
 				val LCM = new AlgoLCM
 				val data = new Transactions(transactions)
 				val closed = LCM.runAlgorithm(1, data)
@@ -421,7 +421,7 @@ object MaximalFinder {
 							new Integer(id.trim)
 						}.
 						sorted.toList.asJava
-					}.toSet.asJava
+					}.toList.asJava
 					val LCM = new AlgoLCM
 					val data = new Transactions(transactions)
 					val closed = LCM.runAlgorithm(1, data)
