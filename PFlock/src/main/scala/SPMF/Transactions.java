@@ -22,7 +22,7 @@ public class Transactions {
     Set<Integer> uniqueItems = new HashSet<>();
 	private int maxItem = 0;
 
-    public Transactions(Set<List<Integer>> ts){
+    public Transactions(List<List<Integer>> ts){
         this.transactions = new ArrayList<>(ts.size());
 
         for (List<Integer> t: ts) {

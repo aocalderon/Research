@@ -1,10 +1,14 @@
 package SPMF.ScalaLCM
 
-import SPMF.{AlgoFPMax, AlgoLCM, Transactions}
+import java.util
+
+import SPMF.{AlgoFPMax, AlgoLCM}
 import org.apache.spark.sql.simba.SimbaSession
-import org.apache.spark.sql.catalyst.ScalaReflection
-import org.apache.spark.sql.types.StructType
 import org.slf4j.{Logger, LoggerFactory}
+import java.io._
+
+import org.apache.spark.rdd.RDD
+
 import scala.collection.JavaConverters._
 
 
@@ -30,61 +34,77 @@ object Tester{
       .config("spark.cores.max", cores)
       .getOrCreate()
     import simba.implicits._
-    import simba.simbaImplicits._
 
     // Reading file...
     var timer = System.currentTimeMillis()
-    val disk_schema = ScalaReflection.schemaFor[DiskFormat].dataType.asInstanceOf[StructType]
     val data = simba.read.option("header", "false")
       .csv(filename)
       .map(d => Disk(d.getString(1)))
-      .sample(false, sample, 42)
+      .sample(withReplacement = false, sample, 42)
       .repartition(partitions)
       .cache()
     val nData = data.count()
     log("Reading file...", timer, s"$nData records.")
-    logger.info(s"Number of partitions: ${data.rdd.getNumPartitions}")
 
-    // Finding maximal patterns FPMax...
+    //Collecting info about partitions...
     timer = System.currentTimeMillis()
-    val FPMAXpatterns = data.rdd.mapPartitionsWithIndex{ (partition_id, disks) =>
-      val transactions = disks
-        .map( candidate => candidate.point_ids.split(" ").map(new Integer(_)).toList.asJava )
-        .toList
-        .asJava
+    val partitionsInfo = data.rdd.mapPartitionsWithIndex{ (partition_id, disks) =>
+      disks.map(d => (partition_id, d.point_ids.split(" ").map(_.toInt).sorted.mkString(" "))).toIterator
+    }.collect().sortBy(_._2).sortBy(_._1)
+    saveToFile(partitionsInfo, s"Partitions_${partitions}_$cores.txt")
+    val nPartitionsInfo = partitionsInfo.map(_._1).distinct.size
+    log("Collecting info about partititons...", timer, s"$nPartitionsInfo partitions")
+
+    // Finding local maximal patterns FPMax...
+    timer = System.currentTimeMillis()
+    val FPMAXlocal = data.rdd.mapPartitionsWithIndex{ (partition_id, disks) =>
+      val transactions = disks.map( candidate => candidate.point_ids.split(" ").map(new Integer(_)).toList.asJava ).toList.asJava
+      saveToFile(transactions, s"/tmp/FPMAXlocal_${partitions}_${cores}_$partition_id.txt")
       val fpmax = new AlgoFPMax
       val maximals = fpmax.runAlgorithm(transactions, 1)
-      maximals.getItemsets(mu)
-        .asScala
-        .map(m => (partition_id, m.asScala.toList.map(_.toLong).sorted))
-        .toIterator
+      maximals.getItemsets(mu).asScala.map(m => (partition_id, m.asScala.toList.map(_.toLong).sorted)).toIterator
     }
-    val nFPMAXpatterns = FPMAXpatterns.count()
-    log("Finding maximal patterns FPMax...", timer, s"$nFPMAXpatterns patterns.")
+    val nFPMAXlocal = FPMAXlocal.count()
+    log("Finding local maximal patterns FPMax...", timer, s"$nFPMAXlocal patterns.")
+    saveToFile(FPMAXlocal, s"/tmp/FPMAXglobal_${partitions}_$cores.txt")
 
-    // Finding maximal patterns LCM...
+    // Finding global maximal patterns LCM...
     timer = System.currentTimeMillis()
-    val LCMpatterns = data.rdd.mapPartitionsWithIndex{ (partition_id, disks) =>
-      val transactions = disks
-        .map( candidate => candidate.point_ids.split(" ").map(new Integer(_)).toList.asJava )
-        .toSet
-        .asJava
+    val FPMAXglobalTransactions = FPMAXlocal.map(_._2.mkString(" ").split(" ").map(new Integer(_)).toList.asJava).collect().toList.asJava
+    val globalFPMAX = new AlgoFPMax
+    val FPMAXglobalMaximals= globalFPMAX.runAlgorithm(FPMAXglobalTransactions, 1)
+    val FPMAXglobalPatterns = FPMAXglobalMaximals.getItemsets(mu).asScala.map(_.asScala.toList.map(_.toLong).sorted).toList
+
+    val nFPMAXglobalPatterns = FPMAXglobalPatterns.size
+    log("Finding global maximal patterns LCM...", timer, s"$nFPMAXglobalPatterns patterns.")
+
+    // Finding local maximal patterns LCM...
+    timer = System.currentTimeMillis()
+    val LCMlocal = data.rdd.mapPartitionsWithIndex{ (partition_id, disks) =>
+      val transactions = disks.map( candidate => candidate.point_ids.split(" ").map(new Integer(_)).toList.asJava).toList.asJava
+      saveToFile(transactions, s"LCMlocal_${partitions}_${cores}_$partition_id.txt")
       val lcm = new AlgoLCM
-      val data = new Transactions(transactions)
+      val data = new SPMF.Transactions(transactions)
       val maximals = lcm.runAlgorithm(1, data)
       maximals.getItemsets(mu)
         .asScala
         .map(m => (partition_id, m.asScala.toList.map(_.toLong).sorted))
         .toIterator
     }
-    val globalTransactions = LCMpatterns.map(_._2.mkString(" ").split(" ").map(new Integer(_)).toList.asJava).collect().toSet.asJava
-    val globalLCM = new AlgoLCM
-    val globalData = new SPMF.Transactions(globalTransactions)
-    val globalMaximals= globalLCM.runAlgorithm(1, globalData)
-    val globalPatterns = globalMaximals.getItemsets(mu).asScala.map(_.asScala.toList.map(_.toLong).sorted).toList
+    val nLCMlocal = LCMlocal.count()
+    log("Finding local maximal patterns LCM...", timer, s"$nLCMlocal patterns.")
+    saveToFile(LCMlocal, s"/tmp/LCMglobal_${partitions}_$cores.txt")
 
-    val nGlobalPatterns = globalPatterns.size
-    log("Finding maximal patterns LCM...", timer, s"$nGlobalPatterns patterns.")
+    // Finding global maximal patterns LCM...
+    timer = System.currentTimeMillis()
+    val LCMglobalTransactions = LCMlocal.map(_._2.mkString(" ").split(" ").map(new Integer(_)).toList.asJava).collect().toList.asJava
+    val globalLCM = new AlgoLCM
+    val LCMglobalData = new SPMF.Transactions(LCMglobalTransactions)
+    val LCMglobalMaximals= globalLCM.runAlgorithm(1, LCMglobalData)
+    val LCMglobalPatterns = LCMglobalMaximals.getItemsets(mu).asScala.map(_.asScala.toList.map(_.toLong).sorted).toList
+
+    val nLCMglobalPatterns = LCMglobalPatterns.size
+    log("Finding global maximal patterns LCM...", timer, s"$nLCMglobalPatterns patterns.")
   }
 
   def log(msg: String, timer: Long, tag: String = ""): Unit = {
@@ -95,6 +115,32 @@ object Tester{
       logger.info("%-40s | %6.2f | %s".format(msg, time, tag))
     }
   }
+
+  def saveToFile(t: util.List[util.List[Integer]], filename: String): Unit = {
+    val pw = new PrintWriter(new File(filename))
+    pw.write(t.asScala.map(_.asScala.toList.map(_.toInt).mkString(" ")).mkString("\n"))
+    pw.close()
+  }
+  def saveToFile(t: util.Set[util.List[Integer]], filename: String): Unit = {
+    val pw = new PrintWriter(new File(filename))
+    pw.write(t.asScala.map(_.asScala.toList.map(_.toInt).mkString(" ")).mkString("\n"))
+    pw.close()
+  }
+
+  def saveToFile(rdd: RDD[(Int, List[Long])], filename: String): Unit = {
+    val pw = new PrintWriter(new File(filename))
+    pw.write(rdd.collect().map(m => s"${m._2.mkString(" ")}").sorted.mkString("\n"))
+    pw.close()
+  }
+
+  def saveToFile(data: Array[(Int, String)], filename: String): Unit = {
+    val pw = new PrintWriter(new File(filename))
+    for(d <- data){
+      pw.write(s"${d._1},${d._2}\n")
+    }
+    pw.close()
+  }
+
 }
 
 import org.rogach.scallop.{ScallopConf, ScallopOption}
@@ -104,7 +150,7 @@ class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
   val master:     ScallopOption[String] = opt[String] (default = Some("local[*]"))
   val partitions: ScallopOption[Int]    = opt[Int]    (default = Some(1024))
   val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(7))
-  val mu:         ScallopOption[Int]    = opt[Int]    (default = Some(3))
+  val mu:         ScallopOption[Int]    = opt[Int]    (default = Some(1))
   val sample:     ScallopOption[Double] = opt[Double] (default = Some(1.0))
 
   verify()

@@ -33,7 +33,7 @@ public class MainTestLCM_saveToMemory {
 		String separator = " ";
 		BufferedReader reader = new BufferedReader(new FileReader(input));
 		String line;
-		Set<List<Integer>> transactions = new HashSet<>();
+		ArrayList<List<Integer>> transactions = new ArrayList<>();
 		while (((line = reader.readLine()) != null)) {
 			String[] lineSplited = line.split(separator);
 			List<Integer> transaction = new ArrayList<>();

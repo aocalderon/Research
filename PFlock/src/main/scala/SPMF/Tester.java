@@ -52,7 +52,7 @@ public class Tester {
             //timer = System.currentTimeMillis();
 			Set<List<Integer>> transactions = map.get(key);
 			Integer size = transactions.size();
-			HashSet<List<Integer>> transactionsSet = new HashSet<>(transactions);
+			ArrayList<List<Integer>> transactionsSet = new ArrayList<>(transactions);
 			transactions.clear();
 			transactions.addAll(transactionsSet);
             //int nTransactions = transactions.size();
@@ -77,7 +77,7 @@ public class Tester {
 			if(algorithm.equals("LCM")){
                 timer = System.currentTimeMillis();
 				AlgoLCM algoLCM = new AlgoLCM();
-				Transactions data = new Transactions(transactions);
+				Transactions data = new Transactions(transactionsSet);
 				Itemsets closedLCM = algoLCM.runAlgorithm(minsup, data);
 				// algoLCM.printStats();
 				// AlgoCharmLCM algoCharmLCM = new AlgoCharmLCM();

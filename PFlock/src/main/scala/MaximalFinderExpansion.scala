@@ -242,7 +242,7 @@ object MaximalFinderExpansion {
                 .split(" ")
                 .map(new Integer(_))
                 .toList.asJava
-              }.toSet.asJava
+              }.toList.asJava
             val LCM = new AlgoLCM
             val data = new Transactions(transactions)
             val maximals = LCM.runAlgorithm(1, data)

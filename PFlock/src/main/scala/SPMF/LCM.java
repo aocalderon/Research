@@ -7,11 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 
 public class LCM {
-    private HashSet<List<Integer>> readFile(String input) throws IOException {
+    private ArrayList<List<Integer>> readFile(String input) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(input));
         String line;
 
-        HashSet<List<Integer>> transactionsSet = new HashSet<>();
+        ArrayList<List<Integer>> transactionsSet = new ArrayList<>();
         while (((line = reader.readLine()) != null)) {
             // split the line into items
             String[] lineSplited = line.split(" ");
@@ -61,7 +61,7 @@ public class LCM {
 
         LCM runner = new LCM();
 
-        HashSet<List<Integer>> transactionsSet = runner.readFile(input);
+        ArrayList<List<Integer>> transactionsSet = runner.readFile(input);
         AlgoLCM lcm = new AlgoLCM();
         Transactions data = new Transactions(transactionsSet);
         Itemsets itemsets = lcm.runAlgorithm(minsup, data);
