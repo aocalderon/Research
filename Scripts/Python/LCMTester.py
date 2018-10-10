@@ -2,6 +2,7 @@ import os
 import argparse
 from subprocess import call
 import logging
+from LCMTesterLib import runLCMunoTest
 
 ## Reading arguments...
 parser = argparse.ArgumentParser()
@@ -26,9 +27,12 @@ p_step        = int(args.p_step)
 c_step        = int(args.c_step)
 p_end         = int(args.p_end)
 c_end         = int(args.c_end)
-debug         = args.debug
 jar_file      = "{}/PFlock/target/scala-2.11/pflock_2.11-2.0.jar".format(os.environ['RESEARCH_HOME'])
 jar_class     = "--class SPMF.ScalaLCM.Tester"
+if args.debug != False:
+    debug = True
+else:
+    debug = False
 
 for partitions in range(p_start, p_end, p_step):
     for cores in range(c_start, c_end, c_step):
@@ -36,4 +40,6 @@ for partitions in range(p_start, p_end, p_step):
         if(debug):
             print(command)
         call([command], shell=True)
+        runLCMunoTest("/tmp/Partitions_{}_{}.txt".format(partitions, cores), debug)
+       
 logging.info("It is done!")
