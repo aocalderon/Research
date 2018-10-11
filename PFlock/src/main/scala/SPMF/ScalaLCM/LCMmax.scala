@@ -27,18 +27,35 @@ object LCMmax {
     }
     val T = transaction_buffer.toList
 
+    val results = run(T)
+    printN()
+
+    new java.io.PrintWriter(output) {
+      write(results.mkString("\n"))
+      close()
+    }
+  }
+
+  def runFromList(D: List[List[Int]]): List[String] = {
+    patterns = new ListBuffer[String]()
+    val T = D.map(d => new Transaction(d))
     uniqueElements = T.flatMap(_.items).distinct.sorted
     buckets = occurrenceDeliver(T)
     
     val P = new Itemset(List.empty)
     backtracking(P, buckets)
 
-    printN()
+    patterns.toList
+  }
+
+  def run(T: List[Transaction]): List[String] = {
+    uniqueElements = T.flatMap(_.items).distinct.sorted
+    buckets = occurrenceDeliver(T)
     
-    new java.io.PrintWriter(output) {
-      write(patterns.toList.mkString("\n"))
-      close()
-    }
+    val P = new Itemset(List.empty)
+    backtracking(P, buckets)
+
+    patterns.toList
   }
 
   def backtracking(P: Itemset, buckets: Map[Int, List[Transaction]]): Unit = {
