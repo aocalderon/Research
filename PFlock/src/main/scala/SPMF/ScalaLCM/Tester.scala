@@ -68,7 +68,7 @@ object Tester{
     log("Finding local maximal patterns FPMax...", timer, s"$nFPMAXlocal patterns.")
     saveToFile(FPMAXlocal, s"/tmp/FPMAXglobal_${partitions}_$cores.txt")
 
-    // Finding global maximal patterns LCM...
+    // Finding global maximal patterns FPMax...
     timer = System.currentTimeMillis()
     val FPMAXglobalTransactions = FPMAXlocal.map(_._2.mkString(" ").split(" ").map(new Integer(_)).toList.asJava).collect().toList.asJava
     val globalFPMAX = new AlgoFPMax
@@ -76,7 +76,7 @@ object Tester{
     val FPMAXglobalPatterns = FPMAXglobalMaximals.getItemsets(mu).asScala.map(_.asScala.toList.map(_.toLong).sorted).toList
 
     val nFPMAXglobalPatterns = FPMAXglobalPatterns.size
-    log("Finding global maximal patterns LCM...", timer, s"$nFPMAXglobalPatterns patterns.")
+    log("Finding global maximal patterns FPMax...", timer, s"$nFPMAXglobalPatterns patterns.")
 
     // Finding local maximal patterns LCM...
     timer = System.currentTimeMillis()
@@ -105,14 +105,35 @@ object Tester{
 
     val nLCMglobalPatterns = LCMglobalPatterns.size
     log("Finding global maximal patterns LCM...", timer, s"$nLCMglobalPatterns patterns.")
+
+    // Finding local maximal patterns Scala LCM...
+    timer = System.currentTimeMillis()
+    val ScalaLCMlocal = data.rdd.mapPartitionsWithIndex{ (partition_id, disks) =>
+      val D = disks.map(_.point_ids.split(" ").map(_.toInt).toList).toList
+      saveToFile(D, s"ScalaLCMlocal_${partitions}_${cores}_$partition_id.txt")
+      val maximals = LCMmax.runFromList(D)
+      maximals.map(m => (partition_id, m.split(" ").map(_.toLong).sorted.toList)).toIterator
+    }
+    val nScalaLCMlocal = ScalaLCMlocal.count()
+    log("Finding local maximal patterns Scala LCM...", timer, s"$nScalaLCMlocal patterns.")
+    saveToFile(ScalaLCMlocal, s"/tmp/ScalaLCMglobal_${partitions}_$cores.txt")
+
+    // Finding global maximal patterns Scala LCM...
+    timer = System.currentTimeMillis()
+    val ScalaLCMglobalTransactions = ScalaLCMlocal.map(_._2.map(_.toString().toInt)).collect().toList
+    val ScalaLCMglobalPatterns = LCMmax.runFromList(ScalaLCMglobalTransactions)
+
+    val nScalaLCMglobalPatterns = ScalaLCMglobalPatterns.size
+    log("Finding global maximal patterns Scala LCM...", timer, s"$nScalaLCMglobalPatterns patterns.")
+
   }
 
   def log(msg: String, timer: Long, tag: String = ""): Unit = {
     val time = (System.currentTimeMillis() - timer) / 1000.0
     if(tag == ""){
-      logger.info("%-40s | %6.2f".format(msg, time))
+      logger.info("%-45s | %6.2f".format(msg, time))
     } else {
-      logger.info("%-40s | %6.2f | %s".format(msg, time, tag))
+      logger.info("%-45s | %6.2f | %s".format(msg, time, tag))
     }
   }
 
@@ -121,9 +142,9 @@ object Tester{
     pw.write(t.asScala.map(_.asScala.toList.map(_.toInt).mkString(" ")).mkString("\n"))
     pw.close()
   }
-  def saveToFile(t: util.Set[util.List[Integer]], filename: String): Unit = {
+  def saveToFile(d: List[List[Int]], filename: String): Unit = {
     val pw = new PrintWriter(new File(filename))
-    pw.write(t.asScala.map(_.asScala.toList.map(_.toInt).mkString(" ")).mkString("\n"))
+    pw.write(d.map(_.mkString(" ")).mkString("\n"))
     pw.close()
   }
 
