@@ -6,8 +6,7 @@ Created on Tue Oct  9 20:12:00 2018
 @author: and
 """
 import pandas as pd
-from subprocess import check_output
-from subprocess import call
+from subprocess import check_output, call
 
 def sortOutput(input_path):
     output_unsort  = open(input_path,  'r')
@@ -22,6 +21,31 @@ def sortOutput(input_path):
     output_path = "{}_sorted.{}".format(name, ext)
     call(['sort', output_temp, '-o', output_path])
     return(output_path)
+    
+def runLCMjavaTest(input_file, debug):
+    jar_class = "--class SPMF.ScalaLCM.LCMjava"
+    jar_file  = "/home/and/Documents/PhD/Research/PFlock/target/scala-2.11/pflock_2.11-2.0.jar"
+    dataset = pd.read_csv(input_file, header=None, names=['id','items'])
+    output = []
+    n = pd.Series(dataset['id']).unique()
+    for i in n:
+        D = pd.Series(dataset.loc[dataset['id'] == i]['items'])
+        data_in = "/tmp/LCMjavaLocalIn_{}.txt".format(i)
+        f = open(data_in,'w')
+        [f.write("{}\n".format(d)) for d in D]
+        f.close()
+        command = "{} {} {} {}".format('spark-submit', jar_class, jar_file, data_in)
+        if debug:
+            print(command)
+        out = check_output([command], shell=True).decode("ascii")
+        output.append( out )
+        print(".", end="", flush=True)
+    print("")
+    data_out = "/tmp/LCMjava_final.txt"
+    g = open(data_out, "w")
+    g.write("".join(output))
+    g.close()
+    
 
 def runLCMunoTest(input_file, debug):
     dataset = pd.read_csv(input_file, header=None, names=['id','items'])
@@ -37,8 +61,6 @@ def runLCMunoTest(input_file, debug):
         if debug:
             print(command)
         out = check_output(['lcm', '_M', data_in, '1', '-']).decode("ascii")
-        if debug:
-            print(out)
         output.append( out )
         print(".", end="", flush=True)
     print("")

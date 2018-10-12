@@ -106,6 +106,7 @@ object Tester{
     val nLCMglobalPatterns = LCMglobalPatterns.size
     log("Finding global maximal patterns LCM...", timer, s"$nLCMglobalPatterns patterns.")
 
+    /*
     // Finding local maximal patterns Scala LCM...
     timer = System.currentTimeMillis()
     val ScalaLCMlocal = data.rdd.mapPartitionsWithIndex{ (partition_id, disks) =>
@@ -125,7 +126,7 @@ object Tester{
 
     val nScalaLCMglobalPatterns = ScalaLCMglobalPatterns.size
     log("Finding global maximal patterns Scala LCM...", timer, s"$nScalaLCMglobalPatterns patterns.")
-
+    */
   }
 
   def log(msg: String, timer: Long, tag: String = ""): Unit = {
