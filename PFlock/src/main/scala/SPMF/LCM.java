@@ -56,8 +56,8 @@ public class LCM {
         int mu = 1;
         String input  = arg[0];
         String output = arg[1];
-        String debug  = "";
-        if(arg.length > 2) debug = arg[2];
+        String flag   = "";
+        if(arg.length > 2) flag = arg[2];
 
         LCM runner = new LCM();
 
@@ -66,16 +66,16 @@ public class LCM {
         Transactions data = new Transactions(transactionsSet);
         Itemsets itemsets = lcm.runAlgorithm(minsup, data);
         ArrayList<ArrayList<Integer>> maximals = itemsets.getItemsets(mu);
-        if(debug.equalsIgnoreCase("debug")) lcm.printStats();
+        if(flag.equalsIgnoreCase("debug")) lcm.printStats();
 
         ArrayList<String> patterns = runner.getSortedPatternsAsStrings(maximals);
-        if(debug.equalsIgnoreCase("debug")){
+        if(flag.equalsIgnoreCase("print")){
             for(String pattern: patterns){
                 System.out.println(pattern);
             }
         }
         runner.savePatterns(patterns, output);
-        lcm.getN();
+        if(flag.equalsIgnoreCase("debug")) lcm.getN();
     }
 }
 

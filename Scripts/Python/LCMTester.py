@@ -2,7 +2,7 @@ import os
 import argparse
 from subprocess import call
 import logging
-from LCMTesterLib import runLCMunoTest
+from LCMTesterLib import runLCMunoTest, runLCMjavaTest
 
 ## Reading arguments...
 parser = argparse.ArgumentParser()
@@ -10,10 +10,10 @@ parser.add_argument("--input_file", "-i",  required=True,      help="Input file.
 parser.add_argument("--master",     "-m",  default="local[*]", help="Master...")
 parser.add_argument("--p_start",    "-ps", default=1,          help="Partitions start...")
 parser.add_argument("--p_step",     "-pt", default=1,          help="Partitions step...")
-parser.add_argument("--p_end",      "-pe", default=1,          help="Partitions end...")
+parser.add_argument("--p_end",      "-pe", default=2,          help="Partitions end...")
 parser.add_argument("--c_start",    "-cs", default=1,          help="Cores start...")
 parser.add_argument("--c_step",     "-ct", default=1,          help="Cores step...")
-parser.add_argument("--c_end",      "-ce", default=1,          help="Cores end...")
+parser.add_argument("--c_end",      "-ce", default=2,          help="Cores end...")
 parser.add_argument("--debug",      "-d",  default=False,      help="Activate debug mode.")
 args = parser.parse_args()
 logging.basicConfig(format="%(asctime)s -> %(message)s")
@@ -40,6 +40,8 @@ for partitions in range(p_start, p_end, p_step):
         if(debug):
             print(command)
         call([command], shell=True)
-        runLCMunoTest("/tmp/Partitions_{}_{}.txt".format(partitions, cores), debug)
+        data_in = "/tmp/Partitions_{}_{}.txt".format(partitions, cores)
+        runLCMunoTest(data_in, debug)
+        runLCMjavaTest(data_in, debug)
        
 logging.info("It is done!")
