@@ -12,9 +12,11 @@ class Itemset(i: List[Int]) {
 
   def U(e: Int): Itemset = { new Itemset(this.items :+ e) }
 
-  def nonEmpty(): Boolean = { items.nonEmpty }
+  def nonEmpty: Boolean = { items.nonEmpty }
 
   def isEmpty: Boolean = { items.isEmpty }
+
+  def tail: Int = { items.reverse.head } 
 
   override def toString: String = s"${items.mkString(" ")}"
 

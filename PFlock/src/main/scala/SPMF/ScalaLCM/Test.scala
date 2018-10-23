@@ -17,12 +17,11 @@ object Test {
   case class OccurrenceDelivery(p: Int, transaction: List[Int])
   case class Item(e: Int)
 
-  var buckets: Map[Int, List[Transaction]] = Map.empty
-  var uniqueElements: List[Int] = List.empty[Int]
-  var patterns: ListBuffer[String] = new ListBuffer[String]()
+  //var buckets: Map[Int, List[Transaction]] = Map.empty
+  //var uniqueElements: List[Int] = List.empty[Int]
+  //var patterns: ListBuffer[String] = new ListBuffer[String]()
   var n: Int = 0
   var debug: Boolean = false
-  var Ps = Stack[List[Int]]()
 
   def main(args: Array[String]): Unit = {
     val conf = new ConfLCMmax2(args)
@@ -33,6 +32,9 @@ object Test {
     val cores      = conf.cores()
     val debug      = conf.debug()
     val print      = conf.print()
+
+    var Ps = Stack[(Itemset, Map[Int, List[Transaction]])]()
+    var patterns = ListBuffer[String]()
 
     val simba = SimbaSession.builder()
       .master(master)
@@ -51,42 +53,55 @@ object Test {
       .cache()
     val nData = data.count()
     logging("Reading file...", timer, nData, "records")
+    data.show(10, truncate=false)
 
-    val T = data.map(d => Items(d.pids.split(" ").map(_.toInt).toList.sorted))
-    T.show(10, truncate=false)
+    val T = data.collect().map(d => new Transaction(d.pids.split(" ").map(_.toInt).toList)).toList
 
-    val I = T.flatMap(_.ids).distinct().collect()
-
-    I.foreach(e => Ps.push(List(e)))
+    val buckets = occurrenceDeliver(T)
+    val I = buckets.keys.toList.sorted.map{ e =>
+      val P = new Itemset(List(e))
+      val call = (P, buckets)
+      Ps.push(call)
+    }
 
     while(Ps.nonEmpty){
-      val P = Ps.pop
-      println(P.mkString(" "))
-      I.filter(_ > P.reverse.head).foreach{ e =>
-        val PUe = P.union(List(e))
-        Ps.push(PUe)
+      val call = Ps.pop
+      val P = call._1
+      val buckets = call._2
+      val I = buckets.keys.toList.sorted
+      I.foreach{ e=>
+        if(P.nonEmpty && P.contains(e) >= 0) {
+        } else {
+          var P_prime = P.U(e)
+
+          P_prime.count = buckets(e).size
+          val d = buckets(e).toSet.map{ t: Transaction =>
+            new Transaction(t.items, t.contains(e))
+          }
+          P_prime.setDenotation(d)
+          P_prime = P_prime.getClosure
+
+          val isPPC = isPPCExtension(P, P_prime, e)
+
+          if(isPPC){
+            if(P_prime.count == 1){
+              var pattern = s"${P_prime.toString}"
+              patterns += pattern
+              //println(pattern)
+            }
+            val T_prime = buckets(e).map(t => new Transaction(t.items))
+            val I_prime = T_prime.flatMap(_.items.filter(_ > e)).distinct
+            val buckets_prime = occurrenceDeliver(T_prime, I_prime, e)
+
+            val call = (P_prime, buckets_prime)
+            Ps.push(call)
+          }
+        }
       }
     }
+    patterns.toList.distinct.foreach(println)
   }
-
   
-  def backT(P: List[Int], I: List[Int]): Unit = {
-    println(P.filter(_ > 0).mkString(" "))
-    I.filter(_ > P.reverse.head).foreach{ e =>
-      backT(P.union(List(e)), I)
-    }
-  }
-
-  def run(T: List[Transaction]): List[String] = {
-    uniqueElements = T.flatMap(_.items).distinct.sorted
-    buckets = occurrenceDeliver(T)
-    
-    val P = new Itemset(List.empty)
-    backtracking(P, buckets)
-
-    patterns.toList
-  }
-
   def backtracking(P: Itemset, buckets: Map[Int, List[Transaction]]): Unit = {
     n = n + 1
     val I = buckets.keys.toList.sorted
@@ -108,7 +123,6 @@ object Test {
           if(isPPC){
             if(P_prime.count == 1){
               var pattern = s"${P_prime.toString}"
-              patterns += pattern
               if(debug) println(pattern)
             }
             val T_prime = buckets(e).map(t => new Transaction(t.items))
@@ -149,6 +163,7 @@ object Test {
 
   def occurrenceDeliver(transactions: List[Transaction]): scala.collection.Map[Int, List[Transaction]] = {
     var buckets = new mutable.HashMap[Int, List[Transaction]]()
+    val uniqueElements = transactions.flatMap(_.items).distinct.sorted
     for (transaction <- transactions) {
       for (element <- uniqueElements) {
         if(transaction.contains(element) >= 0){
