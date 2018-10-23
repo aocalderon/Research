@@ -29,7 +29,7 @@ jar_file        = "PFlock/target/scala-2.11/pflock_2.11-2.0.jar"
 jar_path        = "{}/{}".format(research_home, jar_file)
 lcm_java_class  = "--class SPMF.LCM"
 fpmax_class     = "--class SPMF.FPMax"
-lcm_scala_class = "--class SPMF.ScalaLCM.LCMmax"
+lcm_scala_class = "--class SPMF.ScalaLCM.IterativeLCMmax"
 debug           = args.debug
 start           = int(args.start)
 end             = int(args.end)
@@ -103,7 +103,7 @@ for test in tests:
     output_path    = "Validation/LCM_max/output"
     output_file    = "LCMscala_{}.txt".format(fid)
     lcmscala_out   = "{}/{}/{}".format(research_home, output_path, output_file)
-    command        = "{} {} {} {} {}".format('spark-submit', lcm_scala_class, jar_path, test, lcmscala_out)
+    command        = "{} {} {} --input {} --output {}".format('spark-submit', lcm_scala_class, jar_path, test, lcmscala_out)
     if(debug):
         print(command)
     call([command], shell=True)
