@@ -24,16 +24,16 @@ import java.util.Collections;
 import java.util.List;
 
 public class AlgoLCM {
-    private Itemsets closedFrequentItemsets;
+	private Itemsets closedFrequentItemsets;
 	// the number of frequent itemsets found (for
 	// statistics)
-	private int frequentCount; 
+	private int frequentCount;
 	// the start time and end time of the last algorithm execution
 	private long startTimestamp;
 	private long endTimestamp;
 	// Buckets for occurence delivery
 	// Recall that each bucket correspond to an item
-    // and contains the transactions where the items appears.
+	// and contains the transactions where the items appears.
 	private List[] buckets;
 	private int n = 0;
 
@@ -76,7 +76,7 @@ public class AlgoLCM {
 
 	private void backtrackingLCM(List<Integer> p, List<Transaction> transactionsOfP, List<Integer> frequentItems, int tailPosInP) {
 		long timeRecursion = System.currentTimeMillis();
-        // for each frequent item e
+		// for each frequent item e
 		for (int j = 0; j < frequentItems.size(); j++) {
 			Integer e = frequentItems.get(j);
 			// if the item is not already in p  before the current tail position
@@ -91,25 +91,25 @@ public class AlgoLCM {
 			if (isPPCExtension(p, transactionsPe, e)) {
 				// Create a closed itemset using PU{e...}
 				// First add all items from PU{e}
-		    	List<Integer> itemset = new ArrayList<>();
-		    	if(p != null) {
-			        //add every item i of p  such that i < e to the  itemset
-			        for (int m = 0; m < p.size() && p.get(m) < e; m++) {
-			        	itemset.add(p.get(m));
-			        }
-		    	}
-		    	itemset.add(e);
-		    	int tailPositionInPe = itemset.size()-1;
-		    	for (int k = j+1; k < frequentItems.size(); k++) {
+				List<Integer> itemset = new ArrayList<>();
+				if(p != null) {
+					//add every item i of p  such that i < e to the  itemset
+					for (int m = 0; m < p.size() && p.get(m) < e; m++) {
+						itemset.add(p.get(m));
+					}
+				}
+				itemset.add(e);
+				int tailPositionInPe = itemset.size()-1;
+				for (int k = j+1; k < frequentItems.size(); k++) {
 					Integer itemk = frequentItems.get(k);
-		            // for every item i > e add if it is in all transactions of T(P U e)
-		            if(isItemInAllTransactions(transactionsPe, itemk)) {
-		            	itemset.add(itemk);
-		            }
-		        }
-		        // save the frequent closed itemset
-		    	int supportPe = transactionsPe.size();
-		    	if(supportPe == 1) {
+					// for every item i > e add if it is in all transactions of T(P U e)
+					if(isItemInAllTransactions(transactionsPe, itemk)) {
+						itemset.add(itemk);
+					}
+				}
+				// save the frequent closed itemset
+				int supportPe = transactionsPe.size();
+				if(supportPe == 1) {
 					output(itemset, supportPe);
 					//System.out.println(itemset);
 				}
@@ -117,15 +117,15 @@ public class AlgoLCM {
 				//long timeDBReduction = System.currentTimeMillis();
 				// perform database reduction
 				anyTimeDatabaseReductionClosed(transactionsPe, j, frequentItems, e);
-		    	// Find frequent items in transactions containing P
-		        // Get all frequent items e such that e > tailOfP  
-		    	// (i.e. "e" appears after the position of the tail item in the list of all items)
+				// Find frequent items in transactions containing P
+				// Get all frequent items e such that e > tailOfP
+				// (i.e. "e" appears after the position of the tail item in the list of all items)
 				List<Integer> newFrequentItems = new ArrayList<>();
-		    	for (int k = j+1; k < frequentItems.size(); k++) {
-		        	Integer itemK =  frequentItems.get(k);
-	            	newFrequentItems.add(itemK);
-		        }
-		        //System.out.println(n + ". DB Reduction... " + (System.currentTimeMillis() - timeDBReduction));
+				for (int k = j+1; k < frequentItems.size(); k++) {
+					Integer itemK =  frequentItems.get(k);
+					newFrequentItems.add(itemK);
+				}
+				//System.out.println(n + ". DB Reduction... " + (System.currentTimeMillis() - timeDBReduction));
 				// recursive call
 				backtrackingLCM(itemset, transactionsPe, newFrequentItems, tailPositionInPe);
 			}
@@ -133,7 +133,7 @@ public class AlgoLCM {
 		n = n + 1;
 		//System.out.println(n + "," + (System.currentTimeMillis() - timeRecursion));
 		MemoryLogger.getInstance().checkMemory();
-    }
+	}
 
 	private void performFirstOccurenceDelivery(Transactions dataset) {
 		buckets = new List[dataset.getMaxItem() + 1];
@@ -144,13 +144,13 @@ public class AlgoLCM {
 		}
 	}
 
-    private void anyTimeDatabaseReductionClosed(List<Transaction> transactionsPe, int j, List<Integer> frequentItems, Integer e) {
+	private void anyTimeDatabaseReductionClosed(List<Transaction> transactionsPe, int j, List<Integer> frequentItems, Integer e) {
 		// We just reset the buckets for item  > e instead of all buckets
 		for (int i = j+1; i < frequentItems.size(); i++) {
 			Integer item = frequentItems.get(i);
 			buckets[item] = new ArrayList<>();
 		}
-       // for each transaction
+		// for each transaction
 		for(Transaction transaction : transactionsPe) {
 			// we consider each item I  of the transaction such that  itemI > e
 			for(int i = transaction.getItems().length-1; i >transaction.getOffset(); i--) {
@@ -160,7 +160,7 @@ public class AlgoLCM {
 			}
 		}
 	}
-    
+
 	private boolean containsByBinarySearch(List<Integer> items, Integer item, int searchAfterPosition) {
 		if(items.size() == 0 || item > items.get(items.size() -1)) {
 			return false;
@@ -182,7 +182,7 @@ public class AlgoLCM {
 		}
 		return false;
 	}
-	
+
 	private boolean containsByBinarySearch(List<Integer> items, Integer item) {
 		if(items.size() == 0 || item > items.get(items.size() -1)) {
 			return false;
@@ -204,74 +204,74 @@ public class AlgoLCM {
 		}
 		return false;
 	}
-	
+
 	private List<Transaction> intersectTransactions(List<Transaction> transactionsOfP, Integer e) {
-        List<Transaction> transactionsPe = new ArrayList<>();
+		List<Transaction> transactionsPe = new ArrayList<>();
 
-        // transactions of P U e
-        for(Transaction transaction : transactionsOfP) {
-        	// we remember the position where e appears.
-        	// we will call this position an "offset"
-        	int posE = transaction.containsByBinarySearch(e);
-            if (posE != -1) { // T(P U e)
-                transactionsPe.add(new Transaction(transaction, posE));
-            }
-        }
-        return transactionsPe;
-    }
+		// transactions of P U e
+		for(Transaction transaction : transactionsOfP) {
+			// we remember the position where e appears.
+			// we will call this position an "offset"
+			int posE = transaction.containsByBinarySearch(e);
+			if (posE != -1) { // T(P U e)
+				transactionsPe.add(new Transaction(transaction, posE));
+			}
+		}
+		return transactionsPe;
+	}
 
 
-    /**
-     * Check if a given itemset PUe is a PPC extension according to
-     * the set of transactions containing PUe.
-     * @param p the itemset p
-     * @param e the item e
-     * @param transactionsPe  the transactions containing P U e
-     * @return true if it is a PPC extension
-     */
-    private boolean isPPCExtension(List<Integer> p, List<Transaction> transactionsPe, Integer e) {
-    	// We do a loop on each item i of the first transaction 
-    	if(transactionsPe.size() == 0) { return false; }
-    	Transaction firstTrans = transactionsPe.get(0);
-    	Integer[] firstTransaction = firstTrans.getItems();
-        for (int i = 0; i < firstTrans.getOffset(); i++) {
-        	Integer item = firstTransaction[i];
-            // if p does not contain item i < e and item i is present in all transactions, 
-        	// then it PUe is not a ppc
-            if(item < e && (p == null || !containsByBinarySearch(p,item))
-                    && isItemInAllTransactionsExceptFirst(transactionsPe, item)) {
-                    //&& isItemInAllTransactions(transactionsPe, item)) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    private boolean isItemInAllTransactionsExceptFirst(List<Transaction> transactions, Integer item) {
-    	for(int i=1; i < transactions.size(); i++) {
-            if(!transactions.get(i).containsByBinarySearchOriginalTransaction(item)) {
-                return false;
-            }
-        }
-        return true;
-    }
+	/**
+	 * Check if a given itemset PUe is a PPC extension according to
+	 * the set of transactions containing PUe.
+	 * @param p the itemset p
+	 * @param e the item e
+	 * @param transactionsPe  the transactions containing P U e
+	 * @return true if it is a PPC extension
+	 */
+	private boolean isPPCExtension(List<Integer> p, List<Transaction> transactionsPe, Integer e) {
+		// We do a loop on each item i of the first transaction
+		if(transactionsPe.size() == 0) { return false; }
+		Transaction firstTrans = transactionsPe.get(0);
+		Integer[] firstTransaction = firstTrans.getItems();
+		for (int i = 0; i < firstTrans.getOffset(); i++) {
+			Integer item = firstTransaction[i];
+			// if p does not contain item i < e and item i is present in all transactions,
+			// then it PUe is not a ppc
+			if(item < e && (p == null || !containsByBinarySearch(p,item))
+					&& isItemInAllTransactionsExceptFirst(transactionsPe, item)) {
+				//&& isItemInAllTransactions(transactionsPe, item)) {
+				return false;
+			}
+		}
+		return true;
+	}
 
-    private boolean isItemInAllTransactions(List<Transaction> transactions, Integer item) {
-        for(Transaction transaction : transactions) {
-            if(transaction.containsByBinarySearch(item) == -1) {
-                return false;
-            }
-        }
-        return true;
-    }
+	private boolean isItemInAllTransactionsExceptFirst(List<Transaction> transactions, Integer item) {
+		for(int i=1; i < transactions.size(); i++) {
+			if(!transactions.get(i).containsByBinarySearchOriginalTransaction(item)) {
+				return false;
+			}
+		}
+		return true;
+	}
 
-    private void output(List<Integer> itemset, int support){
-    	// if not the empty set
-        if(!itemset.isEmpty()) {
-            frequentCount++;
-       		closedFrequentItemsets.addItemset(new Itemset(itemset, support), itemset.size());
-        }
-    }
+	private boolean isItemInAllTransactions(List<Transaction> transactions, Integer item) {
+		for(Transaction transaction : transactions) {
+			if(transaction.containsByBinarySearch(item) == -1) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private void output(List<Integer> itemset, int support){
+		// if not the empty set
+		if(!itemset.isEmpty()) {
+			frequentCount++;
+			closedFrequentItemsets.addItemset(new Itemset(itemset, support), itemset.size());
+		}
+	}
 
 	public double getTime() {
 		return (endTimestamp - startTimestamp)/1000.0;
@@ -283,13 +283,13 @@ public class AlgoLCM {
 
 	public void printStats() {
 		System.out.println("========== LCM - STATS ============");
-		System.out.println(" Freq. closed itemsets count: " + frequentCount);			
+		System.out.println(" Freq. closed itemsets count: " + frequentCount);
 		System.out.println(" Total time ~: " + (endTimestamp - startTimestamp) + " ms");
 		System.out.println(" Max memory:" + MemoryLogger.getInstance().getMaxMemory());
 		System.out.println("=====================================");
 	}
 
 	public void getN(){
-    	System.out.println("Number of recursions: " + n);
+		System.out.println("Number of recursions: " + n);
 	}
 }

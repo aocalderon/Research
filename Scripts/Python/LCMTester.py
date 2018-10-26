@@ -2,7 +2,7 @@ import os
 import argparse
 from subprocess import call
 import logging
-from LCMTesterLib import runLCMunoTest, runLCMjavaTest
+from LCMTesterLib import runLCMuno
 
 ## Reading arguments...
 parser = argparse.ArgumentParser()
@@ -34,14 +34,21 @@ if args.debug != False:
 else:
     debug = False
 
-for partitions in range(p_start, p_end, p_step):
-    for cores in range(c_start, c_end, c_step):
-        command = "{} {} {} --input {} --master {} --partitions {} --cores {}".format('spark-submit', jar_class, jar_file, input_file, master, partitions, cores)
-        if(debug):
-            print(command)
-        call([command], shell=True)
-        data_in = "/tmp/Partitions_{}_{}.txt".format(partitions, cores)
-        runLCMunoTest(data_in, debug)
-        runLCMjavaTest(data_in, debug)
+for pid in range(1,10,1):
+    for partitions in range(p_start, p_end, p_step):
+        for cores in range(c_start, c_end, c_step):
+            command = "{} {} {} --input {} --master {} --partitions {} --cores {} --pid {}".format('spark-submit', jar_class, jar_file, input_file, master, partitions, cores, pid)
+            if(debug):
+                print(command)
+            call([command], shell=True)
+            call(['sort', '/tmp/JavaLCMmax.txt', '-o' , '/tmp/JavaLCMmax_sorted.txt'])
+            call(['sort', '/tmp/ScalaLCMmax.txt', '-o' , '/tmp/ScalaLCMmax_sorted.txt'])
+            
+            data_in = "/tmp/Partitions_{}_{}.txt".format(partitions, cores)
+            n = runLCMuno(data_in, debug)
+            print("Finding maximal patterns LCM Uno... {} patterns".format(n))
+            
+            call(['diff', '-s', 'JavaLCMmax_sorted.txt', 'results_sequential_sorted.txt'])
+            call(['diff', '-s', 'ScalaLCMmax_sorted.txt', 'results_sequential_sorted.txt'])
        
 logging.info("It is done!")

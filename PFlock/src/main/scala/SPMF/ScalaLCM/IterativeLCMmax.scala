@@ -8,6 +8,8 @@ import scala.collection.mutable._
 object IterativeLCMmax {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   var n: Int = 0
+  var N: Int = 0
+  var debug: Boolean = false
 
   def main(args: Array[String]): Unit = {
     val conf = new ConfIterativeLCMmax(args)
@@ -16,9 +18,9 @@ object IterativeLCMmax {
     val master     = conf.master()
     val partitions = conf.partitions()
     val cores      = conf.cores()
-    val debug      = conf.debug()
     val print      = conf.print()
-    val N          = conf.iterations()
+    debug      = conf.debug()
+    N          = conf.iterations()
 
     val simba = SimbaSession.builder()
       .master(master)
@@ -42,18 +44,24 @@ object IterativeLCMmax {
     val T = data.collect().map{ line =>
       new Transaction(line.split(" ").map(_.toInt).toList)
     }.toList
+
+    timer = System.currentTimeMillis()
+    val patterns = run(T)
+    if(debug) logging("Finding patterns...", timer, patterns.length, "patterns")
+
+    if(debug) println("")
+    if(print) patterns.foreach(println)
+    if(output.nonEmpty) savePatterns(patterns, output)
+    if(debug) printN()
+  }
+
+  def run(T: List[Transaction]): List[String] = {
     val buckets = occurrenceDeliver(T)
 
     var Ps = Stack[(Itemset, Map[Int, List[Transaction]])]()
-    /*val I = buckets.keys.toList.sorted.map{ e =>
-      val P = new Itemset(List(e))
-      val call = (P, buckets)
-      Ps.push(call)
-     }*/
     val P = new Itemset(List.empty)
     Ps.push((P, buckets))
 
-    timer = System.currentTimeMillis()
     var patterns = ListBuffer[String]()
     while(Ps.nonEmpty){
       n = n + 1
@@ -61,7 +69,7 @@ object IterativeLCMmax {
       val P = call._1
       val buckets = call._2
       val I = buckets.keys.toList.sorted
-      I.foreach{ e=>
+      I.foreach{ e =>
         if(P.nonEmpty && P.contains(e) >= 0) {
         } else {
           var P_prime = P.U(e)
@@ -77,9 +85,8 @@ object IterativeLCMmax {
 
           if(isPPC){
             if(P_prime.count == 1){
-              var pattern = s"${P_prime.toString}"
+              val pattern = s"${P_prime.toString}"
               patterns += pattern
-              //println(pattern)
             }
             val T_prime = buckets(e).map(t => new Transaction(t.items))
             val I_prime = T_prime.flatMap(_.items.filter(_ > e)).distinct
@@ -92,12 +99,8 @@ object IterativeLCMmax {
         }
       }
     }
-    if(debug) println("")
-    if(print) patterns.toList.distinct.foreach(println)
-    if(output.nonEmpty) savePatterns(patterns.toList.distinct, output)
-    if(debug) logging("Finding patterns...", timer, patterns.length, "patterns")
-    if(debug) printN()
-  }  
+    patterns.toList.distinct
+  }
 
   private def isPPCExtension(P: Itemset, P_prime: Itemset, e: Integer): Boolean = {
     if(P_prime != P_prime.closure) return false

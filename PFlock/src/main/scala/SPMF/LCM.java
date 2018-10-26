@@ -3,7 +3,6 @@ package SPMF;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 public class LCM {
@@ -28,9 +27,9 @@ public class LCM {
         return transactionsSet;
     }
 
-    private ArrayList<String> getSortedPatternsAsStrings(ArrayList<ArrayList<Integer>> maximals){
+    private ArrayList<String> getSortedPatternsAsStrings(ArrayList<List<Integer>> maximals){
         ArrayList<String> lcmStrings = new ArrayList<>();
-        for (ArrayList<Integer> m: maximals) {
+        for (List<Integer> m: maximals) {
             StringBuilder pattern = new StringBuilder();
             for(Integer i: m){
                 pattern.append(i).append(" ");
@@ -52,8 +51,6 @@ public class LCM {
     }
 
     public static void main(String[] arg) throws IOException {
-        int minsup = 1;
-        int mu = 1;
         String input  = arg[0];
         String output = arg[1];
         String flag   = "";
@@ -62,10 +59,9 @@ public class LCM {
         LCM runner = new LCM();
 
         ArrayList<List<Integer>> transactionsSet = runner.readFile(input);
-        AlgoLCM lcm = new AlgoLCM();
+        AlgoLCM2 lcm = new AlgoLCM2();
         Transactions data = new Transactions(transactionsSet);
-        Itemsets itemsets = lcm.runAlgorithm(minsup, data);
-        ArrayList<ArrayList<Integer>> maximals = itemsets.getItemsets(mu);
+        ArrayList<List<Integer>> maximals = lcm.run(data);
         if(flag.equalsIgnoreCase("debug")) lcm.printStats();
 
         ArrayList<String> patterns = runner.getSortedPatternsAsStrings(maximals);
