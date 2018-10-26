@@ -2,7 +2,7 @@ package SPMF.ScalaLCM
 
 import java.util
 
-import SPMF.{AlgoFPMax, AlgoLCM}
+import SPMF.{AlgoFPMax, AlgoLCM2}
 import org.apache.spark.sql.simba.SimbaSession
 import org.slf4j.{Logger, LoggerFactory}
 import java.io._
@@ -24,7 +24,7 @@ object Tester{
     val partitions = conf.partitions()
     val cores      = conf.cores()
     val mu         = conf.mu()
-    val sample     = conf.sample()
+    val pid        = conf.pid()
 
     println(s"master=$master partitions=$partitions cores=$cores")
     val simba = SimbaSession.builder()
@@ -39,8 +39,8 @@ object Tester{
     var timer = System.currentTimeMillis()
     val data = simba.read.option("header", "false")
       .csv(filename)
+      .filter(r => r.getString(0).trim.toInt == pid)
       .map(d => Disk(d.getString(1)))
-      .sample(withReplacement = false, sample, 42)
       .repartition(partitions)
       .cache()
     val nData = data.count()
@@ -83,11 +83,10 @@ object Tester{
     val LCMlocal = data.rdd.mapPartitionsWithIndex{ (partition_id, disks) =>
       val transactions = disks.map( candidate => candidate.point_ids.split(" ").map(new Integer(_)).toList.asJava).toList.asJava
       saveToFile(transactions, s"LCMlocal_${partitions}_${cores}_$partition_id.txt")
-      val lcm = new AlgoLCM
+      val lcm = new AlgoLCM2
       val data = new SPMF.Transactions(transactions)
-      val maximals = lcm.runAlgorithm(1, data)
-      maximals.getItemsets(mu)
-        .asScala
+      val maximals = lcm.run(data)
+      maximals.asScala
         .map(m => (partition_id, m.asScala.toList.map(_.toLong).sorted))
         .toIterator
     }
@@ -98,21 +97,21 @@ object Tester{
     // Finding global maximal patterns LCM...
     timer = System.currentTimeMillis()
     val LCMglobalTransactions = LCMlocal.map(_._2.mkString(" ").split(" ").map(new Integer(_)).toList.asJava).collect().toList.asJava
-    val globalLCM = new AlgoLCM
+    val globalLCM = new AlgoLCM2
     val LCMglobalData = new SPMF.Transactions(LCMglobalTransactions)
-    val LCMglobalMaximals= globalLCM.runAlgorithm(1, LCMglobalData)
-    val LCMglobalPatterns = LCMglobalMaximals.getItemsets(mu).asScala.map(_.asScala.toList.map(_.toLong).sorted).toList
+    val LCMglobalMaximals= globalLCM.run(LCMglobalData)
+    val LCMglobalPatterns = LCMglobalMaximals.asScala.map(_.asScala.toList.map(_.toLong).sorted).toList
 
     val nLCMglobalPatterns = LCMglobalPatterns.size
     log("Finding global maximal patterns LCM...", timer, s"$nLCMglobalPatterns patterns.")
+    saveToFileJava(LCMglobalPatterns, "/tmp/JavaLCMmax.txt")
 
-    /*
     // Finding local maximal patterns Scala LCM...
     timer = System.currentTimeMillis()
     val ScalaLCMlocal = data.rdd.mapPartitionsWithIndex{ (partition_id, disks) =>
       val D = disks.map(_.point_ids.split(" ").map(_.toInt).toList).toList
       saveToFile(D, s"ScalaLCMlocal_${partitions}_${cores}_$partition_id.txt")
-      val maximals = LCMmax.runFromList(D)
+      val maximals = IterativeLCMmax.run(D.map(d => new Transaction(d)))
       maximals.map(m => (partition_id, m.split(" ").map(_.toLong).sorted.toList)).toIterator
     }
     val nScalaLCMlocal = ScalaLCMlocal.count()
@@ -122,11 +121,11 @@ object Tester{
     // Finding global maximal patterns Scala LCM...
     timer = System.currentTimeMillis()
     val ScalaLCMglobalTransactions = ScalaLCMlocal.map(_._2.map(_.toString().toInt)).collect().toList
-    val ScalaLCMglobalPatterns = LCMmax.runFromList(ScalaLCMglobalTransactions)
+    val ScalaLCMglobalPatterns = IterativeLCMmax.run(ScalaLCMglobalTransactions.map(g => new Transaction(g)))
 
     val nScalaLCMglobalPatterns = ScalaLCMglobalPatterns.size
     log("Finding global maximal patterns Scala LCM...", timer, s"$nScalaLCMglobalPatterns patterns.")
-    */
+    saveToFileScala(ScalaLCMglobalPatterns, "/tmp/ScalaLCMmax.txt")
   }
 
   def log(msg: String, timer: Long, tag: String = ""): Unit = {
@@ -146,6 +145,18 @@ object Tester{
   def saveToFile(d: List[List[Int]], filename: String): Unit = {
     val pw = new PrintWriter(new File(filename))
     pw.write(d.map(_.mkString(" ")).mkString("\n"))
+    pw.close()
+  }
+
+  def saveToFileJava(d: List[List[Long]], filename: String): Unit = {
+    val pw = new PrintWriter(new File(filename))
+    pw.write(d.map(_.mkString(" ")).mkString("\n"))
+    pw.close()
+  }
+
+  def saveToFileScala(d: List[String], filename: String): Unit = {
+    val pw = new PrintWriter(new File(filename))
+    pw.write(d.mkString("\n") ++ "\n")
     pw.close()
   }
 
@@ -173,7 +184,7 @@ class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
   val partitions: ScallopOption[Int]    = opt[Int]    (default = Some(1024))
   val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(7))
   val mu:         ScallopOption[Int]    = opt[Int]    (default = Some(1))
-  val sample:     ScallopOption[Double] = opt[Double] (default = Some(1.0))
+  val pid:        ScallopOption[Int]    = opt[Int]    (default = Some(1))
 
   verify()
 }
