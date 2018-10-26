@@ -28,6 +28,7 @@ ensime*
 *.cache
 *.log
 *.class
+*.pyc
 metastore_db
 spark-warehouse
 .RData
