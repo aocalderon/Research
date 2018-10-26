@@ -22,6 +22,17 @@ def sortOutput(input_path):
     call(['sort', output_temp, '-o', output_path])
     return(output_path)
     
+def runLCMuno2(input_file, debug):
+    results = "/tmp/sequential.txt"
+    command = "{} {} {} {} {}".format('lcm', '_M', input_file, '1', results)
+    if debug:
+        print(command)
+    call(['lcm', '_M', input_file, '1', results])
+    
+    r2 = sortOutput(results)    
+    n = check_output(['wc', r2]).decode('ascii').split(" ")[2]
+    return(n)    
+    
 def runLCMuno(input_file, debug):
     dataset = pd.read_csv(input_file, header=None, names=['id','items'])
     results2 = "/tmp/results_sequential.txt"
