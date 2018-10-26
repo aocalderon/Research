@@ -203,12 +203,14 @@ object MaximalFinderExpansion {
         val datasets = candidates2.mapPartitionsWithIndex{ (partitionIndex, partitionCandidates) =>
           partitionCandidates.map{ m =>
             val ids = m.items.split(" ").map(_.toLong).distinct.mkString(" ")
+            val x   = m.x
+            val y   = m.y
 
-            s"$partitionIndex,$ids"
+            s"$partitionIndex,$ids,$x,$y\n"
           }
         }
         new java.io.PrintWriter(s"/tmp/Datasets_${dataset}_${epsilon}_${mu}_${delta}_${timestamp}.txt") {
-          val w = datasets.collect().map(line => s"$line\n").mkString(" ")
+          val w = datasets.collect().mkString("")
           write(w)
           close()
         }
