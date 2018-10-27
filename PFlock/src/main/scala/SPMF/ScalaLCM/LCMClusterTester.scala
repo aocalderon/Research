@@ -4,6 +4,7 @@ import java.util
 
 import SPMF.{AlgoFPMax, AlgoLCM2}
 import org.apache.spark.sql.simba.SimbaSession
+import org.apache.spark.sql.simba.index.RTreeType
 import org.slf4j.{Logger, LoggerFactory}
 import java.io._
 
@@ -15,7 +16,7 @@ import scala.collection.JavaConverters._
 object LCMClusterTester{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   case class DiskFormat(partition_id: String, point_ids: String)
-  case class Disk(point_ids: String)
+  case class Disk(point_ids: String, x: Double, y: Double)
 
   def main(args: Array[String]): Unit = {
     val conf = new LCMClusterTesterConf(args)
@@ -33,13 +34,15 @@ object LCMClusterTester{
       .config("spark.cores.max", cores)
       .getOrCreate()
     import simba.implicits._
+    import simba.simbaImplicits._
 
     // Reading file...
     var timer = System.currentTimeMillis()
     val data = simba.read.option("header", "false")
       .csv(filename)
-      .map(d => Disk(d.getString(0)))
-      .repartition(partitions)
+      .map(d => Disk(d.getString(1), d.getString(2).trim.toDouble, d.getString(3).trim.toDouble))
+       .distinct()
+      .index(RTreeType, "dRT", Array("x", "y"))
       .cache()
     val nData = data.count()
     log("Reading file...", timer, s"$nData records.")
