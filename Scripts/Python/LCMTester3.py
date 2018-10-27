@@ -31,8 +31,8 @@ if args.debug != False:
 else:
     debug = False
 
-partitions = [1024]
-cores = [4]
+partitions = [900, 1000, 1100, 1200]
+cores = [32]
 
 for did in range(d_start, d_end):
     input_file = "{}{}{}.{}".format(path_file, prefix_file, did, extension)
