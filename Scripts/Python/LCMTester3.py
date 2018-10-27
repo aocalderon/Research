@@ -8,7 +8,7 @@ from LCMTesterLib import runLCMuno2
 ## Reading arguments...
 parser = argparse.ArgumentParser()
 parser.add_argument("--path_file",   "-i",  required=True,      help="Input file...")
-parser.add_argument("--prefix_file", "-p",  default="d",        help="Prefix file...")
+parser.add_argument("--prefix_file", "-p",  default="a",        help="Prefix file...")
 parser.add_argument("--ext_file",    "-e",  default="txt",      help="Extension file...")
 parser.add_argument("--master",      "-m",  default="local[*]", help="Master...")
 parser.add_argument("--d_start",     "-ds", default=0,          help="Dataset ID start...")
@@ -31,7 +31,7 @@ if args.debug != False:
 else:
     debug = False
 
-partitions = [512, 1024, 2048]
+partitions = [1024]
 cores = [4]
 
 for did in range(d_start, d_end):
