@@ -13,7 +13,7 @@ class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
   val dataset:    ScallopOption[String] 	= opt[String]	(default = Some("berlin0-2"))
   val extension:  ScallopOption[String] 	= opt[String] 	(default = Some("tsv"))
   val separator:  ScallopOption[String] 	= opt[String] 	(default = Some("\t"))
-  val method:     ScallopOption[String] 	= opt[String] 	(default = Some("fpmax"))
+  val method:     ScallopOption[String] 	= opt[String] 	(default = Some("lcm"))
   val debug:      ScallopOption[Boolean]	= opt[Boolean]	(default = Some(false))
   // FlockFinder parameters
   val delta:	  ScallopOption[Int]    	= opt[Int]    	(default = Some(3))
