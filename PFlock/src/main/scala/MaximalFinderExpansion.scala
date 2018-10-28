@@ -1,4 +1,4 @@
-import SPMF.{AlgoFPMax, AlgoLCM, Transactions}
+import SPMF.{AlgoFPMax, AlgoLCM2, Transactions}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.simba.SimbaSession
@@ -220,6 +220,7 @@ object MaximalFinderExpansion {
       // K.Finding maximal disks...
       timer = System.currentTimeMillis()
       val method = conf.method()
+      if(debug) { logger.info(s"Running $method algorithm...")  }
       val maximals = candidates2
         .mapPartitionsWithIndex{ (partitionIndex, partitionCandidates) =>
           var maximalsIterator: Iterator[(Int, List[Long])] = null
@@ -245,11 +246,10 @@ object MaximalFinderExpansion {
                 .map(new Integer(_))
                 .toList.asJava
               }.toList.asJava
-            val LCM = new AlgoLCM
+            val LCM = new AlgoLCM2
             val data = new Transactions(transactions)
-            val maximals = LCM.runAlgorithm(1, data)
-            maximalsIterator = maximals.getItemsets(mu)
-              .asScala
+            val maximals = LCM.run(data)
+            maximalsIterator = maximals.asScala
               .map(m => (partitionIndex, m.asScala.toList.map(_.toLong).sorted))
               .toIterator
           }
