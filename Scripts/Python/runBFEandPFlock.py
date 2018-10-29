@@ -1,6 +1,9 @@
 import subprocess
 import argparse
 import os
+import logging
+import time
+import sys
 
 ## Reading arguments...
 parser = argparse.ArgumentParser()
@@ -26,17 +29,25 @@ dataset = args.dataset
 extension = args.extension
 bfe_dataset = "{0}{1}{2}.{3}".format(research_home, path, dataset, extension)
 ## Running BFE...
+logging.basicConfig(format="%(asctime)s -> %(message)s")
+
 command = "bfe {0} {1} {2} {3}".format(bfe_dataset, epsilon, mu, delta)
 print(command)
 if(args.bfe):
+  timeBFE = time.time()
   subprocess.call(command, shell=True)
+  logging.info("LOG_BFE,{},{},{},{}".format(epsilon, mu, delta, time.time() - timeBFE))
+  sys.stdout.flush()
 
 pflock = "{0}{1}".format(research_home, "PFlock/target/scala-2.11/pflock_2.11-2.0.jar")
 ## Running PFlock...
-command = "spark-submit --class FlockFinderMergeLast {0} --epsilon {1} --epsilon_max {1} --mu {2} --mu_max {2} --delta {3} --delta_max {3} --path {4} --dataset {5} --debug --speed 100".format(pflock, epsilon, mu, delta, path, dataset)
+command = "spark-submit --class FlockFinderMergeLast {0} --epsilon {1} --epsilon_max {1} --mu {2} --mu_max {2} --delta {3} --delta_max {3} --path {4} --dataset {5} --speed 100".format(pflock, epsilon, mu, delta, path, dataset)
 print(command)
 if(args.pflock):
+  timePFLOCK = time.time()
   subprocess.call(command, shell=True)
+  logging.info("LOG_PFLOCK,{},{},{},{}".format(epsilon, mu, delta, time.time() - timePFLOCK))
+  sys.stdout.flush()
 
 ## Sorting and comparing outputs...
 bfe_output = "/tmp/BFE_E{0}_M{1}_D{2}.txt".format(epsilon, mu, delta)

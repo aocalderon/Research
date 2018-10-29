@@ -30,6 +30,7 @@ max_delta = int(args.max_delta)
 step_delta = int(args.step_delta)
 runner_script = "python3 runBFEandPFlock.py"
 
+print("\n\nBFEandPFlockRunner.py has started...")
 for delta in range(min_delta, max_delta + 1, step_delta):
   for epsilon in range(min_epsilon, max_epsilon + 1, step_epsilon):
     for mu in range(min_mu, max_mu + 1, step_mu):
