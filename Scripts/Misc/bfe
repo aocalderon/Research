@@ -14,7 +14,7 @@ DELTA=$4
 FILENAME="BFE_E${EPSILON}_M${MU}_D${DELTA}.txt"
 cat /tmp/bfe.log | grep -P "\d\, \d+\," > /tmp/$FILENAME
 
-cat /tmp/$FILENAME
+#cat /tmp/$FILENAME
 
 grep "Closing stream" /tmp/bfe.log
 
