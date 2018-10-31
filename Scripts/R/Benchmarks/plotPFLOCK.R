@@ -11,7 +11,7 @@ SEP           = "###"
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 options(digits.secs = 6)
 
-dataFile = paste0(RESEARCH_HOME, 'Scripts/Python/Tests/Test006.txt')
+dataFile = paste0(RESEARCH_HOME, 'Scripts/Python/Tests/Test007.txt')
 
 lines    = readLines(dataFile)
 records  = c()
