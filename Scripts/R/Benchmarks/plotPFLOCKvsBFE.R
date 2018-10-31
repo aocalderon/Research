@@ -1,8 +1,13 @@
 #!/usr/bin/Rscript
 
+require(ggplot2)
+require(stringr)
+
+READ_DATA     = T
+SAVE_PDF      = F
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 
-dataFile = paste0(RESEARCH_HOME, 'Scripts/Python/Tests/Test004.txt')
+dataFile = paste0(RESEARCH_HOME, 'Scripts/Python/Tests/Test005.txt')
 
 lines    = readLines(dataFile)
 records  = c()
@@ -11,9 +16,8 @@ epsilon  = 0
 mu       = 0
 delta    = 0
 time     = 0
-readData = T
 
-if(readData){
+if(READ_DATA){
   for(line in lines){
     if(grepl(" LOG_", line)){
       params = str_split_fixed(line, " -> ", 2)[2]
@@ -35,4 +39,14 @@ if(readData){
   data$Mu      = as.numeric(as.character(data$Mu))
   data$Delta   = as.numeric(as.character(data$Delta))
   data$Time    = as.numeric(as.character(data$Time))
+}
+
+title = "Execution time by delta"
+g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Method)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
+  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) 
+if(SAVE_PDF){
+  ggsave("./MergeLastStagebyDelta.pdf", g)
+} else {
+  plot(g)
 }
