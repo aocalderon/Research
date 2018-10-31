@@ -1,4 +1,4 @@
-import SPMF.AlgoFPMax
+import SPMF.{AlgoFPMax, AlgoLCM2, Transactions}
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.simba.index.RTreeType
@@ -187,8 +187,8 @@ object FlockFinderMergeLast {
             val ids2 = r.getString(7).split(" ").map(_.toLong)
             val ids = ids1.intersect(ids2)
             val len = ids.length
-            val x = r.getDouble(3)
-            val y = r.getDouble(4)
+            val x = r.getDouble(8)
+            val y = r.getDouble(9)
 
             (Flock(start, end, ids.sorted.mkString(" "), x, y), len)
           }
@@ -198,7 +198,7 @@ object FlockFinderMergeLast {
           .cache()
         nF_prime = F_prime.count()
         logging(s"3.Joining timestams", timer, nF_prime, "candidates")
-        if(debug) F_prime.orderBy("ids").show(10, truncate = false)
+        if(debug) F_prime.orderBy("ids").show(25, truncate = false)
 
         // Checking internal timestamps...
         val timerCIT = System.currentTimeMillis()
@@ -234,7 +234,7 @@ object FlockFinderMergeLast {
         val nF_temp = F_temp.count()
         if(debug){
           logger.warn(s"F_temp count: $nF_temp")
-          F_temp.orderBy($"ids").show(10, truncate = false)
+          F_temp.orderBy($"ids").show(25, truncate = false)
         }
         
         //val F =  pruneFlocks(F_temp, simba)
@@ -251,7 +251,7 @@ object FlockFinderMergeLast {
     }
     // Reporting summary...
     logger.warn("\n\nPFLOCK_ML\t%.1f\t%d\t%d\t%d\n".format(epsilon, mu, delta + 1, nFinalFlocks))
-    
+    if(debug) FinalFlocks.orderBy($"ids").show(25, truncate = false)
     FinalFlocks
   }
 
@@ -335,11 +335,12 @@ object FlockFinderMergeLast {
               .map(new Integer(_))
               .toList.asJava
             }.toList.asJava
-          val algorithm = new AlgoFPMax
-          val maximals = algorithm.runAlgorithm(transactions, 1)
+          val algorithm = new AlgoLCM2
+          val data = new Transactions(transactions)
 
-          maximals.getItemsets(mu)
-            .asScala
+          val maximals = algorithm.run(data)
+
+          maximals.asScala
             .map(m => (partitionIndex, m.asScala.toList.sorted.mkString(" ")))
             .toIterator
       }.cache()

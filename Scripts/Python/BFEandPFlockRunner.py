@@ -15,6 +15,8 @@ parser.add_argument("--max_delta", "-d2", default=5, help="Maximum delta...")
 parser.add_argument("--step_delta", "-sd", default=1, help="Step in delta...")
 parser.add_argument("--path", "-p", default="Datasets/Berlin/", help="URL path...")
 parser.add_argument("--dataset", "-i", default="berlin0-10", help="Point dataset...")
+parser.add_argument("--no_bfe", dest='bfe', action='store_false', help="Run BFE?")
+parser.add_argument("--no_pflock", dest='pflock', action='store_false', help="Run PFlock?")
 args = parser.parse_args()
 
 ## Setting variables...
@@ -28,6 +30,12 @@ step_mu = int(args.step_mu)
 min_delta = int(args.min_delta)
 max_delta = int(args.max_delta)
 step_delta = int(args.step_delta)
+no_bfe = ""
+if(args.bfe):
+  no_bfe = "--no_bfe" 
+no_pflock = ""
+if(args.pflock):
+  no_pflock = "--no_pflock" 
 runner_script = "python3 -u runBFEandPFlock.py"
 
 logging.warning("BFEandPFlockRunner.py has started...")
@@ -41,6 +49,7 @@ for delta in range(min_delta, max_delta + 1, step_delta):
       , epsilon
       , mu
       , delta)
+      print(command)
       subprocess.call(command, shell=True)
       logging.warning("Iteration Epsilon={0}, Mu={1} and Delta={2} has ended...".format(epsilon, mu, delta))
 logging.warning("BFEandPFlockRunner.py has finished.")
