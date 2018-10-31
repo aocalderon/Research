@@ -2,13 +2,16 @@
 
 require(ggplot2)
 require(stringr)
+require(tidyverse)
+require(lubridate)
 
 READ_DATA     = T
 SAVE_PDF      = F
 SEP           = "###"
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
+options(digits.secs = 6)
 
-dataFile = paste0(RESEARCH_HOME, 'Scripts/Python/Tests/Test005.txt')
+dataFile = paste0(RESEARCH_HOME, 'Scripts/Python/Tests/Test006.txt')
 
 lines    = readLines(dataFile)
 records  = c()
@@ -41,30 +44,38 @@ if(READ_DATA){
       }
     }
   }
-  data = as.tibble(str_split_fixed(records,SEP, 3))
-  runs = filter(data, grepl("spark-submit", V3)) %>% 
-    select(V1,V3) %>%
-    separate(V3, sep = "--", into = letters[1:11]) %>%
-    select(V1, c, e, g) %>%
+  data = as.tibble(str_split_fixed(records,SEP, 3), stringsAsFactors = F) %>%
+    rename(run_id = V1, run_datetime = V2, run_line = V3) %>%
+    mutate(run_id = as.numeric(run_id), run_datetime = as_datetime(str_replace(run_datetime,",",".")))
+  runs = filter(data, grepl("spark-submit", run_line)) %>% 
+    select(run_id, run_line) %>%
+    separate(run_line, sep = "--", into = letters[1:11]) %>%
+    select(run_id, c, e, g) %>%
     separate(c, sep = " ", c(NA, "Epsilon")) %>%
     separate(e, sep = " ", c(NA, "Mu")) %>%
-    separate(g, sep = " ", c(NA, "Delta"))
-  
-  
-  #f = f$V3[, c(3,5,7)]
-  # names(data) = c("Method", "Epsilon", "Mu", "Delta", "Time")
-  # data$Epsilon = as.numeric(as.character(data$Epsilon))
-  # data$Mu      = as.numeric(as.character(data$Mu))
-  # data$Delta   = as.numeric(as.character(data$Delta))
-  # data$Time    = as.numeric(as.character(data$Time))
+    separate(g, sep = " ", c(NA, "Delta")) %>%
+    select(run_id, Epsilon, Mu, Delta) %>%
+    mutate_all(as.numeric)
+  maximals = filter(data, grepl("[A-J]\\.", run_line)) %>% 
+    select(run_id, run_line) %>% 
+    separate(run_line, sep = " \\[", into = c("Stage", "a", "b")) %>% 
+    separate(a, sep = "s]", into = c("Time", NA)) %>% 
+    separate(b, sep = " ", into = c("Load", NA)) %>% 
+    select(run_id, Stage, Time, Load) %>%
+    mutate(Time = as.numeric(Time), Load = as.numeric(Load)) %>% 
+    group_by(run_id, Stage) %>% 
+    summarise(Time = mean(Time), Load = mean(Load))
+    
+  epsilonByStage = runs %>% inner_join(maximals, by = "run_id") %>%
+    select(Epsilon, Stage, Time)
 }
 
-# title = "Execution time by delta"
-# g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Method)) +
-#   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
-#   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) 
-# if(SAVE_PDF){
-#   ggsave("./MergeLastStagebyDelta.pdf", g)
-# } else {
-#   plot(g)
-# }
+title = "Execution time Epsilon by Stage..."
+g = ggplot(data=epsilonByStage, aes(x=factor(Epsilon), y=Time, fill=Stage)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
+  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
+if(SAVE_PDF){
+  ggsave("./MergeLastEpsilonByStage.pdf", g)
+} else {
+  plot(g)
+}
