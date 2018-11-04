@@ -6,12 +6,12 @@ require(tidyverse)
 require(lubridate)
 
 READ_DATA     = T
-SAVE_PDF      = F
+SAVE_PDF      = T
 SEP           = "###"
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 options(digits.secs = 6)
 
-dataFile = paste0(RESEARCH_HOME, 'Scripts/Python/Tests/Test007.txt')
+dataFile = paste0(RESEARCH_HOME, 'Scripts/Python/Tests/Test008.txt')
 
 lines    = readLines(dataFile)
 records  = c()
@@ -66,16 +66,46 @@ if(READ_DATA){
     group_by(run_id, Stage) %>% 
     summarise(Time = mean(Time), Load = mean(Load))
     
-  epsilonByStage = runs %>% inner_join(maximals, by = "run_id") %>%
-    select(Epsilon, Stage, Time)
+  epsilonByMaximalStages = runs %>% inner_join(maximals, by = "run_id") %>%
+    select(Epsilon, Stage, Time) %>%
+    group_by(Epsilon, Stage) %>%
+    summarise(Time = mean(Time))
+  
+  flocks = data %>% 
+    filter(grepl("Set of disks for", run_line) | grepl("Joining timestams", run_line) | grepl("Checking internal timestamps", run_line)) %>%
+    select(run_id, run_line) %>%
+    separate(run_line, sep = "\\|", into = c("Stage", "a", "b")) %>% 
+    mutate_all(str_trim) %>%
+    separate(a, sep = "s", into = c("Time", NA)) %>% 
+    separate(b, sep = " ", into = c("Load", NA)) %>% 
+    select(run_id, Stage, Time, Load) %>%
+    mutate(run_id = as.numeric(run_id), Time = as.numeric(Time), Load = as.numeric(Load)) %>% 
+    group_by(run_id, Stage) %>% 
+    summarise(Time = mean(Time), Load = mean(Load)) 
+    
+  epsilonByFlockStages = runs %>% inner_join(flocks, by = "run_id") %>%
+    select(Epsilon, Stage, Time) %>%
+    group_by(Epsilon, Stage) %>%
+    summarise(Time = mean(Time))
 }
 
-title = "Execution time Epsilon by Stage..."
-g = ggplot(data=epsilonByStage, aes(x=factor(Epsilon), y=Time, fill=Stage)) +
+title = "Execution time Epsilon by Flock Stages..."
+h = ggplot(data=epsilonByFlockStages, aes(x=factor(Epsilon), y=Time, fill=Stage)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
 if(SAVE_PDF){
-  ggsave("./MergeLastEpsilonByStage.pdf", g)
+  ggsave("./MergeLastFlocksByStage.pdf", g)
+} else {
+  plot(h)
+}
+
+title = "Execution time Epsilon by Maximal Stages..."
+g = ggplot(data=epsilonByMaximalStages, aes(x=factor(Epsilon), y=Time, fill=Stage)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
+  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
+if(SAVE_PDF){
+  ggsave("./MergeLastMaximalsByStage.pdf", g)
 } else {
   plot(g)
 }
+

@@ -2,12 +2,14 @@
 
 require(ggplot2)
 require(stringr)
+require(tidyverse)
 
 READ_DATA     = T
-SAVE_PDF      = F
+SAVE_PDF      = T
+SEP           = ","
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 
-dataFile = paste0(RESEARCH_HOME, 'Scripts/Python/Tests/Test005.txt')
+dataFile = paste0(RESEARCH_HOME, 'Scripts/Python/Tests/Test008.txt')
 
 lines    = readLines(dataFile)
 records  = c()
@@ -33,20 +35,18 @@ if(READ_DATA){
       records = c(records, row)
     }
   }
-  data = as.data.frame(str_split_fixed(records, ",", 5))
-  names(data) = c("Method", "Epsilon", "Mu", "Delta", "Time")
-  data$Epsilon = as.numeric(as.character(data$Epsilon))
-  data$Mu      = as.numeric(as.character(data$Mu))
-  data$Delta   = as.numeric(as.character(data$Delta))
-  data$Time    = as.numeric(as.character(data$Time))
+  
+  data = as.tibble(str_split_fixed(records,SEP, 5), stringsAsFactors = F) %>%
+    rename(Method = V1, Epsilon = V2, Mu = V3, Delta = V4, Time = V5) %>%
+    mutate(Epsilon = as.numeric(Epsilon), Mu = as.numeric(Mu), Delta = as.numeric(Delta), Time = as.numeric(Time))
 }
 
-title = "Execution time by delta"
+title = "Execution time by Epsilon"
 g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Method)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) 
 if(SAVE_PDF){
-  ggsave("./MergeLastStagebyDelta.pdf", g)
+  ggsave("./BFEvsPFLOCK_ML.pdf", g)
 } else {
   plot(g)
 }
