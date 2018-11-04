@@ -11,6 +11,7 @@ parser.add_argument("--epsilon", "-e", default=10, help="Epsilon")
 parser.add_argument("--mu", "-m", default=3, help="Mu")
 parser.add_argument("--delta", "-d", default=3, help="Delta")
 parser.add_argument("--speed", "-s", default=100, help="Speed")
+parser.add_argument("--cores", "-c", default=28, help="Speed")
 parser.add_argument("--path", "-p", default="Datasets/Berlin/", help="PFlock path")
 parser.add_argument("--dataset", "-i", default="berlin0-2", help="PFlock dataset")
 parser.add_argument("--extension", "-ext", default="tsv", help="PFlock dataset extension")
@@ -26,6 +27,7 @@ epsilon = args.epsilon
 mu = args.mu
 delta = args.delta
 speed = args.speed
+cores = args.cores
 path = args.path
 dataset = args.dataset
 extension = args.extension
@@ -45,7 +47,7 @@ if(args.bfe):
 if(args.pflock):
   logging.warning("PFLOCK_START")
   pflock = "{0}{1}".format(research_home, "PFlock/target/scala-2.11/pflock_2.11-2.0.jar")
-  command = "spark-submit --class FlockFinderMergeLast {0} --epsilon {1} --epsilon_max {1} --mu {2} --mu_max {2} --delta {3} --delta_max {3} --path {4} --dataset {5} --speed {6}".format(pflock, epsilon, mu, delta, path, dataset, speed)
+  command = "spark-submit --class FlockFinderMergeLast {0} --epsilon {1} --epsilon_max {1} --mu {2} --mu_max {2} --delta {3} --delta_max {3} --path {4} --dataset {5} --speed {6} --cores {7}".format(pflock, epsilon, mu, delta, path, dataset, speed, cores)
   logging.warning(command)
   timePFLOCK = time.time()
   subprocess.call(command, shell=True)
