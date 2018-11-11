@@ -4,6 +4,7 @@ import org.apache.spark.sql.simba.SimbaSession
 import org.apache.spark.sql.simba.index.RTreeType
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.types.StructType
+import org.apache.spark.rdd.RDD
 
 object FF{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -69,8 +70,18 @@ object FF{
       .map(p => (p.getInt(10), ST_Point(p.getInt(0), p.getDouble(1), p.getDouble(2), p.getDouble(3))))
       .rdd
       .partitionBy(new GridPartitioner(nGrid))
+      .map(_._2)
     val nGridPoints = gridPoints.count()
     log("Points by grid indexed", timer, nGridPoints, "points")
+
+    if(debug) logger.info(s"Number of partitions: ${gridPoints.getNumPartitions}")
+
+    if(debug){
+      val p = gridPoints.mapPartitionsWithIndex{ (index, data) =>
+        data.map(d => s"$index,${d.x},${d.y},${d.t}\n")
+      }
+      savePartitions(p, "/tmp/p.csv")
+    }
 
     // Stopping session...
     simba.stop()
@@ -86,6 +97,13 @@ object FF{
       logger.info("%-50s|%6.2f".format(msg,(System.currentTimeMillis()-timer)/1000.0))
     else
       logger.info("%-50s|%6.2f|%6d|%s".format(msg,(System.currentTimeMillis()-timer)/1000.0,n,tag))
+  }
+
+  import java.io._
+  def savePartitions(data: RDD[String], filename: String): Unit ={
+    val pw = new PrintWriter(new File(filename))
+    pw.write(data.collect().mkString(""))
+    pw.close
   }
 
   implicit class Crossable[X](xs: Traversable[X]) {
