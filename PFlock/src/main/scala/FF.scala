@@ -51,11 +51,11 @@ object FF{
       .map(c => (c._1._1._1,c._1._1._2,c._1._2,c._2))
       .toDF("x","y","t","gid").as("grid")
       .cache()
-    val nGrid = grid.count()
+    val nGrid = grid.count().toInt
     if(debug) grid.orderBy($"gid").show(truncate=false)
     log("Grid computed", timer, nGrid, "cells")
 
-    // Joining points and grid...
+    // Indexing points by grid...
     timer = System.currentTimeMillis()
     val pointsByGrid = points.map{ p =>
         val x_prime = (p.x / x_delta).toInt
@@ -65,18 +65,12 @@ object FF{
       }
       .toDF("pid", "x", "y", "t", "x_prime", "y_prime", "t_prime")
       .as("points")
-
-
-    pointsByGrid.join(grid, col("points.x_prime") === col("grid.x")
-      && col("points.y_prime") === col("grid.y")
-      && col("points.t_prime") === col("grid.t"),
-      "left"
-    ).show(truncate=false)
-
-    //val nPointsByGrid = pointsByGrid.count()
-    //if(debug) pointsByGrid.show(truncate=false)
-    //pointsByGrid.rdd.partitionBy(new GridPartitioner(nGrid)).map(_._2).toDS().show(truncate=false)
-    //log("Points by grid done", timer)
+    val gridPoints = pointsByGrid.join(grid, col("points.x_prime") === col("grid.x") && col("points.y_prime") === col("grid.y") && col("points.t_prime") === col("grid.t"), "left")
+      .map(p => (p.getInt(10), ST_Point(p.getInt(0), p.getDouble(1), p.getDouble(2), p.getDouble(3))))
+      .rdd
+      .partitionBy(new GridPartitioner(nGrid))
+    val nGridPoints = gridPoints.count()
+    log("Points by grid indexed", timer, nGridPoints, "points")
 
     // Stopping session...
     simba.stop()
