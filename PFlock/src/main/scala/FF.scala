@@ -5,15 +5,19 @@ import org.apache.spark.sql.simba.index.RTreeType
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.rdd.RDD
+import scala.collection.mutable.ListBuffer
 
 object FF{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val ST_Point_schema = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
   case class ST_Point(pid: Int, x: Double, y: Double, t: Double)
+  case class Grid9(gid: Int, points: List[ST_Point])
   
   def main(args: Array[String]) {
     val conf       = new ConfFF(args)
     val input      = conf.input()
+    val epsilon    = conf.epsilon()
+    val mu         = conf.mu()
     val debug      = conf.debug()
     val master     = conf.master()
     val partitions = conf.partitions()
@@ -83,6 +87,38 @@ object FF{
       savePartitions(p, "/tmp/p.csv")
     }
 
+    // Indexing local partitions by epsilon grid...
+    timer = System.currentTimeMillis()
+    val test = gridPoints.mapPartitions{ points =>
+      var index = scala.collection.mutable.Map[(Int, Int), List[ST_Point]]()
+      points.map{ p =>
+        val x_index = (p.x/epsilon).toInt
+        val y_index = (p.y/epsilon).toInt
+
+        val key   = (x_index, y_index)
+        val value = List(p)
+        val elem = index.get(key)
+        if(elem == None){
+          index += (key -> value)
+        } else {
+          index.update(key, elem.get ++ value)
+        }
+      }
+      /*
+      index.keys.map{ k =>
+        val i = k._1
+        val j = k._2
+        index.get((i-1, j-1)) ++ index.get((i, j-1)) ++ index.get((i+1, j-1)) ++
+        index.get((i-1, j))   ++ index.get((i, j))   ++ index.get((i+1, j))   ++
+        index.get((i-1, j+1)) ++ index.get((i, j+1)) ++ index.get((i+1, j+1)) 
+        
+      }.toIterator
+       */
+      index.valuesIterator.map(x => s"${x.toString}")
+    }
+    val nTest = test.count
+    log("Local partitiions indexed by epsilon grid", timer, nTest)
+
     // Stopping session...
     simba.stop()
     logger.info("Session closed")
@@ -126,6 +162,9 @@ import org.rogach.scallop.{ScallopConf, ScallopOption}
 
 class ConfFF(args: Seq[String]) extends ScallopConf(args) {
   val input:   ScallopOption[String]   =  opt[String]   (required = true)
+  val epsilon: ScallopOption[Double]   =  opt[Double]   (default = Some(10.0))
+  val mu: ScallopOption[Int]           =  opt[Int]      (default = Some(3))
+  val delta: ScallopOption[Int]        =  opt[Int]      (default = Some(3))
   val master:  ScallopOption[String]   =  opt[String]   (default = Some("spark://169.235.27.134:7077"))
   val partitions: ScallopOption[Int]   =  opt[Int]      (default = Some(128))
   val cores:   ScallopOption[Int]      =  opt[Int]      (default = Some(21))
