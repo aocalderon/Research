@@ -1,0 +1,5 @@
+require(rgl)
+library(RColorBrewer)
+palette(rainbow(15))
+data = read.csv("~/tmp/p.csv", header = F)
+plot3d(data$V2,data$V3,data$V4, col = (data$V1 + 1))
