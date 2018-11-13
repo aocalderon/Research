@@ -89,37 +89,40 @@ object FF{
 
     // Indexing local partitions by epsilon grid...
     timer = System.currentTimeMillis()
-    val test = gridPoints.mapPartitions{ points =>
-      var index = scala.collection.mutable.Map[(Int, Int), List[ST_Point]]()
-      points.map{ p =>
-        val x_index = (p.x/epsilon).toInt
-        val y_index = (p.y/epsilon).toInt
+    val grid9 = gridPoints.mapPartitions{ points =>
+        val index = points.map{ p =>
+            val x_index = (p.x/epsilon).toInt
+            val y_index = (p.y/epsilon).toInt
 
-        val key   = (x_index, y_index)
-        val value = List(p)
-        val elem = index.get(key)
-        if(elem == None){
-          index += (key -> value)
-        } else {
-          index.update(key, elem.get ++ value)
-        }
-      }
-      /*
-      index.keys.map{ k =>
-        val i = k._1
-        val j = k._2
-        index.get((i-1, j-1)) ++ index.get((i, j-1)) ++ index.get((i+1, j-1)) ++
-        index.get((i-1, j))   ++ index.get((i, j))   ++ index.get((i+1, j))   ++
-        index.get((i-1, j+1)) ++ index.get((i, j+1)) ++ index.get((i+1, j+1)) 
+            ((x_index, y_index), List(p))
+          }.toList
+          .groupBy(_._1)
+          .mapValues(seq => seq.map(_._2).reduce( (a, b) => a ++ b ))
+          .toMap
         
-      }.toIterator
-       */
-      index.valuesIterator.map(x => s"${x.toString}")
+        index.keys.map { k =>
+          val i = k._1
+          val j = k._2
+          List(
+            index.get((i-1, j-1)) , index.get((i, j-1)) , index.get((i+1, j-1)) ,
+            index.get((i-1, j))   , index.get((i, j))   , index.get((i+1, j))   ,
+            index.get((i-1, j+1)) , index.get((i, j+1)) , index.get((i+1, j+1)) )
+            .flatten.flatten
+        }.toIterator
+      }
+    val nGrid9 = grid9.count
+    if(debug){
+      //grid9.take(25).foreach(println)
+      grid9.map(g => g.filter(_.t == 0.0)).collect()
+        .filter(_.size != 0)
+        .map(g => g.map(p => s"${p.x} ${p.y}"))
+        .map(g => s"MULTIPOINT(${g.mkString(",")})")
+        .foreach(println)
     }
-    val nTest = test.count
-    log("Local partitiions indexed by epsilon grid", timer, nTest)
+    log("Local partitiions indexed by epsilon grid", timer, nGrid9)
 
     // Stopping session...
+    println()
     simba.stop()
     logger.info("Session closed")
   }
