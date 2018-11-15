@@ -43,7 +43,6 @@ object FF{
     val points = simba.read.option("delimiter", "\t").option("header", "false").schema(ST_Point_schema).csv(input).as[ST_Point].cache()
     val nPoints = points.count()
     log("Points indexed", timer, nPoints, "points")
-    if(debug) points.show(truncate = false)
 
     // Computing the grid...
     timer = System.currentTimeMillis()
@@ -57,7 +56,6 @@ object FF{
       .toDF("x","y","t","gid").as("grid")
       .cache()
     val nGrid = grid.count().toInt
-    if(debug) grid.orderBy($"gid").show(truncate=false)
     log("Grid computed", timer, nGrid, "cells")
 
     // Indexing points by grid...
@@ -87,39 +85,47 @@ object FF{
       savePartitions(p, "/tmp/p.csv")
     }
 
-    // Indexing local partitions by epsilon grid...
+    // Extracting grid9's ...
     timer = System.currentTimeMillis()
     val grid9 = gridPoints.mapPartitions{ points =>
-        val index = points.map{ p =>
-            val x_index = (p.x/epsilon).toInt
-            val y_index = (p.y/epsilon).toInt
+      val index = points.map{ p =>
+        val x_index = (p.x/epsilon).toInt
+        val y_index = (p.y/epsilon).toInt
+        val t_index = (p.t).toInt
+        ((x_index, y_index, t_index), List(p))
+      }.toList
+        .groupBy(_._1)
+        .mapValues(seq => seq.map(_._2).reduce( (a, b) => a ++ b ))
+        .toMap
+      index.keys.map { k =>
+        val i = k._1
+        val j = k._2
+        val t = k._3
+        List(
+          index.get((i-1, j-1, t)) , index.get((i, j-1, t)) , index.get((i+1, j-1, t)) ,
+          index.get((i-1, j, t))   , index.get((i, j, t))   , index.get((i+1, j, t))   ,
+          index.get((i-1, j+1, t)) , index.get((i, j+1, t)) , index.get((i+1, j+1, t))
+        ).flatten.flatten
+      }.toIterator
+    }.filter(g => g.size >= mu)
 
-            ((x_index, y_index), List(p))
-          }.toList
-          .groupBy(_._1)
-          .mapValues(seq => seq.map(_._2).reduce( (a, b) => a ++ b ))
-          .toMap
-        
-        index.keys.map { k =>
-          val i = k._1
-          val j = k._2
-          List(
-            index.get((i-1, j-1)) , index.get((i, j-1)) , index.get((i+1, j-1)) ,
-            index.get((i-1, j))   , index.get((i, j))   , index.get((i+1, j))   ,
-            index.get((i-1, j+1)) , index.get((i, j+1)) , index.get((i+1, j+1)) )
-            .flatten.flatten
-        }.toIterator
-      }
     val nGrid9 = grid9.count
     if(debug){
-      //grid9.take(25).foreach(println)
+      grid9.take(2).foreach(println)
       grid9.map(g => g.filter(_.t == 0.0)).collect()
         .filter(_.size != 0)
         .map(g => g.map(p => s"${p.x} ${p.y}"))
         .map(g => s"MULTIPOINT(${g.mkString(",")})")
-        .foreach(println)
+        //.foreach(println)
     }
-    log("Local partitiions indexed by epsilon grid", timer, nGrid9)
+    log("Grid9's found", timer, nGrid9)
+
+    // Finding pairs...
+    timer = System.currentTimeMillis()
+    val pairs = grid9.flatMap(g => g.cross(g)).filter(p => p._1.pid < p._2.pid).map(p => (p, d(p._1, p._2))).filter(p => p._2 <= epsilon).map(_._1)
+    val nPairs = pairs.count()
+    log("Pairs found", timer, nPairs, "pairs")
+    pairs.take(38).foreach(println)
 
     // Stopping session...
     println()
