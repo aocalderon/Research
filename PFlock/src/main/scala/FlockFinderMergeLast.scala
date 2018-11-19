@@ -10,6 +10,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 
 object FlockFinderMergeLast {
+  // General settings, variables and case classes...
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   var conf: Conf = new Conf(Array.empty[String])
 
@@ -25,8 +26,9 @@ object FlockFinderMergeLast {
   private var precision: Double = 0.001
   private var splitEpsilon: Double = 0.0
 
+  /* Run the main algorithm */
   def run(): Unit = {
-    // Starting a session...
+    // Starting a session from configuration class...
     val master = conf.master()
     val partitions = conf.partitions()
     val cores = conf.cores()
@@ -53,6 +55,7 @@ object FlockFinderMergeLast {
     
     import simba.implicits._
     import simba.simbaImplicits._
+    // Set empty dataset to store the final flocks...
     var flocks: Dataset[Flock] = simba.sparkContext.emptyRDD[Flock].toDS()
     var nFlocks: Long = 0
     logging("Starting session", timer)
@@ -87,15 +90,17 @@ object FlockFinderMergeLast {
     val nTimestamps = timestamps.length
     logging("Extracting timestamps", timer, nTimestamps, "timestamps")
 
+    // Loop through different values of epsilon, mu and delta.  Used most for testing and debugging...
     for(d <- delta_min to delta_max by delta_step; m <- mu_min to mu_max by mu_step; e <- epsilon_min to epsilon_max by epsilon_step){
 
       // Running MergeLast v2.0...
       logger.info("=== MergeLast Start ===")
       val startML = System.currentTimeMillis()
-      flocks = runMergeLast(pointset, timestamps, e, m, d, simba)
+      flocks = runMergeLast(pointset, timestamps, e, m, d, simba)  // Call main function...
       nFlocks = flocks.count()
       logging("Running MergeLast...", startML, nFlocks, "flocks")
       val timeML = (System.currentTimeMillis() - startML) / 1000.0
+      // Printing info to identify the run...
       logger.info(s"method=MergeLast,cores=$cores,epsilon=$e,mu=$m,delta=$d,time=$timeML,master=$master")
       // Printing results...
       if(print) printFlocks(flocks, "", simba)
@@ -109,10 +114,10 @@ object FlockFinderMergeLast {
 
   /* MergeLast variant */
   def runMergeLast(pointset: Dataset[ST_Point], timestamps: List[Int], epsilon: Double, mu: Int, delta_prime: Int, simba: SimbaSession): Dataset[Flock] ={
-    // Initialize partial result set...
     import simba.implicits._
     import simba.simbaImplicits._
 
+    // Initialize partial result set and some local variables...
     var FinalFlocks: Dataset[Flock] = simba.sparkContext.emptyRDD[Flock].toDS()
     var nFinalFlocks: Long = 0
     var F_prime: Dataset[Flock] = simba.sparkContext.emptyRDD[Flock].toDS()
@@ -122,6 +127,7 @@ object FlockFinderMergeLast {
     val r2 = Math.pow(epsilon / 2.0, 2)
     val maximalDisksCache = collection.mutable.Map[Int, Dataset[Flock]]()
 
+    // Loop through the timestamps...
     for(timestamp <- timestamps.slice(0, timestamps.length - delta)) {
       // Reported location for trajectories in time t_i...
       timer = System.currentTimeMillis()
@@ -138,7 +144,7 @@ object FlockFinderMergeLast {
       // Set of disks for t_i...
       timer = System.currentTimeMillis()
       var C_t: Dataset[Flock] = maximalDisksCache.getOrElseUpdate(timestamp,
-        MaximalFinderExpansion.run(currentPoints, epsilon, mu, simba, conf, timestamp)
+        MaximalFinderExpansion.run(currentPoints, epsilon, mu, simba, conf, timestamp) // Call MaximalFinder for time i...
           .map{ m =>
             val disk = m.split(";")
             val x = disk(0).toDouble
@@ -164,7 +170,9 @@ object FlockFinderMergeLast {
 
       // Set of disks for t_i+delta...
       timer = System.currentTimeMillis()
-      var C_tPlusDelta: Dataset[Flock] = maximalDisksCache.getOrElseUpdate(timestamp + delta , MaximalFinderExpansion.run(deltaPoints, epsilon, mu, simba, conf, timestamp + delta).map{ m =>
+      var C_tPlusDelta: Dataset[Flock] = maximalDisksCache.getOrElseUpdate(timestamp + delta,
+        MaximalFinderExpansion.run(deltaPoints, epsilon, mu, simba, conf, timestamp + delta) // Call MaximalFinder for time i+delta...
+          .map{ m =>
             val disk = m.split(";")
             val x = disk(0).toDouble
             val y = disk(1).toDouble
@@ -175,10 +183,10 @@ object FlockFinderMergeLast {
       logging("2.Set of disks for t_i+delta...", timer, nC_tPlusDelta, "disks")
 
       if(nC_t > 0 && nC_tPlusDelta > 0) {
-        // Joining timestamps...
+        // Joining timestamps, combining maximal disks from time i and time i+delta...
         timer = System.currentTimeMillis()
-				C_t = C_t.index(RTreeType, "ctRT", Array("x", "y"))
-				C_tPlusDelta = C_tPlusDelta.index(RTreeType, "ctRT", Array("x", "y"))
+	C_t = C_t.index(RTreeType, "ctRT", Array("x", "y"))
+	C_tPlusDelta = C_tPlusDelta.index(RTreeType, "ctRT", Array("x", "y"))
         F_prime = C_t.distanceJoin(C_tPlusDelta, Array("x", "y"), Array("x", "y"), distanceBetweenTimestamps)
           .map { r =>
             val start = r.getInt(0)
@@ -221,7 +229,7 @@ object FlockFinderMergeLast {
 
           (fid, points)
         }
-        if(debug) logger.warn("Making ST_Points...")
+        // Checking potential flock between internal timestamps...
         val F_temp = P_prime.map{ f =>
               val fid = f._1
               val flocks = computeMaximalDisks(f._2, epsilon: Double, mu: Int, simba: SimbaSession)
@@ -237,11 +245,12 @@ object FlockFinderMergeLast {
           F_temp.orderBy($"ids").show(25, truncate = false)
         }
         
-        //val F =  pruneFlocks(F_temp, simba)
+        // Prunning duplicates and subsets flocks...
         val F =  pruneFlocksByExpansions(F_temp, epsilon, mu, simba).map(f => Flock(timestamp, timestamp + delta, f.ids, f.x, f.y))
         val nF = F.count()
         logging("Checking internal timestamps", timerCIT, nF, "flocks")
 
+        // Storing final flocks for this window...
         FinalFlocks = FinalFlocks.union(F)
         nFinalFlocks = FinalFlocks.count()
         C_t.dropIndex()
@@ -260,6 +269,7 @@ object FlockFinderMergeLast {
   import org.apache.spark.sql.simba.spatial.{MBR, Point}
   import org.apache.spark.Partitioner
 
+  /* Custom partitioner to deal with partition expansions */
   class ExpansionPartitioner(partitions: Long) extends Partitioner{
     override def numPartitions: Int = partitions.toInt
 
@@ -267,7 +277,8 @@ object FlockFinderMergeLast {
       key.asInstanceOf[Int]
     }
   }
-  
+
+  // Prunning duplicates and subsets using custom partitioner...
   def pruneFlocksByExpansions(flocks: Dataset[Flock], epsilon: Double, mu: Int, simba: SimbaSession): Dataset[Flock] = {
     // Indexing candidates...
     var timer = System.currentTimeMillis()
@@ -308,6 +319,7 @@ object FlockFinderMergeLast {
         ( MBR(mins, maxs), mbr._2, 1 )
       }
 
+    // Reassigning candiates to expansions... 
     val expandedRTree = RTree(expandedMBRs, candidatesMaxEntriesPerNode)
     candidatesNumPartitions = expandedMBRs.length
     val candidates2 = pointCandidate.flatMap{ candidate =>
@@ -365,9 +377,9 @@ object FlockFinderMergeLast {
       }.
       map(m => (m._1, m._2, isNotInExpansionArea(m._1, m._2, epsilon))).cache()
 
+    // Dealing with duplicates or subsets whose lie just in the border of the partitions...
     val maximalFlocks = maximals2.filter(m => m._3).
-      map(m => m._1).//distinct().
-      map{ m =>
+      map(m => m._1).map{ m =>
         val arr = m.split(";")
         val ids = arr(0)
         val x   = arr(1).toDouble
@@ -406,6 +418,7 @@ object FlockFinderMergeLast {
     prunedFlocks
   }
 
+  // Tell us if the point lies in the expansiona area...
   def isNotInExpansionArea(maximalString: String, coordinatesString: String, epsilon: Double): Boolean = {
     val maximal = maximalString.split(";")
     val x = maximal(1).toDouble
@@ -422,13 +435,7 @@ object FlockFinderMergeLast {
       y >= (min_y + epsilon)
   }
 
-  import org.apache.spark.Partitioner
-  class FlockPartitioner(override val numPartitions: Int) extends Partitioner {
-
-    def getPartition(key: Any): Int = {
-      return key.asInstanceOf[Int]
-    }
-  }
+  // Utility functions to find flock in the internal timestamps...
   implicit class Crossable[X](xs: Traversable[X]) {
     def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
   }
@@ -599,39 +606,7 @@ object FlockFinderMergeLast {
 
     C
   }
-
-  private def pruneSubsets(flocks: Dataset[Flock], simba: SimbaSession): Dataset[Flock] = {
-    import simba.implicits._
-    import simba.simbaImplicits._
-
-    pruneIDsSubsets(flocks, simba).rdd
-      .map(f => (f.ids, f))
-      .reduceByKey{ (a,b) =>
-        if(a.start < b.start){ a } else { b }
-      }
-      .map(_._2)
-      .toDS()
-  }
-
-  private def pruneIDsSubsets(flocks: Dataset[Flock], simba: SimbaSession): Dataset[Flock] = {
-    import simba.implicits._
-    import simba.simbaImplicits._
-
-    val partitions = flocks.rdd.getNumPartitions
-    flocks.map(_.ids)
-      .mapPartitions(runFPMax) // Running local...
-      .repartition(1)
-      .mapPartitions(runFPMax) // Running global...
-      .toDF("ids")
-      .join(flocks, "ids") // Getting back x and y coordiantes...
-      .select("start", "end", "ids", "x", "y")
-      .as[Flock]
-      .groupBy("start", "end", "ids") // Filtering flocks with same IDs...
-      .agg(min("x").alias("x"), min("y").alias("y"))
-      .repartition(partitions) // Restoring to previous number of partitions...
-      .as[Flock]
-  }
-
+  
   def runFPMax(data: Iterator[String]): Iterator[String] = {
     val transactions = data.toList.map(disk => disk.split(" ").map(new Integer(_)).toList.asJava).asJava
     val algorithm = new AlgoFPMax
@@ -639,85 +614,7 @@ object FlockFinderMergeLast {
     algorithm.runAlgorithm(transactions, 1).getItemsets(1).asScala.map(m => m.asScala.toList.sorted.mkString(" ")).toList.toIterator
   }
 
-  def pruneFlocks(flocks: Dataset[Flock], simba: SimbaSession): Dataset[Flock] = {
-    import simba.implicits._
-    import simba.simbaImplicits._
-
-    val U = flocks.rdd
-    val partitions = U.getNumPartitions
-
-    var U_prime = U.mapPartitions{ records =>
-      var flocks = new ListBuffer[(Flock, Boolean)]()
-      for(record <- records){
-        flocks += Tuple2(record, true)
-      }
-      for(i <- flocks.indices){
-        for(j <- flocks.indices){
-          if(i != j & flocks(i)._2){
-            val ids1 = flocks(i)._1.ids.split(" ").map(_.toLong)
-            val ids2 = flocks(j)._1.ids.split(" ").map(_.toLong)
-            if(flocks(j)._2 & ids1.forall(ids2.contains)){
-              val s1 = flocks(i)._1.start
-              val s2 = flocks(j)._1.start
-              val e1 = flocks(i)._1.end
-              val e2 = flocks(j)._1.end
-              if(s1 == s2 & e1 == e2){
-                flocks(i) = Tuple2(flocks(i)._1, false)
-              }
-            }
-            if(flocks(i)._2 & ids2.forall(ids1.contains)){
-              val s1 = flocks(i)._1.start
-              val s2 = flocks(j)._1.start
-              val e1 = flocks(i)._1.end
-              val e2 = flocks(j)._1.end
-              if(s1 == s2 & e1 == e2){
-                flocks(j) = Tuple2(flocks(j)._1, false)
-              }
-            }
-          }
-        }
-      }
-      flocks.filter(_._2).map(_._1).toIterator
-    }.cache()
-
-    U_prime = U_prime.repartition(1).
-      mapPartitions{ records =>
-        var flocks = new ListBuffer[(Flock, Boolean)]()
-        for(record <- records){
-          flocks += Tuple2(record, true)
-        }
-        for(i <- flocks.indices){
-          for(j <- flocks.indices){
-            if(i != j & flocks(i)._2){
-              val ids1 = flocks(i)._1.ids.split(" ").map(_.toLong)
-              val ids2 = flocks(j)._1.ids.split(" ").map(_.toLong)
-              if(flocks(j)._2 & ids1.forall(ids2.contains)){
-                val s1 = flocks(i)._1.start
-                val s2 = flocks(j)._1.start
-                val e1 = flocks(i)._1.end
-                val e2 = flocks(j)._1.end
-                if(s1 == s2 & e1 == e2){
-                  flocks(i) = Tuple2(flocks(i)._1, false)
-                }
-              }
-              if(flocks(i)._2 & ids2.forall(ids1.contains)){
-                val s1 = flocks(i)._1.start
-                val s2 = flocks(j)._1.start
-                val e1 = flocks(i)._1.end
-                val e2 = flocks(j)._1.end
-                if(s1 == s2 & e1 == e2){
-                  flocks(j) = Tuple2(flocks(j)._1, false)
-                }
-              }
-            }
-          }
-        }
-        flocks.filter(_._2).map(_._1).toIterator
-      }.repartition(partitions).cache()
-
-    U_prime.toDS()
-  }
-
+  // Misc funcions...  
   def logging(msg: String, timer: Long, n: Long = 0, tag: String = ""): Unit ={
     logger.info("%-50s | %6.2fs | %6d %s".format(msg, (System.currentTimeMillis() - timer)/1000.0, n, tag))
   }
@@ -751,6 +648,7 @@ object FlockFinderMergeLast {
     }
   }
 
+  // Main function, call run method...
   def main(args: Array[String]): Unit = {
     logger.info("Starting app...")
     conf = new Conf(args)
