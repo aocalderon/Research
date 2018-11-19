@@ -145,7 +145,7 @@ object FF{
   }
 
   def d(p1: ST_Point, p2: ST_Point): Double = {
-    scala.math.sqrt(scala.math.pow(p1.x - p2.x, 2.0) + scala.math.pow(p1.y - p2.y, 2.0) + scala.math.pow(p1.t - p2.t, 2.0))
+    scala.math.sqrt(scala.math.pow(p1.x - p2.x, 2) + scala.math.pow(p1.y - p2.y, 2))
   }
 
   def log(msg: String, timer: Long, n: Long = 0, tag: String = ""): Unit ={
@@ -161,7 +161,7 @@ object FF{
     val X: Double = p1.x - p2.x
     val Y: Double = p1.y - p2.y
     val D2: Double = math.pow(X, 2) + math.pow(Y, 2)
-    if (D2 != 0.0){
+    if (D2 > 0.0){
       val root: Double = math.sqrt(math.abs(4.0 * (r2 / D2) - 1.0))
       val h1: Double = ((X + Y * root) / 2) + p2.x
       val k1: Double = ((Y - X * root) / 2) + p2.y
