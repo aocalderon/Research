@@ -129,9 +129,13 @@ object FF{
       .filter(p => p._1.pid < p._2.pid)
       .map(p => (p, d(p._1, p._2)))
       .filter(p => p._2 <= epsilon + precision)
+      .distinct()
     val nPairs = pairs.count()
     log("Pairs found", timer, nPairs, "pairs")
-
+    if(debug){
+      val p = pairs.map(_._1).map(p => s"LINESTRING(${p._1.x} ${p._1.y}, ${p._2.x} ${p._2.y})\n")
+      saveLines(p, "/tmp/pairs.txt")
+    }
     // Finding centers...
     timer = System.currentTimeMillis()
     val centers = pairs.map(p => calculateCenterCoordinates(p._1._1, p._1._2, r2))
@@ -175,6 +179,12 @@ object FF{
 
   import java.io._
   def savePartitions(data: RDD[String], filename: String): Unit ={
+    val pw = new PrintWriter(new File(filename))
+    pw.write(data.collect().mkString(""))
+    pw.close
+  }
+
+  def saveLines(data: RDD[String], filename: String): Unit ={
     val pw = new PrintWriter(new File(filename))
     pw.write(data.collect().mkString(""))
     pw.close

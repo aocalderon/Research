@@ -129,9 +129,13 @@ object FF{
       .filter(p => p._1.pid < p._2.pid)
       .map(p => (p, d(p._1, p._2)))
       .filter(p => p._2 <= epsilon + precision)
+      .distinct()
     val nPairs = pairs.count()
     log("Pairs found", timer, nPairs, "pairs")
-
+    if(debug){
+      val p = pairs.map(_._1).map(p => s"LINESTRING(${p._1.x} ${p._1.y}, ${p._2.x} ${p._2.y})\n")
+      saveLines(p, "/tmp/pairs.txt")
+    }
     // Finding centers...
     timer = System.currentTimeMillis()
     val centers = pairs.map(p => calculateCenterCoordinates(p._1._1, p._1._2, r2))
@@ -145,7 +149,7 @@ object FF{
   }
 
   def d(p1: ST_Point, p2: ST_Point): Double = {
-    scala.math.sqrt(scala.math.pow(p1.x - p2.x, 2) + scala.math.pow(p1.y - p2.y, 2))
+    scala.math.sqrt(scala.math.pow(p1.x - p2.x, 2.0) + scala.math.pow(p1.y - p2.y, 2.0) + scala.math.pow(p1.t - p2.t, 2.0))
   }
 
   def log(msg: String, timer: Long, n: Long = 0, tag: String = ""): Unit ={
@@ -161,7 +165,7 @@ object FF{
     val X: Double = p1.x - p2.x
     val Y: Double = p1.y - p2.y
     val D2: Double = math.pow(X, 2) + math.pow(Y, 2)
-    if (D2 > 0.0){
+    if (D2 != 0.0){
       val root: Double = math.sqrt(math.abs(4.0 * (r2 / D2) - 1.0))
       val h1: Double = ((X + Y * root) / 2) + p2.x
       val k1: Double = ((Y - X * root) / 2) + p2.y
@@ -180,6 +184,12 @@ object FF{
     pw.close
   }
 
+  def saveLines(data: RDD[String], filename: String): Unit ={
+    val pw = new PrintWriter(new File(filename))
+    pw.write(data.collect().mkString(""))
+    pw.close
+  }
+
   implicit class Crossable[X](xs: Traversable[X]) {
     def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
   }
@@ -193,7 +203,6 @@ object FF{
       key.asInstanceOf[Int]
     }
   }
-
 }
 
 import org.rogach.scallop.{ScallopConf, ScallopOption}
