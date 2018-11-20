@@ -1,0 +1,133 @@
+\documentclass{beamer}
+
+\usefonttheme{professionalfonts} % using non standard fonts for beamer
+\usefonttheme{serif} % default family is serif
+
+\usepackage{hyperref}
+
+%\usepackage{minted}
+
+\usepackage{animate}
+
+\usepackage{graphicx}
+
+\def\Put(#1,#2)#3{\leavevmode\makebox(0,0){\put(#1,#2){#3}}}
+
+\usepackage{color}
+
+\usepackage{tikz}
+
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\usepackage{enumerate}
+
+
+\newcommand\blfootnote[1]{%
+
+  \begingroup
+
+  \renewcommand\thefootnote{}\footnote{#1}%
+
+  \addtocounter{footnote}{-1}%
+
+  \endgroup
+
+}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+
+ % this default might be overridden by plain title style
+
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+
+ % (ERT) argument for the TOC
+
+ \AtBeginDocument{%
+
+   \let\origtableofcontents=\tableofcontents
+
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+
+   \def\gobbletableofcontents#1{\origtableofcontents}
+
+ }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+
+\usetheme{Malmoe}
+
+% or ...
+
+\useoutertheme{infolines}
+
+\addtobeamertemplate{headline}{}{\vskip2pt}
+
+\setbeamertemplate{theorems}[numbered]
+
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}[section]
+
+\setbeamercovered{transparent}
+
+% or whatever (possibly just delete it)
+
+\makeatother
+
+\begin{document}
+\title[Update]{Update}
+\author{Andres}
+\institute[Fall'18]{University of California, Riverside}
+\makebeamertitle
+\newif\iflattersubsect
+
+\AtBeginSection[] {
+    \begin{frame}<beamer>
+    \frametitle{Outline} 
+    \tableofcontents[currentsection]  
+    \end{frame}
+    \lattersubsectfalse
+}
+
+\AtBeginSubsection[] {
+    \begin{frame}<beamer>
+    \frametitle{Outline} 
+    \tableofcontents[currentsubsection]  
+    \end{frame}
+}
+
+\section{Algorithms}
+
+\begin{frame}{Algorithms}
+    \begin{itemize}
+        \item Split the problem in two stages: 
+            \begin{enumerate}
+                \item Find maximal disks at each timestamp (MaximalFinder) and
+                \item Join maximal disks between adjancent timestamps (FlockFinder)
+            \end{enumerate}
+        \item Pseudocode for both algorithms available online: MaximalFinder and FlockFinder.
+        \item Overall discussion about the steps
+    \end{itemize}
+\end{frame}
+
+\section{Performance evaluation}
+
+\begin{frame}{Performance}
+    \begin{enumerate}
+        \item Show performance analysis by steps
+        \item Highlight the bottlenecks
+    \end{enumerate}
+\end{frame}
+
+\section{Proposal}
+
+\begin{frame}{Proposal}
+    \begin{enumerate}
+        \item Alternatives in Simba
+        \item Grid indexing
+    \end{enumerate}
+\end{frame}
+
+\end{document}
