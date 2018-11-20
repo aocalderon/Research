@@ -1,0 +1,47 @@
+70|Grid|Grid indexed                                      |  1.27| 18093|
+70|Grid|Grid9s extracted                                 |  0.30| 11966|
+70|Grid|Pairs found                                       |  1.83| 19555|pairs
+70|Grid|Centers found                                     |  0.12| 19555|centers
+70|Simba|Indexing points...                               |11.709|18093|results
+70|Simba|Getting pairs...                                 |8.442 |19555|results
+70|Simba|Computing centers...                             |2.502 |39110|results
+
+80|Grid|2018-11-19 20:02:46,545 -> Grid indexed                                      |  1.09| 18093|
+80|Grid|2018-11-19 20:02:47,029 -> Grid9s extracted                                 |  0.48| 11590|
+80|Grid|2018-11-19 20:02:49,256 -> Pairs found                                       |  2.23| 23893|pairs
+80|Grid|2018-11-19 20:02:50,606 -> Centers found                                     |  1.35| 23893|centers
+80|Simba|2018-11-19 20:03:08,378 -> A.Indexing points...      |11.718|18093|results
+80|Simba|2018-11-19 20:03:16,728 -> B.Getting pairs...        |8.350|23893|results
+80|Simba|2018-11-19 20:03:19,198 -> C.Computing centers...    |2.470|47786|results
+
+90|Grid|2018-11-19 20:03:52,100 -> Grid indexed                                      |  1.65| 18093|
+90|Grid|2018-11-19 20:03:52,493 -> Grid9s extracted                                 |  0.39| 11147|
+90|Grid|2018-11-19 20:03:54,688 -> Pairs found                                       |  2.19| 28719|pairs
+90|Grid|2018-11-19 20:03:55,926 -> Centers found                                     |  1.24| 28719|centers
+90|Simba|2018-11-19 20:04:14,228 -> A.Indexing points...      |11.987|18093|results
+90|Simba|2018-11-19 20:04:22,647 -> B.Getting pairs...        |8.419|28719|results
+90|Simba|2018-11-19 20:04:25,168 -> C.Computing centers...    |2.521|57438|results
+
+100|Grid|2018-11-19 20:05:06,138 -> Grid indexed                                      |  1.65| 18093|
+100|Grid|2018-11-19 20:05:06,549 -> Grid9s extracted                                 |  0.41| 10713|
+100|Grid|2018-11-19 20:05:08,864 -> Pairs found                                       |  2.31| 33957|pairs
+100|Grid|2018-11-19 20:05:10,133 -> Centers found                                     |  1.27| 33957|centers
+100|Simba|2018-11-19 20:05:28,196 -> A.Indexing points...       |11.479|18093|results
+100|Simba|2018-11-19 20:05:36,640 -> B.Getting pairs...         |8.443|33957|results
+100|Simba|2018-11-19 20:05:39,196 -> C.Computing centers...     |2.556|67914|results
+
+110|Grid|2018-11-19 20:06:38,608 -> Grid indexed                                      |  1.21| 18093|
+110|Grid|2018-11-19 20:06:39,076 -> Grid9s extracted                                 |  0.47| 10227|
+110|Grid|2018-11-19 20:06:41,458 -> Pairs found                                       |  2.38| 39404|pairs
+110|Grid|2018-11-19 20:06:42,802 -> Centers found                                     |  1.34| 39404|centers
+110|Simba|2018-11-19 20:07:00,884 -> A.Indexing points...       |11.822|18093|results
+110|Simba|2018-11-19 20:07:09,259 -> B.Getting pairs...         |8.375|39404|results
+110|Simba|2018-11-19 20:07:12,131 -> C.Computing centers...     |2.872|78808|results
+
+120|Grid|2018-11-19 20:08:21,597 -> Grid indexed                                      |  1.13| 18093|
+120|Grid|2018-11-19 20:08:22,312 -> Grid9s extracted                                 |  0.72|  9667|
+120|Grid|2018-11-19 20:08:24,808 -> Pairs found                                       |  2.50| 45221|pairs
+120|Grid|2018-11-19 20:08:25,034 -> Centers found                                     |  0.23| 45221|centers
+120|Simba|2018-11-19 20:08:42,831 -> A.Indexing points...     |11.637|18093|results
+120|Simba|2018-11-19 20:08:51,521 -> B.Getting pairs...       |8.690|45221|results
+120|Simba|2018-11-19 20:08:54,361 -> C.Computing centers...   |2.840|90442|results
