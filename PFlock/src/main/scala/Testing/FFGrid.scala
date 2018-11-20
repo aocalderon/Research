@@ -7,7 +7,7 @@ import org.apache.spark.sql.types.StructType
 import org.apache.spark.rdd.RDD
 import scala.collection.mutable.ListBuffer
 
-object FF{
+object FFGrid{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val ST_Point_schema = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
   case class ST_Point(pid: Int, x: Double, y: Double, t: Double)
@@ -69,6 +69,7 @@ object FF{
         (p.pid, p.x, p.y, p.t, x_prime, y_prime, t_prime)
       }
       .toDF("pid", "x", "y", "t", "x_prime", "y_prime", "t_prime")
+      .index(RTreeType, "rT", Array("x_prime", "y_prime", "t_prime"))
       .as("points")
     val gridPoints = pointsByGrid.join(grid, col("points.x_prime") === col("grid.x") && col("points.y_prime") === col("grid.y") && col("points.t_prime") === col("grid.t"), "left")
       .map(p => (p.getInt(10), ST_Point(p.getInt(0), p.getDouble(1), p.getDouble(2), p.getDouble(3))))
@@ -203,22 +204,5 @@ object FF{
       key.asInstanceOf[Int]
     }
   }
-}
 
-import org.rogach.scallop.{ScallopConf, ScallopOption}
-
-class ConfFF(args: Seq[String]) extends ScallopConf(args) {
-  val input:   ScallopOption[String]   =  opt[String]   (required = true)
-  val epsilon: ScallopOption[Double]   =  opt[Double]   (default = Some(10.0))
-  val mu: ScallopOption[Int]           =  opt[Int]      (default = Some(3))
-  val delta: ScallopOption[Int]        =  opt[Int]      (default = Some(3))
-  val master:  ScallopOption[String]   =  opt[String]   (default = Some("spark://169.235.27.134:7077"))
-  val partitions: ScallopOption[Int]   =  opt[Int]      (default = Some(128))
-  val cores:   ScallopOption[Int]      =  opt[Int]      (default = Some(21))
-  val grain_x: ScallopOption[Double]   =  opt[Double]   (default = Some(10000.0))
-  val grain_y: ScallopOption[Double]   =  opt[Double]   (default = Some(10000.0))
-  val grain_t: ScallopOption[Double]   =  opt[Double]   (default = Some(3.0))
-  val debug:   ScallopOption[Boolean]  =  opt[Boolean]  (default = Some(false))
-
-  verify()
 }
