@@ -94,7 +94,7 @@ h = ggplot(data=epsilonByFlockStages, aes(x=factor(Epsilon), y=Time, fill=Stage)
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
 if(SAVE_PDF){
-  ggsave("./MergeLastFlocksByStage.pdf", g)
+  ggsave("./MergeLastFlocksByStage.pdf", h)
 } else {
   plot(h)
 }
