@@ -46,7 +46,7 @@ g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Method)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) 
 if(SAVE_PDF){
-  ggsave("./BFEvsPFLOCK_ML.pdf", g)
+  ggsave("./BFEvsPFLOCK_ML.pdf", width = 7, height = 5, dpi = 300, units = "in", device='pdf', g)
 } else {
   plot(g)
 }

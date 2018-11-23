@@ -45,3 +45,10 @@
 120|Simba|2018-11-19 20:08:42,831 -> A.Indexing points...     |11.637|18093|results
 120|Simba|2018-11-19 20:08:51,521 -> B.Getting pairs...       |8.690|45221|results
 120|Simba|2018-11-19 20:08:54,361 -> C.Computing centers...   |2.840|90442|results
+
+70|Geospark|2018-11-23 11:25:47,305 -> Centers found                                     |  1.32| 19555|
+80|Geospark|2018-11-23 11:25:58,906 -> Centers found                                     |  0.97| 23893|
+90|Geospark|2018-11-23 11:26:08,894 -> Centers found                                     |  1.02| 28719|
+100|Geospark|2018-11-23 11:26:20,738 -> Centers found                                     |  1.01| 33957|
+110|Geospark|2018-11-23 11:26:31,058 -> Centers found                                     |  1.14| 39404|
+120|Geospark|2018-11-23 11:26:41,838 -> Centers found                                     |  1.07| 45221|

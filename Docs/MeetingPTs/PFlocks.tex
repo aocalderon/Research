@@ -139,6 +139,11 @@
 
 \begin{frame}{Performance}
     \centering
+    \includegraphics[width=0.8\textwidth]{BFEvsPFLOCK_ML}
+\end{frame}
+
+\begin{frame}{Performance}
+    \centering
     \includegraphics[width=0.9\textwidth]{MergeLastFlocksByStage}
 \end{frame}
 
@@ -149,7 +154,7 @@
 
 \begin{frame}{Performance}
     \centering
-    \includegraphics[width=0.9\textwidth]{Indexing}
+    \includegraphics[width=0.8\textwidth]{indexing}
 \end{frame}
 
 \begin{frame}{Bottlenecks}
@@ -185,20 +190,24 @@
             \item Include the Grid partitioner in Simba and work on its index integration.
             \item Implement distance join by my own.
         \end{itemize}
-
+        
+        \item Explore alternatives in GeoSpark or Geomesa.
+        \begin{itemize}
+            \item Finding centers in GeoSpark already implemented with promising results.
+        \end{itemize}
     \end{enumerate}
 \end{frame}
 
-\section*{Extra slides}
-
-\begin{frame}{Grid partitioning}
-    \centering
-    \includegraphics[trim={4cm 4cm 4cm 4cm},clip,width=\textwidth]{grid3d}
-\end{frame}
-
-\begin{frame}{Grid partitioning}
-    \centering
-    \includegraphics[width=0.9\textheight]{cube}
-\end{frame}
+% \section*{Extra slides}
+% 
+% \begin{frame}{Grid partitioning}
+%     \centering
+%     \includegraphics[trim={4cm 4cm 4cm 4cm},clip,width=\textwidth]{grid3d}
+% \end{frame}
+% 
+% \begin{frame}{Grid partitioning}
+%     \centering
+%     \includegraphics[width=0.9\textheight]{cube}
+% \end{frame}
 
 \end{document}
