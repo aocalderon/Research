@@ -13,13 +13,13 @@ import org.datasyslab.geosparkviz.core.Serde.GeoSparkVizKryoRegistrator
 object Tester{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geometryFactory: GeometryFactory = JTSFactoryFinder.getGeometryFactory(null);
-
+  private val precision: Double = 0.001
 
   def main(args: Array[String]) = {
-    val param = new TesterConf(args)
-    val debug: Boolean  = false
-    val epsilon: Double = param.epsilon()
-    val input:String    = param.input()
+    val params = new TesterConf(args)
+    val debug: Boolean  = params.debug()
+    val epsilon: Double = params.epsilon()
+    val input:String    = params.input()
 
     // Starting session...
     var timer = System.currentTimeMillis()
@@ -33,19 +33,13 @@ object Tester{
     timer = System.currentTimeMillis()
     val points = new PointRDD(sc, input, 1, FileDataSplitter.TSV, true, StorageLevel.MEMORY_ONLY)
     points.CRSTransform("epsg:3068", "epsg:3068")
-    points.analyze()
     val nPoints = points.rawSpatialRDD.count()
     log("Data read", timer, nPoints)
 
-    if(debug) {
-      points.rawSpatialRDD.rdd
-        .map[String](p => s"${p.getX} ${p.getY} ${p.getUserData.asInstanceOf[String]}")
-        .foreach(println)
-    }
-
-    // Finding centers...
+    // Finding pairs...
     timer = System.currentTimeMillis()
-    val buffer = new CircleRDD(points, epsilon)
+    val buffer = new CircleRDD(points, epsilon + precision)
+    points.analyze()
     buffer.analyze()
     buffer.spatialPartitioning(GridType.QUADTREE)
     points.spatialPartitioning(buffer.getPartitioner)
@@ -54,23 +48,28 @@ object Tester{
     buffer.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
 
     val considerBoundary = true
-    val usingIndex = false
-    val r2: Double = math.pow(epsilon / 2.0, 2)
-    val result = JoinQuery.DistanceJoinQueryFlat(points, buffer, usingIndex, considerBoundary)
+    val usingIndex = true
+    val pairs = JoinQuery.DistanceJoinQueryFlat(points, buffer, usingIndex, considerBoundary)
       .rdd.map{ pair =>
         val id1 = pair._1.getUserData().toString().split("\t").head.trim().toInt
         val p1  = pair._1.getCentroid
         val id2 = pair._2.getUserData().toString().split("\t").head.trim().toInt
         val p2  = pair._2
         ( (id1, p1) , (id2, p2) )
-      }.filter(p => p._1._1 < p._2._1).map{ p =>
+      }.filter(p => p._1._1 < p._2._1)
+    val nPairs = pairs.count()
+    log("Pairs found", timer, nPairs)
+
+    // Finding centers...
+    val r2: Double = math.pow(epsilon / 2.0, 2)
+    val centers = pairs.map{ p =>
         val p1 = p._1._2
         val p2 = p._2._2
         calculateCenterCoordinates(p1, p2, r2)
       }
     
-    val nResult = result.count()
-    log("Centers found", timer, nResult)
+    val nCenters = centers.count()
+    log("Centers found", timer, nCenters)
 
     // Closing session...
     timer = System.currentTimeMillis()
