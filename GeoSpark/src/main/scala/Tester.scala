@@ -5,10 +5,9 @@ import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.{SparkConf, SparkContext}
 import org.datasyslab.geospark.enums.{FileDataSplitter, GridType, IndexType}
-import org.datasyslab.geospark.formatMapper.shapefileParser.ShapefileReader
-import org.datasyslab.geospark.spatialOperator.{JoinQuery, KNNQuery, RangeQuery}
-import org.datasyslab.geospark.spatialRDD.{CircleRDD, PointRDD, PolygonRDD}
-import org.datasyslab.geosparkviz.core.Serde.GeoSparkVizKryoRegistrator
+import org.datasyslab.geospark.spatialOperator.JoinQuery
+import org.datasyslab.geospark.spatialRDD.{CircleRDD, PointRDD}
+import org.apache.spark.rdd.RDD
 
 object Tester{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -18,14 +17,15 @@ object Tester{
   def main(args: Array[String]) = {
     val params = new TesterConf(args)
     val debug: Boolean  = params.debug()
+    val master: String  = params.master()
     val epsilon: Double = params.epsilon()
+    val mu: Int         = params.mu()
     val input:String    = params.input()
 
     // Starting session...
     var timer = System.currentTimeMillis()
-    val conf = new SparkConf().setAppName("GeoSparkTester").setMaster("local[*]")
+    val conf = new SparkConf().setAppName("GeoSparkTester").setMaster(master)
     conf.set("spark.serializer", classOf[KryoSerializer].getName)
-    conf.set("spark.kryo.registrator", classOf[GeoSparkVizKryoRegistrator].getName)
     val sc = new SparkContext(conf)
     log("Session started", timer)
 
@@ -38,18 +38,18 @@ object Tester{
 
     // Finding pairs...
     timer = System.currentTimeMillis()
-    val buffer = new CircleRDD(points, epsilon + precision)
+    val pointsBuffer = new CircleRDD(points, epsilon + precision)
     points.analyze()
-    buffer.analyze()
-    buffer.spatialPartitioning(GridType.QUADTREE)
-    points.spatialPartitioning(buffer.getPartitioner)
+    pointsBuffer.analyze()
+    pointsBuffer.spatialPartitioning(GridType.QUADTREE)
+    points.spatialPartitioning(pointsBuffer.getPartitioner)
     points.buildIndex(IndexType.QUADTREE, true)
     points.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
-    buffer.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+    pointsBuffer.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
 
     val considerBoundary = true
     val usingIndex = true
-    val pairs = JoinQuery.DistanceJoinQueryFlat(points, buffer, usingIndex, considerBoundary)
+    val pairs = JoinQuery.DistanceJoinQueryFlat(points, pointsBuffer, usingIndex, considerBoundary)
       .rdd.map{ pair =>
         val id1 = pair._1.getUserData().toString().split("\t").head.trim().toInt
         val p1  = pair._1.getCentroid
@@ -61,15 +61,42 @@ object Tester{
     log("Pairs found", timer, nPairs)
 
     // Finding centers...
+    timer = System.currentTimeMillis()
     val r2: Double = math.pow(epsilon / 2.0, 2)
     val centers = pairs.map{ p =>
         val p1 = p._1._2
         val p2 = p._2._2
         calculateCenterCoordinates(p1, p2, r2)
       }
-    
     val nCenters = centers.count()
     log("Centers found", timer, nCenters)
+
+    if(debug){
+      saveLines(centers.map(c => s"POINT(${c._1.getX()} ${c._1.getY()})\n"), "/tmp/centers1.wkt")
+      saveLines(centers.map(c => s"POINT(${c._2.getX()} ${c._2.getY()})\n"), "/tmp/centers2.wkt")
+      saveLines(pairs.map(c => s"LINESTRING(${c._1._2.getX()} ${c._1._2.getY()}, ${c._2._2.getX()} ${c._2._2.getY()})\n"), "/tmp/pairs.wkt")
+    }
+
+    // Finding disks...
+    timer = System.currentTimeMillis()
+    val r = epsilon / 2.0
+    val centersRDD = new PointRDD(centers.map(_._1).union(centers.map(_._2)).toJavaRDD(), StorageLevel.MEMORY_ONLY, "epsg:3068", "epsg:3068")
+    val centersBuffer = new CircleRDD(centersRDD, r + precision)
+    centersBuffer.analyze()
+    centersBuffer.spatialPartitioning(points.getPartitioner)
+    centersBuffer.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+
+    val disks = JoinQuery.DistanceJoinQueryFlat(points, centersBuffer, usingIndex, considerBoundary)
+      .rdd.map{ d =>
+        val c = d._1.getCentroid
+        val pid = d._2.getUserData().toString().split("\t").head.trim().toInt
+        (c, List(pid))
+      }.reduceByKey( (pids1,pids2) => pids1 ++ pids2)
+      .filter(d => d._2.length >= mu)
+    val nDisks = disks.count()
+    log("Disks found", timer, nDisks)
+
+    if(debug) disks.map(d => s"${d._1.getCentroid} ${d._2.mkString(" ")}").foreach(println)
 
     // Closing session...
     timer = System.currentTimeMillis()
@@ -100,5 +127,12 @@ object Tester{
       logger.info("%-50s|%6.2f".format(msg,(System.currentTimeMillis()-timer)/1000.0))
     else
       logger.info("%-50s|%6.2f|%6d|%s".format(msg,(System.currentTimeMillis()-timer)/1000.0,n,tag))
+  }
+
+  import java.io._
+  def saveLines(data: RDD[String], filename: String): Unit ={
+    val pw = new PrintWriter(new File(filename))
+    pw.write(data.collect().mkString(""))
+    pw.close
   }
 }
