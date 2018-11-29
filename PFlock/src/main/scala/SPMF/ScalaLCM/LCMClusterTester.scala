@@ -50,10 +50,10 @@ object LCMClusterTester{
 
     //Collecting info about partitions...
     timer = System.currentTimeMillis()
-    val partitionsInfo = data.rdd.mapPartitionsWithIndex{ (partition_id, disks) =>
-      disks.map(d => (partition_id, d.point_ids.split(" ").map(_.toInt).sorted.mkString(" "))).toIterator
+    val partitionsInfo = data.select("point_ids").distinct().rdd.mapPartitionsWithIndex{ (partition_id, disks) =>
+      disks.map(d => (partition_id, d.getString(0).split(" ").map(_.toInt).sorted.mkString(" "))).toIterator
     }.collect().sortBy(_._2).sortBy(_._1)
-    saveToFile(partitionsInfo, s"Partitions_${partitions}_$cores.txt")
+    //saveToFile(partitionsInfo, s"Partitions_${partitions}_$cores.txt")
     val nPartitionsInfo = partitionsInfo.map(_._1).distinct.size
     log("Collecting info about partititons...", timer, s"$nPartitionsInfo partitions")
 
@@ -61,7 +61,7 @@ object LCMClusterTester{
     timer = System.currentTimeMillis()
     val FPMAXlocal = data.rdd.mapPartitionsWithIndex{ (partition_id, disks) =>
       val transactions = disks.map( candidate => candidate.point_ids.split(" ").map(new Integer(_)).toList.asJava ).toList.asJava
-      saveToFile(transactions, s"/tmp/FPMAXlocal_${partitions}_${cores}_$partition_id.txt")
+      //saveToFile(transactions, s"/tmp/FPMAXlocal_${partitions}_${cores}_$partition_id.txt")
       val fpmax = new AlgoFPMax
       val maximals = fpmax.runAlgorithm(transactions, 1)
       maximals.getItemsets(mu).asScala.map(m => (partition_id, m.asScala.toList.map(_.toLong).sorted)).toIterator
@@ -84,7 +84,7 @@ object LCMClusterTester{
     timer = System.currentTimeMillis()
     val LCMlocal = data.rdd.mapPartitionsWithIndex{ (partition_id, disks) =>
       val transactions = disks.map( candidate => candidate.point_ids.split(" ").map(new Integer(_)).toList.asJava).toList.asJava
-      saveToFile(transactions, s"LCMlocal_${partitions}_${cores}_$partition_id.txt")
+      //saveToFile(transactions, s"LCMlocal_${partitions}_${cores}_$partition_id.txt")
       val lcm = new AlgoLCM2
       val data = new SPMF.Transactions(transactions)
       val maximals = lcm.run(data)
@@ -112,7 +112,7 @@ object LCMClusterTester{
     timer = System.currentTimeMillis()
     val ScalaLCMlocal = data.rdd.mapPartitionsWithIndex{ (partition_id, disks) =>
       val D = disks.map(_.point_ids.split(" ").map(_.toInt).toList).toList
-      saveToFile(D, s"ScalaLCMlocal_${partitions}_${cores}_$partition_id.txt")
+      //saveToFile(D, s"ScalaLCMlocal_${partitions}_${cores}_$partition_id.txt")
       val maximals = IterativeLCMmax.run(D.map(d => new Transaction(d)))
       maximals.map(m => (partition_id, m.split(" ").map(_.toLong).sorted.toList)).toIterator
     }.distinct()
@@ -181,10 +181,10 @@ object LCMClusterTester{
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 
 class LCMClusterTesterConf(arguments: Seq[String]) extends ScallopConf(arguments) {
-  val input:      ScallopOption[String] = opt[String] (required = true)
+  val input:      ScallopOption[String] = opt[String] (default = Some("/home/and/tmp/transactions.txt"))
   val master:     ScallopOption[String] = opt[String] (default = Some("local[*]"))
-  val partitions: ScallopOption[Int]    = opt[Int]    (default = Some(1024))
-  val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(7))
+  val partitions: ScallopOption[Int]    = opt[Int]    (default = Some(4))
+  val cores:      ScallopOption[Int]    = opt[Int]    (default = Some(3))
   val mu:         ScallopOption[Int]    = opt[Int]    (default = Some(1))
 
   verify()

@@ -55,3 +55,5 @@ resolvers +=
 
 resolvers +=
   "Open Source Geospatial Foundation Repository" at "http://download.osgeo.org/webdav/geotools"
+
+resolvers += Resolver.bintrayIvyRepo("com.eed3si9n", "sbt-plugins")
