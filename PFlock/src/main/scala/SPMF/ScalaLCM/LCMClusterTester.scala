@@ -17,6 +17,7 @@ object LCMClusterTester{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   case class DiskFormat(partition_id: String, point_ids: String)
   case class Disk(point_ids: String, x: Double, y: Double)
+  //case Disk(points_ids: String)
 
   def main(args: Array[String]): Unit = {
     val conf = new LCMClusterTesterConf(args)
@@ -40,8 +41,8 @@ object LCMClusterTester{
     var timer = System.currentTimeMillis()
     val data = simba.read.option("header", "false")
       .csv(filename)
-      .map(d => Disk(d.getString(1), d.getString(2).trim.toDouble, d.getString(3).trim.toDouble))
-       .distinct()
+      .map(d => Disk(d.getString(0), d.getString(1).trim.toDouble, d.getString(2).trim.toDouble))
+      .distinct()
       .index(RTreeType, "dRT", Array("x", "y"))
       .cache()
     val nData = data.count()

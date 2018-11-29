@@ -1,4 +1,4 @@
-import com.vividsolutions.jts.geom.{Point, GeometryFactory, Coordinate}
+import com.vividsolutions.jts.geom.{Point, Geometry, GeometryFactory, Coordinate}
 import org.geotools.geometry.jts.JTSFactoryFinder
 import org.slf4j.{LoggerFactory, Logger}
 import org.apache.spark.serializer.KryoSerializer
@@ -8,6 +8,9 @@ import org.datasyslab.geospark.enums.{FileDataSplitter, GridType, IndexType}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.spatialRDD.{CircleRDD, PointRDD}
 import org.apache.spark.rdd.RDD
+import scala.collection.JavaConverters._
+import SPMF.{AlgoLCM2, Transactions}
+import SPMF.ScalaLCM.{IterativeLCMmax, Transaction}
 
 object Tester{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -20,7 +23,9 @@ object Tester{
     val master: String  = params.master()
     val epsilon: Double = params.epsilon()
     val mu: Int         = params.mu()
-    val input:String    = params.input()
+    val input: String   = params.input()
+    val offset: Int     = params.offset()
+    val partitions: Int = params.partitions()
 
     // Starting session...
     var timer = System.currentTimeMillis()
@@ -31,7 +36,7 @@ object Tester{
 
     // Reading data...
     timer = System.currentTimeMillis()
-    val points = new PointRDD(sc, input, 1, FileDataSplitter.TSV, true, StorageLevel.MEMORY_ONLY)
+    val points = new PointRDD(sc, input, offset, FileDataSplitter.TSV, true, partitions)
     points.CRSTransform("epsg:3068", "epsg:3068")
     val nPoints = points.rawSpatialRDD.count()
     log("Data read", timer, nPoints)
@@ -72,9 +77,6 @@ object Tester{
     log("Centers found", timer, nCenters)
 
     if(debug){
-      saveLines(centers.map(c => s"POINT(${c._1.getX()} ${c._1.getY()})\n"), "/tmp/centers1.wkt")
-      saveLines(centers.map(c => s"POINT(${c._2.getX()} ${c._2.getY()})\n"), "/tmp/centers2.wkt")
-      saveLines(pairs.map(c => s"LINESTRING(${c._1._2.getX()} ${c._1._2.getY()}, ${c._2._2.getX()} ${c._2._2.getY()})\n"), "/tmp/pairs.wkt")
     }
 
     // Finding disks...
@@ -96,7 +98,75 @@ object Tester{
     val nDisks = disks.count()
     log("Disks found", timer, nDisks)
 
-    if(debug) disks.map(d => s"${d._1.getCentroid} ${d._2.mkString(" ")}").foreach(println)
+    // Finding maximal disks...
+    timer = System.currentTimeMillis()
+    val diskRDD = new PointRDD(disks.map{ d =>
+        d._1.setUserData(d._2.sorted.mkString(" "))
+        d._1
+      }.toJavaRDD(), StorageLevel.MEMORY_ONLY, "epsg:3068", "epsg:3068")
+    diskRDD.analyze()
+    val dPartitions = math.ceil(nDisks / params.dpp()).toInt
+    diskRDD.spatialPartitioning(GridType.QUADTREE, dPartitions)
+    val nDiskRDD = diskRDD.spatialPartitionedRDD.count()
+    log("Disks indexed", timer, nDiskRDD)
+
+    timer = System.currentTimeMillis()
+    val maximals = diskRDD.spatialPartitionedRDD.rdd.mapPartitions{ disks =>
+      val transactions = disks.map{_.getUserData().toString().split("\t").head.split(" ").map(new Integer(_)).toList.asJava}.toList.asJava
+      val LCM = new AlgoLCM2
+      val data = new Transactions(transactions)
+      //
+      val lcm = LCM.run(data).asScala.map(m => m.asScala.toList.map(_.toInt).sorted)
+
+      lcm.toIterator
+    }
+    val nMaximals = maximals.count()
+    log("Maximal disks found", timer, nMaximals)
+
+    timer = System.currentTimeMillis()
+    val maximals2= diskRDD.spatialPartitionedRDD.rdd.mapPartitions{ disks =>
+      val transactions = disks.map{_.getUserData().toString().split("\t").head.split(" ").toList.map(_.toInt)}.toList.map(t => new Transaction(t))
+      IterativeLCMmax.run(transactions).toIterator
+    }
+    val nMaximals2 = maximals2.count()
+    log("Maximal disks2 found", timer, nMaximals2)
+
+    saveLines(diskRDD.spatialPartitionedRDD.rdd.map{ d =>
+      s"${d.getUserData().toString().split("\t").head},${d.getX},${d.getY}\n"
+    }, "/tmp/transactions.txt")
+    saveText(maximals.map(_.mkString(" ")).collect().mkString("\n"), "/tmp/m1.dat")
+    saveText(maximals2.map(_.mkString(" ")).collect().mkString("\n"), "/tmp/m2.dat")
+
+    if(debug){
+      val p = pairs.map(c => s"LINESTRING(${c._1._2.getX()} ${c._1._2.getY()}, ${c._2._2.getX()} ${c._2._2.getY()})\n")
+      saveLines(p, "/tmp/pairs.wkt")
+      val grids = diskRDD.getPartitioner.getGrids().asScala.toList.map{ e =>
+        s"POLYGON((${e.getMinX} ${e.getMinY},${e.getMinX} ${e.getMaxY},${e.getMaxX} ${e.getMaxY},${e.getMaxX} ${e.getMinY},${e.getMinX} ${e.getMinY}))\n"
+      }
+      saveList(grids, "/tmp/grids.wkt")
+      val expansions = diskRDD.getPartitioner.getGrids().asScala.toList.map{ e =>
+        e.expandBy(epsilon + precision)
+        s"POLYGON((${e.getMinX} ${e.getMinY},${e.getMinX} ${e.getMaxY},${e.getMaxX} ${e.getMaxY},${e.getMaxX} ${e.getMinY},${e.getMinX} ${e.getMinY}))\n"
+      }
+      saveList(expansions, "/tmp/expansions.wkt")
+      val disks = diskRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (i, data) =>
+        data.map(d => s"POINT(${d.getX} ${d.getY}),${d.getUserData.toString()},${i}\n")
+      }
+      saveLines(disks, "/tmp/disks.wkt")
+      val envelopes = diskRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (i,data) =>
+        data.map(d => s"${d.getEnvelope().toText()},${i}\n")
+      }
+      saveLines(envelopes, "/tmp/envelopes.wkt")
+
+      val nPartitions = diskRDD.getPartitioner.numPartitions
+      val stats = diskRDD.spatialPartitionedRDD.rdd.mapPartitions{ p =>
+        List(p.length).toIterator
+      }
+      logger.info(s"Number of partitions in disks: $nPartitions")
+      logger.info(s"Min number of disks per partition: ${stats.min()}")
+      logger.info(s"Max number of disks per partition: ${stats.max()}")
+      logger.info(s"Min number of disks per partition: ${stats.sum()/stats.count()}")
+    }
 
     // Closing session...
     timer = System.currentTimeMillis()
@@ -133,6 +203,16 @@ object Tester{
   def saveLines(data: RDD[String], filename: String): Unit ={
     val pw = new PrintWriter(new File(filename))
     pw.write(data.collect().mkString(""))
+    pw.close
+  }
+  def saveList(data: List[String], filename: String): Unit ={
+    val pw = new PrintWriter(new File(filename))
+    pw.write(data.mkString(""))
+    pw.close
+  }
+  def saveText(data: String, filename: String): Unit ={
+    val pw = new PrintWriter(new File(filename))
+    pw.write(data)
     pw.close
   }
 }

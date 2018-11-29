@@ -9,14 +9,14 @@ lazy val root = (project in file(".")).
 
     scalaVersion := "2.11.11",
 
-    organization := "org.ucr.dblab",
+    organization := "edu.ucr.dblab",
 
     publishMavenStyle := true
   )
 
-val SparkVersion = "2.2.1"
+val SparkVersion = "2.1.0"
 
-val SparkCompatibleVersion = "2.2"
+val SparkCompatibleVersion = "2.1"
 
 val HadoopVersion = "2.7.2"
 
@@ -34,8 +34,9 @@ libraryDependencies ++= Seq(
   "org.apache.hadoop" % "hadoop-mapreduce-client-core" % HadoopVersion % dependencyScope,
   "org.apache.hadoop" % "hadoop-common" % HadoopVersion % dependencyScope,
   "org.datasyslab" % "geospark" % GeoSparkVersion,
-  "org.datasyslab" % "geospark-sql_".concat(SparkCompatibleVersion) % GeoSparkVersion ,
+  "org.datasyslab" % "geospark-sql_".concat(SparkCompatibleVersion) % GeoSparkVersion,
   "org.datasyslab" % "geospark-viz" % GeoSparkVersion,
+  "org.datasyslab" % "JTSplus" % "0.1.4",
   "org.rogach" %% "scallop" % "3.1.5",
   "org.slf4j" % "slf4j-jdk14" % "1.7.25"
 )
