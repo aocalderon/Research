@@ -76,9 +76,6 @@ object Tester{
     val nCenters = centers.count()
     log("Centers found", timer, nCenters)
 
-    if(debug){
-    }
-
     // Finding disks...
     timer = System.currentTimeMillis()
     val r = epsilon / 2.0
@@ -100,9 +97,12 @@ object Tester{
 
     // Finding maximal disks...
     timer = System.currentTimeMillis()
-    val diskRDD = new PointRDD(disks.map{ d =>
-        d._1.setUserData(d._2.sorted.mkString(" "))
-        d._1
+    val diskRDD = new PointRDD(disks
+      .map(a => (a._2.sorted, a._1))
+      .reduceByKey((a,b) => a)
+      .map{ d =>
+        d._2.setUserData(d._1.mkString(" "))
+        d._2
       }.toJavaRDD(), StorageLevel.MEMORY_ONLY, "epsg:3068", "epsg:3068")
     diskRDD.analyze()
     val dPartitions = math.ceil(nDisks / params.dpp()).toInt
@@ -115,27 +115,18 @@ object Tester{
       val transactions = disks.map{_.getUserData().toString().split("\t").head.split(" ").map(new Integer(_)).toList.asJava}.toList.asJava
       val LCM = new AlgoLCM2
       val data = new Transactions(transactions)
-      //
-      val lcm = LCM.run(data).asScala.map(m => m.asScala.toList.map(_.toInt).sorted)
-
-      lcm.toIterator
+      LCM.run(data).asScala.map(m => m.asScala.toList.map(_.toInt).sorted).toIterator
     }
     val nMaximals = maximals.count()
     log("Maximal disks found", timer, nMaximals)
 
-    timer = System.currentTimeMillis()
-    val maximals2= diskRDD.spatialPartitionedRDD.rdd.mapPartitions{ disks =>
-      val transactions = disks.map{_.getUserData().toString().split("\t").head.split(" ").toList.map(_.toInt)}.toList.map(t => new Transaction(t))
-      IterativeLCMmax.run(transactions).toIterator
-    }
-    val nMaximals2 = maximals2.count()
-    log("Maximal disks2 found", timer, nMaximals2)
-
-    saveLines(diskRDD.spatialPartitionedRDD.rdd.map{ d =>
-      s"${d.getUserData().toString().split("\t").head},${d.getX},${d.getY}\n"
-    }, "/tmp/transactions.txt")
-    saveText(maximals.map(_.mkString(" ")).collect().mkString("\n"), "/tmp/m1.dat")
-    saveText(maximals2.map(_.mkString(" ")).collect().mkString("\n"), "/tmp/m2.dat")
+    timer= System.currentTimeMillis()
+    val global = maximals.map(m => m.map(new Integer(_)).asJava).collect().toList.asJava
+    val T = new Transactions(global)
+    val lcm = new AlgoLCM2
+    val finalDisks = lcm.run(T)
+    val nFinalDisks = finalDisks.size()
+    log("Final disks found", timer, nFinalDisks)
 
     if(debug){
       val p = pairs.map(c => s"LINESTRING(${c._1._2.getX()} ${c._1._2.getY()}, ${c._2._2.getX()} ${c._2._2.getY()})\n")
