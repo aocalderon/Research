@@ -3,6 +3,7 @@ package SPMF;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 public class LCM {
@@ -13,7 +14,8 @@ public class LCM {
         ArrayList<List<Integer>> transactionsSet = new ArrayList<>();
         while (((line = reader.readLine()) != null)) {
             // split the line into items
-            String[] lineSplited = line.split(" ");
+            String temp = line.split(",")[0];
+            String[] lineSplited = temp.split(" ");
             // for each item
             List<Integer> transaction = new ArrayList<>();
             for (String itemString : lineSplited) {
@@ -24,6 +26,10 @@ public class LCM {
             transactionsSet.add(transaction);
         }
 
+        HashSet<List<Integer>> hash = new HashSet<>();
+        hash.addAll(transactionsSet);
+        transactionsSet.clear();
+        transactionsSet.addAll(hash);
         return transactionsSet;
     }
 
@@ -72,6 +78,8 @@ public class LCM {
         }
         runner.savePatterns(patterns, output);
         if(flag.equalsIgnoreCase("debug")) lcm.getN();
+        lcm.printStats();
+        lcm.getN();
     }
 }
 
