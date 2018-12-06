@@ -3,7 +3,7 @@ import org.rogach.scallop.{ScallopConf, ScallopOption}
 class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
   val epsilon:    ScallopOption[Double] 	= opt[Double] 	(default = Some(10.0))
   val precision:  ScallopOption[Double] 	= opt[Double] 	(default = Some(0.001))
-  val mu:         ScallopOption[Int]    	= opt[Int]    	(default = Some(4))
+  val mu:         ScallopOption[Int]    	= opt[Int]    	(default = Some(3))
   val partitions: ScallopOption[Int]    	= opt[Int]    	(default = Some(1024))
   val cores:      ScallopOption[Int]    	= opt[Int]    	(default = Some(32))
   val master:     ScallopOption[String] 	= opt[String] 	(default = Some("spark://169.235.27.134:7077")) /* spark://169.235.27.134:7077 */
@@ -15,6 +15,7 @@ class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
   val separator:  ScallopOption[String] 	= opt[String] 	(default = Some("\t"))
   val method:     ScallopOption[String] 	= opt[String] 	(default = Some("lcm"))
   val debug:      ScallopOption[Boolean]	= opt[Boolean]	(default = Some(false))
+  val tag:        ScallopOption[String] 	= opt[String] 	(default = Some(""))
   // FlockFinder parameters
   val delta:	  ScallopOption[Int]    	= opt[Int]    	(default = Some(3))
   val decimals:	  ScallopOption[Int]    	= opt[Int]    	(default = Some(3))

@@ -8,6 +8,7 @@ import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.spatialRDD.{CircleRDD, PointRDD}
 import com.vividsolutions.jts.index.strtree.STRtree
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import scala.collection.JavaConverters._
 import SPMF.{AlgoLCM2, Transactions}
@@ -17,39 +18,35 @@ object Tester{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory();
   private val precision: Double = 0.001
+  private var tag: String = ""
 
   def main(args: Array[String]) = {
     val params = new TesterConf(args)
-    val debug: Boolean  = params.debug()
-    val master: String  = params.master()
-    val epsilon: Double = params.epsilon()
-    val mu: Int         = params.mu()
-    val input: String   = params.input()
-    val offset: Int     = params.offset()
-    val partitions: Int = params.partitions()
+    val debug: Boolean   = params.debug()
+    val master: String   = params.master()
+    val epsilon: Double  = params.epsilon()
+    val mu: Int          = params.mu()
+    val input: String    = params.input()
+    val offset: Int      = params.offset()
+    val ppartitions: Int = params.ppartitions()
+    val dpartitions: Int = params.dpartitions()
+    tag = params.tag()
 
     // Starting session...
     var timer = System.currentTimeMillis()
-    //val conf = new SparkConf().setAppName("GeoSparkTester").setMaster(master)
-    //conf.set("spark.serializer", classOf[KryoSerializer].getName)
-    //val sc = new SparkContext(conf)
-
-    import org.apache.spark.sql.SparkSession
-    val spark = SparkSession.builder().
-      config("spark.serializer",classOf[KryoSerializer].getName).
-      //config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName).
-      master(master).appName("PFLock").getOrCreate()
-
-    log("Session started", timer)
+    val spark = SparkSession.builder()
+      .config("spark.serializer",classOf[KryoSerializer].getName)
+      .master(master).appName("PFLock").getOrCreate()
+    logger.info(s"Session started [${(System.currentTimeMillis - timer) / 1000.0}]")
 
     // Reading data...
     timer = System.currentTimeMillis()
-    val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, partitions)
+    val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, ppartitions)
     points.CRSTransform("epsg:3068", "epsg:3068")
     val nPoints = points.rawSpatialRDD.count()
-    log("Data read", timer, nPoints)
+    logger.info(s"Data read [${(System.currentTimeMillis - timer) / 1000.0}] [$nPoints]")
 
-    // Finding pairs...
+    // Indexing points...
     timer = System.currentTimeMillis()
     val pointsBuffer = new CircleRDD(points, epsilon + precision)
     points.analyze()
@@ -59,7 +56,10 @@ object Tester{
     points.buildIndex(IndexType.QUADTREE, true)
     points.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
     pointsBuffer.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+    log("A.Points indexed", timer, nPoints)
 
+    // Finding pairs...
+    timer = System.currentTimeMillis()
     val considerBoundary = true
     val usingIndex = true
     val pairs = JoinQuery.DistanceJoinQueryFlat(points, pointsBuffer, usingIndex, considerBoundary)
@@ -71,23 +71,24 @@ object Tester{
         ( (id1, p1) , (id2, p2) )
       }.filter(p => p._1._1 < p._2._1)
     val nPairs = pairs.count()
-    log("Pairs found", timer, nPairs)
+    log("B.Pairs found", timer, nPairs)
 
     // Finding centers...
     timer = System.currentTimeMillis()
     val r2: Double = math.pow(epsilon / 2.0, 2)
-    val centers = pairs.map{ p =>
+    val centersPairs = pairs.map{ p =>
         val p1 = p._1._2
         val p2 = p._2._2
         calculateCenterCoordinates(p1, p2, r2)
-      }
+    }
+    val centers = centersPairs.map(_._1).union(centersPairs.map(_._2))
     val nCenters = centers.count()
-    log("Centers found", timer, nCenters)
+    log("C.Centers found", timer, nCenters)
 
     // Finding disks...
     timer = System.currentTimeMillis()
     val r = epsilon / 2.0
-    val centersRDD = new PointRDD(centers.map(_._1).union(centers.map(_._2)).toJavaRDD(), StorageLevel.MEMORY_ONLY, "epsg:3068", "epsg:3068")
+    val centersRDD = new PointRDD(centers.toJavaRDD(), StorageLevel.MEMORY_ONLY, "epsg:3068", "epsg:3068")
     val centersBuffer = new CircleRDD(centersRDD, r + precision)
     centersBuffer.analyze()
     centersBuffer.spatialPartitioning(points.getPartitioner)
@@ -101,7 +102,7 @@ object Tester{
       }.reduceByKey( (pids1,pids2) => pids1 ++ pids2)
       .filter(d => d._2.length >= mu)
     val nDisks = disks.count()
-    log("Disks found", timer, nDisks)
+    log("D.Disks found", timer, nDisks)
 
     // Indexing disks...
     timer = System.currentTimeMillis()
@@ -115,9 +116,9 @@ object Tester{
       }.toJavaRDD(), StorageLevel.MEMORY_ONLY, "epsg:3068", "epsg:3068")
     disksRDD.analyze()
     val nDisksRDD = disksRDD.rawSpatialRDD.count()
-      disksRDD.spatialPartitioning(GridType.QUADTREE, params.dpp())
+      disksRDD.spatialPartitioning(GridType.QUADTREE, dpartitions)
     disksRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
-    log("Disks indexed", timer, nDisksRDD)
+    log("E.Disks indexed", timer, nDisksRDD)
     
     // Getting expansions...
     timer = System.currentTimeMillis()
@@ -130,7 +131,7 @@ object Tester{
       }.toList
     }.partitionBy(new ExpansionPartitioner(expansions.size)).persist(StorageLevel.MEMORY_ONLY)
     val nExpansionsRDD = expansionsRDD.count()
-    log("Expansions gotten", timer, nExpansionsRDD)
+    log("F.Expansions gotten", timer, nExpansionsRDD)
 
     // Finding maximal disks...
     timer = System.currentTimeMillis()
@@ -145,7 +146,7 @@ object Tester{
       }.toIterator
     }.persist(StorageLevel.MEMORY_ONLY)
     val nMaximals = maximals.count()
-    log("Maximal disks found", timer, nMaximals)
+    log("G.Maximal disks found", timer, nMaximals)
 
     // Prunning maximal disks...
     timer = System.currentTimeMillis()
@@ -175,7 +176,7 @@ object Tester{
       }.filter(_._4)
 
     val nPrunned = prunned.count()
-    log("Maximal disks prunned", timer, nPrunned)
+    log("H.Maximal disks prunned", timer, nPrunned)
 
     if(debug){
       val p = pairs.map(c => s"LINESTRING(${c._1._2.getX()} ${c._1._2.getY()}, ${c._2._2.getX()} ${c._2._2.getY()})\n")
@@ -212,7 +213,7 @@ object Tester{
     // Closing session...
     timer = System.currentTimeMillis()
     spark.stop()
-    log("Session closed", timer)
+    logger.info(s"Session closed [${(System.currentTimeMillis - timer) / 1000.0}]")
   }
 
   def calculateCenterCoordinates(p1: Point, p2: Point, r2: Double): (Point, Point) = {
@@ -259,7 +260,7 @@ object Tester{
     }
   }
 
-  def log(msg: String, timer: Long, n: Long = 0, tag: String = ""): Unit ={
+  def log(msg: String, timer: Long, n: Long = 0): Unit ={
     if(n == 0)
       logger.info("%-50s|%6.2f".format(msg,(System.currentTimeMillis()-timer)/1000.0))
     else
