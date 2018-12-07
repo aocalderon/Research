@@ -9,7 +9,7 @@ RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 RESEARCH_PATH = "Scripts/Misc/"
 DATASET       = "benchmark_E70-120"
 EXTENSION     = "txt"
-SAVE_PDF      = F
+SAVE_PDF      = T
 options(digits.secs = 6)
 
 dataFile = paste0(RESEARCH_HOME, RESEARCH_PATH, DATASET, ".", EXTENSION)
@@ -42,7 +42,7 @@ data = base %>% group_by(Framework, Epsilon, Stage) %>% summarise(Time = mean(Ti
   separate(Stage, c("id", NA), sep = "\\.") %>% 
   inner_join(stages) %>% select(Framework, Epsilon, Stage, Time)
 
-title = paste0("Execution time maximal finder by ", expression(epsilon, "(mts)"), "...")
+title = expression("Execution time maximal finder by"~epsilon~" (values in meters)...")
 g = ggplot(data=data, aes(x=Stage, y=Time, fill=Framework)) + coord_flip() +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
   labs(title=title, y="Time(s)", x="Stages") +
