@@ -1415,3 +1415,22 @@ java.util.concurrent.RejectedExecutionException: Task scala.concurrent.impl.Call
 2018-12-07 12:56:00,326 -> D.Finding disks                                   |  5.96|118263|200|Simba|5
 2018-12-07 12:56:01,338 -> E.Indexing disks                                  |  6.98|118263|200|Simba|5
 2018-12-07 12:56:06,328 -> F.Getting expansions                              |  4.99|1168148|200|Simba|5
+2018-12-07 15:02:27,486 -> G.Finding maximal disks                           |7581.16| 15889|200|Simba|5
+2018-12-07 15:02:33,561 -> H.Prunning maximal disks                          |  6.08| 14282|200|Simba|5
+2018-12-07 15:02:33,562 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-07 15:02:33,562 ->    berlin0-0,   18093, 200.0,    32,  3,7647.71,  101436,    202872,       118263,      14282, -1
+2018-12-07 15:02:33,640 -> Dropping indices...[0.078s]
+2018-12-07 15:02:33,641 -> Finishing MaximalFinder at 15:02:33.641...
+2018-12-07 15:02:33,641 -> Total time for MaximalFinder: 7647.867ms...
+2018-12-07 15:02:33,684 -> Closing session... [0.043s]
+2018-12-07 15:02:37,624 -> Session started [1.662]
+2018-12-07 15:02:41,583 -> Data read [3.959] [18093]
+2018-12-07 15:02:42,385 -> A.Points indexed                                  |  0.80| 18093|200|GeoSpark|5
+2018-12-07 15:02:45,881 -> B.Pairs found                                     |  3.50|101436|200|GeoSpark|5
+2018-12-07 15:02:46,506 -> C.Centers found                                   |  0.63|202872|200|GeoSpark|5
+2018-12-07 15:02:51,780 -> D.Disks found                                     |  5.27|186329|200|GeoSpark|5
+2018-12-07 15:02:53,550 -> E.Disks indexed                                   |  1.77|118263|200|GeoSpark|5
+2018-12-07 15:02:56,300 -> F.Expansions gotten                               |  2.75|201620|200|GeoSpark|5
+2018-12-07 16:02:43,126 -> G.Maximal disks found                             |3586.83| 23574|200|GeoSpark|5
+2018-12-07 16:02:50,657 -> H.Maximal disks prunned                           |  7.53| 14280|200|GeoSpark|5
+2018-12-07 16:02:50,714 -> Session closed [0.057]
