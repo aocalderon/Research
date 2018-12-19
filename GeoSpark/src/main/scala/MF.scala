@@ -20,13 +20,14 @@ object MF{
   private val precision: Double = 0.001
   private var tag: String = ""
 
-  def run(spark: SparkSession, points: PointRDD, params: FFConf): RDD[String] = {
+  def run(spark: SparkSession, points: PointRDD, params: FFConf, info: String = ""): RDD[String] = {
     val debug: Boolean   = params.debug()
     val epsilon: Double  = params.epsilon()
     val mu: Int          = params.mu()
     val dpartitions: Int = params.dpartitions()
     val sespg: String    = params.sespg()
     val tespg: String    = params.tespg()
+    tag = s"${params.tag()}|${info}"
 
     // Indexing points...
     var timer = System.currentTimeMillis()
@@ -202,7 +203,6 @@ object MF{
     val input  = params.input()
     val offset = params.offset()
     val ppartitions = params.ppartitions()
-    tag = params.tag()
 
     // Starting session...
     var timer = System.currentTimeMillis()

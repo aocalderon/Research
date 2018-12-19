@@ -12,6 +12,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.HashMap
 
 object FF {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -19,23 +20,19 @@ object FF {
   private var tag: String = ""
 
   /* SpatialJoin variant */
-  def runSpatialJoin(spark: SparkSession, points: PointRDD, params: FFConf): Unit = {
+  def runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf): Unit = {
     val sespg = params.sespg()
     val tespg = params.tespg()
     var timer = System.currentTimeMillis()
 
     // Maximal disks timestamp i...
-    logger.info("Starting maximal disks timestamp i...")
-    var timestamp = 0
-    val T_i = extractTimestamp(points, timestamp, sespg, tespg)
-    MF.run(spark, T_i, params)
-    log("Maximal disks timestamp i", timer)
-    // Maximal disks timestamp i+delta...
-    logger.info("Starting maximal disks timestamp i+delta...")
-    timestamp = 1
-    val T_delta = extractTimestamp(points, timestamp, sespg, tespg)
-    MF.run(spark, T_delta, params)
-    log("Maximal disks timestamp i+delta", timer)
+    for(timestamp <- pointset.keys.toList.sorted){
+      val T_i = pointset.get(timestamp).get
+      logger.info(s"Starting maximal disks timestamp $timestamp ...")
+      val disks = MF.run(spark, T_i, params, s"$timestamp")
+      val nDisks = disks.count()
+      log(s"Maximal disks timestamp $timestamp", timer, nDisks)
+    }
 
 
     // Initialize partial result set...
@@ -165,11 +162,16 @@ object FF {
     val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, ppartitions)
       points.CRSTransform(params.sespg(), params.tespg())
     val nPoints = points.rawSpatialRDD.count()
+    val timestamps = points.rawSpatialRDD.rdd.map(_.getUserData.toString().split("\t").reverse.head.toInt).distinct.collect()
+    val pointset: HashMap[Int, PointRDD] = new HashMap()
+    for(timestamp <- timestamps){
+      pointset += (timestamp -> extractTimestamp(points, timestamp, params.sespg(), params.tespg()))
+    }
     logger.info(s"Data read [${(System.currentTimeMillis - timer) / 1000.0}] [$nPoints]")
 
     // Running maximal finder...
     timer = System.currentTimeMillis()
-    runSpatialJoin(spark: SparkSession, points: PointRDD, params: FFConf)
+    runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf)
     logger.info(s"Maximal finder run [${(System.currentTimeMillis() - timer) / 1000.0}]")
 
     // Closing session...
