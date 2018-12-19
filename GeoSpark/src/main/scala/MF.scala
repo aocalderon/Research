@@ -27,7 +27,7 @@ object MF{
     val dpartitions: Int = params.dpartitions()
     val sespg: String    = params.sespg()
     val tespg: String    = params.tespg()
-    tag = s"${params.tag()}|${info}"
+    if(params.tag() == ""){ tag = s"$info"} else { tag = s"${params.tag()}|${info}" }
 
     // Indexing points...
     var timer = System.currentTimeMillis()
@@ -153,11 +153,10 @@ object MF{
         val x = (m.getDouble(2) + m.getDouble(4)) / 2.0
         val y = (m.getDouble(3) + m.getDouble(5)) / 2.0
         val pids = m.getList[Int](6).asScala.toList.sorted.mkString(" ")
-        val notInExpansion = isNotInExpansionArea(
-          geofactory.createPoint(new Coordinate(x, y)), expansion, epsilon + precision)
-        (pids, x, y, notInExpansion)
-      }.filter(_._4)
-    .map(m => s"${m._1}\t${m._2}\t{m._3}").rdd
+        val point = geofactory.createPoint(new Coordinate(x, y))
+        val notInExpansion = isNotInExpansionArea(point, expansion, epsilon + precision)
+        (s"${pids};${x};${y}", notInExpansion)
+      }.filter(_._2).map(_._1).rdd
 
     val nMaximals = maximals.count()
     log("H.Maximal disks prunned", timer, nMaximals)

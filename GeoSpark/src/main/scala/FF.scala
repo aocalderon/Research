@@ -16,6 +16,7 @@ import scala.collection.mutable.HashMap
 
 object FF {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
+  private val geofactory: GeometryFactory = new GeometryFactory();
   private val precision: Double = 0.001
   private var tag: String = ""
 
@@ -29,8 +30,9 @@ object FF {
     for(timestamp <- pointset.keys.toList.sorted){
       val T_i = pointset.get(timestamp).get
       logger.info(s"Starting maximal disks timestamp $timestamp ...")
-      val disks = MF.run(spark, T_i, params, s"$timestamp")
-      val nDisks = disks.count()
+      val disks = new PointRDD(MF.run(spark, T_i, params, s"$timestamp").map(makePoint).toJavaRDD(),
+        StorageLevel.MEMORY_ONLY, sespg, tespg)
+      val nDisks = disks.rawSpatialRDD.count()
       log(s"Maximal disks timestamp $timestamp", timer, nDisks)
     }
 
@@ -184,6 +186,13 @@ object FF {
     new PointRDD(points.rawSpatialRDD.rdd.filter{
       _.getUserData().toString().split("\t").reverse.head.toInt == timestamp
     }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
+  }
+
+  def makePoint(pattern: String): Point = {
+    val arr = pattern.split(";")
+    val point = geofactory.createPoint(new Coordinate(arr(1).toDouble, arr(2).toDouble))
+    point.setUserData(arr(0))
+    point
   }
 
   def log(msg: String, timer: Long, n: Long = 0): Unit ={
