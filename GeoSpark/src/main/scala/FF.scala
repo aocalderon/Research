@@ -20,128 +20,83 @@ object FF {
   private val precision: Double = 0.001
   private var tag: String = ""
 
+  case class Flock(pids: List[Int], start: Int, end: Int, center: Point)
+
   /* SpatialJoin variant */
   def runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf): Unit = {
     val sespg = params.sespg()
     val tespg = params.tespg()
+    val distance = params.distance()
+    val dpartitions = params.dpartitions()
+    val mu = params.mu()
+    val delta = params.delta()
     var timer = System.currentTimeMillis()
+    import spark.implicits._
 
     // Maximal disks timestamp i...
+    var firstRun: Boolean = true
+    var F: PointRDD = new PointRDD(spark.sparkContext.emptyRDD[Point].toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
+    var partitioner = F.getPartitioner  
     for(timestamp <- pointset.keys.toList.sorted){
       val T_i = pointset.get(timestamp).get
       logger.info(s"Starting maximal disks timestamp $timestamp ...")
-      val disks = new PointRDD(MF.run(spark, T_i, params, s"$timestamp").map(makePoint).toJavaRDD(),
-        StorageLevel.MEMORY_ONLY, sespg, tespg)
-      val nDisks = disks.rawSpatialRDD.count()
+      timer = System.currentTimeMillis()
+      val C = new PointRDD(MF.run(spark, T_i, params, s"$timestamp").map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
+      val nDisks = C.rawSpatialRDD.count()
       log(s"Maximal disks timestamp $timestamp", timer, nDisks)
-    }
-
-
-    // Initialize partial result set...
-
-    /*
-    // For each new time instance t_i...
-    for(timestamp <- timestamps){
-      // Reported location for trajectories in time t_i...
-      timer = System.currentTimeMillis()
       
-      val currentPoints = pointset
-        .filter(datapoint => datapoint.t == timestamp)
-        .map{ datapoint =>
-          "%d\t%f\t%f".format(datapoint.id, datapoint.x, datapoint.y)
-        }
-        .rdd
-        .cache()
-      val nCurrentPoints = currentPoints.count()
-      logging("Reporting locations...", timer, nCurrentPoints, "points")
-
-      // Set of disks for t_i...
-      timer = System.currentTimeMillis()
-      val C: Dataset[Flock] = MaximalFinderExpansion
-        .run(currentPoints, epsilon, mu, simba, conf, timestamp)
-        .map{ m =>
-          val disk = m.split(";")
-          val x = disk(0).toDouble
-          val y = disk(1).toDouble
-          val ids = disk(2)
-          Flock(timestamp, timestamp, ids, x, y)
-        }.toDS().cache()
-      val nC = C.count()
-      logging("1.Set of disks for t_i...", timer, nC, "disks")
-
-      var nFlocks: Long = 0
-      var nJoin: Long = 0
-      if(nF_prime != 0) {
-        // Distance Join phase with previous potential flocks...
-        timer = System.currentTimeMillis()
-        val cDS = C.index(RTreeType, "cRT", Array("x", "y"))
-        val fDS = F_prime.index(RTreeType, "f_primeRT", Array("x", "y"))
-        val join = fDS.distanceJoin(cDS, Array("x", "y"), Array("x", "y"), distanceBetweenTimestamps)
-        nJoin = join.count()
-        logging("2.Distance Join phase...", timer, nJoin, "combinations")
-
-        // At least mu...
-        timer = System.currentTimeMillis()
-        val the_mu = conf.mu()
-        val U_prime = join
-          .map { tuple =>
-            val ids1 = tuple.getString(7).split(" ").map(_.toLong)
-            val ids2 = tuple.getString(2).split(" ").map(_.toLong)
-            val u = ids1.intersect(ids2)
-            val length = u.length
-            val s = tuple.getInt(0) // set the initial time...
-            val e = timestamp // set the final time...
-            val ids = u.sorted.mkString(" ") // set flocks ids...
-            val x = tuple.getDouble(8)
-            val y = tuple.getDouble(9)
-            (Flock(s, e, ids, x, y), length)
-          }
-          .filter(flock => flock._2 >= the_mu)
-          .map(_._1).as[Flock]
-        U = pruneFlocks(U_prime, simba).cache()
-        nU = U.count()
-        logging("3.Getting candidates...", timer, nU, "candidates")
+      if(firstRun){
+        F = C
+        F.analyze()
+        F.spatialPartitioning(GridType.KDBTREE, dpartitions)
+        F.buildIndex(IndexType.QUADTREE, true)
+        partitioner = F.getPartitioner
+        firstRun = false
       } else {
-        U = C
-        nU = nC
+        C.analyze()
+        val buffers = new CircleRDD(C, distance)
+        buffers.spatialPartitioning(partitioner)
+        val R = JoinQuery.DistanceJoinQuery(F, buffers, true, false)
+        var flocks = R.rdd.flatMap{ case (g: Geometry, h: java.util.HashSet[Point]) =>
+          val f0 = getFlocksFromGeom(g)
+          h.asScala.map{ point =>
+            val f1 = getFlocksFromGeom(point)
+            (f0, f1)
+          }
+        }.map{ flocks =>
+          val f = flocks._1.pids.intersect(flocks._2.pids)
+          val s = flocks._2.start
+          val e = flocks._1.end
+          val c = flocks._1.center
+          Flock(f, s, e, c)
+        }.filter(_.pids.length >= mu).distinct().persist()
+
+        // Reporting flocks...
+        val f0 =  flocks.filter{f => f.end - f.start + 1 >= delta}.persist()
+        val f1 =  flocks.filter{f => f.end - f.start + 1 <  delta}.persist()
+        f0.sortBy(_.pids.mkString(" "))
+          .map(f => s"${f.start}, ${f.end}, ${f.pids.mkString(" ")}")
+          .toDS().show(100, truncate=false)
+        flocks = f0.map(f => Flock(f.pids, f.start + 1, f.end, f.center)).union(f1).persist()
+
+        F = new PointRDD(flocks.map{ f =>
+            val info = s"${f.pids.mkString(" ")};${f.start};${f.end}"
+            f.center.setUserData(info)
+            f.center
+          }.union(C.rawSpatialRDD.rdd).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
+        F.spatialPartitioning(partitioner)
       }
-      // Found flocks...
-      timer = System.currentTimeMillis()
-      val flocks = U.filter(flock => flock.end - flock.start + 1 == delta).cache()
-      nFlocks = flocks.count()
-      logging("4.Found flocks...", timer, nFlocks, "flocks")
-
-      // Report flock patterns...
-      FinalFlocks = FinalFlocks.union(flocks).cache()
-      nFinalFlocks = FinalFlocks.count()
-
-      // Update u.t_start. Shift the time...
-      timer = System.currentTimeMillis()
-      val F = U.filter(flock => flock.end - flock.start + 1 != delta)
-        .union(flocks.map(u => Flock(u.start + 1, u.end, u.ids, u.x, u.y)))
-        .cache()
-      val nF = F.count()
-      logging("5.Updating times...", timer, nF, "flocks")
-
-      // Merge potential flocks U and disks C and adding to F...
-      timer = System.currentTimeMillis()
-      F_prime = F.union(C)
-        .rdd
-        .map(f => (f.ids, f))
-        .reduceByKey( (a,b) => if(a.start < b.start) a else b )
-        .map(_._2)
-        .toDS()
-        .cache()
-      nF_prime = F_prime.count()
-      logging("6.Filter phase...", timer, nF_prime, "flocks")
-      if(debug) printFlocks(F_prime, "", simba)
     }
-    // Reporting summary...
-    logger.warn("\n\nPFLOCK_SJ\t%.1f\t%d\t%d\t%d\n"
-      .format(epsilon, mu, delta, nFinalFlocks))
+  }
 
-    FinalFlocks
-     */
+  def getFlocksFromGeom(g: Geometry): Flock = {
+    val farr = g.getUserData.toString().split(";")
+    val pids = farr(0).split(" ").map(_.toInt).toList
+    val start = farr(1).toInt
+    val end = farr(2).toInt
+    val center = g.getCentroid
+
+    Flock(pids, start, end, center)
   }
 
   def main(args: Array[String]): Unit = {
@@ -188,10 +143,10 @@ object FF {
     }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
   }
 
-  def makePoint(pattern: String): Point = {
+  def makePoint(pattern: String, timestamp: Int): Point = {
     val arr = pattern.split(";")
     val point = geofactory.createPoint(new Coordinate(arr(1).toDouble, arr(2).toDouble))
-    point.setUserData(arr(0))
+    point.setUserData(s"${arr(0)};${timestamp};${timestamp}")
     point
   }
 
