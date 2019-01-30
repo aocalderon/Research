@@ -1,0 +1,19 @@
+#!/bin/bash
+
+DATASET_PATH="/home/acald013/Research/Datasets/Berlin/"
+DATASET_NAME="berlin0-5"
+DATASET_EXT=".tsv"
+JAR="/home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.0.jar"
+DISTANCE=35
+
+ESTART=50
+EEND=100
+ESTEP=10
+M=3
+D=3
+R=1
+for e in `seq $ESTART $ESTEP $EEND`; do
+    for r in `seq 1 $R`; do
+	spark-submit --class FF $JAR --input ${DATASET_PATH}${DATASET_NAME}${DATASET_EXT} --epsilon $e --mu $M --delta $D --distance $DISTANCE
+    done
+done

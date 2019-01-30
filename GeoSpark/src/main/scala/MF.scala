@@ -98,7 +98,7 @@ object MF{
 
     import spark.implicits._
     if(debug){
-      disks.map(d => s"${d.getUserData.toString()},POINT(${d.getX} ${d.getY})").sortBy(_.toString()).toDF().show(200, truncate=false)
+      //disks.map(d => s"${d.getUserData.toString()},POINT(${d.getX} ${d.getY})").sortBy(_.toString()).toDF().show(200, truncate=false)
     }
 
     // Indexing disks...
@@ -111,7 +111,7 @@ object MF{
     log("E.Disks indexed", timer, nDisksRDD)
 
     if(debug){
-      disksRDD.spatialPartitionedRDD.rdd.map(d => s"${d.getUserData.toString()},POINT(${d.getX} ${d.getY})").sortBy(_.toString()).toDF("line").show(200, truncate=false)
+      //disksRDD.spatialPartitionedRDD.rdd.map(d => s"${d.getUserData.toString()},POINT(${d.getX} ${d.getY})").sortBy(_.toString()).toDF("line").show(200, truncate=false)
     }
 
     // Getting expansions...
@@ -124,8 +124,8 @@ object MF{
     }.zipWithIndex
 
     if(debug){
-      logger.info(grids.toList.sortBy(_._2).map(e => s"${e._2}, ${e._1}\n").mkString(""))
-      logger.info(expansions.toList.sortBy(_._2).map(e => s"${e._2}, ${e._1}\n").mkString(""))
+      //logger.info(grids.toList.sortBy(_._2).map(e => s"${e._2}, ${e._1}\n").mkString(""))
+      //logger.info(expansions.toList.sortBy(_._2).map(e => s"${e._2}, ${e._1}\n").mkString(""))
     }
 
     expansions.foreach{e => rtree.insert(e._1, e._2)}
@@ -153,8 +153,7 @@ object MF{
     log("G.Maximal disks found", timer, nCandidates)
 
     if(debug){
-      logger.info("Candidates...")
-      candidates.filter(f => f._1 == 909 || f._1 == 908).toDF("eid", "p").show(truncate = false)
+      //candidates.filter(f => f._1 == 909 || f._1 == 908).toDF("eid", "p").show(truncate = false)
     }
 
     // Prunning maximal disks...
@@ -184,7 +183,7 @@ object MF{
       }
 
     if(debug){
-      maximals0.toDF("a","b","c").sort("a").show(100, truncate=false)
+      //maximals0.toDF("a","b","c").sort("a").show(100, truncate=false)
     }
 
     val maximals = maximals0.filter(_._2).map(_._1).rdd.distinct()

@@ -23,11 +23,14 @@ object FF {
   case class Flock(pids: List[Int], start: Int, end: Int, center: Point)
 
   /* SpatialJoin variant */
-  def runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf): Unit = {
+  def runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf): RDD[Flock] = {
+    var clockTime = System.currentTimeMillis()
+    val debug = params.debug()
     val sespg = params.sespg()
     val tespg = params.tespg()
     val distance = params.distance()
     val dpartitions = params.dpartitions()
+    val epsilon = params.epsilon()
     val mu = params.mu()
     val delta = params.delta()
     var timer = System.currentTimeMillis()
@@ -35,15 +38,25 @@ object FF {
 
     // Maximal disks timestamp i...
     var firstRun: Boolean = true
+    var report: RDD[Flock] = spark.sparkContext.emptyRDD[Flock]
     var F: PointRDD = new PointRDD(spark.sparkContext.emptyRDD[Point].toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
     var partitioner = F.getPartitioner  
     for(timestamp <- pointset.keys.toList.sorted){
       val T_i = pointset.get(timestamp).get
-      logger.info(s"Starting maximal disks timestamp $timestamp ...")
+
+      // Finding maximal disks...
+      //logger.info(s"Starting maximal disks timestamp $timestamp ...")
       timer = System.currentTimeMillis()
       val C = new PointRDD(MF.run(spark, T_i, params, s"$timestamp").map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
       val nDisks = C.rawSpatialRDD.count()
-      log(s"Maximal disks timestamp $timestamp", timer, nDisks)
+      //log(s"Maximal disks timestamp $timestamp", timer, nDisks)
+      log("1.Maximal disks found", timer, nDisks)
+
+      if(debug){
+          logger.info("C...")
+          C.rawSpatialRDD.rdd.map(f => f.getUserData.toString())
+            .sortBy(_.toString()).toDF().show(200, false)
+      }
       
       if(firstRun){
         F = C
@@ -53,6 +66,8 @@ object FF {
         partitioner = F.getPartitioner
         firstRun = false
       } else {
+        // Doing join...
+        timer = System.currentTimeMillis()
         C.analyze()
         val buffers = new CircleRDD(C, distance)
         buffers.spatialPartitioning(partitioner)
@@ -69,24 +84,93 @@ object FF {
           val e = flocks._1.end
           val c = flocks._1.center
           Flock(f, s, e, c)
-        }.filter(_.pids.length >= mu).distinct().persist()
+        }.filter(_.pids.length >= mu)
+          .map(f => (s"${f.pids};${f.start};${f.end}", f))
+          .reduceByKey( (f0, f1) => f0).map(_._2)
+          .persist()
+        val nFlocks = flocks.count()
+        log("2.Join done", timer, nFlocks)
+
+        if(debug){
+          logger.info("Join...")
+          flocks.map(f => s"${f.pids.mkString(" ")},${f.start},${f.end}")
+            .sortBy(_.toString()).toDF().show(200, false)
+        }
 
         // Reporting flocks...
-        val f0 =  flocks.filter{f => f.end - f.start + 1 >= delta}.persist()
+        timer = System.currentTimeMillis()
+        var f0 =  flocks.filter{f => f.end - f.start + 1 >= delta}.persist()
         val f1 =  flocks.filter{f => f.end - f.start + 1 <  delta}.persist()
-        f0.sortBy(_.pids.mkString(" "))
-          .map(f => s"${f.start}, ${f.end}, ${f.pids.mkString(" ")}")
-          .toDS().show(100, truncate=false)
-        flocks = f0.map(f => Flock(f.pids, f.start + 1, f.end, f.center)).union(f1).persist()
+
+        val G_prime = new PointRDD(
+          flocks.map{ f =>
+            f.center.setUserData(f.pids.mkString(" ") ++ s";${f.start};${f.end}")
+            f.center
+          }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg
+        )
+        G_prime.analyze()
+        G_prime.spatialPartitioning(GridType.KDBTREE, dpartitions)
+        val F_prime = new PointRDD(
+          f0.map{ f =>
+            f.center.setUserData(f.pids.mkString(" ") ++ s";${f.start};${f.end}")
+            f.center
+          }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg
+        )
+        F_prime.spatialPartitioning(G_prime.getPartitioner)
+        log("3.Flocks to report", timer, f0.count())
+
+        // Prunning flocks to report...
+        timer = System.currentTimeMillis()
+        f0 = pruneFlockByExpansions(F_prime, epsilon, spark).persist()
+          .map{ f =>
+            val arr = f.split(";")
+            val p = arr(0).split(" ").map(_.toInt).toList
+            val s = arr(1).toInt
+            val e = arr(2).toInt
+            val x = arr(3).toDouble
+            val y = arr(4).toDouble
+            val c = geofactory.createPoint(new Coordinate(x, y))
+            Flock(p,s,e,c)
+          }.persist(StorageLevel.MEMORY_ONLY)
+        report = report.union(f0)
+        log("4.Flocks prunned", timer, f0.count())
+
+        if(debug){
+          f0.map(f => s"${f.pids.mkString(" ")};${f.start};${f.end};POINT(${f.center.getX} ${f.center.getY})").toDF("flock").sort("flock").show(f0.count().toInt, false)
+        }
+
+        // Indexing candidates...
+        timer = System.currentTimeMillis()
+        flocks = f0.map(f => Flock(f.pids, f.start + 1, f.end, f.center))
+          .union(f1)
+          .union(C.rawSpatialRDD.rdd.map(c => getFlocksFromGeom(c)))
+          .map(f => (f.pids, f))
+          .reduceByKey( (a,b) => if(a.start < b.start) a else b )
+          .map(_._2)
+          .distinct()
+          .persist()
 
         F = new PointRDD(flocks.map{ f =>
             val info = s"${f.pids.mkString(" ")};${f.start};${f.end}"
             f.center.setUserData(info)
             f.center
-          }.union(C.rawSpatialRDD.rdd).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
-        F.spatialPartitioning(partitioner)
+          }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
+        F.analyze()
+        F.spatialPartitioning(GridType.KDBTREE, dpartitions)
+        F.buildIndex(IndexType.QUADTREE, true)
+        partitioner = F.getPartitioner
+        log("5.Candidates indexed", timer, F.rawSpatialRDD.count())
+        if(debug){
+          logger.info("F...")
+          F.rawSpatialRDD.rdd.map(f => f.getUserData.toString())    
+             .sortBy(_.toString()).toDF().show(200, false)
+        }
       }
     }
+    logger.info(s"Number of flocks: ${report.count()}")
+    val executionTime = (System.currentTimeMillis() - clockTime) / 1000.0
+    logger.info(s"PFLOCK;${epsilon};${mu};${delta};${executionTime};${report.count()}")
+    report
   }
 
   def getFlocksFromGeom(g: Geometry): Flock = {
@@ -129,7 +213,7 @@ object FF {
     // Running maximal finder...
     timer = System.currentTimeMillis()
     runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf)
-    logger.info(s"Maximal finder run [${(System.currentTimeMillis() - timer) / 1000.0}]")
+    logger.info(s"Flock finder run [${(System.currentTimeMillis() - timer) / 1000.0}]")
 
     // Closing session...
     timer = System.currentTimeMillis()
@@ -148,6 +232,103 @@ object FF {
     val point = geofactory.createPoint(new Coordinate(arr(1).toDouble, arr(2).toDouble))
     point.setUserData(s"${arr(0)};${timestamp};${timestamp}")
     point
+  }
+
+  import com.vividsolutions.jts.index.strtree.STRtree
+  import org.apache.spark.Partitioner
+  import SPMF.{AlgoLCM2, Transactions}
+
+  class ExpansionPartitioner(partitions: Int) extends Partitioner{
+    override def numPartitions: Int = partitions
+
+    override def getPartition(key: Any): Int = {
+      key.asInstanceOf[Int]
+    }
+  }
+
+  def isNotInExpansionArea(p: Point, e: Envelope, epsilon: Double): Boolean = {
+    val error = 0.00000000001
+    val x = p.getX
+    val y = p.getY
+    val min_x = e.getMinX - error
+    val min_y = e.getMinY - error
+    val max_x = e.getMaxX
+    val max_y = e.getMaxY
+
+    x <= (max_x - epsilon) &&
+      x >= (min_x + epsilon) &&
+      y <= (max_y - epsilon) &&
+      y >= (min_y + epsilon)
+  }
+
+  def pruneFlockByExpansions(F: PointRDD, epsilon: Double, spark: SparkSession): RDD[String] = {
+    import spark.implicits._
+
+    val rtree = new STRtree()
+
+    ///
+    //F.rawSpatialRDD.rdd.map(_.getUserData.toString()).toDF("F").orderBy("F").show(F.rawSpatialRDD.rdd.count.toInt, false)
+
+    var timer = System.currentTimeMillis()
+    val expansions = F.getPartitioner.getGrids.asScala.map{ e =>
+      new Envelope(e.getMinX - epsilon, e.getMaxX + epsilon, e.getMinY - epsilon, e.getMaxY + epsilon)
+    }.zipWithIndex
+    expansions.foreach{e => rtree.insert(e._1, e._2)}
+    val expansions_map = expansions.map(e => e._2 -> e._1).toMap
+
+    val expansionsRDD = F.spatialPartitionedRDD.rdd.flatMap{ disk =>
+      rtree.query(disk.getEnvelopeInternal).asScala.map{expansion_id =>
+        (expansion_id, disk)
+      }.toList
+    }.partitionBy(new ExpansionPartitioner(expansions.size)).persist(StorageLevel.MEMORY_ONLY)
+    log("a.Making expansions", timer)
+
+    ///
+    //expansionsRDD.map(e => s"${e._2.getUserData.toString()};${e._1}").toDF("expansionsRDD").orderBy("expansionsRDD").show(expansionsRDD.count().toInt, false)
+
+    timer = System.currentTimeMillis()
+    val candidates = expansionsRDD.map(_._2).mapPartitionsWithIndex{ (expansion_id, disks) =>
+      val transactions = disks.map{ d => d.getUserData.toString().split(";")(0).split(" ").map(new Integer(_)).toList.asJava}.toList.asJava
+      val LCM = new AlgoLCM2
+      val data = new Transactions(transactions)
+      LCM.run(data).asScala.map{ maximal =>
+        (expansion_id, maximal.asScala.toList.map(_.toInt))
+      }.toIterator
+    }.persist(StorageLevel.MEMORY_ONLY)
+    log("b.Finding maximals", timer)
+
+    ///
+    //candidates.map(p => (p._2.sorted.mkString(" "), p._1)).toDF("candidate", "eid").sort("candidate").show(candidates.count().toInt, false)
+
+    timer = System.currentTimeMillis()
+    val f0 = F.rawSpatialRDD.rdd.map(f => getFlocksFromGeom(f))
+      .map(f => (f.pids,f.start,f.end,f.center.getX,f.center.getY))
+      .toDF("pids","start","end","x","y")
+    val f1 = candidates.toDF("eid", "pids")
+    val prunned0 = f0.join(f1, "pids")
+      .select($"eid", $"pids", $"start", $"end", $"x", $"y")
+      .map{ m =>
+        val expansion = expansions_map(m.getInt(0))
+        val pids = m.getList[Int](1).asScala.toList.mkString(" ")
+        val start = m.getInt(2)
+        val end = m.getInt(3)
+        val x = m.getDouble(4)
+        val y = m.getDouble(5)
+        val point = geofactory.createPoint(new Coordinate(x, y))
+        val notInExpansion = isNotInExpansionArea(point, expansion, epsilon)
+        val f = s"${pids};${start};${end};${point.getX};${point.getY}"
+        (f, notInExpansion, expansion.toString())
+      }.rdd
+
+    val prunned = prunned0.filter(_._2).map(_._1)
+      .distinct()
+      .persist(StorageLevel.MEMORY_ONLY)
+    log("c.Filtering maximal in expansions", timer)
+
+    ///
+    //prunned0.sortBy(p => p._1).toDF("flock", "notInExpansion", "Exp").show(prunned0.count().toInt, false)
+
+    prunned
   }
 
   def log(msg: String, timer: Long, n: Long = 0): Unit ={
