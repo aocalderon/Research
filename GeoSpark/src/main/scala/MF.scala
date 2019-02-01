@@ -190,7 +190,8 @@ object MF{
     val nMaximals = maximals.count()
     log("H.Maximal disks prunned", timer, nMaximals)
 
-    if(debug){
+    ////////////////////////////////////////////////////////////////////////////////////
+    if(false){
       val maxims = maximals.map{ m =>
         val arr = m.split(";")
         s"${arr(0)},POINT(${arr(1)} ${arr(2)})\n"

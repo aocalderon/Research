@@ -53,9 +53,8 @@ object FF {
       log("1.Maximal disks found", timer, nDisks)
 
       if(debug){
-          logger.info("C...")
-          C.rawSpatialRDD.rdd.map(f => f.getUserData.toString())
-            .sortBy(_.toString()).toDF().show(200, false)
+          //logger.info("C...")
+          //C.rawSpatialRDD.rdd.map(f => f.getUserData.toString()).sortBy(_.toString()).toDF().show(200, false)
       }
       
       if(firstRun){
@@ -72,13 +71,18 @@ object FF {
         val buffers = new CircleRDD(C, distance)
         buffers.spatialPartitioning(partitioner)
         val R = JoinQuery.DistanceJoinQuery(F, buffers, true, false)
-        var flocks = R.rdd.flatMap{ case (g: Geometry, h: java.util.HashSet[Point]) =>
+        var flocks0 = R.rdd.flatMap{ case (g: Geometry, h: java.util.HashSet[Point]) =>
           val f0 = getFlocksFromGeom(g)
           h.asScala.map{ point =>
             val f1 = getFlocksFromGeom(point)
             (f0, f1)
           }
-        }.map{ flocks =>
+        }
+        if(debug){
+          logger.info(s"FF,Candidates_after_Join,${epsilon},${timestamp},${flocks0.count()}")
+        }
+
+        var flocks = flocks0.map{ flocks =>
           val f = flocks._1.pids.intersect(flocks._2.pids)
           val s = flocks._2.start
           val e = flocks._1.end
@@ -92,9 +96,9 @@ object FF {
         log("2.Join done", timer, nFlocks)
 
         if(debug){
-          logger.info("Join...")
-          flocks.map(f => s"${f.pids.mkString(" ")},${f.start},${f.end}")
-            .sortBy(_.toString()).toDF().show(200, false)
+          //logger.info("Join...")
+          //flocks.map(f => s"${f.pids.mkString(" ")},${f.start},${f.end}").sortBy(_.toString()).toDF().show(200, false)
+          logger.info(s"FF,Less_Than_Mu,${epsilon},${timestamp},${nFlocks}")
         }
 
         // Reporting flocks...
@@ -136,7 +140,8 @@ object FF {
         log("4.Flocks prunned", timer, f0.count())
 
         if(debug){
-          f0.map(f => s"${f.pids.mkString(" ")};${f.start};${f.end};POINT(${f.center.getX} ${f.center.getY})").toDF("flock").sort("flock").show(f0.count().toInt, false)
+          //f0.map(f => s"${f.pids.mkString(" ")};${f.start};${f.end};POINT(${f.center.getX} ${f.center.getY})").toDF("flock").sort("flock").show(f0.count().toInt, false)
+          logger.info(s"FF,Flocks_being_reported,${epsilon},${timestamp},${f0.count()}")
         }
 
         // Indexing candidates...
@@ -161,9 +166,9 @@ object FF {
         partitioner = F.getPartitioner
         log("5.Candidates indexed", timer, F.rawSpatialRDD.count())
         if(debug){
-          logger.info("F...")
-          F.rawSpatialRDD.rdd.map(f => f.getUserData.toString())    
-             .sortBy(_.toString()).toDF().show(200, false)
+          //logger.info("F...")
+          //F.rawSpatialRDD.rdd.map(f => f.getUserData.toString()).sortBy(_.toString()).toDF().show(200, false)
+          logger.info(s"FF,New_set_of_candidates,${epsilon},${timestamp},${F.rawSpatialRDD.count()}")
         }
       }
     }
