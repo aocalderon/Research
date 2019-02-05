@@ -1,0 +1,17 @@
+[info] Packaging /home/and/Documents/PhD/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/berlincopier_2.11-0.3.jar ...
+[debug] Input file mappings:
+[debug] 	BerlinCopier$$typecreator2$1.class
+[debug] 	  /home/and/Documents/PhD/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$typecreator2$1.class
+[debug] 	BerlinCopier$.class
+[debug] 	  /home/and/Documents/PhD/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$.class
+[debug] 	ST_Point$.class
+[debug] 	  /home/and/Documents/PhD/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/ST_Point$.class
+[debug] 	BerlinCopier.class
+[debug] 	  /home/and/Documents/PhD/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier.class
+[debug] 	ST_Point.class
+[debug] 	  /home/and/Documents/PhD/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/ST_Point.class
+[debug] 	BerlinCopier$$typecreator1$1.class
+[debug] 	  /home/and/Documents/PhD/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$typecreator1$1.class
+[debug] 	BerlinCopier$$anonfun$1.class
+[debug] 	  /home/and/Documents/PhD/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$anonfun$1.class
+[info] Done packaging.
