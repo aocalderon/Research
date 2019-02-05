@@ -33,6 +33,11 @@ Scripts/Scala/LCM/project/*
 Scripts/Scala/LCM/.idea/*
 Scripts/Scala/LCM/.idea/workspace.xml
 
+Scripts/Scala/BerlinCopier/target/*
+Scripts/Scala/BerlinCopier/project/*
+Scripts/Scala/BerlinCopier/.idea/*
+Scripts/Scala/BerlinCopier/.idea/workspace.xml
+
 ensime*
 *.cache
 *.log
