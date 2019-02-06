@@ -13,7 +13,7 @@ object BerlinCopier {
     val conf = new BCConf(args)
     val gap: Int = conf.gap()
     val indeces: List[(Int, Int)] = List((1,0), (1,1), (0,1), (-1,1), (-1,0), (-1,-1), (0,-1), (1,-1))
-    val spark = SparkSession.builder().master("local[4]").getOrCreate()
+    val spark = SparkSession.builder().master("local[*]").getOrCreate()
 
     import spark.implicits._
     val filename = conf.input()
@@ -41,23 +41,34 @@ object BerlinCopier {
 
     val max_pid = data.agg(max($"pid")).collect()(0).getInt(0)
 
-    val n = conf.n()
-    val timer = System.currentTimeMillis()
     logger.info("Starting duplication...")
-    val duplication = (0 to n).par.map{ k =>
-      val i = indeces(k)._1
-      val j = indeces(k)._2
+    var timer = System.currentTimeMillis()
+    var duplication = spark.sparkContext.emptyRDD[ST_Point].toDS()
+    val times = conf.times()
+    if(times == 1){
+      duplication = data
+    } else {
+      val n = times - 2
+      duplication = (0 to n).par.map{ k =>
+        val i = indeces(k)._1
+        val j = indeces(k)._2
 
-      data.map{ p =>
-        val new_pid = p.pid + ((k + 1) * max_pid)
-        val new_x   = p.x + (i * extent_x)
-        val new_y   = p.y + (j * extent_y)
-        ST_Point(new_pid, new_x, new_y, p.t)
-      }
-    }.reduce( (a, b) => a.union(b))
+        data.map{ p =>
+          val new_pid = p.pid + ((k + 1) * max_pid)
+          val new_x   = p.x + (i * extent_x)
+          val new_y   = p.y + (j * extent_y)
+          ST_Point(new_pid, new_x, new_y, p.t)
+        }
+      }.reduce( (a, b) => a.union(b))
       .union(data)
+    }
     logger.info(s"Duplication done at ${(System.currentTimeMillis() - timer) / 1000.0}s")
 
+
+    logger.info("Saving new dataset...")
+    timer = System.currentTimeMillis()
+    val nDataset = duplication.count()
+    logger.info(s"Size of the new dataset: $nDataset points")
     if(conf.debug()){
       val out = duplication.map(p => s"${p.pid / max_pid};${p.pid};${p.t};POINT(${p.x} ${p.y})\n")
         .collect().mkString("")
@@ -65,13 +76,10 @@ object BerlinCopier {
       pw.write(out)
       pw.close
     }
-
-    val nDataset = duplication.count()
-    logger.info(s"Size of the new dataset: $nDataset points")
-
     val pw = new PrintWriter(new File(conf.output()))
     pw.write(duplication.map(p => s"${p.pid}\t${p.x}\t${p.y}\t${p.t}\n").collect().mkString(""))
     pw.close
+    logger.info(s"Dataset saved at ${(System.currentTimeMillis() - timer) / 1000.0}s")
 
     spark.close()
   }
@@ -80,7 +88,7 @@ object BerlinCopier {
 class BCConf(args: Seq[String]) extends ScallopConf(args) {
   val input:  ScallopOption[String]   = opt[String]  (required = true)
   val gap:    ScallopOption[Int]      = opt[Int]     (default  = Some(500))
-  val n:      ScallopOption[Int]      = opt[Int]     (default  = Some(0))
+  val times:  ScallopOption[Int]      = opt[Int]     (default  = Some(2))
   val debug:  ScallopOption[Boolean]  = opt[Boolean] (default  = Some(false))
   val output: ScallopOption[String]   = opt[String]  (default  = Some("/tmp/output.tsv"))
 
