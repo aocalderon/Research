@@ -33,6 +33,13 @@ Scripts/Scala/LCM/project/*
 Scripts/Scala/LCM/.idea/*
 Scripts/Scala/LCM/.idea/workspace.xml
 
+Scripts/Scala/BerlinCopier/target/*
+Scripts/Scala/BerlinCopier/project/*
+Scripts/Scala/BerlinCopier/.idea/*
+Scripts/Scala/BerlinCopier/.idea/workspace.xml
+Scripts/Scala/BerlinCopier/.ensime
+Scripts/Scala/BerlinCopier/.ensime_cache/*
+
 ensime*
 *.cache
 *.log
@@ -50,4 +57,4 @@ spark-warehouse
 *.snm
 *.synctex.gz
 *.toc
-
+*.pcl
