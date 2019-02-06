@@ -30,6 +30,7 @@ object FF {
     val tespg = params.tespg()
     val distance = params.distance()
     val dpartitions = params.dpartitions()
+    val cores = params.cores()
     val epsilon = params.epsilon()
     val mu = params.mu()
     val delta = params.delta()
@@ -174,7 +175,7 @@ object FF {
     }
     logger.info(s"Number of flocks: ${report.count()}")
     val executionTime = (System.currentTimeMillis() - clockTime) / 1000.0
-    logger.info(s"PFLOCK;${epsilon};${mu};${delta};${executionTime};${report.count()}")
+    logger.info(s"PFLOCK;${cores};${epsilon};${mu};${delta};${executionTime};${report.count()}")
     report
   }
 
