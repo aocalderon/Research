@@ -57,4 +57,4 @@ spark-warehouse
 *.snm
 *.synctex.gz
 *.toc
-
+*.pcl
