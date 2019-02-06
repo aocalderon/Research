@@ -37,6 +37,8 @@ Scripts/Scala/BerlinCopier/target/*
 Scripts/Scala/BerlinCopier/project/*
 Scripts/Scala/BerlinCopier/.idea/*
 Scripts/Scala/BerlinCopier/.idea/workspace.xml
+Scripts/Scala/BerlinCopier/.ensime
+Scripts/Scala/BerlinCopier/.ensime_cache/*
 
 ensime*
 *.cache
