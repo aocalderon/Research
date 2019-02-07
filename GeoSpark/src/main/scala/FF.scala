@@ -34,6 +34,7 @@ object FF {
     val epsilon = params.epsilon()
     val mu = params.mu()
     val delta = params.delta()
+    val tag = params.tag()
     var timer = System.currentTimeMillis()
     import spark.implicits._
 
@@ -175,7 +176,7 @@ object FF {
     }
     logger.info(s"Number of flocks: ${report.count()}")
     val executionTime = (System.currentTimeMillis() - clockTime) / 1000.0
-    logger.info(s"PFLOCK;${cores};${epsilon};${mu};${delta};${executionTime};${report.count()}")
+    logger.info(s"PFLOCK;${tag};${epsilon};${mu};${delta};${executionTime};${report.count()}")
     report
   }
 
