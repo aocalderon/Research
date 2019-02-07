@@ -218,8 +218,17 @@ object FF {
 
     // Running maximal finder...
     timer = System.currentTimeMillis()
-    runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf)
+    val flocks = runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf)
     logger.info(s"Flock finder run [${(System.currentTimeMillis() - timer) / 1000.0}]")
+
+    if(params.debug()){
+      import spark.implicits._
+      val f = flocks.map(f => s"${f.start}, ${f.end}, ${f.pids.mkString(" ")}\n").sortBy(_.toString()).collect().mkString("")
+      import java.io._
+      val pw = new PrintWriter(new File("/tmp/flocks.txt"))
+      pw.write(f)
+      pw.close
+    }
 
     // Closing session...
     timer = System.currentTimeMillis()
