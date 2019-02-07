@@ -1,0 +1,32 @@
+#!/usr/bin/Rscript
+
+require(ggplot2)
+require(stringr)
+require(tidyverse)
+
+READ_DATA     = T
+SAVE_PDF      = F
+SEP           = ";"
+RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
+
+dataFile = paste0(RESEARCH_HOME, 'Scripts/R/Benchmarks/MultiAndSingleNode/singlenode.txt')
+
+data = readLines(dataFile)
+
+data = as.tibble(as.data.frame(data), stringAsFactors = F) %>% 
+  rename(Line = data) %>% 
+  filter(grepl("PFLOCK;", Line)) %>% 
+  separate(Line, c("Bogus", "Cores", "Epsilon", "Mu", "Delta", "Time", "Load"), sep = ";") %>%
+  select(Cores, Epsilon, Time, Load) %>%
+  mutate(Epsilon = as.numeric(Epsilon), Time = as.numeric(Time), Load = as.numeric(Load)) %>%
+  group_by(Cores, Epsilon) %>% summarise(Time = mean(Time))
+
+title = "Execution time by Epsilon"
+g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Cores)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
+  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) 
+if(SAVE_PDF){
+  ggsave("./Singlenode.pdf", width = 7, height = 4, dpi = 300, units = "in", device='pdf', g)
+} else {
+  plot(g)
+}
