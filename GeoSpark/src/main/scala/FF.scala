@@ -115,7 +115,7 @@ object FF {
           }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg
         )
         G_prime.analyze()
-        G_prime.spatialPartitioning(GridType.KDBTREE, dpartitions)
+        G_prime.spatialPartitioning(GridType.RTREE, dpartitions)
         val F_prime = new PointRDD(
           f0.map{ f =>
             f.center.setUserData(f.pids.mkString(" ") ++ s";${f.start};${f.end}")
