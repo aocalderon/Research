@@ -1,43 +1,43 @@
-[info] Packaging /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/berlincopier_2.11-0.3.jar ...
-[debug] Input file mappings:
-[debug] 	BerlinCopier$.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$.class
-[debug] 	BCConf$$anonfun$7.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BCConf$$anonfun$7.class
-[debug] 	BCConf$$anonfun$3.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BCConf$$anonfun$3.class
-[debug] 	BerlinCopier$$anonfun$2.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$anonfun$2.class
-[debug] 	BerlinCopier$$anonfun$main$3.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$anonfun$main$3.class
-[debug] 	BerlinCopier$$anonfun$main$1.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$anonfun$main$1.class
-[debug] 	BerlinCopier$$typecreator4$1.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$typecreator4$1.class
-[debug] 	ST_Point.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/ST_Point.class
-[debug] 	BerlinCopier$$anonfun$main$1$$typecreator5$1.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$anonfun$main$1$$typecreator5$1.class
-[debug] 	BerlinCopier$$anonfun$1.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$anonfun$1.class
-[debug] 	BerlinCopier.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier.class
-[debug] 	BerlinCopier$$typecreator1$1.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$typecreator1$1.class
-[debug] 	BerlinCopier$$anonfun$main$1$$anonfun$apply$1.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$anonfun$main$1$$anonfun$apply$1.class
-[debug] 	BCConf$$anonfun$4.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BCConf$$anonfun$4.class
-[debug] 	BCConf$$anonfun$6.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BCConf$$anonfun$6.class
-[debug] 	BerlinCopier$$anonfun$main$2.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$anonfun$main$2.class
-[debug] 	BerlinCopier$$typecreator2$1.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$typecreator2$1.class
-[debug] 	BCConf.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BCConf.class
-[debug] 	ST_Point$.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/ST_Point$.class
-[debug] 	BCConf$$anonfun$5.class
-[debug] 	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BCConf$$anonfun$5.class
-[info] Done packaging.
+[0m[[0m[0minfo[0m] [0m[0mPackaging /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/berlincopier_2.11-0.3.jar ...[0m
+[0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BerlinCopier$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BCConf$$anonfun$7.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BCConf$$anonfun$7.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BCConf$$anonfun$3.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BCConf$$anonfun$3.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BerlinCopier$$anonfun$2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$anonfun$2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BerlinCopier$$anonfun$main$3.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$anonfun$main$3.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BerlinCopier$$anonfun$main$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$anonfun$main$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BerlinCopier$$typecreator4$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$typecreator4$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	ST_Point.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/ST_Point.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BerlinCopier$$anonfun$main$1$$typecreator5$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$anonfun$main$1$$typecreator5$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BerlinCopier$$anonfun$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$anonfun$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BerlinCopier.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BerlinCopier$$typecreator1$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$typecreator1$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BerlinCopier$$anonfun$main$1$$anonfun$apply$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$anonfun$main$1$$anonfun$apply$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BCConf$$anonfun$4.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BCConf$$anonfun$4.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BCConf$$anonfun$6.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BCConf$$anonfun$6.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BerlinCopier$$anonfun$main$2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$anonfun$main$2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BerlinCopier$$typecreator2$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BerlinCopier$$typecreator2$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BCConf.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BCConf.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	ST_Point$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/ST_Point$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BCConf$$anonfun$5.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/acald013/Research/Scripts/Scala/BerlinCopier/target/scala-2.11/classes/BCConf$$anonfun$5.class[0m
+[0m[[0m[0minfo[0m] [0m[0mDone packaging.[0m

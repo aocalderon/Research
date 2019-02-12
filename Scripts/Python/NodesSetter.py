@@ -12,7 +12,7 @@ args = parser.parse_args()
 
 ## Setting variables...
 spark_home = os.environ['SPARK_HOME']
-nodes = ['acald013@dblab-rack12', 'acald013@dblab-rack14', 'acald013@dblab-rack11', 'acald013@dblab-rack15']
+nodes = ['acald013@dblab-rack11', 'acald013@dblab-rack12', 'acald013@dblab-rack14', 'acald013@dblab-rack15']
 
 ## Setting nodes...
 def setNodes(n):

@@ -1,13 +1,13 @@
 #!/bin/bash
 
 DATASET_PATH="/home/acald013/Research/Datasets/Berlin/"
-DATASETS=( "berlin_N20K_T0-5" "berlin_N40K_T0-5" "berlin_N60K_T0-5" )
+DATASETS=( "berlin_N20K_T0-5" "berlin_N40K_T0-5" "berlin_N60K_T0-5" "berlin_N80K_T0-5" )
 DATASET_EXT=".tsv"
 JAR="/home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.0.jar"
 
 
-EPSILONS=( 50 60 70 80 90 100 )
-DISTANCES=( 35 50 50 75 75 75 )
+EPSILONS=(  90 100 110 )
+DISTANCES=( 75 75 100 )
 MU=3
 DELTA=3
 N=4

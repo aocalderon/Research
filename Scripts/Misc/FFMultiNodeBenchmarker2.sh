@@ -6,12 +6,12 @@ DATASET_EXT=".tsv"
 JAR="/home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.0.jar"
 
 
-EPSILONS=( 50 60 70 80 90 100 )
-DISTANCES=( 35 50 50 75 75 75 )
+EPSILONS=(  70 80 90 100 )
+DISTANCES=( 50 75 75 75 )
 MU=3
 DELTA=3
 N=3
-NODES=3
+NODES=4
 
 for n in `seq 1 $N`; do
     for node in `seq 1 $NODES`; do
