@@ -5,11 +5,11 @@ require(stringr)
 require(tidyverse)
 
 READ_DATA     = T
-SAVE_PDF      = T
+SAVE_PDF      = F
 SEP           = ";"
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 
-dataFile = paste0(RESEARCH_HOME, 'Scripts/R/Benchmarks/MultiAndSingleNode/multinode1.txt')
+dataFile = paste0(RESEARCH_HOME, 'Scripts/R/Benchmarks/MultiAndSingleNode/multinode_Gap50K.txt')
 
 data = readLines(dataFile)
 
