@@ -11,7 +11,7 @@ class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val sespg:       ScallopOption[String]  =  opt[String]   (default  = Some("epsg:3068"))
   val tespg:       ScallopOption[String]  =  opt[String]   (default  = Some("epsg:3068"))
   val ppartitions: ScallopOption[Int]     =  opt[Int]      (default  = Some(12))
-  val dpartitions: ScallopOption[Int]     =  opt[Int]      (default  = Some(24))
+  val dpartitions: ScallopOption[Int]     =  opt[Int]      (default  = Some(25))
   val cores:       ScallopOption[Int]     =  opt[Int]      (default  = Some(21))
   val tag:         ScallopOption[String]  =  opt[String]   (default  = Some(""))
   val debug:       ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))

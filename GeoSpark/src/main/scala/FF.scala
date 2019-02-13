@@ -62,7 +62,7 @@ object FF {
       if(firstRun){
         F = C
         F.analyze()
-        F.spatialPartitioning(GridType.KDBTREE, dpartitions)
+        F.spatialPartitioning(GridType.QUADTREE, dpartitions)
         F.buildIndex(IndexType.QUADTREE, true)
         partitioner = F.getPartitioner
         firstRun = false
@@ -115,7 +115,7 @@ object FF {
           }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg
         )
         G_prime.analyze()
-        G_prime.spatialPartitioning(GridType.RTREE, dpartitions)
+        G_prime.spatialPartitioning(GridType.QUADTREE, dpartitions)
         val F_prime = new PointRDD(
           f0.map{ f =>
             f.center.setUserData(f.pids.mkString(" ") ++ s";${f.start};${f.end}")
@@ -163,7 +163,7 @@ object FF {
             f.center
           }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
         F.analyze()
-        F.spatialPartitioning(GridType.KDBTREE, dpartitions)
+        F.spatialPartitioning(GridType.QUADTREE, dpartitions)
         F.buildIndex(IndexType.QUADTREE, true)
         partitioner = F.getPartitioner
         log("5.Candidates indexed", timer, F.rawSpatialRDD.count())
@@ -279,11 +279,11 @@ object FF {
 
   def pruneFlockByExpansions(F: PointRDD, epsilon: Double, spark: SparkSession): RDD[String] = {
     import spark.implicits._
-
+    val debug = false
     val rtree = new STRtree()
 
     ///
-    //F.rawSpatialRDD.rdd.map(_.getUserData.toString()).toDF("F").orderBy("F").show(F.rawSpatialRDD.rdd.count.toInt, false)
+    if(debug) F.rawSpatialRDD.rdd.map(_.getUserData.toString()).toDF("F").filter($"F".contains("297 2122 2224")).orderBy("F").show(F.rawSpatialRDD.rdd.count.toInt, false)
 
     var timer = System.currentTimeMillis()
     val expansions = F.getPartitioner.getGrids.asScala.map{ e =>
@@ -300,11 +300,11 @@ object FF {
     log("a.Making expansions", timer)
 
     ///
-    //expansionsRDD.map(e => s"${e._2.getUserData.toString()};${e._1}").toDF("expansionsRDD").orderBy("expansionsRDD").show(expansionsRDD.count().toInt, false)
+    if(debug) expansionsRDD.map(e => s"${e._2.getUserData.toString()};${e._1}").toDF("E").filter($"E".contains("297 2122 2224")).orderBy("E").show(expansionsRDD.count().toInt, false)
 
     timer = System.currentTimeMillis()
     val candidates = expansionsRDD.map(_._2).mapPartitionsWithIndex{ (expansion_id, disks) =>
-      val transactions = disks.map{ d => d.getUserData.toString().split(";")(0).split(" ").map(new Integer(_)).toList.asJava}.toList.asJava
+      val transactions = disks.map{ d => d.getUserData.toString().split(";")(0).split(" ").map(new Integer(_)).toList.asJava}.toList.distinct.asJava
       val LCM = new AlgoLCM2
       val data = new Transactions(transactions)
       LCM.run(data).asScala.map{ maximal =>
@@ -314,7 +314,7 @@ object FF {
     log("b.Finding maximals", timer)
 
     ///
-    //candidates.map(p => (p._2.sorted.mkString(" "), p._1)).toDF("candidate", "eid").sort("candidate").show(candidates.count().toInt, false)
+    if(debug) candidates.map(p => (p._2.sorted.mkString(" "), p._1)).toDF("C", "E").filter($"C".contains("297 2122 2224")).sort("C").show(candidates.count().toInt, false)
 
     timer = System.currentTimeMillis()
     val f0 = F.rawSpatialRDD.rdd.map(f => getFlocksFromGeom(f))
@@ -342,7 +342,7 @@ object FF {
     log("c.Filtering maximal in expansions", timer)
 
     ///
-    //prunned0.sortBy(p => p._1).toDF("flock", "notInExpansion", "Exp").show(prunned0.count().toInt, false)
+    if(debug) prunned0.sortBy(p => p._1).toDF("flock", "notInExpansion", "Exp").filter($"flock".contains("297 2122 2224")).show(prunned0.count().toInt, false)
 
     prunned
   }
