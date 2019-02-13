@@ -1,5 +1,7 @@
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.expressions._
+import scala.collection.JavaConverters._
 import org.slf4j.{Logger, LoggerFactory}
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 import java.io._
@@ -12,7 +14,7 @@ object BerlinCopier {
   def main(args: Array[String]): Unit = {
     val conf = new BCConf(args)
     val gap: Int = conf.gap()
-    val indeces: List[(Int, Int)] = List((1,0), (1,1), (0,1), (-1,1), (-1,0), (-1,-1), (0,-1), (1,-1))
+    val indices: List[(Int, Int)] = List((1,0), (1,1), (0,1), (-1,1), (-1,0), (-1,-1), (0,-1), (1,-1))
     val spark = SparkSession.builder().master("local[*]").getOrCreate()
 
     import spark.implicits._
@@ -39,7 +41,9 @@ object BerlinCopier {
 
     logger.info(s"Dimensions: $extent_x x $extent_y")
 
-    val max_pid = data.agg(max($"pid")).collect()(0).getInt(0)
+    val max_pid = data.agg(max($"pid")).collect()(0).getInt(0) + 1
+
+    logger.info(s"Max pid in this dataset: $max_pid")
 
     logger.info("Starting duplication...")
     var timer = System.currentTimeMillis()
@@ -50,17 +54,19 @@ object BerlinCopier {
     } else {
       val n = times - 2
       duplication = (0 to n).par.map{ k =>
-        val i = indeces(k)._1
-        val j = indeces(k)._2
+        val i = indices(k)._1
+        val j = indices(k)._2
 
         data.map{ p =>
-          val new_pid = p.pid + ((k + 1) * max_pid)
+          val new_pid = p.pid + ((k+1) * max_pid)
           val new_x   = p.x + (i * extent_x)
           val new_y   = p.y + (j * extent_y)
           ST_Point(new_pid, new_x, new_y, p.t)
         }
       }.reduce( (a, b) => a.union(b))
       .union(data)
+      .sort($"pid", $"t").persist()
+      duplication.show()
     }
     logger.info(s"Duplication done at ${(System.currentTimeMillis() - timer) / 1000.0}s")
 
@@ -70,10 +76,16 @@ object BerlinCopier {
     val nDataset = duplication.count()
     logger.info(s"Size of the new dataset: $nDataset points")
     if(conf.debug()){
-      val out = duplication.map(p => s"${p.pid / max_pid};${p.pid};${p.t};POINT(${p.x} ${p.y})\n")
-        .collect().mkString("")
+      val out = duplication.map(p => (p.pid, p.t, s"${p.x} ${p.y}"))
+        .toDF("pid", "t", "point").sort($"pid", $"t")
+        .withColumn("traj", collect_list($"point").over(Window.partitionBy($"pid")))
+        .map(t => (t.getInt(0), t.getList[String](3).asScala))
+        .map(t => (t._1, s"LINESTRING(${t._2.mkString(",")})"))
+        .toDF("pid", "traj").distinct().orderBy($"pid")
+
+      out.show(false)
       val pw = new PrintWriter(new File("/tmp/output.wkt"))
-      pw.write(out)
+      pw.write(out.map(t => s"${t.getInt(0)};${t.getString(1)}\n").collect().mkString(""))
       pw.close
     }
     val pw = new PrintWriter(new File(conf.output()))
