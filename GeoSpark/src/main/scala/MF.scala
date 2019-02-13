@@ -176,14 +176,14 @@ object MF{
         val expansion = expansions_map(m.getInt(0))
         val x = (m.getDouble(2) + m.getDouble(4)) / 2.0
         val y = (m.getDouble(3) + m.getDouble(5)) / 2.0
-        val pids = m.getList[Int](6).asScala.toList.sorted.mkString(" ")
+        val pids = m.getList[Int](6).asScala.toList.sorted.distinct.mkString(" ")
         val point = geofactory.createPoint(new Coordinate(x, y))
         val notInExpansion = isNotInExpansionArea(point, expansion, epsilon)
         (s"${pids};${x};${y}", notInExpansion, expansion.toString())
       }
 
     if(debug){
-      //maximals0.toDF("a","b","c").sort("a").show(100, truncate=false)
+      maximals0.toDF("a","b","c").filter($"a".contains("19999 20637 22033")).sort("a").show(100, truncate=false)
     }
 
     val maximals = maximals0.filter(_._2).map(_._1).rdd.distinct()
@@ -191,7 +191,7 @@ object MF{
     log("H.Maximal disks prunned", timer, nMaximals)
 
     ////////////////////////////////////////////////////////////////////////////////////
-    if(false){
+    if(debug){
       val maxims = maximals.map{ m =>
         val arr = m.split(";")
         s"${arr(0)},POINT(${arr(1)} ${arr(2)})\n"
