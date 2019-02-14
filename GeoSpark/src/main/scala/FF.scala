@@ -13,6 +13,7 @@ import org.apache.spark.sql.SparkSession
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.HashMap
+import java.io._
 
 object FF {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -47,18 +48,11 @@ object FF {
       val T_i = pointset.get(timestamp).get
 
       // Finding maximal disks...
-      //logger.info(s"Starting maximal disks timestamp $timestamp ...")
       timer = System.currentTimeMillis()
       val C = new PointRDD(MF.run(spark, T_i, params, s"$timestamp").map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
       val nDisks = C.rawSpatialRDD.count()
-      //log(s"Maximal disks timestamp $timestamp", timer, nDisks)
       log("1.Maximal disks found", timer, nDisks)
 
-      if(debug){
-          //logger.info("C...")
-          //C.rawSpatialRDD.rdd.map(f => f.getUserData.toString()).sortBy(_.toString()).toDF().show(200, false)
-      }
-      
       if(firstRun){
         F = C
         F.analyze()
@@ -80,6 +74,7 @@ object FF {
             (f0, f1)
           }
         }
+
         if(debug){
           logger.info(s"FF,Candidates_after_Join,${epsilon},${timestamp},${flocks0.count()}")
         }
@@ -98,8 +93,6 @@ object FF {
         log("2.Join done", timer, nFlocks)
 
         if(debug){
-          //logger.info("Join...")
-          //flocks.map(f => s"${f.pids.mkString(" ")},${f.start},${f.end}").sortBy(_.toString()).toDF().show(200, false)
           logger.info(s"FF,Less_Than_Mu,${epsilon},${timestamp},${nFlocks}")
         }
 
@@ -125,9 +118,22 @@ object FF {
         F_prime.spatialPartitioning(G_prime.getPartitioner)
         log("3.Flocks to report", timer, f0.count())
 
+        if(debug){
+          logger.info(s"Saving candidates set at timestamp ${timestamp}...")
+          val data = F_prime.rawSpatialRDD.rdd.map{ p =>
+            val pids = p.getUserData.toString.split(";")(0)
+            val x = p.getX
+            val y = p.getY
+            s"${pids}\t${x}\t${y}\n"
+          }.collect().mkString("")
+          val pw = new PrintWriter(s"/tmp/toprune_${timestamp}.tsv")
+          pw.write(data)
+          pw.close
+        }
+
         // Prunning flocks to report...
         timer = System.currentTimeMillis()
-        f0 = pruneFlockByExpansions(F_prime, epsilon, spark).persist()
+        f0 = pruneFlockByExpansions(F_prime, epsilon, spark)
           .map{ f =>
             val arr = f.split(";")
             val p = arr(0).split(" ").map(_.toInt).toList
@@ -142,7 +148,6 @@ object FF {
         log("4.Flocks prunned", timer, f0.count())
 
         if(debug){
-          //f0.map(f => s"${f.pids.mkString(" ")};${f.start};${f.end};POINT(${f.center.getX} ${f.center.getY})").toDF("flock").sort("flock").show(f0.count().toInt, false)
           logger.info(s"FF,Flocks_being_reported,${epsilon},${timestamp},${f0.count()}")
         }
 
@@ -168,8 +173,6 @@ object FF {
         partitioner = F.getPartitioner
         log("5.Candidates indexed", timer, F.rawSpatialRDD.count())
         if(debug){
-          //logger.info("F...")
-          //F.rawSpatialRDD.rdd.map(f => f.getUserData.toString()).sortBy(_.toString()).toDF().show(200, false)
           logger.info(s"FF,New_set_of_candidates,${epsilon},${timestamp},${F.rawSpatialRDD.count()}")
         }
       }
@@ -203,12 +206,13 @@ object FF {
     val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .master(master).appName("PFLock").getOrCreate()
+    import spark.implicits._
     logger.info(s"Session started [${(System.currentTimeMillis - timer) / 1000.0}]")
 
     // Reading data...
     timer = System.currentTimeMillis()
     val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, ppartitions)
-      points.CRSTransform(params.sespg(), params.tespg())
+    points.CRSTransform(params.sespg(), params.tespg())
     val nPoints = points.rawSpatialRDD.count()
     val timestamps = points.rawSpatialRDD.rdd.map(_.getUserData.toString().split("\t").reverse.head.toInt).distinct.collect()
     val pointset: HashMap[Int, PointRDD] = new HashMap()
@@ -223,9 +227,7 @@ object FF {
     logger.info(s"Flock finder run [${(System.currentTimeMillis() - timer) / 1000.0}]")
 
     if(params.debug()){
-      import spark.implicits._
       val f = flocks.map(f => s"${f.start}, ${f.end}, ${f.pids.mkString(" ")}\n").sortBy(_.toString()).collect().mkString("")
-      import java.io._
       val pw = new PrintWriter(new File("/tmp/flocks.txt"))
       pw.write(f)
       pw.close
