@@ -10,7 +10,7 @@ EPSILONS=(  90 100 110 )
 DISTANCES=( 75 75 100 )
 MU=3
 DELTA=3
-N=1
+N=4
 NODES=4
 
 for n in `seq 1 $N`; do
