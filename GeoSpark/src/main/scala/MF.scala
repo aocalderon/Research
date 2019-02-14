@@ -21,6 +21,8 @@ object MF{
   private var tag: String = ""
 
   def run(spark: SparkSession, points: PointRDD, params: FFConf, info: String = ""): RDD[String] = {
+    import spark.implicits._
+
     val debug: Boolean   = params.debug()
     val epsilon: Double  = params.epsilon()
     val mu: Int          = params.mu()
@@ -96,11 +98,6 @@ object MF{
     val nDisks = disks.count()
     log("D.Disks found", timer, nDisks)
 
-    import spark.implicits._
-    if(debug){
-      //disks.map(d => s"${d.getUserData.toString()},POINT(${d.getX} ${d.getY})").sortBy(_.toString()).toDF().show(200, truncate=false)
-    }
-
     // Indexing disks...
     timer = System.currentTimeMillis()
     val disksRDD = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
@@ -110,10 +107,6 @@ object MF{
     disksRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
     log("E.Disks indexed", timer, nDisksRDD)
 
-    if(debug){
-      //disksRDD.spatialPartitionedRDD.rdd.map(d => s"${d.getUserData.toString()},POINT(${d.getX} ${d.getY})").sortBy(_.toString()).toDF("line").show(200, truncate=false)
-    }
-
     // Getting expansions...
     timer = System.currentTimeMillis()
     
@@ -122,11 +115,6 @@ object MF{
     val expansions = disksRDD.getPartitioner.getGrids.asScala.map{ e =>
       new Envelope(e.getMinX - epsilon, e.getMaxX + epsilon, e.getMinY - epsilon, e.getMaxY + epsilon)
     }.zipWithIndex
-
-    if(debug){
-      //logger.info(grids.toList.sortBy(_._2).map(e => s"${e._2}, ${e._1}\n").mkString(""))
-      //logger.info(expansions.toList.sortBy(_._2).map(e => s"${e._2}, ${e._1}\n").mkString(""))
-    }
 
     expansions.foreach{e => rtree.insert(e._1, e._2)}
     val expansionsRDD = disksRDD.spatialPartitionedRDD.rdd.flatMap{ disk =>
@@ -151,10 +139,6 @@ object MF{
     }.persist(StorageLevel.MEMORY_ONLY)
     val nCandidates = candidates.count()
     log("G.Maximal disks found", timer, nCandidates)
-
-    if(debug){
-      //candidates.filter(f => f._1 == 909 || f._1 == 908).toDF("eid", "p").show(truncate = false)
-    }
 
     // Prunning maximal disks...
     timer = System.currentTimeMillis()
