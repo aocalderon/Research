@@ -121,10 +121,13 @@ object FF {
         if(debug){
           logger.info(s"Saving candidates set at timestamp ${timestamp}...")
           val data = F_prime.rawSpatialRDD.rdd.map{ p =>
-            val pids = p.getUserData.toString.split(";")(0)
+            val arr = p.getUserData.toString.split(";")
+            val pids = arr(0)
+            val start = arr(1)
+            val end = arr(2)
             val x = p.getX
             val y = p.getY
-            s"${pids}\t${x}\t${y}\n"
+            s"${x}\t${y}\t${pids}\t${start}\t${end}\n"
           }.collect().mkString("")
           val pw = new PrintWriter(s"/tmp/toprune_${timestamp}.tsv")
           pw.write(data)

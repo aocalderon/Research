@@ -21,12 +21,12 @@ data = as.tibble(as.data.frame(data), stringAsFactors = F) %>%
   mutate(Epsilon = as.numeric(Epsilon), Time = as.numeric(Time), Load = as.numeric(Load)) %>%
   group_by(Nodes, Epsilon) %>% summarise(Time = mean(Time))
 
-title = "Multinode Speed up [berlin_N80K]"
+title = "Multinode Speed up [berlin_N20K]"
 g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Nodes)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) 
 if(SAVE_PDF){
-  ggsave("./MultinodeSpeedUp.pdf", width = 7, height = 4, dpi = 300, units = "in", device='pdf', g)
+  ggsave("./MultinodeSpeedUp20K.pdf", width = 7, height = 4, dpi = 300, units = "in", device='pdf', g)
 } else {
   plot(g)
 }

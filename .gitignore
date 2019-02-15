@@ -40,6 +40,11 @@ Scripts/Scala/BerlinCopier/.idea/workspace.xml
 Scripts/Scala/BerlinCopier/.ensime
 Scripts/Scala/BerlinCopier/.ensime_cache/*
 
+Scripts/Scala/PLCM/target/*
+Scripts/Scala/PLCM/project/*
+Scripts/Scala/PLCM/.ensime
+Scripts/Scala/PLCM/.ensime_cache/*
+
 ensime*
 *.cache
 *.log
