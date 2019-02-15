@@ -75,6 +75,10 @@ object PLCM{
     val stats = disks.spatialPartitionedRDD.rdd.mapPartitions{ p =>
       List(p.length).toIterator
     }
+    val num = stats.count()
+    val max = stats.max()
+    val min = stats.min()
+    val avg = stats.sum() / stats.count()
     logger.info(s"Number of partitions: ${stats.count()}")
     logger.info(s"Max: ${stats.max()}, Min: ${stats.min()}, Avg: ${stats.sum()/stats.count()}")
 
@@ -132,6 +136,7 @@ object PLCM{
       }.toIterator
     }.persist(StorageLevel.MEMORY_ONLY)
     val nPoints = points.count()
+    val time = (clocktime - timer) / 1000.0
     log("Disks prunned", timer, nPoints)
 
     points.toDF().show(10, true)
@@ -167,6 +172,8 @@ object PLCM{
       .persist(StorageLevel.MEMORY_ONLY)
     val nPrunned = prunned.count()
     log("Results prunned", timer, nPrunned)
+
+    logger.info(s"PLCM;$num;$max;$min;$avg;$nExpansionsRDD;$time;$nPoints;$nPrunned")
 
     // Closing session...
     timer = clocktime
