@@ -139,8 +139,6 @@ object PLCM{
     val time = (clocktime - timer) / 1000.0
     log("Disks prunned", timer, nPoints)
 
-    points.toDF().show(10, true)
-
     // Prunning results...
     timer = clocktime
     val f0 = disks.rawSpatialRDD.rdd
@@ -173,7 +171,7 @@ object PLCM{
     val nPrunned = prunned.count()
     log("Results prunned", timer, nPrunned)
 
-    logger.info(s"PLCM;$num;$max;$min;$avg;$nExpansionsRDD;$time;$nPoints;$nPrunned")
+    logger.info(s"PLCM;$partitions;$num;$max;$min;$avg;$nExpansionsRDD;$time;$nPoints;$nPrunned;$spatial")
 
     // Closing session...
     timer = clocktime
