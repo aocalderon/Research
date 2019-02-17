@@ -45,18 +45,6 @@ object PLCM{
     val nDisks = disks.rawSpatialRDD.count()
     log("Disks read", timer, nDisks)
 
-    /* Partitioner Benchmark...
-
-    val partitioners = List(GridType.QUADTREE, GridType.KDBTREE, GridType.EQUALGRID, GridType.RTREE)
-    val partition_set = 5 to 100 by 5
-    for(partitioner <- partitioners; partition <- partition_set){
-      timer = clocktime
-      disks.analyze()
-      disks.spatialPartitioning(GridType.QUADTREE, partition)
-      logger.info(s";${partitioner.toString()};${partition};${(clocktime-timer)/1000.0}")
-    }
-     */
-
     // Partitioning disks...
     timer = clocktime
     val partitioner = spatial  match {
@@ -67,11 +55,13 @@ object PLCM{
       case "HILBERT" => GridType.HILBERT
       case "VORONOI" => GridType.VORONOI
     }
+    val startTime = clocktime
     disks.analyze()
     disks.spatialPartitioning(partitioner, partitions)
     log("Disks partitioned", timer, nDisks)
 
     // Computing partition statistics...
+    timer = clocktime
     val stats = disks.spatialPartitionedRDD.rdd.mapPartitions{ p =>
       List(p.length).toIterator
     }
@@ -79,8 +69,8 @@ object PLCM{
     val max = stats.max()
     val min = stats.min()
     val avg = stats.sum() / stats.count()
-    logger.info(s"Number of partitions: ${stats.count()}")
-    logger.info(s"Max: ${stats.max()}, Min: ${stats.min()}, Avg: ${stats.sum()/stats.count()}")
+    val statsTime = (clocktime - timer) / 1000.0
+    log(s"Statistics computed ($num, $max)", timer, num)
 
     if(debug){
       val points = disks.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (index, partition) =>
@@ -136,7 +126,6 @@ object PLCM{
       }.toIterator
     }.persist(StorageLevel.MEMORY_ONLY)
     val nPoints = points.count()
-    val time = (clocktime - timer) / 1000.0
     log("Disks prunned", timer, nPoints)
 
     // Prunning results...
@@ -150,7 +139,7 @@ object PLCM{
         (pids, s, e, d.getX, d.getY)
       }.toDF("pids","s","e","x","y")
     val f1 = points.toDF("pids", "eid")
-    val prunned0 = f0.join(f1, "pids")
+    val prunned = f0.join(f1, "pids")
       .select($"eid", $"pids", $"x", $"y", $"s", $"e")
       .map{ m =>
         val expansion = expansions_map(m.getInt(0))
@@ -163,14 +152,13 @@ object PLCM{
         val notInExpansion = isNotInExpansionArea(point, expansion, epsilon)
         val f = s"${pids};${s};${e};${x};${y}"
         (f, notInExpansion, expansion.toString())
-      }.rdd
-
-    val prunned = prunned0.filter(_._2).map(_._1)
+      }.rdd.filter(_._2).map(_._1)
       .distinct()
       .persist(StorageLevel.MEMORY_ONLY)
     val nPrunned = prunned.count()
     log("Results prunned", timer, nPrunned)
-
+    val endTime = clocktime
+    val time = ((endTime - startTime) / 1000.0) - statsTime
     logger.info(s"PLCM;$partitions;$num;$max;$min;$avg;$nExpansionsRDD;$time;$nPoints;$nPrunned;$spatial")
 
     // Closing session...

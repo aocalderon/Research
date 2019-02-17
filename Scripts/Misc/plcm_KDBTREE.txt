@@ -1,0 +1,154 @@
+spark-submit /home/acald013/Research/Scripts/Scala/PLCM/target/scala-2.11/plcm_2.11-0.1.jar --offset 0 --input ~/Research/tmp/toprune_5.tsv --epsilon 100 --spatial QUADTREE --partitions 10
+2019-02-15 12:39:35,141 -> Session started [1.518]
+2019-02-15 12:39:37,630 -> Disks read                                        |  2.49|114015
+2019-02-15 12:39:38,037 -> Disks partitioned                                 |  0.41|114015
+2019-02-15 12:39:40,569 -> Number of partitions: 14
+2019-02-15 12:39:41,151 -> Max: 11063, Min: 5421, Avg: 8143.928571428572
+2019-02-15 12:39:42,375 -> Expansions built                                  |  1.22|220082
+2019-02-15 12:47:56,439 -> Disks prunned                                     |494.06| 26354
+2019-02-15 12:48:03,725 -> Results prunned                                   |  7.29| 23804
+2019-02-15 12:48:03,725 -> PLCM;10;14;11063;5421;8143.928571428572;220082;494.064;26354;23804
+2019-02-15 12:48:03,780 -> Session closed [0.055]
+spark-submit /home/acald013/Research/Scripts/Scala/PLCM/target/scala-2.11/plcm_2.11-0.1.jar --offset 0 --input ~/Research/tmp/toprune_5.tsv --epsilon 100 --spatial QUADTREE --partitions 20
+2019-02-15 12:48:08,413 -> Session started [1.627]
+2019-02-15 12:48:10,973 -> Disks read                                        |  2.56|114015
+2019-02-15 12:48:13,788 -> Disks partitioned                                 |  2.82|114015
+2019-02-15 12:48:18,623 -> Number of partitions: 29
+2019-02-15 12:48:19,402 -> Max: 6384, Min: 1597, Avg: 3931.551724137931
+2019-02-15 12:48:21,532 -> Expansions built                                  |  2.13|338701
+2019-02-15 12:54:13,094 -> Disks prunned                                     |351.56| 28879
+2019-02-15 12:54:18,303 -> Results prunned                                   |  5.21| 23804
+2019-02-15 12:54:18,303 -> PLCM;20;29;6384;1597;3931.551724137931;338701;351.562;28879;23804;KDBTREE
+2019-02-15 12:54:18,357 -> Session closed [0.054]
+spark-submit /home/acald013/Research/Scripts/Scala/PLCM/target/scala-2.11/plcm_2.11-0.1.jar --offset 0 --input ~/Research/tmp/toprune_5.tsv --epsilon 100 --spatial QUADTREE --partitions 30
+2019-02-15 12:54:22,197 -> Session started [1.74]
+2019-02-15 12:54:24,683 -> Disks read                                        |  2.49|114015
+2019-02-15 12:54:27,446 -> Disks partitioned                                 |  2.76|114015
+2019-02-15 12:54:32,303 -> Number of partitions: 43
+2019-02-15 12:54:33,322 -> Max: 4753, Min: 808, Avg: 2651.5116279069766
+2019-02-15 12:54:36,249 -> Expansions built                                  |  2.93|447927
+2019-02-15 13:04:06,148 -> Disks prunned                                     |569.90| 30472
+2019-02-15 13:04:11,107 -> Results prunned                                   |  4.96| 23804
+2019-02-15 13:04:11,107 -> PLCM;30;43;4753;808;2651.5116279069766;447927;569.899;30472;23804;KDBTREE
+2019-02-15 13:04:11,169 -> Session closed [0.062]
+spark-submit /home/acald013/Research/Scripts/Scala/PLCM/target/scala-2.11/plcm_2.11-0.1.jar --offset 0 --input ~/Research/tmp/toprune_5.tsv --epsilon 100 --spatial QUADTREE --partitions 40
+2019-02-15 13:04:14,974 -> Session started [1.636]
+2019-02-15 13:04:17,605 -> Disks read                                        |  2.63|114015
+2019-02-15 13:04:20,578 -> Disks partitioned                                 |  2.97|114015
+2019-02-15 13:04:25,742 -> Number of partitions: 58
+2019-02-15 13:04:26,403 -> Max: 3910, Min: 412, Avg: 1965.7758620689656
+2019-02-15 13:04:28,536 -> Expansions built                                  |  2.13|518718
+2019-02-15 13:06:54,250 -> Disks prunned                                     |145.71| 32115
+2019-02-15 13:06:58,815 -> Results prunned                                   |  4.56| 23804
+2019-02-15 13:06:58,815 -> PLCM;40;58;3910;412;1965.7758620689656;518718;145.712;32115;23804;KDBTREE
+2019-02-15 13:06:58,886 -> Session closed [0.071]
+spark-submit /home/acald013/Research/Scripts/Scala/PLCM/target/scala-2.11/plcm_2.11-0.1.jar --offset 0 --input ~/Research/tmp/toprune_5.tsv --epsilon 100 --spatial QUADTREE --partitions 50
+2019-02-15 13:07:03,368 -> Session started [1.628]
+2019-02-15 13:07:05,736 -> Disks read                                        |  2.37|114015
+2019-02-15 13:07:08,438 -> Disks partitioned                                 |  2.70|114015
+2019-02-15 13:07:12,868 -> Number of partitions: 75
+2019-02-15 13:07:13,645 -> Max: 4018, Min: 360, Avg: 1520.2
+2019-02-15 13:07:15,724 -> Expansions built                                  |  2.08|651614
+2019-02-15 13:10:06,346 -> Disks prunned                                     |170.62| 34052
+2019-02-15 13:10:10,463 -> Results prunned                                   |  4.12| 23804
+2019-02-15 13:10:10,463 -> PLCM;50;75;4018;360;1520.2;651614;170.622;34052;23804;KDBTREE
+2019-02-15 13:10:10,535 -> Session closed [0.072]
+spark-submit /home/acald013/Research/Scripts/Scala/PLCM/target/scala-2.11/plcm_2.11-0.1.jar --offset 0 --input ~/Research/tmp/toprune_5.tsv --epsilon 100 --spatial QUADTREE --partitions 60
+2019-02-15 13:10:14,062 -> Session started [1.533]
+2019-02-15 13:10:16,534 -> Disks read                                        |  2.47|114015
+2019-02-15 13:10:19,285 -> Disks partitioned                                 |  2.75|114015
+2019-02-15 13:10:24,667 -> Number of partitions: 89
+2019-02-15 13:10:25,755 -> Max: 2959, Min: 147, Avg: 1281.0674157303372
+2019-02-15 13:10:28,094 -> Expansions built                                  |  2.34|727992
+2019-02-15 13:12:00,859 -> Disks prunned                                     | 92.77| 35841
+2019-02-15 13:12:05,508 -> Results prunned                                   |  4.65| 23804
+2019-02-15 13:12:05,509 -> PLCM;60;89;2959;147;1281.0674157303372;727992;92.765;35841;23804;KDBTREE
+2019-02-15 13:12:05,567 -> Session closed [0.058]
+spark-submit /home/acald013/Research/Scripts/Scala/PLCM/target/scala-2.11/plcm_2.11-0.1.jar --offset 0 --input ~/Research/tmp/toprune_5.tsv --epsilon 100 --spatial QUADTREE --partitions 70
+2019-02-15 13:12:09,446 -> Session started [1.66]
+2019-02-15 13:12:12,098 -> Disks read                                        |  2.65|114015
+2019-02-15 13:12:14,782 -> Disks partitioned                                 |  2.68|114015
+2019-02-15 13:12:19,274 -> Number of partitions: 108
+2019-02-15 13:12:20,273 -> Max: 2879, Min: 136, Avg: 1055.6944444444443
+2019-02-15 13:12:23,022 -> Expansions built                                  |  2.75|816345
+2019-02-15 13:13:51,333 -> Disks prunned                                     | 88.31| 37654
+2019-02-15 13:13:56,086 -> Results prunned                                   |  4.75| 23804
+2019-02-15 13:13:56,086 -> PLCM;70;108;2879;136;1055.6944444444443;816345;88.311;37654;23804;KDBTREE
+2019-02-15 13:13:56,163 -> Session closed [0.077]
+spark-submit /home/acald013/Research/Scripts/Scala/PLCM/target/scala-2.11/plcm_2.11-0.1.jar --offset 0 --input ~/Research/tmp/toprune_5.tsv --epsilon 100 --spatial QUADTREE --partitions 80
+2019-02-15 13:15:14,377 -> Session started [1.55]
+2019-02-15 13:15:16,996 -> Disks read                                        |  2.62|114015
+2019-02-15 13:15:19,832 -> Disks partitioned                                 |  2.84|114015
+2019-02-15 13:15:24,615 -> Number of partitions: 121
+2019-02-15 13:15:25,809 -> Max: 2245, Min: 0, Avg: 942.2727272727273
+2019-02-15 13:15:29,045 -> Expansions built                                  |  3.24|998177
+2019-02-15 13:16:59,061 -> Disks prunned                                     | 90.02| 39467
+2019-02-15 13:17:04,744 -> Results prunned                                   |  5.68| 23804
+2019-02-15 13:17:04,744 -> PLCM;80;121;2245;0;942.2727272727273;998177;90.016;39467;23804;KDBTREE
+2019-02-15 13:17:04,782 -> Session closed [0.038]
+spark-submit /home/acald013/Research/Scripts/Scala/PLCM/target/scala-2.11/plcm_2.11-0.1.jar --offset 0 --input ~/Research/tmp/toprune_5.tsv --epsilon 100 --spatial QUADTREE --partitions 90
+2019-02-15 13:17:08,500 -> Session started [1.543]
+2019-02-15 13:17:11,138 -> Disks read                                        |  2.64|114015
+2019-02-15 13:17:14,047 -> Disks partitioned                                 |  2.91|114015
+2019-02-15 13:17:19,396 -> Number of partitions: 134
+2019-02-15 13:17:20,730 -> Max: 2520, Min: 0, Avg: 850.8582089552239
+2019-02-15 13:17:23,975 -> Expansions built                                  |  3.25|1051432
+2019-02-15 13:19:22,250 -> Disks prunned                                     |118.28| 40694
+2019-02-15 13:19:27,284 -> Results prunned                                   |  5.03| 23804
+2019-02-15 13:19:27,284 -> PLCM;90;134;2520;0;850.8582089552239;1051432;118.275;40694;23804;KDBTREE
+2019-02-15 13:19:27,339 -> Session closed [0.055]
+spark-submit /home/acald013/Research/Scripts/Scala/PLCM/target/scala-2.11/plcm_2.11-0.1.jar --offset 0 --input ~/Research/tmp/toprune_5.tsv --epsilon 100 --spatial QUADTREE --partitions 100
+2019-02-15 13:19:31,248 -> Session started [1.76]
+2019-02-15 13:19:33,788 -> Disks read                                        |  2.54|114015
+2019-02-15 13:19:36,513 -> Disks partitioned                                 |  2.73|114015
+2019-02-15 13:19:43,973 -> Number of partitions: 158
+2019-02-15 13:19:46,073 -> Max: 2493, Min: 0, Avg: 721.6139240506329
+2019-02-15 13:19:53,083 -> Expansions built                                  |  7.01|1207117
+2019-02-15 13:22:19,970 -> Disks prunned                                     |146.89| 43395
+2019-02-15 13:22:24,842 -> Results prunned                                   |  4.87| 23804
+2019-02-15 13:22:24,842 -> PLCM;100;158;2493;0;721.6139240506329;1207117;146.887;43395;23804;KDBTREE
+2019-02-15 13:22:24,916 -> Session closed [0.074]
+spark-submit /home/acald013/Research/Scripts/Scala/PLCM/target/scala-2.11/plcm_2.11-0.1.jar --offset 0 --input ~/Research/tmp/toprune_5.tsv --epsilon 100 --spatial QUADTREE --partitions 110
+2019-02-15 13:22:29,673 -> Session started [1.82]
+2019-02-15 13:22:32,185 -> Disks read                                        |  2.51|114015
+2019-02-15 13:22:34,958 -> Disks partitioned                                 |  2.77|114015
+2019-02-15 13:22:41,850 -> Number of partitions: 172
+2019-02-15 13:22:43,557 -> Max: 3549, Min: 0, Avg: 662.8779069767442
+2019-02-15 13:22:47,894 -> Expansions built                                  |  4.34|1200801
+2019-02-15 13:24:28,002 -> Disks prunned                                     |100.11| 43596
+2019-02-15 13:24:33,827 -> Results prunned                                   |  5.82| 23804
+2019-02-15 13:24:33,828 -> PLCM;110;172;3549;0;662.8779069767442;1200801;100.108;43596;23804;KDBTREE
+2019-02-15 13:24:33,874 -> Session closed [0.046]
+spark-submit /home/acald013/Research/Scripts/Scala/PLCM/target/scala-2.11/plcm_2.11-0.1.jar --offset 0 --input ~/Research/tmp/toprune_5.tsv --epsilon 100 --spatial QUADTREE --partitions 120
+2019-02-15 13:24:37,552 -> Session started [1.577]
+2019-02-15 13:24:40,310 -> Disks read                                        |  2.76|114015
+2019-02-15 13:24:42,922 -> Disks partitioned                                 |  2.61|114015
+2019-02-15 13:24:49,443 -> Number of partitions: 172
+2019-02-15 13:24:51,444 -> Max: 2300, Min: 0, Avg: 662.8779069767442
+2019-02-15 13:24:56,057 -> Expansions built                                  |  4.61|1302719
+2019-02-15 13:26:49,152 -> Disks prunned                                     |113.10| 44916
+2019-02-15 13:26:53,826 -> Results prunned                                   |  4.67| 23804
+2019-02-15 13:26:53,826 -> PLCM;120;172;2300;0;662.8779069767442;1302719;113.095;44916;23804;KDBTREE
+2019-02-15 13:26:53,875 -> Session closed [0.049]
+spark-submit /home/acald013/Research/Scripts/Scala/PLCM/target/scala-2.11/plcm_2.11-0.1.jar --offset 0 --input ~/Research/tmp/toprune_5.tsv --epsilon 100 --spatial QUADTREE --partitions 130
+2019-02-15 13:26:57,750 -> Session started [1.759]
+2019-02-15 13:27:00,346 -> Disks read                                        |  2.60|114015
+2019-02-15 13:27:03,244 -> Disks partitioned                                 |  2.90|114015
+2019-02-15 13:27:09,426 -> Number of partitions: 183
+2019-02-15 13:27:11,052 -> Max: 2085, Min: 0, Avg: 623.0327868852459
+2019-02-15 13:27:14,184 -> Expansions built                                  |  3.13|1296741
+2019-02-15 13:28:22,296 -> Disks prunned                                     | 68.11| 45568
+2019-02-15 13:28:27,068 -> Results prunned                                   |  4.77| 23804
+2019-02-15 13:28:27,068 -> PLCM;130;183;2085;0;623.0327868852459;1296741;68.112;45568;23804;KDBTREE
+2019-02-15 13:28:27,116 -> Session closed [0.048]
+spark-submit /home/acald013/Research/Scripts/Scala/PLCM/target/scala-2.11/plcm_2.11-0.1.jar --offset 0 --input ~/Research/tmp/toprune_5.tsv --epsilon 100 --spatial QUADTREE --partitions 150
+2019-02-15 13:28:30,954 -> Session started [1.668]
+2019-02-15 13:28:33,432 -> Disks read                                        |  2.48|114015
+2019-02-15 13:28:36,278 -> Disks partitioned                                 |  2.85|114015
+2019-02-15 13:28:42,332 -> Number of partitions: 244
+2019-02-15 13:28:44,394 -> Max: 1875, Min: 0, Avg: 467.2745901639344
+2019-02-15 13:28:50,046 -> Expansions built                                  |  5.65|1756201
+2019-02-15 13:31:00,915 -> Disks prunned                                     |130.87| 51996
+2019-02-15 13:31:06,222 -> Results prunned                                   |  5.31| 23804
+2019-02-15 13:31:06,222 -> PLCM;150;244;1875;0;467.2745901639344;1756201;130.869;51996;23804;KDBTREE
+2019-02-15 13:31:06,259 -> Session closed [0.037]

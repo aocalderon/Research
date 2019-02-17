@@ -36,7 +36,7 @@ object MF{
     val pointsBuffer = new CircleRDD(points, epsilon + precision)
     points.analyze()
     pointsBuffer.analyze()
-    pointsBuffer.spatialPartitioning(GridType.QUADTREE)
+    pointsBuffer.spatialPartitioning(GridType.QUADTREE, dpartitions)
     points.spatialPartitioning(pointsBuffer.getPartitioner)
     points.buildIndex(IndexType.QUADTREE, true)
     points.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
