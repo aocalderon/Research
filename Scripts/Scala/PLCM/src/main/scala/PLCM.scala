@@ -29,13 +29,16 @@ object PLCM{
     val partitions = params.partitions()
     val offset = params.offset()
     val spatial = params.spatial()
+    val cores = params.cores()
     val debug = params.debug()
 
     // Starting session...
     var timer = clocktime
     val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
-      .master(master).appName("PLCM").getOrCreate()
+      .master(master).appName("PLCM")
+      .config("spark.cores.max", cores)
+      .getOrCreate()
     import spark.implicits._
     logger.info(s"Session started [${(clocktime - timer) / 1000.0}]")
 
@@ -59,18 +62,6 @@ object PLCM{
     disks.analyze()
     disks.spatialPartitioning(partitioner, partitions)
     log("Disks partitioned", timer, nDisks)
-
-    // Computing partition statistics...
-    timer = clocktime
-    val stats = disks.spatialPartitionedRDD.rdd.mapPartitions{ p =>
-      List(p.length).toIterator
-    }
-    val num = stats.count()
-    val max = stats.max()
-    val min = stats.min()
-    val avg = stats.sum() / stats.count()
-    val statsTime = (clocktime - timer) / 1000.0
-    log(s"Statistics computed ($num, $max)", timer, num)
 
     if(debug){
       val points = disks.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (index, partition) =>
@@ -96,6 +87,17 @@ object PLCM{
       pw2.close()
     }
 
+    // Computing pre-expansion statistics...
+    timer = clocktime
+    val stats1 = disks.spatialPartitionedRDD.rdd.mapPartitions{ p =>
+      List(p.length).toIterator
+    }
+    var num = stats1.count()
+    var max = stats1.max()
+    var avg = (stats1.sum() / stats1.count()).toInt
+    val statsTime1 = (clocktime - timer) / 1000.0
+    log(s"Pre-expansion statistics  ($num, $max, $avg)", timer, max)
+
     // Building expansions...
     timer = clocktime
     val rtree = new STRtree()
@@ -112,6 +114,17 @@ object PLCM{
     }.partitionBy(new ExpansionPartitioner(expansions.size)).persist(StorageLevel.MEMORY_ONLY)
     val nExpansionsRDD = expansionsRDD.count()
     log("Expansions built", timer, nExpansionsRDD)
+
+    // Computing expansion statistics...
+    timer = clocktime
+    val stats2 = expansionsRDD.mapPartitions{ p =>
+      List(p.length).toIterator
+    }
+    num = stats2.count()
+    max = stats2.max()
+    avg = (stats2.sum() / stats2.count()).toInt
+    val statsTime2 = (clocktime - timer) / 1000.0
+    log(s"Post-expansion statistics ($num, $max, $avg)", timer, max)
 
     // Prunning disks...
     timer = clocktime
@@ -158,8 +171,8 @@ object PLCM{
     val nPrunned = prunned.count()
     log("Results prunned", timer, nPrunned)
     val endTime = clocktime
-    val time = ((endTime - startTime) / 1000.0) - statsTime
-    logger.info(s"PLCM;$partitions;$num;$max;$min;$avg;$nExpansionsRDD;$time;$nPoints;$nPrunned;$spatial")
+    val time = "%.2f".format(((endTime - startTime) / 1000.0) - statsTime1 - statsTime2)
+    logger.info(s"PLCM;$partitions;$num;$max;$avg;$nExpansionsRDD;$time;$nPoints;$nPrunned;$spatial;$cores")
 
     // Closing session...
     timer = clocktime
@@ -203,6 +216,7 @@ object PLCM{
 class PCLMConf(args: Seq[String]) extends ScallopConf(args) {
   val input:      ScallopOption[String]  = opt[String]  (required = true)
   val master:     ScallopOption[String]  = opt[String]  (default = Some("spark://169.235.27.134:7077"))
+  val cores:      ScallopOption[Int]     = opt[Int]     (default = Some(12))
   val spatial:    ScallopOption[String]  = opt[String]  (default = Some("QUADTREE"))
   val epsilon:    ScallopOption[Int]     = opt[Int]     (default = Some(10))
   val partitions: ScallopOption[Int]     = opt[Int]     (default = Some(24))

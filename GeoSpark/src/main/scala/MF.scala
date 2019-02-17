@@ -23,10 +23,10 @@ object MF{
   def run(spark: SparkSession, points: PointRDD, params: FFConf, info: String = ""): RDD[String] = {
     import spark.implicits._
 
-    val debug: Boolean   = params.debug()
+    val debug: Boolean   = params.MFdebug()
     val epsilon: Double  = params.epsilon()
     val mu: Int          = params.mu()
-    val dpartitions: Int = params.dpartitions()
+    val MFpartitions: Int = params.MFpartitions()
     val sespg: String    = params.sespg()
     val tespg: String    = params.tespg()
     if(params.tag() == ""){ tag = s"$info"} else { tag = s"${params.tag()}|${info}" }
@@ -36,7 +36,7 @@ object MF{
     val pointsBuffer = new CircleRDD(points, epsilon + precision)
     points.analyze()
     pointsBuffer.analyze()
-    pointsBuffer.spatialPartitioning(GridType.QUADTREE, dpartitions)
+    pointsBuffer.spatialPartitioning(GridType.QUADTREE, MFpartitions)
     points.spatialPartitioning(pointsBuffer.getPartitioner)
     points.buildIndex(IndexType.QUADTREE, true)
     points.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
@@ -103,13 +103,12 @@ object MF{
     val disksRDD = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
     disksRDD.analyze()
     val nDisksRDD = disksRDD.rawSpatialRDD.count()
-    disksRDD.spatialPartitioning(GridType.QUADTREE, dpartitions)
+    disksRDD.spatialPartitioning(GridType.QUADTREE, MFpartitions)
     disksRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
     log("E.Disks indexed", timer, nDisksRDD)
 
     // Getting expansions...
     timer = System.currentTimeMillis()
-    
     val rtree = new STRtree()
     val grids = disksRDD.getPartitioner.getGrids.asScala.zipWithIndex
     val expansions = disksRDD.getPartitioner.getGrids.asScala.map{ e =>
@@ -167,7 +166,9 @@ object MF{
       }
 
     if(debug){
-      maximals0.toDF("a","b","c").filter($"a".contains("297 2122 2224")).sort("a").show(100, truncate=false)
+      maximals0.toDF("a","b","c")
+        //.filter($"a".contains("297 2122 2224"))
+        .sort("a").show(100, truncate=false)
     }
 
     val maximals = maximals0.filter(_._2).map(_._1).rdd.distinct()
@@ -175,7 +176,7 @@ object MF{
     log("H.Maximal disks prunned", timer, nMaximals)
 
     ////////////////////////////////////////////////////////////////////////////////////
-    if(false){
+    if(debug){
       val maxims = maximals.map{ m =>
         val arr = m.split(";")
         s"${arr(0)},POINT(${arr(1)} ${arr(2)})\n"
@@ -224,7 +225,9 @@ object MF{
     val master = params.master()
     val input  = params.input()
     val offset = params.offset()
-    val ppartitions = params.ppartitions()
+    val partitions = params.MFpartitions()
+    val sepsg = params.sespg()
+    val tepsg = params.tespg()
 
     // Starting session...
     var timer = System.currentTimeMillis()
@@ -235,8 +238,8 @@ object MF{
 
     // Reading data...
     timer = System.currentTimeMillis()
-    val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, ppartitions)
-    points.CRSTransform("epsg:3068", "epsg:3068")
+    val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, partitions)
+    points.CRSTransform(sepsg, tepsg)
     val nPoints = points.rawSpatialRDD.count()
     logger.info(s"Data read [${(System.currentTimeMillis - timer) / 1000.0}] [$nPoints]")
 

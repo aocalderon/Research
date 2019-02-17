@@ -26,11 +26,11 @@ object FF {
   /* SpatialJoin variant */
   def runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf): RDD[Flock] = {
     var clockTime = System.currentTimeMillis()
-    val debug = params.debug()
+    val debug = params.FFdebug()
     val sespg = params.sespg()
     val tespg = params.tespg()
     val distance = params.distance()
-    val dpartitions = params.dpartitions()
+    val FFpartitions = params.FFpartitions()
     val cores = params.cores()
     val epsilon = params.epsilon()
     val mu = params.mu()
@@ -56,7 +56,7 @@ object FF {
       if(firstRun){
         F = C
         F.analyze()
-        F.spatialPartitioning(GridType.QUADTREE, dpartitions)
+        F.spatialPartitioning(GridType.QUADTREE, FFpartitions)
         F.buildIndex(IndexType.QUADTREE, true)
         partitioner = F.getPartitioner
         firstRun = false
@@ -108,7 +108,7 @@ object FF {
           }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg
         )
         G_prime.analyze()
-        G_prime.spatialPartitioning(GridType.QUADTREE, dpartitions)
+        G_prime.spatialPartitioning(GridType.QUADTREE, FFpartitions)
         val F_prime = new PointRDD(
           f0.map{ f =>
             f.center.setUserData(f.pids.mkString(" ") ++ s";${f.start};${f.end}")
@@ -136,7 +136,7 @@ object FF {
 
         // Prunning flocks to report...
         timer = System.currentTimeMillis()
-        f0 = pruneFlockByExpansions(F_prime, epsilon, spark)
+        f0 = pruneFlockByExpansions(F_prime, epsilon, spark, params)
           .map{ f =>
             val arr = f.split(";")
             val p = arr(0).split(" ").map(_.toInt).toList
@@ -171,7 +171,7 @@ object FF {
             f.center
           }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
         F.analyze()
-        F.spatialPartitioning(GridType.QUADTREE, dpartitions)
+        F.spatialPartitioning(GridType.QUADTREE, FFpartitions)
         F.buildIndex(IndexType.QUADTREE, true)
         partitioner = F.getPartitioner
         log("5.Candidates indexed", timer, F.rawSpatialRDD.count())
@@ -201,7 +201,7 @@ object FF {
     val master = params.master()
     val input  = params.input()
     val offset = params.offset()
-    val ppartitions = params.ppartitions()
+    val FFpartitions = params.FFpartitions()
     tag = params.tag()
 
     // Starting session...
@@ -214,7 +214,7 @@ object FF {
 
     // Reading data...
     timer = System.currentTimeMillis()
-    val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, ppartitions)
+    val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, FFpartitions)
     points.CRSTransform(params.sespg(), params.tespg())
     val nPoints = points.rawSpatialRDD.count()
     val timestamps = points.rawSpatialRDD.rdd.map(_.getUserData.toString().split("\t").reverse.head.toInt).distinct.collect()
@@ -229,7 +229,7 @@ object FF {
     val flocks = runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf)
     logger.info(s"Flock finder run [${(System.currentTimeMillis() - timer) / 1000.0}]")
 
-    if(params.debug()){
+    if(params.FFdebug()){
       val f = flocks.map(f => s"${f.start}, ${f.end}, ${f.pids.mkString(" ")}\n").sortBy(_.toString()).collect().mkString("")
       val pw = new PrintWriter(new File("/tmp/flocks.txt"))
       pw.write(f)
@@ -282,12 +282,11 @@ object FF {
       y >= (min_y + epsilon)
   }
 
-  def pruneFlockByExpansions(F: PointRDD, epsilon: Double, spark: SparkSession): RDD[String] = {
+  def pruneFlockByExpansions(F: PointRDD, epsilon: Double, spark: SparkSession, params: FFConf): RDD[String] = {
     import spark.implicits._
-    val debug = false
+    val debug = params.FFdebug()
     val rtree = new STRtree()
 
-    ///
     if(debug) F.rawSpatialRDD.rdd.map(_.getUserData.toString()).toDF("F").filter($"F".contains("297 2122 2224")).orderBy("F").show(F.rawSpatialRDD.rdd.count.toInt, false)
 
     var timer = System.currentTimeMillis()
@@ -304,8 +303,11 @@ object FF {
     }.partitionBy(new ExpansionPartitioner(expansions.size)).persist(StorageLevel.MEMORY_ONLY)
     log("a.Making expansions", timer)
 
-    ///
-    if(debug) expansionsRDD.map(e => s"${e._2.getUserData.toString()};${e._1}").toDF("E").filter($"E".contains("297 2122 2224")).orderBy("E").show(expansionsRDD.count().toInt, false)
+    if(debug){
+      expansionsRDD.map(e => s"${e._2.getUserData.toString()};${e._1}").toDF("E")
+        //.filter($"E".contains("297 2122 2224"))
+        .orderBy("E").show(expansionsRDD.count().toInt, false)
+    }
 
     timer = System.currentTimeMillis()
     val candidates = expansionsRDD.map(_._2).mapPartitionsWithIndex{ (expansion_id, disks) =>
@@ -318,8 +320,11 @@ object FF {
     }.persist(StorageLevel.MEMORY_ONLY)
     log("b.Finding maximals", timer)
 
-    ///
-    if(debug) candidates.map(p => (p._2.sorted.mkString(" "), p._1)).toDF("C", "E").filter($"C".contains("297 2122 2224")).sort("C").show(candidates.count().toInt, false)
+    if(debug){
+      candidates.map(p => (p._2.sorted.mkString(" "), p._1)).toDF("C", "E")
+        //.filter($"C".contains("297 2122 2224"))
+        .sort("C").show(candidates.count().toInt, false)
+    }
 
     timer = System.currentTimeMillis()
     val f0 = F.rawSpatialRDD.rdd.map(f => getFlocksFromGeom(f))
@@ -346,8 +351,11 @@ object FF {
       .persist(StorageLevel.MEMORY_ONLY)
     log("c.Filtering maximal in expansions", timer)
 
-    ///
-    if(debug) prunned0.sortBy(p => p._1).toDF("flock", "notInExpansion", "Exp").filter($"flock".contains("297 2122 2224")).show(prunned0.count().toInt, false)
+    if(debug){
+      prunned0.sortBy(p => p._1).toDF("flock", "notInExpansion", "Exp")
+        //.filter($"flock".contains("297 2122 2224"))
+        .show(prunned0.count().toInt, false)
+    }
 
     prunned
   }
