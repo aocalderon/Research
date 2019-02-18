@@ -38,7 +38,8 @@ libraryDependencies ++= Seq(
   "org.datasyslab" % "geospark-viz" % GeoSparkVersion,
   "org.datasyslab" % "JTSplus" % "0.1.4",
   "org.rogach" %% "scallop" % "3.1.5",
-  "org.slf4j" % "slf4j-jdk14" % "1.7.25"
+  "org.slf4j" % "slf4j-jdk14" % "1.7.25",
+  "com.lihaoyi" %% "requests" % "0.1.7"
 )
 
 assemblyMergeStrategy in assembly := {

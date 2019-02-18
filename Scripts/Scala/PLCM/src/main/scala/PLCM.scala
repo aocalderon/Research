@@ -40,7 +40,8 @@ object PLCM{
       .config("spark.cores.max", cores)
       .getOrCreate()
     import spark.implicits._
-    logger.info(s"Session started [${(clocktime - timer) / 1000.0}]")
+    val appID = spark.sparkContext.applicationId
+    logger.info(s"Session $appID started [${(clocktime - timer) / 1000.0}]")
 
     // Reading disks...
     timer = clocktime
@@ -172,12 +173,22 @@ object PLCM{
     log("Results prunned", timer, nPrunned)
     val endTime = clocktime
     val time = "%.2f".format(((endTime - startTime) / 1000.0) - statsTime1 - statsTime2)
-    logger.info(s"PLCM;$partitions;$num;$max;$avg;$nExpansionsRDD;$time;$nPoints;$nPrunned;$spatial;$cores")
+    logger.info(s"PLCM;$cores;$partitions;$num;$max;$avg;$nExpansionsRDD;$time;$nPoints;$nPrunned;$spatial;$appID")
+    val url = s"http://localhost:4040/api/v1/applications/${appID}/executors"
+    val r = requests.get(url)
+    if(s"${r.statusCode}" == "200"){
+      import scala.util.parsing.json._
+      val j = JSON.parseFull(r.text).get.asInstanceOf[List[Map[String, Any]]]
+      j.foreach{ m =>
+        val ttasks = "%.0f".format(m.get("totalTasks").get)
+        logger.info(s"EXECUTORS;${appID};${m.get("id").get};$ttasks")
+      }
+    }
 
     // Closing session...
     timer = clocktime
     spark.close()
-    logger.info(s"Session closed [${(clocktime - timer) / 1000.0}]")
+    logger.info(s"Session $appID [${(clocktime - timer) / 1000.0}]")
   }
 
   class ExpansionPartitioner(partitions: Int) extends Partitioner{

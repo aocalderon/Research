@@ -181,8 +181,22 @@ object FF {
       }
     }
     logger.info(s"Number of flocks: ${report.count()}")
-    val executionTime = (System.currentTimeMillis() - clockTime) / 1000.0
-    logger.info(s"PFLOCK;${tag};${epsilon};${mu};${delta};${executionTime};${report.count()}")
+    val executionTime = "%.2f".format((System.currentTimeMillis() - clockTime) / 1000.0)
+    val applicationID = spark.sparkContext.applicationId
+    logger.info(s"PFLOCK;${cores};${epsilon};${mu};${delta};${executionTime};${report.count()};${applicationID}")
+    val url = s"http://localhost:4040/api/v1/applications/${applicationID}/executors"
+    val r = requests.get(url)
+    if(s"${r.statusCode}" == "200"){
+      import scala.util.parsing.json._
+      val j = JSON.parseFull(r.text).get.asInstanceOf[List[Map[String, Any]]]
+      j.filter(_.get("id").get != "driver").foreach{ m =>
+        val id     = m.get("id").get
+        val tcores = "%.0f".format(m.get("totalCores").get)
+        val ttasks = "%.0f".format(m.get("totalTasks").get)
+        logger.info(s"EXECUTORS;$applicationID;$id;$tcores;$ttasks")
+      }
+    }
+
     report
   }
 
@@ -201,6 +215,7 @@ object FF {
     val master = params.master()
     val input  = params.input()
     val offset = params.offset()
+    val cores  = params.cores()
     val FFpartitions = params.FFpartitions()
     tag = params.tag()
 
@@ -208,9 +223,12 @@ object FF {
     var timer = System.currentTimeMillis()
     val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
-      .master(master).appName("PFLock").getOrCreate()
+      .config("spark.cores.max", cores)
+      .master(master).appName("PFLock")
+      .getOrCreate()
     import spark.implicits._
-    logger.info(s"Session started [${(System.currentTimeMillis - timer) / 1000.0}]")
+    val appID = spark.sparkContext.applicationId
+    logger.info(s"Session $appID started [${(System.currentTimeMillis - timer) / 1000.0}]")
 
     // Reading data...
     timer = System.currentTimeMillis()
@@ -239,7 +257,7 @@ object FF {
     // Closing session...
     timer = System.currentTimeMillis()
     spark.stop()
-    logger.info(s"Session closed [${(System.currentTimeMillis - timer) / 1000.0}]")    
+    logger.info(s"Session $appID closed [${(System.currentTimeMillis - timer) / 1000.0}]")    
   }
 
   def extractTimestamp(points: PointRDD, timestamp:  Int, sespg: String, tespg: String): PointRDD = {
