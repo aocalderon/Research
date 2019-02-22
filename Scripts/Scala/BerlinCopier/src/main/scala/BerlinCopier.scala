@@ -66,10 +66,8 @@ object BerlinCopier {
       }.reduce( (a, b) => a.union(b))
       .union(data)
       .sort($"pid", $"t").persist()
-      duplication.show()
     }
     logger.info(s"Duplication done at ${(System.currentTimeMillis() - timer) / 1000.0}s")
-
 
     logger.info("Saving new dataset...")
     timer = System.currentTimeMillis()

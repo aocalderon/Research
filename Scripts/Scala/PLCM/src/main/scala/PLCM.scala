@@ -30,6 +30,7 @@ object PLCM{
     val offset = params.offset()
     val spatial = params.spatial()
     val cores = params.cores()
+    val executors = params.executors()
     val debug = params.debug()
 
     // Starting session...
@@ -37,7 +38,8 @@ object PLCM{
     val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .master(master).appName("PLCM")
-      .config("spark.cores.max", cores)
+      .config("spark.cores.max", cores * executors)
+      .config("spark.executor.cores", cores)
       .getOrCreate()
     import spark.implicits._
     val appID = spark.sparkContext.applicationId
@@ -173,15 +175,20 @@ object PLCM{
     log("Results prunned", timer, nPrunned)
     val endTime = clocktime
     val time = "%.2f".format(((endTime - startTime) / 1000.0) - statsTime1 - statsTime2)
-    logger.info(s"PLCM;$cores;$partitions;$num;$max;$avg;$nExpansionsRDD;$time;$nPoints;$nPrunned;$spatial;$appID")
+    val ttime = "%.2f".format(((endTime - startTime) / 1000.0))
+    logger.info(s"PLCM;$cores;$executors;$partitions;$num;$max;$avg;$nExpansionsRDD;$time;$ttime;$nPoints;$nPrunned;$spatial;$appID")
     val url = s"http://localhost:4040/api/v1/applications/${appID}/executors"
     val r = requests.get(url)
     if(s"${r.statusCode}" == "200"){
       import scala.util.parsing.json._
       val j = JSON.parseFull(r.text).get.asInstanceOf[List[Map[String, Any]]]
-      j.foreach{ m =>
+      j.filter(_.get("id").get != "driver").foreach{ m =>
+        val id     = m.get("id").get
         val ttasks = "%.0f".format(m.get("totalTasks").get)
-        logger.info(s"EXECUTORS;${appID};${m.get("id").get};$ttasks")
+        val tcores = "%.0f".format(m.get("totalCores").get)
+        val ttime  = "%.2fs".format(m.get("totalDuration").get.asInstanceOf[Double] / 1000.0)
+        val tinput = "%.2fMB".format(m.get("totalInputBytes").get.asInstanceOf[Double] / (1024.0 * 1024))
+        logger.info(s"EXECUTORS;$appID;$id;$tcores;$ttasks;$ttime;$tinput")
       }
     }
 
@@ -228,6 +235,7 @@ class PCLMConf(args: Seq[String]) extends ScallopConf(args) {
   val input:      ScallopOption[String]  = opt[String]  (required = true)
   val master:     ScallopOption[String]  = opt[String]  (default = Some("spark://169.235.27.134:7077"))
   val cores:      ScallopOption[Int]     = opt[Int]     (default = Some(12))
+  val executors:  ScallopOption[Int]     = opt[Int]     (default = Some(3))
   val spatial:    ScallopOption[String]  = opt[String]  (default = Some("QUADTREE"))
   val epsilon:    ScallopOption[Int]     = opt[Int]     (default = Some(10))
   val partitions: ScallopOption[Int]     = opt[Int]     (default = Some(24))

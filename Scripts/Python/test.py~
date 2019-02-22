@@ -1,0 +1,36 @@
+import curses
+from curses import wrapper
+import time
+from asciichartpy import plot
+import random
+import requests
+import json
+
+def main(stdscr):
+    # Make stdscr.getch non-blocking
+    stdscr.nodelay(True)
+    stdscr.clear()
+    appID = open("/tmp/SparkAppID").readline()
+    width = 125
+    series = [0] * width
+    series.append(1)
+    c = 0
+    while c != ord('q'):
+        c = stdscr.getch()
+        # Clear out anything else the user has typed in
+        curses.flushinp()
+        stdscr.clear()
+        # Plot some data...
+        response = requests.get("http://localhost:4040/api/v1/applications/{}/executors".format(appID))
+        spark = json.loads(response.text)
+        tasks = spark[0]['activeTasks']
+        series.append(tasks)
+        stdscr.addstr(plot(series))
+        series.reverse()
+        series = series[0:width]
+        series.reverse()
+        
+        # Wait 1/2 of a second. Read below to learn about how to avoid problems with using time.sleep with getch!
+        time.sleep(0.25)
+        
+wrapper(main)
