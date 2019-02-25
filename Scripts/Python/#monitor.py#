@@ -145,7 +145,6 @@ def main(stdscr):
             tasks = tasks.rename(index=str, columns={1:"Id", 3:"Status", 4:"Locality", 7:"Duration", 14:"Load"})
             #tasks = tasks[tasks['Status'] == "RUNNING"]
             stdscr.addstr(3*gap+5, 0, tasks.to_string())
-            
         except (IndexError, KeyError, OSError, AttributeError, ZeroDivisionError, requests.exceptions.ConnectionError, json.decoder.JSONDecodeError):
             pass
         
