@@ -115,7 +115,7 @@ object FF {
         log("3.Flocks to report", timer, f0.count())
 
         if(debug){
-          logger.info(s"Saving candidates set at timestamp ${timestamp}...")
+          logger.info(s"Saving candidate set at timestamp ${timestamp}...")
           val data = F_prime.rawSpatialRDD.rdd.map{ p =>
             val arr = p.getUserData.toString.split(";")
             val pids = arr(0)
@@ -125,7 +125,7 @@ object FF {
             val y = p.getY
             s"${x}\t${y}\t${pids}\t${start}\t${end}\n"
           }.collect().mkString("")
-          val pw = new PrintWriter(s"/tmp/toprune_${timestamp}.tsv")
+          val pw = new PrintWriter(s"/tmp/P_N${executors}_E${epsilon}_T${timestamp}.tsv")
           pw.write(data)
           pw.close
         }
@@ -253,7 +253,11 @@ object FF {
     val debug = params.FFdebug()
     val rtree = new STRtree()
 
-    if(debug) F.rawSpatialRDD.rdd.map(_.getUserData.toString()).toDF("F").filter($"F".contains("297 2122 2224")).orderBy("F").show(F.rawSpatialRDD.rdd.count.toInt, false)
+    if(debug){
+      //F.rawSpatialRDD.rdd.map(_.getUserData.toString()).toDF("F")
+        //.filter($"F".contains("297 2122 2224"))
+        //.orderBy("F").show(F.rawSpatialRDD.rdd.count.toInt, false)
+    }
 
     var timer = System.currentTimeMillis()
     val expansions = F.getPartitioner.getGrids.asScala.map{ e =>
@@ -266,13 +270,14 @@ object FF {
       rtree.query(disk.getEnvelopeInternal).asScala.map{expansion_id =>
         (expansion_id, disk)
       }.toList
-    }.partitionBy(new ExpansionPartitioner(expansions.size)).persist(StorageLevel.MEMORY_ONLY)
-    log("a.Making expansions", timer)
+    }.partitionBy(new ExpansionPartitioner(expansions.size))
+    //.persist(StorageLevel.MEMORY_ONLY)
+    //log("a.Making expansions", timer)
 
     if(debug){
-      expansionsRDD.map(e => s"${e._2.getUserData.toString()};${e._1}").toDF("E")
+      //expansionsRDD.map(e => s"${e._2.getUserData.toString()};${e._1}").toDF("E")
         //.filter($"E".contains("297 2122 2224"))
-        .orderBy("E").show(expansionsRDD.count().toInt, false)
+        //.orderBy("E").show(expansionsRDD.count().toInt, false)
     }
 
     timer = System.currentTimeMillis()
@@ -283,13 +288,14 @@ object FF {
       LCM.run(data).asScala.map{ maximal =>
         (expansion_id, maximal.asScala.toList.map(_.toInt))
       }.toIterator
-    }.persist(StorageLevel.MEMORY_ONLY)
-    log("b.Finding maximals", timer)
+    }
+    //.persist(StorageLevel.MEMORY_ONLY)
+    //log("b.Finding maximals", timer)
 
     if(debug){
-      candidates.map(p => (p._2.sorted.mkString(" "), p._1)).toDF("C", "E")
+      //candidates.map(p => (p._2.sorted.mkString(" "), p._1)).toDF("C", "E")
         //.filter($"C".contains("297 2122 2224"))
-        .sort("C").show(candidates.count().toInt, false)
+        //.sort("C").show(candidates.count().toInt, false)
     }
 
     timer = System.currentTimeMillis()
@@ -297,7 +303,7 @@ object FF {
       .map(f => (f.pids,f.start,f.end,f.center.getX,f.center.getY))
       .toDF("pids","start","end","x","y")
     val f1 = candidates.toDF("eid", "pids")
-    val prunned0 = f0.join(f1, "pids")
+    val prunned = f0.join(f1, "pids")
       .select($"eid", $"pids", $"start", $"end", $"x", $"y")
       .map{ m =>
         val expansion = expansions_map(m.getInt(0))
@@ -312,18 +318,13 @@ object FF {
         (f, notInExpansion, expansion.toString())
       }.rdd
 
-    val prunned = prunned0.filter(_._2).map(_._1)
-      .distinct()
-      .persist(StorageLevel.MEMORY_ONLY)
-    log("c.Filtering maximal in expansions", timer)
-
     if(debug){
-      prunned0.sortBy(p => p._1).toDF("flock", "notInExpansion", "Exp")
+      //prunned.sortBy(p => p._1).toDF("flock", "notInExpansion", "Exp")
         //.filter($"flock".contains("297 2122 2224"))
-        .show(prunned0.count().toInt, false)
+        //.show(prunnedRDD.count().toInt, false)
     }
 
-    prunned
+    prunned.filter(_._2).map(_._1).distinct()
   }
 
   def log(msg: String, timer: Long, n: Long = 0): Unit ={

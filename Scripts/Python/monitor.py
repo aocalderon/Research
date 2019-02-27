@@ -11,6 +11,7 @@ import pandas as pd
 
 def main(stdscr):
     # Make stdscr.getch non-blocking
+    master_host = "localhost"
     stdscr.nodelay(True)
     stdscr.clear()
     width = 125
@@ -27,7 +28,7 @@ def main(stdscr):
         c = stdscr.getch()
         # Plot some data...
         try:
-            response = requests.get("http://localhost:4040/api/v1/applications/{}/executors".format(appID))
+            response = requests.get("http://{}:4040/api/v1/applications/{}/executors".format(master_host, appID))
             spark = json.loads(response.text)
         except (requests.exceptions.ConnectionError, json.decoder.JSONDecodeError):
             continue
@@ -121,7 +122,7 @@ def main(stdscr):
     
         # Stages...
         try:
-            response = requests.get("http://localhost:4040/api/v1/applications/{}/stages".format(appID))
+            response = requests.get("http://{}:4040/api/v1/applications/{}/stages".format(master_host, appID))
             stages = json.loads(response.text)
             stageId = 0
             stageName = ""
@@ -129,23 +130,23 @@ def main(stdscr):
                 status = stage['status']
                 if status == 'ACTIVE':
                     stageId  = stage['stageId']
-                    response = requests.get("http://localhost:4040/api/v1/applications/{}/stages/{}".format(appID, stageId))
+                    response = requests.get("http://{}:4040/api/v1/applications/{}/stages/{}".format(master_host, appID, stageId))
                     tasks = json.loads(response.text)
                     stageName = tasks[0]['name']
             #stagesBar = ProgressBar(total=100, prefix='Stages', suffix="{}/{}".format(complete, len(stages)), length=40, fill='#', zfill=' ')
             #stdscr.addstr(3*gap+1, 0, stagesBar.generate_pbar((complete*100.0/len(stages))))
-            complete, total = parse('http://localhost:4040/stages').getroot().get_element_by_id("activeStage-table").cssselect("div span")[1].text.strip().split("/")
+            complete, total = parse("http://{}:4040/stages".format(master_host)).getroot().get_element_by_id("activeStage-table").cssselect("div span")[1].text.strip().split("/")
             completeTasks = float(complete)
             totalTasks    = float(total)
             tasksBar = ProgressBar(total=100, prefix='Tasks ', suffix="{}/{}".format(complete, total), length=40, fill='#', zfill=' ')
             stdscr.addstr(3*gap+3, 0, "[{}] {}".format(stageId, stageName))
             stdscr.addstr(3*gap+4, 0, tasksBar.generate_pbar((completeTasks*100.0)/totalTasks))
-            url = "http://localhost:4040/stages/stage/?id={}&attempt=0&task.sort=Duration&task.desc=true&task.pageSize=10".format(stageId)
+            url = "http://{}:4040/stages/stage/?id={}&attempt=0&task.sort=Duration&task.desc=true&task.pageSize=10".format(master_host, stageId)
             tasks = pd.read_html(etree.tostring(parse(url).getroot().get_element_by_id("task-table")))[0][[1,3,4,7,14]]
             tasks = tasks.rename(index=str, columns={1:"Id", 3:"Status", 4:"Locality", 7:"Duration", 14:"Load"})
+            #tasks.sort_values(by=['Duration'], ascending=[True])
             #tasks = tasks[tasks['Status'] == "RUNNING"]
             stdscr.addstr(3*gap+5, 0, tasks.to_string())
-            
         except (IndexError, KeyError, OSError, AttributeError, ZeroDivisionError, requests.exceptions.ConnectionError, json.decoder.JSONDecodeError):
             pass
         

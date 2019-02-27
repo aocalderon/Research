@@ -17,7 +17,7 @@ import com.vividsolutions.jts.index.strtree.STRtree
 import org.apache.spark.Partitioner
 import java.io._
 
-object PartitionsStats{
+object PartitionViewer{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory()
   private var num: Long = 0
@@ -75,7 +75,6 @@ object PartitionsStats{
     disks.spatialPartitioning(partitioner, partitions)
     log("Disks partitioned", timer, nDisks)
 
-    if(debug){
       val dataset = input.split("/").last.split("\\.").head
       val points = disks.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (index, partition) =>
         partition.map{ disk =>
@@ -98,9 +97,7 @@ object PartitionsStats{
       }.mkString("")
       pw2.write(wkt)
       pw2.close()
-    }
 
-    if(stats){
       // Computing pre-expansion statistics...
       timer = clocktime
       val stats1 = disks.spatialPartitionedRDD.rdd.mapPartitions{ p =>
@@ -111,7 +108,6 @@ object PartitionsStats{
       avg = (stats1.sum() / stats1.count()).toInt
       statsTime1 = (clocktime - timer) / 1000.0
       log(s"Pre-expansion statistics  ($num, $max, $avg)", timer, max)
-    }
 
     // Building expansions...
     timer = clocktime

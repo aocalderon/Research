@@ -17,7 +17,7 @@ import com.vividsolutions.jts.index.strtree.STRtree
 import org.apache.spark.Partitioner
 import java.io._
 
-object PartitionsStats{
+object PartitionViewer{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory()
   private var num: Long = 0
@@ -27,7 +27,7 @@ object PartitionsStats{
   private var statsTime2 = 0.0
 
   def main(args: Array[String]) = {
-    val params = new PStatsConf(args)
+    val params = new PViewerConf(args)
     val input = params.input()
     val epsilon = params.epsilon()
     val master = params.master()
@@ -75,43 +75,39 @@ object PartitionsStats{
     disks.spatialPartitioning(partitioner, partitions)
     log("Disks partitioned", timer, nDisks)
 
-    if(debug){
-      val dataset = input.split("/").last.split("\\.").head
-      val points = disks.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (index, partition) =>
-        partition.map{ disk =>
-          val pids = disk.getUserData.toString()
-          (disk.getX, disk.getY, pids, index)
-        }
-      }.persist(StorageLevel.MEMORY_ONLY)
-      val nPoints = points.count()
-      val pw1 = new PrintWriter(s"/tmp/${dataset}_${partitioner.toString()}_points.wkt")
-      var wkt = points.map{ p => s"POINT(${p._1} ${p._2});${p._3};${p._4}\n"}.collect().mkString("")
-      pw1.write(wkt)
-      pw1.close()
-      val pw2 = new PrintWriter(s"/tmp/${dataset}_${partitioner.toString()}_partitions.wkt")
-      wkt = disks.getPartitioner.getGrids().asScala.map{ e =>
-        val minx = e.getMinX
-        val miny = e.getMinY
-        val maxx = e.getMaxX
-        val maxy = e.getMaxY
-        s"POLYGON(($minx $miny, $minx $maxy, $maxx $maxy, $maxx $miny, $minx $miny))\n"
-      }.mkString("")
-      pw2.write(wkt)
-      pw2.close()
-    }
-
-    if(stats){
-      // Computing pre-expansion statistics...
-      timer = clocktime
-      val stats1 = disks.spatialPartitionedRDD.rdd.mapPartitions{ p =>
-        List(p.length).toIterator
+    val dataset = input.split("/").last.split("\\.").head
+    val disksByPartition = disks.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (k, v) =>
+      v.map{ m =>
+        val pids = m.getUserData.toString
+        (m.getX, m.getY, pids, k)
       }
-      num = stats1.count()
-      max = stats1.max()
-      avg = (stats1.sum() / stats1.count()).toInt
-      statsTime1 = (clocktime - timer) / 1000.0
-      log(s"Pre-expansion statistics  ($num, $max, $avg)", timer, max)
     }
+    val nDisksByPartition = disksByPartition.count()
+    val pw1 = new PrintWriter(s"/tmp/${dataset}_${partitioner.toString()}_points.wkt")
+    var wkt = disksByPartition.map{ p => s"POINT(${p._1} ${p._2});${p._3};${p._4}\n"}.collect().mkString("")
+    pw1.write(wkt)
+    pw1.close()
+    val pw2 = new PrintWriter(s"/tmp/${dataset}_${partitioner.toString()}_partitions.wkt")
+    wkt = disks.getPartitioner.getGrids().asScala.map{ e =>
+      val minx = e.getMinX
+      val miny = e.getMinY
+      val maxx = e.getMaxX
+      val maxy = e.getMaxY
+      s"POLYGON(($minx $miny, $minx $maxy, $maxx $maxy, $maxx $miny, $minx $miny))\n"
+    }.mkString("")
+    pw2.write(wkt)
+    pw2.close()
+
+    // Computing pre-expansion statistics...
+    timer = clocktime
+    val stats1 = disks.spatialPartitionedRDD.rdd.mapPartitions{ p =>
+      List(p.length).toIterator
+    }
+    num = stats1.count()
+    max = stats1.max()
+    avg = (stats1.sum() / stats1.count()).toInt
+    statsTime1 = (clocktime - timer) / 1000.0
+    log(s"Pre-expansion statistics  ($num, $max, $avg)", timer, max)
 
     // Building expansions...
     timer = clocktime
@@ -130,69 +126,23 @@ object PartitionsStats{
     //val nExpansionsRDD = 0
     val nExpansionsRDD = expansionsRDD.count()
     log("Expansions built", timer, nExpansionsRDD)
-
-    if(stats){
-      // Computing expansion statistics...
-      timer = clocktime
-      val stats2 = expansionsRDD.mapPartitions{ p =>
-        List(p.length).toIterator
-      }
-      num = stats2.count()
-      max = stats2.max()
-      avg = (stats2.sum() / stats2.count()).toInt
-      statsTime2 = (clocktime - timer) / 1000.0
-      log(s"Post-expansion statistics ($num, $max, $avg)", timer, max)
+    
+    // Computing expansion statistics...
+    timer = clocktime
+    val stats2 = expansionsRDD.mapPartitions{ p =>
+      List(p.length).toIterator
     }
+    num = stats2.count()
+    max = stats2.max()
+    avg = (stats2.sum() / stats2.count()).toInt
+    statsTime2 = (clocktime - timer) / 1000.0
+    log(s"Post-expansion statistics ($num, $max, $avg)", timer, max)
 
-    // Prunning disks...
-    timer = clocktime
-    val points = expansionsRDD.map(_._2).mapPartitionsWithIndex{ (index, partition) =>
-      val transactions = partition.map{ d =>
-        d.getUserData.toString().split("\t")(0).split(" ").map(new Integer(_)).toList.sorted.asJava
-      }.toList.asJava
-      val LCM = new AlgoLCM2()
-      val data = new Transactions(transactions)
-      LCM.run(data).asScala.map{ m =>
-        (m.asScala.mkString(" "), index)
-      }.toIterator
-    }.persist(StorageLevel.MEMORY_ONLY)
-    //val nPoints = 0
-    val nPoints = points.count()
-    log("Disks prunned", timer, nPoints)
-
-    // Prunning results...
-    timer = clocktime
-    val f0 = disks.rawSpatialRDD.rdd
-      .map{ d =>
-        val arr = d.getUserData.toString().split("\t")
-        val pids = arr(0)
-        val s = arr(1).toInt
-        val e = arr(2).toInt
-        (pids, s, e, d.getX, d.getY)
-      }.toDF("pids","s","e","x","y")
-    val f1 = points.toDF("pids", "eid")
-    val prunned = f0.join(f1, "pids")
-      .select($"eid", $"pids", $"x", $"y", $"s", $"e")
-      .map{ m =>
-        val expansion = expansions_map(m.getInt(0))
-        val pids = m.getString(1)
-        val x = m.getDouble(2)
-        val y = m.getDouble(3)
-        val s = m.getInt(4)
-        val e = m.getInt(5)
-        val point = geofactory.createPoint(new Coordinate(x, y))
-        val notInExpansion = isNotInExpansionArea(point, expansion, epsilon)
-        val f = s"${pids};${s};${e};${x};${y}"
-        (f, notInExpansion, expansion.toString())
-      }.rdd.filter(_._2).map(_._1)
-      .distinct()
-      .persist(StorageLevel.MEMORY_ONLY)
-    val nPrunned = prunned.count()
-    log("Results prunned", timer, nPrunned)
+    // Summary
     val endTime = clocktime
     val time = "%.2f".format(((endTime - startTime) / 1000.0) - statsTime1 - statsTime2)
     val ttime = "%.2f".format(((endTime - startTime) / 1000.0))
-    logger.info(s"PLCM;$cores;$executors;$partitions;$num;$max;$avg;$nExpansionsRDD;$time;$ttime;$nPoints;$nPrunned;$spatial;$appID")
+    logger.info(s"PARTITIONVIEWER;$cores;$executors;$partitions;$num;$max;$avg;$time;$ttime;$spatial;$appID")
     val url = s"http://localhost:4040/api/v1/applications/${appID}/executors"
     val r = requests.get(url)
     if(s"${r.statusCode}" == "200"){
@@ -247,7 +197,7 @@ object PartitionsStats{
   }
 }
 
-class PStatsConf(args: Seq[String]) extends ScallopConf(args) {
+class PViewerConf(args: Seq[String]) extends ScallopConf(args) {
   val input:      ScallopOption[String]  = opt[String]  (required = true)
   val master:     ScallopOption[String]  = opt[String]  (default = Some("spark://169.235.27.134:7077"))
   val cores:      ScallopOption[Int]     = opt[Int]     (default = Some(4))
