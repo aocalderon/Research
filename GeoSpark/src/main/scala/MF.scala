@@ -245,13 +245,24 @@ object MF{
     val partitions = params.mfpartitions()
     val sepsg      = params.sespg()
     val tepsg      = params.tespg()
+    val cores      = params.cores()
+    val executors  = params.executors()
 
     // Starting session...
     var timer = System.currentTimeMillis()
     val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
-      .master(master).appName("PFLock").getOrCreate()
+      .config("spark.cores.max", cores * executors)
+      .config("spark.executor.cores", cores)
+      .master(master).appName("MaximalFinder")
+      .getOrCreate()
+    import spark.implicits._
+    val appID = spark.sparkContext.applicationId
+    val appIDFile = new java.io.PrintWriter("/tmp/SparkAppID")
+    appIDFile.write(appID)
+    appIDFile.close()
     logger.info(s"Session started [${(System.currentTimeMillis - timer) / 1000.0}]")
+
 
     // Reading data...
     timer = System.currentTimeMillis()
