@@ -1,0 +1,1 @@
+spark-submit --class PartitionsStats /home/acald013/Research/Scripts/Scala/PLCM/target/scala-2.11/plcm_2.11-0.1.jar --input ~/Research/tmp/Gap1000/P_N3_E110.0_T5.tsv --epsilon 110 --spatial EQUAL --partitions 1800 --executors 3

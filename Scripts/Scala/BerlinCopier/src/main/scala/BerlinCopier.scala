@@ -14,7 +14,7 @@ object BerlinCopier {
   def main(args: Array[String]): Unit = {
     val conf = new BCConf(args)
     val gap: Int = conf.gap()
-    val indices: List[(Int, Int)] = List((1,0), (1,1), (0,1), (-1,1), (-1,0), (-1,-1), (0,-1), (1,-1))
+    val indices: List[(Int, Int)] = List((1,1), (1,0), (0,1))
     val spark = SparkSession.builder().master("local[*]").getOrCreate()
 
     import spark.implicits._

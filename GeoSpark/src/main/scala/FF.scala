@@ -26,11 +26,11 @@ object FF {
   /* SpatialJoin variant */
   def runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf): RDD[Flock] = {
     var clockTime = System.currentTimeMillis()
-    val debug        = params.FFdebug()
+    val debug        = params.ffdebug()
     val sespg        = params.sespg()
     val tespg        = params.tespg()
     val distance     = params.distance()
-    val FFpartitions = params.FFpartitions()
+    val FFpartitions = params.ffpartitions()
     val cores        = params.cores()
     val executors    = params.executors()
     val epsilon      = params.epsilon()
@@ -132,8 +132,10 @@ object FF {
 
         // Prunning flocks to report...
         timer = System.currentTimeMillis()
-        f0 = pruneFlockByExpansions(F_prime, epsilon, spark, params)
-          .map{ f =>
+        val f0_prime = pruneFlockByExpansions(F_prime, epsilon, spark, params)
+          .persist(StorageLevel.MEMORY_ONLY)
+        f0_prime.count()
+        f0 = f0_prime.map{ f =>
             val arr = f.split(";")
             val p = arr(0).split(" ").map(_.toInt).toList
             val s = arr(1).toInt
@@ -250,7 +252,7 @@ object FF {
 
   def pruneFlockByExpansions(F: PointRDD, epsilon: Double, spark: SparkSession, params: FFConf): RDD[String] = {
     import spark.implicits._
-    val debug = params.FFdebug()
+    val debug = params.ffdebug()
     val rtree = new STRtree()
 
     if(debug){
@@ -344,7 +346,7 @@ object FF {
     val offset       = params.offset()
     val cores        = params.cores()
     val executors    = params.executors()
-    val FFpartitions = params.FFpartitions()
+    val FFpartitions = params.ffpartitions()
     tag = params.tag()
 
     // Starting session...
@@ -379,7 +381,7 @@ object FF {
     val flocks = runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf)
     logger.info(s"FlockFinder run in ${"%.2f".format((System.currentTimeMillis() - timer) / 1000.0)}s")
 
-    if(params.FFdebug()){
+    if(params.ffdebug()){
       val f = flocks.map(f => s"${f.start}, ${f.end}, ${f.pids.mkString(" ")}\n").sortBy(_.toString()).collect().mkString("")
       val pw = new PrintWriter(new File("/tmp/flocks.txt"))
       pw.write(f)

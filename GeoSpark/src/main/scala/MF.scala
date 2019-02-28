@@ -23,12 +23,12 @@ object MF{
   def run(spark: SparkSession, points: PointRDD, params: FFConf, info: String = ""): RDD[String] = {
     import spark.implicits._
 
-    val debug: Boolean   = params.MFdebug()
-    val epsilon: Double  = params.epsilon()
-    val mu: Int          = params.mu()
-    val MFpartitions: Int = params.MFpartitions()
-    val sespg: String    = params.sespg()
-    val tespg: String    = params.tespg()
+    val debug: Boolean    = params.mfdebug()
+    val epsilon: Double   = params.epsilon()
+    val mu: Int           = params.mu()
+    val MFpartitions: Int = params.mfpartitions()
+    val sespg: String     = params.sespg()
+    val tespg: String     = params.tespg()
     if(params.tag() == ""){ tag = s"$info"} else { tag = s"${params.tag()}|${info}" }
 
     // Indexing points...
@@ -106,6 +106,23 @@ object MF{
     disksRDD.spatialPartitioning(GridType.QUADTREE, MFpartitions)
     disksRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
     log("E.Disks indexed", timer, nDisksRDD)
+
+    if(debug){
+      logger.info(s"Saving candidate set [$tag]...")
+      val data = disksRDD.rawSpatialRDD.rdd.map{ p =>
+        val arr = p.getUserData.toString.split(";")
+        val pids = arr(0)
+        val start = arr(1)
+        val end = arr(2)
+        val x = p.getX
+        val y = p.getY
+        s"${x}\t${y}\t${pids}\t${start}\t${end}\n"
+      }.collect().mkString("")
+      
+      val pw = new java.io.PrintWriter(s"/tmp/P__E${epsilon}_${tag}.tsv")
+      pw.write(data)
+      pw.close
+    }
 
     // Getting expansions...
     timer = System.currentTimeMillis()
@@ -221,13 +238,13 @@ object MF{
   }
 
   def main(args: Array[String]) = {
-    val params = new FFConf(args)
-    val master = params.master()
-    val input  = params.input()
-    val offset = params.offset()
-    val partitions = params.MFpartitions()
-    val sepsg = params.sespg()
-    val tepsg = params.tespg()
+    val params     = new FFConf(args)
+    val master     = params.master()
+    val input      = params.input()
+    val offset     = params.offset()
+    val partitions = params.mfpartitions()
+    val sepsg      = params.sespg()
+    val tepsg      = params.tespg()
 
     // Starting session...
     var timer = System.currentTimeMillis()

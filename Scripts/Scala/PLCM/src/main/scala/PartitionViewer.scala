@@ -87,16 +87,6 @@ object PartitionViewer{
     var wkt = disksByPartition.map{ p => s"POINT(${p._1} ${p._2});${p._3};${p._4}\n"}.collect().mkString("")
     pw1.write(wkt)
     pw1.close()
-    val pw2 = new PrintWriter(s"/tmp/${dataset}_${partitioner.toString()}_partitions.wkt")
-    wkt = disks.getPartitioner.getGrids().asScala.map{ e =>
-      val minx = e.getMinX
-      val miny = e.getMinY
-      val maxx = e.getMaxX
-      val maxy = e.getMaxY
-      s"POLYGON(($minx $miny, $minx $maxy, $maxx $maxy, $maxx $miny, $minx $miny))\n"
-    }.mkString("")
-    pw2.write(wkt)
-    pw2.close()
 
     // Computing pre-expansion statistics...
     timer = clocktime
@@ -107,6 +97,16 @@ object PartitionViewer{
     max = stats1.max()
     avg = (stats1.sum() / stats1.count()).toInt
     statsTime1 = (clocktime - timer) / 1000.0
+    val pw2 = new PrintWriter(s"/tmp/${dataset}_${partitioner.toString()}_P${partitions}-${num}_partitions.wkt")
+    wkt = disks.getPartitioner.getGrids().asScala.map{ e =>
+      val minx = e.getMinX
+      val miny = e.getMinY
+      val maxx = e.getMaxX
+      val maxy = e.getMaxY
+      s"POLYGON(($minx $miny, $minx $maxy, $maxx $maxy, $maxx $miny, $minx $miny))\n"
+    }.mkString("")
+    pw2.write(wkt)
+    pw2.close()
     log(s"Pre-expansion statistics  ($num, $max, $avg)", timer, max)
 
     // Building expansions...
@@ -127,7 +127,7 @@ object PartitionViewer{
     val nExpansionsRDD = expansionsRDD.count()
     log("Expansions built", timer, nExpansionsRDD)
     
-    // Computing expansion statistics...
+    // Computing post-expansion statistics...
     timer = clocktime
     val stats2 = expansionsRDD.mapPartitions{ p =>
       List(p.length).toIterator
@@ -142,7 +142,7 @@ object PartitionViewer{
     val endTime = clocktime
     val time = "%.2f".format(((endTime - startTime) / 1000.0) - statsTime1 - statsTime2)
     val ttime = "%.2f".format(((endTime - startTime) / 1000.0))
-    logger.info(s"PARTITIONVIEWER;$cores;$executors;$partitions;$num;$max;$avg;$time;$ttime;$spatial;$appID")
+    logger.info(s"PARTITIONVIEWER;$cores;$executors;$dataset;$spatial;$appID;$partitions;$num;$max;$avg;$nExpansionsRDD;$time;$ttime")
     val url = s"http://localhost:4040/api/v1/applications/${appID}/executors"
     val r = requests.get(url)
     if(s"${r.statusCode}" == "200"){
