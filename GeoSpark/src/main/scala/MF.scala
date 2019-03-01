@@ -29,6 +29,18 @@ object MF{
     val MFpartitions: Int = params.mfpartitions()
     val sespg: String     = params.sespg()
     val tespg: String     = params.tespg()
+    val cores: Int        = params.cores()
+    val executors: Int    = params.executors()
+    val spatial: String   = params.spatial()
+    val Dpartitions: Int  = (cores * executors) * params.dpartitions()
+    val partitioner = spatial  match {
+      case "QUADTREE"  => GridType.QUADTREE
+      case "RTREE"     => GridType.RTREE
+      case "EQUALGRID" => GridType.EQUALGRID
+      case "KDBTREE"   => GridType.KDBTREE
+      case "HILBERT"   => GridType.HILBERT
+      case "VORONOI"   => GridType.VORONOI
+    }
     if(params.tag() == ""){ tag = s"$info"} else { tag = s"${params.tag()}|${info}" }
 
     // Indexing points...
@@ -36,7 +48,7 @@ object MF{
     val pointsBuffer = new CircleRDD(points, epsilon + precision)
     points.analyze()
     pointsBuffer.analyze()
-    pointsBuffer.spatialPartitioning(GridType.QUADTREE, MFpartitions)
+    pointsBuffer.spatialPartitioning(GridType.QUADTREE, Dpartitions)
     points.spatialPartitioning(pointsBuffer.getPartitioner)
     points.buildIndex(IndexType.QUADTREE, true)
     points.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
@@ -103,23 +115,20 @@ object MF{
     val disksRDD = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
     disksRDD.analyze()
     val nDisksRDD = disksRDD.rawSpatialRDD.count()
-    disksRDD.spatialPartitioning(GridType.QUADTREE, MFpartitions)
+    disksRDD.spatialPartitioning(partitioner, MFpartitions)
     disksRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
     log("E.Disks indexed", timer, nDisksRDD)
 
     if(debug){
-      logger.info(s"Saving candidate set [$tag]...")
+      logger.info(s"Saving candidate set $tag...")
       val data = disksRDD.rawSpatialRDD.rdd.map{ p =>
-        val arr = p.getUserData.toString.split(";")
-        val pids = arr(0)
-        val start = arr(1)
-        val end = arr(2)
+        val pids = p.getUserData.toString
         val x = p.getX
         val y = p.getY
-        s"${x}\t${y}\t${pids}\t${start}\t${end}\n"
+        s"${x}\t${y}\t${pids}\n"
       }.collect().mkString("")
       
-      val pw = new java.io.PrintWriter(s"/tmp/P__E${epsilon}_${tag}.tsv")
+      val pw = new java.io.PrintWriter(s"/tmp/PartMF_E${epsilon}_N${executors}.tsv")
       pw.write(data)
       pw.close
     }
@@ -140,6 +149,25 @@ object MF{
     }.partitionBy(new ExpansionPartitioner(expansions.size)).persist(StorageLevel.MEMORY_ONLY)
     val nExpansionsRDD = expansionsRDD.count()
     log("F.Expansions gotten", timer, nExpansionsRDD)
+
+    var statsTime = 0.0
+    if(debug){
+      val startStats = System.currentTimeMillis()
+      val nPartitions = expansionsRDD.getNumPartitions
+      val stats = expansionsRDD.mapPartitions(d => List(d.length).toIterator).persist(StorageLevel.MEMORY_ONLY)
+
+      val data = stats.collect()
+      val avg  = mean(data)
+      val sdev = stdDev(data)
+      val vari = variance(data)
+      logger.info(s"Partitions:\t$nPartitions")
+      logger.info(s"Min:\t${stats.min()}")
+      logger.info(s"Max:\t${stats.max()}")
+      logger.info(s"Avg:\t${"%.2f".format(avg)}")
+      logger.info(s"Sd: \t${"%.2f".format(sdev)}")
+      logger.info(s"Var:\t${"%.2f".format(vari)}")
+      statsTime = System.currentTimeMillis() - startStats
+    }
 
     // Finding maximal disks...
     timer = System.currentTimeMillis()
@@ -183,9 +211,9 @@ object MF{
       }
 
     if(debug){
-      maximals0.toDF("a","b","c")
+      //maximals0.toDF("a","b","c")
         //.filter($"a".contains("297 2122 2224"))
-        .sort("a").show(100, truncate=false)
+        //.sort("a").show(100, truncate=false)
     }
 
     val maximals = maximals0.filter(_._2).map(_._1).rdd.distinct()
@@ -222,31 +250,21 @@ object MF{
         data.map(d => s"${d.getEnvelope().toText()},${i}\n")
       }
       saveLines(envelopes, "/tmp/envelopes.wkt")
-
-      val nPartitions = expansionsRDD.getNumPartitions
-      val stats = expansionsRDD.mapPartitions{ d =>
-        List(d.length).toIterator
-      }
-
-      logger.info(s"Number of partitions in disks: $nPartitions")
-      logger.info(s"Min number of disks per partition: ${stats.min()}")
-      logger.info(s"Max number of disks per partition: ${stats.max()}")
-      logger.info(s"Avg number of disks per partition: ${stats.sum()/stats.count()}")
     }
 
     maximals
   }
 
   def main(args: Array[String]) = {
-    val params     = new FFConf(args)
-    val master     = params.master()
-    val input      = params.input()
-    val offset     = params.offset()
-    val partitions = params.mfpartitions()
-    val sepsg      = params.sespg()
-    val tepsg      = params.tespg()
-    val cores      = params.cores()
-    val executors  = params.executors()
+    val params      = new FFConf(args)
+    val master      = params.master()
+    val input       = params.input()
+    val offset      = params.offset()
+    val sepsg       = params.sespg()
+    val tepsg       = params.tespg()
+    val cores       = params.cores()
+    val executors   = params.executors()
+    val Dpartitions = (cores * executors) * params.dpartitions()
 
     // Starting session...
     var timer = System.currentTimeMillis()
@@ -266,7 +284,7 @@ object MF{
 
     // Reading data...
     timer = System.currentTimeMillis()
-    val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, partitions)
+    val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, Dpartitions)
     points.CRSTransform(sepsg, tepsg)
     val nPoints = points.rawSpatialRDD.count()
     logger.info(s"Data read [${(System.currentTimeMillis - timer) / 1000.0}] [$nPoints]")
@@ -360,4 +378,14 @@ object MF{
       key.asInstanceOf[Int]
     }
   }
+
+  import Numeric.Implicits._
+  def mean[T: Numeric](xs: Iterable[T]): Double = xs.sum.toDouble / xs.size
+
+  def variance[T: Numeric](xs: Iterable[T]): Double = {
+    val avg = mean(xs)
+    xs.map(_.toDouble).map(a => math.pow(a - avg, 2)).sum / xs.size
+  }
+
+  def stdDev[T: Numeric](xs: Iterable[T]): Double = math.sqrt(variance(xs))
 }
