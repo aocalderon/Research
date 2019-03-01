@@ -24,7 +24,12 @@ def main(stdscr):
     gap = 7
     c = 0
     while c != ord('q'):
-        appID = open("/tmp/SparkAppID").readline()
+        try:
+            response = requests.get("http://{}:4040/api/v1/applications".format(master_host))
+            apps = json.loads(response.text)
+            appID = apps[0]["id"]
+        except (requests.exceptions.ConnectionError, json.decoder.JSONDecodeError):
+            continue
         c = stdscr.getch()
         # Plot some data...
         try:
@@ -141,13 +146,14 @@ def main(stdscr):
             tasksBar = ProgressBar(total=100, prefix='Tasks ', suffix="{}/{}".format(complete, total), length=40, fill='#', zfill=' ')
             stdscr.addstr(3*gap+3, 0, "[{}] {}".format(stageId, stageName))
             stdscr.addstr(3*gap+4, 0, tasksBar.generate_pbar((completeTasks*100.0)/totalTasks))
-            url = "http://{}:4040/stages/stage/?id={}&attempt=0&task.sort=ID&task.desc=true&task.pageSize=20".format(master_host, stageId)
-            if c == ord('d'):
-                url = "http://{}:4040/stages/stage/?id={}&attempt=0&task.sort=Duration&task.desc=true&task.pageSize=10".format(master_host, stageId)
-            tasks = pd.read_html(etree.tostring(parse(url).getroot().get_element_by_id("task-table")))[0]#[[1,3,4,7,14]]
-            tasks = tasks.rename(index=str, columns={1:"Id", 3:"Status", 4:"Locality", 7:"Duration", 14:"Load"})
+            url = "http://{}:4040/stages/stage/?id={}&attempt=0&task.sort=Duration&task.desc=true&task.pageSize=10".format(master_host, stageId)
+            if c == ord('n'):
+                url = "http://{}:4040/stages/stage/?id={}&attempt=0&task.sort=ID&task.desc=true&task.pageSize=20".format(master_host, stageId)
+            tasks = pd.read_html(etree.tostring(parse(url).getroot().get_element_by_id("task-table")))[0]
+            cols = [0,2,5,6]
+            tasks.drop(tasks.columns[cols],axis=1,inplace=True)
             if c == ord('r'):
-                tasks = tasks[tasks['Status'] == "RUNNING"]
+                tasks = tasks[tasks['Status'] == "RUNNING"] 
             stdscr.addstr(3*gap+5, 0, tasks.to_string())
         except (IndexError, KeyError, OSError, AttributeError, ZeroDivisionError, requests.exceptions.ConnectionError, json.decoder.JSONDecodeError):
             pass

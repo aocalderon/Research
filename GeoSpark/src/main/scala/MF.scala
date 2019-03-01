@@ -26,13 +26,13 @@ object MF{
     val debug: Boolean    = params.mfdebug()
     val epsilon: Double   = params.epsilon()
     val mu: Int           = params.mu()
-    val MFpartitions: Int = params.mfpartitions()
     val sespg: String     = params.sespg()
     val tespg: String     = params.tespg()
     val cores: Int        = params.cores()
     val executors: Int    = params.executors()
-    val spatial: String   = params.spatial()
     val Dpartitions: Int  = (cores * executors) * params.dpartitions()
+    val MFpartitions: Int = executors * params.mfpartitions()
+    val spatial: String   = params.spatial()
     val partitioner = spatial  match {
       case "QUADTREE"  => GridType.QUADTREE
       case "RTREE"     => GridType.RTREE

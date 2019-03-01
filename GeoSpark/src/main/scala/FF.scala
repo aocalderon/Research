@@ -30,9 +30,10 @@ object FF {
     val sespg        = params.sespg()
     val tespg        = params.tespg()
     val distance     = params.distance()
-    val FFpartitions = params.ffpartitions()
     val cores        = params.cores()
     val executors    = params.executors()
+    val Dpartitions  = (cores * executors) * params.dpartitions()
+    val FFpartitions = executors * params.ffpartitions()
     val epsilon      = params.epsilon()
     val mu           = params.mu()
     val delta        = params.delta()
@@ -56,7 +57,7 @@ object FF {
       if(firstRun){
         F = C
         F.analyze()
-        F.spatialPartitioning(GridType.QUADTREE, FFpartitions)
+        F.spatialPartitioning(GridType.QUADTREE, Dpartitions)
         F.buildIndex(IndexType.QUADTREE, true)
         partitioner = F.getPartitioner
         firstRun = false
@@ -104,7 +105,7 @@ object FF {
           }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg
         )
         G_prime.analyze()
-        G_prime.spatialPartitioning(GridType.QUADTREE, FFpartitions)
+        G_prime.spatialPartitioning(GridType.EQUALGRID, FFpartitions)
         val F_prime = new PointRDD(
           f0.map{ f =>
             f.center.setUserData(f.pids.mkString(" ") ++ s";${f.start};${f.end}")
@@ -169,7 +170,7 @@ object FF {
             f.center
           }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
         F.analyze()
-        F.spatialPartitioning(GridType.QUADTREE, FFpartitions)
+        F.spatialPartitioning(GridType.QUADTREE, Dpartitions)
         F.buildIndex(IndexType.QUADTREE, true)
         partitioner = F.getPartitioner
         log("5.Candidates indexed", timer, F.rawSpatialRDD.count())
@@ -318,7 +319,8 @@ object FF {
         val notInExpansion = isNotInExpansionArea(point, expansion, epsilon)
         val f = s"${pids};${start};${end};${point.getX};${point.getY}"
         (f, notInExpansion, expansion.toString())
-      }.rdd
+      }.rdd.persist(StorageLevel.MEMORY_ONLY)
+    prunned.count()
 
     if(debug){
       //prunned.sortBy(p => p._1).toDF("flock", "notInExpansion", "Exp")
@@ -346,7 +348,7 @@ object FF {
     val offset       = params.offset()
     val cores        = params.cores()
     val executors    = params.executors()
-    val FFpartitions = params.ffpartitions()
+    val Dpartitions  = (cores * executors) * params.dpartitions()
     tag = params.tag()
 
     // Starting session...
@@ -366,7 +368,7 @@ object FF {
 
     // Reading data...
     timer = System.currentTimeMillis()
-    val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, FFpartitions)
+    val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, Dpartitions)
     points.CRSTransform(params.sespg(), params.tespg())
     val nPoints = points.rawSpatialRDD.count()
     val timestamps = points.rawSpatialRDD.rdd.map(_.getUserData.toString().split("\t").reverse.head.toInt).distinct.collect()
