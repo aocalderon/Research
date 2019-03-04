@@ -5,21 +5,22 @@ require(stringr)
 require(tidyverse)
 
 READ_DATA     = T
-SAVE_PDF      = F
+SAVE_PDF      = T
 SEP           = ";"
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 
-dataFile = paste0(RESEARCH_HOME, 'Scripts/R/Benchmarks/MultiAndSingleNode/multinode_Gap50K.txt')
+dataFile = paste0(RESEARCH_HOME, 'Scripts/Misc/multinode_scaleup.txt')
 
 data = readLines(dataFile)
 
 data = as.tibble(as.data.frame(data), stringAsFactors = F) %>% 
   rename(Line = data) %>% 
   filter(grepl("PFLOCK;", Line)) %>% 
-  separate(Line, c("Bogus", "Nodes", "Epsilon", "Mu", "Delta", "Time", "Load"), sep = ";") %>%
+  separate(Line, c("Bogus", "Cores", "Nodes", "Epsilon", "Mu", "Delta", "Time", "Load"), sep = ";") %>%
   select(Nodes, Epsilon, Time, Load) %>%
   mutate(Epsilon = as.numeric(Epsilon), Time = as.numeric(Time), Load = as.numeric(Load)) %>%
-  group_by(Nodes, Epsilon) %>% summarise(Time = mean(Time))
+  group_by(Nodes, Epsilon) %>% summarise(Time = mean(Time)) %>%
+  filter(Epsilon > 90)
 
 title = "Multinode Scale up [berlin_N20K-60K]"
 g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Nodes)) +
