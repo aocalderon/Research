@@ -1,0 +1,1 @@
+spark-submit --class MF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.0.jar --input /home/acald013/Research/Datasets/Berlin/Berlin_D120K_T0-5.tsv --epsilon 100 --mu 3 --delta 3 --distance 75 --cores 4 --timestamp 0 --executors 3 --mfdebug --mfpartitions 2048

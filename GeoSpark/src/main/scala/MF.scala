@@ -210,12 +210,6 @@ object MF{
         (s"${pids};${x};${y}", notInExpansion, expansion.toString())
       }
 
-    if(debug){
-      //maximals0.toDF("a","b","c")
-        //.filter($"a".contains("297 2122 2224"))
-        //.sort("a").show(100, truncate=false)
-    }
-
     val maximals = maximals0.filter(_._2).map(_._1).rdd.distinct()
     val nMaximals = maximals.count()
     log("H.Maximal disks prunned", timer, nMaximals)
@@ -227,14 +221,10 @@ object MF{
         s"${arr(0)},POINT(${arr(1)} ${arr(2)})\n"
       }.toDF("line").sort($"line").rdd.map(_.getString(0))
       saveLines(maxims, "/tmp/maximals.wkt")
-      val p = pairs.map(c => s"LINESTRING(${c._1._2.getX()} ${c._1._2.getY()}, ${c._2._2.getX()} ${c._2._2.getY()})\n")
-      saveLines(p, "/tmp/pairs.wkt")
       val grids = disksRDD.getPartitioner.getGrids().asScala.toList.map{ e =>
         s"POLYGON((${e.getMinX} ${e.getMinY},${e.getMinX} ${e.getMaxY},${e.getMaxX} ${e.getMaxY},${e.getMaxX} ${e.getMinY},${e.getMinX} ${e.getMinY}))\n"
       }
       saveList(grids, "/tmp/grids.wkt")
-      val c = centers.map(c => s"POINT(${c.getX()} ${c.getY()})\n")
-      saveLines(c, "/tmp/centers.wkt")
       val expans = expansions.map{ ex =>
         val e = ex._1
         s"POLYGON((${e.getMinX} ${e.getMinY},${e.getMinX} ${e.getMaxY},${e.getMaxX} ${e.getMaxY},${e.getMaxX} ${e.getMinY},${e.getMinX} ${e.getMinY}))\n"
@@ -246,59 +236,10 @@ object MF{
       saveLines(disks, "/tmp/disks.wkt")
       val candids = candidates.map(_._2.sorted.mkString(" ") ++ "\n").sortBy(_.toString())
       saveLines(candids, "/tmp/candidates.txt")
-      val envelopes = disksRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (i,data) =>
-        data.map(d => s"${d.getEnvelope().toText()},${i}\n")
-      }
-      saveLines(envelopes, "/tmp/envelopes.wkt")
     }
+    ////////////////////////////////////////////////////////////////////////////////////
 
     maximals
-  }
-
-  def main(args: Array[String]) = {
-    val params      = new FFConf(args)
-    val master      = params.master()
-    val input       = params.input()
-    val offset      = params.offset()
-    val sepsg       = params.sespg()
-    val tepsg       = params.tespg()
-    val cores       = params.cores()
-    val executors   = params.executors()
-    val Dpartitions = (cores * executors) * params.dpartitions()
-
-    // Starting session...
-    var timer = System.currentTimeMillis()
-    val spark = SparkSession.builder()
-      .config("spark.serializer",classOf[KryoSerializer].getName)
-      .config("spark.cores.max", cores * executors)
-      .config("spark.executor.cores", cores)
-      .master(master).appName("MaximalFinder")
-      .getOrCreate()
-    import spark.implicits._
-    val appID = spark.sparkContext.applicationId
-    val appIDFile = new java.io.PrintWriter("/tmp/SparkAppID")
-    appIDFile.write(appID)
-    appIDFile.close()
-    logger.info(s"Session started [${(System.currentTimeMillis - timer) / 1000.0}]")
-
-
-    // Reading data...
-    timer = System.currentTimeMillis()
-    val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, Dpartitions)
-    points.CRSTransform(sepsg, tepsg)
-    val nPoints = points.rawSpatialRDD.count()
-    logger.info(s"Data read [${(System.currentTimeMillis - timer) / 1000.0}] [$nPoints]")
-
-    // Running maximal finder...
-    timer = System.currentTimeMillis()
-    val maximals = MF.run(spark, points, params)
-    val nMaximals = maximals.count()
-    logger.info(s"Maximal finder run [${(System.currentTimeMillis() - timer) / 1000.0}] [$nMaximals]")
-
-    // Closing session...
-    timer = System.currentTimeMillis()
-    spark.stop()
-    logger.info(s"Session closed [${(System.currentTimeMillis - timer) / 1000.0}]")
   }
 
   def calculateCenterCoordinates(p1: Point, p2: Point, r2: Double): (Point, Point) = {
@@ -388,4 +329,57 @@ object MF{
   }
 
   def stdDev[T: Numeric](xs: Iterable[T]): Double = math.sqrt(variance(xs))
+
+  /***
+   * The main function...
+   **/
+  def main(args: Array[String]) = {
+    val params      = new FFConf(args)
+    val master      = params.master()
+    val input       = params.input()
+    val offset      = params.offset()
+    val sepsg       = params.sespg()
+    val tepsg       = params.tespg()
+    val timestamp   = params.timestamp()
+    val cores       = params.cores()
+    val executors   = params.executors()
+    val Dpartitions = (cores * executors) * params.dpartitions()
+
+    // Starting session...
+    var timer = System.currentTimeMillis()
+    val spark = SparkSession.builder()
+      .config("spark.serializer",classOf[KryoSerializer].getName)
+      .config("spark.cores.max", cores * executors)
+      .config("spark.executor.cores", cores)
+      .master(master).appName("MaximalFinder")
+      .getOrCreate()
+    import spark.implicits._
+    val appID = spark.sparkContext.applicationId
+    logger.info(s"Session started [${(System.currentTimeMillis - timer) / 1000.0}]")
+
+    // Reading data...
+    timer = System.currentTimeMillis()
+    var points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, Dpartitions)
+    if(timestamp >= 0){
+      points = new PointRDD(points.rawSpatialRDD.rdd.filter{p =>
+        val arr = p.getUserData.toString().split("\t")
+        val t = arr(1).toInt
+        t == timestamp
+      }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sepsg, tepsg)
+    }
+    points.CRSTransform(sepsg, tepsg)
+    val nPoints = points.rawSpatialRDD.count()
+    logger.info(s"Data read [${(System.currentTimeMillis - timer) / 1000.0}] [$nPoints]")
+
+    // Running maximal finder...
+    timer = System.currentTimeMillis()
+    val maximals = MF.run(spark, points, params)
+    val nMaximals = maximals.count()
+    logger.info(s"Maximal finder run [${(System.currentTimeMillis() - timer) / 1000.0}] [$nMaximals]")
+
+    // Closing session...
+    timer = System.currentTimeMillis()
+    spark.stop()
+    logger.info(s"Session closed [${(System.currentTimeMillis - timer) / 1000.0}]")
+  }  
 }
