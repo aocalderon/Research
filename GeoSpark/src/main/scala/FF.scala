@@ -33,7 +33,7 @@ object FF {
     val cores        = params.cores()
     val executors    = params.executors()
     val Dpartitions  = (cores * executors) * params.dpartitions()
-    val FFpartitions = executors * params.ffpartitions()
+    val FFpartitions = params.ffpartitions()
     val epsilon      = params.epsilon()
     val mu           = params.mu()
     val delta        = params.delta()
@@ -360,10 +360,6 @@ object FF {
       .master(master).appName("PFLock")
       .getOrCreate()
     import spark.implicits._
-    val appID = spark.sparkContext.applicationId
-    val appIDFile = new PrintWriter("/tmp/SparkAppID")
-    appIDFile.write(appID)
-    appIDFile.close()
     logger.info(s"Session $appID started in ${(System.currentTimeMillis - timer) / 1000.0}s...")
 
     // Reading data...

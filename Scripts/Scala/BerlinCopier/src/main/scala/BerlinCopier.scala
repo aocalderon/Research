@@ -16,7 +16,7 @@ object BerlinCopier {
     val gap: Int = conf.gap()
     val eps: Double = conf.eps()
     val frame: Boolean = conf.frame()
-    val indices: List[(Int, Int)] = List((1,0), (2,0), (3,0))
+    val indices: List[(Int, Int)] = List((1,1), (1,0), (0,1))
     val spark = SparkSession.builder().master("local[*]").getOrCreate()
 
     import spark.implicits._
