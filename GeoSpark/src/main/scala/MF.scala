@@ -31,7 +31,7 @@ object MF{
     val cores: Int        = params.cores()
     val executors: Int    = params.executors()
     val Dpartitions: Int  = (cores * executors) * params.dpartitions()
-    val MFpartitions: Int = executors * params.mfpartitions()
+    val MFpartitions: Int = params.mfpartitions()
     val spatial: String   = params.spatial()
     val partitioner = spatial  match {
       case "QUADTREE"  => GridType.QUADTREE
