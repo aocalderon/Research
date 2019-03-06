@@ -360,6 +360,7 @@ object FF {
       .master(master).appName("PFLock")
       .getOrCreate()
     import spark.implicits._
+    val appID = spark.sparkContext.applicationId
     logger.info(s"Session $appID started in ${(System.currentTimeMillis - timer) / 1000.0}s...")
 
     // Reading data...
