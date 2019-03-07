@@ -11,7 +11,7 @@ import pandas as pd
 
 def main(stdscr):
     # Make stdscr.getch non-blocking
-    master_host = "localhost"
+    master_host = "169.235.25.66"
     stdscr.nodelay(True)
     stdscr.clear()
     width = 125
@@ -142,7 +142,7 @@ def main(stdscr):
             #stdscr.addstr(3*gap+1, 0, stagesBar.generate_pbar((complete*100.0/len(stages))))
             complete, total = parse("http://{}:4040/stages".format(master_host)).getroot().get_element_by_id("activeStage-table").cssselect("div span")[1].text.strip().split("/")
             completeTasks = float(complete)
-            totalTasks    = float(total)
+            totalTasks    = float(total.split(" ")[0])
             tasksBar = ProgressBar(total=100, prefix='Tasks ', suffix="{}/{}".format(complete, total), length=40, fill='#', zfill=' ')
             stdscr.addstr(3*gap+3, 0, "[{}] {}".format(stageId, stageName))
             stdscr.addstr(3*gap+4, 0, tasksBar.generate_pbar((completeTasks*100.0)/totalTasks))

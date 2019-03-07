@@ -45,6 +45,11 @@ Scripts/Scala/PLCM/project/*
 Scripts/Scala/PLCM/.ensime
 Scripts/Scala/PLCM/.ensime_cache/*
 
+Scripts/Scala/MF/target/*
+Scripts/Scala/MF/project/*
+Scripts/Scala/MF/.ensime
+Scripts/Scala/MF/.ensime_cache/*
+
 ensime*
 *.cache
 *.log
