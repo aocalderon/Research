@@ -3,12 +3,11 @@
 DATASET_PATH="/home/acald013/Research/Datasets/Berlin/Quads/"
 DATASET_NAME="Berlin_N3"
 DATASET_EXT=".tsv"
-PARTITIONS_SET=( 625 2500 2500 )
+PARTITIONS_SET=( 2500 2500 2500 )
 JAR="/home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.0.jar"
 
-
-EPSILONS=(  110 ) 
-DISTANCES=( 100 )
+EPSILONS=( 90 100 ) 
+DISTANCES=( 75 75 )
 MU=3
 DELTA=3
 N=5

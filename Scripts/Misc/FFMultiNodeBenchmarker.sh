@@ -7,11 +7,11 @@ DATASET_EXT=".tsv"
 JAR="/home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.0.jar"
 
 
-EPSILONS=(  110 )
-DISTANCES=( 100 )
+EPSILONS=(  90 100 )
+DISTANCES=(  75 75 )
 MU=3
 DELTA=3
-N=10
+N=5
 ESTART=1
 EEND=3
 CORES=4
