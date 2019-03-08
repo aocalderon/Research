@@ -4,8 +4,8 @@ version := "0.1"
 
 scalaVersion in ThisBuild := "2.11.8"
 
-val SparkVersion = "2.1.0"
-val GeoSparkVersion = "1.1.3"
+val SparkVersion = "2.3.0"
+val GeoSparkVersion = "1.2.0"
 
 libraryDependencies += "org.apache.spark" %% "spark-core" % SparkVersion
 libraryDependencies += "org.apache.spark" %% "spark-sql" % SparkVersion

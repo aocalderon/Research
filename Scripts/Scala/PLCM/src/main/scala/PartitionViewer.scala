@@ -43,15 +43,12 @@ object PartitionViewer{
     var timer = clocktime
     val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
-      .master(master).appName("PartitionsStats")
+      .master(s"spark://${master}:7077").appName("PartitionsStats")
       .config("spark.cores.max", cores * executors)
       .config("spark.executor.cores", cores)
       .getOrCreate()
     import spark.implicits._
     val appID = spark.sparkContext.applicationId
-    val appIDFile = new PrintWriter("/tmp/SparkAppID")
-    appIDFile.write(appID)
-    appIDFile.close()
     logger.info(s"Session $appID started [${(clocktime - timer) / 1000.0}]")
 
     // Reading disks...
@@ -63,12 +60,12 @@ object PartitionViewer{
     // Partitioning disks...
     timer = clocktime
     val partitioner = spatial  match {
-      case "QUADTREE" => GridType.QUADTREE
-      case "RTREE"    => GridType.RTREE
-      case "EQUAL"    => GridType.EQUALGRID
-      case "KDBTREE"  => GridType.KDBTREE
-      case "HILBERT"  => GridType.HILBERT
-      case "VORONOI"  => GridType.VORONOI
+      case "QUADTREE"  => GridType.QUADTREE
+      case "RTREE"     => GridType.RTREE
+      case "EQUALGRID" => GridType.EQUALGRID
+      case "KDBTREE"   => GridType.KDBTREE
+      case "HILBERT"   => GridType.HILBERT
+      case "VORONOI"   => GridType.VORONOI
     }
     val startTime = clocktime
     disks.analyze()
@@ -143,7 +140,7 @@ object PartitionViewer{
     val time = "%.2f".format(((endTime - startTime) / 1000.0) - statsTime1 - statsTime2)
     val ttime = "%.2f".format(((endTime - startTime) / 1000.0))
     logger.info(s"PARTITIONVIEWER;$cores;$executors;$dataset;$spatial;$appID;$partitions;$num;$max;$avg;$nExpansionsRDD;$time;$ttime")
-    val url = s"http://localhost:4040/api/v1/applications/${appID}/executors"
+    val url = s"http://${master}:4040/api/v1/applications/${appID}/executors"
     val r = requests.get(url)
     if(s"${r.statusCode}" == "200"){
       import scala.util.parsing.json._
@@ -199,7 +196,7 @@ object PartitionViewer{
 
 class PViewerConf(args: Seq[String]) extends ScallopConf(args) {
   val input:      ScallopOption[String]  = opt[String]  (required = true)
-  val master:     ScallopOption[String]  = opt[String]  (default = Some("spark://169.235.27.134:7077"))
+  val master:     ScallopOption[String]  = opt[String]  (default = Some("169.235.27.134"))
   val cores:      ScallopOption[Int]     = opt[Int]     (default = Some(4))
   val executors:  ScallopOption[Int]     = opt[Int]     (default = Some(3))
   val spatial:    ScallopOption[String]  = opt[String]  (default = Some("QUADTREE"))
