@@ -21,7 +21,7 @@ data = as.tibble(as.data.frame(data), stringAsFactors = F) %>%
   mutate(Epsilon = as.numeric(Epsilon), Time = as.numeric(Time), Load = as.numeric(Load)) %>%
   group_by(Cores, Epsilon) %>% summarise(Time = mean(Time))
 
-title = "Execution time by Epsilon [Berlin_120K]"
+title = "Singlenode Speed Up by Epsilon [Berlin_120K, 6 cores, 1 thread per core]"
 data$Cores = factor(data$Cores, levels=c("1","2","3","4","5","6"))
 g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Cores)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
