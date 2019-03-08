@@ -89,7 +89,6 @@ object MF{
     centersBuffer.spatialPartitioning(points.getPartitioner)
     centersBuffer.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
 
-    timer = System.currentTimeMillis()
     val disks = JoinQuery.DistanceJoinQueryFlat(points, centersBuffer, usingIndex, considerBoundary)
       .rdd.map{ d =>
         val c = d._1.getEnvelope.getCentroid
@@ -133,13 +132,28 @@ object MF{
 
     // Getting overlapping disks...
     timer = clocktime
-    val circleDisksRDD = new CircleRDD(disksRDD, epsilon + precision)
-    circleDisksRDD.spatialPartitioning(disksRDD.getPartitioner)
-    disksRDD.buildIndex(IndexType.QUADTREE, true) // buildOnSpatialPartitionedRDD, set to TRUE only if run join query...
-    val overlaps = JoinQuery.DistanceJoinQueryFlat(disksRDD, circleDisksRDD, true, true) // considerBoundaryIntersection = true, usingindex = true...
-    val nOverlaps = overlaps.rdd.count()
+    val disksRDDBuffer = new CircleRDD(disksRDD, epsilon + precision)
+    disksRDD.analyze()
+    disksRDDBuffer.analyze()
+    disksRDDBuffer.spatialPartitioning(GridType.QUADTREE, Dpartitions)
+    disksRDD.spatialPartitioning(disksRDDBuffer.getPartitioner)
+    disksRDD.buildIndex(IndexType.QUADTREE, true)
+    disksRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
+    disksRDDBuffer.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+
+    val overlaps = JoinQuery.DistanceJoinQueryFlat(disksRDD, disksRDDBuffer, usingIndex, considerBoundary)
+      .rdd.map{ pair =>
+        val id1 = pair._1.getUserData().toString()//.split("\t").head.trim().toInt
+        val p1  = pair._1.getCentroid.toString()
+        val id2 = pair._2.getUserData().toString()//.split("\t").head.trim().toInt
+        val p2  = pair._2.getCentroid.toString()
+        ( p1 , id2 )
+      }.toDF("id", "pids").groupBy($"id").agg(count($"pids").as("count"))
+    val nOverlaps = overlaps.count()
     log("F.Overlaping disks gotten", timer, nOverlaps)
-    
+
+    import org.apache.spark.sql.functions._
+    overlaps.orderBy(desc("count")).show(10, false)
   }
 
   def clocktime  = System.currentTimeMillis()
