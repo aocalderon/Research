@@ -11,7 +11,7 @@ import pandas as pd
 
 def main(stdscr):
     # Make stdscr.getch non-blocking
-    master_host = "169.235.25.66"
+    master_host = "localhost"
     stdscr.nodelay(True)
     stdscr.clear()
     width = 125
