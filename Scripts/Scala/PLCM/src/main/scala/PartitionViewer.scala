@@ -15,7 +15,11 @@ import scala.collection.JavaConverters._
 import SPMF.{AlgoLCM2, Transactions}
 import com.vividsolutions.jts.index.strtree.STRtree
 import org.apache.spark.Partitioner
+import scala.collection.mutable.ListBuffer
 import java.io._
+
+import org.datasyslab.geospark.spatialPartitioning.{SpatialPartitioner, FlatGridPartitioner}
+
 
 object PartitionViewer{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -26,18 +30,39 @@ object PartitionViewer{
   private var statsTime1 = 0.0
   private var statsTime2 = 0.0
 
+  def getGrids(boundary: Envelope, intervalX: Double, intervalY: Double): List[Envelope] = {
+    var grids: ListBuffer[Envelope] = new ListBuffer()
+    val nAxisX = math.floor((boundary.getMaxX - boundary.getMinX) / intervalX).toInt
+    val nAxisY = math.floor((boundary.getMaxY - boundary.getMinY) / intervalY).toInt
+
+    for(i <- 0 to nAxisX){
+      for(j <- 0 to nAxisY){
+        val grid = new Envelope(
+          boundary.getMinX() + intervalX * i,
+          boundary.getMinX() + intervalX * (i + 1),
+          boundary.getMinY() + intervalY * j,
+          boundary.getMinY() + intervalY * (j + 1)
+        )
+        grids += grid
+      }
+    }
+    grids.toList
+  }
+
   def main(args: Array[String]) = {
-    val params = new PViewerConf(args)
-    val input = params.input()
-    val epsilon = params.epsilon()
-    val master = params.master()
+    val params     = new PViewerConf(args)
+    val input      = params.input()
+    val epsilon    = params.epsilon()
+    val intervalX  = params.intervalx()
+    val intervalY  = params.intervaly()
+    val master     = params.master()
     val partitions = params.partitions()
-    val offset = params.offset()
-    val spatial = params.spatial()
-    val cores = params.cores()
-    val executors = params.executors()
-    val stats = !params.stats()
-    val debug = params.debug()
+    val offset     = params.offset()
+    val spatial    = params.spatial()
+    val cores      = params.cores()
+    val executors  = params.executors()
+    val stats      = !params.stats()
+    val debug      = params.debug()
 
     // Starting session...
     var timer = clocktime
@@ -69,7 +94,14 @@ object PartitionViewer{
     }
     val startTime = clocktime
     disks.analyze()
-    disks.spatialPartitioning(partitioner, partitions)
+    logger.info("Running grids...")
+    val grids = getGrids(disks.boundary(), intervalX, intervalY)
+    grids.take(10).foreach(println)
+
+
+    //disks.spatialPartitioning(partitioner, partitions)
+    disks.spatialPartitioning(new FlatGridPartitioner(grids.asJava))
+    logger.info(s"Number of partitions: ${disks.spatialPartitionedRDD.rdd.getNumPartitions}")
     log("Disks partitioned", timer, nDisks)
 
     val dataset = input.split("/").last.split("\\.").head
@@ -200,7 +232,9 @@ class PViewerConf(args: Seq[String]) extends ScallopConf(args) {
   val cores:      ScallopOption[Int]     = opt[Int]     (default = Some(4))
   val executors:  ScallopOption[Int]     = opt[Int]     (default = Some(3))
   val spatial:    ScallopOption[String]  = opt[String]  (default = Some("QUADTREE"))
-  val epsilon:    ScallopOption[Int]     = opt[Int]     (default = Some(10))
+  val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(10.0))
+  val intervalx:  ScallopOption[Double]  = opt[Double]  (default = Some(1000.0))
+  val intervaly:  ScallopOption[Double]  = opt[Double]  (default = Some(1000.0))
   val partitions: ScallopOption[Int]     = opt[Int]     (default = Some(24))
   val offset:     ScallopOption[Int]     = opt[Int]     (default = Some(0))
   val stats:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
