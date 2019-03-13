@@ -8,10 +8,15 @@ import json
 from lxml.html import parse, etree
 from console_progressbar import ProgressBar
 import pandas as pd
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-m", "--master", default = "localhost", help = "The master host...")
+args = parser.parse_args()
 
 def main(stdscr):
     # Make stdscr.getch non-blocking
-    master_host = "localhost"
+    master_host = args.master
     stdscr.nodelay(True)
     stdscr.clear()
     width = 125

@@ -17,7 +17,6 @@ import com.vividsolutions.jts.index.strtree.STRtree
 import org.apache.spark.Partitioner
 import scala.collection.mutable.ListBuffer
 import java.io._
-
 import org.datasyslab.geospark.spatialPartitioning.{SpatialPartitioner, FlatGridPartitioner}
 
 
@@ -30,32 +29,12 @@ object PartitionViewer{
   private var statsTime1 = 0.0
   private var statsTime2 = 0.0
 
-  def getGrids(boundary: Envelope, intervalX: Double, intervalY: Double): List[Envelope] = {
-    var grids: ListBuffer[Envelope] = new ListBuffer()
-    val nAxisX = math.floor((boundary.getMaxX - boundary.getMinX) / intervalX).toInt
-    val nAxisY = math.floor((boundary.getMaxY - boundary.getMinY) / intervalY).toInt
-
-    for(i <- 0 to nAxisX){
-      for(j <- 0 to nAxisY){
-        val grid = new Envelope(
-          boundary.getMinX() + intervalX * i,
-          boundary.getMinX() + intervalX * (i + 1),
-          boundary.getMinY() + intervalY * j,
-          boundary.getMinY() + intervalY * (j + 1)
-        )
-        grids += grid
-      }
-    }
-    grids.toList
-  }
-
   def main(args: Array[String]) = {
     val params     = new PViewerConf(args)
     val input      = params.input()
     val epsilon    = params.epsilon()
-    val intervalX  = params.intervalx()
-    val intervalY  = params.intervaly()
-    val master     = params.master()
+    val customX    = params.customx()
+    val customY    = params.customy()
     val partitions = params.partitions()
     val offset     = params.offset()
     val spatial    = params.spatial()
@@ -63,12 +42,21 @@ object PartitionViewer{
     val executors  = params.executors()
     val stats      = !params.stats()
     val debug      = params.debug()
+    var host       = params.master()
+    var tag        = ""
 
     // Starting session...
     var timer = clocktime
+    var master = "local[*]"
+    if(host.contains("local[")){
+      master = host
+      host = "localhost"
+    } else {
+      master = s"spark://${host}:7077"
+    }
     val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
-      .master(s"spark://${master}:7077").appName("PartitionsStats")
+      .master(master).appName("PartitionsStats")
       .config("spark.cores.max", cores * executors)
       .config("spark.executor.cores", cores)
       .getOrCreate()
@@ -83,25 +71,30 @@ object PartitionViewer{
     log("Disks read", timer, nDisks)
 
     // Partitioning disks...
-    timer = clocktime
-    val partitioner = spatial  match {
-      case "QUADTREE"  => GridType.QUADTREE
-      case "RTREE"     => GridType.RTREE
-      case "EQUALGRID" => GridType.EQUALGRID
-      case "KDBTREE"   => GridType.KDBTREE
-      case "HILBERT"   => GridType.HILBERT
-      case "VORONOI"   => GridType.VORONOI
-    }
     val startTime = clocktime
+    timer = clocktime
     disks.analyze()
-    logger.info("Running grids...")
-    val grids = getGrids(disks.boundary(), intervalX, intervalY)
-    grids.take(10).foreach(println)
-
-
-    //disks.spatialPartitioning(partitioner, partitions)
-    disks.spatialPartitioning(new FlatGridPartitioner(grids.asJava))
-    logger.info(s"Number of partitions: ${disks.spatialPartitionedRDD.rdd.getNumPartitions}")
+    if(spatial != "CUSTOMGRID"){
+      val partitioner = spatial  match {
+        case "QUADTREE"     => GridType.QUADTREE
+        case "RTREE"        => GridType.RTREE
+        case "EQUALGRID"    => GridType.EQUALGRID
+        case "KDBTREE"      => GridType.KDBTREE
+        case "HILBERT"      => GridType.HILBERT
+        case "VORONOI"      => GridType.VORONOI
+      }
+      disks.spatialPartitioning(partitioner, partitions)
+    } else {
+      var grids: List[Envelope] = List.empty[Envelope]
+      val customGrid = new CustomGrid(disks.boundary())
+      if(params.byinterval()){
+        grids = customGrid.getGridsByInterval(customX, customY)
+      } else {
+        grids = customGrid.getGridsBySize(customX.toInt, customY.toInt)
+      }
+      disks.spatialPartitioning(new FlatGridPartitioner(grids.asJava))
+    }
+    disks.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
     log("Disks partitioned", timer, nDisks)
 
     val dataset = input.split("/").last.split("\\.").head
@@ -112,7 +105,7 @@ object PartitionViewer{
       }
     }
     val nDisksByPartition = disksByPartition.count()
-    val pw1 = new PrintWriter(s"/tmp/${dataset}_${partitioner.toString()}_points.wkt")
+    val pw1 = new PrintWriter(s"/tmp/${dataset}_${spatial}_points.wkt")
     var wkt = disksByPartition.map{ p => s"POINT(${p._1} ${p._2});${p._3};${p._4}\n"}.collect().mkString("")
     pw1.write(wkt)
     pw1.close()
@@ -126,16 +119,6 @@ object PartitionViewer{
     max = stats1.max()
     avg = (stats1.sum() / stats1.count()).toInt
     statsTime1 = (clocktime - timer) / 1000.0
-    val pw2 = new PrintWriter(s"/tmp/${dataset}_${partitioner.toString()}_P${partitions}-${num}_partitions.wkt")
-    wkt = disks.getPartitioner.getGrids().asScala.map{ e =>
-      val minx = e.getMinX
-      val miny = e.getMinY
-      val maxx = e.getMaxX
-      val maxy = e.getMaxY
-      s"POLYGON(($minx $miny, $minx $maxy, $maxx $maxy, $maxx $miny, $minx $miny))\n"
-    }.mkString("")
-    pw2.write(wkt)
-    pw2.close()
     log(s"Pre-expansion statistics  ($num, $max, $avg)", timer, max)
 
     // Building expansions...
@@ -152,7 +135,6 @@ object PartitionViewer{
         (expansion_id, disk)
       }.toList
     }.partitionBy(new ExpansionPartitioner(expansions.size)).persist(StorageLevel.MEMORY_ONLY)
-    //val nExpansionsRDD = 0
     val nExpansionsRDD = expansionsRDD.count()
     log("Expansions built", timer, nExpansionsRDD)
     
@@ -167,24 +149,42 @@ object PartitionViewer{
     statsTime2 = (clocktime - timer) / 1000.0
     log(s"Post-expansion statistics ($num, $max, $avg)", timer, max)
 
+    val nPartitions = expansionsRDD.getNumPartitions
+    logger.info(s"Number of partitions: ${nPartitions}")
+    val pw2 = new PrintWriter(s"/tmp/${dataset}_${spatial}_P${nPartitions}_partitions.wkt")
+    wkt = disks.getPartitioner.getGrids().asScala.map{ e =>
+      val minx = e.getMinX
+      val miny = e.getMinY
+      val maxx = e.getMaxX
+      val maxy = e.getMaxY
+      s"POLYGON(($minx $miny, $minx $maxy, $maxx $maxy, $maxx $miny, $minx $miny))\n"
+    }.mkString("")
+    pw2.write(wkt)
+    pw2.close()
+
     // Summary
     val endTime = clocktime
     val time = "%.2f".format(((endTime - startTime) / 1000.0) - statsTime1 - statsTime2)
     val ttime = "%.2f".format(((endTime - startTime) / 1000.0))
     logger.info(s"PARTITIONVIEWER;$cores;$executors;$dataset;$spatial;$appID;$partitions;$num;$max;$avg;$nExpansionsRDD;$time;$ttime")
-    val url = s"http://${master}:4040/api/v1/applications/${appID}/executors"
-    val r = requests.get(url)
-    if(s"${r.statusCode}" == "200"){
-      import scala.util.parsing.json._
-      val j = JSON.parseFull(r.text).get.asInstanceOf[List[Map[String, Any]]]
-      j.filter(_.get("id").get != "driver").foreach{ m =>
-        val id     = m.get("id").get
-        val ttasks = "%.0f".format(m.get("totalTasks").get)
-        val tcores = "%.0f".format(m.get("totalCores").get)
-        val ttime  = "%.2fs".format(m.get("totalDuration").get.asInstanceOf[Double] / 1000.0)
-        val tinput = "%.2fMB".format(m.get("totalInputBytes").get.asInstanceOf[Double] / (1024.0 * 1024))
-        logger.info(s"EXECUTORS;$appID;$id;$tcores;$ttasks;$ttime;$tinput")
+    try{
+      val url = s"http://${host}:4040/api/v1/applications/${appID}/executors"
+      logger.info(s"Requesting $url ...")
+      val r = requests.get(url)
+      if(s"${r.statusCode}" == "200"){
+        import scala.util.parsing.json._
+        val j = JSON.parseFull(r.text).get.asInstanceOf[List[Map[String, Any]]]
+        j.filter(_.get("id").get != "driver").foreach{ m =>
+          val id     = m.get("id").get
+          val ttasks = "%.0f".format(m.get("totalTasks").get)
+          val tcores = "%.0f".format(m.get("totalCores").get)
+          val ttime  = "%.2fs".format(m.get("totalDuration").get.asInstanceOf[Double] / 1000.0)
+          val tinput = "%.2fMB".format(m.get("totalInputBytes").get.asInstanceOf[Double] / (1024.0 * 1024))
+          logger.info(s"EXECUTORS;$appID;$id;$tcores;$ttasks;$ttime;$tinput")
+        }
       }
+    } catch {
+      case ce: java.net.ConnectException => logger.info("")
     }
 
     // Closing session...
@@ -233,10 +233,11 @@ class PViewerConf(args: Seq[String]) extends ScallopConf(args) {
   val executors:  ScallopOption[Int]     = opt[Int]     (default = Some(3))
   val spatial:    ScallopOption[String]  = opt[String]  (default = Some("QUADTREE"))
   val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(10.0))
-  val intervalx:  ScallopOption[Double]  = opt[Double]  (default = Some(1000.0))
-  val intervaly:  ScallopOption[Double]  = opt[Double]  (default = Some(1000.0))
+  val customx:    ScallopOption[Double]  = opt[Double]  (default = Some(10))
+  val customy:    ScallopOption[Double]  = opt[Double]  (default = Some(10))
   val partitions: ScallopOption[Int]     = opt[Int]     (default = Some(24))
   val offset:     ScallopOption[Int]     = opt[Int]     (default = Some(0))
+  val byinterval: ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val stats:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
 
