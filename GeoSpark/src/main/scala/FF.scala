@@ -183,21 +183,24 @@ object FF {
     val applicationID = spark.sparkContext.applicationId
     val nReport = report.count()
     logger.info(s"PFLOCK;$cores;$executors;$epsilon;$mu;$delta;$executionTime;$nReport;$applicationID")
-    val url = s"http://localhost:4040/api/v1/applications/${applicationID}/executors"
-    val r = requests.get(url)
-    if(s"${r.statusCode}" == "200"){
-      import scala.util.parsing.json._
-      val j = JSON.parseFull(r.text).get.asInstanceOf[List[Map[String, Any]]]
-      j.filter(_.get("id").get != "driver").foreach{ m =>
-        val id     = m.get("id").get
-        val tcores = "%.0f".format(m.get("totalCores").get)
-        val ttasks = "%.0f".format(m.get("totalTasks").get)
-        val ttime  = "%.2fs".format(m.get("totalDuration").get.asInstanceOf[Double] / (m.get("totalCores").get.asInstanceOf[Double] * 1000.0))
-        val tinput = "%.2fMB".format(m.get("totalInputBytes").get.asInstanceOf[Double] / (1024.0 * 1024))
-        logger.info(s"EXECUTORS;$applicationID;$id;$tcores;$ttasks;$ttime;$tinput")
+    try{
+      val url = s"http://localhost:4040/api/v1/applications/${applicationID}/executors"
+      val r = requests.get(url)
+      if(s"${r.statusCode}" == "200"){
+        import scala.util.parsing.json._
+        val j = JSON.parseFull(r.text).get.asInstanceOf[List[Map[String, Any]]]
+        j.filter(_.get("id").get != "driver").foreach{ m =>
+          val id     = m.get("id").get
+          val tcores = "%.0f".format(m.get("totalCores").get)
+          val ttasks = "%.0f".format(m.get("totalTasks").get)
+          val ttime  = "%.2fs".format(m.get("totalDuration").get.asInstanceOf[Double] / (m.get("totalCores").get.asInstanceOf[Double] * 1000.0))
+          val tinput = "%.2fMB".format(m.get("totalInputBytes").get.asInstanceOf[Double] / (1024.0 * 1024))
+          logger.info(s"EXECUTORS;$applicationID;$id;$tcores;$ttasks;$ttime;$tinput")
+        }
       }
+    } catch {
+      case e: java.net.ConnectException => logger.info("No executors information.")
     }
-
     report
   }
 
