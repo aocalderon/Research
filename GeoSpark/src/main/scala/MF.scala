@@ -5,6 +5,7 @@ import org.apache.spark.storage.StorageLevel
 import org.apache.spark.{SparkConf, SparkContext}
 import org.datasyslab.geospark.enums.{FileDataSplitter, GridType, IndexType}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
+import org.datasyslab.geospark.spatialPartitioning.FlatGridPartitioner
 import org.datasyslab.geospark.spatialRDD.{CircleRDD, PointRDD}
 import com.vividsolutions.jts.index.strtree.STRtree
 import org.apache.spark.rdd.RDD
@@ -34,12 +35,13 @@ object MF{
     val MFpartitions: Int = params.mfpartitions()
     val spatial: String   = params.spatial()
     val partitioner = spatial  match {
-      case "QUADTREE"  => GridType.QUADTREE
-      case "RTREE"     => GridType.RTREE
-      case "EQUALGRID" => GridType.EQUALGRID
-      case "KDBTREE"   => GridType.KDBTREE
-      case "HILBERT"   => GridType.HILBERT
-      case "VORONOI"   => GridType.VORONOI
+      case "QUADTREE"   => GridType.QUADTREE
+      case "RTREE"      => GridType.RTREE
+      case "EQUALGRID"  => GridType.EQUALGRID
+      case "KDBTREE"    => GridType.KDBTREE
+      case "HILBERT"    => GridType.HILBERT
+      case "VORONOI"    => GridType.VORONOI
+      case "CUSTOMGRID" => null
     }
     if(params.tag() == ""){ tag = s"$info"} else { tag = s"${params.tag()}|${info}" }
 
@@ -115,7 +117,15 @@ object MF{
     val disksRDD = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
     disksRDD.analyze()
     val nDisksRDD = disksRDD.rawSpatialRDD.count()
-    disksRDD.spatialPartitioning(partitioner, MFpartitions)
+    if(spatial != "CUSTOMGRID"){
+      disksRDD.spatialPartitioning(partitioner, MFpartitions)
+    } else {
+      val customGrid = new CustomGrid(disksRDD.boundary())
+      val numX = params.customxmf()
+      val numY = params.customymf()
+      val grids = customGrid.getGridsBySize(numX.toInt, numY.toInt)
+      disksRDD.spatialPartitioning(new FlatGridPartitioner(grids.asJava))
+    }
     disksRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
     log("E.Disks indexed", timer, nDisksRDD)
 

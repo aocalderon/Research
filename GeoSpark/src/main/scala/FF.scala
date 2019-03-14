@@ -5,6 +5,7 @@ import org.apache.spark.storage.StorageLevel
 import org.datasyslab.geospark.enums.{FileDataSplitter, GridType, IndexType}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.spatialRDD.{CircleRDD, PointRDD}
+import org.datasyslab.geospark.spatialPartitioning.FlatGridPartitioner
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.StructType
 import org.slf4j.{Logger, LoggerFactory}
@@ -38,6 +39,16 @@ object FF {
     val mu           = params.mu()
     val delta        = params.delta()
     val tag          = params.tag()
+    val spatial      = params.spatial()
+    val gridType     = spatial  match {
+      case "QUADTREE"   => GridType.QUADTREE
+      case "RTREE"      => GridType.RTREE
+      case "EQUALGRID"  => GridType.EQUALGRID
+      case "KDBTREE"    => GridType.KDBTREE
+      case "HILBERT"    => GridType.HILBERT
+      case "VORONOI"    => GridType.VORONOI
+      case "CUSTOMGRID" => null
+    }
     import spark.implicits._
 
     // Maximal disks timestamp i...
@@ -105,6 +116,7 @@ object FF {
           }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg
         )
         G_prime.analyze()
+        /*
         G_prime.spatialPartitioning(GridType.EQUALGRID, FFpartitions)
         val F_prime = new PointRDD(
           f0.map{ f =>
@@ -113,7 +125,21 @@ object FF {
           }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg
         )
         F_prime.spatialPartitioning(G_prime.getPartitioner)
+         */
+
+        if(spatial != "CUSTOMGRID"){
+          G_prime.spatialPartitioning(gridType, FFpartitions)
+        } else {
+          val customGrid = new CustomGrid(G_prime.boundary())
+          val numX = params.customx()
+          val numY = params.customy()
+          val grids = customGrid.getGridsBySize(numX.toInt, numY.toInt)
+          G_prime.spatialPartitioning(new FlatGridPartitioner(grids.asJava))
+        }
+        val F_prime = G_prime
+
         log("3.Flocks to report", timer, f0.count())
+
 
         if(debug){
           logger.info(s"Saving candidate set at timestamp ${timestamp}...")
