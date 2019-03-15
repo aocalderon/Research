@@ -2,11 +2,10 @@ import com.vividsolutions.jts.geom.Envelope
 import scala.collection.mutable.ListBuffer
 
 class CustomGrid(boundary: Envelope){
-
   def getGridsBySize(numX: Int, numY: Int): List[Envelope] = {
     var grids: ListBuffer[Envelope] = new ListBuffer()
-    val intervalX = (boundary.getMaxX - boundary.getMinX) / numX.toDouble
-    val intervalY = (boundary.getMaxY - boundary.getMinY) / numY.toDouble
+    val intervalX = (boundary.getMaxX - boundary.getMinX) / numX
+    val intervalY = (boundary.getMaxY - boundary.getMinY) / numY
 
     for(i <- 0 to numX - 1){
       for(j <- 0 to numY - 1){

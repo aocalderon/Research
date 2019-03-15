@@ -35,13 +35,13 @@ object MF{
     val MFpartitions: Int = params.mfpartitions()
     val spatial: String   = params.spatial()
     val partitioner = spatial  match {
-      case "QUADTREE"   => GridType.QUADTREE
-      case "RTREE"      => GridType.RTREE
-      case "EQUALGRID"  => GridType.EQUALGRID
-      case "KDBTREE"    => GridType.KDBTREE
-      case "HILBERT"    => GridType.HILBERT
-      case "VORONOI"    => GridType.VORONOI
-      case "CUSTOMGRID" => null
+      case "QUADTREE"  => GridType.QUADTREE
+      case "RTREE"     => GridType.RTREE
+      case "EQUALGRID" => GridType.EQUALGRID
+      case "KDBTREE"   => GridType.KDBTREE
+      case "HILBERT"   => GridType.HILBERT
+      case "VORONOI"   => GridType.VORONOI
+      case "CUSTOM"    => GridType.CUSTOM
     }
     if(params.tag() == ""){ tag = s"$info"} else { tag = s"${params.tag()}|${info}" }
 
@@ -115,17 +115,14 @@ object MF{
     // Indexing disks...
     timer = System.currentTimeMillis()
     val disksRDD = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
-    disksRDD.analyze()
+    disksRDD.analyze(StorageLevel.MEMORY_ONLY)
     val nDisksRDD = disksRDD.rawSpatialRDD.count()
-    if(spatial != "CUSTOMGRID"){
-      disksRDD.spatialPartitioning(partitioner, MFpartitions)
-    } else {
-      val customGrid = new CustomGrid(disksRDD.boundary())
-      val numX = params.customxmf()
-      val numY = params.customymf()
-      val grids = customGrid.getGridsBySize(numX.toInt, numY.toInt)
-      disksRDD.spatialPartitioning(new FlatGridPartitioner(grids.asJava))
-    }
+    val numX = params.customxmf()
+    val numY = params.customymf()
+    disksRDD.setNumX(numX.toInt)
+    disksRDD.setNumY(numY.toInt)
+    //disksRDD.setSampleNumber(disksRDD.rawSpatialRDD.rdd.count().toInt)
+    disksRDD.spatialPartitioning(partitioner, MFpartitions)
     disksRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
     log("E.Disks indexed", timer, nDisksRDD)
 
@@ -150,7 +147,6 @@ object MF{
     val expansions = disksRDD.getPartitioner.getGrids.asScala.map{ e =>
       new Envelope(e.getMinX - epsilon, e.getMaxX + epsilon, e.getMinY - epsilon, e.getMaxY + epsilon)
     }.zipWithIndex
-
     expansions.foreach{e => rtree.insert(e._1, e._2)}
     val expansionsRDD = disksRDD.spatialPartitionedRDD.rdd.flatMap{ disk =>
       rtree.query(disk.getEnvelopeInternal).asScala.map{expansion_id =>
@@ -234,7 +230,7 @@ object MF{
       val grids = disksRDD.getPartitioner.getGrids().asScala.toList.map{ e =>
         s"POLYGON((${e.getMinX} ${e.getMinY},${e.getMinX} ${e.getMaxY},${e.getMaxX} ${e.getMaxY},${e.getMaxX} ${e.getMinY},${e.getMinX} ${e.getMinY}))\n"
       }
-      saveList(grids, "/tmp/grids.wkt")
+      saveList(grids, s"/tmp/grids_${spatial}_${executors}.wkt")
       val expans = expansions.map{ ex =>
         val e = ex._1
         s"POLYGON((${e.getMinX} ${e.getMinY},${e.getMinX} ${e.getMaxY},${e.getMaxX} ${e.getMaxY},${e.getMaxX} ${e.getMinY},${e.getMinX} ${e.getMinY}))\n"
