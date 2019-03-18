@@ -1,4 +1,8 @@
-#!/bin/bash                                                                                                                                                                       
+#!/bin/bash                             
+
+##################################
+# FF Multinode Speed up
+##################################
 
 DATASET_PATH="/home/acald013/Research/Datasets/Berlin/SideBySide/"
 DATASET_NAME="B4"

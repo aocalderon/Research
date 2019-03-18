@@ -1,0 +1,66 @@
+# Create a new user in Master...
+sudo adduser acald013
+sudo usermod -aG sudo acald013
+su - acald013
+
+# Download JDK...
+wget http://www.cs.ucr.edu/~acald013/public/tmp/jdk.tar.gz
+tar -zxvf jdk.tar.gz
+echo "export JAVA_HOME=/home/acald013/jdk1.8.0_202" >> ~/.bashrc
+echo "export PATH=$PATH:$JAVA_HOME/bin" >> ~/.bashrc
+
+# Download SBT...
+wget https://piccolo.link/sbt-1.2.8.tgz
+tar -zxvf sbt-1.2.8.tgz
+echo "export SBT_HOME=/home/acald013/sbt" >> ~/.bashrc
+echo "export PATH=$PATH:$SBT_HOME/bin" >> ~/.bashrc
+
+# Clone the repository...
+git clone https://github.com/aocalderon/Research.git
+
+# Download Spark...
+mkdir Spark
+cd Spark
+wget http://www.cs.ucr.edu/~acald013/public/tmp/spark.tar.gz
+tar -zxvf spark.tar.gz
+echo "export SPARK_HOME=/home/acald013/Spark/spark-2.1.0-bin-hadoop2.7" >> ~/.bashrc
+echo "export PATH=$PATH:$SPARK_HOME/bin" >> ~/.bashrc
+
+# Reload environment variables...
+source ~/.bashrc
+
+# Change content of spark-env.sh in Master accordingly...
+emacs /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/conf/spark-env.sh
+
+#export JAVA_HOME=/home/acald013/jdk1.8.0_202
+#export SPARK_HOME=/home/acald013/Spark/spark-2.1.0-bin-hadoop2.7
+#export SPARK_MASTER_HOST=_THE_MASTER_IP_
+#export SPARK_MASTER_PORT=7077
+#export SPARK_LOCAL_IP=_THE_MASTER_IP_
+
+# Create a key for user acald013 in Master...
+ssh-keygen
+cat ~/.ssh/id_rsa.pub
+
+# In each Slave...
+sudo adduser acald013
+sudo usermod -aG sudo acald013
+su - acald013
+# Copy acald013 public key in Slave...
+emacs ~/.ssh/authorized_keys
+
+# Back in Master copy JDK, Spark and Research folders to each Slave...
+rsync -avz Research/ acald013@_THE_SLAVE_IP_:/home/acald013/Research/
+rsync -avz jdk1.8.0_202/ acald013@_THE_SLAVE_IP_:/home/acald013/jdk1.8.0_202/
+rsync -avz Spark/ acald013@_THE_SLAVE_IP_:/home/acald013/Spark/
+# Change SPARK_MASTER_HOST and SPARK_LOCAL_IP in the Slave...
+emacs /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/conf/spark-env.sh
+
+#export JAVA_HOME=/home/acald013/jdk1.8.0_202
+#export SPARK_HOME=/home/acald013/Spark/spark-2.1.0-bin-hadoop2.7
+#export SPARK_MASTER_HOST=_THE_MASTER_IP_
+#export SPARK_MASTER_PORT=7077
+#export SPARK_LOCAL_IP=_THE_SLAVE_IP_
+
+# In Master don't forget to add the slave IP to $SPARK_HOME/conf/slaves
+echo "acald013@_THE_SLAVE_IP_" >> /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/conf/slaves
