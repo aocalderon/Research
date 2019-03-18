@@ -30,7 +30,7 @@ for n in `seq 1 $N`; do
 	xmf=$((executors * FF_PARTITIONS))
 	for((i=0;i<${#EPSILONS[@]};i++)); do
 	    echo "spark-submit --class FF $JAR --input ${DATASET_PATH}${DATASET_NAME}${DATASET_EXT} --epsilon ${EPSILONS[i]} --mu $MU --delta $DELTA --distance ${DISTANCES[i]} --master $MASTER --cores $CORES --executors $executors --spatial CUSTOM --customymf $ymf --customxmf $xmf --customy $yff --customx $xff"
-	    spark-submit --class FF $JAR --input ${DATASET_PATH}${DATASET_NAME}${DATASET_EXT} --epsilon ${EPSILONS[i]} --mu $MU --delta $DELTA --distance ${DISTANCES[i]} --$MASTER --cores $CORES --executors $executors --spatial CUSTOM --customymf $ymf --customxmf $xmf --customy $yff --customx $xff  
+	    spark-submit --class FF $JAR --input ${DATASET_PATH}${DATASET_NAME}${DATASET_EXT} --epsilon ${EPSILONS[i]} --mu $MU --delta $DELTA --distance ${DISTANCES[i]} --master $MASTER --cores $CORES --executors $executors --spatial CUSTOM --customymf $ymf --customxmf $xmf --customy $yff --customx $xff  
 	done
     done
 done
