@@ -41,13 +41,13 @@ object FF {
     val tag          = params.tag()
     val spatial      = params.spatial()
     val gridType     = spatial  match {
-      case "QUADTREE"   => GridType.QUADTREE
-      case "RTREE"      => GridType.RTREE
-      case "EQUALGRID"  => GridType.EQUALGRID
-      case "KDBTREE"    => GridType.KDBTREE
-      case "HILBERT"    => GridType.HILBERT
-      case "VORONOI"    => GridType.VORONOI
-      case "CUSTOMGRID" => null
+      case "QUADTREE"  => GridType.QUADTREE
+      case "RTREE"     => GridType.RTREE
+      case "EQUALGRID" => GridType.EQUALGRID
+      case "KDBTREE"   => GridType.KDBTREE
+      case "HILBERT"   => GridType.HILBERT
+      case "VORONOI"   => GridType.VORONOI
+      case "CUSTOM"    => GridType.CUSTOM
     }
     import spark.implicits._
 
@@ -127,15 +127,12 @@ object FF {
         F_prime.spatialPartitioning(G_prime.getPartitioner)
          */
 
-        if(spatial != "CUSTOMGRID"){
-          G_prime.spatialPartitioning(gridType, FFpartitions)
-        } else {
-          val customGrid = new CustomGrid(G_prime.boundary())
-          val numX = params.customx()
-          val numY = params.customy()
-          val grids = customGrid.getGridsBySize(numX.toInt, numY.toInt)
-          G_prime.spatialPartitioning(new FlatGridPartitioner(grids.asJava))
-        }
+        val numX = params.customx()
+        val numY = params.customy()
+        G_prime.setNumX(numX.toInt)
+        G_prime.setNumY(numY.toInt)
+        G_prime.spatialPartitioning(gridType, FFpartitions)
+        G_prime.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
         val F_prime = G_prime
 
         log("3.Flocks to report", timer, f0.count())
