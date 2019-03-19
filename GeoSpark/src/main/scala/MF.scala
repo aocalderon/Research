@@ -121,7 +121,7 @@ object MF{
     val numY = params.customymf()
     disksRDD.setNumX(numX.toInt)
     disksRDD.setNumY(numY.toInt)
-    //disksRDD.setSampleNumber(disksRDD.rawSpatialRDD.rdd.count().toInt)
+    disksRDD.setSampleNumber(disksRDD.rawSpatialRDD.rdd.count().toInt)
     disksRDD.spatialPartitioning(partitioner, MFpartitions)
     disksRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
     log("E.Disks indexed", timer, nDisksRDD)

@@ -116,21 +116,11 @@ object FF {
           }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg
         )
         G_prime.analyze()
-        /*
-        G_prime.spatialPartitioning(GridType.EQUALGRID, FFpartitions)
-        val F_prime = new PointRDD(
-          f0.map{ f =>
-            f.center.setUserData(f.pids.mkString(" ") ++ s";${f.start};${f.end}")
-            f.center
-          }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg
-        )
-        F_prime.spatialPartitioning(G_prime.getPartitioner)
-         */
-
         val numX = params.customx()
         val numY = params.customy()
         G_prime.setNumX(numX.toInt)
         G_prime.setNumY(numY.toInt)
+        G_prime.setSampleNumber(G_prime.rawSpatialRDD.rdd.count().toInt)
         G_prime.spatialPartitioning(gridType, FFpartitions)
         G_prime.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
         val F_prime = G_prime
