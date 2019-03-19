@@ -362,6 +362,7 @@ object FF {
     val master       = params.master()
     val input        = params.input()
     val offset       = params.offset()
+    val fftimestamp  = params.fftimestamp()
     val cores        = params.cores()
     val executors    = params.executors()
     val Dpartitions  = (cores * executors) * params.dpartitions()
@@ -386,10 +387,11 @@ object FF {
     val nPoints = points.rawSpatialRDD.count()
     val timestamps = points.rawSpatialRDD.rdd.map(_.getUserData.toString().split("\t").reverse.head.toInt).distinct.collect()
     val pointset: HashMap[Int, PointRDD] = new HashMap()
-    for(timestamp <- timestamps){
+    for(timestamp <- timestamps.filter(_ < fftimestamp)){
       pointset += (timestamp -> extractTimestamp(points, timestamp, params.sespg(), params.tespg()))
     }
     logger.info(s"$nPoints points read in ${(System.currentTimeMillis - timer) / 1000.0}s")
+    logger.info(s"Current timestamps: ${timestamps.mkString("_")}")
 
     // Running maximal finder...
     timer = System.currentTimeMillis()

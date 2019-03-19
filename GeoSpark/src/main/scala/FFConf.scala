@@ -22,6 +22,7 @@ class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val executors:    ScallopOption[Int]     =  opt[Int]      (default  = Some(3))
   val tag:          ScallopOption[String]  =  opt[String]   (default  = Some(""))
   val timestamp:    ScallopOption[Int]     =  opt[Int]      (default  = Some(-1))
+  val fftimestamp:  ScallopOption[Int]     =  opt[Int]      (default  = Some(10))
   val ffdebug:      ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
   val mfdebug:      ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
 
