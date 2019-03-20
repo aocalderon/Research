@@ -9,7 +9,7 @@ SAVE_PDF      = T
 SEP           = ";"
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 RESULTS_PATH = "Scripts/R/Benchmarks/MultiAndSingleNode/R7/"
-RESULTS_NAME = "AWS_singlenode_speedup"
+RESULTS_NAME = "AWS_multinode_scaleup_quad"
 dataFile = paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '.txt')
 
 data = readLines(dataFile)
@@ -18,18 +18,16 @@ data = as.tibble(as.data.frame(data), stringAsFactors = F) %>%
   rename(Line = data) %>% 
   filter(grepl("PFLOCK;", Line)) %>% 
   separate(Line, c("Bogus", "Cores", "Nodes", "Epsilon", "Mu", "Delta", "Time", "Load", "Id"), sep = ";") %>%
-  select(Cores, Epsilon, Time) %>%
-  filter(Cores != "16") %>%
+  select(Nodes, Epsilon, Time) %>%
   mutate(Epsilon = as.numeric(Epsilon), Time2 = as.numeric(Time)) %>%
-  group_by(Cores, Epsilon) %>% summarise(Time = mean(Time2), SD = sd(Time2))
+  group_by(Nodes, Epsilon) %>% summarise(Time = mean(Time2), SD = sd(Time2))
 
-title = "Singlenode Speed Up by Epsilon [Berlin_160K, 8 cores, 1 thread per core]"
-data$Cores = factor(data$Cores, levels=c("1","2","4","8","16"))
-g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Cores)) +
+title = "Multinode Scale up [Quadtree, Berlin_N40K, Berlin_N80K, Berlin_N120K, Berlin_N160K]"
+g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Nodes)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) 
 if(SAVE_PDF){
-  ggsave(paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '.pdf'), width = 7, height = 4, dpi = 300, units = "in", device='pdf', g)
+  ggsave(paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '.pdf'), width = 8, height = 5, dpi = 300, units = "in", device='pdf', g)
 } else {
   plot(g)
 }
