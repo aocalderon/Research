@@ -124,13 +124,27 @@ object FF {
         G_prime.spatialPartitioning(gridType, FFpartitions)
         G_prime.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
         val F_prime = G_prime
-
         log("3.Flocks to report", timer, f0.count())
 
-
         if(debug){
+          logger.info(s"Computing stats for timestamps ${timestamp}")
+          val nPartitions = G_prime.spatialPartitionedRDD.rdd.getNumPartitions
+          val stats = G_prime.spatialPartitionedRDD.rdd.mapPartitions(d => List(d.length).toIterator).persist(StorageLevel.MEMORY_ONLY)
+
+          val info = stats.collect()
+          val avg  = mean(info)
+          val sdev = stdDev(info)
+          val vari = variance(info)
+          val a = s";$nPartitions"
+          val b = s";${stats.min()}"
+          val c = s";${stats.max()}"
+          val d = s";${"%.2f".format(avg)}"
+          val e = s";${"%.2f".format(sdev)}"
+          val f = s";${"%.2f".format(vari)}"
+          logger.info(s"FF_PINFO${a}${b}${c}${d}${e}${f}")
+
           logger.info(s"Saving candidate set at timestamp ${timestamp}...")
-          val data = F_prime.rawSpatialRDD.rdd.map{ p =>
+          val data = G_prime.rawSpatialRDD.rdd.map{ p =>
             val arr = p.getUserData.toString.split(";")
             val pids = arr(0)
             val start = arr(1)
@@ -139,16 +153,21 @@ object FF {
             val y = p.getY
             s"${x}\t${y}\t${pids}\t${start}\t${end}\n"
           }.collect().mkString("")
-          val pw = new PrintWriter(s"/tmp/P_N${executors}_E${epsilon}_T${timestamp}.tsv")
+          val filename = s"/tmp/P_N${executors}_E${epsilon}_T${timestamp}.tsv"
+          val pw = new PrintWriter(filename)
           pw.write(data)
           pw.close
+          logger.info(s"$filename has been saved.")
         }
 
-        // Prunning flocks to report...
+        // Prunning flocks by expansions...
         timer = System.currentTimeMillis()
-        val f0_prime = pruneFlockByExpansions(F_prime, epsilon, spark, params)
-          .persist(StorageLevel.MEMORY_ONLY)
-        f0_prime.count()
+        val f0_prime = pruneFlockByExpansions(F_prime, epsilon, spark, params).persist(StorageLevel.MEMORY_ONLY)
+        val nF0_prime = f0_prime.count()
+        log("4.Flocks prunned by expansion", timer, nF0_prime)
+
+        // Reporting flocks...
+        timer = System.currentTimeMillis()
         f0 = f0_prime.map{ f =>
             val arr = f.split(";")
             val p = arr(0).split(" ").map(_.toInt).toList
@@ -158,13 +177,12 @@ object FF {
             val y = arr(4).toDouble
             val c = geofactory.createPoint(new Coordinate(x, y))
             Flock(p,s,e,c)
-          }.persist(StorageLevel.MEMORY_ONLY)
-        report = report.union(f0).persist()
-        log("4.Flocks prunned", timer, f0.count())
+        }.persist(StorageLevel.MEMORY_ONLY)
+        val nF0 = f0.count()
+        report = report.union(f0).persist(StorageLevel.MEMORY_ONLY)
+        log("5.Flocks reported", timer, nF0)
 
-        if(debug){
-          logger.info(s"FF,Flocks_being_reported,${epsilon},${timestamp},${f0.count()}")
-        }
+        if(debug) logger.info(s"FF,Flocks_being_reported,${epsilon},${timestamp},${f0.count()}")
 
         // Indexing candidates...
         timer = System.currentTimeMillis()
@@ -175,8 +193,7 @@ object FF {
           .reduceByKey( (a,b) => if(a.start < b.start) a else b )
           .map(_._2)
           .distinct()
-          .persist()
-
+          .persist(StorageLevel.MEMORY_ONLY)
         F = new PointRDD(flocks.map{ f =>
             val info = s"${f.pids.mkString(" ")};${f.start};${f.end}"
             f.center.setUserData(info)
@@ -186,7 +203,7 @@ object FF {
         F.spatialPartitioning(GridType.QUADTREE, Dpartitions)
         F.buildIndex(IndexType.QUADTREE, true)
         partitioner = F.getPartitioner
-        log("5.Candidates indexed", timer, F.rawSpatialRDD.count())
+        log("6.Candidates indexed", timer, F.rawSpatialRDD.count())
 
         if(debug) logger.info(s"FF,New_set_of_candidates,${epsilon},${timestamp},${F.rawSpatialRDD.count()}")
       }
@@ -289,9 +306,9 @@ object FF {
       rtree.query(disk.getEnvelopeInternal).asScala.map{expansion_id =>
         (expansion_id, disk)
       }.toList
-    }.partitionBy(new ExpansionPartitioner(expansions.size))
-    //.persist(StorageLevel.MEMORY_ONLY)
-    //log("a.Making expansions", timer)
+    }.partitionBy(new ExpansionPartitioner(expansions.size)).persist(StorageLevel.MEMORY_ONLY)
+    val nExpansionsRDD = expansionsRDD.count()
+    log("4a.Making expansions", timer, nExpansionsRDD)
 
     if(debug){
       //expansionsRDD.map(e => s"${e._2.getUserData.toString()};${e._1}").toDF("E")
@@ -307,9 +324,9 @@ object FF {
       LCM.run(data).asScala.map{ maximal =>
         (expansion_id, maximal.asScala.toList.map(_.toInt))
       }.toIterator
-    }
-    //.persist(StorageLevel.MEMORY_ONLY)
-    //log("b.Finding maximals", timer)
+    }.persist(StorageLevel.MEMORY_ONLY)
+    val nCandidates = candidates.count()
+    log("4b.Finding maximals", timer, nCandidates)
 
     if(debug){
       //candidates.map(p => (p._2.sorted.mkString(" "), p._1)).toDF("C", "E")
@@ -336,7 +353,8 @@ object FF {
         val f = s"${pids};${start};${end};${point.getX};${point.getY}"
         (f, notInExpansion, expansion.toString())
       }.rdd.persist(StorageLevel.MEMORY_ONLY)
-    prunned.count()
+    val nPrunned = prunned.count()
+    log("4c.Selecting and mapping",timer,nPrunned)
 
     if(debug){
       //prunned.sortBy(p => p._1).toDF("flock", "notInExpansion", "Exp")
@@ -344,7 +362,12 @@ object FF {
         //.show(prunnedRDD.count().toInt, false)
     }
 
-    prunned.filter(_._2).map(_._1).distinct()
+    timer = System.currentTimeMillis()
+    val P = prunned.filter(_._2).map(_._1).distinct().persist(StorageLevel.MEMORY_ONLY)
+    val nP = prunned.count()
+    log("4d.Filtering and distinc",timer,nP)
+
+    P
   }
 
   def log(msg: String, timer: Long, n: Long = 0): Unit ={
@@ -353,6 +376,16 @@ object FF {
     else
       logger.info("%-50s|%6.2f|%6d|%s".format(msg,(System.currentTimeMillis()-timer)/1000.0,n,tag))
   }
+
+  import Numeric.Implicits._
+  def mean[T: Numeric](xs: Iterable[T]): Double = xs.sum.toDouble / xs.size
+
+  def variance[T: Numeric](xs: Iterable[T]): Double = {
+    val avg = mean(xs)
+    xs.map(_.toDouble).map(a => math.pow(a - avg, 2)).sum / xs.size
+  }
+
+  def stdDev[T: Numeric](xs: Iterable[T]): Double = math.sqrt(variance(xs))
 
   /**************************************
    * The main function...   
