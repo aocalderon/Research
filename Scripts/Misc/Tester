@@ -1,0 +1,7 @@
+#!/bin/bash
+
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.0.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B1.tsv --epsilon 110 --mu 3 --delta 3 --distance 100 --cores 4 --executors 1 --spatial CUSTOM --customx  40 --customy 40 --customxmf  34 --customymf 34 --fftimestamp 3 --ffdebug
+
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.0.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B2.tsv --epsilon 110 --mu 3 --delta 3 --distance 100 --cores 4 --executors 2 --spatial CUSTOM --customx  80 --customy 40 --customxmf  68 --customymf 34 --fftimestamp 3 --ffdebug
+
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.0.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B3.tsv --epsilon 110 --mu 3 --delta 3 --distance 100 --cores 4 --executors 3 --spatial CUSTOM --customx 120 --customy 40 --customxmf 102 --customymf 34 --fftimestamp 3 --ffdebug

@@ -158,11 +158,19 @@ object FF {
           pw.write(data)
           pw.close
           logger.info(s"$filename has been saved.")
+
+          val grids = G_prime.getPartitioner.getGrids().asScala.toList.map{ e =>
+            s"POLYGON((${e.getMinX} ${e.getMinY},${e.getMinX} ${e.getMaxY},${e.getMaxX} ${e.getMaxY},${e.getMaxX} ${e.getMinY},${e.getMinX} ${e.getMinY}))\n"
+          }
+          val filename2 = s"/tmp/grids_${spatial}_T${timestamp}_N${executors}.wkt"
+          val pw2 = new PrintWriter(new File(filename2))
+          pw2.write(grids.mkString(""))
+          pw2.close
         }
 
         // Prunning flocks by expansions...
         timer = System.currentTimeMillis()
-        val f0_prime = pruneFlockByExpansions(F_prime, epsilon, spark, params).persist(StorageLevel.MEMORY_ONLY)
+        val f0_prime = pruneFlockByExpansions(G_prime, epsilon, spark, params).persist(StorageLevel.MEMORY_ONLY)
         val nF0_prime = f0_prime.count()
         log("4.Flocks prunned by expansion", timer, nF0_prime)
 
