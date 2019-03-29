@@ -12,7 +12,7 @@ RUNS          = 25
 NODES         = 4
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 RESULTS_PATH = "Scripts/R/Benchmarks/MultiAndSingleNode/R9/"
-RESULTS_NAME = "AWS_multinode_scaleup_by_stages"
+RESULTS_NAME = "AWS_multinode_scaleup_by_stages_outliers"
 dataFile = paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '.txt')
 
 if(READ_DATA){
@@ -31,34 +31,22 @@ if(READ_DATA){
     mutate(Nodes = as.factor(rep(sort(rep(1:4,31)), RUNS))) %>%
     arrange(Timestamp) %>%
     select(Stage, Nodes, Time2) 
-  
-  data2 = data %>%
-    group_by(Nodes, Stage) %>% summarise(Time = mean(Time2), SD = sd(Time2))
 }
 
-title = "Execution time by Stage [Berlin_40K - 80K - 120K - 160K, Epsilon=110, Mu=3, Delta=3]"
-g = ggplot(data=data2, aes(x=Stage, y=Time, fill=Nodes)) +
+stats = data %>% group_by(Nodes, Stage) %>% summarise(lower = quantile(Time2)[2], upper = quantile(Time2)[4])
+data2 = data %>% inner_join(stats, by = c("Nodes", "Stage")) %>% filter(Time2 > lower & Time2 < upper)
+data3 = data2 %>% group_by(Nodes, Stage) %>% summarise(Time = mean(Time2), SD = sd(Time2))
+
+title = "Execution time by Stage without outliers [Berlin_40K - 80K - 120K - 160K, Epsilon=110, Mu=3, Delta=3]"
+g = ggplot(data=data3, aes(x=Stage, y=Time, fill=Nodes)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
   geom_errorbar(aes(ymin=Time-SD, ymax=Time+SD), width=.3, position=position_dodge(width = 0.75)) +
   theme(axis.text.x = element_text(hjust=0, vjust=0.2, angle=270)) +
   labs(title=title, y="Time(s)", x="Stage")
 
 if(SAVE_PDF){
-  ggsave(paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '_bar.pdf'), width = 15, height = 8.50, dpi = 150, units = "in", device='pdf', g)
+  ggsave(paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '.pdf'), width = 15, height = 8.50, dpi = 150, units = "in", device='pdf', g)
 } else {
   plot(g)
 }
-
-title = "Boxplot by Stage [Berlin_40K - 80K - 120K - 160K, Epsilon=110, Mu=3, Delta=3]"
-f = ggplot(data=data, aes(x=Stage, y=Time2, fill=Nodes)) +
-  stat_boxplot(geom ='errorbar', width = 0.5, position = position_dodge(1)) +
-  geom_boxplot(outlier.size = 0.5, position = position_dodge(1)) +
-  theme(axis.text.x = element_text(hjust=0, vjust=0.2, angle=270)) +
-  labs(title=title, y="Time(s)", x="Stage")
-if(SAVE_PDF){
-  ggsave(paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '_boxplot.pdf'), width = 15, height = 8.50, dpi = 150, units = "in", device='pdf', f)
-} else {
-  plot(f)
-}
-
 options(op)
