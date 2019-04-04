@@ -28,6 +28,7 @@ object FF {
   def runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf): RDD[Flock] = {
     var clockTime = System.currentTimeMillis()
     val debug        = params.ffdebug()
+    val master       = params.master()
     val sespg        = params.sespg()
     val tespg        = params.tespg()
     val distance     = params.distance()
@@ -56,20 +57,22 @@ object FF {
     var firstRun: Boolean = true
     var report: RDD[Flock] = spark.sparkContext.emptyRDD[Flock]
     var F: PointRDD = new PointRDD(spark.sparkContext.emptyRDD[Point].toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
-    var partitioner = F.getPartitioner  
+    F.analyze()
+    var partitioner = F.getPartitioner
+    val emptyPartitioner = F.getPartitioner
     for(timestamp <- pointset.keys.toList.sorted){
       // Finding maximal disks...
       timer = System.currentTimeMillis()
       val T_i = pointset.get(timestamp).get
       val C = new PointRDD(MF.run(spark, T_i, params, s"$timestamp").map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
       val nDisks = C.rawSpatialRDD.count()
-      log("1.Maximal disks found", timer, nDisks)
+      log(s"1.${timestamp}.Maximal disks found", timer, nDisks)
 
       if(firstRun){
         F = C
         F.analyze()
         F.spatialPartitioning(GridType.QUADTREE, Dpartitions)
-        F.buildIndex(IndexType.QUADTREE, true)
+        F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
         partitioner = F.getPartitioner
         firstRun = false
       } else {
@@ -78,7 +81,7 @@ object FF {
         C.analyze()
         val buffers = new CircleRDD(C, distance)
         buffers.spatialPartitioning(partitioner)
-        val R = JoinQuery.DistanceJoinQuery(F, buffers, true, false)
+        val R = JoinQuery.DistanceJoinQuery(F, buffers, true, false) // using index, only return geometries fully covered by each buffer...
         var flocks0 = R.rdd.flatMap{ case (g: Geometry, h: java.util.HashSet[Point]) =>
           val f0 = getFlocksFromGeom(g)
           h.asScala.map{ point =>
@@ -100,49 +103,62 @@ object FF {
           .reduceByKey( (f0, f1) => f0).map(_._2)
           .persist()
         val nFlocks = flocks.count()
-        log("2.Join done", timer, nFlocks)
+        log(s"2.${timestamp}.Join done", timer, nFlocks)
 
         if(debug) logger.info(s"FF,Less_Than_Mu,${epsilon},${timestamp},${nFlocks}")
 
         // Reporting flocks...
         timer = System.currentTimeMillis()
-        var f0 =  flocks.filter{f => f.end - f.start + 1 >= delta}.persist()
-        val f1 =  flocks.filter{f => f.end - f.start + 1 <  delta}.persist()
-
+        var f0 =  flocks.filter{f => f.end - f.start + 1 >= delta}
+          .persist(StorageLevel.MEMORY_ONLY)
+        var nF0 = f0.count()
+        val f1 =  flocks.filter{f => f.end - f.start + 1 <  delta}
+          .persist(StorageLevel.MEMORY_ONLY)
+        val nF1 = f1.count()
         val G_prime = new PointRDD(
-          flocks.map{ f =>
+          f0.map{ f =>
             f.center.setUserData(f.pids.mkString(" ") ++ s";${f.start};${f.end}")
             f.center
           }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg
         )
         G_prime.analyze()
-        val numX = params.customx()
-        val numY = params.customy()
-        G_prime.setNumX(numX.toInt)
-        G_prime.setNumY(numY.toInt)
-        G_prime.setSampleNumber(G_prime.rawSpatialRDD.rdd.count().toInt)
-        G_prime.spatialPartitioning(gridType, FFpartitions)
-        G_prime.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
-        val F_prime = G_prime
-        log("3.Flocks to report", timer, f0.count())
+        if(G_prime.boundary() != null){
+          val numX = params.customx()
+          val numY = params.customy()
+          G_prime.setNumX(numX.toInt)
+          G_prime.setNumY(numY.toInt)
+          //G_prime.setSampleNumber(G_prime.rawSpatialRDD.rdd.count().toInt)
+          G_prime.spatialPartitioning(gridType, FFpartitions)
+          G_prime.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+        }
+        log(s"3.${timestamp}.Flocks to report", timer, nF0)
 
         if(debug){
-          logger.info(s"Computing stats for timestamps ${timestamp}")
-          val nPartitions = G_prime.spatialPartitionedRDD.rdd.getNumPartitions
-          val stats = G_prime.spatialPartitionedRDD.rdd.mapPartitions(d => List(d.length).toIterator).persist(StorageLevel.MEMORY_ONLY)
+          if(G_prime.boundary() != null){
+            logger.info(s"Computing stats for timestamps ${timestamp}")
+            val nPartitions = G_prime.spatialPartitionedRDD.rdd.getNumPartitions
+            val stats = G_prime.spatialPartitionedRDD.rdd.mapPartitions(d => List(d.length).toIterator).persist(StorageLevel.MEMORY_ONLY)
 
-          val info = stats.collect()
-          val avg  = mean(info)
-          val sdev = stdDev(info)
-          val vari = variance(info)
-          val a = s";$nPartitions"
-          val b = s";${stats.min()}"
-          val c = s";${stats.max()}"
-          val d = s";${"%.2f".format(avg)}"
-          val e = s";${"%.2f".format(sdev)}"
-          val f = s";${"%.2f".format(vari)}"
-          logger.info(s"FF_PINFO${a}${b}${c}${d}${e}${f}")
+            val info = stats.collect()
+            val avg  = mean(info)
+            val sdev = stdDev(info)
+            val vari = variance(info)
+            val a = s";$nPartitions"
+            val b = s";${stats.min()}"
+            val c = s";${stats.max()}"
+            val d = s";${"%.2f".format(avg)}"
+            val e = s";${"%.2f".format(sdev)}"
+            val f = s";${"%.2f".format(vari)}"
+            logger.info(s"FF_PINFO${a}${b}${c}${d}${e}${f}")
 
+            val grids = G_prime.getPartitioner.getGrids().asScala.toList.map{ e =>
+              s"POLYGON((${e.getMinX} ${e.getMinY},${e.getMinX} ${e.getMaxY},${e.getMaxX} ${e.getMaxY},${e.getMaxX} ${e.getMinY},${e.getMinX} ${e.getMinY}))\n"
+            }
+            val filename2 = s"/tmp/grids_${spatial}_T${timestamp}_N${executors}.wkt"
+            val pw2 = new PrintWriter(new File(filename2))
+            pw2.write(grids.mkString(""))
+            pw2.close
+          }
           logger.info(s"Saving candidate set at timestamp ${timestamp}...")
           val data = G_prime.rawSpatialRDD.rdd.map{ p =>
             val arr = p.getUserData.toString.split(";")
@@ -158,21 +174,16 @@ object FF {
           pw.write(data)
           pw.close
           logger.info(s"$filename has been saved.")
-
-          val grids = G_prime.getPartitioner.getGrids().asScala.toList.map{ e =>
-            s"POLYGON((${e.getMinX} ${e.getMinY},${e.getMinX} ${e.getMaxY},${e.getMaxX} ${e.getMaxY},${e.getMaxX} ${e.getMinY},${e.getMinX} ${e.getMinY}))\n"
-          }
-          val filename2 = s"/tmp/grids_${spatial}_T${timestamp}_N${executors}.wkt"
-          val pw2 = new PrintWriter(new File(filename2))
-          pw2.write(grids.mkString(""))
-          pw2.close
         }
 
         // Prunning flocks by expansions...
         timer = System.currentTimeMillis()
-        val f0_prime = pruneFlockByExpansions(G_prime, epsilon, spark, params).persist(StorageLevel.MEMORY_ONLY)
+        var f0_prime: RDD[String] = spark.sparkContext.emptyRDD[String]
+        if(G_prime.boundary() != null){
+          f0_prime = pruneFlockByExpansions(G_prime, epsilon, spark, params).persist(StorageLevel.MEMORY_ONLY)
+        }
         val nF0_prime = f0_prime.count()
-        log("4.Flocks prunned by expansion", timer, nF0_prime)
+        log(s"4.${timestamp}.Flocks prunned by expansion", timer, nF0_prime)
 
         // Reporting flocks...
         timer = System.currentTimeMillis()
@@ -186,9 +197,9 @@ object FF {
             val c = geofactory.createPoint(new Coordinate(x, y))
             Flock(p,s,e,c)
         }.persist(StorageLevel.MEMORY_ONLY)
-        val nF0 = f0.count()
+        nF0 = f0.count()
         report = report.union(f0).persist(StorageLevel.MEMORY_ONLY)
-        log("5.Flocks reported", timer, nF0)
+        log(s"5.${timestamp}.Flocks reported", timer, nF0)
 
         if(debug) logger.info(s"FF,Flocks_being_reported,${epsilon},${timestamp},${f0.count()}")
 
@@ -209,9 +220,9 @@ object FF {
           }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
         F.analyze()
         F.spatialPartitioning(GridType.QUADTREE, Dpartitions)
-        F.buildIndex(IndexType.QUADTREE, true)
+        F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
         partitioner = F.getPartitioner
-        log("6.Candidates indexed", timer, F.rawSpatialRDD.count())
+        log(s"6.${timestamp}.Candidates indexed", timer, F.rawSpatialRDD.count())
 
         if(debug) logger.info(s"FF,New_set_of_candidates,${epsilon},${timestamp},${F.rawSpatialRDD.count()}")
       }
@@ -222,7 +233,7 @@ object FF {
     val nReport = report.count()
     logger.info(s"PFLOCK;$cores;$executors;$epsilon;$mu;$delta;$executionTime;$nReport;$applicationID")
     try{
-      val url = s"http://localhost:4040/api/v1/applications/${applicationID}/executors"
+      val url = s"http://${master}:4040/api/v1/applications/${applicationID}/executors"
       val r = requests.get(url)
       if(s"${r.statusCode}" == "200"){
         import scala.util.parsing.json._
@@ -378,8 +389,8 @@ object FF {
     P
   }
 
-  def log(msg: String, timer: Long, n: Long = 0): Unit ={
-    if(n == 0)
+  def log(msg: String, timer: Long, n: Long = -1): Unit ={
+    if(n == -1)
       logger.info("%-50s|%6.2f".format(msg,(System.currentTimeMillis()-timer)/1000.0))
     else
       logger.info("%-50s|%6.2f|%6d|%s".format(msg,(System.currentTimeMillis()-timer)/1000.0,n,tag))
@@ -401,6 +412,7 @@ object FF {
   def main(args: Array[String]): Unit = {
     val params       = new FFConf(args)
     val master       = params.master()
+    val port         = params.port()
     val input        = params.input()
     val offset       = params.offset()
     val fftimestamp  = params.fftimestamp()
@@ -415,7 +427,8 @@ object FF {
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .config("spark.cores.max", cores * executors)
       .config("spark.executor.cores", cores)
-      .master(master).appName("PFLock")
+      .master(s"spark://${master}:${port}")
+      .appName("PFLock")
       .getOrCreate()
     import spark.implicits._
     val appID = spark.sparkContext.applicationId
