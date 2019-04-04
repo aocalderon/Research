@@ -8,7 +8,7 @@ READ_DATA     = T
 SAVE_PDF      = F
 SEP           = ";"
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
-RESULTS_PATH = "Scripts/R/Benchmarks/MultiAndSingleNode/R9/"
+RESULTS_PATH = "Scripts/R/Benchmarks/MultiAndSingleNode/R10/"
 RESULTS_NAME = "AWS_multinode_speedup"
 dataFile = paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '.txt')
 
@@ -22,10 +22,10 @@ data = as_tibble(as.data.frame(data), stringAsFactors = F) %>%
   mutate(Epsilon = as.numeric(Epsilon), Time2 = as.numeric(Time3)) %>%
   group_by(Nodes, Epsilon) %>% summarise(Time = mean(Time2), SD = sd(Time2))
 
-title = "Multinode Speed Up by Epsilon [Berlin_160K, 8 cores, 1 thread per core]"
+title = "Multinode Speed Up by Epsilon [Berlin_160K, 8 cores per node, 1 thread per core]"
 g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Nodes)) +
     geom_bar(stat="identity", position=position_dodge(width = 0.75),width = 0.75) +
-    geom_errorbar(aes(ymin=Time-SD, ymax=Time+SD), width=.1, position=position_dodge(width = 0.75)) +
+    geom_errorbar(aes(ymin=Time-SD, ymax=Time+SD), width=.2, position=position_dodge(width = 0.75)) +
     labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) 
 if(SAVE_PDF){
   ggsave(paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '.pdf'), width = 7, height = 4, dpi = 300, units = "in", device='pdf', g)
