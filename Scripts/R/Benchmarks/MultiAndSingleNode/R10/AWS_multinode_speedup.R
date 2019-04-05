@@ -5,7 +5,7 @@ require(stringr)
 require(tidyverse)
 
 READ_DATA     = T
-SAVE_PDF      = F
+SAVE_PDF      = T
 SEP           = ";"
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 RESULTS_PATH = "Scripts/R/Benchmarks/MultiAndSingleNode/R10/"
@@ -28,7 +28,7 @@ g = ggplot(data=data, aes(x=factor(Epsilon), y=Time, fill=Nodes)) +
     geom_errorbar(aes(ymin=Time-SD, ymax=Time+SD), width=.2, position=position_dodge(width = 0.75)) +
     labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) 
 if(SAVE_PDF){
-  ggsave(paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '.pdf'), width = 7, height = 4, dpi = 300, units = "in", device='pdf', g)
+  ggsave(paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '.pdf'), width = 14, height = 8.5, dpi = 150, units = "in", device='pdf', g)
 } else {
   plot(g)
 }

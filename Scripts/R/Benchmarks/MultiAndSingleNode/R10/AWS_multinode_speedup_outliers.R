@@ -7,7 +7,7 @@ require(tidyverse)
 
 op <- options(digits.secs=3)
 READ_DATA     = T
-SAVE_PDF      = F
+SAVE_PDF      = T
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 RESULTS_PATH = "Scripts/R/Benchmarks/MultiAndSingleNode/R10/"
 RESULTS_NAME = "AWS_multinode_speedup_outliers"
@@ -32,7 +32,7 @@ g = ggplot(data=data3, aes(x=factor(Epsilon), y=Time, fill=Nodes)) +
   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)"))) 
 
 if(SAVE_PDF){
-  ggsave(paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '.pdf'), width = 15, height = 8.50, dpi = 150, units = "in", device='pdf', g)
+  ggsave(paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '.pdf'), width = 14, height = 8.50, dpi = 150, units = "in", device='pdf', g)
 } else {
   plot(g)
 }

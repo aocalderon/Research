@@ -8,7 +8,7 @@ source("LogPreProcessor.R")
 
 op <- options(digits.secs=3)
 READ_DATA     = T
-SAVE_PDF      = F
+SAVE_PDF      = T
 CHUNK_SIZE    = 32
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 RESULTS_PATH  = "Scripts/R/Benchmarks/MultiAndSingleNode/R10/"
@@ -60,7 +60,7 @@ g = ggplot(data=data3, aes(x=Stage, y=Time, fill=Nodes)) +
   labs(title=title, y="Time(s)", x="Stage")
 
 if(SAVE_PDF){
-  ggsave(paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '.pdf'), width = 15, height = 8.50, dpi = 150, units = "in", device='pdf', g)
+  ggsave(paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '.pdf'), width = 14, height = 8.50, dpi = 150, units = "in", device='pdf', g)
 } else {
   plot(g)
 }
