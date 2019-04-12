@@ -10,7 +10,7 @@ MF_PARTITIONS=30
 FF_PARTITIONS=30
 DATASET_EXT=".tsv"
 JAR="/home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.0.jar"
-MASTER="spark://ip-172-31-11-47:7077"
+MASTER="169.235.27.138"
 
 EPSILONS=(  110 )
 DISTANCES=( 100 )

@@ -1,0 +1,1436 @@
+2018-12-05 21:48:00,729 -> Starting session... [1.859s]
+2018-12-05 21:48:02,639 -> Reading dataset... [1.910s] [18093 points]
+2018-12-05 21:48:02,682 -> Lauching MaximalFinder at 21:48:02.645...
+2018-12-05 21:48:02,683 -> Setting mu=3,epsilon=130.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-05 21:48:17,526 -> A.Indexing points                                 | 14.62| 18093|130|Simba|1
+2018-12-05 21:48:29,148 -> B.Getting pairs                                   | 11.62| 51242|130|Simba|1
+2018-12-05 21:48:36,312 -> C.Finding centers                                 |  7.16|102484|130|Simba|1
+2018-12-05 21:48:53,053 -> D.Finding disks                                   |  5.35| 50203|130|Simba|1
+2018-12-05 21:48:53,790 -> E.Indexing disks                                  |  6.08| 50203|130|Simba|1
+2018-12-05 21:48:55,734 -> F.Getting expansions                              |  1.94|315197|130|Simba|1
+2018-12-05 21:51:56,284 -> G.Finding maximal disks                           |180.55|  8710|130|Simba|1
+2018-12-05 21:52:00,130 -> H.Prunning maximal disks                          |  3.85|  8267|130|Simba|1
+2018-12-05 21:52:00,130 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-05 21:52:00,130 ->    berlin0-0,   18093, 130.0,    32,  3, 237.23,   51242,    102484,        50203,       8267, -1
+2018-12-05 21:52:00,272 -> Dropping indices...[0.142s]
+2018-12-05 21:52:00,272 -> Finishing MaximalFinder at 21:52:00.272...
+2018-12-05 21:52:00,272 -> Total time for MaximalFinder: 237.590ms...
+2018-12-05 21:52:00,785 -> Closing session... [0.513s]
+2018-12-05 21:52:09,894 -> Session started [3.14]
+2018-12-05 21:52:14,282 -> Data read [4.388] [18093]
+2018-12-05 21:52:15,054 -> A.Points indexed                                  |  0.77| 18093|130|GeoSpark|1
+2018-12-05 21:52:18,576 -> B.Pairs found                                     |  3.52| 51242|130|GeoSpark|1
+2018-12-05 21:52:19,117 -> C.Centers found                                   |  0.54|102484|130|GeoSpark|1
+2018-12-05 21:52:23,074 -> D.Disks found                                     |  3.96| 82363|130|GeoSpark|1
+2018-12-05 21:52:24,609 -> E.Disks indexed                                   |  1.54| 50203|130|GeoSpark|1
+2018-12-05 21:52:27,034 -> F.Expansions gotten                               |  2.42|111947|130|GeoSpark|1
+2018-12-05 21:53:53,421 -> G.Maximal disks found                             | 86.39| 14223|130|GeoSpark|1
+2018-12-05 21:54:00,315 -> H.Maximal disks prunned                           |  6.89|  8267|130|GeoSpark|1
+2018-12-05 21:54:00,372 -> Session closed [0.057]
+2018-12-05 21:54:04,364 -> Starting session... [1.798s]
+2018-12-05 21:54:06,244 -> Reading dataset... [1.880s] [18093 points]
+2018-12-05 21:54:06,313 -> Lauching MaximalFinder at 21:54:06.266...
+2018-12-05 21:54:06,315 -> Setting mu=3,epsilon=130.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-05 21:54:21,131 -> A.Indexing points                                 | 14.76| 18093|130|Simba|2
+2018-12-05 21:54:32,583 -> B.Getting pairs                                   | 11.45| 51242|130|Simba|2
+2018-12-05 21:54:39,260 -> C.Finding centers                                 |  6.68|102484|130|Simba|2
+2018-12-05 21:54:55,952 -> D.Finding disks                                   |  5.22| 50203|130|Simba|2
+2018-12-05 21:54:56,694 -> E.Indexing disks                                  |  5.96| 50203|130|Simba|2
+2018-12-05 21:54:58,859 -> F.Getting expansions                              |  2.17|315197|130|Simba|2
+2018-12-05 21:57:55,813 -> G.Finding maximal disks                           |176.95|  8710|130|Simba|2
+2018-12-05 21:57:59,345 -> H.Prunning maximal disks                          |  3.53|  8267|130|Simba|2
+2018-12-05 21:57:59,346 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-05 21:57:59,346 ->    berlin0-0,   18093, 130.0,    32,  3, 232.97,   51242,    102484,        50203,       8267, -1
+2018-12-05 21:57:59,418 -> Dropping indices...[0.072s]
+2018-12-05 21:57:59,418 -> Finishing MaximalFinder at 21:57:59.418...
+2018-12-05 21:57:59,418 -> Total time for MaximalFinder: 233.104ms...
+2018-12-05 21:57:59,471 -> Closing session... [0.053s]
+2018-12-05 21:58:03,431 -> Session started [1.785]
+2018-12-05 21:58:07,163 -> Data read [3.731] [18093]
+2018-12-05 21:58:07,915 -> A.Points indexed                                  |  0.75| 18093|130|GeoSpark|2
+2018-12-05 21:58:11,942 -> B.Pairs found                                     |  4.03| 51242|130|GeoSpark|2
+2018-12-05 21:58:12,387 -> C.Centers found                                   |  0.45|102484|130|GeoSpark|2
+2018-12-05 21:58:16,984 -> D.Disks found                                     |  4.60| 82363|130|GeoSpark|2
+2018-12-05 21:58:19,005 -> E.Disks indexed                                   |  2.02| 50203|130|GeoSpark|2
+2018-12-05 21:58:21,698 -> F.Expansions gotten                               |  2.69|107441|130|GeoSpark|2
+2018-12-05 21:59:54,663 -> G.Maximal disks found                             | 92.97| 13931|130|GeoSpark|2
+2018-12-05 22:00:02,032 -> H.Maximal disks prunned                           |  7.37|  8267|130|GeoSpark|2
+2018-12-05 22:00:02,075 -> Session closed [0.042]
+2018-12-05 22:00:05,908 -> Starting session... [1.821s]
+2018-12-05 22:00:07,877 -> Reading dataset... [1.969s] [18093 points]
+2018-12-05 22:00:08,137 -> Lauching MaximalFinder at 22:00:07.883...
+2018-12-05 22:00:08,139 -> Setting mu=3,epsilon=130.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-05 22:00:22,686 -> A.Indexing points                                 | 14.49| 18093|130|Simba|3
+2018-12-05 22:00:34,272 -> B.Getting pairs                                   | 11.59| 51242|130|Simba|3
+2018-12-05 22:00:40,874 -> C.Finding centers                                 |  6.60|102484|130|Simba|3
+2018-12-05 22:00:58,587 -> D.Finding disks                                   |  5.42| 50203|130|Simba|3
+2018-12-05 22:00:59,480 -> E.Indexing disks                                  |  6.31| 50203|130|Simba|3
+2018-12-05 22:01:01,858 -> F.Getting expansions                              |  2.38|315197|130|Simba|3
+2018-12-05 22:03:45,232 -> G.Finding maximal disks                           |163.37|  8710|130|Simba|3
+2018-12-05 22:03:49,254 -> H.Prunning maximal disks                          |  4.02|  8267|130|Simba|3
+2018-12-05 22:03:49,254 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-05 22:03:49,254 ->    berlin0-0,   18093, 130.0,    32,  3, 221.06,   51242,    102484,        50203,       8267, -1
+2018-12-05 22:03:49,377 -> Dropping indices...[0.123s]
+2018-12-05 22:03:49,377 -> Finishing MaximalFinder at 22:03:49.377...
+2018-12-05 22:03:49,377 -> Total time for MaximalFinder: 221.239ms...
+2018-12-05 22:03:49,488 -> Closing session... [0.111s]
+2018-12-05 22:03:53,629 -> Session started [1.832]
+2018-12-05 22:03:57,348 -> Data read [3.718] [18093]
+2018-12-05 22:03:58,212 -> A.Points indexed                                  |  0.86| 18093|130|GeoSpark|3
+2018-12-05 22:04:01,898 -> B.Pairs found                                     |  3.69| 51242|130|GeoSpark|3
+2018-12-05 22:04:02,459 -> C.Centers found                                   |  0.56|102484|130|GeoSpark|3
+2018-12-05 22:04:07,140 -> D.Disks found                                     |  4.68| 82363|130|GeoSpark|3
+2018-12-05 22:04:08,802 -> E.Disks indexed                                   |  1.66| 50203|130|GeoSpark|3
+2018-12-05 22:04:11,448 -> F.Expansions gotten                               |  2.65|106590|130|GeoSpark|3
+2018-12-05 22:05:36,308 -> G.Maximal disks found                             | 84.86| 13744|130|GeoSpark|3
+2018-12-05 22:05:43,871 -> H.Maximal disks prunned                           |  7.56|  8267|130|GeoSpark|3
+2018-12-05 22:05:43,929 -> Session closed [0.058]
+2018-12-05 22:05:47,710 -> Starting session... [1.770s]
+2018-12-05 22:05:49,635 -> Reading dataset... [1.925s] [18093 points]
+2018-12-05 22:05:49,697 -> Lauching MaximalFinder at 22:05:49.644...
+2018-12-05 22:05:49,701 -> Setting mu=3,epsilon=130.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-05 22:06:04,557 -> A.Indexing points                                 | 14.60| 18093|130|Simba|4
+2018-12-05 22:06:16,168 -> B.Getting pairs                                   | 11.61| 51242|130|Simba|4
+2018-12-05 22:06:22,788 -> C.Finding centers                                 |  6.62|102484|130|Simba|4
+2018-12-05 22:06:39,073 -> D.Finding disks                                   |  5.16| 50203|130|Simba|4
+2018-12-05 22:06:39,867 -> E.Indexing disks                                  |  5.95| 50203|130|Simba|4
+2018-12-05 22:06:41,865 -> F.Getting expansions                              |  2.00|315197|130|Simba|4
+2018-12-05 22:09:35,484 -> G.Finding maximal disks                           |173.62|  8710|130|Simba|4
+2018-12-05 22:09:39,224 -> H.Prunning maximal disks                          |  3.74|  8267|130|Simba|4
+2018-12-05 22:09:39,224 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-05 22:09:39,224 ->    berlin0-0,   18093, 130.0,    32,  3, 229.27,   51242,    102484,        50203,       8267, -1
+2018-12-05 22:09:39,295 -> Dropping indices...[0.071s]
+2018-12-05 22:09:39,295 -> Finishing MaximalFinder at 22:09:39.295...
+2018-12-05 22:09:39,295 -> Total time for MaximalFinder: 229.596ms...
+2018-12-05 22:09:39,352 -> Closing session... [0.057s]
+2018-12-05 22:09:43,962 -> Session started [1.726]
+2018-12-05 22:09:47,730 -> Data read [3.768] [18093]
+2018-12-05 22:09:48,656 -> A.Points indexed                                  |  0.92| 18093|130|GeoSpark|4
+2018-12-05 22:09:53,434 -> B.Pairs found                                     |  4.78| 51242|130|GeoSpark|4
+2018-12-05 22:09:53,839 -> C.Centers found                                   |  0.41|102484|130|GeoSpark|4
+2018-12-05 22:09:57,733 -> D.Disks found                                     |  3.89| 82363|130|GeoSpark|4
+2018-12-05 22:09:59,396 -> E.Disks indexed                                   |  1.66| 50203|130|GeoSpark|4
+2018-12-05 22:10:02,083 -> F.Expansions gotten                               |  2.69|116715|130|GeoSpark|4
+2018-12-05 22:11:30,365 -> G.Maximal disks found                             | 88.28| 14309|130|GeoSpark|4
+2018-12-05 22:11:40,755 -> H.Maximal disks prunned                           | 10.39|  8267|130|GeoSpark|4
+2018-12-05 22:11:40,859 -> Session closed [0.104]
+2018-12-05 22:11:44,668 -> Starting session... [1.738s]
+2018-12-05 22:11:46,491 -> Reading dataset... [1.822s] [18093 points]
+2018-12-05 22:11:46,531 -> Lauching MaximalFinder at 22:11:46.497...
+2018-12-05 22:11:46,532 -> Setting mu=3,epsilon=130.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-05 22:12:00,787 -> A.Indexing points                                 | 14.01| 18093|130|Simba|5
+2018-12-05 22:12:13,450 -> B.Getting pairs                                   | 12.66| 51242|130|Simba|5
+2018-12-05 22:12:20,288 -> C.Finding centers                                 |  6.84|102484|130|Simba|5
+2018-12-05 22:12:36,742 -> D.Finding disks                                   |  5.26| 50203|130|Simba|5
+2018-12-05 22:12:37,527 -> E.Indexing disks                                  |  6.04| 50203|130|Simba|5
+2018-12-05 22:12:39,521 -> F.Getting expansions                              |  1.99|315197|130|Simba|5
+2018-12-05 22:15:43,828 -> G.Finding maximal disks                           |184.31|  8710|130|Simba|5
+2018-12-05 22:15:47,558 -> H.Prunning maximal disks                          |  3.73|  8267|130|Simba|5
+2018-12-05 22:15:47,558 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-05 22:15:47,558 ->    berlin0-0,   18093, 130.0,    32,  3, 240.78,   51242,    102484,        50203,       8267, -1
+2018-12-05 22:15:47,655 -> Dropping indices...[0.097s]
+2018-12-05 22:15:47,655 -> Finishing MaximalFinder at 22:15:47.655...
+2018-12-05 22:15:47,656 -> Total time for MaximalFinder: 241.124ms...
+2018-12-05 22:15:47,705 -> Closing session... [0.049s]
+2018-12-05 22:15:52,555 -> Session started [1.778]
+2018-12-05 22:15:56,459 -> Data read [3.903] [18093]
+2018-12-05 22:15:57,324 -> A.Points indexed                                  |  0.87| 18093|130|GeoSpark|5
+2018-12-05 22:16:00,219 -> B.Pairs found                                     |  2.90| 51242|130|GeoSpark|5
+2018-12-05 22:16:00,534 -> C.Centers found                                   |  0.31|102484|130|GeoSpark|5
+2018-12-05 22:16:03,925 -> D.Disks found                                     |  3.39| 82363|130|GeoSpark|5
+2018-12-05 22:16:05,804 -> E.Disks indexed                                   |  1.88| 50203|130|GeoSpark|5
+2018-12-05 22:16:08,184 -> F.Expansions gotten                               |  2.38|105463|130|GeoSpark|5
+2018-12-05 22:17:28,292 -> G.Maximal disks found                             | 80.11| 13752|130|GeoSpark|5
+2018-12-05 22:17:34,699 -> H.Maximal disks prunned                           |  6.41|  8267|130|GeoSpark|5
+2018-12-05 22:17:34,762 -> Session closed [0.063]
+2018-12-05 22:17:38,674 -> Starting session... [1.884s]
+2018-12-05 22:17:40,470 -> Reading dataset... [1.796s] [18093 points]
+2018-12-05 22:17:40,512 -> Lauching MaximalFinder at 22:17:40.475...
+2018-12-05 22:17:40,513 -> Setting mu=3,epsilon=140.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-05 22:17:55,149 -> A.Indexing points                                 | 14.39| 18093|140|Simba|1
+2018-12-05 22:18:06,663 -> B.Getting pairs                                   | 11.51| 57539|140|Simba|1
+2018-12-05 22:18:13,570 -> C.Finding centers                                 |  6.91|115078|140|Simba|1
+2018-12-05 22:18:30,897 -> D.Finding disks                                   |  5.05| 58517|140|Simba|1
+2018-12-05 22:18:32,009 -> E.Indexing disks                                  |  6.16| 58517|140|Simba|1
+2018-12-05 22:18:34,298 -> F.Getting expansions                              |  2.29|407522|140|Simba|1
+2018-12-05 22:24:10,674 -> G.Finding maximal disks                           |336.38|  9565|140|Simba|1
+2018-12-05 22:24:14,733 -> H.Prunning maximal disks                          |  4.06|  9025|140|Simba|1
+2018-12-05 22:24:14,733 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-05 22:24:14,733 ->    berlin0-0,   18093, 140.0,    32,  3, 393.97,   57539,    115078,        58517,       9025, -1
+2018-12-05 22:24:14,803 -> Dropping indices...[0.070s]
+2018-12-05 22:24:14,803 -> Finishing MaximalFinder at 22:24:14.803...
+2018-12-05 22:24:14,804 -> Total time for MaximalFinder: 394.291ms...
+2018-12-05 22:24:14,847 -> Closing session... [0.043s]
+2018-12-05 22:24:19,343 -> Session started [1.639]
+2018-12-05 22:24:23,120 -> Data read [3.777] [18093]
+2018-12-05 22:24:23,884 -> A.Points indexed                                  |  0.76| 18093|140|GeoSpark|1
+2018-12-05 22:24:28,561 -> B.Pairs found                                     |  4.68| 57539|140|GeoSpark|1
+2018-12-05 22:24:29,042 -> C.Centers found                                   |  0.48|115078|140|GeoSpark|1
+2018-12-05 22:24:33,645 -> D.Disks found                                     |  4.60| 95062|140|GeoSpark|1
+2018-12-05 22:24:35,811 -> E.Disks indexed                                   |  2.17| 58517|140|GeoSpark|1
+2018-12-05 22:24:38,479 -> F.Expansions gotten                               |  2.67|123965|140|GeoSpark|1
+2018-12-05 22:27:10,000 -> G.Maximal disks found                             |151.52| 15046|140|GeoSpark|1
+2018-12-05 22:27:17,705 -> H.Maximal disks prunned                           |  7.71|  9024|140|GeoSpark|1
+2018-12-05 22:27:17,768 -> Session closed [0.063]
+2018-12-05 22:27:21,670 -> Starting session... [1.705s]
+2018-12-05 22:27:24,235 -> Reading dataset... [2.561s] [18093 points]
+2018-12-05 22:27:24,281 -> Lauching MaximalFinder at 22:27:24.242...
+2018-12-05 22:27:24,282 -> Setting mu=3,epsilon=140.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-05 22:27:39,232 -> A.Indexing points                                 | 14.89| 18093|140|Simba|2
+2018-12-05 22:27:51,646 -> B.Getting pairs                                   | 12.41| 57539|140|Simba|2
+2018-12-05 22:27:58,580 -> C.Finding centers                                 |  6.93|115078|140|Simba|2
+2018-12-05 22:28:15,749 -> D.Finding disks                                   |  5.51| 58517|140|Simba|2
+2018-12-05 22:28:16,506 -> E.Indexing disks                                  |  6.26| 58517|140|Simba|2
+2018-12-05 22:28:18,900 -> F.Getting expansions                              |  2.39|407522|140|Simba|2
+2018-12-05 22:34:01,053 -> G.Finding maximal disks                           |342.15|  9565|140|Simba|2
+2018-12-05 22:34:05,091 -> H.Prunning maximal disks                          |  4.04|  9025|140|Simba|2
+2018-12-05 22:34:05,091 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-05 22:34:05,091 ->    berlin0-0,   18093, 140.0,    32,  3, 400.75,   57539,    115078,        58517,       9025, -1
+2018-12-05 22:34:05,161 -> Dropping indices...[0.070s]
+2018-12-05 22:34:05,161 -> Finishing MaximalFinder at 22:34:05.161...
+2018-12-05 22:34:05,161 -> Total time for MaximalFinder: 400.879ms...
+2018-12-05 22:34:05,227 -> Closing session... [0.065s]
+2018-12-05 22:34:09,337 -> Session started [1.847]
+2018-12-05 22:34:12,981 -> Data read [3.643] [18093]
+2018-12-05 22:34:13,740 -> A.Points indexed                                  |  0.76| 18093|140|GeoSpark|2
+2018-12-05 22:34:17,932 -> B.Pairs found                                     |  4.19| 57539|140|GeoSpark|2
+2018-12-05 22:34:18,500 -> C.Centers found                                   |  0.57|115078|140|GeoSpark|2
+2018-12-05 22:34:23,124 -> D.Disks found                                     |  4.62| 95062|140|GeoSpark|2
+2018-12-05 22:34:25,370 -> E.Disks indexed                                   |  2.25| 58517|140|GeoSpark|2
+2018-12-05 22:34:28,016 -> F.Expansions gotten                               |  2.65|133810|140|GeoSpark|2
+2018-12-05 22:36:52,035 -> G.Maximal disks found                             |144.02| 15627|140|GeoSpark|2
+2018-12-05 22:36:58,801 -> H.Maximal disks prunned                           |  6.77|  9024|140|GeoSpark|2
+2018-12-05 22:36:58,862 -> Session closed [0.061]
+2018-12-05 22:37:03,200 -> Starting session... [1.564s]
+2018-12-05 22:37:05,014 -> Reading dataset... [1.814s] [18093 points]
+2018-12-05 22:37:05,055 -> Lauching MaximalFinder at 22:37:05.018...
+2018-12-05 22:37:05,057 -> Setting mu=3,epsilon=140.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-05 22:37:19,723 -> A.Indexing points                                 | 14.60| 18093|140|Simba|3
+2018-12-05 22:37:31,156 -> B.Getting pairs                                   | 11.43| 57539|140|Simba|3
+2018-12-05 22:37:38,206 -> C.Finding centers                                 |  7.05|115078|140|Simba|3
+2018-12-05 22:37:57,446 -> D.Finding disks                                   |  5.90| 58517|140|Simba|3
+2018-12-05 22:37:58,577 -> E.Indexing disks                                  |  7.03| 58517|140|Simba|3
+2018-12-05 22:38:01,491 -> F.Getting expansions                              |  2.91|407522|140|Simba|3
+2018-12-05 22:44:11,227 -> G.Finding maximal disks                           |369.74|  9565|140|Simba|3
+2018-12-05 22:44:15,704 -> H.Prunning maximal disks                          |  4.44|  9025|140|Simba|3
+2018-12-05 22:44:15,704 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-05 22:44:15,704 ->    berlin0-0,   18093, 140.0,    32,  3, 430.59,   57539,    115078,        58517,       9025, -1
+2018-12-05 22:44:15,827 -> Dropping indices...[0.123s]
+2018-12-05 22:44:15,827 -> Finishing MaximalFinder at 22:44:15.827...
+2018-12-05 22:44:15,827 -> Total time for MaximalFinder: 430.771ms...
+2018-12-05 22:44:16,235 -> Closing session... [0.408s]
+2018-12-05 22:44:25,620 -> Session started [3.254]
+2018-12-05 22:44:30,100 -> Data read [4.48] [18093]
+2018-12-05 22:44:30,793 -> A.Points indexed                                  |  0.69| 18093|140|GeoSpark|3
+2018-12-05 22:44:34,582 -> B.Pairs found                                     |  3.79| 57539|140|GeoSpark|3
+2018-12-05 22:44:34,942 -> C.Centers found                                   |  0.36|115078|140|GeoSpark|3
+2018-12-05 22:44:39,925 -> D.Disks found                                     |  4.98| 95062|140|GeoSpark|3
+2018-12-05 22:44:42,775 -> E.Disks indexed                                   |  2.85| 58517|140|GeoSpark|3
+2018-12-05 22:44:47,216 -> F.Expansions gotten                               |  4.44|138662|140|GeoSpark|3
+2018-12-05 22:47:27,425 -> G.Maximal disks found                             |160.21| 15662|140|GeoSpark|3
+2018-12-05 22:47:34,781 -> H.Maximal disks prunned                           |  7.36|  9024|140|GeoSpark|3
+2018-12-05 22:47:34,845 -> Session closed [0.064]
+2018-12-05 22:47:38,654 -> Starting session... [1.633s]
+2018-12-05 22:47:41,294 -> Reading dataset... [2.639s] [18093 points]
+2018-12-05 22:47:41,349 -> Lauching MaximalFinder at 22:47:41.316...
+2018-12-05 22:47:41,350 -> Setting mu=3,epsilon=140.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-05 22:47:56,826 -> A.Indexing points                                 | 15.42| 18093|140|Simba|4
+2018-12-05 22:48:08,044 -> B.Getting pairs                                   | 11.22| 57539|140|Simba|4
+2018-12-05 22:48:14,645 -> C.Finding centers                                 |  6.60|115078|140|Simba|4
+2018-12-05 22:48:31,505 -> D.Finding disks                                   |  5.21| 58517|140|Simba|4
+2018-12-05 22:48:32,647 -> E.Indexing disks                                  |  6.35| 58517|140|Simba|4
+2018-12-05 22:48:34,957 -> F.Getting expansions                              |  2.31|407522|140|Simba|4
+2018-12-05 22:54:10,169 -> G.Finding maximal disks                           |335.21|  9565|140|Simba|4
+2018-12-05 22:54:14,583 -> H.Prunning maximal disks                          |  4.41|  9025|140|Simba|4
+2018-12-05 22:54:14,583 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-05 22:54:14,583 ->    berlin0-0,   18093, 140.0,    32,  3, 393.18,   57539,    115078,        58517,       9025, -1
+2018-12-05 22:54:14,661 -> Dropping indices...[0.077s]
+2018-12-05 22:54:14,661 -> Finishing MaximalFinder at 22:54:14.661...
+2018-12-05 22:54:14,661 -> Total time for MaximalFinder: 393.312ms...
+2018-12-05 22:54:14,705 -> Closing session... [0.044s]
+2018-12-05 22:54:19,306 -> Session started [1.686]
+2018-12-05 22:54:23,142 -> Data read [3.835] [18093]
+2018-12-05 22:54:23,878 -> A.Points indexed                                  |  0.73| 18093|140|GeoSpark|4
+2018-12-05 22:54:28,268 -> B.Pairs found                                     |  4.39| 57539|140|GeoSpark|4
+2018-12-05 22:54:28,849 -> C.Centers found                                   |  0.58|115078|140|GeoSpark|4
+2018-12-05 22:54:34,069 -> D.Disks found                                     |  5.22| 95062|140|GeoSpark|4
+2018-12-05 22:54:36,319 -> E.Disks indexed                                   |  2.25| 58517|140|GeoSpark|4
+2018-12-05 22:54:38,964 -> F.Expansions gotten                               |  2.65|115545|140|GeoSpark|4
+2018-12-05 22:57:34,227 -> G.Maximal disks found                             |175.26| 14713|140|GeoSpark|4
+2018-12-05 22:57:42,127 -> H.Maximal disks prunned                           |  7.90|  9024|140|GeoSpark|4
+2018-12-05 22:57:42,218 -> Session closed [0.091]
+2018-12-05 22:57:45,936 -> Starting session... [1.652s]
+2018-12-05 22:57:47,819 -> Reading dataset... [1.883s] [18093 points]
+2018-12-05 22:57:47,861 -> Lauching MaximalFinder at 22:57:47.823...
+2018-12-05 22:57:47,862 -> Setting mu=3,epsilon=140.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-05 22:58:02,654 -> A.Indexing points                                 | 14.73| 18093|140|Simba|5
+2018-12-05 22:58:14,528 -> B.Getting pairs                                   | 11.87| 57539|140|Simba|5
+2018-12-05 22:58:21,363 -> C.Finding centers                                 |  6.84|115078|140|Simba|5
+2018-12-05 22:58:38,404 -> D.Finding disks                                   |  5.35| 58517|140|Simba|5
+2018-12-05 22:58:39,280 -> E.Indexing disks                                  |  6.22| 58517|140|Simba|5
+2018-12-05 22:58:41,672 -> F.Getting expansions                              |  2.39|407522|140|Simba|5
+2018-12-05 23:05:26,065 -> G.Finding maximal disks                           |404.39|  9565|140|Simba|5
+2018-12-05 23:05:30,158 -> H.Prunning maximal disks                          |  4.09|  9025|140|Simba|5
+2018-12-05 23:05:30,158 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-05 23:05:30,159 ->    berlin0-0,   18093, 140.0,    32,  3, 462.24,   57539,    115078,        58517,       9025, -1
+2018-12-05 23:05:30,228 -> Dropping indices...[0.069s]
+2018-12-05 23:05:30,229 -> Finishing MaximalFinder at 23:05:30.229...
+2018-12-05 23:05:30,229 -> Total time for MaximalFinder: 462.368ms...
+2018-12-05 23:05:30,270 -> Closing session... [0.041s]
+2018-12-05 23:05:34,190 -> Session started [1.744]
+2018-12-05 23:05:38,004 -> Data read [3.814] [18093]
+2018-12-05 23:05:38,730 -> A.Points indexed                                  |  0.73| 18093|140|GeoSpark|5
+2018-12-05 23:05:41,621 -> B.Pairs found                                     |  2.89| 57539|140|GeoSpark|5
+2018-12-05 23:05:42,009 -> C.Centers found                                   |  0.39|115078|140|GeoSpark|5
+2018-12-05 23:05:45,412 -> D.Disks found                                     |  3.40| 95062|140|GeoSpark|5
+2018-12-05 23:05:46,955 -> E.Disks indexed                                   |  1.54| 58517|140|GeoSpark|5
+2018-12-05 23:05:49,331 -> F.Expansions gotten                               |  2.38|112963|140|GeoSpark|5
+2018-12-05 23:08:45,799 -> G.Maximal disks found                             |176.47| 14511|140|GeoSpark|5
+2018-12-05 23:08:53,703 -> H.Maximal disks prunned                           |  7.90|  9024|140|GeoSpark|5
+2018-12-05 23:08:53,752 -> Session closed [0.048]
+2018-12-05 23:08:58,446 -> Starting session... [1.679s]
+2018-12-05 23:09:01,127 -> Reading dataset... [2.681s] [18093 points]
+2018-12-05 23:09:01,181 -> Lauching MaximalFinder at 23:09:01.134...
+2018-12-05 23:09:01,182 -> Setting mu=3,epsilon=150.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-05 23:09:16,014 -> A.Indexing points                                 | 14.78| 18093|150|Simba|1
+2018-12-05 23:09:27,365 -> B.Getting pairs                                   | 11.35| 64125|150|Simba|1
+2018-12-05 23:09:34,393 -> C.Finding centers                                 |  7.03|128250|150|Simba|1
+2018-12-05 23:09:52,451 -> D.Finding disks                                   |  5.97| 67398|150|Simba|1
+2018-12-05 23:09:53,391 -> E.Indexing disks                                  |  6.91| 67398|150|Simba|1
+2018-12-05 23:09:56,316 -> F.Getting expansions                              |  2.93|496847|150|Simba|1
+2018-12-05 23:20:12,246 -> G.Finding maximal disks                           |615.93| 10492|150|Simba|1
+2018-12-05 23:20:16,863 -> H.Prunning maximal disks                          |  4.62|  9833|150|Simba|1
+2018-12-05 23:20:16,863 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-05 23:20:16,863 ->    berlin0-0,   18093, 150.0,    32,  3, 675.62,   64125,    128250,        67398,       9833, -1
+2018-12-05 23:20:16,942 -> Dropping indices...[0.079s]
+2018-12-05 23:20:16,942 -> Finishing MaximalFinder at 23:20:16.942...
+2018-12-05 23:20:16,942 -> Total time for MaximalFinder: 675.761ms...
+2018-12-05 23:20:16,997 -> Closing session... [0.055s]
+2018-12-05 23:20:21,618 -> Session started [1.707]
+2018-12-05 23:20:25,281 -> Data read [3.662] [18093]
+2018-12-05 23:20:26,088 -> A.Points indexed                                  |  0.81| 18093|150|GeoSpark|1
+2018-12-05 23:20:30,147 -> B.Pairs found                                     |  4.06| 64125|150|GeoSpark|1
+2018-12-05 23:20:30,575 -> C.Centers found                                   |  0.43|128250|150|GeoSpark|1
+2018-12-05 23:20:34,526 -> D.Disks found                                     |  3.95|108522|150|GeoSpark|1
+2018-12-05 23:20:36,292 -> E.Disks indexed                                   |  1.77| 67398|150|GeoSpark|1
+2018-12-05 23:20:38,216 -> F.Expansions gotten                               |  1.92|140998|150|GeoSpark|1
+2018-12-05 23:25:39,578 -> G.Maximal disks found                             |301.36| 16376|150|GeoSpark|1
+2018-12-05 23:25:45,786 -> H.Maximal disks prunned                           |  6.21|  9833|150|GeoSpark|1
+2018-12-05 23:25:45,863 -> Session closed [0.077]
+2018-12-05 23:25:50,279 -> Starting session... [1.567s]
+2018-12-05 23:25:52,241 -> Reading dataset... [1.961s] [18093 points]
+2018-12-05 23:25:52,285 -> Lauching MaximalFinder at 23:25:52.248...
+2018-12-05 23:25:52,286 -> Setting mu=3,epsilon=150.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-05 23:26:07,194 -> A.Indexing points                                 | 14.70| 18093|150|Simba|2
+2018-12-05 23:26:18,649 -> B.Getting pairs                                   | 11.46| 64125|150|Simba|2
+2018-12-05 23:26:25,633 -> C.Finding centers                                 |  6.98|128250|150|Simba|2
+2018-12-05 23:26:43,717 -> D.Finding disks                                   |  5.12| 67398|150|Simba|2
+2018-12-05 23:26:44,629 -> E.Indexing disks                                  |  6.03| 67398|150|Simba|2
+2018-12-05 23:26:47,373 -> F.Getting expansions                              |  2.74|496847|150|Simba|2
+2018-12-05 23:36:58,955 -> G.Finding maximal disks                           |611.58| 10492|150|Simba|2
+2018-12-05 23:37:03,067 -> H.Prunning maximal disks                          |  4.11|  9833|150|Simba|2
+2018-12-05 23:37:03,067 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-05 23:37:03,068 ->    berlin0-0,   18093, 150.0,    32,  3, 670.57,   64125,    128250,        67398,       9833, -1
+2018-12-05 23:37:03,141 -> Dropping indices...[0.073s]
+2018-12-05 23:37:03,141 -> Finishing MaximalFinder at 23:37:03.141...
+2018-12-05 23:37:03,141 -> Total time for MaximalFinder: 670.856ms...
+2018-12-05 23:37:03,201 -> Closing session... [0.060s]
+2018-12-05 23:37:07,039 -> Session started [1.66]
+2018-12-05 23:37:10,707 -> Data read [3.667] [18093]
+2018-12-05 23:37:11,468 -> A.Points indexed                                  |  0.76| 18093|150|GeoSpark|2
+2018-12-05 23:37:15,582 -> B.Pairs found                                     |  4.11| 64125|150|GeoSpark|2
+2018-12-05 23:37:16,131 -> C.Centers found                                   |  0.55|128250|150|GeoSpark|2
+2018-12-05 23:37:20,916 -> D.Disks found                                     |  4.79|108522|150|GeoSpark|2
+2018-12-05 23:37:23,578 -> E.Disks indexed                                   |  2.66| 67398|150|GeoSpark|2
+2018-12-05 23:37:28,306 -> F.Expansions gotten                               |  4.73|159329|150|GeoSpark|2
+2018-12-05 23:42:06,709 -> G.Maximal disks found                             |278.40| 17043|150|GeoSpark|2
+2018-12-05 23:42:14,583 -> H.Maximal disks prunned                           |  7.87|  9833|150|GeoSpark|2
+2018-12-05 23:42:14,637 -> Session closed [0.054]
+2018-12-05 23:42:18,256 -> Starting session... [1.605s]
+2018-12-05 23:42:20,164 -> Reading dataset... [1.907s] [18093 points]
+2018-12-05 23:42:20,202 -> Lauching MaximalFinder at 23:42:20.168...
+2018-12-05 23:42:20,203 -> Setting mu=3,epsilon=150.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-05 23:42:35,240 -> A.Indexing points                                 | 14.98| 18093|150|Simba|3
+2018-12-05 23:42:47,435 -> B.Getting pairs                                   | 12.19| 64125|150|Simba|3
+2018-12-05 23:42:54,689 -> C.Finding centers                                 |  7.25|128250|150|Simba|3
+2018-12-05 23:43:12,226 -> D.Finding disks                                   |  5.41| 67398|150|Simba|3
+2018-12-05 23:43:13,105 -> E.Indexing disks                                  |  6.29| 67398|150|Simba|3
+2018-12-05 23:43:16,033 -> F.Getting expansions                              |  2.93|496847|150|Simba|3
+2018-12-05 23:54:22,152 -> G.Finding maximal disks                           |666.12| 10492|150|Simba|3
+2018-12-05 23:54:26,471 -> H.Prunning maximal disks                          |  4.32|  9833|150|Simba|3
+2018-12-05 23:54:26,471 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-05 23:54:26,471 ->    berlin0-0,   18093, 150.0,    32,  3, 726.21,   64125,    128250,        67398,       9833, -1
+2018-12-05 23:54:26,542 -> Dropping indices...[0.071s]
+2018-12-05 23:54:26,543 -> Finishing MaximalFinder at 23:54:26.543...
+2018-12-05 23:54:26,543 -> Total time for MaximalFinder: 726.341ms...
+2018-12-05 23:54:26,596 -> Closing session... [0.053s]
+2018-12-05 23:54:31,217 -> Session started [1.763]
+2018-12-05 23:54:34,918 -> Data read [3.701] [18093]
+2018-12-05 23:54:35,653 -> A.Points indexed                                  |  0.73| 18093|150|GeoSpark|3
+2018-12-05 23:54:39,066 -> B.Pairs found                                     |  3.41| 64125|150|GeoSpark|3
+2018-12-05 23:54:39,624 -> C.Centers found                                   |  0.56|128250|150|GeoSpark|3
+2018-12-05 23:54:43,454 -> D.Disks found                                     |  3.83|108522|150|GeoSpark|3
+2018-12-05 23:54:45,126 -> E.Disks indexed                                   |  1.67| 67398|150|GeoSpark|3
+2018-12-05 23:54:47,730 -> F.Expansions gotten                               |  2.60|164676|150|GeoSpark|3
+2018-12-06 00:00:04,105 -> G.Maximal disks found                             |316.37| 17555|150|GeoSpark|3
+2018-12-06 00:00:10,406 -> H.Maximal disks prunned                           |  6.30|  9833|150|GeoSpark|3
+2018-12-06 00:00:10,452 -> Session closed [0.046]
+2018-12-06 00:00:14,051 -> Starting session... [1.542s]
+2018-12-06 00:00:15,933 -> Reading dataset... [1.882s] [18093 points]
+2018-12-06 00:00:15,970 -> Lauching MaximalFinder at 00:00:15.937...
+2018-12-06 00:00:15,972 -> Setting mu=3,epsilon=150.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 00:00:30,654 -> A.Indexing points                                 | 14.46| 18093|150|Simba|4
+2018-12-06 00:00:42,066 -> B.Getting pairs                                   | 11.41| 64125|150|Simba|4
+2018-12-06 00:00:49,087 -> C.Finding centers                                 |  7.02|128250|150|Simba|4
+2018-12-06 00:01:06,763 -> D.Finding disks                                   |  5.57| 67398|150|Simba|4
+2018-12-06 00:01:07,567 -> E.Indexing disks                                  |  6.37| 67398|150|Simba|4
+2018-12-06 00:01:10,297 -> F.Getting expansions                              |  2.73|496847|150|Simba|4
+2018-12-06 00:11:16,104 -> G.Finding maximal disks                           |605.81| 10492|150|Simba|4
+2018-12-06 00:11:20,508 -> H.Prunning maximal disks                          |  4.40|  9833|150|Simba|4
+2018-12-06 00:11:20,508 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 00:11:20,508 ->    berlin0-0,   18093, 150.0,    32,  3, 664.31,   64125,    128250,        67398,       9833, -1
+2018-12-06 00:11:20,581 -> Dropping indices...[0.073s]
+2018-12-06 00:11:20,581 -> Finishing MaximalFinder at 00:11:20.581...
+2018-12-06 00:11:20,581 -> Total time for MaximalFinder: 664.611ms...
+2018-12-06 00:11:20,631 -> Closing session... [0.050s]
+2018-12-06 00:11:25,100 -> Session started [1.607]
+2018-12-06 00:11:28,934 -> Data read [3.834] [18093]
+2018-12-06 00:11:29,779 -> A.Points indexed                                  |  0.85| 18093|150|GeoSpark|4
+2018-12-06 00:11:33,672 -> B.Pairs found                                     |  3.89| 64125|150|GeoSpark|4
+2018-12-06 00:11:34,088 -> C.Centers found                                   |  0.42|128250|150|GeoSpark|4
+2018-12-06 00:11:38,617 -> D.Disks found                                     |  4.53|108522|150|GeoSpark|4
+2018-12-06 00:11:40,291 -> E.Disks indexed                                   |  1.67| 67398|150|GeoSpark|4
+2018-12-06 00:11:42,587 -> F.Expansions gotten                               |  2.30|126016|150|GeoSpark|4
+2018-12-06 00:17:06,142 -> G.Maximal disks found                             |323.55| 15915|150|GeoSpark|4
+2018-12-06 00:17:12,741 -> H.Maximal disks prunned                           |  6.60|  9833|150|GeoSpark|4
+2018-12-06 00:17:12,795 -> Session closed [0.054]
+2018-12-06 00:17:17,244 -> Starting session... [1.618s]
+2018-12-06 00:17:19,877 -> Reading dataset... [2.632s] [18093 points]
+2018-12-06 00:17:19,929 -> Lauching MaximalFinder at 00:17:19.883...
+2018-12-06 00:17:19,930 -> Setting mu=3,epsilon=150.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 00:17:34,553 -> A.Indexing points                                 | 14.57| 18093|150|Simba|5
+2018-12-06 00:17:46,164 -> B.Getting pairs                                   | 11.61| 64125|150|Simba|5
+2018-12-06 00:17:52,875 -> C.Finding centers                                 |  6.71|128250|150|Simba|5
+2018-12-06 00:18:09,819 -> D.Finding disks                                   |  5.45| 67398|150|Simba|5
+2018-12-06 00:18:10,719 -> E.Indexing disks                                  |  6.35| 67398|150|Simba|5
+2018-12-06 00:18:13,556 -> F.Getting expansions                              |  2.84|496847|150|Simba|5
+2018-12-06 00:29:17,914 -> G.Finding maximal disks                           |664.36| 10492|150|Simba|5
+2018-12-06 00:29:22,800 -> H.Prunning maximal disks                          |  4.89|  9833|150|Simba|5
+2018-12-06 00:29:22,800 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 00:29:22,801 ->    berlin0-0,   18093, 150.0,    32,  3, 722.81,   64125,    128250,        67398,       9833, -1
+2018-12-06 00:29:22,879 -> Dropping indices...[0.078s]
+2018-12-06 00:29:22,879 -> Finishing MaximalFinder at 00:29:22.879...
+2018-12-06 00:29:22,879 -> Total time for MaximalFinder: 722.950ms...
+2018-12-06 00:29:22,939 -> Closing session... [0.059s]
+2018-12-06 00:29:27,381 -> Session started [1.601]
+2018-12-06 00:29:31,075 -> Data read [3.691] [18093]
+2018-12-06 00:29:31,890 -> A.Points indexed                                  |  0.82| 18093|150|GeoSpark|5
+2018-12-06 00:29:36,229 -> B.Pairs found                                     |  4.34| 64125|150|GeoSpark|5
+2018-12-06 00:29:36,766 -> C.Centers found                                   |  0.54|128250|150|GeoSpark|5
+2018-12-06 00:29:41,571 -> D.Disks found                                     |  4.80|108522|150|GeoSpark|5
+2018-12-06 00:29:43,668 -> E.Disks indexed                                   |  2.10| 67398|150|GeoSpark|5
+2018-12-06 00:29:46,824 -> F.Expansions gotten                               |  3.16|151593|150|GeoSpark|5
+2018-12-06 00:35:20,897 -> G.Maximal disks found                             |334.07| 17024|150|GeoSpark|5
+2018-12-06 00:35:29,432 -> H.Maximal disks prunned                           |  8.54|  9833|150|GeoSpark|5
+2018-12-06 00:35:29,516 -> Session closed [0.084]
+2018-12-06 00:35:33,435 -> Starting session... [1.852s]
+2018-12-06 00:35:35,224 -> Reading dataset... [1.789s] [18093 points]
+2018-12-06 00:35:35,279 -> Lauching MaximalFinder at 00:35:35.231...
+2018-12-06 00:35:35,280 -> Setting mu=3,epsilon=160.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 00:35:49,831 -> A.Indexing points                                 | 14.50| 18093|160|Simba|1
+2018-12-06 00:36:01,355 -> B.Getting pairs                                   | 11.52| 70950|160|Simba|1
+2018-12-06 00:36:08,773 -> C.Finding centers                                 |  7.42|141900|160|Simba|1
+2018-12-06 00:36:26,989 -> D.Finding disks                                   |  5.55| 76587|160|Simba|1
+2018-12-06 00:36:27,849 -> E.Indexing disks                                  |  6.41| 76587|160|Simba|1
+2018-12-06 00:36:30,994 -> F.Getting expansions                              |  3.15|605184|160|Simba|1
+2018-12-06 00:54:17,093 -> G.Finding maximal disks                           |1066.10| 11447|160|Simba|1
+2018-12-06 00:54:21,566 -> H.Prunning maximal disks                          |  4.47| 10689|160|Simba|1
+2018-12-06 00:54:21,566 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 00:54:21,566 ->    berlin0-0,   18093, 160.0,    32,  3,1126.23,   70950,    141900,        76587,      10689, -1
+2018-12-06 00:54:21,640 -> Dropping indices...[0.074s]
+2018-12-06 00:54:21,641 -> Finishing MaximalFinder at 00:54:21.640...
+2018-12-06 00:54:21,641 -> Total time for MaximalFinder: 1126.361ms...
+2018-12-06 00:54:21,688 -> Closing session... [0.047s]
+2018-12-06 00:54:25,442 -> Session started [1.632]
+2018-12-06 00:54:29,203 -> Data read [3.761] [18093]
+2018-12-06 00:54:29,961 -> A.Points indexed                                  |  0.76| 18093|160|GeoSpark|1
+2018-12-06 00:54:33,881 -> B.Pairs found                                     |  3.92| 70950|160|GeoSpark|1
+2018-12-06 00:54:34,351 -> C.Centers found                                   |  0.47|141900|160|GeoSpark|1
+2018-12-06 00:54:39,092 -> D.Disks found                                     |  4.74|122629|160|GeoSpark|1
+2018-12-06 00:54:40,974 -> E.Disks indexed                                   |  1.88| 76587|160|GeoSpark|1
+2018-12-06 00:54:43,839 -> F.Expansions gotten                               |  2.87|155350|160|GeoSpark|1
+2018-12-06 01:04:46,670 -> G.Maximal disks found                             |602.83| 18172|160|GeoSpark|1
+2018-12-06 01:04:53,850 -> H.Maximal disks prunned                           |  7.18| 10688|160|GeoSpark|1
+2018-12-06 01:04:53,898 -> Session closed [0.048]
+2018-12-06 01:04:57,834 -> Starting session... [1.753s]
+2018-12-06 01:05:00,577 -> Reading dataset... [2.743s] [18093 points]
+2018-12-06 01:05:00,617 -> Lauching MaximalFinder at 01:05:00.581...
+2018-12-06 01:05:00,618 -> Setting mu=3,epsilon=160.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 01:05:15,427 -> A.Indexing points                                 | 14.75| 18093|160|Simba|2
+2018-12-06 01:05:27,330 -> B.Getting pairs                                   | 11.90| 70950|160|Simba|2
+2018-12-06 01:05:34,463 -> C.Finding centers                                 |  7.13|141900|160|Simba|2
+2018-12-06 01:05:52,197 -> D.Finding disks                                   |  5.73| 76587|160|Simba|2
+2018-12-06 01:05:53,054 -> E.Indexing disks                                  |  6.59| 76587|160|Simba|2
+2018-12-06 01:05:56,118 -> F.Getting expansions                              |  3.06|605184|160|Simba|2
+2018-12-06 01:24:19,162 -> G.Finding maximal disks                           |1103.04| 11447|160|Simba|2
+2018-12-06 01:24:24,806 -> H.Prunning maximal disks                          |  5.64| 10689|160|Simba|2
+2018-12-06 01:24:24,806 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 01:24:24,807 ->    berlin0-0,   18093, 160.0,    32,  3,1164.13,   70950,    141900,        76587,      10689, -1
+2018-12-06 01:24:24,885 -> Dropping indices...[0.078s]
+2018-12-06 01:24:24,885 -> Finishing MaximalFinder at 01:24:24.885...
+2018-12-06 01:24:24,885 -> Total time for MaximalFinder: 1164.268ms...
+2018-12-06 01:24:24,958 -> Closing session... [0.073s]
+2018-12-06 01:24:28,963 -> Session started [1.844]
+2018-12-06 01:24:32,740 -> Data read [3.777] [18093]
+2018-12-06 01:24:33,740 -> A.Points indexed                                  |  1.00| 18093|160|GeoSpark|2
+2018-12-06 01:24:38,743 -> B.Pairs found                                     |  5.00| 70950|160|GeoSpark|2
+2018-12-06 01:24:39,215 -> C.Centers found                                   |  0.47|141900|160|GeoSpark|2
+2018-12-06 01:24:43,713 -> D.Disks found                                     |  4.50|122629|160|GeoSpark|2
+2018-12-06 01:24:45,875 -> E.Disks indexed                                   |  2.16| 76587|160|GeoSpark|2
+2018-12-06 01:24:48,924 -> F.Expansions gotten                               |  3.05|154302|160|GeoSpark|2
+2018-12-06 01:32:31,160 -> G.Maximal disks found                             |462.24| 17946|160|GeoSpark|2
+2018-12-06 01:32:39,913 -> H.Maximal disks prunned                           |  8.75| 10688|160|GeoSpark|2
+2018-12-06 01:32:40,008 -> Session closed [0.095]
+2018-12-06 01:32:43,793 -> Starting session... [1.682s]
+2018-12-06 01:32:46,342 -> Reading dataset... [2.549s] [18093 points]
+2018-12-06 01:32:46,393 -> Lauching MaximalFinder at 01:32:46.348...
+2018-12-06 01:32:46,395 -> Setting mu=3,epsilon=160.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 01:33:01,600 -> A.Indexing points                                 | 15.15| 18093|160|Simba|3
+2018-12-06 01:33:13,630 -> B.Getting pairs                                   | 12.03| 70950|160|Simba|3
+2018-12-06 01:33:21,027 -> C.Finding centers                                 |  7.40|141900|160|Simba|3
+2018-12-06 01:33:39,370 -> D.Finding disks                                   |  5.69| 76587|160|Simba|3
+2018-12-06 01:33:40,402 -> E.Indexing disks                                  |  6.72| 76587|160|Simba|3
+2018-12-06 01:33:43,597 -> F.Getting expansions                              |  3.20|605184|160|Simba|3
+2018-12-06 01:50:10,362 -> G.Finding maximal disks                           |986.77| 11447|160|Simba|3
+2018-12-06 01:50:15,712 -> H.Prunning maximal disks                          |  5.35| 10689|160|Simba|3
+2018-12-06 01:50:15,712 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 01:50:15,712 ->    berlin0-0,   18093, 160.0,    32,  3,1049.26,   70950,    141900,        76587,      10689, -1
+2018-12-06 01:50:15,796 -> Dropping indices...[0.084s]
+2018-12-06 01:50:15,796 -> Finishing MaximalFinder at 01:50:15.796...
+2018-12-06 01:50:15,796 -> Total time for MaximalFinder: 1049.402ms...
+2018-12-06 01:50:15,846 -> Closing session... [0.050s]
+2018-12-06 01:50:20,545 -> Session started [1.665]
+2018-12-06 01:50:24,274 -> Data read [3.729] [18093]
+2018-12-06 01:50:25,080 -> A.Points indexed                                  |  0.81| 18093|160|GeoSpark|3
+2018-12-06 01:50:28,608 -> B.Pairs found                                     |  3.53| 70950|160|GeoSpark|3
+2018-12-06 01:50:29,191 -> C.Centers found                                   |  0.58|141900|160|GeoSpark|3
+2018-12-06 01:50:33,374 -> D.Disks found                                     |  4.18|122629|160|GeoSpark|3
+2018-12-06 01:50:35,529 -> E.Disks indexed                                   |  2.16| 76587|160|GeoSpark|3
+2018-12-06 01:50:37,937 -> F.Expansions gotten                               |  2.41|164694|160|GeoSpark|3
+2018-12-06 02:00:56,854 -> G.Maximal disks found                             |618.92| 18362|160|GeoSpark|3
+2018-12-06 02:01:03,394 -> H.Maximal disks prunned                           |  6.54| 10688|160|GeoSpark|3
+2018-12-06 02:01:03,455 -> Session closed [0.061]
+2018-12-06 02:01:08,203 -> Starting session... [1.692s]
+2018-12-06 02:01:10,179 -> Reading dataset... [1.976s] [18093 points]
+2018-12-06 02:01:10,228 -> Lauching MaximalFinder at 02:01:10.186...
+2018-12-06 02:01:10,229 -> Setting mu=3,epsilon=160.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 02:01:24,630 -> A.Indexing points                                 | 14.34| 18093|160|Simba|4
+2018-12-06 02:01:36,775 -> B.Getting pairs                                   | 12.15| 70950|160|Simba|4
+2018-12-06 02:01:44,202 -> C.Finding centers                                 |  7.43|141900|160|Simba|4
+2018-12-06 02:02:04,152 -> D.Finding disks                                   |  5.78| 76587|160|Simba|4
+2018-12-06 02:02:05,316 -> E.Indexing disks                                  |  6.94| 76587|160|Simba|4
+2018-12-06 02:02:09,001 -> F.Getting expansions                              |  3.68|605184|160|Simba|4
+2018-12-06 02:19:32,246 -> G.Finding maximal disks                           |1043.25| 11447|160|Simba|4
+2018-12-06 02:19:37,574 -> H.Prunning maximal disks                          |  5.33| 10689|160|Simba|4
+2018-12-06 02:19:37,574 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 02:19:37,574 ->    berlin0-0,   18093, 160.0,    32,  3,1107.29,   70950,    141900,        76587,      10689, -1
+2018-12-06 02:19:37,668 -> Dropping indices...[0.094s]
+2018-12-06 02:19:37,669 -> Finishing MaximalFinder at 02:19:37.669...
+2018-12-06 02:19:37,669 -> Total time for MaximalFinder: 1107.441ms...
+2018-12-06 02:19:37,730 -> Closing session... [0.061s]
+2018-12-06 02:19:42,220 -> Session started [1.617]
+2018-12-06 02:19:46,032 -> Data read [3.812] [18093]
+2018-12-06 02:19:47,045 -> A.Points indexed                                  |  1.01| 18093|160|GeoSpark|4
+2018-12-06 02:19:51,805 -> B.Pairs found                                     |  4.76| 70950|160|GeoSpark|4
+2018-12-06 02:19:52,212 -> C.Centers found                                   |  0.41|141900|160|GeoSpark|4
+2018-12-06 02:19:56,754 -> D.Disks found                                     |  4.54|122629|160|GeoSpark|4
+2018-12-06 02:19:58,587 -> E.Disks indexed                                   |  1.83| 76587|160|GeoSpark|4
+2018-12-06 02:20:01,414 -> F.Expansions gotten                               |  2.83|158503|160|GeoSpark|4
+2018-12-06 02:29:09,229 -> G.Maximal disks found                             |547.82| 18064|160|GeoSpark|4
+2018-12-06 02:29:18,604 -> H.Maximal disks prunned                           |  9.38| 10688|160|GeoSpark|4
+2018-12-06 02:29:18,709 -> Session closed [0.105]
+2018-12-06 02:29:22,265 -> Starting session... [1.548s]
+2018-12-06 02:29:24,211 -> Reading dataset... [1.945s] [18093 points]
+2018-12-06 02:29:24,251 -> Lauching MaximalFinder at 02:29:24.215...
+2018-12-06 02:29:24,252 -> Setting mu=3,epsilon=160.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 02:29:39,027 -> A.Indexing points                                 | 14.72| 18093|160|Simba|5
+2018-12-06 02:29:51,227 -> B.Getting pairs                                   | 12.20| 70950|160|Simba|5
+2018-12-06 02:29:58,301 -> C.Finding centers                                 |  7.07|141900|160|Simba|5
+2018-12-06 02:30:16,734 -> D.Finding disks                                   |  5.61| 76587|160|Simba|5
+2018-12-06 02:30:17,872 -> E.Indexing disks                                  |  6.75| 76587|160|Simba|5
+2018-12-06 02:30:20,943 -> F.Getting expansions                              |  3.07|605184|160|Simba|5
+2018-12-06 02:48:00,264 -> G.Finding maximal disks                           |1059.32| 11447|160|Simba|5
+2018-12-06 02:48:06,298 -> H.Prunning maximal disks                          |  6.03| 10689|160|Simba|5
+2018-12-06 02:48:06,298 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 02:48:06,298 ->    berlin0-0,   18093, 160.0,    32,  3,1121.99,   70950,    141900,        76587,      10689, -1
+2018-12-06 02:48:06,369 -> Dropping indices...[0.071s]
+2018-12-06 02:48:06,369 -> Finishing MaximalFinder at 02:48:06.369...
+2018-12-06 02:48:06,369 -> Total time for MaximalFinder: 1122.118ms...
+2018-12-06 02:48:06,422 -> Closing session... [0.053s]
+2018-12-06 02:48:10,851 -> Session started [1.576]
+2018-12-06 02:48:14,664 -> Data read [3.813] [18093]
+2018-12-06 02:48:15,635 -> A.Points indexed                                  |  0.97| 18093|160|GeoSpark|5
+2018-12-06 02:48:21,963 -> B.Pairs found                                     |  6.33| 70950|160|GeoSpark|5
+2018-12-06 02:48:22,751 -> C.Centers found                                   |  0.79|141900|160|GeoSpark|5
+2018-12-06 02:48:31,114 -> D.Disks found                                     |  8.36|122629|160|GeoSpark|5
+2018-12-06 02:48:35,616 -> E.Disks indexed                                   |  4.50| 76587|160|GeoSpark|5
+2018-12-06 02:48:40,852 -> F.Expansions gotten                               |  5.24|164955|160|GeoSpark|5
+2018-12-06 03:00:52,706 -> G.Maximal disks found                             |731.85| 18405|160|GeoSpark|5
+2018-12-06 03:01:01,546 -> H.Maximal disks prunned                           |  8.84| 10688|160|GeoSpark|5
+2018-12-06 03:01:01,590 -> Session closed [0.044]
+2018-12-06 03:01:05,482 -> Starting session... [1.631s]
+2018-12-06 03:01:07,267 -> Reading dataset... [1.783s] [18093 points]
+2018-12-06 03:01:07,321 -> Lauching MaximalFinder at 03:01:07.273...
+2018-12-06 03:01:07,323 -> Setting mu=3,epsilon=170.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 03:01:21,606 -> A.Indexing points                                 | 14.04| 18093|170|Simba|1
+2018-12-06 03:01:32,999 -> B.Getting pairs                                   | 11.39| 78049|170|Simba|1
+2018-12-06 03:01:40,528 -> C.Finding centers                                 |  7.53|156098|170|Simba|1
+2018-12-06 03:01:59,228 -> D.Finding disks                                   |  6.12| 86212|170|Simba|1
+2018-12-06 03:02:00,203 -> E.Indexing disks                                  |  7.09| 86212|170|Simba|1
+2018-12-06 03:02:03,595 -> F.Getting expansions                              |  3.39|722165|170|Simba|1
+2018-12-06 03:33:12,191 -> G.Finding maximal disks                           |1868.60| 12487|170|Simba|1
+2018-12-06 03:33:18,014 -> H.Prunning maximal disks                          |  5.80| 11554|170|Simba|1
+2018-12-06 03:33:18,014 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 03:33:18,014 ->    berlin0-0,   18093, 170.0,    32,  3,1930.44,   78049,    156098,        86212,      11554, -1
+2018-12-06 03:33:18,204 -> Dropping indices...[0.190s]
+2018-12-06 03:33:18,205 -> Finishing MaximalFinder at 03:33:18.204...
+2018-12-06 03:33:18,205 -> Total time for MaximalFinder: 1930.882ms...
+2018-12-06 03:33:18,623 -> Closing session... [0.418s]
+2018-12-06 03:33:27,156 -> Session started [2.971]
+2018-12-06 03:33:31,574 -> Data read [4.417] [18093]
+2018-12-06 03:33:32,299 -> A.Points indexed                                  |  0.72| 18093|170|GeoSpark|1
+2018-12-06 03:33:36,260 -> B.Pairs found                                     |  3.96| 78049|170|GeoSpark|1
+2018-12-06 03:33:36,657 -> C.Centers found                                   |  0.40|156098|170|GeoSpark|1
+2018-12-06 03:33:42,315 -> D.Disks found                                     |  5.66|137303|170|GeoSpark|1
+2018-12-06 03:33:45,042 -> E.Disks indexed                                   |  2.73| 86212|170|GeoSpark|1
+2018-12-06 03:33:48,846 -> F.Expansions gotten                               |  3.80|172634|170|GeoSpark|1
+2018-12-06 03:48:57,651 -> G.Maximal disks found                             |908.81| 19544|170|GeoSpark|1
+2018-12-06 03:49:06,925 -> H.Maximal disks prunned                           |  9.27| 11553|170|GeoSpark|1
+2018-12-06 03:49:07,042 -> Session closed [0.117]
+2018-12-06 03:49:12,319 -> Starting session... [1.961s]
+2018-12-06 03:49:15,022 -> Reading dataset... [2.702s] [18093 points]
+2018-12-06 03:49:15,118 -> Lauching MaximalFinder at 03:49:15.064...
+2018-12-06 03:49:15,119 -> Setting mu=3,epsilon=170.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 03:49:30,353 -> A.Indexing points                                 | 15.15| 18093|170|Simba|2
+2018-12-06 03:49:41,579 -> B.Getting pairs                                   | 11.23| 78049|170|Simba|2
+2018-12-06 03:49:48,587 -> C.Finding centers                                 |  7.01|156098|170|Simba|2
+2018-12-06 03:50:06,781 -> D.Finding disks                                   |  5.61| 86212|170|Simba|2
+2018-12-06 03:50:07,627 -> E.Indexing disks                                  |  6.46| 86212|170|Simba|2
+2018-12-06 03:50:11,473 -> F.Getting expansions                              |  3.85|722165|170|Simba|2
+2018-12-06 04:17:54,129 -> G.Finding maximal disks                           |1662.66| 12487|170|Simba|2
+2018-12-06 04:17:59,521 -> H.Prunning maximal disks                          |  5.35| 11554|170|Simba|2
+2018-12-06 04:17:59,522 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 04:17:59,522 ->    berlin0-0,   18093, 170.0,    32,  3,1724.32,   78049,    156098,        86212,      11554, -1
+2018-12-06 04:17:59,662 -> Dropping indices...[0.140s]
+2018-12-06 04:17:59,662 -> Finishing MaximalFinder at 04:17:59.662...
+2018-12-06 04:17:59,663 -> Total time for MaximalFinder: 1724.544ms...
+2018-12-06 04:18:00,248 -> Closing session... [0.585s]
+2018-12-06 04:18:09,625 -> Session started [3.175]
+2018-12-06 04:18:14,201 -> Data read [4.576] [18093]
+2018-12-06 04:18:14,925 -> A.Points indexed                                  |  0.72| 18093|170|GeoSpark|2
+2018-12-06 04:18:19,123 -> B.Pairs found                                     |  4.20| 78049|170|GeoSpark|2
+2018-12-06 04:18:19,631 -> C.Centers found                                   |  0.51|156098|170|GeoSpark|2
+2018-12-06 04:18:24,519 -> D.Disks found                                     |  4.89|137303|170|GeoSpark|2
+2018-12-06 04:18:27,126 -> E.Disks indexed                                   |  2.59| 86212|170|GeoSpark|2
+2018-12-06 04:18:32,026 -> F.Expansions gotten                               |  4.90|193378|170|GeoSpark|2
+2018-12-06 04:35:42,264 -> G.Maximal disks found                             |1030.24| 20403|170|GeoSpark|2
+2018-12-06 04:35:50,632 -> H.Maximal disks prunned                           |  8.36| 11553|170|GeoSpark|2
+2018-12-06 04:35:50,989 -> Session closed [0.357]
+2018-12-06 04:35:59,651 -> Starting session... [3.172s]
+2018-12-06 04:36:01,511 -> Reading dataset... [1.860s] [18093 points]
+2018-12-06 04:36:01,575 -> Lauching MaximalFinder at 04:36:01.535...
+2018-12-06 04:36:01,576 -> Setting mu=3,epsilon=170.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 04:36:16,268 -> A.Indexing points                                 | 14.64| 18093|170|Simba|3
+2018-12-06 04:36:27,087 -> B.Getting pairs                                   | 10.82| 78049|170|Simba|3
+2018-12-06 04:36:35,176 -> C.Finding centers                                 |  8.09|156098|170|Simba|3
+2018-12-06 04:36:53,483 -> D.Finding disks                                   |  5.85| 86212|170|Simba|3
+2018-12-06 04:36:54,422 -> E.Indexing disks                                  |  6.79| 86212|170|Simba|3
+2018-12-06 04:36:58,226 -> F.Getting expansions                              |  3.80|722165|170|Simba|3
+2018-12-06 05:06:12,306 -> G.Finding maximal disks                           |1754.08| 12487|170|Simba|3
+2018-12-06 05:06:18,815 -> H.Prunning maximal disks                          |  6.48| 11554|170|Simba|3
+2018-12-06 05:06:18,815 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 05:06:18,815 ->    berlin0-0,   18093, 170.0,    32,  3,1817.18,   78049,    156098,        86212,      11554, -1
+2018-12-06 05:06:18,953 -> Dropping indices...[0.138s]
+2018-12-06 05:06:18,954 -> Finishing MaximalFinder at 05:06:18.954...
+2018-12-06 05:06:18,954 -> Total time for MaximalFinder: 1817.379ms...
+2018-12-06 05:06:19,491 -> Closing session... [0.537s]
+2018-12-06 05:06:29,626 -> Session started [3.374]
+2018-12-06 05:06:34,018 -> Data read [4.392] [18093]
+2018-12-06 05:06:34,798 -> A.Points indexed                                  |  0.78| 18093|170|GeoSpark|3
+2018-12-06 05:06:38,808 -> B.Pairs found                                     |  4.01| 78049|170|GeoSpark|3
+2018-12-06 05:06:39,347 -> C.Centers found                                   |  0.54|156098|170|GeoSpark|3
+2018-12-06 05:06:43,525 -> D.Disks found                                     |  4.18|137303|170|GeoSpark|3
+2018-12-06 05:06:45,391 -> E.Disks indexed                                   |  1.87| 86212|170|GeoSpark|3
+2018-12-06 05:06:48,104 -> F.Expansions gotten                               |  2.71|175438|170|GeoSpark|3
+2018-12-06 05:20:37,043 -> G.Maximal disks found                             |828.94| 19579|170|GeoSpark|3
+2018-12-06 05:20:44,950 -> H.Maximal disks prunned                           |  7.91| 11553|170|GeoSpark|3
+2018-12-06 05:20:44,998 -> Session closed [0.048]
+2018-12-06 05:20:49,718 -> Starting session... [1.721s]
+2018-12-06 05:20:51,607 -> Reading dataset... [1.888s] [18093 points]
+2018-12-06 05:20:51,952 -> Lauching MaximalFinder at 05:20:51.625...
+2018-12-06 05:20:51,954 -> Setting mu=3,epsilon=170.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 05:21:06,653 -> A.Indexing points                                 | 14.65| 18093|170|Simba|4
+2018-12-06 05:21:18,689 -> B.Getting pairs                                   | 12.04| 78049|170|Simba|4
+2018-12-06 05:21:26,035 -> C.Finding centers                                 |  7.33|156098|170|Simba|4
+2018-12-06 05:21:46,455 -> D.Finding disks                                   |  6.18| 86212|170|Simba|4
+2018-12-06 05:21:47,618 -> E.Indexing disks                                  |  7.34| 86212|170|Simba|4
+2018-12-06 05:21:52,396 -> F.Getting expansions                              |  4.78|722165|170|Simba|4
+2018-12-06 05:52:23,938 -> G.Finding maximal disks                           |1831.44| 12487|170|Simba|4
+2018-12-06 05:52:30,747 -> H.Prunning maximal disks                          |  6.77| 11554|170|Simba|4
+2018-12-06 05:52:30,747 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 05:52:30,748 ->    berlin0-0,   18093, 170.0,    32,  3,1898.74,   78049,    156098,        86212,      11554, -1
+2018-12-06 05:52:30,889 -> Dropping indices...[0.141s]
+2018-12-06 05:52:30,889 -> Finishing MaximalFinder at 05:52:30.889...
+2018-12-06 05:52:30,889 -> Total time for MaximalFinder: 1898.937ms...
+2018-12-06 05:52:31,465 -> Closing session... [0.576s]
+2018-12-06 05:52:41,483 -> Session started [3.581]
+2018-12-06 05:52:46,163 -> Data read [4.678] [18093]
+2018-12-06 05:52:48,114 -> A.Points indexed                                  |  1.95| 18093|170|GeoSpark|4
+2018-12-06 05:52:51,726 -> B.Pairs found                                     |  3.61| 78049|170|GeoSpark|4
+2018-12-06 05:52:52,349 -> C.Centers found                                   |  0.62|156098|170|GeoSpark|4
+2018-12-06 05:52:57,775 -> D.Disks found                                     |  5.43|137303|170|GeoSpark|4
+2018-12-06 05:53:00,966 -> E.Disks indexed                                   |  3.19| 86212|170|GeoSpark|4
+2018-12-06 05:53:05,413 -> F.Expansions gotten                               |  4.45|185368|170|GeoSpark|4
+2018-12-06 06:10:39,928 -> G.Maximal disks found                             |1054.52| 20074|170|GeoSpark|4
+2018-12-06 06:10:47,509 -> H.Maximal disks prunned                           |  7.58| 11553|170|GeoSpark|4
+2018-12-06 06:10:47,569 -> Session closed [0.06]
+2018-12-06 06:10:51,843 -> Starting session... [1.860s]
+2018-12-06 06:10:53,692 -> Reading dataset... [1.848s] [18093 points]
+2018-12-06 06:10:53,745 -> Lauching MaximalFinder at 06:10:53.712...
+2018-12-06 06:10:53,747 -> Setting mu=3,epsilon=170.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 06:11:08,431 -> A.Indexing points                                 | 14.45| 18093|170|Simba|5
+2018-12-06 06:11:19,769 -> B.Getting pairs                                   | 11.34| 78049|170|Simba|5
+2018-12-06 06:11:27,231 -> C.Finding centers                                 |  7.46|156098|170|Simba|5
+2018-12-06 06:11:46,458 -> D.Finding disks                                   |  6.01| 86212|170|Simba|5
+2018-12-06 06:11:47,462 -> E.Indexing disks                                  |  7.02| 86212|170|Simba|5
+2018-12-06 06:11:51,089 -> F.Getting expansions                              |  3.63|722165|170|Simba|5
+2018-12-06 06:40:15,454 -> G.Finding maximal disks                           |1704.37| 12487|170|Simba|5
+2018-12-06 06:40:20,727 -> H.Prunning maximal disks                          |  5.25| 11554|170|Simba|5
+2018-12-06 06:40:20,727 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 06:40:20,727 ->    berlin0-0,   18093, 170.0,    32,  3,1766.74,   78049,    156098,        86212,      11554, -1
+2018-12-06 06:40:20,953 -> Dropping indices...[0.226s]
+2018-12-06 06:40:20,954 -> Finishing MaximalFinder at 06:40:20.953...
+2018-12-06 06:40:20,954 -> Total time for MaximalFinder: 1767.208ms...
+2018-12-06 06:40:21,318 -> Closing session... [0.364s]
+2018-12-06 06:40:30,552 -> Session started [3.214]
+2018-12-06 06:40:34,958 -> Data read [4.405] [18093]
+2018-12-06 06:40:35,685 -> A.Points indexed                                  |  0.73| 18093|170|GeoSpark|5
+2018-12-06 06:40:38,840 -> B.Pairs found                                     |  3.16| 78049|170|GeoSpark|5
+2018-12-06 06:40:39,195 -> C.Centers found                                   |  0.36|156098|170|GeoSpark|5
+2018-12-06 06:40:42,816 -> D.Disks found                                     |  3.62|137303|170|GeoSpark|5
+2018-12-06 06:40:44,631 -> E.Disks indexed                                   |  1.82| 86212|170|GeoSpark|5
+2018-12-06 06:40:47,337 -> F.Expansions gotten                               |  2.71|166907|170|GeoSpark|5
+2018-12-06 06:56:13,393 -> G.Maximal disks found                             |926.06| 19124|170|GeoSpark|5
+2018-12-06 06:56:20,414 -> H.Maximal disks prunned                           |  7.00| 11553|170|GeoSpark|5
+2018-12-06 06:56:20,469 -> Session closed [0.055]
+2018-12-06 06:56:24,998 -> Starting session... [1.633s]
+2018-12-06 06:56:26,876 -> Reading dataset... [1.875s] [18093 points]
+2018-12-06 06:56:26,926 -> Lauching MaximalFinder at 06:56:26.890...
+2018-12-06 06:56:26,927 -> Setting mu=3,epsilon=180.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 06:56:41,612 -> A.Indexing points                                 | 14.63| 18093|180|Simba|1
+2018-12-06 06:56:53,262 -> B.Getting pairs                                   | 11.65| 85459|180|Simba|1
+2018-12-06 06:57:00,571 -> C.Finding centers                                 |  7.31|170918|180|Simba|1
+2018-12-06 06:57:20,241 -> D.Finding disks                                   |  6.07| 96496|180|Simba|1
+2018-12-06 06:57:21,168 -> E.Indexing disks                                  |  7.00| 96496|180|Simba|1
+2018-12-06 06:57:25,022 -> F.Getting expansions                              |  3.85|858734|180|Simba|1
+2018-12-06 07:50:14,379 -> G.Finding maximal disks                           |3169.36| 13479|180|Simba|1
+2018-12-06 07:50:19,897 -> H.Prunning maximal disks                          |  5.52| 12342|180|Simba|1
+2018-12-06 07:50:19,897 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 07:50:19,897 ->    berlin0-0,   18093, 180.0,    32,  3,3232.91,   85459,    170918,        96496,      12342, -1
+2018-12-06 07:50:19,978 -> Dropping indices...[0.080s]
+2018-12-06 07:50:19,978 -> Finishing MaximalFinder at 07:50:19.978...
+2018-12-06 07:50:19,978 -> Total time for MaximalFinder: 3233.052ms...
+2018-12-06 07:50:20,023 -> Closing session... [0.045s]
+2018-12-06 07:50:24,875 -> Session started [1.757]
+2018-12-06 07:50:28,920 -> Data read [4.043] [18093]
+2018-12-06 07:50:29,735 -> A.Points indexed                                  |  0.82| 18093|180|GeoSpark|1
+2018-12-06 07:50:33,008 -> B.Pairs found                                     |  3.27| 85459|180|GeoSpark|1
+2018-12-06 07:50:33,513 -> C.Centers found                                   |  0.51|170918|180|GeoSpark|1
+2018-12-06 07:50:37,927 -> D.Disks found                                     |  4.41|152791|180|GeoSpark|1
+2018-12-06 07:50:39,924 -> E.Disks indexed                                   |  2.00| 96496|180|GeoSpark|1
+2018-12-06 07:50:42,666 -> F.Expansions gotten                               |  2.74|199923|180|GeoSpark|1
+2018-12-06 08:09:36,613 -> G.Maximal disks found                             |1133.95| 21395|180|GeoSpark|1
+2018-12-06 08:09:43,515 -> H.Maximal disks prunned                           |  6.90| 12341|180|GeoSpark|1
+2018-12-06 08:09:43,564 -> Session closed [0.049]
+2018-12-06 08:09:48,049 -> Starting session... [1.679s]
+2018-12-06 08:09:49,965 -> Reading dataset... [1.914s] [18093 points]
+2018-12-06 08:09:50,049 -> Lauching MaximalFinder at 08:09:49.975...
+2018-12-06 08:09:50,051 -> Setting mu=3,epsilon=180.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 08:10:04,797 -> A.Indexing points                                 | 14.68| 18093|180|Simba|2
+2018-12-06 08:10:16,908 -> B.Getting pairs                                   | 12.11| 85459|180|Simba|2
+2018-12-06 08:10:24,416 -> C.Finding centers                                 |  7.51|170918|180|Simba|2
+2018-12-06 08:10:44,478 -> D.Finding disks                                   |  6.05| 96496|180|Simba|2
+2018-12-06 08:10:45,432 -> E.Indexing disks                                  |  7.01| 96496|180|Simba|2
+2018-12-06 08:10:49,530 -> F.Getting expansions                              |  4.10|858734|180|Simba|2
+2018-12-06 08:59:09,157 -> G.Finding maximal disks                           |2899.63| 13479|180|Simba|2
+2018-12-06 08:59:14,584 -> H.Prunning maximal disks                          |  5.43| 12342|180|Simba|2
+2018-12-06 08:59:14,584 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 08:59:14,584 ->    berlin0-0,   18093, 180.0,    32,  3,2964.47,   85459,    170918,        96496,      12342, -1
+2018-12-06 08:59:14,654 -> Dropping indices...[0.070s]
+2018-12-06 08:59:14,654 -> Finishing MaximalFinder at 08:59:14.654...
+2018-12-06 08:59:14,654 -> Total time for MaximalFinder: 2964.604ms...
+2018-12-06 08:59:14,702 -> Closing session... [0.048s]
+2018-12-06 08:59:19,304 -> Session started [1.746]
+2018-12-06 08:59:22,876 -> Data read [3.572] [18093]
+2018-12-06 08:59:23,647 -> A.Points indexed                                  |  0.77| 18093|180|GeoSpark|2
+2018-12-06 08:59:27,443 -> B.Pairs found                                     |  3.80| 85459|180|GeoSpark|2
+2018-12-06 08:59:27,904 -> C.Centers found                                   |  0.46|170918|180|GeoSpark|2
+2018-12-06 08:59:33,210 -> D.Disks found                                     |  5.31|152791|180|GeoSpark|2
+2018-12-06 08:59:36,153 -> E.Disks indexed                                   |  2.94| 96496|180|GeoSpark|2
+2018-12-06 08:59:41,230 -> F.Expansions gotten                               |  5.08|216750|180|GeoSpark|2
+2018-12-06 09:28:05,678 -> G.Maximal disks found                             |1704.45| 21833|180|GeoSpark|2
+2018-12-06 09:28:14,140 -> H.Maximal disks prunned                           |  8.46| 12341|180|GeoSpark|2
+2018-12-06 09:28:14,221 -> Session closed [0.081]
+2018-12-06 09:28:19,017 -> Starting session... [1.812s]
+2018-12-06 09:28:20,895 -> Reading dataset... [1.878s] [18093 points]
+2018-12-06 09:28:20,949 -> Lauching MaximalFinder at 09:28:20.902...
+2018-12-06 09:28:20,950 -> Setting mu=3,epsilon=180.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 09:28:35,863 -> A.Indexing points                                 | 14.85| 18093|180|Simba|3
+2018-12-06 09:28:47,631 -> B.Getting pairs                                   | 11.77| 85459|180|Simba|3
+2018-12-06 09:28:54,800 -> C.Finding centers                                 |  7.17|170918|180|Simba|3
+2018-12-06 09:29:13,678 -> D.Finding disks                                   |  5.63| 96496|180|Simba|3
+2018-12-06 09:29:14,674 -> E.Indexing disks                                  |  6.63| 96496|180|Simba|3
+2018-12-06 09:29:18,838 -> F.Getting expansions                              |  4.16|858734|180|Simba|3
+2018-12-06 10:23:07,671 -> G.Finding maximal disks                           |3228.83| 13479|180|Simba|3
+2018-12-06 10:23:13,569 -> H.Prunning maximal disks                          |  5.90| 12342|180|Simba|3
+2018-12-06 10:23:13,569 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 10:23:13,569 ->    berlin0-0,   18093, 180.0,    32,  3,3292.56,   85459,    170918,        96496,      12342, -1
+2018-12-06 10:23:13,646 -> Dropping indices...[0.077s]
+2018-12-06 10:23:13,646 -> Finishing MaximalFinder at 10:23:13.646...
+2018-12-06 10:23:13,646 -> Total time for MaximalFinder: 3292.697ms...
+2018-12-06 10:23:13,697 -> Closing session... [0.051s]
+2018-12-06 10:23:17,789 -> Session started [1.845]
+2018-12-06 10:23:21,489 -> Data read [3.699] [18093]
+2018-12-06 10:23:22,388 -> A.Points indexed                                  |  0.90| 18093|180|GeoSpark|3
+2018-12-06 10:23:27,304 -> B.Pairs found                                     |  4.92| 85459|180|GeoSpark|3
+2018-12-06 10:23:27,759 -> C.Centers found                                   |  0.46|170918|180|GeoSpark|3
+2018-12-06 10:23:32,750 -> D.Disks found                                     |  4.99|152791|180|GeoSpark|3
+2018-12-06 10:23:35,041 -> E.Disks indexed                                   |  2.29| 96496|180|GeoSpark|3
+2018-12-06 10:23:38,191 -> F.Expansions gotten                               |  3.15|183917|180|GeoSpark|3
+2018-12-06 10:47:32,012 -> G.Maximal disks found                             |1433.82| 20620|180|GeoSpark|3
+2018-12-06 10:47:39,000 -> H.Maximal disks prunned                           |  6.99| 12341|180|GeoSpark|3
+2018-12-06 10:47:39,049 -> Session closed [0.049]
+2018-12-06 10:47:42,909 -> Starting session... [1.753s]
+2018-12-06 10:47:44,767 -> Reading dataset... [1.858s] [18093 points]
+2018-12-06 10:47:44,805 -> Lauching MaximalFinder at 10:47:44.772...
+2018-12-06 10:47:44,806 -> Setting mu=3,epsilon=180.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 10:48:00,269 -> A.Indexing points                                 | 15.21| 18093|180|Simba|4
+2018-12-06 10:48:12,282 -> B.Getting pairs                                   | 12.01| 85459|180|Simba|4
+2018-12-06 10:48:19,599 -> C.Finding centers                                 |  7.32|170918|180|Simba|4
+2018-12-06 10:48:38,982 -> D.Finding disks                                   |  5.75| 96496|180|Simba|4
+2018-12-06 10:48:39,824 -> E.Indexing disks                                  |  6.59| 96496|180|Simba|4
+2018-12-06 10:48:43,831 -> F.Getting expansions                              |  4.01|858734|180|Simba|4
+2018-12-06 11:41:22,424 -> G.Finding maximal disks                           |3158.59| 13479|180|Simba|4
+2018-12-06 11:41:27,755 -> H.Prunning maximal disks                          |  5.33| 12342|180|Simba|4
+2018-12-06 11:41:27,755 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 11:41:27,755 ->    berlin0-0,   18093, 180.0,    32,  3,3222.70,   85459,    170918,        96496,      12342, -1
+2018-12-06 11:41:27,831 -> Dropping indices...[0.076s]
+2018-12-06 11:41:27,832 -> Finishing MaximalFinder at 11:41:27.831...
+2018-12-06 11:41:27,832 -> Total time for MaximalFinder: 3223.026ms...
+java.util.concurrent.RejectedExecutionException: Task scala.concurrent.impl.CallbackRunnable@51012fc9 rejected from java.util.concurrent.ThreadPoolExecutor@659125d9[Terminated, pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 696]
+	at java.util.concurrent.ThreadPoolExecutor$AbortPolicy.rejectedExecution(ThreadPoolExecutor.java:2063)
+	at java.util.concurrent.ThreadPoolExecutor.reject(ThreadPoolExecutor.java:830)
+	at java.util.concurrent.ThreadPoolExecutor.execute(ThreadPoolExecutor.java:1379)
+	at scala.concurrent.impl.ExecutionContextImpl$$anon$1.execute(ExecutionContextImpl.scala:136)
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248)
+	at scala.concurrent.Promise$class.complete(Promise.scala:55)
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153)
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:326)
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:326)
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32)
+	at org.spark_project.guava.util.concurrent.MoreExecutors$SameThreadExecutorService.execute(MoreExecutors.java:293)
+	at scala.concurrent.impl.ExecutionContextImpl$$anon$1.execute(ExecutionContextImpl.scala:136)
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248)
+	at scala.concurrent.Promise$class.complete(Promise.scala:55)
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153)
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:237)
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:237)
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32)
+	at scala.concurrent.BatchingExecutor$Batch$$anonfun$run$1.processBatch$1(BatchingExecutor.scala:63)
+	at scala.concurrent.BatchingExecutor$Batch$$anonfun$run$1.apply$mcV$sp(BatchingExecutor.scala:78)
+	at scala.concurrent.BatchingExecutor$Batch$$anonfun$run$1.apply(BatchingExecutor.scala:55)
+	at scala.concurrent.BatchingExecutor$Batch$$anonfun$run$1.apply(BatchingExecutor.scala:55)
+	at scala.concurrent.BlockContext$.withBlockContext(BlockContext.scala:72)
+	at scala.concurrent.BatchingExecutor$Batch.run(BatchingExecutor.scala:54)
+	at scala.concurrent.Future$InternalCallbackExecutor$.unbatchedExecute(Future.scala:601)
+	at scala.concurrent.BatchingExecutor$class.execute(BatchingExecutor.scala:106)
+	at scala.concurrent.Future$InternalCallbackExecutor$.execute(Future.scala:599)
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248)
+	at scala.concurrent.Promise$class.tryFailure(Promise.scala:112)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryFailure(Promise.scala:153)
+	at org.apache.spark.rpc.netty.NettyRpcEnv.org$apache$spark$rpc$netty$NettyRpcEnv$$onFailure$1(NettyRpcEnv.scala:205)
+	at org.apache.spark.rpc.netty.NettyRpcEnv$$anonfun$2.apply(NettyRpcEnv.scala:228)
+	at org.apache.spark.rpc.netty.NettyRpcEnv$$anonfun$2.apply(NettyRpcEnv.scala:228)
+	at org.apache.spark.rpc.netty.RpcOutboxMessage.onFailure(Outbox.scala:75)
+	at org.apache.spark.network.client.TransportResponseHandler.failOutstandingRequests(TransportResponseHandler.java:110)
+	at org.apache.spark.network.client.TransportResponseHandler.channelInactive(TransportResponseHandler.java:128)
+	at org.apache.spark.network.server.TransportChannelHandler.channelInactive(TransportChannelHandler.java:109)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:230)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelInactive(ChannelInboundHandlerAdapter.java:75)
+	at io.netty.handler.timeout.IdleStateHandler.channelInactive(IdleStateHandler.java:257)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:230)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelInactive(ChannelInboundHandlerAdapter.java:75)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:230)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelInactive(ChannelInboundHandlerAdapter.java:75)
+	at org.apache.spark.network.util.TransportFrameDecoder.channelInactive(TransportFrameDecoder.java:182)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:230)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelInactive(DefaultChannelPipeline.java:1289)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelInactive(DefaultChannelPipeline.java:893)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe$7.run(AbstractChannel.java:691)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:376)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.confirmShutdown(SingleThreadEventExecutor.java:680)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:465)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$2.run(SingleThreadEventExecutor.java:140)
+	at io.netty.util.concurrent.DefaultThreadFactory$DefaultRunnableDecorator.run(DefaultThreadFactory.java:144)
+	at java.lang.Thread.run(Thread.java:748)
+java.util.concurrent.RejectedExecutionException: Task scala.concurrent.impl.CallbackRunnable@438dda59 rejected from java.util.concurrent.ThreadPoolExecutor@659125d9[Terminated, pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 696]
+	at java.util.concurrent.ThreadPoolExecutor$AbortPolicy.rejectedExecution(ThreadPoolExecutor.java:2063)
+	at java.util.concurrent.ThreadPoolExecutor.reject(ThreadPoolExecutor.java:830)
+	at java.util.concurrent.ThreadPoolExecutor.execute(ThreadPoolExecutor.java:1379)
+	at scala.concurrent.impl.ExecutionContextImpl$$anon$1.execute(ExecutionContextImpl.scala:136)
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248)
+	at scala.concurrent.Promise$class.complete(Promise.scala:55)
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153)
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:326)
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:326)
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32)
+	at org.spark_project.guava.util.concurrent.MoreExecutors$SameThreadExecutorService.execute(MoreExecutors.java:293)
+	at scala.concurrent.impl.ExecutionContextImpl$$anon$1.execute(ExecutionContextImpl.scala:136)
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248)
+	at scala.concurrent.Promise$class.complete(Promise.scala:55)
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153)
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:237)
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:237)
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32)
+	at scala.concurrent.BatchingExecutor$Batch$$anonfun$run$1.processBatch$1(BatchingExecutor.scala:63)
+	at scala.concurrent.BatchingExecutor$Batch$$anonfun$run$1.apply$mcV$sp(BatchingExecutor.scala:78)
+	at scala.concurrent.BatchingExecutor$Batch$$anonfun$run$1.apply(BatchingExecutor.scala:55)
+	at scala.concurrent.BatchingExecutor$Batch$$anonfun$run$1.apply(BatchingExecutor.scala:55)
+	at scala.concurrent.BlockContext$.withBlockContext(BlockContext.scala:72)
+	at scala.concurrent.BatchingExecutor$Batch.run(BatchingExecutor.scala:54)
+	at scala.concurrent.Future$InternalCallbackExecutor$.unbatchedExecute(Future.scala:601)
+	at scala.concurrent.BatchingExecutor$class.execute(BatchingExecutor.scala:106)
+	at scala.concurrent.Future$InternalCallbackExecutor$.execute(Future.scala:599)
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248)
+	at scala.concurrent.Promise$class.tryFailure(Promise.scala:112)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryFailure(Promise.scala:153)
+	at org.apache.spark.rpc.netty.NettyRpcEnv.org$apache$spark$rpc$netty$NettyRpcEnv$$onFailure$1(NettyRpcEnv.scala:205)
+	at org.apache.spark.rpc.netty.NettyRpcEnv$$anonfun$2.apply(NettyRpcEnv.scala:228)
+	at org.apache.spark.rpc.netty.NettyRpcEnv$$anonfun$2.apply(NettyRpcEnv.scala:228)
+	at org.apache.spark.rpc.netty.RpcOutboxMessage.onFailure(Outbox.scala:75)
+	at org.apache.spark.network.client.TransportResponseHandler.failOutstandingRequests(TransportResponseHandler.java:110)
+	at org.apache.spark.network.client.TransportResponseHandler.channelInactive(TransportResponseHandler.java:128)
+	at org.apache.spark.network.server.TransportChannelHandler.channelInactive(TransportChannelHandler.java:109)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:230)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelInactive(ChannelInboundHandlerAdapter.java:75)
+	at io.netty.handler.timeout.IdleStateHandler.channelInactive(IdleStateHandler.java:257)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:230)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelInactive(ChannelInboundHandlerAdapter.java:75)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:230)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelInactive(ChannelInboundHandlerAdapter.java:75)
+	at org.apache.spark.network.util.TransportFrameDecoder.channelInactive(TransportFrameDecoder.java:182)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:230)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelInactive(DefaultChannelPipeline.java:1289)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelInactive(DefaultChannelPipeline.java:893)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe$7.run(AbstractChannel.java:691)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:376)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.confirmShutdown(SingleThreadEventExecutor.java:680)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:465)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$2.run(SingleThreadEventExecutor.java:140)
+	at io.netty.util.concurrent.DefaultThreadFactory$DefaultRunnableDecorator.run(DefaultThreadFactory.java:144)
+	at java.lang.Thread.run(Thread.java:748)
+java.util.concurrent.RejectedExecutionException: Task scala.concurrent.impl.CallbackRunnable@77f98bd7 rejected from java.util.concurrent.ThreadPoolExecutor@659125d9[Terminated, pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 696]
+	at java.util.concurrent.ThreadPoolExecutor$AbortPolicy.rejectedExecution(ThreadPoolExecutor.java:2063)
+	at java.util.concurrent.ThreadPoolExecutor.reject(ThreadPoolExecutor.java:830)
+	at java.util.concurrent.ThreadPoolExecutor.execute(ThreadPoolExecutor.java:1379)
+	at scala.concurrent.impl.ExecutionContextImpl$$anon$1.execute(ExecutionContextImpl.scala:136)
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248)
+	at scala.concurrent.Promise$class.complete(Promise.scala:55)
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153)
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:326)
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:326)
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32)
+	at org.spark_project.guava.util.concurrent.MoreExecutors$SameThreadExecutorService.execute(MoreExecutors.java:293)
+	at scala.concurrent.impl.ExecutionContextImpl$$anon$1.execute(ExecutionContextImpl.scala:136)
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248)
+	at scala.concurrent.Promise$class.complete(Promise.scala:55)
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153)
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:237)
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:237)
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32)
+	at scala.concurrent.BatchingExecutor$Batch$$anonfun$run$1.processBatch$1(BatchingExecutor.scala:63)
+	at scala.concurrent.BatchingExecutor$Batch$$anonfun$run$1.apply$mcV$sp(BatchingExecutor.scala:78)
+	at scala.concurrent.BatchingExecutor$Batch$$anonfun$run$1.apply(BatchingExecutor.scala:55)
+	at scala.concurrent.BatchingExecutor$Batch$$anonfun$run$1.apply(BatchingExecutor.scala:55)
+	at scala.concurrent.BlockContext$.withBlockContext(BlockContext.scala:72)
+	at scala.concurrent.BatchingExecutor$Batch.run(BatchingExecutor.scala:54)
+	at scala.concurrent.Future$InternalCallbackExecutor$.unbatchedExecute(Future.scala:601)
+	at scala.concurrent.BatchingExecutor$class.execute(BatchingExecutor.scala:106)
+	at scala.concurrent.Future$InternalCallbackExecutor$.execute(Future.scala:599)
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248)
+	at scala.concurrent.Promise$class.tryFailure(Promise.scala:112)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryFailure(Promise.scala:153)
+	at org.apache.spark.rpc.netty.NettyRpcEnv.org$apache$spark$rpc$netty$NettyRpcEnv$$onFailure$1(NettyRpcEnv.scala:205)
+	at org.apache.spark.rpc.netty.NettyRpcEnv$$anonfun$2.apply(NettyRpcEnv.scala:228)
+	at org.apache.spark.rpc.netty.NettyRpcEnv$$anonfun$2.apply(NettyRpcEnv.scala:228)
+	at org.apache.spark.rpc.netty.RpcOutboxMessage.onFailure(Outbox.scala:75)
+	at org.apache.spark.network.client.TransportResponseHandler.failOutstandingRequests(TransportResponseHandler.java:110)
+	at org.apache.spark.network.client.TransportResponseHandler.channelInactive(TransportResponseHandler.java:128)
+	at org.apache.spark.network.server.TransportChannelHandler.channelInactive(TransportChannelHandler.java:109)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:230)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelInactive(ChannelInboundHandlerAdapter.java:75)
+	at io.netty.handler.timeout.IdleStateHandler.channelInactive(IdleStateHandler.java:257)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:230)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelInactive(ChannelInboundHandlerAdapter.java:75)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:230)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelInactive(ChannelInboundHandlerAdapter.java:75)
+	at org.apache.spark.network.util.TransportFrameDecoder.channelInactive(TransportFrameDecoder.java:182)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:230)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelInactive(DefaultChannelPipeline.java:1289)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelInactive(DefaultChannelPipeline.java:893)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe$7.run(AbstractChannel.java:691)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:376)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.confirmShutdown(SingleThreadEventExecutor.java:680)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:465)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$2.run(SingleThreadEventExecutor.java:140)
+	at io.netty.util.concurrent.DefaultThreadFactory$DefaultRunnableDecorator.run(DefaultThreadFactory.java:144)
+	at java.lang.Thread.run(Thread.java:748)
+java.util.concurrent.RejectedExecutionException: Task scala.concurrent.impl.CallbackRunnable@79262606 rejected from java.util.concurrent.ThreadPoolExecutor@659125d9[Terminated, pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 696]
+	at java.util.concurrent.ThreadPoolExecutor$AbortPolicy.rejectedExecution(ThreadPoolExecutor.java:2063)
+	at java.util.concurrent.ThreadPoolExecutor.reject(ThreadPoolExecutor.java:830)
+	at java.util.concurrent.ThreadPoolExecutor.execute(ThreadPoolExecutor.java:1379)
+	at scala.concurrent.impl.ExecutionContextImpl$$anon$1.execute(ExecutionContextImpl.scala:136)
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248)
+	at scala.concurrent.Promise$class.complete(Promise.scala:55)
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153)
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:326)
+	at scala.concurrent.Future$$anonfun$recover$1.apply(Future.scala:326)
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32)
+	at org.spark_project.guava.util.concurrent.MoreExecutors$SameThreadExecutorService.execute(MoreExecutors.java:293)
+	at scala.concurrent.impl.ExecutionContextImpl$$anon$1.execute(ExecutionContextImpl.scala:136)
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248)
+	at scala.concurrent.Promise$class.complete(Promise.scala:55)
+	at scala.concurrent.impl.Promise$DefaultPromise.complete(Promise.scala:153)
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:237)
+	at scala.concurrent.Future$$anonfun$map$1.apply(Future.scala:237)
+	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:32)
+	at scala.concurrent.BatchingExecutor$Batch$$anonfun$run$1.processBatch$1(BatchingExecutor.scala:63)
+	at scala.concurrent.BatchingExecutor$Batch$$anonfun$run$1.apply$mcV$sp(BatchingExecutor.scala:78)
+	at scala.concurrent.BatchingExecutor$Batch$$anonfun$run$1.apply(BatchingExecutor.scala:55)
+	at scala.concurrent.BatchingExecutor$Batch$$anonfun$run$1.apply(BatchingExecutor.scala:55)
+	at scala.concurrent.BlockContext$.withBlockContext(BlockContext.scala:72)
+	at scala.concurrent.BatchingExecutor$Batch.run(BatchingExecutor.scala:54)
+	at scala.concurrent.Future$InternalCallbackExecutor$.unbatchedExecute(Future.scala:601)
+	at scala.concurrent.BatchingExecutor$class.execute(BatchingExecutor.scala:106)
+	at scala.concurrent.Future$InternalCallbackExecutor$.execute(Future.scala:599)
+	at scala.concurrent.impl.CallbackRunnable.executeWithValue(Promise.scala:40)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:248)
+	at scala.concurrent.Promise$class.tryFailure(Promise.scala:112)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryFailure(Promise.scala:153)
+	at org.apache.spark.rpc.netty.NettyRpcEnv.org$apache$spark$rpc$netty$NettyRpcEnv$$onFailure$1(NettyRpcEnv.scala:205)
+	at org.apache.spark.rpc.netty.NettyRpcEnv$$anonfun$2.apply(NettyRpcEnv.scala:228)
+	at org.apache.spark.rpc.netty.NettyRpcEnv$$anonfun$2.apply(NettyRpcEnv.scala:228)
+	at org.apache.spark.rpc.netty.RpcOutboxMessage.onFailure(Outbox.scala:75)
+	at org.apache.spark.network.client.TransportResponseHandler.failOutstandingRequests(TransportResponseHandler.java:110)
+	at org.apache.spark.network.client.TransportResponseHandler.channelInactive(TransportResponseHandler.java:128)
+	at org.apache.spark.network.server.TransportChannelHandler.channelInactive(TransportChannelHandler.java:109)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:230)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelInactive(ChannelInboundHandlerAdapter.java:75)
+	at io.netty.handler.timeout.IdleStateHandler.channelInactive(IdleStateHandler.java:257)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:230)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelInactive(ChannelInboundHandlerAdapter.java:75)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:230)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelInactive(ChannelInboundHandlerAdapter.java:75)
+	at org.apache.spark.network.util.TransportFrameDecoder.channelInactive(TransportFrameDecoder.java:182)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:230)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelInactive(DefaultChannelPipeline.java:1289)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:237)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelInactive(DefaultChannelPipeline.java:893)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe$7.run(AbstractChannel.java:691)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:376)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.confirmShutdown(SingleThreadEventExecutor.java:680)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:465)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$2.run(SingleThreadEventExecutor.java:140)
+	at io.netty.util.concurrent.DefaultThreadFactory$DefaultRunnableDecorator.run(DefaultThreadFactory.java:144)
+	at java.lang.Thread.run(Thread.java:748)
+2018-12-06 11:41:27,897 -> Closing session... [0.065s]
+2018-12-06 11:41:32,744 -> Session started [1.862]
+2018-12-06 11:41:36,686 -> Data read [3.94] [18093]
+2018-12-06 11:41:37,444 -> A.Points indexed                                  |  0.76| 18093|180|GeoSpark|4
+2018-12-06 11:41:41,210 -> B.Pairs found                                     |  3.77| 85459|180|GeoSpark|4
+2018-12-06 11:41:41,853 -> C.Centers found                                   |  0.64|170918|180|GeoSpark|4
+2018-12-06 11:41:47,092 -> D.Disks found                                     |  5.24|152791|180|GeoSpark|4
+2018-12-06 11:41:49,124 -> E.Disks indexed                                   |  2.03| 96496|180|GeoSpark|4
+2018-12-06 11:41:51,284 -> F.Expansions gotten                               |  2.16|194640|180|GeoSpark|4
+2018-12-06 12:00:12,195 -> G.Maximal disks found                             |1100.91| 21040|180|GeoSpark|4
+2018-12-06 12:00:20,021 -> H.Maximal disks prunned                           |  7.83| 12341|180|GeoSpark|4
+2018-12-06 12:00:20,069 -> Session closed [0.048]
+2018-12-06 12:00:23,792 -> Starting session... [1.608s]
+2018-12-06 12:00:25,626 -> Reading dataset... [1.834s] [18093 points]
+2018-12-06 12:00:25,674 -> Lauching MaximalFinder at 12:00:25.631...
+2018-12-06 12:00:25,675 -> Setting mu=3,epsilon=180.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 12:00:40,625 -> A.Indexing points                                 | 14.89| 18093|180|Simba|5
+2018-12-06 12:00:52,556 -> B.Getting pairs                                   | 11.93| 85459|180|Simba|5
+2018-12-06 12:00:59,927 -> C.Finding centers                                 |  7.37|170918|180|Simba|5
+2018-12-06 12:01:18,308 -> D.Finding disks                                   |  5.71| 96496|180|Simba|5
+2018-12-06 12:01:19,264 -> E.Indexing disks                                  |  6.66| 96496|180|Simba|5
+2018-12-06 12:01:23,094 -> F.Getting expansions                              |  3.83|858734|180|Simba|5
+2018-12-06 12:53:50,107 -> G.Finding maximal disks                           |3147.01| 13479|180|Simba|5
+2018-12-06 12:53:55,784 -> H.Prunning maximal disks                          |  5.68| 12342|180|Simba|5
+2018-12-06 12:53:55,784 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 12:53:55,784 ->    berlin0-0,   18093, 180.0,    32,  3,3210.05,   85459,    170918,        96496,      12342, -1
+2018-12-06 12:53:55,859 -> Dropping indices...[0.075s]
+2018-12-06 12:53:55,859 -> Finishing MaximalFinder at 12:53:55.859...
+2018-12-06 12:53:55,859 -> Total time for MaximalFinder: 3210.185ms...
+2018-12-06 12:53:55,920 -> Closing session... [0.061s]
+2018-12-06 12:54:00,665 -> Session started [1.665]
+2018-12-06 12:54:04,289 -> Data read [3.622] [18093]
+2018-12-06 12:54:05,144 -> A.Points indexed                                  |  0.85| 18093|180|GeoSpark|5
+2018-12-06 12:54:09,073 -> B.Pairs found                                     |  3.93| 85459|180|GeoSpark|5
+2018-12-06 12:54:09,648 -> C.Centers found                                   |  0.57|170918|180|GeoSpark|5
+2018-12-06 12:54:14,903 -> D.Disks found                                     |  5.25|152791|180|GeoSpark|5
+2018-12-06 12:54:18,015 -> E.Disks indexed                                   |  3.11| 96496|180|GeoSpark|5
+2018-12-06 12:54:22,411 -> F.Expansions gotten                               |  4.40|215893|180|GeoSpark|5
+2018-12-06 13:21:38,856 -> G.Maximal disks found                             |1636.45| 21987|180|GeoSpark|5
+2018-12-06 13:21:46,761 -> H.Maximal disks prunned                           |  7.91| 12341|180|GeoSpark|5
+2018-12-06 13:21:46,829 -> Session closed [0.068]
+2018-12-06 13:21:50,685 -> Starting session... [1.841s]
+2018-12-06 13:21:52,526 -> Reading dataset... [1.841s] [18093 points]
+2018-12-06 13:21:52,567 -> Lauching MaximalFinder at 13:21:52.533...
+2018-12-06 13:21:52,568 -> Setting mu=3,epsilon=190.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 13:22:07,077 -> A.Indexing points                                 | 14.30| 18093|190|Simba|1
+2018-12-06 13:22:18,775 -> B.Getting pairs                                   | 11.70| 93350|190|Simba|1
+2018-12-06 13:22:26,395 -> C.Finding centers                                 |  7.62|186700|190|Simba|1
+2018-12-06 13:22:44,935 -> D.Finding disks                                   |  5.39|107235|190|Simba|1
+2018-12-06 13:22:46,067 -> E.Indexing disks                                  |  6.52|107235|190|Simba|1
+2018-12-06 13:22:50,626 -> F.Getting expansions                              |  4.56|1001532|190|Simba|1
+2018-12-06 14:45:33,495 -> G.Finding maximal disks                           |4962.87| 14710|190|Simba|1
+2018-12-06 14:45:39,724 -> H.Prunning maximal disks                          |  6.23| 13367|190|Simba|1
+2018-12-06 14:45:39,724 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 14:45:39,725 ->    berlin0-0,   18093, 190.0,    32,  3,5026.95,   93350,    186700,       107235,      13367, -1
+2018-12-06 14:45:39,877 -> Dropping indices...[0.152s]
+2018-12-06 14:45:39,877 -> Finishing MaximalFinder at 14:45:39.877...
+2018-12-06 14:45:39,877 -> Total time for MaximalFinder: 5027.309ms...
+2018-12-06 14:45:40,080 -> Closing session... [0.203s]
+2018-12-06 14:45:45,618 -> Session started [1.819]
+2018-12-06 14:45:49,654 -> Data read [4.036] [18093]
+2018-12-06 14:45:50,374 -> A.Points indexed                                  |  0.72| 18093|190|GeoSpark|1
+2018-12-06 14:45:54,543 -> B.Pairs found                                     |  4.17| 93350|190|GeoSpark|1
+2018-12-06 14:45:55,024 -> C.Centers found                                   |  0.48|186700|190|GeoSpark|1
+2018-12-06 14:46:00,099 -> D.Disks found                                     |  5.08|169372|190|GeoSpark|1
+2018-12-06 14:46:02,314 -> E.Disks indexed                                   |  2.22|107235|190|GeoSpark|1
+2018-12-06 14:46:05,072 -> F.Expansions gotten                               |  2.76|200680|190|GeoSpark|1
+2018-12-06 15:26:06,598 -> G.Maximal disks found                             |2401.53| 22469|190|GeoSpark|1
+2018-12-06 15:26:13,210 -> H.Maximal disks prunned                           |  6.61| 13365|190|GeoSpark|1
+2018-12-06 15:26:13,285 -> Session closed [0.075]
+2018-12-06 15:26:17,149 -> Starting session... [1.780s]
+2018-12-06 15:26:19,058 -> Reading dataset... [1.908s] [18093 points]
+2018-12-06 15:26:19,133 -> Lauching MaximalFinder at 15:26:19.076...
+2018-12-06 15:26:19,134 -> Setting mu=3,epsilon=190.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 15:26:33,522 -> A.Indexing points                                 | 14.12| 18093|190|Simba|2
+2018-12-06 15:26:45,396 -> B.Getting pairs                                   | 11.87| 93350|190|Simba|2
+2018-12-06 15:26:52,808 -> C.Finding centers                                 |  7.41|186700|190|Simba|2
+2018-12-06 15:27:11,830 -> D.Finding disks                                   |  5.96|107235|190|Simba|2
+2018-12-06 15:27:12,925 -> E.Indexing disks                                  |  7.05|107235|190|Simba|2
+2018-12-06 15:27:17,345 -> F.Getting expansions                              |  4.42|1001532|190|Simba|2
+2018-12-06 16:50:01,631 -> G.Finding maximal disks                           |4964.29| 14710|190|Simba|2
+2018-12-06 16:50:07,701 -> H.Prunning maximal disks                          |  6.07| 13367|190|Simba|2
+2018-12-06 16:50:07,701 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 16:50:07,701 ->    berlin0-0,   18093, 190.0,    32,  3,5028.30,   93350,    186700,       107235,      13367, -1
+2018-12-06 16:50:07,778 -> Dropping indices...[0.077s]
+2018-12-06 16:50:07,778 -> Finishing MaximalFinder at 16:50:07.778...
+2018-12-06 16:50:07,778 -> Total time for MaximalFinder: 5028.645ms...
+2018-12-06 16:50:07,830 -> Closing session... [0.052s]
+2018-12-06 16:50:11,803 -> Session started [1.62]
+2018-12-06 16:50:15,629 -> Data read [3.826] [18093]
+2018-12-06 16:50:16,422 -> A.Points indexed                                  |  0.79| 18093|190|GeoSpark|2
+2018-12-06 16:50:20,167 -> B.Pairs found                                     |  3.74| 93350|190|GeoSpark|2
+2018-12-06 16:50:20,811 -> C.Centers found                                   |  0.64|186700|190|GeoSpark|2
+2018-12-06 16:50:25,503 -> D.Disks found                                     |  4.69|169372|190|GeoSpark|2
+2018-12-06 16:50:27,444 -> E.Disks indexed                                   |  1.94|107235|190|GeoSpark|2
+2018-12-06 16:50:30,237 -> F.Expansions gotten                               |  2.79|204226|190|GeoSpark|2
+2018-12-06 17:30:49,977 -> G.Maximal disks found                             |2419.74| 22710|190|GeoSpark|2
+2018-12-06 17:30:56,658 -> H.Maximal disks prunned                           |  6.68| 13365|190|GeoSpark|2
+2018-12-06 17:30:56,702 -> Session closed [0.044]
+2018-12-06 17:31:01,102 -> Starting session... [1.601s]
+2018-12-06 17:31:02,892 -> Reading dataset... [1.789s] [18093 points]
+2018-12-06 17:31:02,931 -> Lauching MaximalFinder at 17:31:02.898...
+2018-12-06 17:31:02,932 -> Setting mu=3,epsilon=190.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 17:31:17,630 -> A.Indexing points                                 | 14.64| 18093|190|Simba|3
+2018-12-06 17:31:29,355 -> B.Getting pairs                                   | 11.72| 93350|190|Simba|3
+2018-12-06 17:31:37,169 -> C.Finding centers                                 |  7.81|186700|190|Simba|3
+2018-12-06 17:31:56,459 -> D.Finding disks                                   |  6.26|107235|190|Simba|3
+2018-12-06 17:31:57,416 -> E.Indexing disks                                  |  7.21|107235|190|Simba|3
+2018-12-06 17:32:01,882 -> F.Getting expansions                              |  4.47|1001532|190|Simba|3
+2018-12-06 18:50:27,110 -> G.Finding maximal disks                           |4705.23| 14710|190|Simba|3
+2018-12-06 18:50:33,050 -> H.Prunning maximal disks                          |  5.94| 13367|190|Simba|3
+2018-12-06 18:50:33,050 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 18:50:33,051 ->    berlin0-0,   18093, 190.0,    32,  3,4770.06,   93350,    186700,       107235,      13367, -1
+2018-12-06 18:50:33,131 -> Dropping indices...[0.080s]
+2018-12-06 18:50:33,131 -> Finishing MaximalFinder at 18:50:33.131...
+2018-12-06 18:50:33,131 -> Total time for MaximalFinder: 4770.200ms...
+2018-12-06 18:50:33,175 -> Closing session... [0.044s]
+2018-12-06 18:50:36,937 -> Session started [1.505]
+2018-12-06 18:50:40,593 -> Data read [3.656] [18093]
+2018-12-06 18:50:41,296 -> A.Points indexed                                  |  0.70| 18093|190|GeoSpark|3
+2018-12-06 18:50:45,095 -> B.Pairs found                                     |  3.80| 93350|190|GeoSpark|3
+2018-12-06 18:50:45,592 -> C.Centers found                                   |  0.50|186700|190|GeoSpark|3
+2018-12-06 18:50:51,169 -> D.Disks found                                     |  5.58|169372|190|GeoSpark|3
+2018-12-06 18:50:53,057 -> E.Disks indexed                                   |  1.89|107235|190|GeoSpark|3
+2018-12-06 18:50:55,933 -> F.Expansions gotten                               |  2.88|228211|190|GeoSpark|3
+2018-12-06 19:30:44,479 -> G.Maximal disks found                             |2388.55| 23597|190|GeoSpark|3
+2018-12-06 19:30:51,249 -> H.Maximal disks prunned                           |  6.77| 13365|190|GeoSpark|3
+2018-12-06 19:30:51,300 -> Session closed [0.051]
+2018-12-06 19:30:54,915 -> Starting session... [1.653s]
+2018-12-06 19:30:56,704 -> Reading dataset... [1.788s] [18093 points]
+2018-12-06 19:30:56,740 -> Lauching MaximalFinder at 19:30:56.708...
+2018-12-06 19:30:56,741 -> Setting mu=3,epsilon=190.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 19:31:11,446 -> A.Indexing points                                 | 14.46| 18093|190|Simba|4
+2018-12-06 19:31:23,266 -> B.Getting pairs                                   | 11.82| 93350|190|Simba|4
+2018-12-06 19:31:31,037 -> C.Finding centers                                 |  7.77|186700|190|Simba|4
+2018-12-06 19:31:50,611 -> D.Finding disks                                   |  5.42|107235|190|Simba|4
+2018-12-06 19:31:51,593 -> E.Indexing disks                                  |  6.41|107235|190|Simba|4
+2018-12-06 19:31:56,024 -> F.Getting expansions                              |  4.43|1001532|190|Simba|4
+2018-12-06 20:56:24,745 -> G.Finding maximal disks                           |5068.72| 14710|190|Simba|4
+2018-12-06 20:56:30,206 -> H.Prunning maximal disks                          |  5.46| 13367|190|Simba|4
+2018-12-06 20:56:30,206 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 20:56:30,206 ->    berlin0-0,   18093, 190.0,    32,  3,5133.22,   93350,    186700,       107235,      13367, -1
+2018-12-06 20:56:30,277 -> Dropping indices...[0.071s]
+2018-12-06 20:56:30,277 -> Finishing MaximalFinder at 20:56:30.277...
+2018-12-06 20:56:30,277 -> Total time for MaximalFinder: 5133.537ms...
+2018-12-06 20:56:30,340 -> Closing session... [0.062s]
+2018-12-06 20:56:34,343 -> Session started [1.651]
+2018-12-06 20:56:38,045 -> Data read [3.702] [18093]
+2018-12-06 20:56:38,788 -> A.Points indexed                                  |  0.74| 18093|190|GeoSpark|4
+2018-12-06 20:56:41,922 -> B.Pairs found                                     |  3.13| 93350|190|GeoSpark|4
+2018-12-06 20:56:42,238 -> C.Centers found                                   |  0.32|186700|190|GeoSpark|4
+2018-12-06 20:56:46,089 -> D.Disks found                                     |  3.85|169372|190|GeoSpark|4
+2018-12-06 20:56:47,952 -> E.Disks indexed                                   |  1.86|107235|190|GeoSpark|4
+2018-12-06 20:56:50,981 -> F.Expansions gotten                               |  3.03|203787|190|GeoSpark|4
+2018-12-06 21:37:25,451 -> G.Maximal disks found                             |2434.47| 22625|190|GeoSpark|4
+2018-12-06 21:37:33,794 -> H.Maximal disks prunned                           |  8.34| 13365|190|GeoSpark|4
+2018-12-06 21:37:33,855 -> Session closed [0.061]
+2018-12-06 21:37:38,511 -> Starting session... [1.836s]
+2018-12-06 21:37:41,035 -> Reading dataset... [2.524s] [18093 points]
+2018-12-06 21:37:41,076 -> Lauching MaximalFinder at 21:37:41.039...
+2018-12-06 21:37:41,077 -> Setting mu=3,epsilon=190.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 21:37:55,959 -> A.Indexing points                                 | 14.82| 18093|190|Simba|5
+2018-12-06 21:38:07,735 -> B.Getting pairs                                   | 11.78| 93350|190|Simba|5
+2018-12-06 21:38:14,881 -> C.Finding centers                                 |  7.15|186700|190|Simba|5
+2018-12-06 21:38:33,451 -> D.Finding disks                                   |  5.80|107235|190|Simba|5
+2018-12-06 21:38:34,578 -> E.Indexing disks                                  |  6.93|107235|190|Simba|5
+2018-12-06 21:38:39,097 -> F.Getting expansions                              |  4.52|1001532|190|Simba|5
+2018-12-06 23:00:21,048 -> G.Finding maximal disks                           |4901.95| 14710|190|Simba|5
+2018-12-06 23:00:27,861 -> H.Prunning maximal disks                          |  6.81| 13367|190|Simba|5
+2018-12-06 23:00:27,861 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-06 23:00:27,861 ->    berlin0-0,   18093, 190.0,    32,  3,4966.73,   93350,    186700,       107235,      13367, -1
+2018-12-06 23:00:27,940 -> Dropping indices...[0.079s]
+2018-12-06 23:00:27,940 -> Finishing MaximalFinder at 23:00:27.940...
+2018-12-06 23:00:27,940 -> Total time for MaximalFinder: 4966.864ms...
+2018-12-06 23:00:28,015 -> Closing session... [0.074s]
+2018-12-06 23:00:32,483 -> Session started [1.608]
+2018-12-06 23:00:36,208 -> Data read [3.725] [18093]
+2018-12-06 23:00:36,937 -> A.Points indexed                                  |  0.73| 18093|190|GeoSpark|5
+2018-12-06 23:00:40,486 -> B.Pairs found                                     |  3.55| 93350|190|GeoSpark|5
+2018-12-06 23:00:40,924 -> C.Centers found                                   |  0.44|186700|190|GeoSpark|5
+2018-12-06 23:00:46,071 -> D.Disks found                                     |  5.15|169372|190|GeoSpark|5
+2018-12-06 23:00:47,979 -> E.Disks indexed                                   |  1.91|107235|190|GeoSpark|5
+2018-12-06 23:00:50,847 -> F.Expansions gotten                               |  2.87|200479|190|GeoSpark|5
+2018-12-06 23:40:48,269 -> G.Maximal disks found                             |2397.42| 22256|190|GeoSpark|5
+2018-12-06 23:40:55,452 -> H.Maximal disks prunned                           |  7.18| 13365|190|GeoSpark|5
+2018-12-06 23:40:55,504 -> Session closed [0.052]
+2018-12-06 23:40:59,421 -> Starting session... [1.689s]
+2018-12-06 23:41:01,462 -> Reading dataset... [2.040s] [18093 points]
+2018-12-06 23:41:01,502 -> Lauching MaximalFinder at 23:41:01.469...
+2018-12-06 23:41:01,504 -> Setting mu=3,epsilon=200.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-06 23:41:15,665 -> A.Indexing points                                 | 14.10| 18093|200|Simba|1
+2018-12-06 23:41:26,938 -> B.Getting pairs                                   | 11.27|101436|200|Simba|1
+2018-12-06 23:41:34,783 -> C.Finding centers                                 |  7.84|202872|200|Simba|1
+2018-12-06 23:41:54,232 -> D.Finding disks                                   |  6.00|118263|200|Simba|1
+2018-12-06 23:41:55,283 -> E.Indexing disks                                  |  7.05|118263|200|Simba|1
+2018-12-06 23:42:00,281 -> F.Getting expansions                              |  5.00|1168148|200|Simba|1
+2018-12-07 01:54:36,050 -> G.Finding maximal disks                           |7955.77| 15889|200|Simba|1
+2018-12-07 01:54:42,868 -> H.Prunning maximal disks                          |  6.82| 14282|200|Simba|1
+2018-12-07 01:54:42,869 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-07 01:54:42,869 ->    berlin0-0,   18093, 200.0,    32,  3,8021.31,  101436,    202872,       118263,      14282, -1
+2018-12-07 01:54:42,944 -> Dropping indices...[0.075s]
+2018-12-07 01:54:42,945 -> Finishing MaximalFinder at 01:54:42.944...
+2018-12-07 01:54:42,945 -> Total time for MaximalFinder: 8021.442ms...
+2018-12-07 01:54:43,000 -> Closing session... [0.055s]
+2018-12-07 01:54:46,869 -> Session started [1.734]
+2018-12-07 01:54:50,487 -> Data read [3.618] [18093]
+2018-12-07 01:54:51,222 -> A.Points indexed                                  |  0.73| 18093|200|GeoSpark|1
+2018-12-07 01:54:55,490 -> B.Pairs found                                     |  4.27|101436|200|GeoSpark|1
+2018-12-07 01:54:56,001 -> C.Centers found                                   |  0.51|202872|200|GeoSpark|1
+2018-12-07 01:55:02,340 -> D.Disks found                                     |  6.34|186329|200|GeoSpark|1
+2018-12-07 01:55:06,322 -> E.Disks indexed                                   |  3.98|118263|200|GeoSpark|1
+2018-12-07 01:55:11,219 -> F.Expansions gotten                               |  4.90|226902|200|GeoSpark|1
+2018-12-07 03:06:00,939 -> G.Maximal disks found                             |4249.72| 24705|200|GeoSpark|1
+2018-12-07 03:06:08,797 -> H.Maximal disks prunned                           |  7.86| 14280|200|GeoSpark|1
+2018-12-07 03:06:08,849 -> Session closed [0.052]
+2018-12-07 03:06:13,264 -> Starting session... [1.638s]
+2018-12-07 03:06:15,106 -> Reading dataset... [1.842s] [18093 points]
+2018-12-07 03:06:15,147 -> Lauching MaximalFinder at 03:06:15.113...
+2018-12-07 03:06:15,148 -> Setting mu=3,epsilon=200.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-07 03:06:30,390 -> A.Indexing points                                 | 15.17| 18093|200|Simba|2
+2018-12-07 03:06:42,663 -> B.Getting pairs                                   | 12.27|101436|200|Simba|2
+2018-12-07 03:06:50,467 -> C.Finding centers                                 |  7.80|202872|200|Simba|2
+2018-12-07 03:07:09,637 -> D.Finding disks                                   |  5.71|118263|200|Simba|2
+2018-12-07 03:07:10,796 -> E.Indexing disks                                  |  6.87|118263|200|Simba|2
+2018-12-07 03:07:15,543 -> F.Getting expansions                              |  4.75|1168148|200|Simba|2
+2018-12-07 05:15:08,779 -> G.Finding maximal disks                           |7673.24| 15889|200|Simba|2
+2018-12-07 05:15:15,432 -> H.Prunning maximal disks                          |  6.61| 14282|200|Simba|2
+2018-12-07 05:15:15,432 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-07 05:15:15,432 ->    berlin0-0,   18093, 200.0,    32,  3,7740.22,  101436,    202872,       118263,      14282, -1
+2018-12-07 05:15:15,551 -> Dropping indices...[0.119s]
+2018-12-07 05:15:15,552 -> Finishing MaximalFinder at 05:15:15.551...
+2018-12-07 05:15:15,552 -> Total time for MaximalFinder: 7740.404ms...
+2018-12-07 05:15:16,233 -> Closing session... [0.681s]
+2018-12-07 05:15:25,893 -> Session started [3.545]
+2018-12-07 05:15:30,420 -> Data read [4.527] [18093]
+2018-12-07 05:15:31,192 -> A.Points indexed                                  |  0.77| 18093|200|GeoSpark|2
+2018-12-07 05:15:34,150 -> B.Pairs found                                     |  2.96|101436|200|GeoSpark|2
+2018-12-07 05:15:34,487 -> C.Centers found                                   |  0.34|202872|200|GeoSpark|2
+2018-12-07 05:15:38,896 -> D.Disks found                                     |  4.41|186329|200|GeoSpark|2
+2018-12-07 05:15:40,982 -> E.Disks indexed                                   |  2.09|118263|200|GeoSpark|2
+2018-12-07 05:15:43,640 -> F.Expansions gotten                               |  2.66|207170|200|GeoSpark|2
+2018-12-07 06:16:16,732 -> G.Maximal disks found                             |3633.09| 23718|200|GeoSpark|2
+2018-12-07 06:16:24,674 -> H.Maximal disks prunned                           |  7.88| 14280|200|GeoSpark|2
+2018-12-07 06:16:25,123 -> Session closed [0.449]
+2018-12-07 06:16:34,129 -> Starting session... [3.126s]
+2018-12-07 06:16:36,108 -> Reading dataset... [1.979s] [18093 points]
+2018-12-07 06:16:36,166 -> Lauching MaximalFinder at 06:16:36.135...
+2018-12-07 06:16:36,167 -> Setting mu=3,epsilon=200.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-07 06:16:51,242 -> A.Indexing points                                 | 15.02| 18093|200|Simba|3
+2018-12-07 06:17:02,869 -> B.Getting pairs                                   | 11.63|101436|200|Simba|3
+2018-12-07 06:17:11,055 -> C.Finding centers                                 |  8.19|202872|200|Simba|3
+2018-12-07 06:17:30,982 -> D.Finding disks                                   |  5.61|118263|200|Simba|3
+2018-12-07 06:17:31,922 -> E.Indexing disks                                  |  6.55|118263|200|Simba|3
+2018-12-07 06:17:36,617 -> F.Getting expansions                              |  4.70|1168148|200|Simba|3
+2018-12-07 08:37:01,882 -> G.Finding maximal disks                           |8365.27| 15889|200|Simba|3
+2018-12-07 08:37:08,452 -> H.Prunning maximal disks                          |  6.57| 14282|200|Simba|3
+2018-12-07 08:37:08,452 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-07 08:37:08,452 ->    berlin0-0,   18093, 200.0,    32,  3,8432.23,  101436,    202872,       118263,      14282, -1
+2018-12-07 08:37:08,578 -> Dropping indices...[0.126s]
+2018-12-07 08:37:08,578 -> Finishing MaximalFinder at 08:37:08.578...
+2018-12-07 08:37:08,578 -> Total time for MaximalFinder: 8432.412ms...
+2018-12-07 08:37:08,714 -> Closing session... [0.136s]
+2018-12-07 08:37:14,841 -> Session started [2.16]
+2018-12-07 08:37:19,335 -> Data read [4.494] [18093]
+2018-12-07 08:37:20,262 -> A.Points indexed                                  |  0.93| 18093|200|GeoSpark|3
+2018-12-07 08:37:24,457 -> B.Pairs found                                     |  4.20|101436|200|GeoSpark|3
+2018-12-07 08:37:24,966 -> C.Centers found                                   |  0.51|202872|200|GeoSpark|3
+2018-12-07 08:37:30,928 -> D.Disks found                                     |  5.96|186329|200|GeoSpark|3
+2018-12-07 08:37:33,465 -> E.Disks indexed                                   |  2.54|118263|200|GeoSpark|3
+2018-12-07 08:37:36,409 -> F.Expansions gotten                               |  2.94|222557|200|GeoSpark|3
+2018-12-07 09:40:16,974 -> G.Maximal disks found                             |3760.56| 24317|200|GeoSpark|3
+2018-12-07 09:40:25,025 -> H.Maximal disks prunned                           |  8.05| 14280|200|GeoSpark|3
+2018-12-07 09:40:25,078 -> Session closed [0.053]
+2018-12-07 09:40:29,814 -> Starting session... [1.796s]
+2018-12-07 09:40:31,724 -> Reading dataset... [1.909s] [18093 points]
+2018-12-07 09:40:31,791 -> Lauching MaximalFinder at 09:40:31.741...
+2018-12-07 09:40:31,792 -> Setting mu=3,epsilon=200.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-07 09:40:46,185 -> A.Indexing points                                 | 14.34| 18093|200|Simba|4
+2018-12-07 09:40:58,160 -> B.Getting pairs                                   | 11.98|101436|200|Simba|4
+2018-12-07 09:41:05,449 -> C.Finding centers                                 |  7.29|202872|200|Simba|4
+2018-12-07 09:41:24,698 -> D.Finding disks                                   |  5.77|118263|200|Simba|4
+2018-12-07 09:41:25,736 -> E.Indexing disks                                  |  6.81|118263|200|Simba|4
+2018-12-07 09:41:30,743 -> F.Getting expansions                              |  5.01|1168148|200|Simba|4
+2018-12-07 11:52:17,682 -> G.Finding maximal disks                           |7846.94| 15889|200|Simba|4
+2018-12-07 11:52:23,975 -> H.Prunning maximal disks                          |  6.28| 14282|200|Simba|4
+2018-12-07 11:52:23,975 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-07 11:52:23,975 ->    berlin0-0,   18093, 200.0,    32,  3,7912.13,  101436,    202872,       118263,      14282, -1
+2018-12-07 11:52:24,065 -> Dropping indices...[0.089s]
+2018-12-07 11:52:24,065 -> Finishing MaximalFinder at 11:52:24.065...
+2018-12-07 11:52:24,065 -> Total time for MaximalFinder: 7912.273ms...
+2018-12-07 11:52:24,106 -> Closing session... [0.041s]
+2018-12-07 11:52:27,933 -> Session started [1.603]
+2018-12-07 11:52:31,815 -> Data read [3.881] [18093]
+2018-12-07 11:52:32,818 -> A.Points indexed                                  |  1.00| 18093|200|GeoSpark|4
+2018-12-07 11:52:37,840 -> B.Pairs found                                     |  5.02|101436|200|GeoSpark|4
+2018-12-07 11:52:38,351 -> C.Centers found                                   |  0.51|202872|200|GeoSpark|4
+2018-12-07 11:52:43,930 -> D.Disks found                                     |  5.58|186329|200|GeoSpark|4
+2018-12-07 11:52:46,089 -> E.Disks indexed                                   |  2.16|118263|200|GeoSpark|4
+2018-12-07 11:52:49,398 -> F.Expansions gotten                               |  3.31|225540|200|GeoSpark|4
+2018-12-07 12:54:48,889 -> G.Maximal disks found                             |3719.49| 24617|200|GeoSpark|4
+2018-12-07 12:55:00,098 -> H.Maximal disks prunned                           | 11.21| 14280|200|GeoSpark|4
+2018-12-07 12:55:00,171 -> Session closed [0.073]
+2018-12-07 12:55:03,834 -> Starting session... [1.619s]
+2018-12-07 12:55:05,729 -> Reading dataset... [1.895s] [18093 points]
+2018-12-07 12:55:05,774 -> Lauching MaximalFinder at 12:55:05.736...
+2018-12-07 12:55:05,775 -> Setting mu=3,epsilon=200.0,cores=32,timestamp=-1,dataset=berlin0-0
+2018-12-07 12:55:20,614 -> A.Indexing points                                 | 14.76| 18093|200|Simba|5
+2018-12-07 12:55:32,768 -> B.Getting pairs                                   | 12.15|101436|200|Simba|5
+2018-12-07 12:55:40,712 -> C.Finding centers                                 |  7.94|202872|200|Simba|5
+2018-12-07 12:56:00,326 -> D.Finding disks                                   |  5.96|118263|200|Simba|5
+2018-12-07 12:56:01,338 -> E.Indexing disks                                  |  6.98|118263|200|Simba|5
+2018-12-07 12:56:06,328 -> F.Getting expansions                              |  4.99|1168148|200|Simba|5
+2018-12-07 15:02:27,486 -> G.Finding maximal disks                           |7581.16| 15889|200|Simba|5
+2018-12-07 15:02:33,561 -> H.Prunning maximal disks                          |  6.08| 14282|200|Simba|5
+2018-12-07 15:02:33,562 ->      Dataset,# Points,   Eps, Cores, Mu,   Time, # Pairs,   # Disks, # Candidates, # Maximals,  t
+2018-12-07 15:02:33,562 ->    berlin0-0,   18093, 200.0,    32,  3,7647.71,  101436,    202872,       118263,      14282, -1
+2018-12-07 15:02:33,640 -> Dropping indices...[0.078s]
+2018-12-07 15:02:33,641 -> Finishing MaximalFinder at 15:02:33.641...
+2018-12-07 15:02:33,641 -> Total time for MaximalFinder: 7647.867ms...
+2018-12-07 15:02:33,684 -> Closing session... [0.043s]
+2018-12-07 15:02:37,624 -> Session started [1.662]
+2018-12-07 15:02:41,583 -> Data read [3.959] [18093]
+2018-12-07 15:02:42,385 -> A.Points indexed                                  |  0.80| 18093|200|GeoSpark|5
+2018-12-07 15:02:45,881 -> B.Pairs found                                     |  3.50|101436|200|GeoSpark|5
+2018-12-07 15:02:46,506 -> C.Centers found                                   |  0.63|202872|200|GeoSpark|5
+2018-12-07 15:02:51,780 -> D.Disks found                                     |  5.27|186329|200|GeoSpark|5
+2018-12-07 15:02:53,550 -> E.Disks indexed                                   |  1.77|118263|200|GeoSpark|5
+2018-12-07 15:02:56,300 -> F.Expansions gotten                               |  2.75|201620|200|GeoSpark|5
+2018-12-07 16:02:43,126 -> G.Maximal disks found                             |3586.83| 23574|200|GeoSpark|5
+2018-12-07 16:02:50,657 -> H.Maximal disks prunned                           |  7.53| 14280|200|GeoSpark|5
+2018-12-07 16:02:50,714 -> Session closed [0.057]
