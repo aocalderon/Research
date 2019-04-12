@@ -1,0 +1,12 @@
+#!/bin/bash
+
+NNODES=$1
+FILE_NODES="/tmp/slaves"
+NODES_SET=("acald013@ip-172-31-12-43" "acald013@ip-172-31-11-251" "acald013@ip-172-31-14-206" "acald013@ip-172-31-2-190")
+truncate -s 0 $FILE_NODES
+for((i=0;i<$NNODES;i++));do
+	NODE=${NODES_SET[i]}
+    	echo "$NODE" >> $FILE_NODES
+done
+#${#NODES_SET[@]}
+
