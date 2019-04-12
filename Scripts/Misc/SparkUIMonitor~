@@ -1,8 +1,0 @@
-#!/bin/bash
-
-luakit -u http://localhost:4040
-sleep 5
-for i in `seq 1 1000`; do
-    wmctrl -a "http://localhost:4040"
-    xdotool key r
-done
