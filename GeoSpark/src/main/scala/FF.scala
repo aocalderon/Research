@@ -66,7 +66,7 @@ object FF {
       val T_i = pointset.get(timestamp).get
       val C = new PointRDD(MF.run(spark, T_i, params, s"$timestamp").map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
       val nDisks = C.rawSpatialRDD.count()
-      log(s"1.${timestamp}.Maximal disks found", timer, nDisks)
+      log("1.Maximal disks found", timer, nDisks, s"$timestamp")
 
       if(firstRun){
         F = C
@@ -103,7 +103,7 @@ object FF {
           .reduceByKey( (f0, f1) => f0).map(_._2)
           .persist()
         val nFlocks = flocks.count()
-        log(s"2.${timestamp}.Join done", timer, nFlocks)
+        log("2.Join done", timer, nFlocks, s"$timestamp")
 
         if(debug) logger.info(s"FF,Less_Than_Mu,${epsilon},${timestamp},${nFlocks}")
 
@@ -131,7 +131,7 @@ object FF {
           G_prime.spatialPartitioning(gridType, FFpartitions)
           G_prime.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
         }
-        log(s"3.${timestamp}.Flocks to report", timer, nF0)
+        log("3.Flocks to report", timer, nF0, s"$timestamp")
 
         if(debug){
           if(G_prime.boundary() != null){
@@ -180,10 +180,10 @@ object FF {
         timer = System.currentTimeMillis()
         var f0_prime: RDD[String] = spark.sparkContext.emptyRDD[String]
         if(G_prime.boundary() != null){
-          f0_prime = pruneFlockByExpansions(G_prime, epsilon, spark, params).persist(StorageLevel.MEMORY_ONLY)
+          f0_prime = pruneFlockByExpansions(G_prime, epsilon, timestamp, spark, params).persist(StorageLevel.MEMORY_ONLY)
         }
         val nF0_prime = f0_prime.count()
-        log(s"4.${timestamp}.Flocks prunned by expansion", timer, nF0_prime)
+        log("4.Flocks prunned by expansion", timer, nF0_prime, s"$timestamp")
 
         // Reporting flocks...
         timer = System.currentTimeMillis()
@@ -199,7 +199,7 @@ object FF {
         }.persist(StorageLevel.MEMORY_ONLY)
         nF0 = f0.count()
         report = report.union(f0).persist(StorageLevel.MEMORY_ONLY)
-        log(s"5.${timestamp}.Flocks reported", timer, nF0)
+        log("5.Flocks reported", timer, nF0, s"$timestamp")
 
         if(debug) logger.info(s"FF,Flocks_being_reported,${epsilon},${timestamp},${f0.count()}")
 
@@ -222,7 +222,7 @@ object FF {
         F.spatialPartitioning(GridType.QUADTREE, Dpartitions)
         F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
         partitioner = F.getPartitioner
-        log(s"6.${timestamp}.Candidates indexed", timer, F.rawSpatialRDD.count())
+        log("6.Candidates indexed", timer, F.rawSpatialRDD.count(), s"$timestamp")
 
         if(debug) logger.info(s"FF,New_set_of_candidates,${epsilon},${timestamp},${F.rawSpatialRDD.count()}")
       }
@@ -239,12 +239,14 @@ object FF {
         import scala.util.parsing.json._
         val j = JSON.parseFull(r.text).get.asInstanceOf[List[Map[String, Any]]]
         j.filter(_.get("id").get != "driver").foreach{ m =>
-          val id     = m.get("id").get
+          val tid    = m.get("id").get
+          val thost  = m.get("hostPort").get
           val tcores = "%.0f".format(m.get("totalCores").get)
+          val trdds  = "%.0f".format(m.get("rddBlocks").get)
           val ttasks = "%.0f".format(m.get("totalTasks").get)
           val ttime  = "%.2fs".format(m.get("totalDuration").get.asInstanceOf[Double] / (m.get("totalCores").get.asInstanceOf[Double] * 1000.0))
           val tinput = "%.2fMB".format(m.get("totalInputBytes").get.asInstanceOf[Double] / (1024.0 * 1024))
-          logger.info(s"EXECUTORS;$applicationID;$id;$tcores;$ttasks;$ttime;$tinput")
+          logger.info(s"EXECUTORS;$tcores;$tid;$trdds;$ttasks;$ttime;$tinput;$thost;$applicationID")
         }
       }
     } catch {
@@ -303,7 +305,7 @@ object FF {
       y >= (min_y + epsilon)
   }
 
-  def pruneFlockByExpansions(F: PointRDD, epsilon: Double, spark: SparkSession, params: FFConf): RDD[String] = {
+  def pruneFlockByExpansions(F: PointRDD, epsilon: Double, timestamp: Int, spark: SparkSession, params: FFConf): RDD[String] = {
     import spark.implicits._
     val debug = params.ffdebug()
     val rtree = new STRtree()
@@ -327,7 +329,7 @@ object FF {
       }.toList
     }.partitionBy(new ExpansionPartitioner(expansions.size)).persist(StorageLevel.MEMORY_ONLY)
     val nExpansionsRDD = expansionsRDD.count()
-    log("4a.Making expansions", timer, nExpansionsRDD)
+    log("4a.Making expansions", timer, nExpansionsRDD, s"$timestamp")
 
     if(debug){
       //expansionsRDD.map(e => s"${e._2.getUserData.toString()};${e._1}").toDF("E")
@@ -345,7 +347,7 @@ object FF {
       }.toIterator
     }.persist(StorageLevel.MEMORY_ONLY)
     val nCandidates = candidates.count()
-    log("4b.Finding maximals", timer, nCandidates)
+    log("4b.Finding maximals", timer, nCandidates, s"$timestamp")
 
     if(debug){
       //candidates.map(p => (p._2.sorted.mkString(" "), p._1)).toDF("C", "E")
@@ -373,7 +375,7 @@ object FF {
         (f, notInExpansion, expansion.toString())
       }.rdd.persist(StorageLevel.MEMORY_ONLY)
     val nPrunned = prunned.count()
-    log("4c.Selecting and mapping",timer,nPrunned)
+    log("4c.Selecting and mapping", timer, nPrunned, s"$timestamp")
 
     if(debug){
       //prunned.sortBy(p => p._1).toDF("flock", "notInExpansion", "Exp")
@@ -384,12 +386,12 @@ object FF {
     timer = System.currentTimeMillis()
     val P = prunned.filter(_._2).map(_._1).distinct().persist(StorageLevel.MEMORY_ONLY)
     val nP = prunned.count()
-    log("4d.Filtering and distinc",timer,nP)
+    log("4d.Filtering and distinc", timer, nP, s"$timestamp")
 
     P
   }
 
-  def log(msg: String, timer: Long, n: Long = -1): Unit ={
+  def log(msg: String, timer: Long, n: Long = -1, tag: String = ""): Unit ={
     if(n == -1)
       logger.info("%-50s|%6.2f".format(msg,(System.currentTimeMillis()-timer)/1000.0))
     else
@@ -445,12 +447,12 @@ object FF {
       pointset += (timestamp -> extractTimestamp(points, timestamp, params.sespg(), params.tespg()))
     }
     logger.info(s"$nPoints points read in ${(System.currentTimeMillis - timer) / 1000.0}s")
-    logger.info(s"Current timestamps: ${timestamps.mkString("_")}")
+    logger.info(s"Current timestamps: ${timestamps.filter(_ < fftimestamp).mkString(" ")}")
 
     // Running maximal finder...
     timer = System.currentTimeMillis()
     val flocks = runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf)
-    logger.info(s"FlockFinder run in ${"%.2f".format((System.currentTimeMillis() - timer) / 1000.0)}s")
+    logger.info(s"FlockFinder runs in ${"%.2f".format((System.currentTimeMillis() - timer) / 1000.0)}s")
 
     if(params.ffdebug()){
       val f = flocks.map(f => s"${f.start}, ${f.end}, ${f.pids.mkString(" ")}\n").sortBy(_.toString()).collect().mkString("")
