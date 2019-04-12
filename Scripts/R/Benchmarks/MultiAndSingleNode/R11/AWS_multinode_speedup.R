@@ -9,7 +9,7 @@ SAVE_PDF      = F
 SEP           = ";"
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
 RESULTS_PATH = "Scripts/R/Benchmarks/MultiAndSingleNode/R11/"
-RESULTS_NAME = "AWS_multinode_speedup"
+RESULTS_NAME = "AWS_multinode_speedup_003"
 dataFile = paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '.txt')
 
 data = readLines(dataFile)
@@ -35,16 +35,16 @@ if(SAVE_PDF){
   plot(g)
 }
 
-# title = "Multinode Speed Up by Epsilon Boxplot [Berlin_160K, 4 cores per node, 1 thread per core]"
-# f = ggplot(data=data0, aes(x=factor(Epsilon), y=Time2, fill=Nodes)) +
-#   stat_boxplot(geom ='errorbar', width = 0.5, position = position_dodge(1)) +
-#   geom_boxplot(outlier.size = 0.5, position = position_dodge(1)) +
-#   labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
-# if(SAVE_PDF){
-#   ggsave(paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '_boxplot.pdf'), width = 15, height = 8.5, dpi = 150, units = "in", device='pdf', f)
-# } else {
-#   plot(f)
-# }
+title = "Multinode Speed Up by Epsilon Boxplot [Berlin_160K, 4 cores per node, 1 thread per core]"
+f = ggplot(data=data0, aes(x=factor(Epsilon), y=Time2, fill=Nodes)) +
+  stat_boxplot(geom ='errorbar', width = 0.5, position = position_dodge(1)) +
+  geom_boxplot(outlier.size = 0.5, position = position_dodge(1)) +
+  labs(title=title, y="Time(s)", x=expression(paste(epsilon,"(mts)")))
+if(SAVE_PDF){
+  ggsave(paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '_boxplot.pdf'), width = 15, height = 8.5, dpi = 150, units = "in", device='pdf', f)
+} else {
+  plot(f)
+}
 
 op <- options(digits.secs=3)
 stats = data0 %>% group_by(Nodes, Epsilon) %>% summarise(lower = quantile(Time2)[2], upper = quantile(Time2)[4])
