@@ -1,0 +1,1572 @@
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B4.tsv --epsilon 100 --mu 3 --delta 3 --distance 75 --master 169.235.27.138 --cores 4 --executors 1 --spatial CUSTOM --customy 50 --customx 200 --customymf 40 --customxmf 160 --fftimestamp 6
+2019-04-15 18:10:09,592 -> Session app-20190415181009-0001 started in 1.869s...
+2019-04-15 18:10:35,163 -> 883080 points read in 25.571s
+2019-04-15 18:10:35,165 -> Current timestamps: 0 1 2 3 4 5
+2019-04-15 18:10:35,655 -> A.Points indexed                                  |  0.45|144756|0
+2019-04-15 18:10:39,784 -> B.Pairs found                                     |  4.13|271668|0
+2019-04-15 18:10:40,794 -> C.Centers found                                   |  1.01|543336|0
+2019-04-15 18:10:58,220 -> D.Disks found                                     | 15.34|229332|0
+2019-04-15 18:11:00,170 -> E.Disks indexed                                   |  1.95|229332|0
+2019-04-15 18:11:56,640 -> F.Expansions gotten                               | 56.47|360974|0
+2019-04-15 18:12:31,574 -> G.Maximal disks found                             | 34.93| 74241|0
+2019-04-15 18:13:04,336 -> H.Maximal disks prunned                           | 32.76| 46028|0
+2019-04-15 18:13:05,712 -> 1.Maximal disks found                             |150.51| 46028|0
+2019-04-15 18:13:06,176 -> A.Points indexed                                  |  0.16|145972|1
+2019-04-15 18:13:09,154 -> B.Pairs found                                     |  2.98|275708|1
+2019-04-15 18:13:09,946 -> C.Centers found                                   |  0.79|551416|1
+2019-04-15 18:13:23,673 -> D.Disks found                                     | 12.51|232932|1
+2019-04-15 18:13:24,993 -> E.Disks indexed                                   |  1.32|232932|1
+2019-04-15 18:14:18,693 -> F.Expansions gotten                               | 53.70|366925|1
+2019-04-15 18:14:51,802 -> G.Maximal disks found                             | 33.11| 75623|1
+2019-04-15 18:15:14,528 -> H.Maximal disks prunned                           | 22.73| 46900|1
+2019-04-15 18:15:15,937 -> 1.Maximal disks found                             |129.92| 46900|1
+2019-04-15 18:15:25,399 -> 2.Join done                                       |  9.46|135052|1
+2019-04-15 18:15:26,781 -> 3.Flocks to report                                |  1.38|     0|1
+2019-04-15 18:15:26,819 -> 4.Flocks prunned by expansion                     |  0.04|     0|1
+2019-04-15 18:15:26,827 -> 5.Flocks reported                                 |  0.01|     0|1
+2019-04-15 18:15:47,277 -> 6.Candidates indexed                              | 20.45|138980|1
+2019-04-15 18:15:47,424 -> A.Points indexed                                  |  0.15|147164|2
+2019-04-15 18:15:50,079 -> B.Pairs found                                     |  2.66|279356|2
+2019-04-15 18:15:50,930 -> C.Centers found                                   |  0.85|558712|2
+2019-04-15 18:16:06,750 -> D.Disks found                                     | 14.48|236396|2
+2019-04-15 18:16:08,099 -> E.Disks indexed                                   |  1.35|236396|2
+2019-04-15 18:17:02,294 -> F.Expansions gotten                               | 54.20|372745|2
+2019-04-15 18:17:42,856 -> G.Maximal disks found                             | 40.56| 77053|2
+2019-04-15 18:18:06,335 -> H.Maximal disks prunned                           | 23.48| 47740|2
+2019-04-15 18:18:07,692 -> 1.Maximal disks found                             |140.42| 47740|2
+2019-04-15 18:19:07,569 -> 2.Join done                                       | 59.88|258276|2
+2019-04-15 18:19:10,474 -> 3.Flocks to report                                |  2.90|220316|2
+2019-04-15 18:20:32,194 -> 4a.Making expansions                              | 81.61|313014|2
+2019-04-15 18:21:05,713 -> 4b.Finding maximals                               | 33.52| 78886|2
+2019-04-15 18:21:28,531 -> 4c.Selecting and mapping                          | 22.82| 78886|2
+2019-04-15 18:21:29,275 -> 4d.Filtering and distinc                          |  0.74| 78886|2
+2019-04-15 18:21:31,488 -> 4.Flocks prunned by expansion                     |141.01| 45580|2
+2019-04-15 18:21:32,923 -> 5.Flocks reported                                 |  1.44| 45580|2
+2019-04-15 18:21:56,368 -> 6.Candidates indexed                              | 23.44| 87364|2
+2019-04-15 18:21:56,507 -> A.Points indexed                                  |  0.14|148396|3
+2019-04-15 18:21:59,461 -> B.Pairs found                                     |  2.95|284132|3
+2019-04-15 18:22:00,285 -> C.Centers found                                   |  0.82|568264|3
+2019-04-15 18:22:13,971 -> D.Disks found                                     | 12.44|241140|3
+2019-04-15 18:22:15,473 -> E.Disks indexed                                   |  1.50|241140|3
+2019-04-15 18:23:08,897 -> F.Expansions gotten                               | 53.42|379536|3
+2019-04-15 18:23:49,480 -> G.Maximal disks found                             | 40.58| 78358|3
+2019-04-15 18:24:11,397 -> H.Maximal disks prunned                           | 21.92| 48532|3
+2019-04-15 18:24:12,771 -> 1.Maximal disks found                             |136.40| 48532|3
+2019-04-15 18:24:47,169 -> 2.Join done                                       | 34.40|236769|3
+2019-04-15 18:24:50,385 -> 3.Flocks to report                                |  3.22|200449|3
+2019-04-15 18:26:15,903 -> 4a.Making expansions                              | 85.40|300057|3
+2019-04-15 18:26:44,231 -> 4b.Finding maximals                               | 28.33| 79670|3
+2019-04-15 18:27:04,287 -> 4c.Selecting and mapping                          | 20.06| 79670|3
+2019-04-15 18:27:05,039 -> 4d.Filtering and distinc                          |  0.75| 79670|3
+2019-04-15 18:27:07,150 -> 4.Flocks prunned by expansion                     |136.77| 46140|3
+2019-04-15 18:27:08,548 -> 5.Flocks reported                                 |  1.40| 46140|3
+2019-04-15 18:27:34,099 -> 6.Candidates indexed                              | 25.55| 86692|3
+2019-04-15 18:27:34,904 -> A.Points indexed                                  |  0.80|148396|4
+2019-04-15 18:27:38,351 -> B.Pairs found                                     |  3.45|283844|4
+2019-04-15 18:27:39,293 -> C.Centers found                                   |  0.94|567688|4
+2019-04-15 18:28:04,110 -> D.Disks found                                     | 23.45|240244|4
+2019-04-15 18:28:05,590 -> E.Disks indexed                                   |  1.48|240244|4
+2019-04-15 18:29:01,323 -> F.Expansions gotten                               | 55.73|377955|4
+2019-04-15 18:29:44,418 -> G.Maximal disks found                             | 43.10| 78513|4
+2019-04-15 18:30:10,183 -> H.Maximal disks prunned                           | 25.77| 48612|4
+2019-04-15 18:30:11,473 -> 1.Maximal disks found                             |157.37| 48612|4
+2019-04-15 18:30:43,111 -> 2.Join done                                       | 31.64|242195|4
+2019-04-15 18:30:46,432 -> 3.Flocks to report                                |  3.32|192643|4
+2019-04-15 18:32:08,321 -> 4a.Making expansions                              | 81.77|284233|4
+2019-04-15 18:32:33,406 -> 4b.Finding maximals                               | 25.09| 80990|4
+2019-04-15 18:32:54,388 -> 4c.Selecting and mapping                          | 20.98| 80990|4
+2019-04-15 18:32:55,198 -> 4d.Filtering and distinc                          |  0.81| 80990|4
+2019-04-15 18:32:57,348 -> 4.Flocks prunned by expansion                     |130.92| 46940|4
+2019-04-15 18:32:58,927 -> 5.Flocks reported                                 |  1.58| 46940|4
+2019-04-15 18:33:27,234 -> 6.Candidates indexed                              | 28.31| 99020|4
+2019-04-15 18:33:28,111 -> A.Points indexed                                  |  0.88|148396|5
+2019-04-15 18:33:31,124 -> B.Pairs found                                     |  3.01|283628|5
+2019-04-15 18:33:31,870 -> C.Centers found                                   |  0.75|567256|5
+2019-04-15 18:33:54,138 -> D.Disks found                                     | 20.97|239780|5
+2019-04-15 18:33:55,839 -> E.Disks indexed                                   |  1.70|239780|5
+2019-04-15 18:34:51,328 -> F.Expansions gotten                               | 55.49|377780|5
+2019-04-15 18:35:32,882 -> G.Maximal disks found                             | 41.55| 78335|5
+2019-04-15 18:36:10,538 -> H.Maximal disks prunned                           | 37.66| 48484|5
+2019-04-15 18:36:11,882 -> 1.Maximal disks found                             |164.65| 48484|5
+2019-04-15 18:37:07,490 -> 2.Join done                                       | 55.61|258934|5
+2019-04-15 18:37:10,877 -> 3.Flocks to report                                |  3.39|228030|5
+2019-04-15 18:38:36,018 -> 4a.Making expansions                              | 85.03|317745|5
+2019-04-15 18:39:14,461 -> 4b.Finding maximals                               | 38.44| 82432|5
+2019-04-15 18:39:35,685 -> 4c.Selecting and mapping                          | 21.22| 82432|5
+2019-04-15 18:39:36,576 -> 4d.Filtering and distinc                          |  0.89| 82432|5
+2019-04-15 18:39:38,860 -> 4.Flocks prunned by expansion                     |147.98| 47612|5
+2019-04-15 18:39:40,328 -> 5.Flocks reported                                 |  1.47| 47612|5
+2019-04-15 18:40:02,584 -> 6.Candidates indexed                              | 22.26| 81004|5
+2019-04-15 18:40:17,272 -> Number of flocks: 186272
+2019-04-15 18:40:17,789 -> PFLOCK;4;1;100.0;3;3;1782.11;186272;app-20190415181009-0001
+2019-04-15 18:40:20,227 -> EXECUTORS;4;0;177726;343650;1764.51s;19726.13MB;169.235.27.137:42733;app-20190415181009-0001
+2019-04-15 18:40:20,228 -> FlockFinder runs in 1785.06s
+2019-04-15 18:40:25,320 -> Session app-20190415181009-0001 closed.
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B4.tsv --epsilon 100 --mu 3 --delta 4 --distance 75 --master 169.235.27.138 --cores 4 --executors 1 --spatial CUSTOM --customy 50 --customx 200 --customymf 40 --customxmf 160 --fftimestamp 6
+2019-04-15 18:40:30,054 -> Session app-20190415184029-0002 started in 1.922s...
+2019-04-15 18:42:37,823 -> 883080 points read in 127.769s
+2019-04-15 18:42:37,824 -> Current timestamps: 0 1 2 3 4 5
+2019-04-15 18:42:38,298 -> A.Points indexed                                  |  0.43|144756|0
+2019-04-15 18:42:42,428 -> B.Pairs found                                     |  4.13|271668|0
+2019-04-15 18:42:44,363 -> C.Centers found                                   |  1.94|543336|0
+2019-04-15 18:43:01,894 -> D.Disks found                                     | 16.17|229332|0
+2019-04-15 18:43:03,341 -> E.Disks indexed                                   |  1.45|229332|0
+2019-04-15 18:43:59,256 -> F.Expansions gotten                               | 55.92|360974|0
+2019-04-15 18:44:34,958 -> G.Maximal disks found                             | 35.70| 74241|0
+2019-04-15 18:45:09,981 -> H.Maximal disks prunned                           | 35.02| 46028|0
+2019-04-15 18:45:11,317 -> 1.Maximal disks found                             |153.46| 46028|0
+2019-04-15 18:45:11,793 -> A.Points indexed                                  |  0.16|145972|1
+2019-04-15 18:45:15,042 -> B.Pairs found                                     |  3.25|275708|1
+2019-04-15 18:45:15,819 -> C.Centers found                                   |  0.78|551416|1
+2019-04-15 18:45:31,735 -> D.Disks found                                     | 14.45|232932|1
+2019-04-15 18:45:33,304 -> E.Disks indexed                                   |  1.57|232932|1
+2019-04-15 18:46:28,571 -> F.Expansions gotten                               | 55.27|366925|1
+2019-04-15 18:47:02,540 -> G.Maximal disks found                             | 33.97| 75623|1
+2019-04-15 18:47:25,266 -> H.Maximal disks prunned                           | 22.73| 46900|1
+2019-04-15 18:47:26,567 -> 1.Maximal disks found                             |134.94| 46900|1
+2019-04-15 18:47:35,422 -> 2.Join done                                       |  8.86|135052|1
+2019-04-15 18:47:36,694 -> 3.Flocks to report                                |  1.27|     0|1
+2019-04-15 18:47:36,735 -> 4.Flocks prunned by expansion                     |  0.04|     0|1
+2019-04-15 18:47:36,743 -> 5.Flocks reported                                 |  0.01|     0|1
+2019-04-15 18:47:56,185 -> 6.Candidates indexed                              | 19.44|138980|1
+2019-04-15 18:47:56,335 -> A.Points indexed                                  |  0.15|147164|2
+2019-04-15 18:47:59,761 -> B.Pairs found                                     |  3.43|279356|2
+2019-04-15 18:48:00,708 -> C.Centers found                                   |  0.95|558712|2
+2019-04-15 18:48:17,946 -> D.Disks found                                     | 15.87|236396|2
+2019-04-15 18:48:19,273 -> E.Disks indexed                                   |  1.33|236396|2
+2019-04-15 18:49:12,706 -> F.Expansions gotten                               | 53.43|372745|2
+2019-04-15 18:49:48,610 -> G.Maximal disks found                             | 35.90| 77053|2
+2019-04-15 18:50:13,474 -> H.Maximal disks prunned                           | 24.86| 47740|2
+2019-04-15 18:50:14,855 -> 1.Maximal disks found                             |138.67| 47740|2
+2019-04-15 18:51:12,102 -> 2.Join done                                       | 57.25|258276|2
+2019-04-15 18:51:13,784 -> 3.Flocks to report                                |  1.68|     0|2
+2019-04-15 18:51:13,821 -> 4.Flocks prunned by expansion                     |  0.04|     0|2
+2019-04-15 18:51:13,826 -> 5.Flocks reported                                 |  0.01|     0|2
+2019-04-15 18:51:41,641 -> 6.Candidates indexed                              | 27.82|234828|2
+2019-04-15 18:51:41,784 -> A.Points indexed                                  |  0.14|148396|3
+2019-04-15 18:51:45,256 -> B.Pairs found                                     |  3.47|284132|3
+2019-04-15 18:51:45,991 -> C.Centers found                                   |  0.74|568264|3
+2019-04-15 18:52:00,657 -> D.Disks found                                     | 13.15|241140|3
+2019-04-15 18:52:02,115 -> E.Disks indexed                                   |  1.46|241140|3
+2019-04-15 18:52:59,534 -> F.Expansions gotten                               | 57.42|379536|3
+2019-04-15 18:53:35,995 -> G.Maximal disks found                             | 36.46| 78358|3
+2019-04-15 18:54:02,085 -> H.Maximal disks prunned                           | 26.09| 48532|3
+2019-04-15 18:54:03,450 -> 1.Maximal disks found                             |141.81| 48532|3
+2019-04-15 19:03:09,000 -> 2.Join done                                       |545.55|363347|3
+2019-04-15 19:03:12,352 -> 3.Flocks to report                                |  3.35|276346|3
+2019-04-15 19:04:41,358 -> 4a.Making expansions                              | 88.89|386371|3
+2019-04-15 19:05:21,010 -> 4b.Finding maximals                               | 39.65| 78093|3
+2019-04-15 19:05:41,327 -> 4c.Selecting and mapping                          | 20.32| 78093|3
+2019-04-15 19:05:42,240 -> 4d.Filtering and distinc                          |  0.91| 78093|3
+2019-04-15 19:05:44,329 -> 4.Flocks prunned by expansion                     |151.98| 45204|3
+2019-04-15 19:05:45,549 -> 5.Flocks reported                                 |  1.22| 45204|3
+2019-04-15 19:06:13,293 -> 6.Candidates indexed                              | 27.74|121429|3
+2019-04-15 19:06:14,133 -> A.Points indexed                                  |  0.84|148396|4
+2019-04-15 19:06:17,628 -> B.Pairs found                                     |  3.50|283844|4
+2019-04-15 19:06:18,377 -> C.Centers found                                   |  0.75|567688|4
+2019-04-15 19:06:44,948 -> D.Disks found                                     | 25.12|240244|4
+2019-04-15 19:06:46,301 -> E.Disks indexed                                   |  1.35|240244|4
+2019-04-15 19:07:44,358 -> F.Expansions gotten                               | 58.06|377955|4
+2019-04-15 19:08:25,764 -> G.Maximal disks found                             | 41.41| 78513|4
+2019-04-15 19:08:47,564 -> H.Maximal disks prunned                           | 21.80| 48612|4
+2019-04-15 19:08:48,990 -> 1.Maximal disks found                             |155.70| 48612|4
+2019-04-15 19:09:56,506 -> 2.Join done                                       | 67.52|345596|4
+2019-04-15 19:10:00,263 -> 3.Flocks to report                                |  3.76|210495|4
+2019-04-15 19:11:28,463 -> 4a.Making expansions                              | 88.08|315613|4
+2019-04-15 19:11:53,330 -> 4b.Finding maximals                               | 24.87| 79277|4
+2019-04-15 19:12:14,068 -> 4c.Selecting and mapping                          | 20.74| 79277|4
+2019-04-15 19:12:14,896 -> 4d.Filtering and distinc                          |  0.83| 79277|4
+2019-04-15 19:12:17,090 -> 4.Flocks prunned by expansion                     |136.83| 45860|4
+2019-04-15 19:12:18,555 -> 5.Flocks reported                                 |  1.47| 45860|4
+2019-04-15 19:12:50,642 -> 6.Candidates indexed                              | 32.09|159869|4
+2019-04-15 19:12:51,453 -> A.Points indexed                                  |  0.81|148396|5
+2019-04-15 19:12:54,621 -> B.Pairs found                                     |  3.17|283628|5
+2019-04-15 19:12:55,381 -> C.Centers found                                   |  0.76|567256|5
+2019-04-15 19:13:19,169 -> D.Disks found                                     | 22.33|239780|5
+2019-04-15 19:13:20,601 -> E.Disks indexed                                   |  1.43|239780|5
+2019-04-15 19:14:20,632 -> F.Expansions gotten                               | 60.03|377780|5
+2019-04-15 19:14:55,235 -> G.Maximal disks found                             | 34.60| 78335|5
+2019-04-15 19:15:20,341 -> H.Maximal disks prunned                           | 25.11| 48484|5
+2019-04-15 19:15:21,641 -> 1.Maximal disks found                             |151.00| 48484|5
+2019-04-15 19:17:14,951 -> 2.Join done                                       |113.31|373926|5
+2019-04-15 19:17:18,611 -> 3.Flocks to report                                |  3.66|236400|5
+2019-04-15 19:18:43,012 -> 4a.Making expansions                              | 84.29|332016|5
+2019-04-15 19:19:16,581 -> 4b.Finding maximals                               | 33.57| 80272|5
+2019-04-15 19:19:38,144 -> 4c.Selecting and mapping                          | 21.56| 80272|5
+2019-04-15 19:19:39,097 -> 4d.Filtering and distinc                          |  0.95| 80272|5
+2019-04-15 19:19:41,196 -> 4.Flocks prunned by expansion                     |142.59| 46428|5
+2019-04-15 19:19:42,515 -> 5.Flocks reported                                 |  1.32| 46428|5
+2019-04-15 19:20:16,577 -> 6.Candidates indexed                              | 34.06|164868|5
+2019-04-15 19:20:23,416 -> Number of flocks: 137492
+2019-04-15 19:20:23,816 -> PFLOCK;4;1;100.0;3;4;2265.59;137492;app-20190415184029-0002
+2019-04-15 19:20:26,353 -> EXECUTORS;4;0;154351;300801;2233.56s;20449.22MB;169.235.27.137:36176;app-20190415184029-0002
+2019-04-15 19:20:26,353 -> FlockFinder runs in 2268.53s
+2019-04-15 19:20:31,427 -> Session app-20190415184029-0002 closed.
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B4.tsv --epsilon 100 --mu 3 --delta 5 --distance 75 --master 169.235.27.138 --cores 4 --executors 1 --spatial CUSTOM --customy 50 --customx 200 --customymf 40 --customxmf 160 --fftimestamp 6
+2019-04-15 19:20:36,167 -> Session app-20190415192035-0003 started in 1.873s...
+2019-04-15 19:22:20,085 -> 883080 points read in 103.918s
+2019-04-15 19:22:20,086 -> Current timestamps: 0 1 2 3 4 5
+2019-04-15 19:22:20,603 -> A.Points indexed                                  |  0.48|144756|0
+2019-04-15 19:22:25,638 -> B.Pairs found                                     |  5.03|271668|0
+2019-04-15 19:22:26,551 -> C.Centers found                                   |  0.91|543336|0
+2019-04-15 19:22:45,550 -> D.Disks found                                     | 17.54|229332|0
+2019-04-15 19:22:47,410 -> E.Disks indexed                                   |  1.86|229332|0
+2019-04-15 19:23:45,960 -> F.Expansions gotten                               | 58.55|360974|0
+2019-04-15 19:24:22,196 -> G.Maximal disks found                             | 36.24| 74241|0
+2019-04-15 19:24:54,623 -> H.Maximal disks prunned                           | 32.43| 46028|0
+2019-04-15 19:24:55,989 -> 1.Maximal disks found                             |155.87| 46028|0
+2019-04-15 19:24:56,480 -> A.Points indexed                                  |  0.18|145972|1
+2019-04-15 19:24:59,628 -> B.Pairs found                                     |  3.15|275708|1
+2019-04-15 19:25:00,267 -> C.Centers found                                   |  0.64|551416|1
+2019-04-15 19:25:13,787 -> D.Disks found                                     | 12.32|232932|1
+2019-04-15 19:25:15,777 -> E.Disks indexed                                   |  1.99|232932|1
+2019-04-15 19:26:10,262 -> F.Expansions gotten                               | 54.48|366925|1
+2019-04-15 19:26:47,818 -> G.Maximal disks found                             | 37.56| 75623|1
+2019-04-15 19:27:14,247 -> H.Maximal disks prunned                           | 26.43| 46900|1
+2019-04-15 19:27:15,653 -> 1.Maximal disks found                             |139.35| 46900|1
+2019-04-15 19:27:24,384 -> 2.Join done                                       |  8.73|135052|1
+2019-04-15 19:27:25,564 -> 3.Flocks to report                                |  1.18|     0|1
+2019-04-15 19:27:25,602 -> 4.Flocks prunned by expansion                     |  0.04|     0|1
+2019-04-15 19:27:25,609 -> 5.Flocks reported                                 |  0.01|     0|1
+2019-04-15 19:27:45,872 -> 6.Candidates indexed                              | 20.26|138980|1
+2019-04-15 19:27:46,020 -> A.Points indexed                                  |  0.15|147164|2
+2019-04-15 19:27:49,280 -> B.Pairs found                                     |  3.26|279356|2
+2019-04-15 19:27:50,233 -> C.Centers found                                   |  0.95|558712|2
+2019-04-15 19:28:03,759 -> D.Disks found                                     | 12.15|236396|2
+2019-04-15 19:28:05,333 -> E.Disks indexed                                   |  1.57|236396|2
+2019-04-15 19:29:03,478 -> F.Expansions gotten                               | 58.14|372745|2
+2019-04-15 19:29:40,350 -> G.Maximal disks found                             | 36.87| 77053|2
+2019-04-15 19:30:03,999 -> H.Maximal disks prunned                           | 23.65| 47740|2
+2019-04-15 19:30:05,351 -> 1.Maximal disks found                             |139.48| 47740|2
+2019-04-15 19:31:09,263 -> 2.Join done                                       | 63.91|258276|2
+2019-04-15 19:31:10,847 -> 3.Flocks to report                                |  1.58|     0|2
+2019-04-15 19:31:10,886 -> 4.Flocks prunned by expansion                     |  0.04|     0|2
+2019-04-15 19:31:10,891 -> 5.Flocks reported                                 |  0.01|     0|2
+2019-04-15 19:31:35,894 -> 6.Candidates indexed                              | 25.00|234828|2
+2019-04-15 19:31:36,038 -> A.Points indexed                                  |  0.14|148396|3
+2019-04-15 19:31:39,112 -> B.Pairs found                                     |  3.07|284132|3
+2019-04-15 19:31:40,098 -> C.Centers found                                   |  0.99|568264|3
+2019-04-15 19:31:55,070 -> D.Disks found                                     | 13.40|241140|3
+2019-04-15 19:31:56,716 -> E.Disks indexed                                   |  1.65|241140|3
+2019-04-15 19:32:52,237 -> F.Expansions gotten                               | 55.52|379536|3
+2019-04-15 19:33:34,739 -> G.Maximal disks found                             | 42.50| 78358|3
+2019-04-15 19:33:57,134 -> H.Maximal disks prunned                           | 22.40| 48532|3
+2019-04-15 19:33:58,537 -> 1.Maximal disks found                             |142.64| 48532|3
+2019-04-15 19:42:35,080 -> 2.Join done                                       |516.54|363347|3
+2019-04-15 19:42:36,941 -> 3.Flocks to report                                |  1.86|     0|3
+2019-04-15 19:42:36,976 -> 4.Flocks prunned by expansion                     |  0.04|     0|3
+2019-04-15 19:42:36,981 -> 5.Flocks reported                                 |  0.01|     0|3
+2019-04-15 19:43:07,140 -> 6.Candidates indexed                              | 30.16|301898|3
+2019-04-15 19:43:08,183 -> A.Points indexed                                  |  1.04|148396|4
+2019-04-15 19:43:11,385 -> B.Pairs found                                     |  3.20|283844|4
+2019-04-15 19:43:12,311 -> C.Centers found                                   |  0.93|567688|4
+2019-04-15 19:43:28,627 -> D.Disks found                                     | 14.79|240244|4
+2019-04-15 19:43:30,653 -> E.Disks indexed                                   |  2.03|240244|4
+2019-04-15 19:44:30,642 -> F.Expansions gotten                               | 59.99|377955|4
+2019-04-15 19:45:11,151 -> G.Maximal disks found                             | 40.51| 78513|4
+2019-04-15 19:45:48,149 -> H.Maximal disks prunned                           | 37.00| 48612|4
+2019-04-15 19:45:49,461 -> 1.Maximal disks found                             |162.32| 48612|4
+Exception in thread "main" org.apache.spark.SparkException: Job 150 cancelled 
+	at org.apache.spark.scheduler.DAGScheduler.org$apache$spark$scheduler$DAGScheduler$$failJobAndIndependentStages(DAGScheduler.scala:1887)
+	at org.apache.spark.scheduler.DAGScheduler.handleJobCancellation(DAGScheduler.scala:1822)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:2074)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2057)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2046)
+	at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)
+	at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:737)
+	at org.apache.spark.SparkContext.runJob(SparkContext.scala:2061)
+	at org.apache.spark.SparkContext.runJob(SparkContext.scala:2082)
+	at org.apache.spark.SparkContext.runJob(SparkContext.scala:2101)
+	at org.apache.spark.SparkContext.runJob(SparkContext.scala:2126)
+	at org.apache.spark.rdd.RDD.count(RDD.scala:1168)
+	at FF$$anonfun$runSpatialJoin$1.apply$mcVI$sp(FF.scala:105)
+	at FF$$anonfun$runSpatialJoin$1.apply(FF.scala:63)
+	at FF$$anonfun$runSpatialJoin$1.apply(FF.scala:63)
+	at scala.collection.immutable.List.foreach(List.scala:392)
+	at FF$.runSpatialJoin(FF.scala:63)
+	at FF$.main(FF.scala:454)
+	at FF.main(FF.scala)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.spark.deploy.JavaMainApplication.start(SparkApplication.scala:52)
+	at org.apache.spark.deploy.SparkSubmit.org$apache$spark$deploy$SparkSubmit$$runMain(SparkSubmit.scala:849)
+	at org.apache.spark.deploy.SparkSubmit.doRunMain$1(SparkSubmit.scala:167)
+	at org.apache.spark.deploy.SparkSubmit.submit(SparkSubmit.scala:195)
+	at org.apache.spark.deploy.SparkSubmit.doSubmit(SparkSubmit.scala:86)
+	at org.apache.spark.deploy.SparkSubmit$$anon$2.doSubmit(SparkSubmit.scala:924)
+	at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:933)
+	at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B4.tsv --epsilon 100 --mu 3 --delta 6 --distance 75 --master 169.235.27.138 --cores 4 --executors 1 --spatial CUSTOM --customy 50 --customx 200 --customymf 40 --customxmf 160 --fftimestamp 6
+2019-04-15 20:32:46,858 -> Session app-20190415203246-0004 started in 1.894s...
+2019-04-15 20:32:58,499 -> 883080 points read in 11.641s
+2019-04-15 20:32:58,500 -> Current timestamps: 0 1 2 3 4 5
+2019-04-15 20:32:58,994 -> A.Points indexed                                  |  0.45|144756|0
+2019-04-15 20:33:03,014 -> B.Pairs found                                     |  4.02|271668|0
+2019-04-15 20:33:04,015 -> C.Centers found                                   |  1.00|543336|0
+2019-04-15 20:33:22,814 -> D.Disks found                                     | 16.27|229332|0
+2019-04-15 20:33:24,474 -> E.Disks indexed                                   |  1.66|229332|0
+2019-04-15 20:34:19,819 -> F.Expansions gotten                               | 55.35|360974|0
+2019-04-15 20:34:55,720 -> G.Maximal disks found                             | 35.90| 74241|0
+2019-04-15 20:35:27,075 -> H.Maximal disks prunned                           | 31.36| 46028|0
+2019-04-15 20:35:28,447 -> 1.Maximal disks found                             |149.91| 46028|0
+2019-04-15 20:35:29,037 -> A.Points indexed                                  |  0.16|145972|1
+2019-04-15 20:35:32,372 -> B.Pairs found                                     |  3.34|275708|1
+2019-04-15 20:35:33,084 -> C.Centers found                                   |  0.71|551416|1
+2019-04-15 20:35:48,698 -> D.Disks found                                     | 14.25|232932|1
+2019-04-15 20:35:49,824 -> E.Disks indexed                                   |  1.13|232932|1
+2019-04-15 20:36:44,358 -> F.Expansions gotten                               | 54.53|366925|1
+2019-04-15 20:37:20,803 -> G.Maximal disks found                             | 36.45| 75623|1
+2019-04-15 20:37:46,085 -> H.Maximal disks prunned                           | 25.28| 46900|1
+2019-04-15 20:37:47,459 -> 1.Maximal disks found                             |138.58| 46900|1
+2019-04-15 20:37:56,995 -> 2.Join done                                       |  9.54|135052|1
+2019-04-15 20:37:58,178 -> 3.Flocks to report                                |  1.18|     0|1
+2019-04-15 20:37:58,219 -> 4.Flocks prunned by expansion                     |  0.04|     0|1
+2019-04-15 20:37:58,226 -> 5.Flocks reported                                 |  0.01|     0|1
+2019-04-15 20:38:18,918 -> 6.Candidates indexed                              | 20.69|138980|1
+2019-04-15 20:38:19,082 -> A.Points indexed                                  |  0.16|147164|2
+2019-04-15 20:38:22,203 -> B.Pairs found                                     |  3.12|279356|2
+2019-04-15 20:38:23,098 -> C.Centers found                                   |  0.90|558712|2
+2019-04-15 20:38:37,779 -> D.Disks found                                     | 13.44|236396|2
+2019-04-15 20:38:39,363 -> E.Disks indexed                                   |  1.58|236396|2
+2019-04-15 20:39:36,374 -> F.Expansions gotten                               | 57.01|372745|2
+2019-04-15 20:40:15,129 -> G.Maximal disks found                             | 38.75| 77053|2
+2019-04-15 20:40:38,392 -> H.Maximal disks prunned                           | 23.26| 47740|2
+2019-04-15 20:40:39,729 -> 1.Maximal disks found                             |140.81| 47740|2
+2019-04-15 20:41:45,890 -> 2.Join done                                       | 66.16|258276|2
+2019-04-15 20:41:47,204 -> 3.Flocks to report                                |  1.31|     0|2
+2019-04-15 20:41:47,241 -> 4.Flocks prunned by expansion                     |  0.04|     0|2
+2019-04-15 20:41:47,246 -> 5.Flocks reported                                 |  0.01|     0|2
+2019-04-15 20:42:12,194 -> 6.Candidates indexed                              | 24.95|234828|2
+2019-04-15 20:42:12,343 -> A.Points indexed                                  |  0.15|148396|3
+2019-04-15 20:42:16,012 -> B.Pairs found                                     |  3.67|284132|3
+2019-04-15 20:42:17,046 -> C.Centers found                                   |  1.03|568264|3
+2019-04-15 20:42:33,088 -> D.Disks found                                     | 14.78|241140|3
+2019-04-15 20:42:34,837 -> E.Disks indexed                                   |  1.75|241140|3
+2019-04-15 20:43:27,906 -> F.Expansions gotten                               | 53.07|379536|3
+2019-04-15 20:44:09,890 -> G.Maximal disks found                             | 41.98| 78358|3
+2019-04-15 20:44:35,433 -> H.Maximal disks prunned                           | 25.54| 48532|3
+2019-04-15 20:44:36,777 -> 1.Maximal disks found                             |144.58| 48532|3
+2019-04-15 20:54:03,119 -> 2.Join done                                       |566.34|363347|3
+2019-04-15 20:54:05,332 -> 3.Flocks to report                                |  2.21|     0|3
+2019-04-15 20:54:05,370 -> 4.Flocks prunned by expansion                     |  0.04|     0|3
+2019-04-15 20:54:05,375 -> 5.Flocks reported                                 |  0.01|     0|3
+2019-04-15 20:54:34,413 -> 6.Candidates indexed                              | 29.04|301898|3
+2019-04-15 20:54:35,513 -> A.Points indexed                                  |  1.10|148396|4
+2019-04-15 20:54:38,723 -> B.Pairs found                                     |  3.21|283844|4
+2019-04-15 20:54:39,975 -> C.Centers found                                   |  1.25|567688|4
+2019-04-15 20:54:57,354 -> D.Disks found                                     | 15.70|240244|4
+2019-04-15 20:54:58,812 -> E.Disks indexed                                   |  1.46|240244|4
+2019-04-15 20:55:56,536 -> F.Expansions gotten                               | 57.72|377955|4
+2019-04-15 20:56:35,670 -> G.Maximal disks found                             | 39.13| 78513|4
+2019-04-15 20:57:08,732 -> H.Maximal disks prunned                           | 33.06| 48612|4
+2019-04-15 20:57:10,096 -> 1.Maximal disks found                             |155.68| 48612|4
+Exception in thread "main" org.apache.spark.SparkException: Job 150 cancelled 
+	at org.apache.spark.scheduler.DAGScheduler.org$apache$spark$scheduler$DAGScheduler$$failJobAndIndependentStages(DAGScheduler.scala:1887)
+	at org.apache.spark.scheduler.DAGScheduler.handleJobCancellation(DAGScheduler.scala:1822)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:2074)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2057)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2046)
+	at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)
+	at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:737)
+	at org.apache.spark.SparkContext.runJob(SparkContext.scala:2061)
+	at org.apache.spark.SparkContext.runJob(SparkContext.scala:2082)
+	at org.apache.spark.SparkContext.runJob(SparkContext.scala:2101)
+	at org.apache.spark.SparkContext.runJob(SparkContext.scala:2126)
+	at org.apache.spark.rdd.RDD.count(RDD.scala:1168)
+	at FF$$anonfun$runSpatialJoin$1.apply$mcVI$sp(FF.scala:105)
+	at FF$$anonfun$runSpatialJoin$1.apply(FF.scala:63)
+	at FF$$anonfun$runSpatialJoin$1.apply(FF.scala:63)
+	at scala.collection.immutable.List.foreach(List.scala:392)
+	at FF$.runSpatialJoin(FF.scala:63)
+	at FF$.main(FF.scala:454)
+	at FF.main(FF.scala)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.spark.deploy.JavaMainApplication.start(SparkApplication.scala:52)
+	at org.apache.spark.deploy.SparkSubmit.org$apache$spark$deploy$SparkSubmit$$runMain(SparkSubmit.scala:849)
+	at org.apache.spark.deploy.SparkSubmit.doRunMain$1(SparkSubmit.scala:167)
+	at org.apache.spark.deploy.SparkSubmit.submit(SparkSubmit.scala:195)
+	at org.apache.spark.deploy.SparkSubmit.doSubmit(SparkSubmit.scala:86)
+	at org.apache.spark.deploy.SparkSubmit$$anon$2.doSubmit(SparkSubmit.scala:924)
+	at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:933)
+	at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B4.tsv --epsilon 100 --mu 3 --delta 3 --distance 75 --master 169.235.27.138 --cores 8 --executors 1 --spatial CUSTOM --customy 50 --customx 200 --customymf 40 --customxmf 160 --fftimestamp 6
+2019-04-15 21:09:36,603 -> Session app-20190415210936-0005 started in 1.882s...
+2019-04-15 21:09:51,710 -> 883080 points read in 15.107s
+2019-04-15 21:09:51,712 -> Current timestamps: 0 1 2 3 4 5
+2019-04-15 21:09:52,217 -> A.Points indexed                                  |  0.46|144756|0
+2019-04-15 21:09:56,404 -> B.Pairs found                                     |  4.19|271668|0
+2019-04-15 21:09:58,230 -> C.Centers found                                   |  1.83|543336|0
+2019-04-15 21:10:13,305 -> D.Disks found                                     | 13.75|229332|0
+2019-04-15 21:10:15,112 -> E.Disks indexed                                   |  1.81|229332|0
+2019-04-15 21:10:58,075 -> F.Expansions gotten                               | 42.96|360974|0
+2019-04-15 21:11:24,654 -> G.Maximal disks found                             | 26.58| 74241|0
+2019-04-15 21:11:52,123 -> H.Maximal disks prunned                           | 27.47| 46028|0
+2019-04-15 21:11:53,175 -> 1.Maximal disks found                             |121.43| 46028|0
+2019-04-15 21:11:53,608 -> A.Points indexed                                  |  0.17|145972|1
+2019-04-15 21:11:56,160 -> B.Pairs found                                     |  2.55|275708|1
+2019-04-15 21:11:56,892 -> C.Centers found                                   |  0.73|551416|1
+2019-04-15 21:12:11,830 -> D.Disks found                                     | 13.66|232932|1
+2019-04-15 21:12:13,940 -> E.Disks indexed                                   |  2.11|232932|1
+2019-04-15 21:12:53,753 -> F.Expansions gotten                               | 39.81|366925|1
+2019-04-15 21:13:19,985 -> G.Maximal disks found                             | 26.23| 75623|1
+2019-04-15 21:13:37,719 -> H.Maximal disks prunned                           | 17.73| 46900|1
+2019-04-15 21:13:38,720 -> 1.Maximal disks found                             |105.29| 46900|1
+2019-04-15 21:13:48,709 -> 2.Join done                                       |  9.99|135052|1
+2019-04-15 21:13:50,331 -> 3.Flocks to report                                |  1.62|     0|1
+2019-04-15 21:13:50,377 -> 4.Flocks prunned by expansion                     |  0.05|     0|1
+2019-04-15 21:13:50,384 -> 5.Flocks reported                                 |  0.01|     0|1
+2019-04-15 21:14:06,229 -> 6.Candidates indexed                              | 15.85|138980|1
+2019-04-15 21:14:06,381 -> A.Points indexed                                  |  0.15|147164|2
+2019-04-15 21:14:09,072 -> B.Pairs found                                     |  2.69|279356|2
+2019-04-15 21:14:09,916 -> C.Centers found                                   |  0.84|558712|2
+2019-04-15 21:14:25,086 -> D.Disks found                                     | 13.92|236396|2
+2019-04-15 21:14:27,209 -> E.Disks indexed                                   |  2.12|236396|2
+2019-04-15 21:15:08,949 -> F.Expansions gotten                               | 41.74|372745|2
+2019-04-15 21:15:36,474 -> G.Maximal disks found                             | 27.53| 77053|2
+2019-04-15 21:15:54,696 -> H.Maximal disks prunned                           | 18.22| 47740|2
+2019-04-15 21:15:55,697 -> 1.Maximal disks found                             |109.47| 47740|2
+2019-04-15 21:16:51,045 -> 2.Join done                                       | 55.35|258280|2
+2019-04-15 21:16:55,422 -> 3.Flocks to report                                |  4.38|220320|2
+2019-04-15 21:17:57,926 -> 4a.Making expansions                              | 62.35|313046|2
+2019-04-15 21:18:20,927 -> 4b.Finding maximals                               | 23.00| 78893|2
+2019-04-15 21:18:35,397 -> 4c.Selecting and mapping                          | 14.47| 78893|2
+2019-04-15 21:18:35,988 -> 4d.Filtering and distinc                          |  0.59| 78893|2
+2019-04-15 21:18:37,768 -> 4.Flocks prunned by expansion                     |102.35| 45580|2
+2019-04-15 21:18:38,966 -> 5.Flocks reported                                 |  1.20| 45580|2
+2019-04-15 21:18:55,924 -> 6.Candidates indexed                              | 16.96| 87364|2
+2019-04-15 21:18:56,110 -> A.Points indexed                                  |  0.19|148396|3
+2019-04-15 21:18:58,607 -> B.Pairs found                                     |  2.50|284132|3
+2019-04-15 21:18:59,405 -> C.Centers found                                   |  0.80|568264|3
+2019-04-15 21:19:13,779 -> D.Disks found                                     | 13.08|241140|3
+2019-04-15 21:19:15,735 -> E.Disks indexed                                   |  1.96|241140|3
+2019-04-15 21:19:59,144 -> F.Expansions gotten                               | 43.41|379536|3
+2019-04-15 21:20:29,845 -> G.Maximal disks found                             | 30.70| 78358|3
+2019-04-15 21:20:46,530 -> H.Maximal disks prunned                           | 16.69| 48532|3
+2019-04-15 21:20:47,544 -> 1.Maximal disks found                             |111.62| 48532|3
+2019-04-15 21:21:17,700 -> 2.Join done                                       | 30.16|236765|3
+2019-04-15 21:21:24,766 -> 3.Flocks to report                                |  7.07|200445|3
+2019-04-15 21:22:34,246 -> 4a.Making expansions                              | 69.34|298914|3
+2019-04-15 21:22:52,516 -> 4b.Finding maximals                               | 18.27| 79686|3
+2019-04-15 21:23:06,523 -> 4c.Selecting and mapping                          | 14.01| 79686|3
+2019-04-15 21:23:07,142 -> 4d.Filtering and distinc                          |  0.62| 79686|3
+2019-04-15 21:23:08,685 -> 4.Flocks prunned by expansion                     |103.92| 46140|3
+2019-04-15 21:23:09,833 -> 5.Flocks reported                                 |  1.15| 46140|3
+2019-04-15 21:23:26,523 -> 6.Candidates indexed                              | 16.69| 86692|3
+2019-04-15 21:23:27,370 -> A.Points indexed                                  |  0.85|148396|4
+2019-04-15 21:23:30,217 -> B.Pairs found                                     |  2.85|283844|4
+2019-04-15 21:23:30,858 -> C.Centers found                                   |  0.64|567688|4
+2019-04-15 21:23:50,972 -> D.Disks found                                     | 18.80|240244|4
+2019-04-15 21:23:52,662 -> E.Disks indexed                                   |  1.69|240244|4
+2019-04-15 21:24:36,141 -> F.Expansions gotten                               | 43.48|377955|4
+2019-04-15 21:25:05,417 -> G.Maximal disks found                             | 29.28| 78513|4
+2019-04-15 21:25:28,563 -> H.Maximal disks prunned                           | 23.15| 48612|4
+2019-04-15 21:25:29,576 -> 1.Maximal disks found                             |123.05| 48612|4
+2019-04-15 21:25:58,232 -> 2.Join done                                       | 28.66|242197|4
+2019-04-15 21:26:02,049 -> 3.Flocks to report                                |  3.82|192645|4
+2019-04-15 21:27:08,311 -> 4a.Making expansions                              | 66.13|284988|4
+2019-04-15 21:27:25,555 -> 4b.Finding maximals                               | 17.24| 80990|4
+2019-04-15 21:27:42,347 -> 4c.Selecting and mapping                          | 16.79| 80990|4
+2019-04-15 21:27:42,994 -> 4d.Filtering and distinc                          |  0.65| 80990|4
+2019-04-15 21:27:44,768 -> 4.Flocks prunned by expansion                     |102.72| 46940|4
+2019-04-15 21:27:45,738 -> 5.Flocks reported                                 |  0.97| 46940|4
+2019-04-15 21:28:04,002 -> 6.Candidates indexed                              | 18.26| 99020|4
+2019-04-15 21:28:04,915 -> A.Points indexed                                  |  0.91|148396|5
+2019-04-15 21:28:07,532 -> B.Pairs found                                     |  2.62|283628|5
+2019-04-15 21:28:08,348 -> C.Centers found                                   |  0.82|567256|5
+2019-04-15 21:28:30,056 -> D.Disks found                                     | 20.15|239780|5
+2019-04-15 21:28:31,570 -> E.Disks indexed                                   |  1.51|239780|5
+2019-04-15 21:29:17,025 -> F.Expansions gotten                               | 45.46|377780|5
+2019-04-15 21:29:45,840 -> G.Maximal disks found                             | 28.81| 78335|5
+2019-04-15 21:30:14,837 -> H.Maximal disks prunned                           | 29.00| 48484|5
+2019-04-15 21:30:15,877 -> 1.Maximal disks found                             |131.88| 48484|5
+2019-04-15 21:31:04,643 -> 2.Join done                                       | 48.77|258936|5
+2019-04-15 21:31:09,270 -> 3.Flocks to report                                |  4.63|228032|5
+2019-04-15 21:32:13,259 -> 4a.Making expansions                              | 63.84|318241|5
+2019-04-15 21:32:43,886 -> 4b.Finding maximals                               | 30.63| 82435|5
+2019-04-15 21:32:58,880 -> 4c.Selecting and mapping                          | 14.99| 82435|5
+2019-04-15 21:32:59,502 -> 4d.Filtering and distinc                          |  0.62| 82435|5
+2019-04-15 21:33:01,081 -> 4.Flocks prunned by expansion                     |111.81| 47612|5
+2019-04-15 21:33:02,060 -> 5.Flocks reported                                 |  0.98| 47612|5
+2019-04-15 21:33:18,113 -> 6.Candidates indexed                              | 16.05| 81004|5
+2019-04-15 21:33:26,731 -> Number of flocks: 186272
+2019-04-15 21:33:27,097 -> PFLOCK;8;1;100.0;3;3;1415.02;186272;app-20190415210936-0005
+2019-04-15 21:33:30,530 -> EXECUTORS;8;0;187687;348750;1353.08s;19698.11MB;169.235.27.137:39382;app-20190415210936-0005
+2019-04-15 21:33:30,531 -> FlockFinder runs in 1418.82s
+2019-04-15 21:33:35,615 -> Session app-20190415210936-0005 closed.
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B4.tsv --epsilon 100 --mu 3 --delta 4 --distance 75 --master 169.235.27.138 --cores 8 --executors 1 --spatial CUSTOM --customy 50 --customx 200 --customymf 40 --customxmf 160 --fftimestamp 6
+2019-04-15 21:33:40,410 -> Session app-20190415213340-0006 started in 1.909s...
+2019-04-15 21:36:09,172 -> 883080 points read in 148.762s
+2019-04-15 21:36:09,173 -> Current timestamps: 0 1 2 3 4 5
+2019-04-15 21:36:09,711 -> A.Points indexed                                  |  0.50|144756|0
+2019-04-15 21:36:14,100 -> B.Pairs found                                     |  4.39|271668|0
+2019-04-15 21:36:16,014 -> C.Centers found                                   |  1.91|543336|0
+2019-04-15 21:36:33,021 -> D.Disks found                                     | 15.71|229332|0
+2019-04-15 21:36:35,015 -> E.Disks indexed                                   |  1.99|229332|0
+2019-04-15 21:37:16,328 -> F.Expansions gotten                               | 41.31|360974|0
+2019-04-15 21:37:43,307 -> G.Maximal disks found                             | 26.98| 74241|0
+2019-04-15 21:38:11,373 -> H.Maximal disks prunned                           | 28.07| 46028|0
+2019-04-15 21:38:12,374 -> 1.Maximal disks found                             |123.17| 46028|0
+2019-04-15 21:38:12,793 -> A.Points indexed                                  |  0.17|145972|1
+2019-04-15 21:38:15,437 -> B.Pairs found                                     |  2.64|275708|1
+2019-04-15 21:38:16,013 -> C.Centers found                                   |  0.58|551416|1
+2019-04-15 21:38:30,019 -> D.Disks found                                     | 12.68|232932|1
+2019-04-15 21:38:31,657 -> E.Disks indexed                                   |  1.64|232932|1
+2019-04-15 21:39:15,956 -> F.Expansions gotten                               | 44.30|366925|1
+2019-04-15 21:39:44,660 -> G.Maximal disks found                             | 28.70| 75623|1
+2019-04-15 21:40:03,744 -> H.Maximal disks prunned                           | 19.08| 46900|1
+2019-04-15 21:40:04,728 -> 1.Maximal disks found                             |112.11| 46900|1
+2019-04-15 21:40:14,899 -> 2.Join done                                       | 10.17|135052|1
+2019-04-15 21:40:16,477 -> 3.Flocks to report                                |  1.58|     0|1
+2019-04-15 21:40:16,524 -> 4.Flocks prunned by expansion                     |  0.05|     0|1
+2019-04-15 21:40:16,531 -> 5.Flocks reported                                 |  0.01|     0|1
+2019-04-15 21:40:32,221 -> 6.Candidates indexed                              | 15.69|138980|1
+2019-04-15 21:40:32,379 -> A.Points indexed                                  |  0.16|147164|2
+2019-04-15 21:40:35,045 -> B.Pairs found                                     |  2.67|279356|2
+2019-04-15 21:40:35,824 -> C.Centers found                                   |  0.78|558712|2
+2019-04-15 21:40:50,248 -> D.Disks found                                     | 13.17|236396|2
+2019-04-15 21:40:52,148 -> E.Disks indexed                                   |  1.90|236396|2
+2019-04-15 21:41:35,123 -> F.Expansions gotten                               | 42.98|372745|2
+2019-04-15 21:42:03,269 -> G.Maximal disks found                             | 28.14| 77053|2
+2019-04-15 21:42:21,998 -> H.Maximal disks prunned                           | 18.73| 47740|2
+2019-04-15 21:42:23,016 -> 1.Maximal disks found                             |110.79| 47740|2
+2019-04-15 21:43:13,460 -> 2.Join done                                       | 50.44|258280|2
+2019-04-15 21:43:16,024 -> 3.Flocks to report                                |  2.56|     0|2
+2019-04-15 21:43:16,073 -> 4.Flocks prunned by expansion                     |  0.05|     0|2
+2019-04-15 21:43:16,078 -> 5.Flocks reported                                 |  0.01|     0|2
+2019-04-15 21:43:37,944 -> 6.Candidates indexed                              | 21.87|234832|2
+2019-04-15 21:43:38,099 -> A.Points indexed                                  |  0.16|148396|3
+2019-04-15 21:43:40,773 -> B.Pairs found                                     |  2.67|284132|3
+2019-04-15 21:43:41,563 -> C.Centers found                                   |  0.79|568264|3
+2019-04-15 21:43:56,901 -> D.Disks found                                     | 14.09|241140|3
+2019-04-15 21:44:02,724 -> E.Disks indexed                                   |  5.82|241140|3
+2019-04-15 21:44:43,477 -> F.Expansions gotten                               | 40.75|379536|3
+2019-04-15 21:45:15,583 -> G.Maximal disks found                             | 32.11| 78358|3
+2019-04-15 21:45:35,304 -> H.Maximal disks prunned                           | 19.72| 48532|3
+2019-04-15 21:45:36,290 -> 1.Maximal disks found                             |118.35| 48532|3
+2019-04-15 21:48:00,964 -> 2.Join done                                       |144.67|363339|3
+2019-04-15 21:48:07,281 -> 3.Flocks to report                                |  6.32|276344|3
+2019-04-15 21:49:22,415 -> 4a.Making expansions                              | 74.97|384977|3
+2019-04-15 21:49:54,198 -> 4b.Finding maximals                               | 31.78| 78099|3
+2019-04-15 21:50:09,443 -> 4c.Selecting and mapping                          | 15.25| 78099|3
+2019-04-15 21:50:10,033 -> 4d.Filtering and distinc                          |  0.59| 78099|3
+2019-04-15 21:50:11,658 -> 4.Flocks prunned by expansion                     |124.38| 45204|3
+2019-04-15 21:50:12,708 -> 5.Flocks reported                                 |  1.05| 45204|3
+2019-04-15 21:50:34,333 -> 6.Candidates indexed                              | 21.62|121423|3
+2019-04-15 21:50:35,222 -> A.Points indexed                                  |  0.89|148396|4
+2019-04-15 21:50:37,963 -> B.Pairs found                                     |  2.74|283844|4
+2019-04-15 21:50:38,531 -> C.Centers found                                   |  0.57|567688|4
+2019-04-15 21:51:03,945 -> D.Disks found                                     | 23.99|240244|4
+2019-04-15 21:51:05,874 -> E.Disks indexed                                   |  1.93|240244|4
+2019-04-15 21:51:52,204 -> F.Expansions gotten                               | 46.33|377955|4
+2019-04-15 21:52:21,720 -> G.Maximal disks found                             | 29.52| 78513|4
+2019-04-15 21:52:38,379 -> H.Maximal disks prunned                           | 16.66| 48612|4
+2019-04-15 21:52:39,402 -> 1.Maximal disks found                             |125.07| 48612|4
+2019-04-15 21:53:29,000 -> 2.Join done                                       | 49.60|345602|4
+2019-04-15 21:53:33,396 -> 3.Flocks to report                                |  4.40|210495|4
+2019-04-15 21:54:41,329 -> 4a.Making expansions                              | 67.80|317345|4
+2019-04-15 21:55:02,254 -> 4b.Finding maximals                               | 20.92| 79295|4
+2019-04-15 21:55:28,069 -> 4c.Selecting and mapping                          | 25.82| 79295|4
+2019-04-15 21:55:28,732 -> 4d.Filtering and distinc                          |  0.66| 79295|4
+2019-04-15 21:55:30,350 -> 4.Flocks prunned by expansion                     |116.95| 45860|4
+2019-04-15 21:55:31,328 -> 5.Flocks reported                                 |  0.98| 45860|4
+2019-04-15 21:55:55,952 -> 6.Candidates indexed                              | 24.62|159873|4
+2019-04-15 21:55:56,994 -> A.Points indexed                                  |  1.04|148396|5
+2019-04-15 21:56:00,106 -> B.Pairs found                                     |  3.11|283628|5
+2019-04-15 21:56:00,864 -> C.Centers found                                   |  0.76|567256|5
+2019-04-15 21:56:16,450 -> D.Disks found                                     | 14.29|239780|5
+2019-04-15 21:56:18,619 -> E.Disks indexed                                   |  2.17|239780|5
+2019-04-15 21:57:01,676 -> F.Expansions gotten                               | 43.06|377780|5
+2019-04-15 21:57:30,866 -> G.Maximal disks found                             | 29.19| 78335|5
+2019-04-15 21:58:00,082 -> H.Maximal disks prunned                           | 29.22| 48484|5
+2019-04-15 21:58:01,096 -> 1.Maximal disks found                             |125.14| 48484|5
+2019-04-15 21:59:36,702 -> 2.Join done                                       | 95.61|373916|5
+2019-04-15 21:59:42,760 -> 3.Flocks to report                                |  6.06|236394|5
+2019-04-15 22:00:46,415 -> 4a.Making expansions                              | 63.50|332939|5
+2019-04-15 22:01:11,123 -> 4b.Finding maximals                               | 24.71| 80272|5
+2019-04-15 22:01:26,416 -> 4c.Selecting and mapping                          | 15.29| 80272|5
+2019-04-15 22:01:27,050 -> 4d.Filtering and distinc                          |  0.63| 80272|5
+2019-04-15 22:01:28,605 -> 4.Flocks prunned by expansion                     |105.84| 46428|5
+2019-04-15 22:01:29,621 -> 5.Flocks reported                                 |  1.02| 46428|5
+2019-04-15 22:01:55,844 -> 6.Candidates indexed                              | 26.22|164866|5
+2019-04-15 22:02:01,039 -> Number of flocks: 137492
+2019-04-15 22:02:01,417 -> PFLOCK;8;1;100.0;3;4;1551.87;137492;app-20190415213340-0006
+2019-04-15 22:02:04,884 -> EXECUTORS;8;0;155379;306594;1482.65s;20433.44MB;169.235.27.137:45121;app-20190415213340-0006
+2019-04-15 22:02:04,884 -> FlockFinder runs in 1555.71s
+2019-04-15 22:02:10,346 -> Session app-20190415213340-0006 closed.
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B4.tsv --epsilon 100 --mu 3 --delta 5 --distance 75 --master 169.235.27.138 --cores 8 --executors 1 --spatial CUSTOM --customy 50 --customx 200 --customymf 40 --customxmf 160 --fftimestamp 6
+2019-04-15 22:02:15,100 -> Session app-20190415220214-0007 started in 1.904s...
+2019-04-15 22:04:15,635 -> 883080 points read in 120.535s
+2019-04-15 22:04:15,637 -> Current timestamps: 0 1 2 3 4 5
+2019-04-15 22:04:16,159 -> A.Points indexed                                  |  0.48|144756|0
+2019-04-15 22:04:21,088 -> B.Pairs found                                     |  4.93|271668|0
+2019-04-15 22:04:21,907 -> C.Centers found                                   |  0.82|543336|0
+2019-04-15 22:04:42,185 -> D.Disks found                                     | 18.87|229332|0
+2019-04-15 22:04:43,990 -> E.Disks indexed                                   |  1.81|229332|0
+2019-04-15 22:05:26,650 -> F.Expansions gotten                               | 42.66|360974|0
+2019-04-15 22:05:54,008 -> G.Maximal disks found                             | 27.36| 74241|0
+2019-04-15 22:06:22,662 -> H.Maximal disks prunned                           | 28.65| 46028|0
+2019-04-15 22:06:23,727 -> 1.Maximal disks found                             |128.06| 46028|0
+2019-04-15 22:06:24,151 -> A.Points indexed                                  |  0.17|145972|1
+2019-04-15 22:06:27,060 -> B.Pairs found                                     |  2.91|275708|1
+2019-04-15 22:06:27,754 -> C.Centers found                                   |  0.69|551416|1
+2019-04-15 22:06:44,299 -> D.Disks found                                     | 15.26|232932|1
+2019-04-15 22:06:46,781 -> E.Disks indexed                                   |  2.48|232932|1
+2019-04-15 22:07:27,893 -> F.Expansions gotten                               | 41.11|366925|1
+2019-04-15 22:07:55,555 -> G.Maximal disks found                             | 27.66| 75623|1
+2019-04-15 22:08:18,652 -> H.Maximal disks prunned                           | 23.10| 46900|1
+2019-04-15 22:08:19,709 -> 1.Maximal disks found                             |115.73| 46900|1
+2019-04-15 22:08:30,338 -> 2.Join done                                       | 10.63|135052|1
+2019-04-15 22:08:32,098 -> 3.Flocks to report                                |  1.76|     0|1
+2019-04-15 22:08:32,150 -> 4.Flocks prunned by expansion                     |  0.05|     0|1
+2019-04-15 22:08:32,157 -> 5.Flocks reported                                 |  0.01|     0|1
+2019-04-15 22:08:49,159 -> 6.Candidates indexed                              | 17.00|138980|1
+2019-04-15 22:08:49,321 -> A.Points indexed                                  |  0.16|147164|2
+2019-04-15 22:08:52,305 -> B.Pairs found                                     |  2.98|279356|2
+2019-04-15 22:08:52,870 -> C.Centers found                                   |  0.57|558712|2
+2019-04-15 22:09:07,594 -> D.Disks found                                     | 13.41|236396|2
+2019-04-15 22:09:09,329 -> E.Disks indexed                                   |  1.73|236396|2
+2019-04-15 22:09:53,530 -> F.Expansions gotten                               | 44.20|372745|2
+2019-04-15 22:10:21,989 -> G.Maximal disks found                             | 28.46| 77053|2
+2019-04-15 22:10:41,093 -> H.Maximal disks prunned                           | 19.10| 47740|2
+2019-04-15 22:10:42,144 -> 1.Maximal disks found                             |112.99| 47740|2
+2019-04-15 22:11:38,292 -> 2.Join done                                       | 56.15|258270|2
+2019-04-15 22:11:40,792 -> 3.Flocks to report                                |  2.50|     0|2
+2019-04-15 22:11:40,838 -> 4.Flocks prunned by expansion                     |  0.05|     0|2
+2019-04-15 22:11:40,844 -> 5.Flocks reported                                 |  0.01|     0|2
+2019-04-15 22:12:03,764 -> 6.Candidates indexed                              | 22.92|234822|2
+2019-04-15 22:12:03,999 -> A.Points indexed                                  |  0.24|148396|3
+2019-04-15 22:12:07,034 -> B.Pairs found                                     |  3.04|284132|3
+2019-04-15 22:12:07,855 -> C.Centers found                                   |  0.82|568264|3
+2019-04-15 22:12:26,549 -> D.Disks found                                     | 17.41|241140|3
+2019-04-15 22:12:28,034 -> E.Disks indexed                                   |  1.49|241140|3
+2019-04-15 22:13:08,693 -> F.Expansions gotten                               | 40.66|379536|3
+2019-04-15 22:13:40,234 -> G.Maximal disks found                             | 31.54| 78358|3
+2019-04-15 22:14:00,264 -> H.Maximal disks prunned                           | 20.03| 48532|3
+2019-04-15 22:14:01,296 -> 1.Maximal disks found                             |117.53| 48532|3
+2019-04-15 22:16:24,951 -> 2.Join done                                       |143.66|363335|3
+2019-04-15 22:16:28,637 -> 3.Flocks to report                                |  3.69|     0|3
+2019-04-15 22:16:28,697 -> 4.Flocks prunned by expansion                     |  0.06|     0|3
+2019-04-15 22:16:28,703 -> 5.Flocks reported                                 |  0.01|     0|3
+2019-04-15 22:16:57,363 -> 6.Candidates indexed                              | 28.66|301890|3
+2019-04-15 22:16:57,513 -> A.Points indexed                                  |  0.15|148396|4
+2019-04-15 22:17:00,985 -> B.Pairs found                                     |  3.47|283844|4
+2019-04-15 22:17:01,572 -> C.Centers found                                   |  0.59|567688|4
+2019-04-15 22:17:18,575 -> D.Disks found                                     | 15.65|240244|4
+2019-04-15 22:17:20,473 -> E.Disks indexed                                   |  1.90|240244|4
+2019-04-15 22:18:04,878 -> F.Expansions gotten                               | 44.41|377955|4
+2019-04-15 22:18:35,445 -> G.Maximal disks found                             | 30.57| 78513|4
+2019-04-15 22:19:05,307 -> H.Maximal disks prunned                           | 29.86| 48612|4
+2019-04-15 22:19:06,327 -> 1.Maximal disks found                             |128.96| 48612|4
+2019-04-15 22:23:42,970 -> 2.Join done                                       |276.64|473328|4
+2019-04-15 22:23:51,355 -> 3.Flocks to report                                |  8.38|320052|4
+2019-04-15 22:25:09,693 -> 4a.Making expansions                              | 78.13|441900|4
+2019-04-15 22:25:51,909 -> 4b.Finding maximals                               | 42.22| 77649|4
+2019-04-15 22:26:20,084 -> 4c.Selecting and mapping                          | 28.18| 77649|4
+2019-04-15 22:26:20,718 -> 4d.Filtering and distinc                          |  0.63| 77649|4
+2019-04-15 22:26:22,391 -> 4.Flocks prunned by expansion                     |151.04| 44924|4
+2019-04-15 22:26:23,497 -> 5.Flocks reported                                 |  1.11| 44924|4
+2019-04-15 22:26:55,798 -> 6.Candidates indexed                              | 32.30|161748|4
+2019-04-15 22:26:56,868 -> A.Points indexed                                  |  1.07|148396|5
+2019-04-15 22:27:00,439 -> B.Pairs found                                     |  3.57|283628|5
+2019-04-15 22:27:01,029 -> C.Centers found                                   |  0.59|567256|5
+2019-04-15 22:27:16,459 -> D.Disks found                                     | 14.10|239780|5
+2019-04-15 22:27:18,238 -> E.Disks indexed                                   |  1.78|239780|5
+2019-04-15 22:28:03,268 -> F.Expansions gotten                               | 45.03|377780|5
+2019-04-15 22:28:32,644 -> G.Maximal disks found                             | 29.38| 78335|5
+2019-04-15 22:29:02,679 -> H.Maximal disks prunned                           | 30.04| 48484|5
+2019-04-15 22:29:03,723 -> 1.Maximal disks found                             |127.92| 48484|5
+2019-04-15 22:30:37,303 -> 2.Join done                                       | 93.58|463757|5
+2019-04-15 22:30:42,854 -> 3.Flocks to report                                |  5.55|226136|5
+2019-04-15 22:31:53,592 -> 4a.Making expansions                              | 70.60|333630|5
+2019-04-15 22:32:17,791 -> 4b.Finding maximals                               | 24.20| 78685|5
+2019-04-15 22:32:32,760 -> 4c.Selecting and mapping                          | 14.97| 78685|5
+2019-04-15 22:32:33,495 -> 4d.Filtering and distinc                          |  0.74| 78685|5
+2019-04-15 22:32:35,082 -> 4.Flocks prunned by expansion                     |112.23| 45428|5
+2019-04-15 22:32:36,093 -> 5.Flocks reported                                 |  1.01| 45428|5
+2019-04-15 22:33:09,729 -> 6.Candidates indexed                              | 33.64|217330|5
+2019-04-15 22:33:12,544 -> Number of flocks: 90352
+2019-04-15 22:33:12,760 -> PFLOCK;8;1;100.0;3;5;1736.91;90352;app-20190415220214-0007
+2019-04-15 22:33:15,380 -> EXECUTORS;8;1;113487;264138;1653.36s;20581.84MB;169.235.27.134:36864;app-20190415220214-0007
+2019-04-15 22:33:15,380 -> FlockFinder runs in 1739.74s
+2019-04-15 22:33:20,449 -> Session app-20190415220214-0007 closed.
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B4.tsv --epsilon 100 --mu 3 --delta 6 --distance 75 --master 169.235.27.138 --cores 8 --executors 1 --spatial CUSTOM --customy 50 --customx 200 --customymf 40 --customxmf 160 --fftimestamp 6
+2019-04-15 22:33:25,214 -> Session app-20190415223324-0008 started in 1.946s...
+2019-04-15 22:34:30,111 -> 883080 points read in 64.897s
+2019-04-15 22:34:30,113 -> Current timestamps: 0 1 2 3 4 5
+2019-04-15 22:34:30,643 -> A.Points indexed                                  |  0.49|144756|0
+2019-04-15 22:34:35,234 -> B.Pairs found                                     |  4.59|271668|0
+2019-04-15 22:34:37,264 -> C.Centers found                                   |  2.03|543336|0
+2019-04-15 22:34:56,443 -> D.Disks found                                     | 17.82|229332|0
+2019-04-15 22:34:58,294 -> E.Disks indexed                                   |  1.85|229332|0
+2019-04-15 22:35:41,633 -> F.Expansions gotten                               | 43.34|360974|0
+2019-04-15 22:36:09,467 -> G.Maximal disks found                             | 27.83| 74241|0
+2019-04-15 22:36:37,702 -> H.Maximal disks prunned                           | 28.24| 46028|0
+2019-04-15 22:36:38,784 -> 1.Maximal disks found                             |128.64| 46028|0
+2019-04-15 22:36:39,205 -> A.Points indexed                                  |  0.18|145972|1
+2019-04-15 22:36:42,029 -> B.Pairs found                                     |  2.82|275708|1
+2019-04-15 22:36:42,780 -> C.Centers found                                   |  0.75|551416|1
+2019-04-15 22:36:56,436 -> D.Disks found                                     | 12.42|232932|1
+2019-04-15 22:36:58,119 -> E.Disks indexed                                   |  1.68|232932|1
+2019-04-15 22:37:40,674 -> F.Expansions gotten                               | 42.56|366925|1
+2019-04-15 22:38:07,918 -> G.Maximal disks found                             | 27.24| 75623|1
+2019-04-15 22:38:26,359 -> H.Maximal disks prunned                           | 18.44| 46900|1
+2019-04-15 22:38:27,449 -> 1.Maximal disks found                             |108.42| 46900|1
+2019-04-15 22:38:38,378 -> 2.Join done                                       | 10.93|135052|1
+2019-04-15 22:38:40,061 -> 3.Flocks to report                                |  1.68|     0|1
+2019-04-15 22:38:40,112 -> 4.Flocks prunned by expansion                     |  0.05|     0|1
+2019-04-15 22:38:40,119 -> 5.Flocks reported                                 |  0.01|     0|1
+2019-04-15 22:38:57,036 -> 6.Candidates indexed                              | 16.92|138980|1
+2019-04-15 22:38:57,194 -> A.Points indexed                                  |  0.16|147164|2
+2019-04-15 22:38:59,902 -> B.Pairs found                                     |  2.71|279356|2
+2019-04-15 22:39:00,724 -> C.Centers found                                   |  0.82|558712|2
+2019-04-15 22:39:18,472 -> D.Disks found                                     | 16.52|236396|2
+2019-04-15 22:39:19,968 -> E.Disks indexed                                   |  1.50|236396|2
+2019-04-15 22:39:59,991 -> F.Expansions gotten                               | 40.02|372745|2
+2019-04-15 22:40:29,814 -> G.Maximal disks found                             | 29.82| 77053|2
+2019-04-15 22:40:49,142 -> H.Maximal disks prunned                           | 19.33| 47740|2
+2019-04-15 22:40:50,213 -> 1.Maximal disks found                             |113.18| 47740|2
+2019-04-15 22:41:47,949 -> 2.Join done                                       | 57.74|258280|2
+2019-04-15 22:41:50,681 -> 3.Flocks to report                                |  2.73|     0|2
+2019-04-15 22:41:50,742 -> 4.Flocks prunned by expansion                     |  0.06|     0|2
+2019-04-15 22:41:50,747 -> 5.Flocks reported                                 |  0.01|     0|2
+2019-04-15 22:42:14,238 -> 6.Candidates indexed                              | 23.49|234832|2
+2019-04-15 22:42:14,394 -> A.Points indexed                                  |  0.16|148396|3
+2019-04-15 22:42:17,221 -> B.Pairs found                                     |  2.83|284132|3
+2019-04-15 22:42:18,071 -> C.Centers found                                   |  0.85|568264|3
+2019-04-15 22:42:33,569 -> D.Disks found                                     | 14.19|241140|3
+2019-04-15 22:42:35,320 -> E.Disks indexed                                   |  1.75|241140|3
+2019-04-15 22:43:17,824 -> F.Expansions gotten                               | 42.50|379536|3
+2019-04-15 22:43:52,879 -> G.Maximal disks found                             | 35.06| 78358|3
+2019-04-15 22:44:09,955 -> H.Maximal disks prunned                           | 17.08| 48532|3
+2019-04-15 22:44:11,011 -> 1.Maximal disks found                             |116.77| 48532|3
+2019-04-15 22:46:33,519 -> 2.Join done                                       |142.51|363341|3
+2019-04-15 22:46:37,237 -> 3.Flocks to report                                |  3.72|     0|3
+2019-04-15 22:46:37,303 -> 4.Flocks prunned by expansion                     |  0.07|     0|3
+2019-04-15 22:46:37,309 -> 5.Flocks reported                                 |  0.01|     0|3
+2019-04-15 22:47:09,102 -> 6.Candidates indexed                              | 31.79|301891|3
+2019-04-15 22:47:09,259 -> A.Points indexed                                  |  0.16|148396|4
+2019-04-15 22:47:12,554 -> B.Pairs found                                     |  3.30|283844|4
+2019-04-15 22:47:13,365 -> C.Centers found                                   |  0.81|567688|4
+2019-04-15 22:47:29,935 -> D.Disks found                                     | 14.96|240244|4
+2019-04-15 22:47:31,515 -> E.Disks indexed                                   |  1.58|240244|4
+2019-04-15 22:48:15,332 -> F.Expansions gotten                               | 43.82|377955|4
+2019-04-15 22:48:47,809 -> G.Maximal disks found                             | 32.48| 78513|4
+2019-04-15 22:49:21,971 -> H.Maximal disks prunned                           | 34.16| 48612|4
+2019-04-15 22:49:23,005 -> 1.Maximal disks found                             |133.90| 48612|4
+2019-04-15 22:54:34,336 -> 2.Join done                                       |311.33|473325|4
+2019-04-15 22:54:39,140 -> 3.Flocks to report                                |  4.80|     0|4
+2019-04-15 22:54:39,204 -> 4.Flocks prunned by expansion                     |  0.06|     0|4
+2019-04-15 22:54:39,209 -> 5.Flocks reported                                 |  0.01|     0|4
+2019-04-15 22:55:11,388 -> 6.Candidates indexed                              | 32.18|364555|4
+2019-04-15 22:55:12,618 -> A.Points indexed                                  |  1.23|148396|5
+2019-04-15 22:55:18,171 -> B.Pairs found                                     |  5.55|283628|5
+2019-04-15 22:55:18,805 -> C.Centers found                                   |  0.63|567256|5
+2019-04-15 22:55:47,885 -> D.Disks found                                     | 25.93|239780|5
+2019-04-15 22:55:49,810 -> E.Disks indexed                                   |  1.93|239780|5
+2019-04-15 22:56:33,126 -> F.Expansions gotten                               | 43.32|377780|5
+2019-04-15 22:57:03,218 -> G.Maximal disks found                             | 30.09| 78335|5
+2019-04-15 22:57:32,574 -> H.Maximal disks prunned                           | 29.36| 48484|5
+2019-04-15 22:57:33,612 -> 1.Maximal disks found                             |142.22| 48484|5
+2019-04-15 23:06:25,464 -> 2.Join done                                       |531.85|606343|5
+2019-04-15 23:06:35,863 -> 3.Flocks to report                                | 10.40|376980|5
+2019-04-15 23:07:54,905 -> 4a.Making expansions                              | 78.85|507945|5
+2019-04-15 23:08:52,776 -> 4b.Finding maximals                               | 57.87| 77021|5
+2019-04-15 23:09:09,434 -> 4c.Selecting and mapping                          | 16.66| 77021|5
+2019-04-15 23:09:10,122 -> 4d.Filtering and distinc                          |  0.69| 77021|5
+2019-04-15 23:09:11,757 -> 4.Flocks prunned by expansion                     |155.89| 44476|5
+2019-04-15 23:09:12,816 -> 5.Flocks reported                                 |  1.06| 44476|5
+2019-04-15 23:09:47,377 -> 6.Candidates indexed                              | 34.56|209038|5
+2019-04-15 23:09:48,340 -> Number of flocks: 44476
+2019-04-15 23:09:48,452 -> PFLOCK;8;1;100.0;3;6;2118.23;44476;app-20190415223324-0008
+2019-04-15 23:09:51,007 -> EXECUTORS;8;0;92554;221736;1970.60s;20559.51MB;169.235.27.134:44488;app-20190415223324-0008
+2019-04-15 23:09:51,008 -> FlockFinder runs in 2120.90s
+2019-04-15 23:09:56,087 -> Session app-20190415223324-0008 closed.
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B4.tsv --epsilon 100 --mu 3 --delta 3 --distance 75 --master 169.235.27.138 --cores 8 --executors 1 --spatial CUSTOM --customy 50 --customx 200 --customymf 40 --customxmf 160 --fftimestamp 6
+2019-04-15 23:10:00,883 -> Session app-20190415231000-0009 started in 1.939s...
+2019-04-15 23:10:34,233 -> 883080 points read in 33.349s
+2019-04-15 23:10:34,235 -> Current timestamps: 0 1 2 3 4 5
+2019-04-15 23:10:34,787 -> A.Points indexed                                  |  0.51|144756|0
+2019-04-15 23:10:39,153 -> B.Pairs found                                     |  4.37|271668|0
+2019-04-15 23:10:39,999 -> C.Centers found                                   |  0.85|543336|0
+2019-04-15 23:10:57,570 -> D.Disks found                                     | 15.49|229332|0
+2019-04-15 23:10:59,621 -> E.Disks indexed                                   |  2.05|229332|0
+2019-04-15 23:11:42,200 -> F.Expansions gotten                               | 42.58|360974|0
+2019-04-15 23:12:09,334 -> G.Maximal disks found                             | 27.13| 74241|0
+2019-04-15 23:12:37,113 -> H.Maximal disks prunned                           | 27.78| 46028|0
+2019-04-15 23:12:38,184 -> 1.Maximal disks found                             |123.92| 46028|0
+2019-04-15 23:12:38,611 -> A.Points indexed                                  |  0.17|145972|1
+2019-04-15 23:12:41,330 -> B.Pairs found                                     |  2.72|275708|1
+2019-04-15 23:12:42,046 -> C.Centers found                                   |  0.72|551416|1
+2019-04-15 23:12:57,299 -> D.Disks found                                     | 13.97|232932|1
+2019-04-15 23:12:59,476 -> E.Disks indexed                                   |  2.18|232932|1
+2019-04-15 23:13:40,925 -> F.Expansions gotten                               | 41.45|366925|1
+2019-04-15 23:14:07,540 -> G.Maximal disks found                             | 26.61| 75623|1
+2019-04-15 23:14:27,839 -> H.Maximal disks prunned                           | 20.30| 46900|1
+2019-04-15 23:14:28,845 -> 1.Maximal disks found                             |110.41| 46900|1
+2019-04-15 23:14:39,287 -> 2.Join done                                       | 10.44|135052|1
+2019-04-15 23:14:40,951 -> 3.Flocks to report                                |  1.66|     0|1
+2019-04-15 23:14:40,996 -> 4.Flocks prunned by expansion                     |  0.05|     0|1
+2019-04-15 23:14:41,003 -> 5.Flocks reported                                 |  0.01|     0|1
+2019-04-15 23:14:57,413 -> 6.Candidates indexed                              | 16.41|138980|1
+2019-04-15 23:14:57,568 -> A.Points indexed                                  |  0.15|147164|2
+2019-04-15 23:15:00,281 -> B.Pairs found                                     |  2.71|279356|2
+2019-04-15 23:15:01,100 -> C.Centers found                                   |  0.82|558712|2
+2019-04-15 23:15:15,817 -> D.Disks found                                     | 13.61|236396|2
+2019-04-15 23:15:17,477 -> E.Disks indexed                                   |  1.66|236396|2
+2019-04-15 23:16:00,042 -> F.Expansions gotten                               | 42.57|372745|2
+2019-04-15 23:16:28,465 -> G.Maximal disks found                             | 28.42| 77053|2
+2019-04-15 23:16:47,229 -> H.Maximal disks prunned                           | 18.76| 47740|2
+2019-04-15 23:16:48,324 -> 1.Maximal disks found                             |110.91| 47740|2
+2019-04-15 23:17:43,687 -> 2.Join done                                       | 55.36|258280|2
+2019-04-15 23:17:47,955 -> 3.Flocks to report                                |  4.27|220320|2
+2019-04-15 23:18:53,132 -> 4a.Making expansions                              | 65.06|312550|2
+2019-04-15 23:19:16,769 -> 4b.Finding maximals                               | 23.64| 78890|2
+2019-04-15 23:19:32,030 -> 4c.Selecting and mapping                          | 15.26| 78890|2
+2019-04-15 23:19:32,777 -> 4d.Filtering and distinc                          |  0.75| 78890|2
+2019-04-15 23:19:34,464 -> 4.Flocks prunned by expansion                     |106.51| 45580|2
+2019-04-15 23:19:35,449 -> 5.Flocks reported                                 |  0.99| 45580|2
+2019-04-15 23:19:52,927 -> 6.Candidates indexed                              | 17.48| 87364|2
+2019-04-15 23:19:53,085 -> A.Points indexed                                  |  0.16|148396|3
+2019-04-15 23:19:55,866 -> B.Pairs found                                     |  2.78|284132|3
+2019-04-15 23:19:56,619 -> C.Centers found                                   |  0.75|568264|3
+2019-04-15 23:20:12,347 -> D.Disks found                                     | 14.44|241140|3
+2019-04-15 23:20:18,256 -> E.Disks indexed                                   |  5.91|241140|3
+2019-04-15 23:20:59,714 -> F.Expansions gotten                               | 41.46|379536|3
+2019-04-15 23:21:30,881 -> G.Maximal disks found                             | 31.17| 78358|3
+2019-04-15 23:21:48,335 -> H.Maximal disks prunned                           | 17.45| 48532|3
+2019-04-15 23:21:49,367 -> 1.Maximal disks found                             |116.44| 48532|3
+2019-04-15 23:22:22,542 -> 2.Join done                                       | 33.18|236756|3
+2019-04-15 23:22:26,203 -> 3.Flocks to report                                |  3.66|200436|3
+2019-04-15 23:23:33,524 -> 4a.Making expansions                              | 67.18|298899|3
+2019-04-15 23:23:52,636 -> 4b.Finding maximals                               | 19.11| 79686|3
+2019-04-15 23:24:07,452 -> 4c.Selecting and mapping                          | 14.82| 79686|3
+2019-04-15 23:24:08,079 -> 4d.Filtering and distinc                          |  0.63| 79686|3
+2019-04-15 23:24:09,842 -> 4.Flocks prunned by expansion                     |103.64| 46140|3
+2019-04-15 23:24:10,818 -> 5.Flocks reported                                 |  0.98| 46140|3
+2019-04-15 23:24:28,236 -> 6.Candidates indexed                              | 17.42| 86692|3
+2019-04-15 23:24:29,130 -> A.Points indexed                                  |  0.89|148396|4
+2019-04-15 23:24:32,022 -> B.Pairs found                                     |  2.87|283844|4
+2019-04-15 23:24:32,882 -> C.Centers found                                   |  0.86|567688|4
+2019-04-15 23:24:47,921 -> D.Disks found                                     | 13.73|240244|4
+2019-04-15 23:24:50,060 -> E.Disks indexed                                   |  2.14|240244|4
+2019-04-15 23:25:39,610 -> F.Expansions gotten                               | 49.55|377955|4
+2019-04-15 23:26:09,308 -> G.Maximal disks found                             | 29.70| 78513|4
+2019-04-15 23:26:38,532 -> H.Maximal disks prunned                           | 29.22| 48612|4
+2019-04-15 23:26:39,624 -> 1.Maximal disks found                             |131.39| 48612|4
+2019-04-15 23:27:14,242 -> 2.Join done                                       | 34.62|242197|4
+2019-04-15 23:27:18,479 -> 3.Flocks to report                                |  4.24|192645|4
+2019-04-15 23:28:28,119 -> 4a.Making expansions                              | 69.51|284620|4
+2019-04-15 23:28:46,277 -> 4b.Finding maximals                               | 18.16| 80979|4
+2019-04-15 23:29:03,559 -> 4c.Selecting and mapping                          | 17.28| 80979|4
+2019-04-15 23:29:04,221 -> 4d.Filtering and distinc                          |  0.66| 80979|4
+2019-04-15 23:29:05,867 -> 4.Flocks prunned by expansion                     |107.39| 46940|4
+2019-04-15 23:29:06,933 -> 5.Flocks reported                                 |  1.07| 46940|4
+2019-04-15 23:29:26,526 -> 6.Candidates indexed                              | 19.59| 99020|4
+2019-04-15 23:29:27,418 -> A.Points indexed                                  |  0.89|148396|5
+2019-04-15 23:29:30,241 -> B.Pairs found                                     |  2.82|283628|5
+2019-04-15 23:29:31,086 -> C.Centers found                                   |  0.85|567256|5
+2019-04-15 23:29:54,462 -> D.Disks found                                     | 22.04|239780|5
+2019-04-15 23:29:56,765 -> E.Disks indexed                                   |  2.30|239780|5
+2019-04-15 23:30:45,882 -> F.Expansions gotten                               | 49.12|377780|5
+2019-04-15 23:31:14,723 -> G.Maximal disks found                             | 28.84| 78335|5
+2019-04-15 23:31:43,995 -> H.Maximal disks prunned                           | 29.27| 48484|5
+2019-04-15 23:31:45,180 -> 1.Maximal disks found                             |138.65| 48484|5
+2019-04-15 23:32:30,224 -> 2.Join done                                       | 45.04|258935|5
+2019-04-15 23:32:35,190 -> 3.Flocks to report                                |  4.97|228031|5
+2019-04-15 23:33:50,956 -> 4a.Making expansions                              | 75.47|318111|5
+2019-04-15 23:34:18,045 -> 4b.Finding maximals                               | 27.09| 82435|5
+2019-04-15 23:34:36,330 -> 4c.Selecting and mapping                          | 18.29| 82435|5
+2019-04-15 23:34:36,967 -> 4d.Filtering and distinc                          |  0.64| 82435|5
+2019-04-15 23:34:38,686 -> 4.Flocks prunned by expansion                     |123.50| 47612|5
+2019-04-15 23:34:39,851 -> 5.Flocks reported                                 |  1.17| 47612|5
+2019-04-15 23:34:57,721 -> 6.Candidates indexed                              | 17.87| 81004|5
+2019-04-15 23:35:08,226 -> Number of flocks: 186272
+2019-04-15 23:35:08,606 -> PFLOCK;8;1;100.0;3;3;1473.99;186272;app-20190415231000-0009
+2019-04-15 23:35:12,123 -> EXECUTORS;8;0;184087;348702;1414.98s;19687.29MB;169.235.27.134:43664;app-20190415231000-0009
+2019-04-15 23:35:12,123 -> FlockFinder runs in 1477.89s
+2019-04-15 23:35:17,300 -> Session app-20190415231000-0009 closed.
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B4.tsv --epsilon 100 --mu 3 --delta 4 --distance 75 --master 169.235.27.138 --cores 8 --executors 1 --spatial CUSTOM --customy 50 --customx 200 --customymf 40 --customxmf 160 --fftimestamp 6
+2019-04-15 23:35:21,962 -> Session app-20190415233521-0010 started in 1.86s...
+2019-04-15 23:37:09,677 -> 883080 points read in 107.714s
+2019-04-15 23:37:09,678 -> Current timestamps: 0 1 2 3 4 5
+2019-04-15 23:37:10,186 -> A.Points indexed                                  |  0.47|144756|0
+2019-04-15 23:37:14,459 -> B.Pairs found                                     |  4.27|271668|0
+2019-04-15 23:37:16,512 -> C.Centers found                                   |  2.05|543336|0
+2019-04-15 23:37:33,106 -> D.Disks found                                     | 15.27|229332|0
+2019-04-15 23:37:35,184 -> E.Disks indexed                                   |  2.08|229332|0
+2019-04-15 23:38:20,091 -> F.Expansions gotten                               | 44.91|360974|0
+2019-04-15 23:38:47,432 -> G.Maximal disks found                             | 27.34| 74241|0
+2019-04-15 23:39:18,829 -> H.Maximal disks prunned                           | 31.40| 46028|0
+2019-04-15 23:39:19,904 -> 1.Maximal disks found                             |130.19| 46028|0
+2019-04-15 23:39:20,479 -> A.Points indexed                                  |  0.18|145972|1
+2019-04-15 23:39:23,220 -> B.Pairs found                                     |  2.74|275708|1
+2019-04-15 23:39:23,934 -> C.Centers found                                   |  0.71|551416|1
+2019-04-15 23:39:39,583 -> D.Disks found                                     | 14.38|232932|1
+2019-04-15 23:39:41,708 -> E.Disks indexed                                   |  2.13|232932|1
+2019-04-15 23:40:23,546 -> F.Expansions gotten                               | 41.84|366925|1
+2019-04-15 23:40:52,179 -> G.Maximal disks found                             | 28.63| 75623|1
+2019-04-15 23:41:12,102 -> H.Maximal disks prunned                           | 19.92| 46900|1
+2019-04-15 23:41:13,156 -> 1.Maximal disks found                             |112.86| 46900|1
+2019-04-15 23:41:23,705 -> 2.Join done                                       | 10.55|135052|1
+2019-04-15 23:41:25,335 -> 3.Flocks to report                                |  1.63|     0|1
+2019-04-15 23:41:25,382 -> 4.Flocks prunned by expansion                     |  0.05|     0|1
+2019-04-15 23:41:25,390 -> 5.Flocks reported                                 |  0.01|     0|1
+2019-04-15 23:41:41,811 -> 6.Candidates indexed                              | 16.42|138980|1
+2019-04-15 23:41:41,972 -> A.Points indexed                                  |  0.16|147164|2
+2019-04-15 23:41:44,840 -> B.Pairs found                                     |  2.87|279356|2
+2019-04-15 23:41:45,616 -> C.Centers found                                   |  0.78|558712|2
+2019-04-15 23:42:00,361 -> D.Disks found                                     | 13.47|236396|2
+2019-04-15 23:42:02,231 -> E.Disks indexed                                   |  1.87|236396|2
+2019-04-15 23:42:45,159 -> F.Expansions gotten                               | 42.93|372745|2
+2019-04-15 23:43:13,630 -> G.Maximal disks found                             | 28.47| 77053|2
+2019-04-15 23:43:43,290 -> H.Maximal disks prunned                           | 29.66| 47740|2
+2019-04-15 23:43:44,420 -> 1.Maximal disks found                             |122.61| 47740|2
+2019-04-15 23:44:36,842 -> 2.Join done                                       | 52.42|258280|2
+2019-04-15 23:44:39,378 -> 3.Flocks to report                                |  2.54|     0|2
+2019-04-15 23:44:39,428 -> 4.Flocks prunned by expansion                     |  0.05|     0|2
+2019-04-15 23:44:39,434 -> 5.Flocks reported                                 |  0.01|     0|2
+2019-04-15 23:45:01,986 -> 6.Candidates indexed                              | 22.55|234832|2
+2019-04-15 23:45:02,149 -> A.Points indexed                                  |  0.16|148396|3
+2019-04-15 23:45:05,020 -> B.Pairs found                                     |  2.87|284132|3
+2019-04-15 23:45:05,983 -> C.Centers found                                   |  0.96|568264|3
+2019-04-15 23:45:22,517 -> D.Disks found                                     | 15.15|241140|3
+2019-04-15 23:45:24,519 -> E.Disks indexed                                   |  2.00|241140|3
+2019-04-15 23:46:09,491 -> F.Expansions gotten                               | 44.97|379536|3
+2019-04-15 23:46:43,625 -> G.Maximal disks found                             | 34.13| 78358|3
+2019-04-15 23:47:00,710 -> H.Maximal disks prunned                           | 17.08| 48532|3
+2019-04-15 23:47:01,742 -> 1.Maximal disks found                             |119.76| 48532|3
+2019-04-15 23:49:42,299 -> 2.Join done                                       |160.56|363339|3
+2019-04-15 23:49:48,807 -> 3.Flocks to report                                |  6.51|276344|3
+2019-04-15 23:51:00,047 -> 4a.Making expansions                              | 71.07|385982|3
+2019-04-15 23:51:32,887 -> 4b.Finding maximals                               | 32.84| 78091|3
+2019-04-15 23:51:48,118 -> 4c.Selecting and mapping                          | 15.23| 78091|3
+2019-04-15 23:51:48,726 -> 4d.Filtering and distinc                          |  0.61| 78091|3
+2019-04-15 23:51:50,308 -> 4.Flocks prunned by expansion                     |121.50| 45204|3
+2019-04-15 23:51:51,316 -> 5.Flocks reported                                 |  1.01| 45204|3
+2019-04-15 23:52:13,181 -> 6.Candidates indexed                              | 21.86|121423|3
+2019-04-15 23:52:14,088 -> A.Points indexed                                  |  0.91|148396|4
+2019-04-15 23:52:16,778 -> B.Pairs found                                     |  2.69|283844|4
+2019-04-15 23:52:17,572 -> C.Centers found                                   |  0.79|567688|4
+2019-04-15 23:52:32,929 -> D.Disks found                                     | 14.08|240244|4
+2019-04-15 23:52:34,860 -> E.Disks indexed                                   |  1.93|240244|4
+2019-04-15 23:53:19,650 -> F.Expansions gotten                               | 44.79|377955|4
+2019-04-15 23:53:51,880 -> G.Maximal disks found                             | 32.23| 78513|4
+2019-04-15 23:54:21,164 -> H.Maximal disks prunned                           | 29.28| 48612|4
+2019-04-15 23:54:22,211 -> 1.Maximal disks found                             |129.03| 48612|4
+2019-04-15 23:55:13,957 -> 2.Join done                                       | 51.75|345596|4
+2019-04-15 23:55:18,458 -> 3.Flocks to report                                |  4.50|210495|4
+2019-04-15 23:56:23,377 -> 4a.Making expansions                              | 64.65|316325|4
+2019-04-15 23:56:43,677 -> 4b.Finding maximals                               | 20.30| 79288|4
+2019-04-15 23:57:09,220 -> 4c.Selecting and mapping                          | 25.54| 79288|4
+2019-04-15 23:57:09,861 -> 4d.Filtering and distinc                          |  0.64| 79288|4
+2019-04-15 23:57:11,489 -> 4.Flocks prunned by expansion                     |113.03| 45860|4
+2019-04-15 23:57:12,428 -> 5.Flocks reported                                 |  0.94| 45860|4
+2019-04-15 23:57:41,251 -> 6.Candidates indexed                              | 28.82|159868|4
+2019-04-15 23:57:42,165 -> A.Points indexed                                  |  0.91|148396|5
+2019-04-15 23:57:45,147 -> B.Pairs found                                     |  2.98|283628|5
+2019-04-15 23:57:45,748 -> C.Centers found                                   |  0.60|567256|5
+2019-04-15 23:58:01,968 -> D.Disks found                                     | 14.94|239780|5
+2019-04-15 23:58:03,995 -> E.Disks indexed                                   |  2.03|239780|5
+2019-04-15 23:58:47,742 -> F.Expansions gotten                               | 43.75|377780|5
+2019-04-15 23:59:16,336 -> G.Maximal disks found                             | 28.59| 78335|5
+2019-04-15 23:59:46,537 -> H.Maximal disks prunned                           | 30.20| 48484|5
+2019-04-15 23:59:47,561 -> 1.Maximal disks found                             |126.31| 48484|5
+2019-04-16 00:01:16,144 -> 2.Join done                                       | 88.58|373910|5
+2019-04-16 00:01:22,338 -> 3.Flocks to report                                |  6.19|236390|5
+2019-04-16 00:02:31,131 -> 4a.Making expansions                              | 68.65|333691|5
+2019-04-16 00:02:56,315 -> 4b.Finding maximals                               | 25.18| 80284|5
+2019-04-16 00:03:11,843 -> 4c.Selecting and mapping                          | 15.53| 80284|5
+2019-04-16 00:03:12,485 -> 4d.Filtering and distinc                          |  0.64| 80284|5
+2019-04-16 00:03:14,732 -> 4.Flocks prunned by expansion                     |112.39| 46428|5
+2019-04-16 00:03:15,695 -> 5.Flocks reported                                 |  0.96| 46428|5
+2019-04-16 00:03:42,633 -> 6.Candidates indexed                              | 26.94|164865|5
+2019-04-16 00:03:47,901 -> Number of flocks: 137492
+2019-04-16 00:03:48,176 -> PFLOCK;8;1;100.0;3;4;1598.22;137492;app-20190415233521-0010
+2019-04-16 00:03:51,503 -> EXECUTORS;8;0;155505;306990;1530.48s;20429.59MB;169.235.27.134:44429;app-20190415233521-0010
+2019-04-16 00:03:51,503 -> FlockFinder runs in 1601.82s
+2019-04-16 00:03:56,899 -> Session app-20190415233521-0010 closed.
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B4.tsv --epsilon 100 --mu 3 --delta 5 --distance 75 --master 169.235.27.138 --cores 8 --executors 1 --spatial CUSTOM --customy 50 --customx 200 --customymf 40 --customxmf 160 --fftimestamp 6
+2019-04-16 00:04:01,658 -> Session app-20190416000401-0011 started in 1.931s...
+2019-04-16 00:05:28,124 -> 883080 points read in 86.465s
+2019-04-16 00:05:28,126 -> Current timestamps: 0 1 2 3 4 5
+2019-04-16 00:05:28,818 -> A.Points indexed                                  |  0.65|144756|0
+2019-04-16 00:05:34,002 -> B.Pairs found                                     |  5.18|271668|0
+2019-04-16 00:05:34,813 -> C.Centers found                                   |  0.81|543336|0
+2019-04-16 00:05:53,258 -> D.Disks found                                     | 17.06|229332|0
+2019-04-16 00:05:54,971 -> E.Disks indexed                                   |  1.71|229332|0
+2019-04-16 00:06:37,428 -> F.Expansions gotten                               | 42.46|360974|0
+2019-04-16 00:07:04,719 -> G.Maximal disks found                             | 27.29| 74241|0
+2019-04-16 00:07:32,541 -> H.Maximal disks prunned                           | 27.82| 46028|0
+2019-04-16 00:07:33,608 -> 1.Maximal disks found                             |125.45| 46028|0
+2019-04-16 00:07:34,026 -> A.Points indexed                                  |  0.17|145972|1
+2019-04-16 00:07:36,721 -> B.Pairs found                                     |  2.70|275708|1
+2019-04-16 00:07:37,307 -> C.Centers found                                   |  0.59|551416|1
+2019-04-16 00:07:51,390 -> D.Disks found                                     | 12.92|232932|1
+2019-04-16 00:07:53,207 -> E.Disks indexed                                   |  1.82|232932|1
+2019-04-16 00:08:34,126 -> F.Expansions gotten                               | 40.92|366925|1
+2019-04-16 00:09:01,034 -> G.Maximal disks found                             | 26.91| 75623|1
+2019-04-16 00:09:19,340 -> H.Maximal disks prunned                           | 18.31| 46900|1
+2019-04-16 00:09:21,714 -> 1.Maximal disks found                             |107.86| 46900|1
+2019-04-16 00:09:31,759 -> 2.Join done                                       | 10.05|135052|1
+2019-04-16 00:09:33,437 -> 3.Flocks to report                                |  1.68|     0|1
+2019-04-16 00:09:33,487 -> 4.Flocks prunned by expansion                     |  0.05|     0|1
+2019-04-16 00:09:33,494 -> 5.Flocks reported                                 |  0.01|     0|1
+2019-04-16 00:09:50,134 -> 6.Candidates indexed                              | 16.64|138980|1
+2019-04-16 00:09:50,388 -> A.Points indexed                                  |  0.25|147164|2
+2019-04-16 00:09:53,077 -> B.Pairs found                                     |  2.69|279356|2
+2019-04-16 00:09:53,830 -> C.Centers found                                   |  0.75|558712|2
+2019-04-16 00:10:14,773 -> D.Disks found                                     | 19.66|236396|2
+2019-04-16 00:10:16,297 -> E.Disks indexed                                   |  1.52|236396|2
+2019-04-16 00:10:56,934 -> F.Expansions gotten                               | 40.64|372745|2
+2019-04-16 00:11:26,074 -> G.Maximal disks found                             | 29.14| 77053|2
+2019-04-16 00:11:49,365 -> H.Maximal disks prunned                           | 23.29| 47740|2
+2019-04-16 00:11:50,450 -> 1.Maximal disks found                             |120.32| 47740|2
+2019-04-16 00:12:47,734 -> 2.Join done                                       | 57.28|258270|2
+2019-04-16 00:12:49,858 -> 3.Flocks to report                                |  2.12|     0|2
+2019-04-16 00:12:49,903 -> 4.Flocks prunned by expansion                     |  0.05|     0|2
+2019-04-16 00:12:49,908 -> 5.Flocks reported                                 |  0.01|     0|2
+2019-04-16 00:13:11,735 -> 6.Candidates indexed                              | 21.83|234822|2
+2019-04-16 00:13:11,893 -> A.Points indexed                                  |  0.16|148396|3
+2019-04-16 00:13:15,226 -> B.Pairs found                                     |  3.33|284132|3
+2019-04-16 00:13:15,812 -> C.Centers found                                   |  0.59|568264|3
+2019-04-16 00:13:31,643 -> D.Disks found                                     | 14.32|241140|3
+2019-04-16 00:13:33,260 -> E.Disks indexed                                   |  1.62|241140|3
+2019-04-16 00:14:14,912 -> F.Expansions gotten                               | 41.65|379536|3
+2019-04-16 00:14:46,428 -> G.Maximal disks found                             | 31.52| 78358|3
+2019-04-16 00:15:07,448 -> H.Maximal disks prunned                           | 21.02| 48532|3
+2019-04-16 00:15:08,485 -> 1.Maximal disks found                             |116.75| 48532|3
+2019-04-16 00:17:34,890 -> 2.Join done                                       |146.41|363328|3
+2019-04-16 00:17:38,336 -> 3.Flocks to report                                |  3.45|     0|3
+2019-04-16 00:17:38,392 -> 4.Flocks prunned by expansion                     |  0.06|     0|3
+2019-04-16 00:17:38,397 -> 5.Flocks reported                                 |  0.01|     0|3
+2019-04-16 00:18:05,958 -> 6.Candidates indexed                              | 27.56|301877|3
+2019-04-16 00:18:06,112 -> A.Points indexed                                  |  0.15|148396|4
+2019-04-16 00:18:09,096 -> B.Pairs found                                     |  2.98|283844|4
+2019-04-16 00:18:09,905 -> C.Centers found                                   |  0.81|567688|4
+2019-04-16 00:18:26,113 -> D.Disks found                                     | 14.90|240244|4
+2019-04-16 00:18:32,649 -> E.Disks indexed                                   |  6.54|240244|4
+2019-04-16 00:19:13,915 -> F.Expansions gotten                               | 41.27|377955|4
+2019-04-16 00:19:46,873 -> G.Maximal disks found                             | 32.96| 78513|4
+2019-04-16 00:20:19,651 -> H.Maximal disks prunned                           | 32.78| 48612|4
+2019-04-16 00:20:20,722 -> 1.Maximal disks found                             |134.76| 48612|4
+2019-04-16 00:24:53,268 -> 2.Join done                                       |272.55|473323|4
+2019-04-16 00:25:02,096 -> 3.Flocks to report                                |  8.83|320044|4
+2019-04-16 00:26:15,131 -> 4a.Making expansions                              | 72.87|442572|4
+2019-04-16 00:26:56,578 -> 4b.Finding maximals                               | 41.45| 77653|4
+2019-04-16 00:27:23,499 -> 4c.Selecting and mapping                          | 26.92| 77653|4
+2019-04-16 00:27:24,097 -> 4d.Filtering and distinc                          |  0.60| 77653|4
+2019-04-16 00:27:25,637 -> 4.Flocks prunned by expansion                     |143.54| 44924|4
+2019-04-16 00:27:26,702 -> 5.Flocks reported                                 |  1.07| 44924|4
+2019-04-16 00:27:53,562 -> 6.Candidates indexed                              | 26.86|161753|4
+2019-04-16 00:27:54,591 -> A.Points indexed                                  |  1.03|148396|5
+2019-04-16 00:27:57,340 -> B.Pairs found                                     |  2.75|283628|5
+2019-04-16 00:27:58,147 -> C.Centers found                                   |  0.81|567256|5
+2019-04-16 00:28:13,597 -> D.Disks found                                     | 14.21|239780|5
+2019-04-16 00:28:15,606 -> E.Disks indexed                                   |  2.01|239780|5
+2019-04-16 00:28:59,715 -> F.Expansions gotten                               | 44.11|377780|5
+2019-04-16 00:29:29,072 -> G.Maximal disks found                             | 29.36| 78335|5
+2019-04-16 00:29:58,742 -> H.Maximal disks prunned                           | 29.67| 48484|5
+2019-04-16 00:29:59,810 -> 1.Maximal disks found                             |126.25| 48484|5
+2019-04-16 00:31:29,151 -> 2.Join done                                       | 89.34|463739|5
+2019-04-16 00:31:34,890 -> 3.Flocks to report                                |  5.74|226131|5
+2019-04-16 00:32:41,709 -> 4a.Making expansions                              | 66.68|333889|5
+2019-04-16 00:33:05,949 -> 4b.Finding maximals                               | 24.24| 78676|5
+2019-04-16 00:33:20,818 -> 4c.Selecting and mapping                          | 14.87| 78676|5
+2019-04-16 00:33:21,508 -> 4d.Filtering and distinc                          |  0.69| 78676|5
+2019-04-16 00:33:23,321 -> 4.Flocks prunned by expansion                     |108.43| 45428|5
+2019-04-16 00:33:24,303 -> 5.Flocks reported                                 |  0.98| 45428|5
+2019-04-16 00:33:58,290 -> 6.Candidates indexed                              | 33.99|217326|5
+2019-04-16 00:34:01,062 -> Number of flocks: 90352
+2019-04-16 00:34:01,266 -> PFLOCK;8;1;100.0;3;5;1712.94;90352;app-20190416000401-0011
+2019-04-16 00:34:04,556 -> EXECUTORS;8;0;123707;263811;1636.76s;20564.88MB;169.235.27.134:39270;app-20190416000401-0011
+2019-04-16 00:34:04,556 -> FlockFinder runs in 1716.43s
+2019-04-16 00:34:09,714 -> Session app-20190416000401-0011 closed.
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B4.tsv --epsilon 100 --mu 3 --delta 6 --distance 75 --master 169.235.27.138 --cores 8 --executors 1 --spatial CUSTOM --customy 50 --customx 200 --customymf 40 --customxmf 160 --fftimestamp 6
+2019-04-16 00:34:14,473 -> Session app-20190416003414-0012 started in 1.91s...
+2019-04-16 00:35:26,039 -> 883080 points read in 71.565s
+2019-04-16 00:35:26,041 -> Current timestamps: 0 1 2 3 4 5
+2019-04-16 00:35:26,596 -> A.Points indexed                                  |  0.51|144756|0
+2019-04-16 00:35:31,008 -> B.Pairs found                                     |  4.41|271668|0
+2019-04-16 00:35:31,953 -> C.Centers found                                   |  0.94|543336|0
+2019-04-16 00:35:48,002 -> D.Disks found                                     | 14.73|229332|0
+2019-04-16 00:35:49,695 -> E.Disks indexed                                   |  1.69|229332|0
+2019-04-16 00:36:34,269 -> F.Expansions gotten                               | 44.57|360974|0
+2019-04-16 00:37:01,886 -> G.Maximal disks found                             | 27.62| 74241|0
+2019-04-16 00:37:29,281 -> H.Maximal disks prunned                           | 27.40| 46028|0
+2019-04-16 00:37:30,334 -> 1.Maximal disks found                             |124.26| 46028|0
+2019-04-16 00:37:30,792 -> A.Points indexed                                  |  0.17|145972|1
+2019-04-16 00:37:33,656 -> B.Pairs found                                     |  2.86|275708|1
+2019-04-16 00:37:34,210 -> C.Centers found                                   |  0.55|551416|1
+2019-04-16 00:37:49,678 -> D.Disks found                                     | 14.20|232932|1
+2019-04-16 00:37:52,018 -> E.Disks indexed                                   |  2.34|232932|1
+2019-04-16 00:38:33,191 -> F.Expansions gotten                               | 41.17|366925|1
+2019-04-16 00:39:03,238 -> G.Maximal disks found                             | 30.05| 75623|1
+2019-04-16 00:39:20,968 -> H.Maximal disks prunned                           | 17.73| 46900|1
+2019-04-16 00:39:21,992 -> 1.Maximal disks found                             |111.37| 46900|1
+2019-04-16 00:39:32,561 -> 2.Join done                                       | 10.57|135052|1
+2019-04-16 00:39:34,213 -> 3.Flocks to report                                |  1.65|     0|1
+2019-04-16 00:39:34,263 -> 4.Flocks prunned by expansion                     |  0.05|     0|1
+2019-04-16 00:39:34,270 -> 5.Flocks reported                                 |  0.01|     0|1
+2019-04-16 00:39:51,173 -> 6.Candidates indexed                              | 16.90|138980|1
+2019-04-16 00:39:51,328 -> A.Points indexed                                  |  0.16|147164|2
+2019-04-16 00:39:53,998 -> B.Pairs found                                     |  2.67|279356|2
+2019-04-16 00:39:54,820 -> C.Centers found                                   |  0.82|558712|2
+2019-04-16 00:40:08,728 -> D.Disks found                                     | 12.73|236396|2
+2019-04-16 00:40:10,337 -> E.Disks indexed                                   |  1.61|236396|2
+2019-04-16 00:40:52,354 -> F.Expansions gotten                               | 42.02|372745|2
+2019-04-16 00:41:21,488 -> G.Maximal disks found                             | 29.13| 77053|2
+2019-04-16 00:41:49,054 -> H.Maximal disks prunned                           | 27.57| 47740|2
+2019-04-16 00:41:50,071 -> 1.Maximal disks found                             |118.90| 47740|2
+2019-04-16 00:42:47,347 -> 2.Join done                                       | 57.28|258280|2
+2019-04-16 00:42:49,738 -> 3.Flocks to report                                |  2.39|     0|2
+2019-04-16 00:42:49,789 -> 4.Flocks prunned by expansion                     |  0.05|     0|2
+2019-04-16 00:42:49,795 -> 5.Flocks reported                                 |  0.01|     0|2
+2019-04-16 00:43:11,407 -> 6.Candidates indexed                              | 21.61|234832|2
+2019-04-16 00:43:11,566 -> A.Points indexed                                  |  0.16|148396|3
+2019-04-16 00:43:14,588 -> B.Pairs found                                     |  3.02|284132|3
+2019-04-16 00:43:15,349 -> C.Centers found                                   |  0.76|568264|3
+2019-04-16 00:43:31,039 -> D.Disks found                                     | 14.22|241140|3
+2019-04-16 00:43:32,661 -> E.Disks indexed                                   |  1.62|241140|3
+2019-04-16 00:44:16,577 -> F.Expansions gotten                               | 43.92|379536|3
+2019-04-16 00:44:48,357 -> G.Maximal disks found                             | 31.78| 78358|3
+2019-04-16 00:45:08,239 -> H.Maximal disks prunned                           | 19.88| 48532|3
+2019-04-16 00:45:09,246 -> 1.Maximal disks found                             |117.84| 48532|3
+2019-04-16 00:47:28,140 -> 2.Join done                                       |138.89|363341|3
+2019-04-16 00:47:32,015 -> 3.Flocks to report                                |  3.88|     0|3
+2019-04-16 00:47:32,144 -> 4.Flocks prunned by expansion                     |  0.13|     0|3
+2019-04-16 00:47:32,150 -> 5.Flocks reported                                 |  0.01|     0|3
+2019-04-16 00:48:00,520 -> 6.Candidates indexed                              | 28.37|301891|3
+2019-04-16 00:48:00,674 -> A.Points indexed                                  |  0.15|148396|4
+2019-04-16 00:48:03,867 -> B.Pairs found                                     |  3.19|283844|4
+2019-04-16 00:48:04,477 -> C.Centers found                                   |  0.61|567688|4
+2019-04-16 00:48:24,598 -> D.Disks found                                     | 18.62|240244|4
+2019-04-16 00:48:26,437 -> E.Disks indexed                                   |  1.84|240244|4
+2019-04-16 00:49:09,077 -> F.Expansions gotten                               | 42.64|377955|4
+2019-04-16 00:49:39,505 -> G.Maximal disks found                             | 30.43| 78513|4
+2019-04-16 00:50:08,559 -> H.Maximal disks prunned                           | 29.05| 48612|4
+2019-04-16 00:50:09,576 -> 1.Maximal disks found                             |129.06| 48612|4
+2019-04-16 00:54:54,166 -> 2.Join done                                       |284.59|473298|4
+2019-04-16 00:54:58,802 -> 3.Flocks to report                                |  4.64|     0|4
+2019-04-16 00:54:58,870 -> 4.Flocks prunned by expansion                     |  0.07|     0|4
+2019-04-16 00:54:58,876 -> 5.Flocks reported                                 |  0.01|     0|4
+2019-04-16 00:55:33,728 -> 6.Candidates indexed                              | 34.85|364544|4
+2019-04-16 00:55:35,189 -> A.Points indexed                                  |  1.46|148396|5
+2019-04-16 00:55:39,682 -> B.Pairs found                                     |  4.49|283628|5
+2019-04-16 00:55:40,252 -> C.Centers found                                   |  0.57|567256|5
+2019-04-16 00:56:06,481 -> D.Disks found                                     | 22.97|239780|5
+2019-04-16 00:56:08,444 -> E.Disks indexed                                   |  1.96|239780|5
+2019-04-16 00:56:52,574 -> F.Expansions gotten                               | 44.13|377780|5
+2019-04-16 00:57:22,069 -> G.Maximal disks found                             | 29.50| 78335|5
+2019-04-16 00:57:50,831 -> H.Maximal disks prunned                           | 28.76| 48484|5
+2019-04-16 00:57:51,847 -> 1.Maximal disks found                             |138.12| 48484|5
+2019-04-16 01:05:56,987 -> 2.Join done                                       |485.14|606335|5
+2019-04-16 01:06:06,641 -> 3.Flocks to report                                |  9.65|376960|5
+2019-04-16 01:07:18,658 -> 4a.Making expansions                              | 71.82|507929|5
+2019-04-16 01:08:22,360 -> 4b.Finding maximals                               | 63.70| 77021|5
+2019-04-16 01:08:38,805 -> 4c.Selecting and mapping                          | 16.45| 77021|5
+2019-04-16 01:08:39,467 -> 4d.Filtering and distinc                          |  0.66| 77021|5
+2019-04-16 01:08:41,049 -> 4.Flocks prunned by expansion                     |154.41| 44476|5
+2019-04-16 01:08:42,060 -> 5.Flocks reported                                 |  1.01| 44476|5
+2019-04-16 01:09:18,297 -> 6.Candidates indexed                              | 36.24|209053|5
+2019-04-16 01:09:19,312 -> Number of flocks: 44476
+2019-04-16 01:09:19,468 -> PFLOCK;8;1;100.0;3;6;2033.27;44476;app-20190416003414-0012
+2019-04-16 01:09:22,081 -> EXECUTORS;8;0;92613;222204;1905.65s;20548.72MB;169.235.27.134:36969;app-20190416003414-0012
+2019-04-16 01:09:22,081 -> FlockFinder runs in 2036.04s
+2019-04-16 01:09:27,161 -> Session app-20190416003414-0012 closed.
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B4.tsv --epsilon 100 --mu 3 --delta 3 --distance 75 --master 169.235.27.138 --cores 8 --executors 1 --spatial CUSTOM --customy 50 --customx 200 --customymf 40 --customxmf 160 --fftimestamp 6
+2019-04-16 01:09:31,845 -> Session app-20190416010931-0013 started in 1.862s...
+2019-04-16 01:10:25,739 -> 883080 points read in 53.893s
+2019-04-16 01:10:25,740 -> Current timestamps: 0 1 2 3 4 5
+2019-04-16 01:10:26,244 -> A.Points indexed                                  |  0.46|144756|0
+2019-04-16 01:10:30,574 -> B.Pairs found                                     |  4.33|271668|0
+2019-04-16 01:10:32,773 -> C.Centers found                                   |  2.20|543336|0
+2019-04-16 01:10:48,370 -> D.Disks found                                     | 14.25|229332|0
+2019-04-16 01:10:50,041 -> E.Disks indexed                                   |  1.67|229332|0
+2019-04-16 01:11:33,746 -> F.Expansions gotten                               | 43.71|360974|0
+2019-04-16 01:12:01,100 -> G.Maximal disks found                             | 27.35| 74241|0
+2019-04-16 01:12:28,834 -> H.Maximal disks prunned                           | 27.73| 46028|0
+2019-04-16 01:12:29,905 -> 1.Maximal disks found                             |124.13| 46028|0
+2019-04-16 01:12:30,399 -> A.Points indexed                                  |  0.24|145972|1
+2019-04-16 01:12:33,229 -> B.Pairs found                                     |  2.83|275708|1
+2019-04-16 01:12:33,948 -> C.Centers found                                   |  0.72|551416|1
+2019-04-16 01:12:48,825 -> D.Disks found                                     | 13.63|232932|1
+2019-04-16 01:12:50,759 -> E.Disks indexed                                   |  1.93|232932|1
+2019-04-16 01:13:32,218 -> F.Expansions gotten                               | 41.46|366925|1
+2019-04-16 01:13:59,132 -> G.Maximal disks found                             | 26.91| 75623|1
+2019-04-16 01:14:16,900 -> H.Maximal disks prunned                           | 17.77| 46900|1
+2019-04-16 01:14:17,918 -> 1.Maximal disks found                             |107.76| 46900|1
+2019-04-16 01:14:27,867 -> 2.Join done                                       |  9.95|135052|1
+2019-04-16 01:14:29,560 -> 3.Flocks to report                                |  1.69|     0|1
+2019-04-16 01:14:29,607 -> 4.Flocks prunned by expansion                     |  0.05|     0|1
+2019-04-16 01:14:29,614 -> 5.Flocks reported                                 |  0.01|     0|1
+2019-04-16 01:14:46,354 -> 6.Candidates indexed                              | 16.74|138980|1
+2019-04-16 01:14:46,514 -> A.Points indexed                                  |  0.16|147164|2
+2019-04-16 01:14:49,261 -> B.Pairs found                                     |  2.75|279356|2
+2019-04-16 01:14:49,811 -> C.Centers found                                   |  0.55|558712|2
+2019-04-16 01:15:07,380 -> D.Disks found                                     | 16.39|236396|2
+2019-04-16 01:15:08,898 -> E.Disks indexed                                   |  1.52|236396|2
+2019-04-16 01:15:48,120 -> F.Expansions gotten                               | 39.22|372745|2
+2019-04-16 01:16:17,266 -> G.Maximal disks found                             | 29.15| 77053|2
+2019-04-16 01:16:36,228 -> H.Maximal disks prunned                           | 18.96| 47740|2
+2019-04-16 01:16:37,225 -> 1.Maximal disks found                             |110.87| 47740|2
+2019-04-16 01:17:31,314 -> 2.Join done                                       | 54.09|258270|2
+2019-04-16 01:17:35,830 -> 3.Flocks to report                                |  4.52|220310|2
+2019-04-16 01:18:39,182 -> 4a.Making expansions                              | 63.21|313275|2
+2019-04-16 01:19:01,991 -> 4b.Finding maximals                               | 22.81| 78883|2
+2019-04-16 01:19:16,985 -> 4c.Selecting and mapping                          | 14.99| 78883|2
+2019-04-16 01:19:17,788 -> 4d.Filtering and distinc                          |  0.80| 78883|2
+2019-04-16 01:19:19,349 -> 4.Flocks prunned by expansion                     |103.52| 45580|2
+2019-04-16 01:19:20,342 -> 5.Flocks reported                                 |  0.99| 45580|2
+2019-04-16 01:19:38,113 -> 6.Candidates indexed                              | 17.77| 87364|2
+2019-04-16 01:19:38,272 -> A.Points indexed                                  |  0.16|148396|3
+2019-04-16 01:19:41,019 -> B.Pairs found                                     |  2.75|284132|3
+2019-04-16 01:19:41,780 -> C.Centers found                                   |  0.76|568264|3
+2019-04-16 01:19:56,495 -> D.Disks found                                     | 13.45|241140|3
+2019-04-16 01:19:58,745 -> E.Disks indexed                                   |  2.25|241140|3
+2019-04-16 01:20:42,663 -> F.Expansions gotten                               | 43.92|379536|3
+2019-04-16 01:21:14,182 -> G.Maximal disks found                             | 31.52| 78358|3
+2019-04-16 01:21:34,438 -> H.Maximal disks prunned                           | 20.26| 48532|3
+2019-04-16 01:21:35,470 -> 1.Maximal disks found                             |117.36| 48532|3
+2019-04-16 01:22:04,915 -> 2.Join done                                       | 29.44|236771|3
+2019-04-16 01:22:08,630 -> 3.Flocks to report                                |  3.72|200451|3
+2019-04-16 01:23:15,403 -> 4a.Making expansions                              | 66.64|299258|3
+2019-04-16 01:23:34,513 -> 4b.Finding maximals                               | 19.11| 79689|3
+2019-04-16 01:23:49,013 -> 4c.Selecting and mapping                          | 14.50| 79689|3
+2019-04-16 01:23:49,597 -> 4d.Filtering and distinc                          |  0.58| 79689|3
+2019-04-16 01:23:51,375 -> 4.Flocks prunned by expansion                     |102.75| 46140|3
+2019-04-16 01:23:52,364 -> 5.Flocks reported                                 |  0.99| 46140|3
+2019-04-16 01:24:09,407 -> 6.Candidates indexed                              | 17.04| 86692|3
+2019-04-16 01:24:10,393 -> A.Points indexed                                  |  0.99|148396|4
+2019-04-16 01:24:13,118 -> B.Pairs found                                     |  2.73|283844|4
+2019-04-16 01:24:13,882 -> C.Centers found                                   |  0.76|567688|4
+2019-04-16 01:24:33,842 -> D.Disks found                                     | 18.75|240244|4
+2019-04-16 01:24:35,506 -> E.Disks indexed                                   |  1.66|240244|4
+2019-04-16 01:25:23,092 -> F.Expansions gotten                               | 47.59|377955|4
+2019-04-16 01:25:53,358 -> G.Maximal disks found                             | 30.27| 78513|4
+2019-04-16 01:26:20,509 -> H.Maximal disks prunned                           | 27.15| 48612|4
+2019-04-16 01:26:21,593 -> 1.Maximal disks found                             |132.19| 48612|4
+2019-04-16 01:26:50,144 -> 2.Join done                                       | 28.55|242193|4
+2019-04-16 01:26:54,190 -> 3.Flocks to report                                |  4.05|192641|4
+2019-04-16 01:27:57,569 -> 4a.Making expansions                              | 63.23|284616|4
+2019-04-16 01:28:15,690 -> 4b.Finding maximals                               | 18.12| 80979|4
+2019-04-16 01:28:33,809 -> 4c.Selecting and mapping                          | 18.12| 80979|4
+2019-04-16 01:28:34,451 -> 4d.Filtering and distinc                          |  0.64| 80979|4
+2019-04-16 01:28:36,053 -> 4.Flocks prunned by expansion                     |101.86| 46940|4
+2019-04-16 01:28:37,132 -> 5.Flocks reported                                 |  1.08| 46940|4
+2019-04-16 01:29:00,421 -> 6.Candidates indexed                              | 23.29| 99020|4
+2019-04-16 01:29:01,282 -> A.Points indexed                                  |  0.86|148396|5
+2019-04-16 01:29:04,002 -> B.Pairs found                                     |  2.72|283628|5
+2019-04-16 01:29:04,772 -> C.Centers found                                   |  0.77|567256|5
+2019-04-16 01:29:27,723 -> D.Disks found                                     | 21.65|239780|5
+2019-04-16 01:29:29,696 -> E.Disks indexed                                   |  1.97|239780|5
+2019-04-16 01:30:14,209 -> F.Expansions gotten                               | 44.51|377780|5
+2019-04-16 01:30:43,955 -> G.Maximal disks found                             | 29.75| 78335|5
+2019-04-16 01:31:18,148 -> H.Maximal disks prunned                           | 34.19| 48484|5
+2019-04-16 01:31:19,203 -> 1.Maximal disks found                             |138.78| 48484|5
+2019-04-16 01:32:01,964 -> 2.Join done                                       | 42.76|258935|5
+2019-04-16 01:32:06,666 -> 3.Flocks to report                                |  4.70|228031|5
+2019-04-16 01:33:16,212 -> 4a.Making expansions                              | 69.40|318111|5
+2019-04-16 01:33:43,519 -> 4b.Finding maximals                               | 27.31| 82435|5
+2019-04-16 01:34:01,339 -> 4c.Selecting and mapping                          | 17.82| 82435|5
+2019-04-16 01:34:01,927 -> 4d.Filtering and distinc                          |  0.59| 82435|5
+2019-04-16 01:34:03,508 -> 4.Flocks prunned by expansion                     |116.84| 47612|5
+2019-04-16 01:34:04,600 -> 5.Flocks reported                                 |  1.09| 47612|5
+2019-04-16 01:34:25,183 -> 6.Candidates indexed                              | 20.58| 81004|5
+2019-04-16 01:34:34,075 -> Number of flocks: 186272
+2019-04-16 01:34:34,412 -> PFLOCK;8;1;100.0;3;3;1448.33;186272;app-20190416010931-0013
+2019-04-16 01:34:37,875 -> EXECUTORS;8;0;184092;348807;1395.76s;19695.06MB;169.235.27.134:40855;app-20190416010931-0013
+2019-04-16 01:34:37,875 -> FlockFinder runs in 1452.13s
+2019-04-16 01:34:43,311 -> Session app-20190416010931-0013 closed.
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B4.tsv --epsilon 100 --mu 3 --delta 4 --distance 75 --master 169.235.27.138 --cores 8 --executors 1 --spatial CUSTOM --customy 50 --customx 200 --customymf 40 --customxmf 160 --fftimestamp 6
+2019-04-16 01:34:48,093 -> Session app-20190416013447-0014 started in 1.929s...
+2019-04-16 01:36:32,149 -> 883080 points read in 104.055s
+2019-04-16 01:36:32,150 -> Current timestamps: 0 1 2 3 4 5
+2019-04-16 01:36:32,677 -> A.Points indexed                                  |  0.47|144756|0
+2019-04-16 01:36:36,807 -> B.Pairs found                                     |  4.13|271668|0
+2019-04-16 01:36:38,763 -> C.Centers found                                   |  1.96|543336|0
+2019-04-16 01:36:54,531 -> D.Disks found                                     | 14.44|229332|0
+2019-04-16 01:36:56,103 -> E.Disks indexed                                   |  1.57|229332|0
+2019-04-16 01:37:38,557 -> F.Expansions gotten                               | 42.45|360974|0
+2019-04-16 01:38:05,833 -> G.Maximal disks found                             | 27.27| 74241|0
+2019-04-16 01:38:36,039 -> H.Maximal disks prunned                           | 30.21| 46028|0
+2019-04-16 01:38:37,233 -> 1.Maximal disks found                             |125.04| 46028|0
+2019-04-16 01:38:37,662 -> A.Points indexed                                  |  0.18|145972|1
+2019-04-16 01:38:40,345 -> B.Pairs found                                     |  2.68|275708|1
+2019-04-16 01:38:41,056 -> C.Centers found                                   |  0.71|551416|1
+2019-04-16 01:38:56,096 -> D.Disks found                                     | 13.86|232932|1
+2019-04-16 01:38:57,518 -> E.Disks indexed                                   |  1.42|232932|1
+2019-04-16 01:39:37,592 -> F.Expansions gotten                               | 40.07|366925|1
+2019-04-16 01:40:04,737 -> G.Maximal disks found                             | 27.15| 75623|1
+2019-04-16 01:40:23,950 -> H.Maximal disks prunned                           | 19.21| 46900|1
+2019-04-16 01:40:25,079 -> 1.Maximal disks found                             |107.60| 46900|1
+2019-04-16 01:40:34,994 -> 2.Join done                                       |  9.91|135052|1
+2019-04-16 01:40:36,622 -> 3.Flocks to report                                |  1.63|     0|1
+2019-04-16 01:40:36,673 -> 4.Flocks prunned by expansion                     |  0.05|     0|1
+2019-04-16 01:40:36,680 -> 5.Flocks reported                                 |  0.01|     0|1
+2019-04-16 01:40:52,922 -> 6.Candidates indexed                              | 16.24|138980|1
+2019-04-16 01:40:53,077 -> A.Points indexed                                  |  0.16|147164|2
+2019-04-16 01:40:55,811 -> B.Pairs found                                     |  2.73|279356|2
+2019-04-16 01:40:56,614 -> C.Centers found                                   |  0.80|558712|2
+2019-04-16 01:41:11,448 -> D.Disks found                                     | 13.58|236396|2
+2019-04-16 01:41:13,611 -> E.Disks indexed                                   |  2.16|236396|2
+2019-04-16 01:41:56,560 -> F.Expansions gotten                               | 42.95|372745|2
+2019-04-16 01:42:25,156 -> G.Maximal disks found                             | 28.60| 77053|2
+2019-04-16 01:42:44,217 -> H.Maximal disks prunned                           | 19.06| 47740|2
+2019-04-16 01:42:45,255 -> 1.Maximal disks found                             |112.33| 47740|2
+2019-04-16 01:43:39,219 -> 2.Join done                                       | 53.96|258270|2
+2019-04-16 01:43:41,672 -> 3.Flocks to report                                |  2.45|     0|2
+2019-04-16 01:43:41,720 -> 4.Flocks prunned by expansion                     |  0.05|     0|2
+2019-04-16 01:43:41,725 -> 5.Flocks reported                                 |  0.01|     0|2
+2019-04-16 01:44:03,139 -> 6.Candidates indexed                              | 21.41|234822|2
+2019-04-16 01:44:03,296 -> A.Points indexed                                  |  0.16|148396|3
+2019-04-16 01:44:06,194 -> B.Pairs found                                     |  2.89|284132|3
+2019-04-16 01:44:06,966 -> C.Centers found                                   |  0.77|568264|3
+2019-04-16 01:44:27,470 -> D.Disks found                                     | 18.97|241140|3
+2019-04-16 01:44:29,053 -> E.Disks indexed                                   |  1.58|241140|3
+2019-04-16 01:45:09,872 -> F.Expansions gotten                               | 40.82|379536|3
+2019-04-16 01:45:41,276 -> G.Maximal disks found                             | 31.40| 78358|3
+2019-04-16 01:46:01,186 -> H.Maximal disks prunned                           | 19.91| 48532|3
+2019-04-16 01:46:02,205 -> 1.Maximal disks found                             |119.07| 48532|3
+2019-04-16 01:48:35,368 -> 2.Join done                                       |153.16|363338|3
+2019-04-16 01:48:42,327 -> 3.Flocks to report                                |  6.96|276337|3
+2019-04-16 01:49:52,054 -> 4a.Making expansions                              | 69.37|383862|3
+2019-04-16 01:50:25,318 -> 4b.Finding maximals                               | 33.26| 78098|3
+2019-04-16 01:50:40,596 -> 4c.Selecting and mapping                          | 15.28| 78098|3
+2019-04-16 01:50:41,230 -> 4d.Filtering and distinc                          |  0.63| 78098|3
+2019-04-16 01:50:42,729 -> 4.Flocks prunned by expansion                     |120.40| 45204|3
+2019-04-16 01:50:43,752 -> 5.Flocks reported                                 |  1.02| 45204|3
+2019-04-16 01:51:05,265 -> 6.Candidates indexed                              | 21.51|121429|3
+2019-04-16 01:51:06,295 -> A.Points indexed                                  |  1.03|148396|4
+2019-04-16 01:51:09,254 -> B.Pairs found                                     |  2.94|283844|4
+2019-04-16 01:51:10,054 -> C.Centers found                                   |  0.80|567688|4
+2019-04-16 01:51:25,309 -> D.Disks found                                     | 13.95|240244|4
+2019-04-16 01:51:27,287 -> E.Disks indexed                                   |  1.98|240244|4
+2019-04-16 01:52:10,695 -> F.Expansions gotten                               | 43.41|377955|4
+2019-04-16 01:52:41,203 -> G.Maximal disks found                             | 30.51| 78513|4
+2019-04-16 01:53:10,367 -> H.Maximal disks prunned                           | 29.16| 48612|4
+2019-04-16 01:53:11,422 -> 1.Maximal disks found                             |126.16| 48612|4
+2019-04-16 01:53:57,054 -> 2.Join done                                       | 45.63|345610|4
+2019-04-16 01:54:02,133 -> 3.Flocks to report                                |  5.08|210495|4
+2019-04-16 01:55:09,198 -> 4a.Making expansions                              | 66.92|315306|4
+2019-04-16 01:55:29,450 -> 4b.Finding maximals                               | 20.25| 79280|4
+2019-04-16 01:55:54,995 -> 4c.Selecting and mapping                          | 25.55| 79280|4
+2019-04-16 01:55:55,599 -> 4d.Filtering and distinc                          |  0.60| 79280|4
+2019-04-16 01:55:57,205 -> 4.Flocks prunned by expansion                     |115.07| 45860|4
+2019-04-16 01:55:58,233 -> 5.Flocks reported                                 |  1.03| 45860|4
+2019-04-16 01:56:27,026 -> 6.Candidates indexed                              | 28.79|159879|4
+2019-04-16 01:56:27,799 -> A.Points indexed                                  |  0.77|148396|5
+2019-04-16 01:56:32,250 -> B.Pairs found                                     |  4.45|283628|5
+2019-04-16 01:56:32,812 -> C.Centers found                                   |  0.56|567256|5
+2019-04-16 01:56:46,767 -> D.Disks found                                     | 12.73|239780|5
+2019-04-16 01:56:48,340 -> E.Disks indexed                                   |  1.57|239780|5
+2019-04-16 01:57:31,365 -> F.Expansions gotten                               | 43.03|377780|5
+2019-04-16 01:58:00,328 -> G.Maximal disks found                             | 28.96| 78335|5
+2019-04-16 01:58:29,482 -> H.Maximal disks prunned                           | 29.15| 48484|5
+2019-04-16 01:58:30,554 -> 1.Maximal disks found                             |123.53| 48484|5
+2019-04-16 02:00:06,638 -> 2.Join done                                       | 96.08|373931|5
+2019-04-16 02:00:12,946 -> 3.Flocks to report                                |  6.31|236400|5
+2019-04-16 02:01:18,208 -> 4a.Making expansions                              | 65.11|334112|5
+2019-04-16 02:01:43,856 -> 4b.Finding maximals                               | 25.65| 80278|5
+2019-04-16 02:01:59,245 -> 4c.Selecting and mapping                          | 15.39| 80278|5
+2019-04-16 02:01:59,846 -> 4d.Filtering and distinc                          |  0.60| 80278|5
+2019-04-16 02:02:01,434 -> 4.Flocks prunned by expansion                     |108.49| 46428|5
+2019-04-16 02:02:02,459 -> 5.Flocks reported                                 |  1.03| 46428|5
+2019-04-16 02:02:28,808 -> 6.Candidates indexed                              | 26.35|164875|5
+2019-04-16 02:02:34,165 -> Number of flocks: 137492
+2019-04-16 02:02:34,449 -> PFLOCK;8;1;100.0;3;4;1562.02;137492;app-20190416013447-0014
+2019-04-16 02:02:37,945 -> EXECUTORS;8;0;155491;306828;1489.97s;20431.31MB;169.235.27.134:40618;app-20190416013447-0014
+2019-04-16 02:02:37,945 -> FlockFinder runs in 1565.80s
+2019-04-16 02:02:43,395 -> Session app-20190416013447-0014 closed.
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B4.tsv --epsilon 100 --mu 3 --delta 5 --distance 75 --master 169.235.27.138 --cores 8 --executors 1 --spatial CUSTOM --customy 50 --customx 200 --customymf 40 --customxmf 160 --fftimestamp 6
+2019-04-16 02:02:48,116 -> Session app-20190416020247-0015 started in 1.88s...
+2019-04-16 02:04:35,936 -> 883080 points read in 107.82s
+2019-04-16 02:04:35,938 -> Current timestamps: 0 1 2 3 4 5
+2019-04-16 02:04:36,523 -> A.Points indexed                                  |  0.55|144756|0
+2019-04-16 02:04:40,775 -> B.Pairs found                                     |  4.25|271668|0
+2019-04-16 02:04:42,728 -> C.Centers found                                   |  1.95|543336|0
+2019-04-16 02:04:59,317 -> D.Disks found                                     | 15.23|229332|0
+2019-04-16 02:05:01,113 -> E.Disks indexed                                   |  1.80|229332|0
+2019-04-16 02:05:43,030 -> F.Expansions gotten                               | 41.92|360974|0
+2019-04-16 02:06:10,204 -> G.Maximal disks found                             | 27.17| 74241|0
+2019-04-16 02:06:38,582 -> H.Maximal disks prunned                           | 28.38| 46028|0
+2019-04-16 02:06:39,667 -> 1.Maximal disks found                             |123.70| 46028|0
+2019-04-16 02:06:40,080 -> A.Points indexed                                  |  0.17|145972|1
+2019-04-16 02:06:42,779 -> B.Pairs found                                     |  2.70|275708|1
+2019-04-16 02:06:43,459 -> C.Centers found                                   |  0.68|551416|1
+2019-04-16 02:06:58,084 -> D.Disks found                                     | 13.44|232932|1
+2019-04-16 02:07:00,068 -> E.Disks indexed                                   |  1.98|232932|1
+2019-04-16 02:07:40,692 -> F.Expansions gotten                               | 40.62|366925|1
+2019-04-16 02:08:07,268 -> G.Maximal disks found                             | 26.58| 75623|1
+2019-04-16 02:08:27,198 -> H.Maximal disks prunned                           | 19.93| 46900|1
+2019-04-16 02:08:28,286 -> 1.Maximal disks found                             |108.38| 46900|1
+2019-04-16 02:08:39,548 -> 2.Join done                                       | 11.26|135052|1
+2019-04-16 02:08:41,482 -> 3.Flocks to report                                |  1.93|     0|1
+2019-04-16 02:08:41,541 -> 4.Flocks prunned by expansion                     |  0.06|     0|1
+2019-04-16 02:08:41,549 -> 5.Flocks reported                                 |  0.01|     0|1
+2019-04-16 02:08:58,980 -> 6.Candidates indexed                              | 17.43|138980|1
+2019-04-16 02:08:59,213 -> A.Points indexed                                  |  0.23|147164|2
+2019-04-16 02:09:02,233 -> B.Pairs found                                     |  3.02|279356|2
+2019-04-16 02:09:03,029 -> C.Centers found                                   |  0.80|558712|2
+2019-04-16 02:09:18,360 -> D.Disks found                                     | 14.06|236396|2
+2019-04-16 02:09:20,404 -> E.Disks indexed                                   |  2.04|236396|2
+2019-04-16 02:10:02,311 -> F.Expansions gotten                               | 41.91|372745|2
+2019-04-16 02:10:30,371 -> G.Maximal disks found                             | 28.06| 77053|2
+2019-04-16 02:10:52,022 -> H.Maximal disks prunned                           | 21.65| 47740|2
+2019-04-16 02:10:53,228 -> 1.Maximal disks found                             |114.25| 47740|2
+2019-04-16 02:11:43,918 -> 2.Join done                                       | 50.69|258268|2
+2019-04-16 02:11:46,640 -> 3.Flocks to report                                |  2.72|     0|2
+2019-04-16 02:11:46,687 -> 4.Flocks prunned by expansion                     |  0.05|     0|2
+2019-04-16 02:11:46,693 -> 5.Flocks reported                                 |  0.01|     0|2
+2019-04-16 02:12:10,056 -> 6.Candidates indexed                              | 23.36|234820|2
+2019-04-16 02:12:10,214 -> A.Points indexed                                  |  0.16|148396|3
+2019-04-16 02:12:13,109 -> B.Pairs found                                     |  2.90|284132|3
+2019-04-16 02:12:13,879 -> C.Centers found                                   |  0.77|568264|3
+2019-04-16 02:12:29,346 -> D.Disks found                                     | 14.15|241140|3
+2019-04-16 02:12:31,619 -> E.Disks indexed                                   |  2.27|241140|3
+2019-04-16 02:13:17,805 -> F.Expansions gotten                               | 46.19|379536|3
+2019-04-16 02:13:48,679 -> G.Maximal disks found                             | 30.87| 78358|3
+2019-04-16 02:14:06,252 -> H.Maximal disks prunned                           | 17.57| 48532|3
+2019-04-16 02:14:07,305 -> 1.Maximal disks found                             |117.25| 48532|3
+2019-04-16 02:16:30,946 -> 2.Join done                                       |143.64|363337|3
+2019-04-16 02:16:34,903 -> 3.Flocks to report                                |  3.96|     0|3
+2019-04-16 02:16:34,960 -> 4.Flocks prunned by expansion                     |  0.06|     0|3
+2019-04-16 02:16:34,966 -> 5.Flocks reported                                 |  0.01|     0|3
+2019-04-16 02:17:03,831 -> 6.Candidates indexed                              | 28.87|301892|3
+2019-04-16 02:17:03,985 -> A.Points indexed                                  |  0.15|148396|4
+2019-04-16 02:17:07,050 -> B.Pairs found                                     |  3.06|283844|4
+2019-04-16 02:17:07,887 -> C.Centers found                                   |  0.84|567688|4
+2019-04-16 02:17:24,485 -> D.Disks found                                     | 15.29|240244|4
+2019-04-16 02:17:26,615 -> E.Disks indexed                                   |  2.13|240244|4
+2019-04-16 02:18:10,202 -> F.Expansions gotten                               | 43.59|377955|4
+2019-04-16 02:18:40,121 -> G.Maximal disks found                             | 29.92| 78513|4
+2019-04-16 02:19:13,752 -> H.Maximal disks prunned                           | 33.63| 48612|4
+2019-04-16 02:19:14,833 -> 1.Maximal disks found                             |131.00| 48612|4
+2019-04-16 02:23:52,521 -> 2.Join done                                       |277.69|473331|4
+2019-04-16 02:24:00,970 -> 3.Flocks to report                                |  8.45|320055|4
+2019-04-16 02:25:12,251 -> 4a.Making expansions                              | 71.11|442611|4
+2019-04-16 02:25:57,845 -> 4b.Finding maximals                               | 45.59| 77653|4
+2019-04-16 02:26:25,697 -> 4c.Selecting and mapping                          | 27.85| 77653|4
+2019-04-16 02:26:26,347 -> 4d.Filtering and distinc                          |  0.65| 77653|4
+2019-04-16 02:26:27,987 -> 4.Flocks prunned by expansion                     |147.02| 44924|4
+2019-04-16 02:26:29,024 -> 5.Flocks reported                                 |  1.04| 44924|4
+2019-04-16 02:26:56,569 -> 6.Candidates indexed                              | 27.55|161748|4
+2019-04-16 02:26:57,671 -> A.Points indexed                                  |  1.10|148396|5
+2019-04-16 02:27:00,592 -> B.Pairs found                                     |  2.92|283628|5
+2019-04-16 02:27:01,469 -> C.Centers found                                   |  0.88|567256|5
+2019-04-16 02:27:16,525 -> D.Disks found                                     | 13.82|239780|5
+2019-04-16 02:27:18,723 -> E.Disks indexed                                   |  2.20|239780|5
+2019-04-16 02:28:06,548 -> F.Expansions gotten                               | 47.83|377780|5
+2019-04-16 02:28:35,031 -> G.Maximal disks found                             | 28.48| 78335|5
+2019-04-16 02:29:03,909 -> H.Maximal disks prunned                           | 28.88| 48484|5
+2019-04-16 02:29:04,937 -> 1.Maximal disks found                             |128.37| 48484|5
+2019-04-16 02:30:35,439 -> 2.Join done                                       | 90.50|463744|5
+2019-04-16 02:30:41,461 -> 3.Flocks to report                                |  6.02|226132|5
+2019-04-16 02:31:47,974 -> 4a.Making expansions                              | 66.36|334561|5
+2019-04-16 02:32:11,740 -> 4b.Finding maximals                               | 23.77| 78696|5
+2019-04-16 02:32:27,964 -> 4c.Selecting and mapping                          | 16.22| 78696|5
+2019-04-16 02:32:28,555 -> 4d.Filtering and distinc                          |  0.59| 78696|5
+2019-04-16 02:32:30,295 -> 4.Flocks prunned by expansion                     |108.83| 45428|5
+2019-04-16 02:32:31,325 -> 5.Flocks reported                                 |  1.03| 45428|5
+2019-04-16 02:33:07,353 -> 6.Candidates indexed                              | 36.03|217330|5
+2019-04-16 02:33:10,283 -> Number of flocks: 90352
+2019-04-16 02:33:10,489 -> PFLOCK;8;1;100.0;3;5;1714.35;90352;app-20190416020247-0015
+2019-04-16 02:33:13,055 -> EXECUTORS;8;0;123764;264219;1623.23s;20570.92MB;169.235.27.134:38471;app-20190416020247-0015
+2019-04-16 02:33:13,055 -> FlockFinder runs in 1717.12s
+2019-04-16 02:33:18,128 -> Session app-20190416020247-0015 closed.
+spark-submit --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Research/Datasets/Berlin/SideBySide/B4.tsv --epsilon 100 --mu 3 --delta 6 --distance 75 --master 169.235.27.138 --cores 8 --executors 1 --spatial CUSTOM --customy 50 --customx 200 --customymf 40 --customxmf 160 --fftimestamp 6
+2019-04-16 02:33:22,928 -> Session app-20190416023322-0016 started in 1.932s...
+2019-04-16 02:34:05,837 -> 883080 points read in 42.908s
+2019-04-16 02:34:05,838 -> Current timestamps: 0 1 2 3 4 5
+2019-04-16 02:34:06,346 -> A.Points indexed                                  |  0.46|144756|0
+2019-04-16 02:34:11,646 -> B.Pairs found                                     |  5.30|271668|0
+2019-04-16 02:34:12,428 -> C.Centers found                                   |  0.78|543336|0
+2019-04-16 02:34:31,521 -> D.Disks found                                     | 17.77|229332|0
+2019-04-16 02:34:33,392 -> E.Disks indexed                                   |  1.87|229332|0
+2019-04-16 02:35:15,723 -> F.Expansions gotten                               | 42.33|360974|0
+2019-04-16 02:35:42,815 -> G.Maximal disks found                             | 27.09| 74241|0
+2019-04-16 02:36:14,604 -> H.Maximal disks prunned                           | 31.79| 46028|0
+2019-04-16 02:36:15,663 -> 1.Maximal disks found                             |129.79| 46028|0
+2019-04-16 02:36:16,086 -> A.Points indexed                                  |  0.17|145972|1
+2019-04-16 02:36:18,808 -> B.Pairs found                                     |  2.72|275708|1
+2019-04-16 02:36:19,383 -> C.Centers found                                   |  0.58|551416|1
+2019-04-16 02:36:34,073 -> D.Disks found                                     | 13.46|232932|1
+2019-04-16 02:36:35,878 -> E.Disks indexed                                   |  1.81|232932|1
+2019-04-16 02:37:18,917 -> F.Expansions gotten                               | 43.04|366925|1
+2019-04-16 02:37:45,743 -> G.Maximal disks found                             | 26.83| 75623|1
+2019-04-16 02:38:03,890 -> H.Maximal disks prunned                           | 18.15| 46900|1
+2019-04-16 02:38:04,908 -> 1.Maximal disks found                             |108.99| 46900|1
+2019-04-16 02:38:15,590 -> 2.Join done                                       | 10.68|135052|1
+2019-04-16 02:38:17,164 -> 3.Flocks to report                                |  1.57|     0|1
+2019-04-16 02:38:17,211 -> 4.Flocks prunned by expansion                     |  0.05|     0|1
+2019-04-16 02:38:17,218 -> 5.Flocks reported                                 |  0.01|     0|1
+2019-04-16 02:38:33,668 -> 6.Candidates indexed                              | 16.45|138980|1
+2019-04-16 02:38:33,829 -> A.Points indexed                                  |  0.16|147164|2
+2019-04-16 02:38:36,804 -> B.Pairs found                                     |  2.97|279356|2
+2019-04-16 02:38:37,603 -> C.Centers found                                   |  0.80|558712|2
+2019-04-16 02:38:53,207 -> D.Disks found                                     | 14.30|236396|2
+2019-04-16 02:38:55,568 -> E.Disks indexed                                   |  2.36|236396|2
+2019-04-16 02:39:38,431 -> F.Expansions gotten                               | 42.86|372745|2
+2019-04-16 02:40:06,988 -> G.Maximal disks found                             | 28.56| 77053|2
+2019-04-16 02:40:25,936 -> H.Maximal disks prunned                           | 18.95| 47740|2
+2019-04-16 02:40:26,961 -> 1.Maximal disks found                             |113.29| 47740|2
+2019-04-16 02:41:26,007 -> 2.Join done                                       | 59.05|258280|2
+2019-04-16 02:41:28,426 -> 3.Flocks to report                                |  2.42|     0|2
+2019-04-16 02:41:28,473 -> 4.Flocks prunned by expansion                     |  0.05|     0|2
+2019-04-16 02:41:28,479 -> 5.Flocks reported                                 |  0.01|     0|2
+2019-04-16 02:41:50,269 -> 6.Candidates indexed                              | 21.79|234832|2
+2019-04-16 02:41:50,424 -> A.Points indexed                                  |  0.16|148396|3
+2019-04-16 02:41:53,401 -> B.Pairs found                                     |  2.98|284132|3
+2019-04-16 02:41:54,195 -> C.Centers found                                   |  0.79|568264|3
+2019-04-16 02:42:13,979 -> D.Disks found                                     | 18.43|241140|3
+2019-04-16 02:42:15,484 -> E.Disks indexed                                   |  1.51|241140|3
+2019-04-16 02:42:56,337 -> F.Expansions gotten                               | 40.85|379536|3
+2019-04-16 02:43:27,481 -> G.Maximal disks found                             | 31.14| 78358|3
+2019-04-16 02:43:47,678 -> H.Maximal disks prunned                           | 20.20| 48532|3
+2019-04-16 02:43:48,740 -> 1.Maximal disks found                             |118.47| 48532|3
+2019-04-16 02:46:18,148 -> 2.Join done                                       |149.41|363341|3
+2019-04-16 02:46:21,696 -> 3.Flocks to report                                |  3.55|     0|3
+2019-04-16 02:46:21,751 -> 4.Flocks prunned by expansion                     |  0.05|     0|3
+2019-04-16 02:46:21,757 -> 5.Flocks reported                                 |  0.01|     0|3
+2019-04-16 02:46:49,460 -> 6.Candidates indexed                              | 27.70|301891|3
+2019-04-16 02:46:49,615 -> A.Points indexed                                  |  0.15|148396|4
+2019-04-16 02:46:52,787 -> B.Pairs found                                     |  3.17|283844|4
+2019-04-16 02:46:53,660 -> C.Centers found                                   |  0.87|567688|4
+2019-04-16 02:47:15,018 -> D.Disks found                                     | 19.99|240244|4
+2019-04-16 02:47:16,622 -> E.Disks indexed                                   |  1.60|240244|4
+2019-04-16 02:47:57,729 -> F.Expansions gotten                               | 41.11|377955|4
+2019-04-16 02:48:27,874 -> G.Maximal disks found                             | 30.15| 78513|4
+2019-04-16 02:48:57,723 -> H.Maximal disks prunned                           | 29.85| 48612|4
+2019-04-16 02:48:58,778 -> 1.Maximal disks found                             |129.32| 48612|4
+2019-04-16 02:54:17,367 -> 2.Join done                                       |318.59|473321|4
+2019-04-16 02:54:21,984 -> 3.Flocks to report                                |  4.62|     0|4
+2019-04-16 02:54:22,048 -> 4.Flocks prunned by expansion                     |  0.06|     0|4
+2019-04-16 02:54:22,053 -> 5.Flocks reported                                 |  0.01|     0|4
+2019-04-16 02:54:56,877 -> 6.Candidates indexed                              | 34.82|364549|4
+2019-04-16 02:54:58,129 -> A.Points indexed                                  |  1.25|148396|5
+2019-04-16 02:55:02,163 -> B.Pairs found                                     |  4.03|283628|5
+2019-04-16 02:55:02,988 -> C.Centers found                                   |  0.83|567256|5
+2019-04-16 02:55:29,212 -> D.Disks found                                     | 22.85|239780|5
+2019-04-16 02:55:31,080 -> E.Disks indexed                                   |  1.87|239780|5
+2019-04-16 02:56:14,535 -> F.Expansions gotten                               | 43.46|377780|5
+2019-04-16 02:56:43,757 -> G.Maximal disks found                             | 29.22| 78335|5
+2019-04-16 02:57:12,665 -> H.Maximal disks prunned                           | 28.91| 48484|5
+2019-04-16 02:57:13,658 -> 1.Maximal disks found                             |136.78| 48484|5
+2019-04-16 03:05:03,932 -> 2.Join done                                       |470.27|606331|5
+2019-04-16 03:05:14,302 -> 3.Flocks to report                                | 10.37|376959|5
+2019-04-16 03:06:29,524 -> 4a.Making expansions                              | 75.02|508812|5
+2019-04-16 03:07:28,817 -> 4b.Finding maximals                               | 59.29| 77001|5
+2019-04-16 03:07:44,416 -> 4c.Selecting and mapping                          | 15.60| 77001|5
+2019-04-16 03:07:45,036 -> 4d.Filtering and distinc                          |  0.62| 77001|5
+2019-04-16 03:07:46,777 -> 4.Flocks prunned by expansion                     |152.48| 44476|5
+2019-04-16 03:07:47,753 -> 5.Flocks reported                                 |  0.98| 44476|5
+2019-04-16 03:08:20,503 -> 6.Candidates indexed                              | 32.75|209052|5
+2019-04-16 03:08:21,501 -> Number of flocks: 44476
+2019-04-16 03:08:21,605 -> PFLOCK;8;1;100.0;3;6;2055.66;44476;app-20190416023322-0016
+2019-04-16 03:08:24,015 -> EXECUTORS;8;0;92517;222075;1893.23s;20559.60MB;169.235.27.134:37561;app-20190416023322-0016
+2019-04-16 03:08:24,015 -> FlockFinder runs in 2058.18s
+2019-04-16 03:08:29,095 -> Session app-20190416023322-0016 closed.
