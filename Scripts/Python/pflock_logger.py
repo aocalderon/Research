@@ -13,7 +13,7 @@ args = parser.parse_args()
 logging.basicConfig(filename='monitor.log',level=logging.INFO, format='%(asctime)s|%(message)s')
 clocktime = lambda: int(round(time.time() * 1000))
 timer = lambda x: round((clocktime() - x) / 1000.0, 2)
-timeToLog = args.time
+timeToLog = int(args.time)
 isTimeToLog = lambda x: int(x) % timeToLog == 0 
 master_host = args.master
 
@@ -59,47 +59,17 @@ def main():
             if spark[node]['id'] == 'driver':
                 driver_node = node
         del spark[driver_node]
-        
-        if len(spark) > 0:
-            i = 0
-            cores = spark[i]['totalCores']
-            tasks = spark[i]['activeTasks']
-            if tasks > cores:
-                tasks = cores
-            id = spark[i]['id']
-            hostPort = spark[i]['hostPort']
-            totalTasks = spark[i]['totalTasks']
-            totalDuration   = round((spark[i]['totalDuration'])/(float(cores)*1000.0), 2)
-            totalInputBytes = round(spark[i]['totalInputBytes']/(1024.0*1024.0), 2)
-            log = "{}|{}|{}|{}|{}|{}|{}".format(appID, id, hostPort, stageName, totalTasks, totalDuration, totalInputBytes)
-            logging.info(log)
 
-        if len(spark) > 1:
-            i = 1
+        executors = len(spark)
+        for i in range(0, executors):
             cores = spark[i]['totalCores']
-            tasks = spark[i]['activeTasks']
-            if tasks > cores:
-                tasks = cores
             id = spark[i]['id']
             hostPort = spark[i]['hostPort']
+            rddBlocks = spark[i]['rddBlocks']
             totalTasks = spark[i]['totalTasks']
             totalDuration   = round((spark[i]['totalDuration'])/(float(cores)*1000.0), 2)
             totalInputBytes = round(spark[i]['totalInputBytes']/(1024.0*1024.0), 2)
-            log = "{}|{}|{}|{}|{}|{}|{}".format(appID, id, hostPort, stageName, totalTasks, totalDuration, totalInputBytes)
-            logging.info(log)
-
-        if len(spark) > 2:
-            i = 2
-            cores = spark[i]['totalCores']
-            tasks = spark[i]['activeTasks']
-            if tasks > cores:
-                tasks = cores
-            id = spark[i]['id']
-            hostPort = spark[i]['hostPort']
-            totalTasks = spark[i]['totalTasks']
-            totalDuration   = round((spark[i]['totalDuration'])/(float(cores)*1000.0), 2)
-            totalInputBytes = round(spark[i]['totalInputBytes']/(1024.0*1024.0), 2)
-            log = "{}|{}|{}|{}|{}|{}|{}".format(appID, id, hostPort, stageName, totalTasks, totalDuration, totalInputBytes)
+            log = "{}|{}|{}|{}|{}|{}|{}|{}|{}|{}".format(int(timer(start)), appID, executors, id, hostPort, stageName, rddBlocks, totalTasks, totalDuration, totalInputBytes)
             logging.info(log)
 
 if __name__== "__main__":

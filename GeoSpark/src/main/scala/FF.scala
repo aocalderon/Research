@@ -20,6 +20,7 @@ object FF {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory();
   private val precision: Double = 0.001
+  private var appID: String = ""
   private var tag: String = ""
 
   case class Flock(pids: List[Int], start: Int, end: Int, center: Point)
@@ -393,9 +394,9 @@ object FF {
 
   def log(msg: String, timer: Long, n: Long = -1, tag: String = ""): Unit ={
     if(n == -1)
-      logger.info("%-50s|%6.2f".format(msg,(System.currentTimeMillis()-timer)/1000.0))
+      logger.info("%s|%-50s|%6.2f".format(appID,msg,(System.currentTimeMillis()-timer)/1000.0))
     else
-      logger.info("%-50s|%6.2f|%6d|%s".format(msg,(System.currentTimeMillis()-timer)/1000.0,n,tag))
+      logger.info("%s|%-50s|%6.2f|%6d|%s".format(appID,msg,(System.currentTimeMillis()-timer)/1000.0,n,tag))
   }
 
   import Numeric.Implicits._
@@ -433,7 +434,7 @@ object FF {
       .appName("PFLock")
       .getOrCreate()
     import spark.implicits._
-    val appID = spark.sparkContext.applicationId
+    appID = spark.sparkContext.applicationId
     logger.info(s"Session $appID started in ${(System.currentTimeMillis - timer) / 1000.0}s...")
 
     // Reading data...

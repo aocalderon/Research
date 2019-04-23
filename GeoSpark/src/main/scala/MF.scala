@@ -20,10 +20,12 @@ object MF{
   private val geofactory: GeometryFactory = new GeometryFactory();
   private val precision: Double = 0.001
   private var tag: String = ""
+  private var appID: String = ""
 
   def run(spark: SparkSession, points: PointRDD, params: FFConf, info: String = ""): RDD[String] = {
     import spark.implicits._
 
+    appID = spark.sparkContext.applicationId
     val debug: Boolean    = params.mfdebug()
     val epsilon: Double   = params.epsilon()
     val mu: Int           = params.mu()
@@ -295,9 +297,9 @@ object MF{
 
   def log(msg: String, timer: Long, n: Long = 0): Unit ={
     if(n == 0)
-      logger.info("%-50s|%6.2f".format(msg,(System.currentTimeMillis()-timer)/1000.0))
+      logger.info("%s|%-50s|%6.2f".format(appID, msg, (System.currentTimeMillis()-timer)/1000.0))
     else
-      logger.info("%-50s|%6.2f|%6d|%s".format(msg,(System.currentTimeMillis()-timer)/1000.0,n,tag))
+      logger.info("%s|%-50s|%6.2f|%6d|%s".format(appID, msg, (System.currentTimeMillis()-timer)/1000.0, n, tag))
   }
 
   import java.io._
