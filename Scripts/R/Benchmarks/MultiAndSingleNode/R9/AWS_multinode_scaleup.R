@@ -5,10 +5,10 @@ require(stringr)
 require(tidyverse)
 
 READ_DATA     = T
-SAVE_PDF      = T
+SAVE_PDF      = F
 SEP           = ";"
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
-RESULTS_PATH = "Scripts/R/Benchmarks/MultiAndSingleNode/R9/"
+RESULTS_PATH = "Scripts/R/Benchmarks/MultiAndSingleNode/R11/"
 RESULTS_NAME = "AWS_multinode_scaleup"
 dataFile = paste0(RESEARCH_HOME, RESULTS_PATH, RESULTS_NAME, '.txt')
 
