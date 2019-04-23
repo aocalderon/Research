@@ -5,7 +5,7 @@ require(stringr)
 require(tidyverse)
 
 READ_DATA     = T
-SAVE_PDF      = T
+SAVE_PDF      = F
 SEP           = ";"
 YLIM_MAX      = 1000
 RESEARCH_HOME = Sys.getenv(c("RESEARCH_HOME"))
