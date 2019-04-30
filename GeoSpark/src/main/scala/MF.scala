@@ -21,12 +21,14 @@ object MF{
   private val precision: Double = 0.001
   private var tag: String = ""
   private var appID: String = ""
+  private var startTime: Long = 0
 
   def run(spark: SparkSession, points: PointRDD, params: FFConf, info: String = ""): RDD[String] = {
     import spark.implicits._
 
     appID = spark.sparkContext.applicationId
     val debug: Boolean    = params.mfdebug()
+    val print: Boolean    = params.mfprint()
     val epsilon: Double   = params.epsilon()
     val mu: Int           = params.mu()
     val sespg: String     = params.sespg()
@@ -222,7 +224,6 @@ object MF{
     val nMaximals = maximals.count()
     log("H.Maximal disks prunned", timer, nMaximals)
 
-    ////////////////////////////////////////////////////////////////////////////////////
     if(debug){
       val maxims = maximals.map{ m =>
         val arr = m.split(";")
@@ -245,7 +246,12 @@ object MF{
       val candids = candidates.map(_._2.sorted.mkString(" ") ++ "\n").sortBy(_.toString())
       saveLines(candids, "/tmp/candidates.txt")
     }
-    ////////////////////////////////////////////////////////////////////////////////////
+    val endTime = System.currentTimeMillis()
+    val totalTime = (endTime - startTime) / 1000.0
+
+    if(print){
+      logger.info(s"MF|${appID}|${executors}|${cores}|${totalTime}|${nMaximals}")
+    }
 
     maximals
   }
@@ -295,11 +301,15 @@ object MF{
     }
   }
 
-  def log(msg: String, timer: Long, n: Long = 0): Unit ={
-    if(n == 0)
-      logger.info("%s|%-50s|%6.2f".format(appID, msg, (System.currentTimeMillis()-timer)/1000.0))
-    else
-      logger.info("%s|%-50s|%6.2f|%6d|%s".format(appID, msg, (System.currentTimeMillis()-timer)/1000.0, n, tag))
+  def clocktime = System.currentTimeMillis()
+
+  def log(msg: String, timer: Long, n: Long = -1): Unit ={
+    val duration = "%3.2f".format((clocktime - startTime) / 1000.0)
+    if(n == -1){
+      logger.info("%-30s|%-50s|%6.2f".format(s"$appID|$duration", msg, (clocktime - timer)/1000.0))
+    } else {
+      logger.info("%-30s|%-50s|%6.2f|%6d|%s".format(s"$appID|$duration", msg, (System.currentTimeMillis()-timer)/1000.0, n, tag))
+    }
   }
 
   import java.io._
@@ -344,6 +354,7 @@ object MF{
   def main(args: Array[String]) = {
     val params      = new FFConf(args)
     val master      = params.master()
+    val port        = params.port()
     val input       = params.input()
     val offset      = params.offset()
     val sepsg       = params.sespg()
@@ -354,16 +365,18 @@ object MF{
     val Dpartitions = (cores * executors) * params.dpartitions()
 
     // Starting session...
-    var timer = System.currentTimeMillis()
+    startTime = clocktime
+    var timer = clocktime
     val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .config("spark.cores.max", cores * executors)
       .config("spark.executor.cores", cores)
-      .master(master).appName("MaximalFinder")
+      .master(s"spark://${master}:${port}")
+      .appName("MaximalFinder")
       .getOrCreate()
     import spark.implicits._
-    val appID = spark.sparkContext.applicationId
-    logger.info(s"Session started [${(System.currentTimeMillis - timer) / 1000.0}]")
+    appID = spark.sparkContext.applicationId
+    log("Session started", timer, 0)
 
     // Reading data...
     timer = System.currentTimeMillis()
@@ -377,17 +390,17 @@ object MF{
     }
     points.CRSTransform(sepsg, tepsg)
     val nPoints = points.rawSpatialRDD.count()
-    logger.info(s"Data read [${(System.currentTimeMillis - timer) / 1000.0}] [$nPoints]")
+    log("Data read", timer, nPoints)
 
     // Running maximal finder...
     timer = System.currentTimeMillis()
     val maximals = MF.run(spark, points, params)
     val nMaximals = maximals.count()
-    logger.info(s"Maximal finder run [${(System.currentTimeMillis() - timer) / 1000.0}] [$nMaximals]")
+    log("Maximal finder run", timer, nMaximals)
 
     // Closing session...
     timer = System.currentTimeMillis()
     spark.stop()
-    logger.info(s"Session closed [${(System.currentTimeMillis - timer) / 1000.0}]")
+    log("Session closed", timer, 0)
   }  
 }

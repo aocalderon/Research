@@ -69,7 +69,7 @@ def main():
             totalTasks = spark[i]['totalTasks']
             totalDuration   = round((spark[i]['totalDuration'])/(float(cores)*1000.0), 2)
             totalInputBytes = round(spark[i]['totalInputBytes']/(1024.0*1024.0), 2)
-            log = "{}|{}|{}|{}|{}|{}|{}|{}|{}|{}".format(int(timer(start)), appID, executors, id, hostPort, stageName, rddBlocks, totalTasks, totalDuration, totalInputBytes)
+            log = "{}|{}|{}|{}|{}|{}|{}|{}|{}|{}".format(timer(start), appID, executors, id, hostPort, stageName, rddBlocks, totalTasks, totalDuration, totalInputBytes)
             logging.info(log)
 
 if __name__== "__main__":
