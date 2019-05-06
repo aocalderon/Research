@@ -85,12 +85,12 @@ def main():
             totalTasks    = float(total.split(" ")[0])
             url = "http://{}:4040/stages/stage/?id={}&attempt=0&task.sort=Duration&task.desc=true&task.pageSize=25".format(master_host, stageId)
             tasks = pd.read_html(etree.tostring(parse(url).getroot().get_element_by_id("task-table")))[0]
-            cols = [0,2,5,6]
+            cols = [2,5,6]
             tasks.drop(tasks.columns[cols],axis=1,inplace=True)
             #tasks = tasks[tasks['Status'] == "RUNNING"]
             for index, row in tasks.iterrows():
                 #logging.info(row)
-                logging.info("TASKS|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}".format(timer(start), appID, executors, id, hostPort, stageName, row['Locality Level'], row['Launch Time'], row['Duration  ▾'], row['Input Size / Records'], row['Status']))
+                logging.info("TASKS|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}".format(timer(start), appID, executors, id, hostPort, stageName, row['ID'], row['Locality Level'], row['Launch Time'], row['Duration  ▾'], row['Input Size / Records'], row['Status']))
         except (IndexError, KeyError, OSError, AttributeError, ZeroDivisionError, requests.exceptions.ConnectionError, json.decoder.JSONDecodeError):
             pass
 
