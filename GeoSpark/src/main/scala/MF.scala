@@ -27,6 +27,7 @@ object MF{
     import spark.implicits._
 
     appID = spark.sparkContext.applicationId
+    startTime = spark.sparkContext.startTime
     val debug: Boolean    = params.mfdebug()
     val print: Boolean    = params.mfprint()
     val epsilon: Double   = params.epsilon()
@@ -365,7 +366,6 @@ object MF{
     val Dpartitions = (cores * executors) * params.dpartitions()
 
     // Starting session...
-    startTime = clocktime
     var timer = clocktime
     val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)

@@ -34,13 +34,13 @@ def main():
         try:
             response = requests.get("http://{}:4040/api/v1/applications/{}/executors".format(master_host, appID))
             spark = json.loads(response.text)
-        except (requests.exceptions.ConnectionError, json.decoder.JSONDecodeError):
+            driver_node = 0
+            for node in range(0,len(spark)):
+                if spark[node]['id'] == 'driver':
+                    driver_node = node
+            del spark[driver_node]
+        except (requests.exceptions.ConnectionError, json.decoder.JSONDecodeError, IndexError):
             continue
-        driver_node = 0
-        for node in range(0,len(spark)):
-            if spark[node]['id'] == 'driver':
-                driver_node = node
-        del spark[driver_node]
 
         tblock = 0
         ttasks = 0
@@ -64,8 +64,9 @@ def main():
             
         log = "TOTAL|{}|{}|{}|{}|{}|{}|{}|{}".format(timer(start), appID, executors, stageName, tblock, ttasks, tdurat, tinput)
         logging.info(log)
-        log = "SCALE|{}|{}|{}|{}|{:.2f}|{:.2f}|{:.2f}|{:.2f}".format(timer(start), appID, executors, stageName, tblock / executors, ttasks / executors, tdurat / executors, tinput / executors)
-        logging.info(log)
+        if(executors != 0):
+            log = "SCALE|{}|{}|{}|{}|{:.2f}|{:.2f}|{:.2f}|{:.2f}".format(timer(start), appID, executors, stageName, tblock / executors, ttasks / executors, tdurat / executors, tinput / executors)
+            logging.info(log)
 
         # Stages...
         try:
@@ -83,7 +84,7 @@ def main():
             complete, total = parse("http://{}:4040/stages".format(master_host)).getroot().get_element_by_id("activeStage-table").cssselect("div span")[1].text.strip().split("/")
             completeTasks = float(complete)
             totalTasks    = float(total.split(" ")[0])
-            url = "http://{}:4040/stages/stage/?id={}&attempt=0&task.sort=Duration&task.desc=true&task.pageSize=25".format(master_host, stageId)
+            url = "http://{}:4040/stages/stage/?id={}&attempt=0&task.sort=Duration&task.desc=true&task.pageSize=50".format(master_host, stageId)
             tasks = pd.read_html(etree.tostring(parse(url).getroot().get_element_by_id("task-table")))[0]
             cols = [2,5,6]
             tasks.drop(tasks.columns[cols],axis=1,inplace=True)
@@ -93,7 +94,6 @@ def main():
                 logging.info("TASKS|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}".format(timer(start), appID, executors, id, hostPort, stageName, row['ID'], row['Locality Level'], row['Launch Time'], row['Duration  ▾'], row['Input Size / Records'], row['Status']))
         except (IndexError, KeyError, OSError, AttributeError, ZeroDivisionError, requests.exceptions.ConnectionError, json.decoder.JSONDecodeError):
             pass
-
 
 if __name__== "__main__":
     main()
