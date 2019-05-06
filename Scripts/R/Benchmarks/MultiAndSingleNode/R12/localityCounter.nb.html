@@ -246,8 +246,9 @@ $(document).ready(function () {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5SRVNFQVJDSF9IT01FID0gXCIvaG9tZS9hbmQvRG9jdW1lbnRzL1BoRC9SZXNlYXJjaFwiXG5saW5lcyA9IHJlYWRMaW5lcyhwYXN0ZTAoUkVTRUFSQ0hfSE9NRSwgXCIvU2NyaXB0cy9SL0JlbmNobWFya3MvTXVsdGlBbmRTaW5nbGVOb2RlL1IxMi9kYmxhYi9tb25pdG9yLnR4dFwiKSlcbmxpbmVzID0gbGluZXNbZ3JlcGwoXCJcXFxcfFRBU0tTXFxcXHxcIiwgbGluZXMpXVxuZmllbGRzID0gYyhcIlRpbWVzdGFtcFwiLCBcIlRpdGxlXCIsIFwiVGltZVwiLCBcImFwcElEXCIsIFwiTm9kZXNcIiwgXCJub2RlSURcIiwgXCJub2RlSVBcIiwgXCJTdGFnZVwiLCBcInRhc2tJRFwiLCBcIkxvY2FsaXR5XCIsIFwiTGF1bmNoXCIsIFwiRHVyYXRpb25cIiwgXCJJbnB1dFwiLCBcIlN0YXR1c1wiKVxudGFza3NJbmZvID0gYXNfdGliYmxlKGxpbmVzKSAlPiVcbiAgc2VwYXJhdGUodmFsdWUsIGludG89ZmllbGRzLCBzZXA9XCJcXFxcfFwiKSAlPiVcbiAgc2VwYXJhdGUoYXBwSUQsIGludG89YyhOQSwgTkEsIFwiSURcIiksIHNlcD1cIi1cIikgJT4lXG4gIHNlbGVjdChJRCwgdGFza0lELCBMb2NhbGl0eSkgJT4lXG4gIGRpc3RpbmN0KCkgJT4lXG4gICNtdXRhdGUoSUQ9ZmFjdG9yKElEKSwgdGFza0lEPWZhY3Rvcih0YXNrSUQpLCBMb2NhbGl0eT1mYWN0b3IoTG9jYWxpdHkpKSAlPiVcbiAgZ3JvdXBfYnkoSUQsIExvY2FsaXR5KSAlPiUgdGFsbHkoKVxuaGVhZCh0YXNrc0luZm8sIG49SW5mKVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5cblJFU0VBUkNIX0hPTUUgPSBcIi9ob21lL2FuZC9Eb2N1bWVudHMvUGhEL1Jlc2VhcmNoXCJcbmxpbmVzID0gcmVhZExpbmVzKHBhc3RlMChSRVNFQVJDSF9IT01FLCBcIi9TY3JpcHRzL1IvQmVuY2htYXJrcy9NdWx0aUFuZFNpbmdsZU5vZGUvUjEyL2RibGFiL21vbml0b3IudHh0XCIpKVxubGluZXMgPSBsaW5lc1tncmVwbChcIlxcXFx8VEFTS1NcXFxcfFwiLCBsaW5lcyldXG5maWVsZHMgPSBjKFwiVGltZXN0YW1wXCIsIFwiVGl0bGVcIiwgXCJUaW1lXCIsIFwiYXBwSURcIiwgXCJOb2Rlc1wiLCBcIm5vZGVJRFwiLCBcIm5vZGVJUFwiLCBcIlN0YWdlXCIsIFwidGFza0lEXCIsIFwiTG9jYWxpdHlcIiwgXCJMYXVuY2hcIiwgXCJEdXJhdGlvblwiLCBcIklucHV0XCIsIFwiU3RhdHVzXCIpXG50YXNrc0luZm8gPSBhc190aWJibGUobGluZXMpICU+JVxuICBzZXBhcmF0ZSh2YWx1ZSwgaW50bz1maWVsZHMsIHNlcD1cIlxcXFx8XCIpICU+JVxuICBzZXBhcmF0ZShhcHBJRCwgaW50bz1jKE5BLCBOQSwgXCJJRFwiKSwgc2VwPVwiLVwiKSAlPiVcbiAgc2VsZWN0KElELCB0YXNrSUQsIExvY2FsaXR5KSAlPiVcbiAgZGlzdGluY3QoKSAlPiVcbiAgI211dGF0ZShJRD1mYWN0b3IoSUQpLCB0YXNrSUQ9ZmFjdG9yKHRhc2tJRCksIExvY2FsaXR5PWZhY3RvcihMb2NhbGl0eSkpICU+JVxuICBncm91cF9ieShJRCwgTG9jYWxpdHkpICU+JSB0YWxseSgpXG5oZWFkKHRhc2tzSW5mbywgbj1JbmYpXG5gYGAifQ== -->
 <pre class="r"><code>library(tidyverse)
+
 RESEARCH_HOME = &quot;/home/and/Documents/PhD/Research&quot;
 lines = readLines(paste0(RESEARCH_HOME, &quot;/Scripts/R/Benchmarks/MultiAndSingleNode/R12/dblab/monitor.txt&quot;))
 lines = lines[grepl(&quot;\\|TASKS\\|&quot;, lines)]
@@ -261,13 +262,6 @@ tasksInfo = as_tibble(lines) %&gt;%
   group_by(ID, Locality) %&gt;% tally()
 head(tasksInfo, n=Inf)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImdyb3VwZWRfZGYiLCJ0YmxfZGYiLCJ0YmwiLCJkYXRhLmZyYW1lIl0sIm5jb2wiOjMsIm5yb3ciOjE0fSwicmRmIjoiSDRzSUFBQUFBQUFBQTlWU3pVckRRQkNlL0dvRFZzRlg4SnBRcWIvSDBsWVFRaU90UWozSm1rWU54dDJhcEtnMzhhWjQ5YTA4K1FRK2d3L1FPQnRuRHcwVWN2V3dPOTkrT3ovN3pleXdOMjQ3WXdjQUREQnMzQzJFWUoyZEhya0hBS2FPQncxTWFFajdpTmVicFNmQUJxNG1YWml0MW1GN0NkNnBnWGRyNEwwYWVIOHBYbnl2TXdoNi9Rcy82SFo4WXRaT2hrRzNQeG90a0VabmNQNi9JNUFvWlFPOEFkaWZhT1U4WHhEZmwzTUZlRVc4UlNOOXg3bC9rODhIOGwrVitWdWMzVVVaOWRJZ1VqL3VFVnIxUmNpU09IOVMzNFZYNDhPRVpTcGVrYzZFNWN5N1NqRjF4YjJSaWdkUGxaUTY5R2ZjaXFMNFFUT3ZPSytJYVI0TGpxNjYvS0ZXcFlxV1ZvajFHWmVwSjI1NE0rTzM3clo4Q2JVRXFKeEdyVlBZK0N1cEY1VEtvbFIyeEs5akhpbVJDYnVNRWpvMFVVS3B3SnVtTWMrVlpHUXpMeGM1VTM1T0tCTEZsTnBnL2d2MGU3REttQU1BQUE9PSJ9 -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["ID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Locality"],"name":[2],"type":["chr"],"align":["left"]},{"label":["n"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"0093","2":"NODE_LOCAL","3":"138"},{"1":"0093","2":"PROCESS_LOCAL","3":"1740"},{"1":"0094","2":"ANY","3":"2"},{"1":"0094","2":"NODE_LOCAL","3":"130"},{"1":"0094","2":"PROCESS_LOCAL","3":"1649"},{"1":"0095","2":"ANY","3":"1"},{"1":"0095","2":"NODE_LOCAL","3":"137"},{"1":"0095","2":"PROCESS_LOCAL","3":"1572"},{"1":"0096","2":"ANY","3":"3"},{"1":"0096","2":"NODE_LOCAL","3":"140"},{"1":"0096","2":"PROCESS_LOCAL","3":"1504"},{"1":"0097","2":"ANY","3":"2"},{"1":"0097","2":"NODE_LOCAL","3":"149"},{"1":"0097","2":"PROCESS_LOCAL","3":"1746"}],"options":{"columns":{"min":{},"max":[10],"total":[3]},"rows":{"min":[10],"max":[10],"total":[14]},"pages":{}}}
-  </script>
-</div>
-<!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
