@@ -1,22 +1,21 @@
 library(tidyverse)
 
-RESEARCH_HOME = "/home/and/Documents/PhD/Research"
+RESEARCH_HOME = "/home/and/Documents/PhD/Research/"
+FILES_PATH = "Scripts/R/Benchmarks/MultiAndSingleNode/R12/dblab/"
+NOHUP_FILE = "nohupDemo.out"
+SEPARATOR_ID = "-"
 
-lines = readLines(paste0(RESEARCH_HOME, "/Scripts/R/Benchmarks/MultiAndSingleNode/R12/aws/monitor.txt"))
-lines = lines[grepl("\\|TOTAL\\|", lines)]
-monitor = as_tibble(lines) %>%
-  separate(value, into=c("Timestamp", "Scale", "Time", "ID", "Nodes", "Stage", "RDDs", "Task", "Dura", "Load"), sep="\\|") %>%
-  separate(ID, into=c(NA, NA, "ID"), sep="_") %>%
-  select(Timestamp, ID) %>%
-  mutate(ID = as.numeric(ID), Timestamp = parse_datetime(str_replace(str_replace(Timestamp," ", "T"), ",", "."))) 
-
-lines = readLines(paste0(RESEARCH_HOME, "/Scripts/R/Benchmarks/MultiAndSingleNode/R12/aws/nohup.txt"))
-lines = lines[grepl("\\|[A-H]\\.", lines)]
+lines = readLines(paste0(RESEARCH_HOME, FILES_PATH, NOHUP_FILE))
+lines = lines[grepl("\\|[1-6]\\.", lines)]
 nohup = as_tibble(lines) %>%
-  separate(value, into=c("Timestamp", "ID", "Time", "Stage", "Duration", "Load", "Bogus"), sep="\\|") %>%
-  separate(ID, into=c(NA, NA, "ID"), sep="_") %>%
-  select(ID, Stage, Timestamp) %>%
-  mutate(ID = as.numeric(ID), Stage = str_trim(Stage), Timestamp = parse_datetime(str_replace(str_replace(Timestamp," ", "T"), ",", "."))) 
-
-
+  separate(value, into=c("Timestamp", "ID", "Time", "Stage", "Duration", "Load", "TS"), sep="\\|") %>%
+  separate(ID, into=c(NA, NA, "ID"), sep = SEPARATOR_ID) %>%
+  mutate(ID = as.numeric(ID), Time = as.numeric(Time), Duration = as.numeric(Duration)) 
   
+nohupStages = nohup %>% mutate(Stage = paste0(TS,".",str_trim(Stage))) %>%
+  mutate(Start = Time - Duration, End = Time) %>%
+  select(ID, Stage, Start, End, Duration) 
+
+nohupTimeintervals = nohup %>% select(ID, TS, Time, Duration) %>%
+  mutate(Start = Time - Duration, End = Time) %>%
+  group_by(ID, TS) %>% summarise(Start = min(Start), End = max(End))

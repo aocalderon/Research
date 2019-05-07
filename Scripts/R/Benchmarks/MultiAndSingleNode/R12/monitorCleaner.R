@@ -41,7 +41,6 @@ nodes = monitor %>% ungroup %>%
 
 stageLevels = nodes[nodes$Nodes==1,"Stage"]
 nodes$Stage = factor(nodes$Stage, levels = as.character(stageLevels$Stage))
-View(nodes)
 
 p = ggplot(data = nodes, aes(x = Stage, y = Time, fill = Nodes)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
