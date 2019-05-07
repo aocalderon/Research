@@ -1,6 +1,8 @@
 ---
 title: "R Notebook"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r}
@@ -9,8 +11,8 @@ library(plotly)
 
 RESEARCH_HOME = "/home/and/Documents/PhD/Research/"
 FILES_PATH = "Scripts/R/Benchmarks/MultiAndSingleNode/R12/dblab/"
-MONITOR_FILE = "monitorDemo.log"
-NOHUP_FILE = "nohupDemo.out"
+MONITOR_FILE = "monitor.log"
+NOHUP_FILE = "nohup.out"
 SEPARATOR_ID = "-"
 
 lines = readLines(paste0(RESEARCH_HOME, FILES_PATH, NOHUP_FILE))
@@ -51,35 +53,30 @@ getStageStart <- function(d){
 lines = readLines(paste0(RESEARCH_HOME, FILES_PATH, MONITOR_FILE))
 lines = lines[grepl("\\|SCALE\\|", lines)]
 monitor = as_tibble(lines) %>%
-  separate(value, into=c("Timestamp", "Scale", "Time", "ID", "Nodes", "Stage", "RDDs", "Task", "Dura", "Load"), sep="\\|") %>%
+  separate(value, into=c("Timestamp", "Scale", "Time", "ID", "Nodes", "StageID", "Stage", "RDDs", "Task", "Dura", "Load"), sep="\\|") %>%
   separate(ID, into=c(NA, NA, "ID"), sep = SEPARATOR_ID) %>%
-  select(ID, Time, Nodes, Stage, RDDs, Task, Load) %>%
-  mutate(ID=as.numeric(ID), Time=as.numeric(Time), RDDs=as.numeric(RDDs), Tasks=as.numeric(Task), Load=as.numeric(Load)) %>%
-  group_by(ID, Time, Nodes, Stage) %>% summarise(RDDs=mean(RDDs), Tasks=mean(Tasks), Load=mean(Load))
+  select(ID, Time, Nodes, StageID, Stage, RDDs, Task, Load) %>%
+  mutate(ID=as.numeric(ID), Time=as.numeric(Time), StageID = as.numeric(StageID), RDDs=as.numeric(RDDs), Tasks=as.numeric(Task), Load=as.numeric(Load)) %>%
+  group_by(ID, Time, Nodes, StageID, Stage) %>% summarise(RDDs=mean(RDDs), Tasks=mean(Tasks), Load=mean(Load)) %>%
+  filter(StageID != -1)
+monitor$Nodes = (monitor$ID %% 3) + 1
 head(monitor)
 ```
 
 ```{r}
-apps = monitor %>% ungroup() %>% select(ID, Nodes) %>% distinct()
-head(apps, n=Inf)
-```
-
-
-```{r}
-d = monitor %>% filter(ID %in% c(0,1,2)) %>% ungroup %>% 
-  mutate(y = Load) %>%
+d = monitor %>% filter(ID %in% c(6,7,8)) %>% ungroup %>% 
+  mutate(y = Load, Nodes = factor(Nodes)) %>%
   select(ID, Time, y, Nodes, Stage) %>% 
   arrange(Time) 
 
 stageStarts =getStageStart(d)
-
-
 ```
 
 ```{r}
 p = ggplot(data = d, aes(x = Time, y = y, group = 1, color = Nodes, linetype = Nodes)) +
   geom_line() +
-  geom_point(data = stageStarts, aes(x=Start, y=y, group=1, color=Nodes, text = paste(Stage,"<br>Start:",Start,"<br>",y)))
+  geom_point(data = stageStarts, aes(x=Start, y=y, group=1, color=Nodes, text = paste(Stage,"<br>Start:",Start,"<br>",y))) +
+  labs(x = "Time(s)", y="Load (MB)")
 ```
 
 ```{r}

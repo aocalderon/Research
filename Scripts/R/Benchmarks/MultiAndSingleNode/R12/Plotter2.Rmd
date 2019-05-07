@@ -1,6 +1,8 @@
 ---
 title: "R Notebook"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r}
@@ -29,24 +31,22 @@ head(monitor)
 ```
 
 ```{r}
-apps = monitor %>% ungroup() %>% select(ID, Nodes) %>% distinct()
-head(apps, n=Inf)
-```
-
-
-```{r}
 d = monitor %>% filter(ID %in% c("0028","0029","0030")) %>% ungroup %>% 
   mutate(y = Load) %>%
   select(Time, y, Nodes, Stage) %>% 
   arrange(Time) 
-
-head(d, n=30)
+starts = getStarts(d)
 ```
 
 ```{r}
+starts$Label = ""
+starts[starts$Stage == "count at MF.scala:194", "Label"] = "<br>Maximal disk find start"
+starts[starts$Stage == "rdd at MF.scala:223", "Label"] = "<br>Maximal disk find end"
+
 p = ggplot(data = d, aes(x = Time, y = y, group = 1, color = Nodes, linetype = Nodes)) +
   geom_line() +
-  geom_point(data = getStarts(d), aes(x=Start, y=y, group=1, color=Nodes, text = paste(Stage,"<br>Start:",Start,"<br>",y)))
+  geom_point(data = starts, aes(x=Start, y=y, group=1, color=Nodes, text = paste0(Stage,"<br>Start: ",Start,", Load: ",y,"<br>",Label))) +
+  labs(x="Time(s)", y="Load (Mb)")
 ```
 
 ```{r}

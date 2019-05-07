@@ -1,27 +1,30 @@
 ---
 title: "R Notebook"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
+Grouping by the type of locality of tasks in the runs with 3 nodes.  
 
 ```{r}
 library(tidyverse)
 
 RESEARCH_HOME = "/home/and/Documents/PhD/Research"
-lines = readLines(paste0(RESEARCH_HOME, "/Scripts/R/Benchmarks/MultiAndSingleNode/R12/dblab/monitor.txt"))
+lines = readLines(paste0(RESEARCH_HOME, "/Scripts/R/Benchmarks/MultiAndSingleNode/R12/dblab/monitor.log"))
 lines = lines[grepl("\\|TASKS\\|", lines)]
-fields = c("Timestamp", "Title", "Time", "appID", "Nodes", "nodeID", "nodeIP", "Stage", "taskID", "Locality", "Launch", "Duration", "Input", "Status")
+fields = c("Timestamp", "Title", "Time", "appID", "Nodes", "nodeID", "nodeIP", "StageID","Stage", "taskID", "Locality", "Launch", "Duration", "Input", "Status")
 tasksInfo = as_tibble(lines) %>%
   separate(value, into=fields, sep="\\|") %>%
   separate(appID, into=c(NA, NA, "ID"), sep="-") %>%
-  select(ID, taskID, Locality) %>%
+  select(ID, Nodes, taskID, Locality) %>%
   distinct() %>%
-  #mutate(ID=factor(ID), taskID=factor(taskID), Locality=factor(Locality)) %>%
+  filter(Nodes == "3") %>%
   group_by(ID, Locality) %>% tally()
 head(tasksInfo, n=Inf)
 ```
 
-
+PROCESS_LOCAL and NODE_LOCAL means the tasks are running in the Java Virtual Machine or, at least, in the same node [(1)](https://spark.apache.org/docs/latest/tuning.html#data-locality).  ANY means the data can be in other rack and there will be a communication cost.
 
 ```{r}
 p = ggplot(data = tasksInfo, aes(x = ID, y = n, fill = Locality)) +
