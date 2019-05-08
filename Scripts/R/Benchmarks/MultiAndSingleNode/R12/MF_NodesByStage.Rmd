@@ -1,0 +1,62 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(tidyverse)
+
+RESEARCH_HOME = "/home/and/Documents/PhD/Research"
+lines = readLines(paste0(RESEARCH_HOME, "/Scripts/R/Benchmarks/MultiAndSingleNode/R12/aws/monitor.txt"))
+lines = lines[grepl("\\|SCALE\\|", lines)]
+monitor = as_tibble(lines) %>%
+  separate(value, into=c("Timestamp", "Scale", "Time", "ID", "Nodes", "Stage", "RDDs", "Task", "Dura", "Load"), sep="\\|") %>%
+  separate(ID, into=c(NA, NA, "ID"), sep="_") %>%
+  mutate(ID = as.numeric(ID)) %>%
+  select(ID, Time, Nodes, Stage, RDDs, Task, Load) %>%
+  mutate(Time=as.numeric(Time), RDDs=as.numeric(RDDs), Tasks=as.numeric(Task), Load=as.numeric(Load)) %>%
+  group_by(ID, Time, Nodes, Stage) %>% summarise(RDDs=mean(RDDs), Tasks=mean(Tasks), Load=mean(Load)) %>%
+  filter(Stage != "")
+head(monitor)
+```
+
+```{r}
+monitor[monitor$ID == 13, "Nodes"] = 3
+monitor[monitor$ID == 14, "Nodes"] = 2
+monitor[monitor$ID == 15, "Nodes"] = 1
+monitor[monitor$ID == 16, "Nodes"] = 1
+monitor[monitor$ID == 17, "Nodes"] = 2
+monitor[monitor$ID == 18, "Nodes"] = 3
+monitor[monitor$ID == 19, "Nodes"] = 1
+monitor[monitor$ID == 20, "Nodes"] = 2
+monitor[monitor$ID == 21, "Nodes"] = 3
+monitor[monitor$ID == 22, "Nodes"] = 1
+monitor[monitor$ID == 23, "Nodes"] = 2
+monitor[monitor$ID == 24, "Nodes"] = 3
+monitor[monitor$ID == 25, "Nodes"] = 1
+monitor[monitor$ID == 26, "Nodes"] = 2
+monitor[monitor$ID == 27, "Nodes"] = 3
+monitor[monitor$ID == 28, "Nodes"] = 1
+monitor[monitor$ID == 29, "Nodes"] = 2
+monitor[monitor$ID == 30, "Nodes"] = 3
+
+nodes = monitor %>% ungroup %>% 
+  select(Nodes, Stage, Time) %>%
+  mutate(Nodes = factor(Nodes)) %>%
+  group_by(Nodes, Stage) %>%
+  summarise(Time = mean(Time)) %>%
+  arrange(Time)
+```
+
+```{r}
+stageLevels = nodes[nodes$Nodes==1,"Stage"]
+nodes$Stage = factor(nodes$Stage, levels = as.character(stageLevels$Stage))
+
+p = ggplot(data = nodes, aes(x = Stage, y = Time, fill = Nodes)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+plot(p)
+```
+
