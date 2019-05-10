@@ -38,7 +38,7 @@ ff = as_tibble(lines) %>%
   separate(value, into=c("Timestamp", "Title", "ID", "Nodes", "Cores", "Status", "Time", "Stage", "Duration", "Load", "Interval"), sep="\\|") %>%
   separate(ID, into=c(NA, NA, "ID"), sep="-") %>%
   mutate(ID = as.numeric(ID), Stage = str_trim(Stage), Duration = as.numeric(Duration)) %>%
-  mutate(uStart = parse_datetime(str_replace(Timestamp, ",", ".")), FFStage = Stage) %>%
+  mutate(uStart = parse_datetime(str_replace(Timestamp, ",", ".")), FFStage = Stage, Status = str_trim(Status)) %>%
   select(uStart, Nodes, Stage, Duration, Interval, FFStage, Status)
 
 head(ff)
@@ -52,8 +52,47 @@ head(stages, n=100)
 
 ```{r}
 n = nrow(stages)
-for(row in 1:5){
-  print(stages[row,])
+ffstage  = ""
+interval = ""
+for(row in 1:n){
+  if(stages[row, "Status"] == "START"){
+    ffstage  = stages[row, "FFStage"]
+    interval = stages[row, "Interval"]
+  } else {
+    if(stages[row, "Status"] == "END"){
+      ffstage  = ""
+      interval = ""
+    } else {
+      stages[row, "FFStage"] = ffstage
+      stages[row, "Interval"] = interval
+    }
+  }
 }
+
+head(stages, n=100)
 ```
 
+```{r}
+s = stages %>% filter(Interval != "") %>% filter(grepl("_", Stage)) %>% 
+  mutate(FFStage = paste0(Interval,".",FFStage)) %>% 
+  select(Nodes, Stage, Duration, FFStage, Interval)
+
+head(s)
+```
+
+```{r}
+p = ggplot(data = s %>% filter(Interval == 1), aes(x = Stage, y = Duration, fill = Nodes)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Stages", y="Duration(s)")
+ggplotly(p)
+```
+
+
+```{r}
+p = ggplot(data = s %>% filter(Interval == 2), aes(x = Stage, y = Duration, fill = Nodes)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Stages", y="Duration(s)")
+ggplotly(p)
+```
