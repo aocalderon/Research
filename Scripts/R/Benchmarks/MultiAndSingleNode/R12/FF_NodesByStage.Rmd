@@ -7,49 +7,35 @@ output:
 
 ```{r}
 library(tidyverse)
+library(plotly)
 
 RESEARCH_HOME = "/home/and/Documents/PhD/Research"
 PATH_FILES = "/Scripts/R/Benchmarks/MultiAndSingleNode/R12/dblab/"
-NOHUP_FILE = "stages1.tsv"
+NOHUP_FILE = "stages.tsv"
 lines = readLines(paste0(RESEARCH_HOME, PATH_FILES, NOHUP_FILE))
 lines = lines[grepl("\\|STAGES\\|", lines)]
-stages1 = as_tibble(lines) %>%
-  separate(value, into=c("Timestamp", "Title", "StageID", "Stage", "Start", "End", "nTasks", "Runtime", "CPUTime", "InputBytes", "InputRecords", "ShuffleBytes", "ShuffleRecords", "ID"), sep="\\|") %>%
+stages = as_tibble(lines) %>%
+  separate(value, into=c("Timestamp", "Title", "Nodes", "Cores","StageID", "Stage", "Start", "End", "nTasks", "Runtime", "CPUTime", "InputBytes", "InputRecords", "ShuffleBytes", "ShuffleRecords", "ID"), sep="\\|") %>%
   separate(ID, into=c(NA, NA, "ID"), sep="-") %>%
-  mutate(ID = as.numeric(ID), Stage = str_trim(Stage), StageID = str_pad(StageID, width = 4, pad = "0", side = "left")) %>%
+  mutate(ID = as.numeric(ID), Stage = str_trim(Stage)) %>%
   mutate(uStart = parse_datetime(str_replace(str_trim(Start), "GMT", "")), 
          uEnd = parse_datetime(str_replace(str_trim(End), "GMT", ""))) %>%
   mutate(Duration = uEnd - uStart) %>%
-  select(ID, StageID, Stage, Duration)
+  select(Nodes, StageID, Stage, Duration) %>%
+  group_by(Nodes, StageID, Stage) %>%
+  summarise(Duration = mean(Duration)) %>%
+  ungroup() %>%
+  mutate(Stage = paste0(str_pad(str_trim(StageID), pad="0", side="left", width=5),"_",Stage)) 
   
-head(stages1)
-```
-```{r}
-NOHUP_FILE = "stages3.tsv"
-lines = readLines(paste0(RESEARCH_HOME, PATH_FILES, NOHUP_FILE))
-lines = lines[grepl("\\|STAGES\\|", lines)]
-stages3 = as_tibble(lines) %>%
-  separate(value, into=c("Timestamp", "Title", "StageID", "Stage", "Start", "End", "nTasks", "Runtime", "CPUTime", "InputBytes", "InputRecords", "ShuffleBytes", "ShuffleRecords", "ID"), sep="\\|") %>%
-  separate(ID, into=c(NA, NA, "ID"), sep="-") %>%
-  mutate(ID = as.numeric(ID), Stage = str_trim(Stage), StageID = str_pad(StageID, width = 4, pad = "0", side = "left")) %>%
-  mutate(uStart = parse_datetime(str_replace(str_trim(Start), "GMT", "")), 
-         uEnd = parse_datetime(str_replace(str_trim(End), "GMT", ""))) %>%
-  mutate(Duration = uEnd - uStart) %>%
-  select(ID, StageID, Stage, Duration)
-  
-head(stages3)
+head(stages)
 ```
 
 
 ```{r}
-stages1$Nodes = 1
-stages3$Nodes = 3
-start = 0
-end = start + 270
-stages = rbind(stages1[start:end,], stages3[start:end,]) %>% filter(Duration > 5)
-p = ggplot(data = stages, aes(x = factor(StageID), y = Duration, fill = factor(Nodes))) +
+p = ggplot(data = stages, aes(x = factor(Stage), y = Duration, fill = Nodes)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-plot(p)
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Stages", y="Duration(s)")
+ggplotly(p)
 ```
 
