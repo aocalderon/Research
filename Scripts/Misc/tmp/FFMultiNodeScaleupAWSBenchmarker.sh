@@ -17,9 +17,9 @@ DISTANCES=( 100 )
 MU=3
 DELTA=3
 N=3
-EXECUTORS_SET=( 1 2 3 )
+EXECUTORS_SET=( 1 3 )
 CORES=4
-TIMESTAMP=3
+TIMESTAMP=5
 
 for n in `seq 1 $N`; do
     for((e=0;e<${#EXECUTORS_SET[@]};e++)); do

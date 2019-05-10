@@ -20,28 +20,29 @@ object FF {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory();
   private val precision: Double = 0.001
-  private var appID: String = ""
-  private var startTime: Long = 0L
-  private var tag: String = ""
+  private var tag: String = "-1"
+  private var appID: String = "app-00000000000000-0000"
+  private var startTime: Long = clocktime
+  private var cores: Int = 0
+  private var executors: Int = 0
 
   case class Flock(pids: List[Int], start: Int, end: Int, center: Point)
 
   /* SpatialJoin variant */
   def runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf): RDD[Flock] = {
     var clockTime = System.currentTimeMillis()
+    cores         = params.cores()
+    executors     = params.executors()
     val debug        = params.ffdebug()
     val master       = params.master()
     val sespg        = params.sespg()
     val tespg        = params.tespg()
     val distance     = params.distance()
-    val cores        = params.cores()
-    val executors    = params.executors()
     val Dpartitions  = (cores * executors) * params.dpartitions()
     val FFpartitions = params.ffpartitions()
     val epsilon      = params.epsilon()
     val mu           = params.mu()
     val delta        = params.delta()
-    val tag          = params.tag()
     val spatial      = params.spatial()
     val gridType     = spatial  match {
       case "QUADTREE"  => GridType.QUADTREE
@@ -56,6 +57,7 @@ object FF {
 
     // Maximal disks timestamp i...
     var timer = System.currentTimeMillis()
+    var stage = ""
     var firstRun: Boolean = true
     var report: RDD[Flock] = spark.sparkContext.emptyRDD[Flock]
     var F: PointRDD = new PointRDD(spark.sparkContext.emptyRDD[Point].toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
@@ -64,11 +66,14 @@ object FF {
     val emptyPartitioner = F.getPartitioner
     for(timestamp <- pointset.keys.toList.sorted){
       // Finding maximal disks...
+      tag = s"$timestamp"
       timer = System.currentTimeMillis()
+      stage = "1.Maximal disks found"
+      logStart(stage)
       val T_i = pointset.get(timestamp).get
       val C = new PointRDD(MF.run(spark, T_i, params, s"$timestamp").map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
       val nDisks = C.rawSpatialRDD.count()
-      log("1.Maximal disks found", timer, nDisks, s"$timestamp")
+      logEnd(stage, timer, nDisks, s"$timestamp")
 
       if(firstRun){
         F = C
@@ -80,6 +85,8 @@ object FF {
       } else {
         // Doing join...
         timer = System.currentTimeMillis()
+        stage = "2.Join done"
+        logStart(stage)
         C.analyze()
         val buffers = new CircleRDD(C, distance)
         buffers.spatialPartitioning(partitioner)
@@ -105,12 +112,14 @@ object FF {
           .reduceByKey( (f0, f1) => f0).map(_._2)
           .persist()
         val nFlocks = flocks.count()
-        log("2.Join done", timer, nFlocks, s"$timestamp")
+        logEnd(stage, timer, nFlocks, s"$timestamp")
 
         if(debug) logger.info(s"FF,Less_Than_Mu,${epsilon},${timestamp},${nFlocks}")
 
         // Reporting flocks...
         timer = System.currentTimeMillis()
+        stage = "3.Flocks to report"
+        logStart(stage)
         var f0 =  flocks.filter{f => f.end - f.start + 1 >= delta}
           .persist(StorageLevel.MEMORY_ONLY)
         var nF0 = f0.count()
@@ -133,7 +142,7 @@ object FF {
           G_prime.spatialPartitioning(gridType, FFpartitions)
           G_prime.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
         }
-        log("3.Flocks to report", timer, nF0, s"$timestamp")
+        logEnd(stage, timer, nF0, s"$timestamp")
 
         if(debug){
           if(G_prime.boundary() != null){
@@ -180,15 +189,19 @@ object FF {
 
         // Prunning flocks by expansions...
         timer = System.currentTimeMillis()
+        stage = "4.Flocks prunned by expansion"
+        logStart(stage)
         var f0_prime: RDD[String] = spark.sparkContext.emptyRDD[String]
         if(G_prime.boundary() != null){
           f0_prime = pruneFlockByExpansions(G_prime, epsilon, timestamp, spark, params).persist(StorageLevel.MEMORY_ONLY)
         }
         val nF0_prime = f0_prime.count()
-        log("4.Flocks prunned by expansion", timer, nF0_prime, s"$timestamp")
+        logEnd(stage, timer, nF0_prime, s"$timestamp")
 
         // Reporting flocks...
         timer = System.currentTimeMillis()
+        stage = "5.Flocks reported"
+        logStart(stage)
         f0 = f0_prime.map{ f =>
             val arr = f.split(";")
             val p = arr(0).split(" ").map(_.toInt).toList
@@ -201,12 +214,14 @@ object FF {
         }.persist(StorageLevel.MEMORY_ONLY)
         nF0 = f0.count()
         report = report.union(f0).persist(StorageLevel.MEMORY_ONLY)
-        log("5.Flocks reported", timer, nF0, s"$timestamp")
+        logEnd(stage, timer, nF0, s"$timestamp")
 
         if(debug) logger.info(s"FF,Flocks_being_reported,${epsilon},${timestamp},${f0.count()}")
 
         // Indexing candidates...
         timer = System.currentTimeMillis()
+        stage = "6.Candidates indexed"
+        logStart(stage)
         flocks = f0.map(f => Flock(f.pids, f.start + 1, f.end, f.center))
           .union(f1)
           .union(C.rawSpatialRDD.rdd.map(c => getFlocksFromGeom(c)))
@@ -224,7 +239,7 @@ object FF {
         F.spatialPartitioning(GridType.QUADTREE, Dpartitions)
         F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
         partitioner = F.getPartitioner
-        log("6.Candidates indexed", timer, F.rawSpatialRDD.count(), s"$timestamp")
+        logEnd(stage, timer, F.rawSpatialRDD.count(), s"$timestamp")
 
         if(debug) logger.info(s"FF,New_set_of_candidates,${epsilon},${timestamp},${F.rawSpatialRDD.count()}")
       }
@@ -233,7 +248,13 @@ object FF {
     val executionTime = "%.2f".format((System.currentTimeMillis() - clockTime) / 1000.0)
     val applicationID = spark.sparkContext.applicationId
     val nReport = report.count()
-    logger.info(s"PFLOCK;$cores;$executors;$epsilon;$mu;$delta;$executionTime;$nReport;$applicationID")
+    logger.info(s"PFLOCK|$applicationID|$cores|$executors|$epsilon|$mu|$delta|$executionTime|$nReport")
+    getExectutorsInfo(master, applicationID)
+    getStagesInfo(master, applicationID)
+    report
+  }
+
+  def getExectutorsInfo(master: String, applicationID: String){
     try{
       val url = s"http://${master}:4040/api/v1/applications/${applicationID}/executors"
       val r = requests.get(url)
@@ -248,13 +269,39 @@ object FF {
           val ttasks = "%.0f".format(m.get("totalTasks").get)
           val ttime  = "%.2fs".format(m.get("totalDuration").get.asInstanceOf[Double] / (m.get("totalCores").get.asInstanceOf[Double] * 1000.0))
           val tinput = "%.2fMB".format(m.get("totalInputBytes").get.asInstanceOf[Double] / (1024.0 * 1024))
-          logger.info(s"EXECUTORS;$tcores;$tid;$trdds;$ttasks;$ttime;$tinput;$thost;$applicationID")
+          logger.info(s"EXECUTORS|$executors|$tid|$trdds|$ttasks|$ttime|$tinput|$thost|$applicationID")
         }
       }
     } catch {
       case e: java.net.ConnectException => logger.info("No executors information.")
     }
-    report
+  }
+
+  def getStagesInfo(master: String, applicationID: String): Unit = {
+    try{
+      val url = s"http://${master}:4040/api/v1/applications/${applicationID}/stages"
+      val r = requests.get(url)
+      if(s"${r.statusCode}" == "200"){
+        import scala.util.parsing.json._
+        val j = JSON.parseFull(r.text).get.asInstanceOf[List[Map[String, Any]]]
+        j.filter(_.get("status").get == "COMPLETE").foreach{ m =>
+          val sid    = "%4.0f".format(m.get("stageId").get)
+          val sname  = "%-37s".format(m.get("name").get.toString())
+          val submissionTime     = "%s".format(m.get("submissionTime").get)
+          val completionTime     = "%s".format(m.get("completionTime").get)
+          val numTasks           = "%4.0f".format(m.get("numTasks").get)
+          val executorRunTime    = "%.0f".format(m.get("executorRunTime").get)
+          val executorCpuTime    = "%.0f".format(m.get("executorCpuTime").get)
+          val inputBytes         = "%.0f".format(m.get("inputBytes").get)
+          val inputRecords       = "%.0f".format(m.get("inputRecords").get)
+          val shuffleReadBytes   = "%.0f".format(m.get("shuffleReadBytes").get)
+          val shuffleReadRecords = "%.0f".format(m.get("shuffleReadRecords").get)
+          logger.info(s"STAGES|$executors|$cores|$sid|$sname|$submissionTime|$completionTime|$numTasks|$executorRunTime|$executorCpuTime|$inputBytes|$inputRecords|$shuffleReadBytes|$shuffleReadRecords|$applicationID")
+        }
+      }
+    } catch {
+      case e: java.net.ConnectException => logger.info("No executors information.")
+    }
   }
 
   def getFlocksFromGeom(g: Geometry): Flock = {
@@ -319,6 +366,8 @@ object FF {
     }
 
     var timer = System.currentTimeMillis()
+    var stage = "4a.Making expansions"
+    logStart(stage)
     val expansions = F.getPartitioner.getGrids.asScala.map{ e =>
       new Envelope(e.getMinX - epsilon, e.getMaxX + epsilon, e.getMinY - epsilon, e.getMaxY + epsilon)
     }.zipWithIndex
@@ -331,7 +380,7 @@ object FF {
       }.toList
     }.partitionBy(new ExpansionPartitioner(expansions.size)).persist(StorageLevel.MEMORY_ONLY)
     val nExpansionsRDD = expansionsRDD.count()
-    log("4a.Making expansions", timer, nExpansionsRDD, s"$timestamp")
+    logEnd(stage, timer, nExpansionsRDD, s"$timestamp")
 
     if(debug){
       //expansionsRDD.map(e => s"${e._2.getUserData.toString()};${e._1}").toDF("E")
@@ -340,6 +389,8 @@ object FF {
     }
 
     timer = System.currentTimeMillis()
+    stage = "4b.Finding maximals"
+    logStart(stage)
     val candidates = expansionsRDD.map(_._2).mapPartitionsWithIndex{ (expansion_id, disks) =>
       val transactions = disks.map{ d => d.getUserData.toString().split(";")(0).split(" ").map(new Integer(_)).toList.asJava}.toList.distinct.asJava
       val LCM = new AlgoLCM2
@@ -349,7 +400,7 @@ object FF {
       }.toIterator
     }.persist(StorageLevel.MEMORY_ONLY)
     val nCandidates = candidates.count()
-    log("4b.Finding maximals", timer, nCandidates, s"$timestamp")
+    logEnd(stage, timer, nCandidates, s"$timestamp")
 
     if(debug){
       //candidates.map(p => (p._2.sorted.mkString(" "), p._1)).toDF("C", "E")
@@ -358,6 +409,8 @@ object FF {
     }
 
     timer = System.currentTimeMillis()
+    stage = "4c.Selecting and mapping"
+    logStart(stage)
     val f0 = F.rawSpatialRDD.rdd.map(f => getFlocksFromGeom(f))
       .map(f => (f.pids,f.start,f.end,f.center.getX,f.center.getY))
       .toDF("pids","start","end","x","y")
@@ -377,7 +430,7 @@ object FF {
         (f, notInExpansion, expansion.toString())
       }.rdd.persist(StorageLevel.MEMORY_ONLY)
     val nPrunned = prunned.count()
-    log("4c.Selecting and mapping", timer, nPrunned, s"$timestamp")
+    logEnd(stage, timer, nPrunned, s"$timestamp")
 
     if(debug){
       //prunned.sortBy(p => p._1).toDF("flock", "notInExpansion", "Exp")
@@ -386,22 +439,25 @@ object FF {
     }
 
     timer = System.currentTimeMillis()
+    stage = "4d.Filtering and distinc"
+    logStart(stage)
     val P = prunned.filter(_._2).map(_._1).distinct().persist(StorageLevel.MEMORY_ONLY)
     val nP = prunned.count()
-    log("4d.Filtering and distinc", timer, nP, s"$timestamp")
+    logEnd(stage, timer, nP, s"$timestamp")
 
     P
   }
 
   def clocktime = System.currentTimeMillis()
 
-  def log(msg: String, timer: Long, n: Long = -1, tag: String = ""): Unit ={
-    val duration = "%3.2f".format((clocktime - startTime) / 1000.0)
-    if(n == -1){
-      logger.info("%-30s|%-50s|%6.2f".format(s"$appID|$duration", msg, (clocktime - timer)/1000.0))
-    } else {
-      logger.info("%-30s|%-50s|%6.2f|%6d|%s".format(s"$appID|$duration", msg, (System.currentTimeMillis()-timer)/1000.0, n, tag))
-    }
+  def logStart(msg: String): Unit ={
+    val duration = (clocktime - startTime) / 1000.0
+    logger.info("FF|%-30s|%6.2f|%-50s|%6.2f|%6d|%s".format(s"$appID|$executors|$cores|START", duration, msg, 0.0, 0, tag))
+  }
+
+  def logEnd(msg: String, timer: Long, n: Long = -1, tag: String = "-1"): Unit ={
+    val duration = (clocktime - startTime) / 1000.0
+    logger.info("FF|%-30s|%6.2f|%-50s|%6.2f|%6d|%s".format(s"$appID|$executors|$cores|  END", duration, msg, (System.currentTimeMillis()-timer)/1000.0, n, tag))
   }
 
   import Numeric.Implicits._
@@ -424,13 +480,15 @@ object FF {
     val input        = params.input()
     val offset       = params.offset()
     val fftimestamp  = params.fftimestamp()
-    val cores        = params.cores()
-    val executors    = params.executors()
+    val debug        = params.ffdebug()
+    cores            = params.cores()
+    executors        = params.executors()
     val Dpartitions  = (cores * executors) * params.dpartitions()
-    tag = params.tag()
-
+    
     // Starting session...
     var timer = System.currentTimeMillis()
+    var stage = "Session start"
+    logStart(stage)
     val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .config("spark.cores.max", cores * executors)
@@ -441,10 +499,12 @@ object FF {
     import spark.implicits._
     appID = spark.sparkContext.applicationId
     startTime = spark.sparkContext.startTime
-    logger.info(s"Session $appID started in ${(System.currentTimeMillis - timer) / 1000.0}s...")
+    logEnd(stage, timer, 0, "-1")
 
     // Reading data...
     timer = System.currentTimeMillis()
+    stage = "Data read"
+    logStart(stage)
     val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, Dpartitions)
     points.CRSTransform(params.sespg(), params.tespg())
     val nPoints = points.rawSpatialRDD.count()
@@ -453,15 +513,18 @@ object FF {
     for(timestamp <- timestamps.filter(_ < fftimestamp)){
       pointset += (timestamp -> extractTimestamp(points, timestamp, params.sespg(), params.tespg()))
     }
-    logger.info(s"$nPoints points read in ${(System.currentTimeMillis - timer) / 1000.0}s")
-    logger.info(s"Current timestamps: ${timestamps.filter(_ < fftimestamp).mkString(" ")}")
+    logEnd(stage, timer, nPoints)
+
+    if(debug){ logger.info(s"Current timestamps: ${timestamps.filter(_ < fftimestamp).mkString(" ")}") }
 
     // Running maximal finder...
     timer = System.currentTimeMillis()
+    stage = "Flock Finder run"
+    logStart(stage)
     val flocks = runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf)
-    logger.info(s"FlockFinder runs in ${"%.2f".format((System.currentTimeMillis() - timer) / 1000.0)}s")
+    logEnd(stage, timer, flocks.count(), tag)
 
-    if(params.ffdebug()){
+    if(debug){
       val f = flocks.map(f => s"${f.start}, ${f.end}, ${f.pids.mkString(" ")}\n").sortBy(_.toString()).collect().mkString("")
       val pw = new PrintWriter(new File("/tmp/flocks.txt"))
       pw.write(f)
@@ -469,7 +532,10 @@ object FF {
     }
 
     // Closing session...
+    timer = clocktime
+    stage = "Session closed"
+    logStart(stage)
     spark.stop()
-    logger.info(s"Session $appID closed.")    
+    logEnd(stage, timer, 0, tag)    
   }
 }
