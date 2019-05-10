@@ -19,7 +19,8 @@ stages = as_tibble(lines) %>%
   separate(ID, into=c(NA, NA, "ID"), sep="-") %>%
   mutate(ID = as.numeric(ID), Stage = str_trim(Stage)) %>%
   mutate(uStart = parse_datetime(str_replace(str_trim(Start), "GMT", "")), 
-         uEnd = parse_datetime(str_replace(str_trim(End), "GMT", ""))) %>%
+         uEnd = parse_datetime(str_replace(str_trim(End), "GMT", "")),
+         Timestamp = parse_datetime(str_replace(Timestamp, ",", "."))) %>%
   mutate(Duration = uEnd - uStart) %>%
   select(Nodes, StageID, Stage, Duration) %>%
   group_by(Nodes, StageID, Stage) %>%
@@ -32,7 +33,7 @@ head(stages)
 
 
 ```{r}
-p = ggplot(data = stages, aes(x = factor(Stage), y = Duration, fill = Nodes)) +
+p = ggplot(data = stages, aes(x = Stage, y = Duration, fill = Nodes)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   labs(x="Stages", y="Duration(s)")
