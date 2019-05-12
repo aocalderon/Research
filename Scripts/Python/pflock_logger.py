@@ -50,9 +50,14 @@ def main():
                     for index, row in tasks.iterrows():
                         #logging.info(row)
                         logging.info("TASKS|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}".format(timer(start), appID, executors, executorID, hostPort, stageID, stageName, row['ID'], row['Locality Level'], row['Launch Time'], row['Duration  ▾'], row['GC Time'], row['Input Size / Records'], row['Status']))
-#                if status == 'COMPLETE':
-#                    stageCompleted = "{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}".format(stage['stageId'],stage['name'],stage['numTasks'],stage['executorRunTime'],stage['executorCpuTime'],stage['submissionTime'],stage['completionTime'], stage['inputBytes'],stage['inputRecords'],stage['shuffleReadBytes'],stage['shuffleReadRecords'])
-#                    logging.info("COMPLETED|{}|{}|{}|{}|{}".format(timer(start), appID, executors, hostPort, stageCompleted))
+                if status == 'COMPLETE':
+                    #stageCompleted = "{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}".format(stage['stageId'],stage['name'],stage['numTasks'],stage['executorRunTime'],stage['executorCpuTime'],stage['submissionTime'],stage['completionTime'], stage['inputBytes'],stage['inputRecords'],stage['shuffleReadBytes'],stage['shuffleReadRecords'])
+                    #logging.info("COMPLETED|{}|{}|{}|{}|{}".format(timer(start), appID, executors, hostPort, stageCompleted))
+                    stageID = stage['stageId']
+                    response = requests.get("http://{}:4040/api/v1/applications/{}/stages/{}".format(master_host, appID, stageID))
+                    stage = json.loads(response.text)
+                    stageName = stage[0]['name']
+                    print("{}\t{}\t{}".format(stageID, stageName, len(stage[0]['tasks'])))
 
             ### Executors...
             
