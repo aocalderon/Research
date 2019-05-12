@@ -11,7 +11,7 @@ library(plotly)
 
 RESEARCH_HOME = "/home/and/Documents/PhD/Research"
 PATH_FILES = "/Scripts/R/Benchmarks/MultiAndSingleNode/R12/dblab/"
-NOHUP_FILE = "stages.tsv"
+NOHUP_FILE = "nohup10.tsv"
 lines = readLines(paste0(RESEARCH_HOME, PATH_FILES, NOHUP_FILE))
 lines = lines[grepl("\\|STAGES\\|", lines)]
 stages = as_tibble(lines) %>%
@@ -29,6 +29,17 @@ stages = as_tibble(lines) %>%
   mutate(Stage = paste0(str_pad(str_trim(StageID), pad="0", side="left", width=5),"_",Stage)) 
   
 head(stages)
+```
+
+```{r}
+lines = readLines(paste0(RESEARCH_HOME, PATH_FILES, NOHUP_FILE))
+lines = lines[grepl("\\|[1-6]\\.", lines)]
+ff = as_tibble(lines) %>%
+  separate(value, into=c("Timestamp", "Title", "ID", "Nodes", "Cores", "Status", "Time", "Stage", "Duration", "Load", "Interval"), sep="\\|") %>%
+  separate(ID, into=c(NA, NA, "ID"), sep="-") %>%
+  mutate(ID = as.numeric(ID), Stage = str_trim(Stage)) %>%
+  mutate(Timestamp = parse_datetime(str_replace(Timestamp, ",", ".")))
+head(ff)
 ```
 
 
