@@ -1,6 +1,8 @@
 ---
 title: "R Notebook"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 
@@ -81,18 +83,34 @@ head(s)
 ```
 
 ```{r}
-p = ggplot(data = s %>% filter(Interval == 1), aes(x = Stage, y = Duration, fill = Nodes)) +
+interval = 0
+p = ggplot(data = s %>% filter(Interval == interval), aes(x = Stage, y = Duration, fill = Nodes)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(x="Stages", y="Duration(s)")
+  labs(title=paste("Time interval", interval), x="Stages", y="Duration(s)")
 ggplotly(p)
-```
-
-
-```{r}
-p = ggplot(data = s %>% filter(Interval == 2), aes(x = Stage, y = Duration, fill = Nodes)) +
+interval = 1
+p = ggplot(data = s %>% filter(Interval == interval), aes(x = Stage, y = Duration, fill = Nodes)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(x="Stages", y="Duration(s)")
+  labs(title=paste("Time interval", interval), x="Stages", y="Duration(s)")
+ggplotly(p)
+interval = 2
+p = ggplot(data = s %>% filter(Interval == interval), aes(x = Stage, y = Duration, fill = Nodes)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(title=paste("Time interval", interval), x="Stages", y="Duration(s)")
+ggplotly(p)
+interval = 3
+p = ggplot(data = s %>% filter(Interval == interval), aes(x = Stage, y = Duration, fill = Nodes)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(title=paste("Time interval", interval), x="Stages", y="Duration(s)")
+ggplotly(p)
+interval = 4
+p = ggplot(data = s %>% filter(Interval == interval), aes(x = Stage, y = Duration, fill = Nodes)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(title=paste("Time interval", interval), x="Stages", y="Duration(s)")
 ggplotly(p)
 ```
