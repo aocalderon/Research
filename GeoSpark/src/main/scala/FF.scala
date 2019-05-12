@@ -251,6 +251,7 @@ object FF {
     logger.info(s"PFLOCK|$applicationID|$cores|$executors|$epsilon|$mu|$delta|$executionTime|$nReport")
     getExectutorsInfo(master, applicationID)
     getStagesInfo(master, applicationID)
+    getTasksInfo(master, applicationID)
     report
   }
 
@@ -303,6 +304,41 @@ object FF {
       case e: java.net.ConnectException => logger.info("No executors information.")
     }
   }
+
+  def getTasksInfo(master: String, applicationID: String): Unit = {
+    try{
+      val url1 = s"http://${master}:4040/api/v1/applications/${applicationID}/stages"
+      val r = requests.get(url1)
+      if(s"${r.statusCode}" == "200"){
+        import scala.util.parsing.json._
+        val j = JSON.parseFull(r.text).get.asInstanceOf[List[Map[String, Any]]]
+        j.filter(_.get("status").get == "COMPLETE").foreach{ m =>
+          val stageId ="%.0f".format(m.get("stageId").get)
+          val sid    = "%4.0f".format(m.get("stageId").get)
+          val sname  = "%-37s".format(m.get("name").get.toString())
+          val ntasks = "%5.0f".format(m.get("numTasks").get)
+          val url2 = s"http://${master}:4040/api/v1/applications/${applicationID}/stages/${stageId}"
+          val t = requests.get(url2)
+          val k = JSON.parseFull(t.text).get.asInstanceOf[List[Map[String, Any]]]
+          k.foreach { x  =>
+            val tasks = x.get("tasks").get.asInstanceOf[Map[String, Map[String, Any]]]
+            tasks.values.filter(_.get("status").get == "SUCCESS").foreach { t =>
+              val tasksId      = "%7.0f".format(t.get("taskId").get)
+              val duration     = "%4.0f".format(t.get("duration").get)
+              val launchTime   = "%s".format(t.get("launchTime").get.toString())
+              val host         = "%s".format(t.get("host").get.toString())
+              val taskLocality = "%s".format(t.get("taskLocality").get.toString())
+
+              logger.info(s"TASKS|$executors|$cores|$sid|$sname|$ntasks|$tasksId|$duration|$launchTime|$host|$taskLocality|$applicationID")
+            }
+          }
+        }
+      }
+    } catch {
+      case e: java.net.ConnectException => logger.info("No executors information.")
+    }
+  }
+
 
   def getFlocksFromGeom(g: Geometry): Flock = {
     val farr = g.getUserData.toString().split(";")

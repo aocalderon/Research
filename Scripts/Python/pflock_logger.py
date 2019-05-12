@@ -57,7 +57,7 @@ def main():
                     response = requests.get("http://{}:4040/api/v1/applications/{}/stages/{}".format(master_host, appID, stageID))
                     stage = json.loads(response.text)
                     stageName = stage[0]['name']
-                    print("{}\t{}\t{}".format(stageID, stageName, len(stage[0]['tasks'])))
+                    print("\n\n\n\n{}".format(stage))
 
             ### Executors...
             
