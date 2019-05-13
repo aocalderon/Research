@@ -335,7 +335,8 @@ object FF {
         }
       }
     } catch {
-      case e: java.net.ConnectException => logger.info("No executors information.")
+      case e1: java.net.ConnectException        => logger.info(s"Connection error... ${e1.getMessage}")
+      case e2: java.util.NoSuchElementException => logger.info(s"No such element...  ${e2.getMessage}")
     }
   }
 
