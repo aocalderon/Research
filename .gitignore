@@ -50,6 +50,12 @@ Scripts/Scala/MF/project/*
 Scripts/Scala/MF/.ensime
 Scripts/Scala/MF/.ensime_cache/*
 
+Validation/Scaleup/.ensime
+Validation/Scaleup/.ensime_cache/*
+Validation/Scaleup/target/*
+Validation/Scaleup/project/*
+
+*~
 ensime*
 *.cache
 *.log
