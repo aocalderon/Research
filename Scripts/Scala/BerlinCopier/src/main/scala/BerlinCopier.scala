@@ -61,8 +61,8 @@ object BerlinCopier {
 
         data.map{ p =>
           val new_pid = p.pid + ((k + 1) * max_pid)
-          val new_x   = p.x + (i * extent_x)
-          val new_y   = p.y + (j * extent_y)
+          val new_x   = p.x + i * (gap + extent_x)
+          val new_y   = p.y + j * (gap + extent_y)
           ST_Point(new_pid, new_x, new_y, p.t)
         }
       }.reduce( (a, b) => a.union(b))
@@ -83,7 +83,7 @@ object BerlinCopier {
           ST_Point(max_pid + d._2 + 1, d._1._1._1, d._1._1._2, d._1._2)
         }
       }.toDS()
-      //BoundaryGap.show(72)
+      BoundaryGap.show()
       duplication = BoundaryGap.union(duplication)
     }
 
@@ -121,7 +121,7 @@ object BerlinCopier {
       pw.write(out.map(t => s"${t.getInt(0)};${t.getString(1)}\n").collect().mkString(""))
       pw.close
     }
-    val pw = new PrintWriter(new File(conf.output()))
+    val pw = new PrintWriter(conf.output())
     pw.write(duplication.map(p => s"${p.pid}\t${p.x}\t${p.y}\t${p.t}\n").collect().mkString(""))
     pw.close
     logger.info(s"Dataset saved at ${(System.currentTimeMillis() - timer) / 1000.0}s")
