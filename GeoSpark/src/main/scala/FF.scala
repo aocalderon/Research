@@ -90,6 +90,21 @@ object FF {
         C.analyze()
         val buffers = new CircleRDD(C, distance)
         buffers.spatialPartitioning(partitioner)
+        if(debug){
+          val t1 = F.rawSpatialRDD.rdd.map{f =>
+            val x = f.getX
+            val y = f.getY
+            val userdata = f.getUserData.toString()
+            s"$x\t$y\t$userdata"
+          }
+          val pw1 = new PrintWriter(s"F_${timestamp}.tsv")
+          val t2 = C.rawSpatialRDD.rdd.map{c =>
+            val x = c.getX
+            val y = c.getY
+            val userdata = c.getUserData.toString()
+            s"$x\t$y\t$userdata"
+          }
+        }
         val R = JoinQuery.DistanceJoinQuery(F, buffers, true, false) // using index, only return geometries fully covered by each buffer...
         var flocks0 = R.rdd.flatMap{ case (g: Geometry, h: java.util.HashSet[Point]) =>
           val f0 = getFlocksFromGeom(g)
@@ -154,12 +169,12 @@ object FF {
             val avg  = mean(info)
             val sdev = stdDev(info)
             val vari = variance(info)
-            val a = s";$nPartitions"
-            val b = s";${stats.min()}"
-            val c = s";${stats.max()}"
-            val d = s";${"%.2f".format(avg)}"
-            val e = s";${"%.2f".format(sdev)}"
-            val f = s";${"%.2f".format(vari)}"
+            val a = s"|$nPartitions"
+            val b = s"|${stats.min()}"
+            val c = s"|${stats.max()}"
+            val d = s"|${"%.2f".format(avg)}"
+            val e = s"|${"%.2f".format(sdev)}"
+            val f = s"|${"%.2f".format(vari)}"
             logger.info(s"FF_PINFO${a}${b}${c}${d}${e}${f}")
 
             val grids = G_prime.getPartitioner.getGrids().asScala.toList.map{ e =>
