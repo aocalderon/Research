@@ -8,7 +8,7 @@ class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val epsilon:      ScallopOption[Double]  =  opt[Double]   (default  = Some(10.0))
   val mu:           ScallopOption[Int]     =  opt[Int]      (default  = Some(3))
   val delta:        ScallopOption[Int]     =  opt[Int]      (default  = Some(3))
-  val master:       ScallopOption[String]  =  opt[String]   (default  = Some("169.235.27.134")) //spark://169.235.27.134:7077
+  val master:       ScallopOption[String]  =  opt[String]   (default  = Some("169.235.27.138")) //spark://169.235.27.134:7077
   val port:         ScallopOption[String]  =  opt[String]   (default  = Some("7077"))
   val sespg:        ScallopOption[String]  =  opt[String]   (default  = Some("epsg:3068"))
   val tespg:        ScallopOption[String]  =  opt[String]   (default  = Some("epsg:3068"))
