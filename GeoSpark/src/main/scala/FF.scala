@@ -6,6 +6,7 @@ import org.datasyslab.geospark.enums.{FileDataSplitter, GridType, IndexType}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.spatialRDD.{CircleRDD, PointRDD}
 import org.datasyslab.geospark.spatialPartitioning.FlatGridPartitioner
+import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.StructType
 import org.slf4j.{Logger, LoggerFactory}
@@ -25,6 +26,7 @@ object FF {
   private var startTime: Long = clocktime
   private var cores: Int = 0
   private var executors: Int = 0
+  private var portUI: String = "4040"
 
   case class Flock(pids: List[Int], start: Int, end: Int, center: Point)
 
@@ -95,15 +97,23 @@ object FF {
             val x = f.getX
             val y = f.getY
             val userdata = f.getUserData.toString()
-            s"$x\t$y\t$userdata"
+            s"$x\t$y\t$userdata\n"
           }
-          val pw1 = new PrintWriter(s"F_${timestamp}.tsv")
+          val Ffilename = s"F${executors}_${timestamp}.tsv"
+          val pw1 = new PrintWriter(Ffilename)
+          pw1.write(t1.collect().mkString(""))
+          pw1.close()
           val t2 = C.rawSpatialRDD.rdd.map{c =>
             val x = c.getX
             val y = c.getY
             val userdata = c.getUserData.toString()
-            s"$x\t$y\t$userdata"
+            s"$x\t$y\t$userdata\n"
           }
+          val Cfilename = s"C${executors}_${timestamp}.tsv"
+          val pw2 = new PrintWriter(Cfilename)
+          pw2.write(t2.collect().mkString(""))
+          pw2.close()
+          logger.info(s"$Ffilename and $Cfilename have been written...")
         }
         val R = JoinQuery.DistanceJoinQuery(F, buffers, true, false) // using index, only return geometries fully covered by each buffer...
         var flocks0 = R.rdd.flatMap{ case (g: Geometry, h: java.util.HashSet[Point]) =>
@@ -272,7 +282,7 @@ object FF {
 
   def getExectutorsInfo(master: String, applicationID: String){
     try{
-      val url = s"http://${master}:4040/api/v1/applications/${applicationID}/executors"
+      val url = s"http://${master}:${portUI}/api/v1/applications/${applicationID}/executors"
       val r = requests.get(url)
       if(s"${r.statusCode}" == "200"){
         import scala.util.parsing.json._
@@ -295,7 +305,7 @@ object FF {
 
   def getStagesInfo(master: String, applicationID: String): Unit = {
     try{
-      val url = s"http://${master}:4040/api/v1/applications/${applicationID}/stages"
+      val url = s"http://${master}:${portUI}/api/v1/applications/${applicationID}/stages"
       val r = requests.get(url)
       if(s"${r.statusCode}" == "200"){
         import scala.util.parsing.json._
@@ -322,7 +332,7 @@ object FF {
 
   def getTasksInfo(master: String, applicationID: String): Unit = {
     try{
-      val url1 = s"http://${master}:4040/api/v1/applications/${applicationID}/stages"
+      val url1 = s"http://${master}:${portUI}/api/v1/applications/${applicationID}/stages"
       val r = requests.get(url1)
       if(s"${r.statusCode}" == "200"){
         import scala.util.parsing.json._
@@ -332,7 +342,7 @@ object FF {
           val sid    = "%4.0f".format(m.get("stageId").get)
           val sname  = "%-37s".format(m.get("name").get.toString())
           val ntasks = "%5.0f".format(m.get("numTasks").get)
-          val url2 = s"http://${master}:4040/api/v1/applications/${applicationID}/stages/${stageId}"
+          val url2 = s"http://${master}:${portUI}/api/v1/applications/${applicationID}/stages/${stageId}"
           val t = requests.get(url2)
           val k = JSON.parseFull(t.text).get.asInstanceOf[List[Map[String, Any]]]
           k.foreach { x  =>
@@ -535,6 +545,7 @@ object FF {
     val debug        = params.ffdebug()
     cores            = params.cores()
     executors        = params.executors()
+    portUI           = params.portui()
     val Dpartitions  = (cores * executors) * params.dpartitions()
     
     // Starting session...
@@ -542,7 +553,9 @@ object FF {
     var stage = "Session start"
     logStart(stage)
     val spark = SparkSession.builder()
+      .config("spark.default.parallelism", 3 * cores * executors)
       .config("spark.serializer",classOf[KryoSerializer].getName)
+      .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .config("spark.cores.max", cores * executors)
       .config("spark.executor.cores", cores)
       .master(s"spark://${master}:${port}")
