@@ -2,6 +2,7 @@ import scala.collection.mutable.ListBuffer
 
 object InfoTracker{
   var master: String = ""
+  var port: String = ""
   var applicationID: String = ""
   var executors: Int = 0
   var cores: Int = 0
@@ -9,7 +10,7 @@ object InfoTracker{
   def getExectutorsInfo(): String = {
     var logger = new ListBuffer[String]()
     try{
-      val url = s"http://${master}:4040/api/v1/applications/${applicationID}/executors"
+      val url = s"http://${master}:${port}/api/v1/applications/${applicationID}/executors"
       val r = requests.get(url)
       if(s"${r.statusCode}" == "200"){
         import scala.util.parsing.json._
@@ -34,7 +35,7 @@ object InfoTracker{
   def getStagesInfo(): String = {
     var logger = new ListBuffer[String]()
     try{
-      val url = s"http://${master}:4040/api/v1/applications/${applicationID}/stages"
+      val url = s"http://${master}:${port}/api/v1/applications/${applicationID}/stages"
       val r = requests.get(url)
       if(s"${r.statusCode}" == "200"){
         import scala.util.parsing.json._
@@ -63,7 +64,7 @@ object InfoTracker{
   def getTasksInfo(): String = {
     var logger = new ListBuffer[String]()
     try{
-      val url1 = s"http://${master}:4040/api/v1/applications/${applicationID}/stages"
+      val url1 = s"http://${master}:${port}/api/v1/applications/${applicationID}/stages"
       val r = requests.get(url1)
       if(s"${r.statusCode}" == "200"){
         import scala.util.parsing.json._
@@ -73,7 +74,7 @@ object InfoTracker{
           val sid    = "%4.0f".format(s.get("stageId").get)
           val sname  = "%-37s".format(s.get("name").get.toString())
           val ntasks = "%5.0f".format(s.get("numTasks").get)
-          val url2 = s"http://${master}:4040/api/v1/applications/${applicationID}/stages/${stageId}"
+          val url2 = s"http://${master}:${port}/api/v1/applications/${applicationID}/stages/${stageId}"
           val u = requests.get(url2)
           val k = JSON.parseFull(u.text).get.asInstanceOf[List[Map[String, Any]]]
           k.foreach { v  =>
@@ -84,8 +85,20 @@ object InfoTracker{
               val launchTime   = "%s".format(t.get("launchTime").get.toString())
               val host         = "%s".format(t.get("host").get.toString())
               val taskLocality = "%s".format(t.get("taskLocality").get.toString())
+              val taskMetrics  = t.get("taskMetrics").get.asInstanceOf[Map[String, Any]]
+              val executorRunTime = "%.0f".format(taskMetrics.get("executorRunTime").get)
+              val resultSize   = "%.0f".format(taskMetrics.get("resultSize").get)
+              val inputMetrics   = taskMetrics.get("inputMetrics").get.asInstanceOf[Map[String, Any]]
+              val sInputMetrics  = "%.0f|%.0f".format(inputMetrics.get("bytesRead").get, inputMetrics.get("recordsRead").get)
+              val outputMetrics  = taskMetrics.get("outputMetrics").get.asInstanceOf[Map[String, Any]]
+              val sOutputMetrics = "%.0f|%.0f".format(outputMetrics.get("bytesWritten").get, outputMetrics.get("recordsWritten").get)
 
-              logger += s"TASKS|$sid|$sname|$tasksId|$executors|$cores|$ntasks|$duration|$launchTime|$host|$taskLocality|$applicationID\n"
+              val shuffleReadMetrics   = taskMetrics.get("shuffleReadMetrics").get.asInstanceOf[Map[String, Any]]
+              val sShuffleReadMetrics  = "%.0f|%.0f".format(shuffleReadMetrics.get("remoteBytesRead").get, shuffleReadMetrics.get("recordsRead").get)
+              val shuffleWriteMetrics  = taskMetrics.get("outputMetrics").get.asInstanceOf[Map[String, Any]]
+              val sShuffleWriteMetrics = "%.0f|%.0f".format(shuffleWriteMetrics.get("bytesWritten").get, shuffleWriteMetrics.get("recordsWritten").get)
+
+              logger += s"TASKS|$sid|$sname|$tasksId|$executors|$cores|$ntasks|$duration|$launchTime|$host|$taskLocality|$executorRunTime|$resultSize|$sInputMetrics|$sOutputMetrics|$sShuffleReadMetrics|$sShuffleWriteMetrics|$applicationID\n"
             }
           }
         }

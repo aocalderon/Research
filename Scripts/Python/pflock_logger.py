@@ -13,6 +13,8 @@ parser.add_argument("-m", "--master", default = "localhost", help = "The master 
 parser.add_argument("-p", "--port", default = "4040", help = "The master port...")
 parser.add_argument("-t", "--time", default = 1, help = "Time lapse to log...")
 parser.add_argument("-n", "--nohup", default = "", help = "The nohup file path...")
+parser.add_argument("-i", "--indexstage", default = 1, help = "Index for stage in logs...")
+parser.add_argument("-e", "--indexstatus", default = 1, help = "Index for status in logs...")
 args = parser.parse_args()
 logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='%(asctime)s|%(message)s')
 clocktime = lambda: int(round(time.time() * 1000))
@@ -22,6 +24,8 @@ isTimeToLog = lambda x: int(x) % timeToLog == 0
 master_host = args.master
 master_port = args.port
 nohup = args.nohup
+indexStage  = int(args.indexstage)
+indexStatus = int(args.indexstatus)
 
 def main():
     stageID    = -1
@@ -98,15 +102,16 @@ def main():
             if(nohup != ""):
                 out = subprocess.run(["tail", "-n1", nohup], capture_output=True)
                 line = str(out.stdout)
-                logging.info(line[2:-4])
+                logging.info(line[2:-3])
                 arr  = line.split("|")
-                myStatus = arr[5].strip()
+                myStatus = arr[indexStatus].strip()
+                logging.info(myStatus)
                 if myStatus == "START":
-                    myStage    = arr[7].strip()
-                    myInterval = arr[10][0]
+                    myStage    = arr[indexStage].strip()
+                    #myInterval = arr[indexInterval][0]
                 if myStatus == "END":
                     myStage    = "None"
-                    myInterval = "-1"
+                    #myInterval = "-1"
             
         except (requests.exceptions.ConnectionError, json.decoder.JSONDecodeError, IndexError, KeyError, OSError, AttributeError, ZeroDivisionError):
             continue

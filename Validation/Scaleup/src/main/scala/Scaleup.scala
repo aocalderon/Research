@@ -5,6 +5,7 @@ import org.apache.spark.sql.functions._
 import org.datasyslab.geospark.spatialRDD.{PointRDD, CircleRDD}
 import org.datasyslab.geospark.enums.{GridType, IndexType, FileDataSplitter}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
+import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import com.vividsolutions.jts.geom.{GeometryFactory, Geometry, Coordinate}
 import org.rogach.scallop._
 import org.slf4j.{LoggerFactory, Logger}
@@ -25,6 +26,7 @@ object Scaleup{
     val tag        = params.tag()
     val host       = params.host()
     val port       = params.port()
+    val portUI     = params.portui()
     val mfpartitions = params.mfpartitions()
     val ffpartitions = params.ffpartitions()
     val dpartitions  = params.dpartitions()
@@ -61,7 +63,9 @@ object Scaleup{
     log("Session start", timer, 0, "START")
     val maxCores = cores * executors
     val spark = SparkSession.builder().
+      config("spark.default.parallelism", 3 * cores * executors).
       config("spark.serializer",classOf[KryoSerializer].getName).
+      config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName).
       master(master).appName("Scaleup").
       config("spark.cores.max", maxCores).
       config("spark.executor.cores", cores).
@@ -75,13 +79,13 @@ object Scaleup{
     // Reading data...
     timer = clocktime
     log("T1 read", timer, 0, "START")
-    val t1Points = new PointRDD(spark.sparkContext, t1, offset, FileDataSplitter.CSV, true, defaultPartitions)
+    val t1Points = new PointRDD(spark.sparkContext, t1, offset, FileDataSplitter.TSV, true, defaultPartitions)
     val nT1 = t1Points.rawSpatialRDD.rdd.count()
     log("T1 read", timer, nT1, "END")
 
     timer = clocktime
     log("T2 read", timer, 0, "START")
-    val t2Points = new PointRDD(spark.sparkContext, t2, offset, FileDataSplitter.CSV, true, defaultPartitions)
+    val t2Points = new PointRDD(spark.sparkContext, t2, offset, FileDataSplitter.TSV, true, defaultPartitions)
     val nT2 = t2Points.rawSpatialRDD.rdd.count()
     log("T2 read", timer, nT2, "END")
 
@@ -103,6 +107,7 @@ object Scaleup{
     timer = clocktime
     log("Session close", timer, 0, "START")
     InfoTracker.master = host
+    InfoTracker.port = portUI
     InfoTracker.applicationID = appID
     InfoTracker.executors = executors
     InfoTracker.cores = cores
@@ -130,6 +135,7 @@ class ScaleupConf(args: Seq[String]) extends ScallopConf(args) {
   val tag:        ScallopOption[String]  = opt[String]  (default = Some(""))
   val host:       ScallopOption[String]  = opt[String]  (default = Some("169.235.27.138"))
   val port:       ScallopOption[String]  = opt[String]  (default = Some("7077"))
+  val portui:     ScallopOption[String]  = opt[String]  (default = Some("4040"))
   val cores:      ScallopOption[Int]     = opt[Int]     (default = Some(4))
   val executors:  ScallopOption[Int]     = opt[Int]     (default = Some(3))
   val distance:   ScallopOption[Double]  = opt[Double]  (default = Some(110.0))
