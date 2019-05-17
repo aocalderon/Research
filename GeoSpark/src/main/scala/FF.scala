@@ -161,8 +161,8 @@ object FF {
         )
         G_prime.analyze()
         if(G_prime.boundary() != null){
-          val numX = params.customx()
-          val numY = params.customy()
+          val numX = params.ffcustomx()
+          val numY = params.ffcustomy()
           G_prime.setNumX(numX.toInt)
           G_prime.setNumY(numY.toInt)
           //G_prime.setSampleNumber(G_prime.rawSpatialRDD.rdd.count().toInt)

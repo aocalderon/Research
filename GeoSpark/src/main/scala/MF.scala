@@ -39,7 +39,6 @@ object MF{
     val sespg: String     = params.sespg()
     val tespg: String     = params.tespg()
     val Dpartitions: Int  = (cores * executors) * params.dpartitions()
-    val MFpartitions: Int = params.mfpartitions()
     val spatial: String   = params.spatial()
     val partitioner = spatial  match {
       case "QUADTREE"  => GridType.QUADTREE
@@ -51,6 +50,7 @@ object MF{
       case "CUSTOM"    => GridType.CUSTOM
     }
     if(params.tag() == ""){ tag = s"$info"} else { tag = s"${params.tag()}|${info}" }
+    var MFpartitions: Int = params.mfpartitions()
 
     // Indexing points...
     var timer = System.currentTimeMillis()
@@ -133,10 +133,11 @@ object MF{
     val disksRDD = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
     disksRDD.analyze(StorageLevel.MEMORY_ONLY)
     val nDisksRDD = disksRDD.rawSpatialRDD.count()
-    val numX = params.customxmf()
-    val numY = params.customymf()
-    disksRDD.setNumX(numX.toInt)
-    disksRDD.setNumY(numY.toInt)
+    val numX = params.mfcustomx().toInt
+    val numY = params.mfcustomy().toInt
+    disksRDD.setNumX(numX)
+    disksRDD.setNumY(numY)
+    MFpartitions = numX * numY
     disksRDD.setSampleNumber(disksRDD.rawSpatialRDD.rdd.count().toInt)
     disksRDD.spatialPartitioning(partitioner, MFpartitions)
     disksRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
