@@ -14,11 +14,15 @@ source("/home/and/Documents/PhD/Research/Scripts/R/R13/tasksMetrics.R")
 appsE1_1 = "/home/and/Documents/PhD/Research/Scripts/Misc/tmp/apps/app-0282_info.tsv"
 appsE1_2 = "/home/and/Documents/PhD/Research/Scripts/Misc/tmp/apps/app-0284_info.tsv"
 appsE1_3 = "/home/and/Documents/PhD/Research/Scripts/Misc/tmp/apps/app-0286_info.tsv"
-stagesE1 = rbind(getStages(appsE1_1),getStages(appsE1_2),getStages(appsE1_3))
+appsE1_4 = "/home/and/Documents/PhD/Research/Scripts/Misc/tmp/apps/app-0288_info.tsv"
+appsE1_5 = "/home/and/Documents/PhD/Research/Scripts/Misc/tmp/apps/app-0290_info.tsv"
+stagesE1 = rbind(getStages(appsE1_1),getStages(appsE1_2),getStages(appsE1_3),getStages(appsE1_4),getStages(appsE1_5))
 appsE3_1 = "/home/and/Documents/PhD/Research/Scripts/Misc/tmp/apps/app-0281_info.tsv"
 appsE3_2 = "/home/and/Documents/PhD/Research/Scripts/Misc/tmp/apps/app-0283_info.tsv"
 appsE3_3 = "/home/and/Documents/PhD/Research/Scripts/Misc/tmp/apps/app-0285_info.tsv"
-stagesE3 = rbind(getStages(appsE3_1),getStages(appsE3_2),getStages(appsE3_3))
+appsE3_4 = "/home/and/Documents/PhD/Research/Scripts/Misc/tmp/apps/app-0287_info.tsv"
+appsE3_5 = "/home/and/Documents/PhD/Research/Scripts/Misc/tmp/apps/app-0289_info.tsv"
+stagesE3 = rbind(getStages(appsE3_1),getStages(appsE3_2),getStages(appsE3_3),getStages(appsE3_4),getStages(appsE3_5))
 
 stages = rbind(stagesE1, stagesE3) %>% select(StageId, Stage, Executors, Duration) %>%
   mutate(Stage = paste(str_pad(StageId,5,"left"), Stage)) %>%
