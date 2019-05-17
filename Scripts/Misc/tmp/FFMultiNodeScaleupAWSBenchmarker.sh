@@ -17,10 +17,11 @@ EPSILONS=(  110 )
 DISTANCES=( 100 )
 MU=3
 DELTA=3
-N=1
+N=2
 EXECUTORS_SET=( 3 1 )
 CORES=4
 TIMESTAMP=5
+PORTUI=4043
 
 for n in `seq 1 $N`; do
     for((e=0;e<${#EXECUTORS_SET[@]};e++)); do
@@ -32,8 +33,8 @@ for n in `seq 1 $N`; do
 	yd=$D_PARTITIONS
 	xd=$((${EXECUTORS_SET[e]} * D_PARTITIONS))
 	for((i=0;i<${#EPSILONS[@]};i++)); do
-	    echo "spark-submit --class FF $JAR --input ${DATASET_PATH}${DATASET_NAME}${DATASET_EXT} --epsilon ${EPSILONS[i]} --mu $MU --delta $DELTA --distance ${DISTANCES[i]} --master $MASTER --cores $CORES --executors ${EXECUTORS_SET[e]} --spatial CUSTOM --customymf $ymf --customxmf $xmf --customy $yff --customx $xff --fftimestamp $TIMESTAMP"
-	    spark-submit --class FF $JAR --input ${DATASET_PATH}${DATASET_NAME}${DATASET_EXT} --epsilon ${EPSILONS[i]} --mu $MU --delta $DELTA --distance ${DISTANCES[i]} --master $MASTER --cores $CORES --executors ${EXECUTORS_SET[e]} --spatial CUSTOM --mfcustomy $ymf --mfcustomx $xmf --ffcustomy $yff --ffcustomx $xff --dcustomy $yd --dcustomx $xd --fftimestamp $TIMESTAMP
+	    echo "spark-submit --class FF $JAR --input ${DATASET_PATH}${DATASET_NAME}${DATASET_EXT} --epsilon ${EPSILONS[i]} --mu $MU --delta $DELTA --distance ${DISTANCES[i]} --master $MASTER --cores $CORES --executors ${EXECUTORS_SET[e]} --spatial CUSTOM --customymf $ymf --customxmf $xmf --customy $yff --customx $xff --fftimestamp $TIMESTAMP --portui $PORTUI"
+	    spark-submit --class FF $JAR --input ${DATASET_PATH}${DATASET_NAME}${DATASET_EXT} --epsilon ${EPSILONS[i]} --mu $MU --delta $DELTA --distance ${DISTANCES[i]} --master $MASTER --cores $CORES --executors ${EXECUTORS_SET[e]} --spatial CUSTOM --mfcustomy $ymf --mfcustomx $xmf --ffcustomy $yff --ffcustomx $xff --dcustomy $yd --dcustomx $xd --fftimestamp $TIMESTAMP --portui $PORTUI
 	done
     done
 done

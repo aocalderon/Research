@@ -35,6 +35,7 @@ def main():
     hostPort   = ""
     myStage    = ""
     myInterval = ""
+    currentStageId = -1
     while True:
         try:
             response = requests.get("http://{}:{}/api/v1/applications".format(master_host, master_port))
@@ -60,9 +61,28 @@ def main():
                     tasks.drop(tasks.columns[cols],axis=1,inplace=True)
                     for index, row in tasks.iterrows():
                         taskStatus = row['Status']
-                        if taskStatus == 'RUNNING':
+                        #if taskStatus == 'RUNNING':
                             #logging.info(row)
-                            logging.info("TASKS|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}".format(myStage, timer(start), appID, executors, executorID, hostPort, stageID, stageName, row['ID'], row['Locality Level'], row['Launch Time'], row['Duration  ▾'], row['GC Time'], row['Input Size / Records'], taskStatus))
+                            #logging.info("TASKS|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}".format(myStage, timer(start), appID, executors, executorID, hostPort, stageID, stageName, row['ID'], row['Locality Level'], row['Launch Time'], row['Duration  ▾'], row['GC Time'], row['Input Size / Records'], taskStatus))
+
+                if status == 'COMPLETE':
+                    stageId = int(stage['stageId'])
+                    name = stage['name']
+                    partitions = stage['numTasks']
+                    if stageId > currentStageId:
+                        response = requests.get("http://{}:{}/api/v1/applications/{}/stages/{}/0/taskList".format(master_host, master_port, appID, stageId))
+                        tasks = json.loads(response.text)
+                        for task in tasks:
+                            taskStatus = task['status']
+                            if taskStatus == "SUCCESS":
+                                taskId = task['taskId']
+                                taskLocality = task['taskLocality']
+                                taskHost = task['host']
+                                taskDuration = task['duration']
+                                taskMetrics = task['taskMetrics']
+                                times = "{}|{}|{}|{}|{}".format(taskDuration, taskMetrics['executorDeserializeTime'],taskMetrics['executorRunTime'],taskMetrics['jvmGcTime'],taskMetrics['resultSerializationTime'])
+                                logging.info("TASK|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}".format(myStage, timer(start), appID, executors, stageId, name, partitions, taskId, taskLocality, taskHost, times))
+                        currentStageId = stageId
 
             ### Executors...
             
@@ -105,7 +125,6 @@ def main():
                 logging.info(line[2:-3])
                 arr  = line.split("|")
                 myStatus = arr[indexStatus].strip()
-                logging.info(myStatus)
                 if myStatus == "START":
                     myStage    = arr[indexStage].strip()
                     #myInterval = arr[indexInterval][0]
