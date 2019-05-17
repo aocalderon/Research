@@ -79,19 +79,31 @@ object FF {
 
       if(firstRun){
         F = C
-        F.analyze()
-        F.spatialPartitioning(GridType.QUADTREE, Dpartitions)
-        F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
-        partitioner = F.getPartitioner
         firstRun = false
       } else {
         // Doing join...
         timer = System.currentTimeMillis()
         stage = "2.Join done"
         logStart(stage)
-        C.analyze()
+
+        F.analyze()
+        F.setNumX(params.dcustomx())
+        F.setNumY(params.dcustomy())
+        F.spatialPartitioning(gridType, Dpartitions)
+        F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
         val buffers = new CircleRDD(C, distance)
-        buffers.spatialPartitioning(partitioner)
+        buffers.spatialPartitioning(F.getPartitioner)
+
+        val R = JoinQuery.DistanceJoinQuery(F, buffers, true, false) // using index, only return geometries fully covered by each buffer...
+        var flocks0 = R.rdd.flatMap{ case (g: Geometry, h: java.util.HashSet[Point]) =>
+          val f0 = getFlocksFromGeom(g)
+          h.asScala.map{ point =>
+            val f1 = getFlocksFromGeom(point)
+            (f0, f1)
+          }
+        }
+
+        if(debug) logger.info(s"FF,Candidates_after_Join,${epsilon},${timestamp},${flocks0.count()}")
         if(debug){
           val t1 = F.rawSpatialRDD.rdd.map{f =>
             val x = f.getX
@@ -115,16 +127,6 @@ object FF {
           pw2.close()
           logger.info(s"$Ffilename and $Cfilename have been written...")
         }
-        val R = JoinQuery.DistanceJoinQuery(F, buffers, true, false) // using index, only return geometries fully covered by each buffer...
-        var flocks0 = R.rdd.flatMap{ case (g: Geometry, h: java.util.HashSet[Point]) =>
-          val f0 = getFlocksFromGeom(g)
-          h.asScala.map{ point =>
-            val f1 = getFlocksFromGeom(point)
-            (f0, f1)
-          }
-        }
-
-        if(debug) logger.info(s"FF,Candidates_after_Join,${epsilon},${timestamp},${flocks0.count()}")
 
         var flocks = flocks0.map{ flocks =>
           val f = flocks._1.pids.intersect(flocks._2.pids)
@@ -260,10 +262,6 @@ object FF {
             f.center.setUserData(info)
             f.center
           }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
-        F.analyze()
-        F.spatialPartitioning(GridType.QUADTREE, Dpartitions)
-        F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
-        partitioner = F.getPartitioner
         logEnd(stage, timer, F.rawSpatialRDD.count(), s"$timestamp")
 
         if(debug) logger.info(s"FF,New_set_of_candidates,${epsilon},${timestamp},${F.rawSpatialRDD.count()}")
@@ -274,97 +272,8 @@ object FF {
     val applicationID = spark.sparkContext.applicationId
     val nReport = report.count()
     logger.info(s"PFLOCK|$applicationID|$cores|$executors|$epsilon|$mu|$delta|$executionTime|$nReport")
-    getExectutorsInfo(master, applicationID)
-    getStagesInfo(master, applicationID)
-    getTasksInfo(master, applicationID)
     report
   }
-
-  def getExectutorsInfo(master: String, applicationID: String){
-    try{
-      val url = s"http://${master}:${portUI}/api/v1/applications/${applicationID}/executors"
-      val r = requests.get(url)
-      if(s"${r.statusCode}" == "200"){
-        import scala.util.parsing.json._
-        val j = JSON.parseFull(r.text).get.asInstanceOf[List[Map[String, Any]]]
-        j.filter(_.get("id").get != "driver").foreach{ m =>
-          val tid    = m.get("id").get
-          val thost  = m.get("hostPort").get
-          val tcores = "%.0f".format(m.get("totalCores").get)
-          val trdds  = "%.0f".format(m.get("rddBlocks").get)
-          val ttasks = "%.0f".format(m.get("totalTasks").get)
-          val ttime  = "%.2fs".format(m.get("totalDuration").get.asInstanceOf[Double] / (m.get("totalCores").get.asInstanceOf[Double] * 1000.0))
-          val tinput = "%.2fMB".format(m.get("totalInputBytes").get.asInstanceOf[Double] / (1024.0 * 1024))
-          logger.info(s"EXECUTORS|$executors|$tid|$trdds|$ttasks|$ttime|$tinput|$thost|$applicationID")
-        }
-      }
-    } catch {
-      case e: java.net.ConnectException => logger.info("No executors information.")
-    }
-  }
-
-  def getStagesInfo(master: String, applicationID: String): Unit = {
-    try{
-      val url = s"http://${master}:${portUI}/api/v1/applications/${applicationID}/stages"
-      val r = requests.get(url)
-      if(s"${r.statusCode}" == "200"){
-        import scala.util.parsing.json._
-        val j = JSON.parseFull(r.text).get.asInstanceOf[List[Map[String, Any]]]
-        j.filter(_.get("status").get == "COMPLETE").foreach{ m =>
-          val sid    = "%4.0f".format(m.get("stageId").get)
-          val sname  = "%-37s".format(m.get("name").get.toString())
-          val submissionTime     = "%s".format(m.get("submissionTime").get)
-          val completionTime     = "%s".format(m.get("completionTime").get)
-          val numTasks           = "%4.0f".format(m.get("numTasks").get)
-          val executorRunTime    = "%.0f".format(m.get("executorRunTime").get)
-          val executorCpuTime    = "%.0f".format(m.get("executorCpuTime").get)
-          val inputBytes         = "%.0f".format(m.get("inputBytes").get)
-          val inputRecords       = "%.0f".format(m.get("inputRecords").get)
-          val shuffleReadBytes   = "%.0f".format(m.get("shuffleReadBytes").get)
-          val shuffleReadRecords = "%.0f".format(m.get("shuffleReadRecords").get)
-          logger.info(s"STAGES|$executors|$cores|$sid|$sname|$submissionTime|$completionTime|$numTasks|$executorRunTime|$executorCpuTime|$inputBytes|$inputRecords|$shuffleReadBytes|$shuffleReadRecords|$applicationID")
-        }
-      }
-    } catch {
-      case e: java.net.ConnectException => logger.info("No executors information.")
-    }
-  }
-
-  def getTasksInfo(master: String, applicationID: String): Unit = {
-    try{
-      val url1 = s"http://${master}:${portUI}/api/v1/applications/${applicationID}/stages"
-      val r = requests.get(url1)
-      if(s"${r.statusCode}" == "200"){
-        import scala.util.parsing.json._
-        val j = JSON.parseFull(r.text).get.asInstanceOf[List[Map[String, Any]]]
-        j.filter(_.get("status").get == "COMPLETE").foreach{ m =>
-          val stageId ="%.0f".format(m.get("stageId").get)
-          val sid    = "%4.0f".format(m.get("stageId").get)
-          val sname  = "%-37s".format(m.get("name").get.toString())
-          val ntasks = "%5.0f".format(m.get("numTasks").get)
-          val url2 = s"http://${master}:${portUI}/api/v1/applications/${applicationID}/stages/${stageId}"
-          val t = requests.get(url2)
-          val k = JSON.parseFull(t.text).get.asInstanceOf[List[Map[String, Any]]]
-          k.foreach { x  =>
-            val tasks = x.get("tasks").get.asInstanceOf[Map[String, Map[String, Any]]]
-            tasks.values.filter(_.get("status").get == "SUCCESS").foreach { t =>
-              val tasksId      = "%7.0f".format(t.get("taskId").get)
-              val duration     = "%4.0f".format(t.get("duration").get)
-              val launchTime   = "%s".format(t.get("launchTime").get.toString())
-              val host         = "%s".format(t.get("host").get.toString())
-              val taskLocality = "%s".format(t.get("taskLocality").get.toString())
-
-              logger.info(s"TASKS|$executors|$cores|$sid|$sname|$ntasks|$tasksId|$duration|$launchTime|$host|$taskLocality|$applicationID")
-            }
-          }
-        }
-      }
-    } catch {
-      case e1: java.net.ConnectException        => logger.info(s"Connection error... ${e1.getMessage}")
-      case e2: java.util.NoSuchElementException => logger.info(s"No such element...  ${e2.getMessage}")
-    }
-  }
-
 
   def getFlocksFromGeom(g: Geometry): Flock = {
     val farr = g.getUserData.toString().split(";")
@@ -600,7 +509,20 @@ object FF {
     timer = clocktime
     stage = "Session closed"
     logStart(stage)
-    spark.stop()
+    InfoTracker.master = master
+    InfoTracker.port = portUI
+    InfoTracker.applicationID = appID
+    InfoTracker.executors = executors
+    InfoTracker.cores = cores
+    val app_count = appID.split("-").reverse.head
+    val f = new java.io.PrintWriter(s"${params.output()}app-${app_count}_info.tsv")
+    f.write(InfoTracker.getExectutorsInfo())
+    f.write(InfoTracker.getStagesInfo())
+    f.write(InfoTracker.getTasksInfo())
+    f.close()
+    spark.close()
+
+    spark.close()
     logEnd(stage, timer, 0, tag)    
   }
 }
