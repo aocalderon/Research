@@ -1,12 +1,7 @@
 library(tidyverse)
 
-taskFields = c("Title", "StageId", "Stage", "TaskId", "Executors", "Cores", "Partitions", "Duration", "Start", "Host", "Locality", "executorRuntime", "resultSize",
-           "BytesRead",           "RecordsRead",        "BytesWritten",        "RecordsWritten",
-           "ShuffleBytesRead",    "ShuffleRecordsRead", "ShuffleBytesWritten", "ShuffleRecordsWritten", "appID")
 stageFields = c("STAGES","StageId","Stage","Executors","Cores","Start","End","Partitions","executorRuntime","executorCputime",
-              "inputBytes","inputRecords","shuffleReadBytes","shuffleReadRecords","appID"
-)
-
+              "inputBytes","inputRecords","shuffleReadBytes","shuffleReadRecords","appID")
 getStages <- function(filename){
   stages = as_tibble(readLines(filename)) %>%
     filter(grepl("STAGES", value)) %>%
@@ -21,6 +16,9 @@ getStages <- function(filename){
   return(stages)
 }
 
+taskFields = c("Title", "StageId", "Stage", "TaskId", "Executors", "Cores", "Partitions", "Duration", "Start", "Host", "Locality", "executorRuntime", "resultSize",
+               "BytesRead",           "RecordsRead",        "BytesWritten",        "RecordsWritten",
+               "ShuffleBytesRead",    "ShuffleRecordsRead", "ShuffleBytesWritten", "ShuffleRecordsWritten", "appID")
 getTasks <- function(filename){
   tasks = as_tibble(readLines(filename)) %>%
     filter(grepl("TASKS", value)) %>%
@@ -35,3 +33,16 @@ getTasks <- function(filename){
            ShuffleBytesRead, ShuffleBytesWritten, ShuffleRecordsRead, ShuffleRecordsWritten)  
   return(tasks)
 }
+
+customStageFields = c("Timestamp", "Part", "appID", "Executors", "Cores", "Status", "Time", "Stage", "Duration", "Load", "Interval")
+getCustomStages <- function(filename, appID){
+  as_tibble(readLines(filename)) %>%
+    filter(grepl(paste0("app-\\d{14}-0", appID), value)) %>%
+    filter(grepl("\\|\\d\\.", value)) %>%
+    filter(grepl("END\\|", value)) %>%
+    separate(value, customStageFields, sep = "\\|")  %>%
+    separate(appID, c(NA,NA,"appID"), sep="-") %>%
+    mutate(Stage = str_trim(Stage, side = "both"), Duration = as.numeric(Duration), Load = as.numeric(Load)) %>%
+    mutate(Status = str_trim(Status, side = "both"), Time = as.numeric(Time))
+}
+
