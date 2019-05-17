@@ -15,12 +15,20 @@
               'taskMetrics': {
                 'executorDeserializeTime': 2, 'executorDeserializeCpuTime': 1952433, 'executorRunTime': 89, 'executorCpuTime': 57506354, 
                 'resultSize': 1105, 'jvmGcTime': 9, 'resultSerializationTime': 0, 'memoryBytesSpilled': 0, 'diskBytesSpilled': 0, 
-                'peakExecutionMemory': 1152, 'inputMetrics': {'bytesRead': 851968, 'recordsRead': 27673}, 
-                'outputMetrics': {'bytesWritten': 0, 'recordsWritten': 0}, 
+                'peakExecutionMemory': 1152, 
+                'inputMetrics': {
+                  'bytesRead': 851968, 'recordsRead': 27673
+                }, 
+                'outputMetrics': {
+                  'bytesWritten': 0, 'recordsWritten': 0
+                }, 
                 'shuffleReadMetrics': {
                   'remoteBlocksFetched': 0, 'localBlocksFetched': 0, 'fetchWaitTime': 0, 'remoteBytesRead': 0, 'remoteBytesReadToDisk': 0, 
                   'localBytesRead': 0, 'recordsRead': 0
-                }, 'shuffleWriteMetrics': {'bytesWritten': 270, 'writeTime': 263982, 'recordsWritten': 6}
+                }, 
+                'shuffleWriteMetrics': {
+                  'bytesWritten': 270, 'writeTime': 263982, 'recordsWritten': 6
+                }
               }
             }, 
       '24': {'taskId': 24, 'index': 0, 'attempt': 0, 'launchTime': '2019-05-12T17:16:44.322GMT', 'duration': 261, 'executorId': '2', 'host': '169.235.27.134', 'status': 'SUCCESS', 'taskLocality': 'PROCESS_LOCAL', 'speculative': False, 'accumulatorUpdates': [], 'taskMetrics': {'executorDeserializeTime': 34, 'executorDeserializeCpuTime': 6188089, 'executorRunTime': 188, 'executorCpuTime': 169679214, 'resultSize': 1105, 'jvmGcTime': 13, 'resultSerializationTime': 0, 'memoryBytesSpilled': 0, 'diskBytesSpilled': 0, 'peakExecutionMemory': 1152, 'inputMetrics': {'bytesRead': 851968, 'recordsRead': 28928}, 'outputMetrics': {'bytesWritten': 0, 'recordsWritten': 0}, 'shuffleReadMetrics': {'remoteBlocksFetched': 0, 'localBlocksFetched': 0, 'fetchWaitTime': 0, 'remoteBytesRead': 0, 'remoteBytesReadToDisk': 0, 'localBytesRead': 0, 'recordsRead': 0}, 'shuffleWriteMetrics': {'bytesWritten': 270, 'writeTime': 1942194, 'recordsWritten': 6}}}, 
