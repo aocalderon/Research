@@ -46,3 +46,22 @@ getCustomStages <- function(filename, appID){
     mutate(Status = str_trim(Status, side = "both"), Time = as.numeric(Time))
 }
 
+customStageFields2 = c("TimestampPart", "appID", "Executors", "Cores", "Status", "Time", "Stage", "Duration", "Load", "Interval")
+getCustomStages2 <- function(filename, appID){
+  as_tibble(readLines(filename)) %>%
+    filter(grepl(paste0("app-\\d{14}-0", appID), value)) %>%
+    filter(grepl("\\|\\d\\.", value)) %>%
+    filter(grepl("END\\|", value)) %>%
+    separate(value, customStageFields2, sep = "\\|")  %>%
+    separate(appID, c(NA,NA,"appID"), sep="-") %>%
+    mutate(Stage = str_trim(Stage, side = "both"), Duration = as.numeric(Duration), Load = as.numeric(Load)) %>%
+    mutate(Status = str_trim(Status, side = "both"), Time = as.numeric(Time))
+}
+
+customExecutionTimeFields = c("TimestampPart", "appID", "Cores", "Executors", "Epsilon", "Mu", "Delta", "Duration", "Load")
+customExecutionTime <- function(filename){
+  as_tibble(readLines(filename)) %>%
+    filter(grepl("PFLOCK", value)) %>%
+    separate(value, customExecutionTimeFields, sep = "\\|")  %>%
+    mutate(Duration = as.numeric(Duration), Load = as.numeric(Load))
+}
