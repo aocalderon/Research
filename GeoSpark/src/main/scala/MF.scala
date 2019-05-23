@@ -1,4 +1,3 @@
-import com.vividsolutions.jts.geom.{Point, Geometry, GeometryFactory, Coordinate, Envelope, Polygon}
 import org.slf4j.{LoggerFactory, Logger}
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.storage.StorageLevel
@@ -6,8 +5,11 @@ import org.apache.spark.{SparkConf, SparkContext}
 import org.datasyslab.geospark.enums.{FileDataSplitter, GridType, IndexType}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.spatialPartitioning.FlatGridPartitioner
-import org.datasyslab.geospark.spatialRDD.{CircleRDD, PointRDD}
+import org.datasyslab.geospark.spatialRDD.{SpatialRDD, PolygonRDD, CircleRDD, PointRDD}
 import com.vividsolutions.jts.index.strtree.STRtree
+import com.vividsolutions.jts.operation.buffer.BufferParameters
+import com.vividsolutions.jts.geom.{GeometryFactory, Geometry, Envelope, Coordinate, Polygon, LinearRing, Point}
+import com.vividsolutions.jts.geom.impl.CoordinateArraySequence
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
@@ -175,6 +177,48 @@ object MF{
     val nExpansionsRDD = expansionsRDD.count()
     logEnd(stage, timer, nExpansionsRDD)
 
+    if(debug){
+      timer = clocktime
+      stage = "F.a.Getting alternative expansions"
+      logStart(stage)
+      val quadrantSegments = 8
+      val grids = disksRDD.getPartitioner.getGrids.asScala.zipWithIndex.map{ e =>
+        val geom = envelope2Polygon(e._1) 
+        geom.setUserData(e._2)
+        geom.buffer(epsilon + precision, quadrantSegments, BufferParameters.CAP_ROUND)
+      }
+      logEnd(stage, timer, grids.size)
+      timer = clocktime
+      stage = "F.b.Making new expansions RDD"
+      logStart(stage)
+      val gridsRDD = new SpatialRDD[Geometry]()
+      gridsRDD.setRawSpatialRDD(spark.sparkContext.parallelize(grids))
+      logger.info("Parallize")
+      gridsRDD.CRSTransform(sespg, tespg)
+      logger.info("Transform")
+      gridsRDD.analyze()
+      logger.info("Analize")
+      gridsRDD.spatialPartitioning(disksRDD.getPartitioner)
+      logger.info("Partition")
+      logEnd(stage, timer, gridsRDD.rawSpatialRDD.count())
+      timer = clocktime
+      stage = "F.c.Join expansions"
+      logStart(stage)
+      val expandsRDD = JoinQuery.SpatialJoinQuery(disksRDD, gridsRDD, usingIndex, considerBoundary)
+      //val nExpandsRDD = expandsRDD.count()
+      logEnd(stage, timer, 0)
+      timer = clocktime
+      stage = "F.d.Map expansions"
+      logStart(stage)
+      val expands = expandsRDD.rdd.map{ pair =>
+          val expansionId = pair._1.getUserData.toString()
+          val disks = pair._2
+          (expansionId, disks)
+        }
+      val nExpands = expands.count()
+      logEnd(stage, timer, nExpands)
+    }
+
     var statsTime = 0.0
     if(debug){
       val startStats = System.currentTimeMillis()
@@ -273,6 +317,20 @@ object MF{
     }
 
     maximals
+  }
+
+  def envelope2Polygon(e: Envelope): Polygon = {
+    val minX = e.getMinX()
+    val minY = e.getMinY()
+    val maxX = e.getMaxX()
+    val maxY = e.getMaxY()
+    val p1 = new Coordinate(minX, minY)
+    val p2 = new Coordinate(minX, maxY)
+    val p3 = new Coordinate(maxX, maxY)
+    val p4 = new Coordinate(maxX, minY)
+    val coordArraySeq = new CoordinateArraySequence( Array(p1,p2,p3,p4,p1), 2)
+    val ring = new LinearRing(coordArraySeq, geofactory)
+    new Polygon(ring, null, geofactory)
   }
 
   def calculateCenterCoordinates(p1: Point, p2: Point, r2: Double): (Point, Point) = {
