@@ -1,4 +1,3 @@
-import com.vividsolutions.jts.geom.{Point, Geometry, GeometryFactory, Coordinate, Envelope, Polygon}
 import org.slf4j.{LoggerFactory, Logger}
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.storage.StorageLevel
@@ -8,7 +7,8 @@ import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.spatialPartitioning.FlatGridPartitioner
 import org.datasyslab.geospark.spatialRDD.{CircleRDD, PointRDD}
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
-import com.vividsolutions.jts.index.strtree.STRtree
+import com.vividsolutions.jts.geom.{GeometryFactory, Geometry, Envelope, Coordinate, Polygon, LinearRing, Point}
+import com.vividsolutions.jts.geom.impl.CoordinateArraySequence
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
@@ -55,7 +55,9 @@ object GridExpander{
     points.setNumX(params.mfcustomx().toInt)
     points.setNumY(params.mfcustomy().toInt)
     points.spatialPartitioning(partitioner, 200)
-    val cell = points.getPartitioner.getGrids.asScala.head
+    val grids = points.getPartitioner.getGrids.asScala
+    saveGrids(grids.toList, "/tmp/grids.wkt")
+    val cell = grids.head
     val width  = (cell.getWidth * factor).toInt
     val height = (cell.getHeight * factor).toInt
     val minX = (points.boundary().getMinX * factor).toInt
@@ -98,11 +100,18 @@ object GridExpander{
     location
   }
 
-  def isNotInExpansionArea(p: Point, w: Int, h: Int, mx: Int, my: Int, e: Double): Boolean = {
-    val x = (p.getX * factor).toInt - mx
-    val y = (p.getY * factor).toInt - my
-
-    x <= w - e && x >= e && y <= h - e && y >= e
+  def envelope2Polygon(e: Envelope): Polygon = {
+    val minX = e.getMinX()
+    val minY = e.getMinY()
+    val maxX = e.getMaxX()
+    val maxY = e.getMaxY()
+    val p1 = new Coordinate(minX, minY)
+    val p2 = new Coordinate(minX, maxY)
+    val p3 = new Coordinate(maxX, maxY)
+    val p4 = new Coordinate(maxX, minY)
+    val coordArraySeq = new CoordinateArraySequence( Array(p1,p2,p3,p4,p1), 2)
+    val ring = new LinearRing(coordArraySeq, geofactory)
+    new Polygon(ring, null, geofactory)
   }
 
   def clocktime = System.currentTimeMillis()
@@ -116,6 +125,13 @@ object GridExpander{
   def saveWKT(wkt: RDD[String], filename: String): Unit ={
     val pw = new PrintWriter(new File(filename))
     pw.write(wkt.collect().mkString(""))
+    pw.close
+  }
+
+  def saveGrids(grids: List[Envelope], filename: String): Unit ={
+    val wkt = grids.map(g => s"${envelope2Polygon(g).toText()}\n")
+    val pw = new PrintWriter(new File(filename))
+    pw.write(wkt.mkString(""))
     pw.close
   }
 
