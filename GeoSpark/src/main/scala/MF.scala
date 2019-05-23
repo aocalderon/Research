@@ -178,20 +178,25 @@ object MF{
     logEnd(stage, timer, nExpansionsRDD)
 
     if(debug){
+      val cell = disksRDD.getPartitioner.getGrids().get(0)
+      val width  = cell.getWidth  + 2 * epsilon 
+      val heigth = cell.getHeight + 2 * epsilon
+
+      /*
       timer = clocktime
       stage = "F.a.Getting alternative expansions"
       logStart(stage)
-      val quadrantSegments = 8
       val grids = disksRDD.getPartitioner.getGrids.asScala.zipWithIndex.map{ e =>
-        val geom = envelope2Polygon(e._1) 
+        e._1.expandBy(epsilon)
+        val geom = envelope2Polygon(e._1)
         geom.setUserData(e._2)
-        geom.buffer(epsilon + precision, quadrantSegments, BufferParameters.CAP_ROUND)
+        geom
       }
       logEnd(stage, timer, grids.size)
       timer = clocktime
       stage = "F.b.Making new expansions RDD"
       logStart(stage)
-      val gridsRDD = new SpatialRDD[Geometry]()
+      val gridsRDD = new SpatialRDD[Polygon]()
       gridsRDD.setRawSpatialRDD(spark.sparkContext.parallelize(grids))
       logger.info("Parallize")
       gridsRDD.CRSTransform(sespg, tespg)
@@ -205,7 +210,7 @@ object MF{
       stage = "F.c.Join expansions"
       logStart(stage)
       val expandsRDD = JoinQuery.SpatialJoinQuery(disksRDD, gridsRDD, usingIndex, considerBoundary)
-      //val nExpandsRDD = expandsRDD.count()
+      val nExpandsRDD = expandsRDD.count()
       logEnd(stage, timer, 0)
       timer = clocktime
       stage = "F.d.Map expansions"
@@ -217,6 +222,7 @@ object MF{
         }
       val nExpands = expands.count()
       logEnd(stage, timer, nExpands)
+      */
     }
 
     var statsTime = 0.0
