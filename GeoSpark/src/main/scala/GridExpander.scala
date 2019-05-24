@@ -248,7 +248,7 @@ object GridExpander{
     val nExpansions = expansions.count()
     log(stage, timer, nExpansions, "END")
 
-    GridExpander.saveExpansions(expansions, "/tmp/expansions.wkt")
+    GridExpander.saveExpansions(expansions, "/tmp/expansions.tsv")
 
     // Closing session...
     timer = System.currentTimeMillis()
