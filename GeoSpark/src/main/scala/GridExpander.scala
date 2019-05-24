@@ -13,6 +13,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import scala.collection.JavaConverters._
+import scala.collection.mutable.ListBuffer
 import SPMF.{AlgoLCM2, Transactions}
 import SPMF.ScalaLCM.{IterativeLCMmax, Transaction}
 import java.io.PrintWriter
@@ -69,43 +70,69 @@ object GridExpander{
     logger.info(s"# of cells in X: $cellsInX")
 
     val expansions1 = points.getRawSpatialRDD.rdd.map{ point =>
-      val i = ((point.getX * factor).toInt - minX) / width
-      val j = ((point.getY * factor).toInt - minY) / height
-      val location = locatePointInCell(point, width, height, minX, minY, e)
-      (point.toText, i.toInt, j.toInt, i.toInt + (j.toInt * cellsInX), location)
+      val i = (((point.getX * factor).toInt - minX) / width).toInt
+      val j = (((point.getY * factor).toInt - minY) / height).toInt
+      val location = locatePointInCell(point, width, height, minX, minY, e, i, j, cellsInX)
+      (point.toText, i, j, i + j * cellsInX, s"|${location._1}|${location._2.mkString("|")}|")
     }
-    expansions1.toDF("Point", "i","j","id", "location").show(25, false)
+    expansions1.toDF("Point", "i", "j", "id", "ids").show(25, false)
 
     expansions = expansions1.map(e => s"${e._1}\t${e._4}\t${e._5}\n")
     expansions
   }
 
-  def locatePointInCell(p: Point, w: Int, h: Int, mx: Int, my: Int, e: Double): String = {
+  def locatePointInCell(p: Point, w: Int, h: Int, mx: Int, my: Int, e: Double, i: Int, j: Int, c: Int): (String, List[Int]) = {
     val x = ((p.getX * factor).toInt - mx) % w
     val y = ((p.getY * factor).toInt - my) % h
 
     var location = s"*"
+    var partitions = new ListBuffer[Int]()
     if(x <= w - e && x >= e     && y <= h - e && y >= e){
       location = "C"
+      partitions += i + c * j
     } else if(x <  e     && x >= 0     && y <= h - e && y >= e    ){
       location = "W"
+      partitions += i + c * j
+      partitions += (i - 1) + c * j
     } else if(x <  w     && x >  w - e && y <= h - e && y >= e    ){
       location = "E"
+      partitions += i + c * j
+      partitions += (i + 1) + c * j
     } else if(x <= w - e && x >= e     && y <  h     && y >  h - e){
       location = "N"
+      partitions += i + c * j
+      partitions += i + c * (j + 1)
     } else if(x <= w - e && x >= e     && y <  e     && y >= 0    ){
       location = "S"
+      partitions += i + c * j
+      partitions += i + c * (j - 1)
     } else if(x <  e     && x >= 0     && y <  h     && y >  h - e){
       location = "NW"
+      partitions += i + c * j
+      partitions += i + c * (j + 1)
+      partitions += (i - 1) + c * j
+      partitions += (i - 1) + c * (j + 1)
     } else if(x <  w     && x >  w - e && y <  h     && y >  h - e){
       location = "NE"
+      partitions += i + c * j
+      partitions += i + c * (j + 1)
+      partitions += (i + 1) + c * j
+      partitions += (i + 1) + c * (j + 1)
     } else if(x <  e     && x >= 0     && y <  e     && y >= 0    ){
       location = "SW"
+      partitions += i + c * j
+      partitions += i + c * (j - 1)
+      partitions += (i - 1) + c * j
+      partitions += (i - 1) + c * (j - 1)
     } else if(x <  w     && x >= w - e && y <  e     && y >= 0    ){
       location = "SE"
+      partitions += i + c * j
+      partitions += i + c * (j - 1)
+      partitions += (i + 1) + c * j
+      partitions += (i + 1) + c * (j - 1)
     }
 
-    location
+    (location, partitions.toList)
   }
 
   def envelope2Polygon(e: Envelope): Polygon = {
