@@ -95,6 +95,14 @@ object GridExpander{
       location = "N"
     } else if(x <= w - e && x >= e     && y <  e     && y >= 0    ){
       location = "S"
+    } else if(x <  e     && x >= 0     && y <  h     && y >  h - e){
+      location = "NW"
+    } else if(x <  w     && x >  w - e && y <  h     && y >  h - e){
+      location = "NE"
+    } else if(x <  e     && x >= 0     && y <  e     && y >= 0    ){
+      location = "SW"
+    } else if(x <  w     && x >= w - e && y <  e     && y >= 0    ){
+      location = "SE"
     }
 
     location
@@ -202,8 +210,7 @@ object GridExpander{
     val nExpansions = expansions.count()
     log(stage, timer, nExpansions, "END")
 
-    val filename = s"${input.split("/").reverse.head.split("\\.").head}_expansions.wkt"
-    GridExpander.saveWKT(expansions, filename)
+    GridExpander.saveWKT(expansions, "/tmp/expansions.wkt")
 
     // Closing session...
     timer = System.currentTimeMillis()
