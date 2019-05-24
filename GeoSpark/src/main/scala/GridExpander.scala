@@ -29,9 +29,10 @@ object GridExpander{
   private var executors: Int = 0
   private val factor: Double = 1000.0
 
-  def run(spark: SparkSession, points: PointRDD, params: FFConf, info: String = ""): RDD[String] = {
+  case class EDisk(id: Long, x: Double, y: Double, pids: String, partition: Int)
+
+  def run(spark: SparkSession, points: PointRDD, params: FFConf, info: String = ""): RDD[EDisk] = {
     import spark.implicits._
-    var expansions = spark.sparkContext.emptyRDD[String]
 
     appID     = spark.sparkContext.applicationId
     startTime = spark.sparkContext.startTime
@@ -69,19 +70,18 @@ object GridExpander{
     logger.info(s"Cell size: $width x $height")
     logger.info(s"# of cells in X: $cellsInX")
 
-    val expansions1 = points.getRawSpatialRDD.rdd.map{ point =>
+    val expansions = points.getRawSpatialRDD.rdd.flatMap{ point =>
       val i = (((point.getX * factor).toInt - minX) / width).toInt
       val j = (((point.getY * factor).toInt - minY) / height).toInt
-      val location = locatePointInCell(point, width, height, minX, minY, e, i, j, cellsInX)
-      (point.toText, i, j, i + j * cellsInX, s"|${location._1}|${location._2.mkString("|")}|")
-    }
-    expansions1.toDF("Point", "i", "j", "id", "ids").show(25, false)
 
-    expansions = expansions1.map(e => s"${e._1}\t${e._4}\t${e._5}\n")
+      getPointExpansions(point, width, height, minX, minY, e, i, j, cellsInX)
+    }
+    expansions.toDS().show(25, false)
+
     expansions
   }
 
-  def locatePointInCell(p: Point, w: Int, h: Int, mx: Int, my: Int, e: Double, i: Int, j: Int, c: Int): (String, List[Int]) = {
+  def getPointExpansions(p: Point, w: Int, h: Int, mx: Int, my: Int, e: Double, i: Int, j: Int, c: Int): List[EDisk] = {
     val x = ((p.getX * factor).toInt - mx) % w
     val y = ((p.getY * factor).toInt - my) % h
 
@@ -132,7 +132,12 @@ object GridExpander{
       partitions += (i + 1) + c * (j - 1)
     }
 
-    (location, partitions.toList)
+    val arr = p.getUserData.toString().split("\t")
+    val id = arr(0).toLong
+    val pids = arr(1)
+    val X = p.getX
+    val Y = p.getY
+    partitions.toList.map(partition => EDisk(id, X, Y, pids, partition))
   }
 
   def envelope2Polygon(e: Envelope): Polygon = {
@@ -160,6 +165,12 @@ object GridExpander{
   def saveWKT(wkt: RDD[String], filename: String): Unit ={
     val pw = new PrintWriter(new File(filename))
     pw.write(wkt.collect().mkString(""))
+    pw.close
+  }
+
+  def saveExpansions(expansions: RDD[EDisk], filename: String): Unit ={
+    val pw = new PrintWriter(new File(filename))
+    pw.write(expansions.map(e => s"${e.id}\t${e.x}\t${e.y}\t${e.pids}\t${e.partition}\n").collect().mkString(""))
     pw.close
   }
 
@@ -237,7 +248,7 @@ object GridExpander{
     val nExpansions = expansions.count()
     log(stage, timer, nExpansions, "END")
 
-    GridExpander.saveWKT(expansions, "/tmp/expansions.wkt")
+    GridExpander.saveExpansions(expansions, "/tmp/expansions.wkt")
 
     // Closing session...
     timer = System.currentTimeMillis()
