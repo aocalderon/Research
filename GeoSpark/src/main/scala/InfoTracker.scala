@@ -2,7 +2,7 @@ import scala.collection.mutable.ListBuffer
 
 object InfoTracker{
   var master: String = ""
-  var port: String = ""
+  var port: String = "4040"
   var applicationID: String = ""
   var executors: Int = 0
   var cores: Int = 0
@@ -105,8 +105,46 @@ object InfoTracker{
       }
       logger.toList.mkString("")
     } catch {
-      case e1: java.net.ConnectException        => s"No tasks information... ${e1.getMessage}"
-      case e2: java.util.NoSuchElementException => s"No tasks information...  ${e2.getMessage}"
+      case e1: java.net.ConnectException        => s"Connection exception... ${e1.getMessage}"
+      case e2: java.util.NoSuchElementException => s"No such element exception...  ${e2.getMessage}"
+    }
+  }
+
+  def getTasksInfoByDuration(length: Int): String = {
+    var logger = new ListBuffer[String]()
+    try{
+      val url1 = s"http://${master}:${port}/api/v1/applications/${applicationID}/stages"
+      val r = requests.get(url1)
+      if(s"${r.statusCode}" == "200"){
+        import scala.util.parsing.json._
+        val j = JSON.parseFull(r.text).get.asInstanceOf[List[Map[String, Any]]]
+        j.filter(_.get("status").get == "COMPLETE").foreach{ s =>
+          val stageId ="%.0f".format(s.get("stageId").get)
+          val sid    = "%4.0f".format(s.get("stageId").get)
+          val sname  = "%-37s".format(s.get("name").get.toString())
+          val ntasks = "%5.0f".format(s.get("numTasks").get)
+          val url2 = s"http://${master}:${port}/api/v1/applications/${applicationID}/stages/${stageId}/0/taskList?length=${length}&sortBy=-runtime"
+          val u = requests.get(url2)
+          val k = JSON.parseFull(u.text).get.asInstanceOf[List[Map[String, Any]]]
+          k.filter(_.get("status").get == "SUCCESS").foreach { t =>
+              val tasksId      = "%6.0f".format(t.get("taskId").get)
+              val duration     = "%5.0f".format(t.get("duration").get)
+              val launchTime   = "%s".format(t.get("launchTime").get.toString())
+              val host         = "%s".format(t.get("host").get.toString())
+              val taskLocality = "%-14s".format(t.get("taskLocality").get.toString())
+              val taskMetrics  = t.get("taskMetrics").get.asInstanceOf[Map[String, Any]]
+              val executorRunTime = "%5.0f".format(taskMetrics.get("executorRunTime").get)
+              val inputMetrics   = taskMetrics.get("inputMetrics").get.asInstanceOf[Map[String, Any]]
+              val sInputMetrics  = "%8.0f|%5.0f".format(inputMetrics.get("bytesRead").get, inputMetrics.get("recordsRead").get)
+
+              logger += s"TASKS|$sid|$sname|$tasksId|$executors|$cores|$ntasks|$duration|$launchTime|$host|$taskLocality|$executorRunTime|$sInputMetrics|$applicationID\n"
+          }
+        }
+      }
+      logger.toList.mkString("")
+    } catch {
+      case e1: java.net.ConnectException        => s"Connection exception... ${e1.getMessage}"
+      case e2: java.util.NoSuchElementException => s"No such element exception...  ${e2.getMessage}"
     }
   }
 }

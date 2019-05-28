@@ -3,7 +3,6 @@ import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.{SparkConf, SparkContext}
 import org.datasyslab.geospark.enums.{FileDataSplitter, GridType, IndexType}
-import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.spatialPartitioning.FlatGridPartitioner
 import org.datasyslab.geospark.spatialRDD.{CircleRDD, PointRDD}
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
@@ -28,60 +27,48 @@ object GridExpander{
   private var cores: Int = 0
   private var executors: Int = 0
   private val factor: Double = 1000.0
+  var expansions: List[(Envelope, Int)] = List.empty[(Envelope, Int)]
 
-  case class EDisk(id: Long, x: Double, y: Double, pids: String, partition: Int)
-
-  def run(spark: SparkSession, points: PointRDD, params: FFConf, info: String = ""): RDD[EDisk] = {
+  def run(spark: SparkSession, disks: PointRDD, grids: List[Envelope], cellsInX: Int, params: FFConf): RDD[(Int, Point)] = {
     import spark.implicits._
-
-    appID     = spark.sparkContext.applicationId
     startTime = spark.sparkContext.startTime
-    cores     = params.cores()
+    appID = spark.sparkContext.applicationId
+    cores = params.cores()
     executors = params.executors()
-    val debug: Boolean    = params.mfdebug()
     val epsilon: Double   = params.epsilon()
-    val sespg: String     = params.sespg()
-    val tespg: String     = params.tespg()
-    val spatial: String   = params.spatial()
-    val partitioner = spatial  match {
-      case "QUADTREE"  => GridType.QUADTREE
-      case "RTREE"     => GridType.RTREE
-      case "EQUALGRID" => GridType.EQUALGRID
-      case "KDBTREE"   => GridType.KDBTREE
-      case "HILBERT"   => GridType.HILBERT
-      case "VORONOI"   => GridType.VORONOI
-      case "CUSTOM"    => GridType.CUSTOM
-    }
+    val debug: Boolean    = params.mfdebug()
 
-    points.analyze()
-    points.setNumX(params.mfcustomx().toInt)
-    points.setNumY(params.mfcustomy().toInt)
-    points.spatialPartitioning(partitioner, 200)
-    val grids = points.getPartitioner.getGrids.asScala
-    saveGrids(grids.toList, "/tmp/grids.wkt")
+    if(debug){
+      saveGrids(grids.toList, "/tmp/grids.wkt")
+    }
     val cell = grids.head
     val width  = (cell.getWidth * factor).toInt
     val height = (cell.getHeight * factor).toInt
-    val minX = (points.boundary().getMinX * factor).toInt
-    val minY = (points.boundary().getMinY * factor).toInt
-    val cellsInX = params.mfcustomx().toInt
+    val minX = (disks.boundary().getMinX * factor).toInt
+    val minY = (disks.boundary().getMinY * factor).toInt
+    setExpansions(grids, width, height, minX, minY, cellsInX, epsilon)
     val e = (epsilon * factor) / 2.0
-    logger.info(s"Origin: ($minX , $minY)")
     logger.info(s"Cell size: $width x $height")
-    logger.info(s"# of cells in X: $cellsInX")
-
-    val expansions = points.getRawSpatialRDD.rdd.flatMap{ point =>
-      val i = (((point.getX * factor).toInt - minX) / width).toInt
-      val j = (((point.getY * factor).toInt - minY) / height).toInt
-
-      getPointExpansions(point, width, height, minX, minY, e, i, j, cellsInX)
+    if(debug){
+      logger.info(s"Origin: ($minX , $minY)")
+      logger.info(s"Cell size: $width x $height")
+      logger.info(s"# of cells in X: $cellsInX")
     }
-    expansions.toDS().show(25, false)
+    val expansions = disks.spatialPartitionedRDD.rdd.flatMap{ disk =>
+      val i = (((disk.getX * factor).toInt - minX) / width).toInt
+      val j = (((disk.getY * factor).toInt - minY) / height).toInt
+
+      getDiskExpansions(disk, width, height, minX, minY, e, i, j, cellsInX)
+    }.filter(_._1 >= 0)
+    if(debug){
+      expansions.map(e => (e._1, e._2.toText())).toDF("Partition","Point").show(false)
+      saveExpansions(expansions, "/tmp/expansions.wkt")
+    }
 
     expansions
   }
 
-  def getPointExpansions(p: Point, w: Int, h: Int, mx: Int, my: Int, e: Double, i: Int, j: Int, c: Int): List[EDisk] = {
+  def getDiskExpansions(p: Point, w: Int, h: Int, mx: Int, my: Int, e: Double, i: Int, j: Int, c: Int): List[(Int, Point)] = {
     val x = ((p.getX * factor).toInt - mx) % w
     val y = ((p.getY * factor).toInt - my) % h
 
@@ -132,12 +119,17 @@ object GridExpander{
       partitions += (i + 1) + c * (j - 1)
     }
 
-    val arr = p.getUserData.toString().split("\t")
-    val id = arr(0).toLong
-    val pids = arr(1)
-    val X = p.getX
-    val Y = p.getY
-    partitions.toList.map(partition => EDisk(id, X, Y, pids, partition))
+    partitions.toList.map(partition => (partition, p))
+  }
+
+  def setExpansions(g: List[Envelope], w:Int, h: Int, mx: Int, my: Int, c: Int, e: Double): Unit = {
+    expansions = g.map{ g =>
+      val p = g.centre()
+      val i = (((p.x * factor).toInt - mx) / w).toInt
+      val j = (((p.y * factor).toInt - my) / h).toInt
+      g.expandBy(e)
+      (g, i + j * c)
+    }
   }
 
   def envelope2Polygon(e: Envelope): Polygon = {
@@ -158,7 +150,7 @@ object GridExpander{
 
   def log(msg: String, timer: Long, n: Long, status: String): Unit ={
     val duration = (clocktime - startTime) / 1000.0
-    logger.info("GRIDEXPANDER|%-30s|%6.2f|%-50s|%6.2f|%6d|%s".format(s"$appID|$executors|$cores|", duration, msg, (clocktime - timer) / 1000.0, n, status))
+    logger.info("GE|%-30s|%6.2f|%-50s|%6.2f|%6d|".format(s"$appID|$executors|$cores|$status", duration, msg, (clocktime - timer) / 1000.0, n, status))
   }
 
   import java.io._
@@ -168,9 +160,9 @@ object GridExpander{
     pw.close
   }
 
-  def saveExpansions(expansions: RDD[EDisk], filename: String): Unit ={
+  def saveExpansions(expansions: RDD[(Int, Point)], filename: String): Unit ={
     val pw = new PrintWriter(new File(filename))
-    pw.write(expansions.map(e => s"${e.id}\t${e.x}\t${e.y}\t${e.pids}\t${e.partition}\n").collect().mkString(""))
+    pw.write(expansions.map(e => s"${e._2.toText()}\t${e._2.getUserData.toString()}\t${e._1}\n").collect().mkString(""))
     pw.close
   }
 
@@ -244,7 +236,14 @@ object GridExpander{
     timer = clocktime
     stage = "Grid expansions"
     log(stage, timer, 0, "START")
-    val expansions = GridExpander.run(spark, points, params)
+    val X = params.mfcustomx().toInt
+    val Y = params.mfcustomy().toInt
+    points.setNumX(X)
+    points.setNumY(Y)
+    points.spatialPartitioning(GridType.CUSTOM, X*Y)
+    points.spatialPartitionedRDD.cache()
+    val grids = points.getPartitioner.getGrids.asScala.toList
+    val expansions = GridExpander.run(spark, points, grids, X, params)
     val nExpansions = expansions.count()
     log(stage, timer, nExpansions, "END")
 

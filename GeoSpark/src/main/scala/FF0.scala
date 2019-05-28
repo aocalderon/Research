@@ -17,7 +17,7 @@ import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.HashMap
 import java.io._
 
-object FF {
+object FF0 {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory();
   private val precision: Double = 0.001
@@ -160,17 +160,16 @@ object FF {
           }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg
         )
         G_prime.analyze()
-        var nG_prime = 0
         if(G_prime.boundary() != null){
           val numX = params.ffcustomx()
           val numY = params.ffcustomy()
           G_prime.setNumX(numX.toInt)
           G_prime.setNumY(numY.toInt)
+          //G_prime.setSampleNumber(G_prime.rawSpatialRDD.rdd.count().toInt)
           G_prime.spatialPartitioning(gridType, FFpartitions)
-          G_prime.spatialPartitionedRDD.cache()
-          nG_prime = G_prime.spatialPartitionedRDD.count().toInt
+          G_prime.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
         }
-        logEnd(stage, timer, nG_prime, s"$timestamp")
+        logEnd(stage, timer, nF0, s"$timestamp")
 
         if(debug){
           if(G_prime.boundary() != null){
@@ -340,19 +339,6 @@ object FF {
     var timer = System.currentTimeMillis()
     var stage = "4a.Making expansions"
     logStart(stage)
-
-    val npartitions = (params.ffcustomx() * params.ffcustomy()).toInt
-    val cellsInX = params.ffcustomx().toInt
-    val grids = F.getPartitioner.getGrids.asScala.toList
-    val expansionsRDD = GridExpander.run(spark, F, grids, cellsInX, params)
-      .filter(_._1 < npartitions)
-      .partitionBy(new ExpansionPartitioner(npartitions)).persist(StorageLevel.MEMORY_ONLY)
-    val nExpansionsRDD = expansionsRDD.count()
-    val expansions = GridExpander.expansions
-    logEnd(stage, timer, nExpansionsRDD, s"$timestamp")
-
-
-    /*
     val expansions = F.getPartitioner.getGrids.asScala.map{ e =>
       new Envelope(e.getMinX - epsilon, e.getMaxX + epsilon, e.getMinY - epsilon, e.getMaxY + epsilon)
     }.zipWithIndex
@@ -372,7 +358,6 @@ object FF {
         //.filter($"E".contains("297 2122 2224"))
         //.orderBy("E").show(expansionsRDD.count().toInt, false)
     }
-    */
 
     timer = System.currentTimeMillis()
     stage = "4b.Finding maximals"
@@ -401,7 +386,6 @@ object FF {
       .map(f => (f.pids,f.start,f.end,f.center.getX,f.center.getY))
       .toDF("pids","start","end","x","y")
     val f1 = candidates.toDF("eid", "pids")
-    val expansions_map = expansions.map(e => e._2 -> e._1).toMap
     val prunned = f0.join(f1, "pids")
       .select($"eid", $"pids", $"start", $"end", $"x", $"y")
       .map{ m =>
@@ -534,8 +518,10 @@ object FF {
     val f = new java.io.PrintWriter(s"${params.output()}app-${app_count}_info.tsv")
     f.write(InfoTracker.getExectutorsInfo())
     f.write(InfoTracker.getStagesInfo())
-    f.write(InfoTracker.getTasksInfoByDuration(25))
+    //f.write(InfoTracker.getTasksInfo())
     f.close()
+    spark.close()
+
     spark.close()
     logEnd(stage, timer, 0, tag)    
   }

@@ -31,7 +31,8 @@ class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val fftimestamp:  ScallopOption[Int]     =  opt[Int]      (default  = Some(10))
   val ffdebug:      ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
   val mfdebug:      ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
-  val mfprint:      ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
+  val expander:     ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
+  val info:         ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
 
   verify()
 }

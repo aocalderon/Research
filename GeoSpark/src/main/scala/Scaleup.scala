@@ -34,7 +34,6 @@ object Scaleup{
     cores     = params.cores()
     executors = params.executors()
     val debug: Boolean    = params.mfdebug()
-    val print: Boolean    = params.mfprint()
     val epsilon: Double   = params.epsilon()
     val mu: Int           = params.mu()
     val sespg: String     = params.sespg()
@@ -162,7 +161,7 @@ object Scaleup{
     stage = "F.Expansions gotten"
     logStart(stage)
     val rtree = new STRtree()
-    val grids = disksRDD.getPartitioner.getGrids.asScala.zipWithIndex
+    //val grids = disksRDD.getPartitioner.getGrids.asScala.zipWithIndex
     val expansions = disksRDD.getPartitioner.getGrids.asScala.map{ e =>
       new Envelope(e.getMinX - epsilon, e.getMaxX + epsilon, e.getMinY - epsilon, e.getMaxY + epsilon)
     }.zipWithIndex
@@ -267,10 +266,6 @@ object Scaleup{
     }
     val endTime = System.currentTimeMillis()
     val totalTime = (endTime - startTime) / 1000.0
-
-    if(print){
-      logger.info(s"MF|${appID}|${executors}|${cores}|${totalTime}|${nMaximals}")
-    }
 
     maximals
   }
@@ -420,14 +415,14 @@ object Scaleup{
     timer = System.currentTimeMillis()
     stage = "Maximal finder run"
     logStart(stage)
-    val maximals = MF.run(spark, points, params)
+    val maximals = Scaleup.run(spark, points, params)
     val nMaximals = maximals.count()
     logEnd(stage, timer, nMaximals)
 
-    val filename = input.split("/").reverse.head.split("\\.").head
-    val pw = new PrintWriter(s"/tmp/${filename}_disks.tsv")
-    pw.write(maximals.map(m => s"${m}\n").collect().mkString(""))
-    pw.close()
+    //val filename = input.split("/").reverse.head.split("\\.").head
+    //val pw = new PrintWriter(s"/tmp/${filename}_disks.tsv")
+    //pw.write(maximals.map(m => s"${m}\n").collect().mkString(""))
+    //pw.close()
 
     // Closing session...
     timer = System.currentTimeMillis()
