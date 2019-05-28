@@ -20,6 +20,6 @@ stages270 = getStages(app270)
 stages272 = getStages(app272)
 
 stages = stages270 %>% inner_join(stages272, by = c("StageId", "Stage")) %>% 
-  select(StageId, Stage, Executors.x, Executors.y, executorRuntime.x, executorRuntime.y, Duration.x, Duration.y)
+  select(StageId, Stage, Executors.x, Executors.y, executorRuntime.x, executorRuntime.y, Duration.x, Duration.y, shuffleReadRecords.x, shuffleReadRecords.y)
 
 print(stages)
