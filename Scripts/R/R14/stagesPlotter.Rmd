@@ -1,0 +1,53 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(plotly)
+source("/home/and/Documents/PhD/Research/Scripts/R/R13/tasksMetrics.R")
+```
+
+```{r}
+appsE1_1 = "/home/and/Documents/PhD/Research/Scripts/R/R14/apps/app-0025_info.tsv"
+appsE1_2 = "/home/and/Documents/PhD/Research/Scripts/R/R14/apps/app-0028_info.tsv"
+appsE1_3 = "/home/and/Documents/PhD/Research/Scripts/R/R14/apps/app-0031_info.tsv"
+#appsE1_4 = "/home/and/Documents/PhD/Research/Scripts/R/R14/apps/app-0022_info.tsv"
+#appsE1_5 = "/home/and/Documents/PhD/Research/Scripts/Misc/tmp/apps/app-0290_info.tsv"
+stagesE1 = rbind(getStages(appsE1_1))#,getStages(appsE1_2),getStages(appsE1_3),getStages(appsE1_4),getStages(appsE1_5))
+appsE2_1 = "/home/and/Documents/PhD/Research/Scripts/R/R14/apps/app-0026_info.tsv"
+appsE2_2 = "/home/and/Documents/PhD/Research/Scripts/R/R14/apps/app-0029_info.tsv"
+appsE2_3 = "/home/and/Documents/PhD/Research/Scripts/R/R14/apps/app-0032_info.tsv"
+#appsE2_4 = "/home/and/Documents/PhD/Research/Scripts/R/R14/apps/app-0023_info.tsv"
+#appsE2_5 = "/home/and/Documents/PhD/Research/Scripts/Misc/tmp/apps/app-0290_info.tsv"
+stagesE2 = rbind(getStages(appsE2_1))#,getStages(appsE1_2),getStages(appsE1_3),getStages(appsE1_4),getStages(appsE1_5))
+appsE3_1 = "/home/and/Documents/PhD/Research/Scripts/R/R14/apps/app-0027_info.tsv"
+appsE3_2 = "/home/and/Documents/PhD/Research/Scripts/R/R14/apps/app-0030_info.tsv"
+appsE3_3 = "/home/and/Documents/PhD/Research/Scripts/R/R14/apps/app-0033_info.tsv"
+#appsE3_4 = "/home/and/Documents/PhD/Research/Scripts/R/R14/apps/app-0024_info.tsv"
+#appsE3_5 = "/home/and/Documents/PhD/Research/Scripts/Misc/tmp/apps/app-0289_info.tsv"
+stagesE3 = rbind(getStages(appsE3_1))#,getStages(appsE3_2),getStages(appsE3_3),getStages(appsE3_4),getStages(appsE3_5))
+
+stages = rbind(stagesE1, stagesE2, stagesE3) %>% select(StageId, Stage, Executors, Duration) %>%
+  mutate(Stage = paste(str_pad(StageId,5,"left"), Stage)) %>%
+  select(Stage, Executors, Duration) %>%
+  group_by(Stage, Executors) %>% summarise(Duration = mean(Duration))
+levels = c("3","6","9")
+head(stages)
+```
+
+```{r}
+stages$Executors = factor(stages$Executors, levels = levels)
+p = ggplot(data = stages, aes(x = Stage, y = Duration, fill = Executors)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Stages", y="Duration(s)")
+ggplotly(p)
+```
+
+```{r}
+stages %>% group_by(Executors) %>% summarise(Duration = sum(Duration))
+```
+
