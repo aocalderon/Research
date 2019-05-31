@@ -1,0 +1,52 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+```
+
+```{r}
+source("/home/and/Documents/PhD/Research/Scripts/R/R13/tasksMetrics.R")
+
+nohup = "/home/and/Documents/PhD/Research/Scripts/R/R14/nohupAWS011.txt"
+cores = 5
+epsilon = 110.0
+stages1 = bind_rows(getAppIDs(nohup, cores, executors = 3, epsilon) %>% map(getStages))
+stages2 = bind_rows(getAppIDs(nohup, cores, executors = 6, epsilon) %>% map(getStages))
+stages3 = bind_rows(getAppIDs(nohup, cores, executors = 9, epsilon) %>% map(getStages))
+
+stages = rbind(stages1, stages2, stages3) %>% select(StageId, Stage, Executors, Duration) %>%
+  mutate(Stage = paste(str_pad(StageId,5,"left"), Stage)) %>%
+  select(Stage, Executors, Duration) %>%
+  group_by(Stage, Executors) %>% summarise(Duration = mean(Duration))
+levels = c("3","6","9")
+stages$Executors = factor(stages$Executors, levels = levels)
+p = ggplot(data = stages, aes(x = Stage, y = Duration, fill = Executors)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Stages", y="Duration(s)")
+ggplotly(p)
+```
+
+```{r}
+stages
+```
+
+```{r}
+stages %>% group_by(Executors) %>% summarise(Duration = sum(Duration))
+```
+
+```{r}
+stages = rbind(stagesE1, stagesE2, stagesE3) %>% select(StageId, Stage, Executors, Duration) %>%
+  mutate(StageId = as.numeric(StageId))
+stages %>% group_by(StageId, Stage) %>% summarise(min=min(Duration), max=max(Duration), mean=mean(Duration), sd=sd(Duration)) %>%
+  mutate(diff = max - min) %>%
+  arrange(desc(diff))
+```
+

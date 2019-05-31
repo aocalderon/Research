@@ -47,7 +47,18 @@ p = ggplot(data = stages, aes(x = Stage, y = Duration, fill = Executors)) +
 ggplotly(p)
 ```
 
+
 ```{r}
 stages %>% group_by(Executors) %>% summarise(Duration = sum(Duration))
+```
+
+```{r}
+stages = rbind(stagesE1, stagesE2, stagesE3) %>% select(StageId, Stage, Executors, Duration) %>%
+  mutate(StageId = as.numeric(StageId))
+stages %>% group_by(StageId, Stage) %>% summarise(min=min(Duration), max=max(Duration), mean=mean(Duration), sd=sd(Duration)) %>%
+  mutate(diff = max - min) %>%
+#  filter(sd > 0.1) %>%
+  arrange(desc(diff))
+
 ```
 
