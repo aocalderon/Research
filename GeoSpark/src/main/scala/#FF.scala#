@@ -162,11 +162,11 @@ object FF {
         G_prime.analyze()
         var nG_prime = 0
         if(G_prime.boundary() != null){
-          val numX = params.ffcustomx()
-          val numY = params.ffcustomy()
-          G_prime.setNumX(numX.toInt)
-          G_prime.setNumY(numY.toInt)
-          G_prime.spatialPartitioning(gridType, FFpartitions)
+          val numX = params.ffcustomx().toInt
+          val numY = params.ffcustomy().toInt
+          G_prime.setNumX(numX)
+          G_prime.setNumY(numY)
+          G_prime.spatialPartitioning(gridType, numX * numY)
           G_prime.spatialPartitionedRDD.cache()
           nG_prime = G_prime.spatialPartitionedRDD.count().toInt
         }
@@ -238,7 +238,8 @@ object FF {
             val x = arr(3).toDouble
             val y = arr(4).toDouble
             val c = geofactory.createPoint(new Coordinate(x, y))
-            Flock(p,s,e,c)
+          Flock(p,s,e,c)
+
         }.persist(StorageLevel.MEMORY_ONLY)
         nF0 = f0.count()
         report = report.union(f0).persist(StorageLevel.MEMORY_ONLY)
@@ -534,7 +535,7 @@ object FF {
     val f = new java.io.PrintWriter(s"${params.output()}app-${app_count}_info.tsv")
     f.write(InfoTracker.getExectutorsInfo())
     f.write(InfoTracker.getStagesInfo())
-    f.write(InfoTracker.getTasksInfo())
+    f.write(InfoTracker.getTasksInfoByDuration(25))
     f.close()
     spark.close()
     logEnd(stage, timer, 0, tag)    
