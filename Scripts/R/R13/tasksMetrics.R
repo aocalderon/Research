@@ -65,3 +65,17 @@ customExecutionTime <- function(filename){
     separate(value, customExecutionTimeFields, sep = "\\|")  %>%
     mutate(Duration = as.numeric(Duration), Load = as.numeric(Load))
 }
+
+getAppIDs <- function(nohup, cores, executors, epsilon){
+  pattern = paste0("\\|",cores,"\\|",executors,"\\|",epsilon)
+  prefix = "/home/and/Documents/PhD/Research/Scripts/R/R14/apps/app-"
+  sufix  = "_info.tsv"
+  apps = as_tibble(readLines(nohup)) %>%
+    filter(grepl("PFLOCK", value)) %>%
+    filter(grepl(pattern,value)) %>%
+    separate(value, customExecutionTimeFields, sep = "\\|")  %>%
+    separate(appID, c(NA,NA,"appID"), sep="-") %>%
+    select(appID) %>%
+    map(function(x){ paste0(prefix,x,sufix)})
+  return(as.vector(apps$appID))
+}
