@@ -1,0 +1,113 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+6 runs using 3,6 and 9 executors for the B1, B2 and B3 Berlin datasets with epsilon values of 90, 100, 110m...
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+```
+
+Reading the data and plotting scale up of apache spark stages...
+
+```{r}
+source("/home/and/Documents/PhD/Research/Scripts/R/R13/tasksMetrics.R")
+
+nohup = "/home/and/Documents/PhD/Research/Scripts/R/R14/nohupAWS012.txt"
+cores = 6
+epsilon = 110.0
+stages1 = bind_rows(getAppIDs(nohup, cores, executors = 3, epsilon) %>% map(getStages))
+stages2 = bind_rows(getAppIDs(nohup, cores, executors = 6, epsilon) %>% map(getStages))
+stages3 = bind_rows(getAppIDs(nohup, cores, executors = 9, epsilon) %>% map(getStages))
+
+stages = rbind(stages1, stages2, stages3) %>% select(StageId, Stage, Executors, Duration) %>%
+  group_by(StageId, Stage, Executors) %>% summarise(Duration = mean(Duration))
+
+data = stages %>% ungroup() %>% mutate(Stage = paste(str_pad(StageId, 5, "left"), Stage))
+p = ggplot(data = data, aes(x = Stage, y = Duration, fill = Executors)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Stages", y="Duration(s)")
+ggplotly(p)
+```
+
+Overal scale up..
+
+```{r}
+data = stages %>% ungroup() %>% 
+  select(Executors, Duration) %>% group_by(Executors) %>% summarise(Duration = sum(Duration))
+head(data)
+data$Epsilon = as.factor(epsilon)
+p = ggplot(data = data, aes(x = Epsilon, y = Duration, fill = Executors)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Epsilon", y="Duration(s)")
+plot(p)
+```
+
+Collecting stages with greatest difference on time...
+
+```{r}
+stagesByDiff = stages %>% group_by(StageId, Stage) %>% 
+  summarise(min=min(Duration), max=max(Duration), mean=mean(Duration), sd=sd(Duration)) %>%
+  mutate(diff = max - min) %>%
+  arrange(desc(diff))
+stagesByDiff
+```
+
+Reading taks information for those stages...
+
+```{r}
+source("/home/and/Documents/PhD/Research/Scripts/R/R13/tasksMetrics.R")
+tasks1 = getTasksStats(nohup, cores, executors = 3, epsilon)
+tasks2 = getTasksStats(nohup, cores, executors = 6, epsilon)
+tasks3 = getTasksStats(nohup, cores, executors = 9, epsilon)
+tasks = rbind(tasks1, tasks2, tasks3) 
+tasks
+```
+
+Selecting the top 10 more unbalance stages and their tasks...
+
+```{r}
+topN = 10
+stagesByHost = stagesByDiff[1:topN,] %>% select(StageId) %>% inner_join(tasks, by = c("StageId")) 
+stagesByHost
+```
+
+Collecting info about how the tasks are distributed among the executors by number of tasks (bad approach in this case) and the time a executor take to complete their tasks...
+
+```{r}
+tasksByHost = stagesByHost %>% group_by(Executors, StageId, Stage) %>% 
+  summarise(minN=min(N), maxN=max(N), sdN=sd(N), 
+            minD=min(Duration), maxD=max(Duration), sdD=sd(Duration)) %>%
+  mutate(diffN = maxN - minN, diffD = maxD - minD) %>%
+  select(Executors, StageId, Stage, sdN, diffN, sdD, diffD) %>%
+  arrange(StageId)
+tasksByHost
+```
+
+Plotting the results...
+
+```{r}
+data = tasksByHost %>% mutate(Stage = paste(str_pad(StageId,pad = "0", width = 5), str_trim(Stage, side = "both"))) %>%
+  select(Executors,Stage, sdN, sdD)
+
+p = ggplot(data = data, aes(x = Stage, y = sdN, fill = Executors)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Stage", y="Std dev tasks/executor", title="Variability in the distribution of tasks per executor") 
+plot(p)
+
+p = ggplot(data = data, aes(x = Stage, y = sdD, fill = Executors)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Stage", y="Std dev time/executor", title="Variability in the time used per executor to run their tasks") 
+plot(p)
+
+```
+
+

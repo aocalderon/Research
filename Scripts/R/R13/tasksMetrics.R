@@ -8,7 +8,8 @@ getStages <- function(filename){
     separate(value, stageFields, sep = "\\|") %>%
     separate(appID, c(NA,NA,"appID"), sep="-") %>%
     mutate(executorRuntime = as.numeric(executorRuntime), executorCputime = as.numeric(executorCputime), Partitions = as.numeric(Partitions),
-            inputBytes = as.numeric(inputBytes), inputRecords = as.numeric(inputRecords),
+            Stage = str_trim(Stage, side = "both"),
+            StageId = as.numeric(StageId), inputBytes = as.numeric(inputBytes), inputRecords = as.numeric(inputRecords),
             shuffleReadBytes = as.numeric(shuffleReadBytes), shuffleReadRecords = as.numeric(shuffleReadRecords),
             Start = parse_datetime(str_replace(str_replace(Start, "GMT", ""), "T", " ")),
             End   = parse_datetime(str_replace(str_replace(End,   "GMT", ""), "T", " "))) %>%
@@ -22,7 +23,7 @@ taskFields = c("Title", "StageId", "Stage", "TaskId", "Executors", "Cores", "Par
 getTasks <- function(filename){
   tasks = as_tibble(readLines(filename)) %>%
     filter(grepl("TASKS", value)) %>%
-    separate(value, taskFields, sep = "\\|") %>%
+    separate(value, taskFields1, sep = "\\|") %>%
     separate(appID, c(NA,NA,"appID"), sep="-") %>%
     mutate(Stage = str_trim(Stage), Duration = as.numeric(Duration), Partitions = as.numeric(Partitions)) %>%
     mutate(executorRuntime = as.numeric(executorRuntime), resultSize = as.numeric(resultSize)) %>%
@@ -32,6 +33,32 @@ getTasks <- function(filename){
            BytesRead, BytesWritten, RecordsRead, RecordsWritten, 
            ShuffleBytesRead, ShuffleBytesWritten, ShuffleRecordsRead, ShuffleRecordsWritten)  
   return(tasks)
+}
+
+taskFields2 = c("Title", "StageId", "Stage", "TaskId", "Executors", "Cores", "Partitions", "Duration", "Start", "Host", "Locality", "executorRuntime", 
+               "BytesRead", "RecordsRead", "appID")
+getTasks2 <- function(filename){
+  tasks = as_tibble(readLines(filename)) %>%
+    filter(grepl("TASKS", value)) %>%
+    separate(value, taskFields2, sep = "\\|") %>%
+    separate(appID, c(NA,NA,"appID"), sep="-") %>%
+    mutate(Stage = str_trim(Stage), Duration = as.numeric(Duration), Partitions = as.numeric(Partitions)) %>%
+    mutate(executorRuntime = as.numeric(executorRuntime)) %>%
+    mutate(StageId = as.numeric(StageId), TaskId = as.numeric(TaskId)) %>%
+    mutate(BytesRead=as.numeric(BytesRead),RecordsRead=as.numeric(RecordsRead)) %>%
+    select(appID, Executors, StageId, Stage, TaskId, Duration, Host, Locality, executorRuntime, BytesRead, RecordsRead)  
+  return(tasks)
+}
+
+getTasksStats <- function(nohup, cores, executors, epsilon){
+  bind_rows(getAppIDs(nohup, cores, executors, epsilon) %>% map(getTasks2)) %>%
+    group_by(appID, StageId, Stage, Executors, Host) %>% 
+    summarise(N=n(), 
+              Duration = sum(Duration)/1000.0, 
+              Bytes = sum(BytesRead)/1024.0, 
+              Records = sum(RecordsRead)) %>%
+    ungroup() %>%
+    select(appID, StageId, Stage, Executors, Host, N, Duration)
 }
 
 customStageFields = c("Timestamp", "Part", "appID", "Executors", "Cores", "Status", "Time", "Stage", "Duration", "Load", "Interval")
@@ -79,3 +106,4 @@ getAppIDs <- function(nohup, cores, executors, epsilon){
     map(function(x){ paste0(prefix,x,sufix)})
   return(as.vector(apps$appID))
 }
+
