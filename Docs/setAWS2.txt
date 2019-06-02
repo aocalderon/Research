@@ -58,15 +58,9 @@ rsync -avz jdk1.8.0_202/ ubuntu@_WORKER_HOST_:/home/ubuntu/jdk1.8.0_202/
 rsync -avz Spark/ ubuntu@_WORKER_HOST_:/home/ubuntu/Spark/
 
 # Change SPARK_MASTER_HOST and SPARK_LOCAL_IP in each worker ...
-emacs /home/ubuntu/Spark/2.4/conf/spark-env.sh
+parallel-ssh -h workers "/home/ubuntu/Research/Docs/setWorker.sh"
+for i in {1..15}; do echo "export SPARK_LOCAL_IP=worker${i}" >> /home/ubuntu/Spark/2.4/conf/spark-env.sh; done
 
-#export USER=ubuntu
-#export WorkerID=1
-#export JAVA_HOME=/home/${USER}/jdk1.8.0_202
-#export SPARK_HOME=/home/${USER}/Spark/2.4
-#export SPARK_MASTER_HOST=driver
-#export SPARK_MASTER_PORT=7077
-#export SPARK_LOCAL_IP=worker${WorkerID}
 
 # In Master don't forget to add the worker hosts to $SPARK_HOME/conf/slaves
 echo "ubuntu@_WORKER_NUMBER_" >> /home/ubuntu/Spark/2.4/conf/slaves

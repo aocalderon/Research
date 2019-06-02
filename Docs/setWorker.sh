@@ -1,5 +1,4 @@
 #!/bin/bash
-worker_number=$1
 
 # Download JDK...
 wget http://www.cs.ucr.edu/~acald013/public/tmp/jdk.tar.gz
@@ -17,7 +16,4 @@ echo "export PATH=\$PATH:\$SPARK_HOME/bin" >> ~/.bashrc
 
 # Reload environment variables...
 source ~/.bashrc
-
-# Change content of spark-env.sh in worker accordingly...
-echo "export SPARK_LOCAL_IP=master${worker_number}" >> /home/ubuntu/Spark/2.4/conf/spark-env.sh
 
