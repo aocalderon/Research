@@ -1,6 +1,15 @@
 # Install multiverse repository in apt...
 deb http://us.archive.ubuntu.com/ubuntu/ bionic multiverse
 
+# Install python-pip, pssh and parallel-pssh ...
+sudo apt install python-pip pssh
+pip install parallel-ssh
+
+# Set security group with AllTCP and ALLUDP among member of the same security group...
+
+# Clone the repository...
+git clone https://github.com/aocalderon/Research.git
+
 # Download JDK...
 wget http://www.cs.ucr.edu/~acald013/public/tmp/jdk.tar.gz
 tar -zxvf jdk.tar.gz
@@ -12,9 +21,6 @@ wget https://piccolo.link/sbt-1.2.8.tgz
 tar -zxvf sbt-1.2.8.tgz
 echo "export SBT_HOME=/home/ubuntu/sbt" >> ~/.bashrc
 echo "export PATH=\$PATH:\$SBT_HOME/bin" >> ~/.bashrc
-
-# Clone the repository...
-git clone https://github.com/aocalderon/Research.git
 
 # Download Spark...
 mkdir Spark
@@ -28,7 +34,7 @@ echo "export PATH=\$PATH:\$SPARK_HOME/bin" >> ~/.bashrc
 source ~/.bashrc
 
 # Change content of spark-env.sh in Master accordingly...
-emacs /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/conf/spark-env.sh
+emacs /home/ubuntu/Spark/2.4/conf/spark-env.sh
 
 #export JAVA_HOME=/home/ubuntu/jdk1.8.0_202
 #export SPARK_HOME=/home/ubuntu/Spark/spark-2.1.0-bin-hadoop2.7
@@ -36,26 +42,31 @@ emacs /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/conf/spark-env.sh
 #export SPARK_MASTER_PORT=7077
 #export SPARK_LOCAL_IP=_THE_MASTER_IP_
 
-# Create a key for user in Master...
-ssh-keygen
-cat ~/.ssh/id_rsa.pub
+# Copy PEM file in Driver and set as Identity File in ~/.ssh/config ...
+Host *
+    IdentityFile ~/aws.pem
 
-# In each Slave...
-# Copy ubuntu public key in Slave...
-vim ~/.ssh/authorized_keys
+# Set /etc/hosts with the IPs of the worker and the driver
 
-# Back in Master copy JDK, Spark and Research folders to each Slave...
-rsync -avz Research/ ubuntu@_THE_SLAVE_IP_:/home/ubuntu/Research/
-rsync -avz jdk1.8.0_202/ ubuntu@_THE_SLAVE_IP_:/home/ubuntu/jdk1.8.0_202/
-rsync -avz Spark/ ubuntu@_THE_SLAVE_IP_:/home/ubuntu/Spark/
-# Change SPARK_MASTER_HOST and SPARK_LOCAL_IP in the Slave...
-emacs /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/conf/spark-env.sh
+# Copy hosts file to workers...
+for i in {1..15}; do scp /etc/hosts ubuntu@worker${i}:/home/ubuntu; done
+parallel-ssh -h workers "sudo mv /home/ubuntu/hosts /etc/hosts"
+    
+# Back in driver copy JDK, Spark and Research folders to each worker...
+rsync -avz Research/ ubuntu@_WORKER_HOST_:/home/ubuntu/Research/
+rsync -avz jdk1.8.0_202/ ubuntu@_WORKER_HOST_:/home/ubuntu/jdk1.8.0_202/
+rsync -avz Spark/ ubuntu@_WORKER_HOST_:/home/ubuntu/Spark/
 
-#export JAVA_HOME=/home/acald013/jdk1.8.0_202
-#export SPARK_HOME=/home/acald013/Spark/spark-2.1.0-bin-hadoop2.7
-#export SPARK_MASTER_HOST=_THE_MASTER_IP_
+# Change SPARK_MASTER_HOST and SPARK_LOCAL_IP in each worker ...
+emacs /home/ubuntu/Spark/2.4/conf/spark-env.sh
+
+#export USER=ubuntu
+#export WorkerID=1
+#export JAVA_HOME=/home/${USER}/jdk1.8.0_202
+#export SPARK_HOME=/home/${USER}/Spark/2.4
+#export SPARK_MASTER_HOST=driver
 #export SPARK_MASTER_PORT=7077
-#export SPARK_LOCAL_IP=_THE_SLAVE_IP_
+#export SPARK_LOCAL_IP=worker${WorkerID}
 
-# In Master don't forget to add the slave IP to $SPARK_HOME/conf/slaves
-echo "acald013@_THE_SLAVE_IP_" >> /home/acald013/Spark/spark-2.1.0-bin-hadoop2.7/conf/slaves
+# In Master don't forget to add the worker hosts to $SPARK_HOME/conf/slaves
+echo "ubuntu@_WORKER_NUMBER_" >> /home/ubuntu/Spark/2.4/conf/slaves
