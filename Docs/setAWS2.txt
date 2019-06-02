@@ -52,15 +52,14 @@ Host *
 for i in {1..15}; do scp /etc/hosts ubuntu@worker${i}:/home/ubuntu; done
 parallel-ssh -h workers "sudo mv /home/ubuntu/hosts /etc/hosts"
     
-# Back in driver copy JDK, Spark and Research folders to each worker...
-rsync -avz Research/ ubuntu@_WORKER_HOST_:/home/ubuntu/Research/
-rsync -avz jdk1.8.0_202/ ubuntu@_WORKER_HOST_:/home/ubuntu/jdk1.8.0_202/
-rsync -avz Spark/ ubuntu@_WORKER_HOST_:/home/ubuntu/Spark/
+# Clone the repository in each worker...
+parallel-ssh -h ~/workers -t 300 "git clone https://github.com/aocalderon/Research.git"
 
-# Change SPARK_MASTER_HOST and SPARK_LOCAL_IP in each worker ...
-parallel-ssh -h workers "/home/ubuntu/Research/Docs/setWorker.sh"
-for i in {1..15}; do echo "export SPARK_LOCAL_IP=worker${i}" >> /home/ubuntu/Spark/2.4/conf/spark-env.sh; done
+# Download JDK and Spark in each worker
+parallel-ssh -h workers -t 300 "/home/ubuntu/Research/Docs/setWorker.sh"
 
+# Change SPARK_LOCAL_IP in each worker ...
+for i in {1..15}; do ssh ubuntu@worker${i} -t "echo "export SPARK_LOCAL_IP=worker${i}" >> /home/ubuntu/Spark/2.4/conf/spark-env.sh"; done
 
 # In Master don't forget to add the worker hosts to $SPARK_HOME/conf/slaves
 echo "ubuntu@_WORKER_NUMBER_" >> /home/ubuntu/Spark/2.4/conf/slaves
