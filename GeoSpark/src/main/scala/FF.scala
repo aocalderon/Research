@@ -481,6 +481,7 @@ object FF {
       .config("spark.default.parallelism", 3 * cores * executors)
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
+      .config("spark.scheduler.mode", "FAIR")
       .config("spark.cores.max", cores * executors)
       .config("spark.executor.cores", cores)
       .master(s"spark://${master}:${port}")
