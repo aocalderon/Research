@@ -15,24 +15,34 @@ import java.io.PrintWriter
 object SelfJoin{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory()
+  var appID      = ""
+  var grid       = ""
+  var startTime  = clocktime
+  var distance   = 0.0
+  var executors  = 0
+  var partitions = 0
+  var finalPartitions = 0L
 
   def main(args: Array[String]) = {
     val params     = new SJConf(args)
     val input      = params.input()
     val output     = params.output()
-    val distance   = params.distance() + params.precision()
+    val precisio   = params.precision()
     val offset     = params.offset()
     val host       = params.host()
     val port       = params.port()
     val portUI     = params.portui()
     val customx    = params.customx()
     val customy    = params.customy()
-    val grid       = params.grid()
     val index      = params.index()
     val cores      = params.cores()
-    val executors  = params.executors()
     val debug      = params.debug()
     val local      = params.local()
+    val indexType = index match {
+      case "QUADTREE"  => IndexType.QUADTREE
+      case "RTREE"     => IndexType.RTREE
+    }
+    grid           = params.grid()
     val gridType = grid match {
       case "QUADTREE"  => GridType.QUADTREE
       case "RTREE"     => GridType.RTREE
@@ -42,17 +52,15 @@ object SelfJoin{
       case "VORONOI"   => GridType.VORONOI
       case "CUSTOM"    => GridType.CUSTOM
     }
-    val indexType = index match {
-      case "QUADTREE"  => IndexType.QUADTREE
-      case "RTREE"     => IndexType.RTREE
-    }
-    var partitions = params.partitions()
     var master     = ""
     if(local){
       master = s"local[$cores]"
     } else {
       master = s"spark://${host}:${port}"
     }
+    executors  = params.executors()
+    distance   = params.distance()
+    partitions = params.partitions()
 
     // Starting session...
     var timer = clocktime
@@ -68,8 +76,9 @@ object SelfJoin{
       config("spark.executor.cores", cores).
       getOrCreate()
     import spark.implicits._
-    val appID = spark.sparkContext.applicationId
-    val startTime = spark.sparkContext.startTime
+    appID      = spark.sparkContext.applicationId
+    startTime  = spark.sparkContext.startTime
+    if(grid == "CUSTOM") { partitions = (customx * customy).toInt }
     log("Session start", timer, 0, "END")    
 
     // Reading data...
@@ -79,22 +88,33 @@ object SelfJoin{
     val nPoints = points.rawSpatialRDD.rdd.count()
     log("Input read", timer, nPoints, "END")
 
-    // Spatial self-join...
+    // Partitioning...
+    val timerJoin = clocktime
+    log("Partitioning + Self-join", timerJoin,  0, "START")
     timer = clocktime
-    log("Spatial self-join", timer, 0, "START")
+    log("Points and buffers partitioned", timer, 0, "START")
     points.analyze()
     if(grid == "CUSTOM"){
       points.setNumX(customx.toInt)
       points.setNumY(customy.toInt)
-      partitions = (customx * customy).toInt
     }
     points.spatialPartitioning(gridType, partitions)
+    points.spatialPartitionedRDD.cache()
     points.buildIndex(indexType, true)
     val buffer = new CircleRDD(points, distance)
     buffer.spatialPartitioning(points.getPartitioner)
+    buffer.spatialPartitionedRDD.cache()
+    val nBuffer = buffer.spatialPartitionedRDD.count()
+    finalPartitions = buffer.spatialPartitionedRDD.rdd.getNumPartitions
+    log("1.Points and buffers partitioned", timer, 0, "END")
+
+    // Spatial self-join...
+    timer = clocktime
+    log("Spatial self-join", timer, 0, "START")
     val R = JoinQuery.DistanceJoinQueryFlat(points, buffer, true, false)
     val nR = R.rdd.count()
-    log("Spatial self-join", timer, nR, "END")
+    log("2.Spatial self-join", timer, nR, "END")
+    log("3.Partitioning + Self-join", timerJoin, nR, "END")
 
     // Closing session...
     timer = clocktime
@@ -108,7 +128,7 @@ object SelfJoin{
     val f = new java.io.PrintWriter(s"${output}/app-${app_count}_info.tsv")
     f.write(InfoTracker.getExectutorsInfo())
     f.write(InfoTracker.getStagesInfo())
-    f.write(InfoTracker.getTasksInfo())
+    //f.write(InfoTracker.getTasksInfo())
     f.close()
     spark.close()
     log("Session close", timer, 0, "END")
@@ -117,7 +137,7 @@ object SelfJoin{
   def clocktime = System.currentTimeMillis()
 
   def log(msg: String, timer: Long, n: Long = -1, status: String = "NULL"): Unit = {
-    logger.info("%-50s|%6.2f|%6d|%s".format(msg, (clocktime - timer)/1000.0, n, status))
+    logger.info("%-24s|%-10s|%2d|%4.0f|%5d|%5d|%-40s|%6.2f|%6.2f|%6d|%s".format(appID, grid, executors, distance, partitions, finalPartitions, msg, (clocktime - startTime)/1000.0, (clocktime - timer)/1000.0, n, status))
   }
 }
 
