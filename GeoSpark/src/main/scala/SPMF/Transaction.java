@@ -18,11 +18,13 @@ package SPMF;
 import java.util.Arrays;
 import java.util.List;
 
-class Transaction implements Comparable<Transaction>{
-	private static Integer[] temp = new Integer[500];
-	private Transaction originalTransaction;
-	private int offset;
+public class Transaction implements Comparable<Transaction>{
+    private static Integer[] temp = new Integer[500];
+    private Transaction originalTransaction;
+    private int offset;
     private Integer[] items;
+    private Double x = 0.0;
+    private Double y = 0.0;
 
     Transaction(Integer[] items) {
     	originalTransaction = this;
@@ -36,10 +38,25 @@ class Transaction implements Comparable<Transaction>{
     	this.offset = offset;
     }
 
+    public Transaction(Double x, Double y, String pids){
+	String[] arr = pids.split(" ");
+	int n = arr.length;
+	items = new Integer[n];
+	for(int i = 0; i < n; i++){
+	    items[i] = Integer.parseInt(arr[i]);
+	}
+	originalTransaction = this;
+	this.offset = 0;
+	this.x = x;
+	this.y = y;
+    }
+
     public Integer[] getItems() {
         return items;
     }
-
+    
+    public Double getX() { return x; }
+    public Double getY() { return y; }
     public int getOffset() { return offset; }
 
 	public int containsByBinarySearch(Integer item) {
@@ -84,6 +101,10 @@ class Transaction implements Comparable<Transaction>{
     @Override
     public String toString() {
         return Arrays.asList(this.items).toString();
+    }
+
+    public String asDiskString(){
+	return String.format("%s\t%.3f\t%.3f", this.toString(), this.getX(), this.getY());
     }
 
 	public void removeInfrequentItems(List<Transaction>[] buckets, int minsupRelative) {
