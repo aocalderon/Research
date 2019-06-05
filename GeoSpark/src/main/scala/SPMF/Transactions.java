@@ -20,7 +20,7 @@ import java.util.*;
 public class Transactions {
     private List<Transaction> transactions;
     Set<Integer> uniqueItems = new HashSet<>();
-	private int maxItem = 0;
+    private int maxItem = 0;
 
     public Transactions(List<List<Integer>> ts){
         this.transactions = new ArrayList<>(ts.size());
@@ -34,6 +34,18 @@ public class Transactions {
         );
     }
 
+    public Transactions(List<Transaction> ts, int bogus){
+        this.transactions = ts;
+	for(Transaction t: ts){
+	    Integer items[] = t.getItems();
+	    uniqueItems.addAll(new ArrayList<Integer>(Arrays.asList(items)));
+	    int lastItem = items[items.length - 1];
+	    if(lastItem > maxItem) {
+		maxItem = lastItem;
+	    }
+	}
+    }
+
     private Transaction createTransaction(List<Integer> t) {
         int size = t.size();
         uniqueItems.addAll(t);
@@ -45,7 +57,7 @@ public class Transactions {
         return new Transaction(t.toArray(new Integer[size]));
     }
 
-     public List<Transaction> getTransactions() {
+    public List<Transaction> getTransactions() {
         return transactions;
     }
 
