@@ -62,31 +62,11 @@ object MF{
     val pointsBuffer = new CircleRDD(points, epsilon + precision)
     points.analyze()
     pointsBuffer.analyze()
-    var dnumX = params.dcustomx().toInt
-    var dnumY = params.dcustomy().toInt
-    points.setNumX(dnumX)
-    points.setNumY(dnumY)
-    pointsBuffer.spatialPartitioning(partitioner, dnumX * dnumY)
-    points.spatialPartitioning(pointsBuffer.getPartitioner)
-    points.buildIndex(IndexType.QUADTREE, true)
+    points.spatialPartitioning(GridType.KDBTREE, Dpartitions) // KDBTREE works better that CUSTOM and QUADTREE at this point...
+    pointsBuffer.spatialPartitioning(points.getPartitioner)
+    points.buildIndex(IndexType.QUADTREE, true) 
     points.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
     pointsBuffer.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
-
-    /*
-    var numX = params.dcustomx().toInt
-    var numY = params.dcustomy().toInt
-    points.setNumX(numX)
-    points.setNumY(numY)
-    points.analyze()
-    val pointsBuffer = new CircleRDD(points, epsilon + precision)
-    pointsBuffer.analyze()
-    if(spatial == "CUSTOM") { Dpartitions = numX * numY }
-    points.spatialPartitioning(partitioner, Dpartitions)
-    points.spatialPartitionedRDD.cache()
-    points.buildIndex(IndexType.QUADTREE, true)
-    points.indexedRDD.cache()
-    pointsBuffer.spatialPartitioning(points.getPartitioner)
-    */
     logEnd(stage, timer, points.rawSpatialRDD.count())
 
     // Finding pairs...
