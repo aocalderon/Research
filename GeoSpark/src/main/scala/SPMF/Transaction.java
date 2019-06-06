@@ -36,6 +36,8 @@ public class Transaction implements Comparable<Transaction>{
     	this.originalTransaction = transaction.originalTransaction; 	
     	this.items = transaction.getItems();
     	this.offset = offset;
+	this.x = transaction.getX();
+	this.y = transaction.getY();
     }
 
     public Transaction(Double x, Double y, String pids){

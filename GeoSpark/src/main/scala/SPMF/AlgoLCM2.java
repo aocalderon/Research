@@ -38,11 +38,14 @@ public class AlgoLCM2 {
     // and contains the transactions where the items appears.
     private int n = 0;
 
+    private ArrayList<Transaction> points_and_pids;
+    
     public ArrayList<List<Integer>> run(Transactions dataset){
         Stack<Call> Ps = new Stack<>();
         // record the start time
         startTimestamp = System.currentTimeMillis();
         ArrayList<List<Integer>> patterns = new ArrayList<>();
+        points_and_pids = new ArrayList<>();
 
         // reset the number of itemset found
         frequentCount = 0;
@@ -106,6 +109,7 @@ public class AlgoLCM2 {
                         if(!itemset.isEmpty()) {
                             frequentCount++;
                             patterns.add(itemset);
+			    points_and_pids.add(transactionsPe.get(0));
                         }
                     }
 
@@ -285,5 +289,9 @@ public class AlgoLCM2 {
 
     public void getN(){
         System.out.println("Number of recursions: " + n);
+    }
+
+    public List<Transaction> getPointsAndPids(){
+	return points_and_pids;
     }
 }

@@ -13,7 +13,7 @@ object LCMTester {
   case class Disk(x: Double, y: Double, pids: String)
 
   def main(args: Array[String]): Unit = {
-    val lines = Source.fromFile("/home/and/Documents/PhD/Research/GeoSpark/src/main/scala/SPMF/pids_and_points.tsv")
+    val lines = Source.fromFile(args(0))
     logger.info("Reading file...")
     val points = lines.getLines().map{ line =>
       val pids_point = line.split("\t")
@@ -27,10 +27,21 @@ object LCMTester {
     logger.info("Running LCM...")
     val lcm = new AlgoLCM2()
     val data = new Transactions(points, 0)
-    val maximals = lcm.run(data).asScala.map{ maximal =>
-      maximal.asScala.toList.map(_.toInt)
+    lcm.run(data)
+    val maximals = lcm.getPointsAndPids().asScala
+    logger.info(maximals.map(_.asDiskString()).mkString("\n"))
+    logger.info(s"${maximals.size}")
+
+    val f = new PrintWriter("/tmp/JavaLCM.tsv")
+    f.write(maximals.map(_.getItems().toList.sorted.mkString(" ")).map(m => s"$m\n").mkString(""))
+    f.close()
+
+    val uno = Source.fromFile("/tmp/UnoLCM.tsv").getLines().map{ l =>
+      l.split(" ").map(_.toInt).sorted.mkString(" ")
     }
-    logger.info(maximals.map(m => s"${m.toString()}\n").mkString(""))
+    val g = new PrintWriter("/tmp/UnoLCM2.tsv")
+    g.write(uno.map(u => s"$u\n").mkString(""))
+    g.close()
   }
 }
 
