@@ -36,14 +36,14 @@ public class Transactions {
 
     public Transactions(List<Transaction> ts, int bogus){
         this.transactions = ts;
-	for(Transaction t: ts){
-	    Integer items[] = t.getItems();
-	    uniqueItems.addAll(new ArrayList<Integer>(Arrays.asList(items)));
-	    int lastItem = items[items.length - 1];
-	    if(lastItem > maxItem) {
-		maxItem = lastItem;
-	    }
-	}
+        for(Transaction t: ts){
+            Integer items[] = t.getItems();
+            uniqueItems.addAll(new ArrayList<Integer>(Arrays.asList(items)));
+            int lastItem = items[items.length - 1];
+            if(lastItem > maxItem) {
+                maxItem = lastItem;
+            }
+        }
     }
 
     private Transaction createTransaction(List<Integer> t) {

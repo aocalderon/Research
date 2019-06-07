@@ -36,21 +36,21 @@ public class Transaction implements Comparable<Transaction>{
     	this.originalTransaction = transaction.originalTransaction; 	
     	this.items = transaction.getItems();
     	this.offset = offset;
-	this.x = transaction.getX();
-	this.y = transaction.getY();
+        this.x = transaction.getX();
+        this.y = transaction.getY();
     }
 
     public Transaction(Double x, Double y, String pids){
-	String[] arr = pids.split(" ");
-	int n = arr.length;
-	items = new Integer[n];
-	for(int i = 0; i < n; i++){
-	    items[i] = Integer.parseInt(arr[i]);
-	}
-	originalTransaction = this;
-	this.offset = 0;
-	this.x = x;
-	this.y = y;
+        String[] arr = pids.split(" ");
+        int n = arr.length;
+        items = new Integer[n];
+        for(int i = 0; i < n; i++){
+            items[i] = Integer.parseInt(arr[i]);
+        }
+        originalTransaction = this;
+        this.offset = 0;
+        this.x = x;
+        this.y = y;
     }
 
     public Integer[] getItems() {
@@ -105,8 +105,17 @@ public class Transaction implements Comparable<Transaction>{
         return Arrays.asList(this.items).toString();
     }
 
+    private String itemsToString(){
+        String[] str = new String[this.items.length];
+        int i = 0;
+        for(Integer item: items){
+            str[i] = String.format("%d", item);
+        }
+        return String.join(" ", str);
+    }
+
     public String asDiskString(){
-	return String.format("%s\t%.3f\t%.3f", this.toString(), this.getX(), this.getY());
+        return String.format("%.3f\t%.3f\t%s", this.getX(), this.getY(), this.itemsToString());
     }
 
 	public void removeInfrequentItems(List<Transaction>[] buckets, int minsupRelative) {

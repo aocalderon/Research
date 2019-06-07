@@ -292,6 +292,6 @@ public class AlgoLCM2 {
     }
 
     public List<Transaction> getPointsAndPids(){
-	return points_and_pids;
+        return points_and_pids;
     }
 }
