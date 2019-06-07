@@ -1,6 +1,8 @@
 ---
 title: "R Notebook"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r}
@@ -25,8 +27,13 @@ head(data)
 ```
 
 ```{r}
-d = data %>% ungroup() %>% mutate(MF_X = as.numeric(MF_X), FF_X = as.numeric(FF_X))
-ggplot(d, aes(x = MF_X, y = FF_X)) + geom_raster(aes(fill = Time)) + 
+data$MF_X = factor(data$MF_X, levels = c("30","60","90","120","150"))
+data$FF_X = factor(data$FF_X, levels = c("30","60","90","120","150"))
+ggplot(data, aes(x = MF_X, y = FF_X)) + geom_raster(aes(fill = Time)) + 
   scale_fill_gradient(low="white", high="red") + 
-  geom_text(aes(MF_X, FF_X, label = Time), color = "black", size = 3)
+  geom_text(aes(MF_X, FF_X, label = round(Time, 2)), color = "black", size = 3) +
+  labs(x="Number of partitions during maximal disks finding.", y="Number of partitions after time intervals join.", title="Execution time in seconds varying number of partitions.")
 ```
+
+* Partitions varies on X axis, number of partitions on Y axis was fixed to 90.  
+* Dataset: Berlin(x3), Executors: 15 (4 cores each), Epsilon: 110m, Mu: 3, Delta: 3.
