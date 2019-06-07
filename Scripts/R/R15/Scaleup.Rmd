@@ -1,0 +1,31 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+fields = c("Timestamp", "Tag", "appId", "Cores", "Executors", "Epsilon", "Mu", "Delta", "Time", "Load")
+data_path = "~/Documents/PhD/Research/Scripts/R/R15/nohupKDBTREE.txt"
+data = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>%
+  filter(grepl("PFLOCK", line)) %>% separate(line, into = fields, sep = "\\|") %>%
+  mutate(Time = as.numeric(Time)) %>%
+  group_by(Executors, Epsilon) %>% summarise(Time = mean(Time)) %>%
+  arrange(Time)
+
+head(data)
+```
+
+```{r}
+data$Executors = factor(data$Executors, levels = c("5","10","15"))
+data$Epsilon   = factor(data$Epsilon,   levels = c("80.0","90.0","100.0","110.0"))
+p = ggplot(data = data, aes(x = Epsilon, y = Time, fill = Executors)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Time(s)", y="Epsilon(m)", title="Scaleup") 
+plot(p)
+```
+

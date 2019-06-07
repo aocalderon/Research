@@ -1,0 +1,32 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+fields = c("Timestamp", "Tag", "appId", "Cores", "Executors", "Epsilon", "Mu", "Delta", "Time", "Load")
+data_path = "~/Documents/PhD/Research/Scripts/R/R15/nohupPartitions.txt"
+spark_submit = enframe(read_lines(data_path), name="n", value="line") %>% select(line) %>% 
+  filter(grepl("spark-submit", line)) %>% separate(line, into=paste0("A", 1:17), sep = "--") %>% 
+  select(A12, A13, A14, A15) %>% separate(A12, c(NA,"MF_Y")) %>% separate(A13, c(NA,"MF_X")) %>% 
+  separate(A14, c(NA,"FF_Y")) %>% separate(A15, c(NA,"FF_X"))
+pflock = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>%
+  filter(grepl("PFLOCK", line)) %>% separate(line, into = fields, sep = "\\|") %>%
+  mutate(Time = as.numeric(Time)) 
+data = bind_cols(pflock, spark_submit) %>%
+  group_by(MF_X, FF_X) %>% summarise(Time = mean(Time)) %>%
+  arrange(Time)
+
+head(data)
+```
+
+```{r}
+d = data %>% ungroup() %>% mutate(MF_X = as.numeric(MF_X), FF_X = as.numeric(FF_X))
+ggplot(d, aes(x = MF_X, y = FF_X)) + geom_raster(aes(fill = Time)) + 
+  scale_fill_gradient(low="white", high="red") + 
+  geom_text(aes(MF_X, FF_X, label = Time), color = "black", size = 3)
+```
