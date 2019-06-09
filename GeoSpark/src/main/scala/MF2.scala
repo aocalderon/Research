@@ -151,9 +151,7 @@ object MF2{
     stage = "F.Maximal disks found"
     logStart(stage)
     val grids = diskCenters.getPartitioner.getGrids.asScala.toList.zipWithIndex.map(g => g._2 -> g._1).toMap
-    //val g = new java.io.PrintWriter("/tmp/grids.wkt")
-    //g.write(grids.map(e => (e._1, envelope2Polygon(e._2).toText())).map(x => s"${x._1}\t${x._2}\n").mkString(""))
-    //g.close()
+    val nGrids = grids.size
     val maximals = diskCircles.spatialPartitionedRDD.rdd
       .mapPartitionsWithIndex{ (i, disks) =>
         var result = List.empty[String]
@@ -186,11 +184,9 @@ object MF2{
     logEnd(stage, timer, nMaximals)
 
     val endTime = System.currentTimeMillis()
-    val totalTime = (endTime - startTime) / 1000.0
+    val executionTime = (endTime - startTime) / 1000.0
 
-    //val f = new java.io.PrintWriter("/tmp/maximals.wkt")
-    //f.write(maximals.collect().mkString(""))
-    //f.close()
+    logger.info(s"MAXIMALS|$appID|$cores|$executors|$epsilon|$mu|$nGrids|$executionTime|$nMaximals")
 
     maximals
   }
