@@ -151,9 +151,9 @@ object MF2{
     stage = "F.Maximal disks found"
     logStart(stage)
     val grids = diskCenters.getPartitioner.getGrids.asScala.toList.zipWithIndex.map(g => g._2 -> g._1).toMap
-    val g = new java.io.PrintWriter("/tmp/grids.wkt")
-    g.write(grids.map(e => (e._1, envelope2Polygon(e._2).toText())).map(x => s"${x._1}\t${x._2}\n").mkString(""))
-    g.close()
+    //val g = new java.io.PrintWriter("/tmp/grids.wkt")
+    //g.write(grids.map(e => (e._1, envelope2Polygon(e._2).toText())).map(x => s"${x._1}\t${x._2}\n").mkString(""))
+    //g.close()
     val maximals = diskCircles.spatialPartitionedRDD.rdd
       .mapPartitionsWithIndex{ (i, disks) =>
         var result = List.empty[String]
@@ -175,7 +175,7 @@ object MF2{
               val point = geofactory.createPoint(new Coordinate(p.getX, p.getY))
               
               val flag = isNotInExpansionArea(point, grid, 0.0)
-              ((p.getX, p.getY, pids),  flag)
+              ((pids, p.getX, p.getY),  flag)
             }
             .filter(_._2).map(_._1)
             .map(p => s"${p._1}\t${p._2}\t${p._3}\n").toList

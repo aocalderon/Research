@@ -293,7 +293,7 @@ object FF {
   }
 
   def makePoint(pattern: String, timestamp: Int): Point = {
-    val arr = pattern.split(";")
+    val arr = pattern.split("\t")
     val point = geofactory.createPoint(new Coordinate(arr(1).toDouble, arr(2).toDouble))
     point.setUserData(s"${arr(0)};${timestamp};${timestamp}")
     point
@@ -350,29 +350,6 @@ object FF {
     val nExpansionsRDD = expansionsRDD.count()
     val expansions = GridExpander.expansions
     logEnd(stage, timer, nExpansionsRDD, s"$timestamp")
-
-
-    /*
-    val expansions = F.getPartitioner.getGrids.asScala.map{ e =>
-      new Envelope(e.getMinX - epsilon, e.getMaxX + epsilon, e.getMinY - epsilon, e.getMaxY + epsilon)
-    }.zipWithIndex
-    expansions.foreach{e => rtree.insert(e._1, e._2)}
-    val expansions_map = expansions.map(e => e._2 -> e._1).toMap
-
-    val expansionsRDD = F.spatialPartitionedRDD.rdd.flatMap{ disk =>
-      rtree.query(disk.getEnvelopeInternal).asScala.map{expansion_id =>
-        (expansion_id, disk)
-      }.toList
-    }.partitionBy(new ExpansionPartitioner(expansions.size)).persist(StorageLevel.MEMORY_ONLY)
-    val nExpansionsRDD = expansionsRDD.count()
-    logEnd(stage, timer, nExpansionsRDD, s"$timestamp")
-
-    if(debug){
-      //expansionsRDD.map(e => s"${e._2.getUserData.toString()};${e._1}").toDF("E")
-        //.filter($"E".contains("297 2122 2224"))
-        //.orderBy("E").show(expansionsRDD.count().toInt, false)
-    }
-    */
 
     timer = System.currentTimeMillis()
     stage = "4b.Finding maximals"
@@ -526,6 +503,7 @@ object FF {
     timer = clocktime
     stage = "Session closed"
     logStart(stage)
+    /*
     InfoTracker.master = master
     InfoTracker.port = portUI
     InfoTracker.applicationID = appID
@@ -537,6 +515,7 @@ object FF {
     f.write(InfoTracker.getStagesInfo())
     f.write(InfoTracker.getTasksInfo())
     f.close()
+     */
     spark.close()
     logEnd(stage, timer, 0, tag)    
   }

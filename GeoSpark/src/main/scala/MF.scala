@@ -232,35 +232,31 @@ object MF{
     stage = "H.Maximal disks prunned"
     logStart(stage)
     var maximals = spark.sparkContext.emptyRDD[String]
-    if(true){
-      val points_positions = points.spatialPartitionedRDD.rdd.map{ point =>
-        val point_id = point.getUserData.toString().split("\t").head.trim().toInt
-        (point_id, point.getX, point.getY)
-      }.toDF("point_id1", "x", "y")
-      
-      val candidates_points = candidates
-        .toDF("expansion_id", "points_ids")
-        .withColumn("maximal_id", monotonically_increasing_id())
-        .withColumn("point_id2", explode($"points_ids"))
-        .select("expansion_id", "maximal_id", "point_id2")
-      val expansions_map = expansions.map(e => e._2 -> e._1).toMap
-      val maximals0 = points_positions.join(candidates_points, $"point_id1" === $"point_id2")
-        .groupBy($"expansion_id", $"maximal_id")
-        .agg(min($"x"), min($"y"), max($"x"), max($"y"), collect_list("point_id1"))
-        .map{ m =>
-          val expansion = expansions_map(m.getInt(0))
-          val x = (m.getDouble(2) + m.getDouble(4)) / 2.0
-          val y = (m.getDouble(3) + m.getDouble(5)) / 2.0
-          val pids = m.getList[Int](6).asScala.toList.sorted.mkString(" ")
-          val point = geofactory.createPoint(new Coordinate(x, y))
-          val notInExpansion = isNotInExpansionArea(point, expansion, epsilon)
-          (s"${pids};${x};${y}", notInExpansion, expansion.toString())
-        }
+    val points_positions = points.spatialPartitionedRDD.rdd.map{ point =>
+      val point_id = point.getUserData.toString().split("\t").head.trim().toInt
+      (point_id, point.getX, point.getY)
+    }.toDF("point_id1", "x", "y")
 
-      maximals = maximals0.filter(_._2).map(_._1).rdd.distinct()
-    } else {
+    val candidates_points = candidates
+      .toDF("expansion_id", "points_ids")
+      .withColumn("maximal_id", monotonically_increasing_id())
+      .withColumn("point_id2", explode($"points_ids"))
+      .select("expansion_id", "maximal_id", "point_id2")
+    val expansions_map = expansions.map(e => e._2 -> e._1).toMap
+    val maximals0 = points_positions.join(candidates_points, $"point_id1" === $"point_id2")
+      .groupBy($"expansion_id", $"maximal_id")
+      .agg(min($"x"), min($"y"), max($"x"), max($"y"), collect_list("point_id1"))
+      .map{ m =>
+        val expansion = expansions_map(m.getInt(0))
+        val x = (m.getDouble(2) + m.getDouble(4)) / 2.0
+        val y = (m.getDouble(3) + m.getDouble(5)) / 2.0
+        val pids = m.getList[Int](6).asScala.toList.sorted.mkString(" ")
+        val point = geofactory.createPoint(new Coordinate(x, y))
+        val notInExpansion = isNotInExpansionArea(point, expansion, epsilon)
+        (s"${pids}\t${x}\t${y}", notInExpansion, expansion.toString())
+      }
 
-    }
+    maximals = maximals0.filter(_._2).map(_._1).rdd.distinct()
     val nMaximals = maximals.count()
     logEnd(stage, timer, nMaximals)
 
