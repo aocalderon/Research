@@ -173,9 +173,12 @@ object MF2{
               val pids = p.getItems.mkString(" ")
               val grid = grids(i)
               val point = geofactory.createPoint(new Coordinate(p.getX, p.getY))
-              (point.toText(), pids, i, envelope2Polygon(grid).toText(), r,  isNotInExpansionArea(point, grid, 0.0))
+              
+              val flag = isNotInExpansionArea(point, grid, 0.0)
+              ((p.getX, p.getY, pids),  flag)
             }
-            .map(p => s"${p._1}\t${p._2}\t${p._3}\t${p._4}\t${p._5}\t${p._6}\n").toList
+            .filter(_._2).map(_._1)
+            .map(p => s"${p._1}\t${p._2}\t${p._3}\n").toList
         }
         result.toIterator
       }.persist(StorageLevel.MEMORY_ONLY)
@@ -185,9 +188,9 @@ object MF2{
     val endTime = System.currentTimeMillis()
     val totalTime = (endTime - startTime) / 1000.0
 
-    val f = new java.io.PrintWriter("/tmp/maximals.wkt")
-    f.write(maximals.collect().mkString(""))
-    f.close()
+    //val f = new java.io.PrintWriter("/tmp/maximals.wkt")
+    //f.write(maximals.collect().mkString(""))
+    //f.close()
 
     maximals
   }
