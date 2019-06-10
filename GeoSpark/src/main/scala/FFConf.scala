@@ -13,7 +13,7 @@ class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val portui:       ScallopOption[String]  =  opt[String]   (default  = Some("4040"))
   val sespg:        ScallopOption[String]  =  opt[String]   (default  = Some("epsg:3068"))
   val tespg:        ScallopOption[String]  =  opt[String]   (default  = Some("epsg:3068"))
-  val spatial:      ScallopOption[String]  =  opt[String]   (default  = Some("EQUALGRID"))
+  val spatial:      ScallopOption[String]  =  opt[String]   (default  = Some("KDBTREE"))
   val output:       ScallopOption[String]  =  opt[String]   (default  = Some("/tmp/"))
   val ffpartitions: ScallopOption[Int]     =  opt[Int]      (default  = Some(625))
   val mfpartitions: ScallopOption[Int]     =  opt[Int]      (default  = Some(625))
