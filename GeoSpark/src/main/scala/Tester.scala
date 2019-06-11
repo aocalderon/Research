@@ -4,7 +4,7 @@ import org.apache.spark.storage.StorageLevel
 import org.apache.spark.{SparkConf, SparkContext}
 import org.datasyslab.geospark.enums.{FileDataSplitter, GridType, IndexType}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
-import org.datasyslab.geospark.spatialPartitioning.FlatGridPartitioner
+import org.datasyslab.geospark.spatialPartitioning.GridPartitioner
 import org.datasyslab.geospark.spatialRDD.{SpatialRDD, PolygonRDD, CircleRDD, PointRDD}
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import com.vividsolutions.jts.index.strtree.STRtree
@@ -22,6 +22,7 @@ object Tester{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory();
   private val precision: Double = 0.001
+  private var MFPartitioner: GridPartitioner = new GridPartitioner(List.empty[Envelope].asJava)
   private var tag: String = ""
   private var appID: String = "app-00000000000000-0000"
   private var startTime: Long = clocktime
@@ -59,9 +60,7 @@ object Tester{
     var stage = "A.Points indexed"
     logStart(stage)
     val pointsBuffer = new CircleRDD(points, epsilon + precision)
-    //points.analyze()
     pointsBuffer.analyze()
-    //points.spatialPartitioning(partitioner, MFpartitions) // KDBTREE works better that EQUALGRID and QUADTREE at this point...
     pointsBuffer.spatialPartitioning(points.getPartitioner)
     points.buildIndex(IndexType.QUADTREE, true) // QUADTREE works better as an indexer than RTREE...
     points.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
@@ -132,19 +131,29 @@ object Tester{
     val diskCenters = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
     val diskCircles = new CircleRDD(diskCenters, r + precision)
     diskCenters.analyze()
-    diskCenters.spatialPartitioning(points.getPartitioner)
+    //diskCenters.spatialPartitioning(GridType.EQUALGRID, params.mfpartitions())
+    diskCenters.spatialPartitioning(MFPartitioner)
     diskCenters.spatialPartitionedRDD.cache()
-    diskCircles.spatialPartitioning(points.getPartitioner)
+    diskCircles.spatialPartitioning(MFPartitioner)
     diskCircles.spatialPartitionedRDD.cache()
     val nDisksRDD = diskCenters.spatialPartitionedRDD.count()
     logEnd(stage, timer, nDisksRDD)
+
+    val f = new java.io.PrintWriter("/tmp/disks.wkt")
+    val disksWKT = diskCenters.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (i, points) =>
+      points.map(p => s"$i\t${p.toText()}\n").toIterator
+    }
+    f.write(disksWKT.collect().mkString(""))
+    f.close()
 
     // Finding maximal disks...
     timer = System.currentTimeMillis()
     stage = "F.Maximal disks found"
     logStart(stage)
-    val grids = diskCenters.getPartitioner.getGrids.asScala.toList.zipWithIndex.map(g => g._2 -> g._1).toMap
-    val nGrids = grids.size
+    val grids  = MFPartitioner.getGrids.asScala.toList.zipWithIndex.map(g => g._2 -> g._1).toMap
+    val nGrids = MFPartitioner.getGrids.size
+    logger.info(s"Cell dimensions: ${grids(0).getWidth} x ${grids(0).getHeight}")
+    logger.info(s"Cell area: ${grids(0).getArea}")
     val maximals = diskCircles.spatialPartitionedRDD.rdd
       .mapPartitionsWithIndex{ (i, disks) =>
         var result = List.empty[String]
@@ -291,6 +300,8 @@ object Tester{
 
   def stdDev[T: Numeric](xs: Iterable[T]): Double = math.sqrt(variance(xs))
 
+  def roundAt(p: Int)(n: Double): Double = { val s = math pow (10, p); (math round n * s) / s }
+
   /***
    * The main function...
    **/
@@ -305,9 +316,10 @@ object Tester{
     val tepsg       = params.tespg()
     val info        = params.info()
     val timestamp   = params.timestamp()
-    val Dpartitions = (cores * executors) * params.dpartitions()
+    val epsilon     = params.epsilon()
     cores       = params.cores()
     executors   = params.executors()
+    val Dpartitions = (cores * executors) * params.dpartitions()
 
     // Starting session...
     var timer = clocktime
@@ -356,22 +368,32 @@ object Tester{
     val maxy = boundary.getMaxY
     val dx = params.mfcustomx()
     val dy = params.mfcustomy()
-    val Xs = minx until maxx by dx
-    val Ys = miny until maxy by dy
+    val Xs = (minx until maxx by dx).map(x => roundAt(3)(x))
+    val Ys = (miny until maxy by dy).map(y => roundAt(3)(y))
     implicit class Crossable[X](xs: Traversable[X]) {
       def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
     }
     val g = Xs cross Ys
-    val error = 0.001
+//    logger.info(s"${g.map(_.toString()).mkString(" ")}")
+    val error = 0.0001
     val grids = g.toList.map(g => new Envelope(g._1, g._1 + dx - error, g._2, g._2 + dy - error))
+//    logger.info(s"${grids.map(_.toString()).mkString(" ")}")
     logger.info(s"Number of grid envelops: ${grids.size}")
-    val partitioner = new FlatGridPartitioner(grids.asJava)
-    points.spatialPartitioning(partitioner)
+    val f = new java.io.PrintWriter("/tmp/grids.wkt")
+    f.write(grids.zipWithIndex.map{h =>  s"${h._2}\t${envelope2Polygon(h._1).toText()}\n"}.mkString(""))
+    f.close()
+    MFPartitioner = new GridPartitioner(grids.asJava, epsilon, dx, dy, Xs.size, Ys.size)
+    logEnd(stage, timer, grids.size)
+
+    timer = clocktime
+    stage = "Default partitioner"
+    logStart(stage)
+    points.analyze()
+    points.spatialPartitioning(GridType.KDBTREE, Dpartitions)
     points.spatialPartitionedRDD.cache()
     val nPartitions = points.spatialPartitionedRDD.rdd.getNumPartitions
     logger.info(s"Number of partitions: $nPartitions")
-    logEnd(stage, timer, nPartitions
-    )
+    logEnd(stage, timer, nPartitions)
 
     // Running maximal finder...
     timer = System.currentTimeMillis()
