@@ -1,0 +1,85 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r echo=FALSE, include=FALSE, results='hide'}
+library(tidyverse)
+```
+
+```{r}
+fields = c("Timestamp", "Tag", "appId", "Cores", "Executors", "Epsilon", "Mu", "Delta", "Time", "Load")
+data_path = "~/Documents/PhD/Research/Scripts/R/R16/nohupCellSize.txt"
+spark_submit = enframe(read_lines(data_path), name="n", value="line") %>% select(line) %>% 
+  filter(grepl("spark-submit", line)) %>% separate(line, into=paste0("A", 1:13), sep = "--") %>% 
+  select(A11) %>% mutate(A11 = str_trim(A11)) %>% separate(A11, c(NA,"CellSize"), sep = " ")
+maximals = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>%
+  filter(grepl("MAXIMALS", line)) %>% separate(line, into = fields, sep = "\\|") %>%
+  mutate(Time = as.numeric(Time)) 
+data = bind_cols(maximals, spark_submit) %>%
+  group_by(CellSize) %>% summarise(Time = mean(Time))
+data$CellSize = factor(data$CellSize, levels = data$CellSize[order(as.numeric(data$CellSize))])
+head(data %>% arrange(CellSize))
+```
+
+
+```{r}
+p = ggplot(data = data, aes(x = CellSize, y = Time)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 0, hjust = 0)) +
+  labs(x="Cell size(m)", y="Time(s)", title="Execution time after varying cell size.") 
+plot(p)
+```
+
+* Cells are squares with length equal to 'Cell size'.  
+* Dataset: Berlin(x3), Executors: 10 (4 cores each), Epsilon: 100 m, Mu: 3.
+
+```{r}
+fields = c("Timestamp", "Tag", "appId", "Executors", "Cores", "Status", "Duration", "Stage", "Time", "Load","Bogus")
+stage1 = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>%
+  filter(grepl("E\\.", line)) %>% filter(grepl("END", line)) %>% separate(line, into = fields, sep = "\\|") %>%
+  mutate(StageE = Stage, TimeE = as.numeric(Time), LoadE = as.numeric(Load)) %>% select(StageE, TimeE, LoadE)
+stage2 = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>%
+  filter(grepl("F\\.", line)) %>% filter(grepl("END", line)) %>% separate(line, into = fields, sep = "\\|") %>%
+  mutate(StageF = Stage, TimeF = as.numeric(Time), LoadF = as.numeric(Load)) %>% select(StageF, TimeF, LoadF)
+data = bind_cols(stage1, stage2, spark_submit) %>%
+  group_by(CellSize) %>% summarise(TimeE = mean(TimeE), LoadE = mean(LoadE), TimeF = mean(TimeF)) %>%
+  arrange(CellSize)
+data$CellSize = factor(data$CellSize, levels = data$CellSize[order(as.numeric(data$CellSize))])
+head(data)
+```
+* TimeE: Execution time for stage E (Expansion stage).
+* LoadE: Number of disks replicated during expansions before to be evaluated by LCM stage
+* TimeF: Execution time for stage F (LCM stage) to get maximal disks.
+```{r}
+p = ggplot(data = data, aes(x = CellSize, y = TimeE)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 0, hjust = 0)) +
+  labs(x="Cell size(m)", y="Time(s)", title="Execution time during disk partitioning stage (Expansion stage).") 
+plot(p)
+```
+
+* Dataset: Berlin(x3), Executors: 10 (4 cores each), Epsilon: 100 m, Mu: 3.
+
+```{r}
+p = ggplot(data = data, aes(x = CellSize, y = TimeF)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 0, hjust = 0)) +
+  labs(x="Cell size(m)", y="Time(s)", title="Execution time of maximal disks prunning (LCM stage).") 
+plot(p)
+```
+
+* Dataset: Berlin(x3), Executors: 10 (4 cores each), Epsilon: 100 m, Mu: 3.
+
+```{r}
+p = ggplot(data = data, aes(x = CellSize, y = LoadE)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 0, hjust = 0)) +
+  labs(x="Cell size(m)", y="Number of disks", title="Number of disks after expansion stage.") 
+plot(p)
+```
+
+* Dataset: Berlin(x3), Executors: 10 (4 cores each), Epsilon: 100 m, Mu: 3.
+
