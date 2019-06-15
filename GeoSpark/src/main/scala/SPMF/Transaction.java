@@ -25,6 +25,8 @@ public class Transaction implements Comparable<Transaction>{
     private Integer[] items;
     private Double x = 0.0;
     private Double y = 0.0;
+    private Integer s = -1;
+    private Integer e = -1;
 
     Transaction(Integer[] items) {
     	originalTransaction = this;
@@ -38,6 +40,8 @@ public class Transaction implements Comparable<Transaction>{
     	this.offset = offset;
         this.x = transaction.getX();
         this.y = transaction.getY();
+        this.s = transaction.getStart();
+        this.e = transaction.getEnd();
     }
 
     public Transaction(Double x, Double y, String pids){
@@ -53,12 +57,29 @@ public class Transaction implements Comparable<Transaction>{
         this.y = y;
     }
 
+    public Transaction(Double x, Double y, Integer s, Integer e, String pids){
+        String[] arr = pids.split(" ");
+        int n = arr.length;
+        items = new Integer[n];
+        for(int i = 0; i < n; i++){
+            items[i] = Integer.parseInt(arr[i]);
+        }
+        originalTransaction = this;
+        this.offset = 0;
+        this.x = x;
+        this.y = y;
+        this.s = s;
+        this.e = e;
+    }
+
     public Integer[] getItems() {
         return items;
     }
     
     public Double getX() { return x; }
     public Double getY() { return y; }
+    public Integer getStart() { return s; }
+    public Integer getEnd()   { return e; }
     public int getOffset() { return offset; }
 
 	public int containsByBinarySearch(Integer item) {

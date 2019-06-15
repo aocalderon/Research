@@ -1,12 +1,11 @@
-import com.vividsolutions.jts.geom.{Point, Geometry, GeometryFactory, Coordinate, Envelope, Polygon, LinearRing}
-import com.vividsolutions.jts.geom.impl.CoordinateArraySequence
+import com.vividsolutions.jts.geom.{Point, Geometry, GeometryFactory, Coordinate, Envelope, Polygon}
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.storage.StorageLevel
 import org.datasyslab.geospark.enums.{FileDataSplitter, GridType, IndexType}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.spatialRDD.{CircleRDD, PointRDD}
-import org.datasyslab.geospark.spatialPartitioning.{FlatGridPartitioner, GridPartitioner}
+import org.datasyslab.geospark.spatialPartitioning.FlatGridPartitioner
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.StructType
@@ -18,11 +17,10 @@ import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.HashMap
 import java.io._
 
-object FF {
+object FF1 {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory();
   private val precision: Double = 0.001
-  private var defaultPartitioner: GridPartitioner = new GridPartitioner(List.empty[Envelope].asJava)
   private var tag: String = "-1"
   private var appID: String = "app-00000000000000-0000"
   private var startTime: Long = clocktime
@@ -55,6 +53,7 @@ object FF {
       case "KDBTREE"   => GridType.KDBTREE
       case "HILBERT"   => GridType.HILBERT
       case "VORONOI"   => GridType.VORONOI
+      case "CUSTOM"    => GridType.CUSTOM
     }
     import spark.implicits._
 
@@ -65,6 +64,8 @@ object FF {
     var report: RDD[Flock] = spark.sparkContext.emptyRDD[Flock]
     var F: PointRDD = new PointRDD(spark.sparkContext.emptyRDD[Point].toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
     F.analyze()
+    var partitioner = F.getPartitioner
+    val emptyPartitioner = F.getPartitioner
     for(timestamp <- pointset.keys.toList.sorted){
       // Finding maximal disks...
       tag = s"$timestamp"
@@ -72,7 +73,7 @@ object FF {
       stage = "1.Maximal disks found"
       logStart(stage)
       val T_i = pointset.get(timestamp).get
-      val C = new PointRDD(Tester.run(spark, T_i, defaultPartitioner, params, s"$timestamp").map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
+      val C = new PointRDD(MF2.run(spark, T_i, params, s"$timestamp").map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
       val nDisks = C.rawSpatialRDD.count()
       logEnd(stage, timer, nDisks, s"$timestamp")
 
@@ -86,6 +87,8 @@ object FF {
         logStart(stage)
 
         F.analyze()
+        F.setNumX(params.dcustomx())
+        F.setNumY(params.dcustomy())
         F.spatialPartitioning(gridType, Dpartitions)
         F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
         val buffers = new CircleRDD(C, distance)
@@ -157,8 +160,60 @@ object FF {
           }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg
         )
         G_prime.analyze()
-        val nG_prime = G_prime.rawSpatialRDD.count()
+        var nG_prime = 0
+        if(G_prime.boundary() != null){
+          val numX = params.ffcustomx()
+          val numY = params.ffcustomy()
+          G_prime.setNumX(numX.toInt)
+          G_prime.setNumY(numY.toInt)
+          G_prime.spatialPartitioning(gridType, FFpartitions)
+          G_prime.spatialPartitionedRDD.cache()
+          nG_prime = G_prime.spatialPartitionedRDD.count().toInt
+        }
         logEnd(stage, timer, nG_prime, s"$timestamp")
+
+        if(debug){
+          if(G_prime.boundary() != null){
+            logger.info(s"Computing stats for timestamps ${timestamp}")
+            val nPartitions = G_prime.spatialPartitionedRDD.rdd.getNumPartitions
+            val stats = G_prime.spatialPartitionedRDD.rdd.mapPartitions(d => List(d.length).toIterator).persist(StorageLevel.MEMORY_ONLY)
+
+            val info = stats.collect()
+            val avg  = mean(info)
+            val sdev = stdDev(info)
+            val vari = variance(info)
+            val a = s"|$nPartitions"
+            val b = s"|${stats.min()}"
+            val c = s"|${stats.max()}"
+            val d = s"|${"%.2f".format(avg)}"
+            val e = s"|${"%.2f".format(sdev)}"
+            val f = s"|${"%.2f".format(vari)}"
+            logger.info(s"FF_PINFO${a}${b}${c}${d}${e}${f}")
+
+            val grids = G_prime.getPartitioner.getGrids().asScala.toList.map{ e =>
+              s"POLYGON((${e.getMinX} ${e.getMinY},${e.getMinX} ${e.getMaxY},${e.getMaxX} ${e.getMaxY},${e.getMaxX} ${e.getMinY},${e.getMinX} ${e.getMinY}))\n"
+            }
+            val filename2 = s"/tmp/grids_${spatial}_T${timestamp}_N${executors}.wkt"
+            val pw2 = new PrintWriter(new File(filename2))
+            pw2.write(grids.mkString(""))
+            pw2.close
+          }
+          logger.info(s"Saving candidate set at timestamp ${timestamp}...")
+          val data = G_prime.rawSpatialRDD.rdd.map{ p =>
+            val arr = p.getUserData.toString.split(";")
+            val pids = arr(0)
+            val start = arr(1)
+            val end = arr(2)
+            val x = p.getX
+            val y = p.getY
+            s"${x}\t${y}\t${pids}\t${start}\t${end}\n"
+          }.collect().mkString("")
+          val filename = s"/tmp/P_N${executors}_E${epsilon}_T${timestamp}.tsv"
+          val pw = new PrintWriter(filename)
+          pw.write(data)
+          pw.close
+          logger.info(s"$filename has been saved.")
+        }
 
         // Prunning flocks by expansions...
         timer = System.currentTimeMillis()
@@ -244,8 +299,9 @@ object FF {
     point
   }
 
+  import com.vividsolutions.jts.index.strtree.STRtree
   import org.apache.spark.Partitioner
-  import SPMF.{AlgoLCM2, Transactions, Transaction}
+  import SPMF.{AlgoLCM2, Transactions}
 
   class ExpansionPartitioner(partitions: Int) extends Partitioner{
     override def numPartitions: Int = partitions
@@ -273,49 +329,84 @@ object FF {
   def pruneFlockByExpansions(F: PointRDD, epsilon: Double, timestamp: Int, spark: SparkSession, params: FFConf): RDD[String] = {
     import spark.implicits._
     val debug = params.ffdebug()
+    val rtree = new STRtree()
+
+    if(debug){
+      //F.rawSpatialRDD.rdd.map(_.getUserData.toString()).toDF("F")
+        //.filter($"F".contains("297 2122 2224"))
+        //.orderBy("F").show(F.rawSpatialRDD.rdd.count.toInt, false)
+    }
 
     var timer = System.currentTimeMillis()
     var stage = "4a.Making expansions"
     logStart(stage)
 
-    val r = epsilon / 2.0 + precision
-    val FCircles = new CircleRDD(F, r)
-    FCircles.spatialPartitioning(defaultPartitioner)
-    FCircles.spatialPartitionedRDD.cache()
-    val nFCircles = FCircles.spatialPartitionedRDD.rdd.count()
-    val grids = defaultPartitioner.getGrids.asScala.toList.zipWithIndex.map(g => g._2 -> g._1).toMap
-    logEnd(stage, timer, nFCircles, s"$timestamp")
+    val npartitions = (params.ffcustomx() * params.ffcustomy()).toInt
+    val cellsInX = params.ffcustomx().toInt
+    val grids = F.getPartitioner.getGrids.asScala.toList
+    val expansionsRDD = GridExpander.run(spark, F, grids, cellsInX, params)
+      .filter(_._1 < npartitions)
+      .partitionBy(new ExpansionPartitioner(npartitions)).persist(StorageLevel.MEMORY_ONLY)
+    val nExpansionsRDD = expansionsRDD.count()
+    val expansions = GridExpander.expansions
+    logEnd(stage, timer, nExpansionsRDD, s"$timestamp")
 
     timer = System.currentTimeMillis()
     stage = "4b.Finding maximals"
     logStart(stage)
-    val P = FCircles.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (i, disks) =>
-      val transactions = disks.map{ d =>
-        val x = d.getCenterPoint.x
-        val y = d.getCenterPoint.y
-        val arr = d.getUserData.toString().split(";")
-        val pids = arr(0)
-        val s = arr(1).toInt
-        val e = arr(2).toInt
-        new Transaction(x, y, s, e, pids)
-      }.toList.asJava
-      val LCM = new AlgoLCM2()
-      val data = new Transactions(transactions, 0)
-      LCM.run(data)
-      val result = LCM.getPointsAndPids.asScala
-         .map{ p =>
-           val pids = p.getItems.mkString(" ")
-           val grid = grids(i)
-           val point = geofactory.createPoint(new Coordinate(p.getX, p.getY))
-
-           val flag = isNotInExpansionArea(point, grid, 0.0)
-           ((pids, p.getStart, p.getEnd, p.getX, p.getY),  flag)
-         }
-         .filter(_._2).map(_._1)
-         .map(p => s"${p._1};${p._2};${p._3};${p._4};${p._5}").toList
-       result.toIterator
+    val candidates = expansionsRDD.map(_._2).mapPartitionsWithIndex{ (expansion_id, disks) =>
+      val transactions = disks.map{ d => d.getUserData.toString().split(";")(0).split(" ").map(new Integer(_)).toList.asJava}.toList.distinct.asJava
+      val LCM = new AlgoLCM2
+      val data = new Transactions(transactions)
+      LCM.run(data).asScala.map{ maximal =>
+        (expansion_id, maximal.asScala.toList.map(_.toInt))
+      }.toIterator
     }.persist(StorageLevel.MEMORY_ONLY)
-    val nP = P.count()
+    val nCandidates = candidates.count()
+    logEnd(stage, timer, nCandidates, s"$timestamp")
+
+    if(debug){
+      //candidates.map(p => (p._2.sorted.mkString(" "), p._1)).toDF("C", "E")
+        //.filter($"C".contains("297 2122 2224"))
+        //.sort("C").show(candidates.count().toInt, false)
+    }
+
+    timer = System.currentTimeMillis()
+    stage = "4c.Selecting and mapping"
+    logStart(stage)
+    val f0 = F.rawSpatialRDD.rdd.map(f => getFlocksFromGeom(f))
+      .map(f => (f.pids,f.start,f.end,f.center.getX,f.center.getY))
+      .toDF("pids","start","end","x","y")
+    val f1 = candidates.toDF("eid", "pids")
+    val expansions_map = expansions.map(e => e._2 -> e._1).toMap
+    val prunned = f0.join(f1, "pids")
+      .select($"eid", $"pids", $"start", $"end", $"x", $"y")
+      .map{ m =>
+        val expansion = expansions_map(m.getInt(0))
+        val pids = m.getList[Int](1).asScala.toList.mkString(" ")
+        val start = m.getInt(2)
+        val end = m.getInt(3)
+        val x = m.getDouble(4)
+        val y = m.getDouble(5)
+        val point = geofactory.createPoint(new Coordinate(x, y))
+        val notInExpansion = isNotInExpansionArea(point, expansion, epsilon)
+        val f = s"${pids};${start};${end};${point.getX};${point.getY}"
+        (f, notInExpansion, expansion.toString())
+      }.rdd.persist(StorageLevel.MEMORY_ONLY)
+    val nPrunned = prunned.count()
+    logEnd(stage, timer, nPrunned, s"$timestamp")
+
+    if(debug){
+      //prunned.sortBy(p => p._1).toDF("flock", "notInExpansion", "Exp")
+        //.filter($"flock".contains("297 2122 2224"))
+        //.show(prunnedRDD.count().toInt, false)
+    }
+
+    timer = System.currentTimeMillis()
+    stage = "4d.Filtering and distinc"
+    logStart(stage)
+    val P = prunned.filter(_._2).map(_._1).distinct().persist(StorageLevel.MEMORY_ONLY)
+    val nP = prunned.count()
     logEnd(stage, timer, nP, s"$timestamp")
 
     P
@@ -343,42 +434,6 @@ object FF {
 
   def stdDev[T: Numeric](xs: Iterable[T]): Double = math.sqrt(variance(xs))
 
-  def envelope2Polygon(e: Envelope): Polygon = {
-    val minX = e.getMinX()
-    val minY = e.getMinY()
-    val maxX = e.getMaxX()
-    val maxY = e.getMaxY()
-    val p1 = new Coordinate(minX, minY)
-    val p2 = new Coordinate(minX, maxY)
-    val p3 = new Coordinate(maxX, maxY)
-    val p4 = new Coordinate(maxX, minY)
-    val coordArraySeq = new CoordinateArraySequence( Array(p1,p2,p3,p4,p1), 2)
-    val ring = new LinearRing(coordArraySeq, geofactory)
-    new Polygon(ring, null, geofactory)
-  }
-
-  def roundAt(p: Int)(n: Double): Double = { val s = math pow (10, p); (math round n * s) / s }
-
-  def getDefaultPartitioner(boundary: Envelope, epsilon: Double, dx: Double, dy: Double): GridPartitioner = {
-    val minx = boundary.getMinX
-    val miny = boundary.getMinY
-    val maxx = boundary.getMaxX
-    val maxy = boundary.getMaxY
-    val Xs = (minx until maxx by dx).map(x => roundAt(3)(x))
-    val Ys = (miny until maxy by dy).map(y => roundAt(3)(y))
-    implicit class Crossable[X](xs: Traversable[X]) {
-      def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
-    }
-    val g = Xs cross Ys
-    val error = 0.0000001
-    val grids = g.toList.map(g => new Envelope(g._1, g._1 + dx - error, g._2, g._2 + dy - error))
-    logger.info(s"Number of grid envelops: ${grids.size}")
-    //val f = new java.io.PrintWriter("/tmp/grids.wkt")
-    //f.write(grids.zipWithIndex.map{h =>  s"${h._2}\t${envelope2Polygon(h._1).toText()}\n"}.mkString(""))
-    //f.close()
-    new GridPartitioner(grids.asJava, epsilon, dx, dy, Xs.size, Ys.size)
-  }
-
   /**************************************
    * The main function...   
    *************************************/
@@ -388,7 +443,6 @@ object FF {
     val port         = params.port()
     val input        = params.input()
     val offset       = params.offset()
-    val epsilon      = params.epsilon()
     val fftimestamp  = params.fftimestamp()
     val debug        = params.ffdebug()
     cores            = params.cores()
@@ -421,11 +475,6 @@ object FF {
     logStart(stage)
     val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, Dpartitions)
     points.CRSTransform(params.sespg(), params.tespg())
-    points.analyze()
-    val fullBoundary = points.boundary()
-    val dx = params.ffcustomx()
-    val dy = params.ffcustomy()
-    defaultPartitioner = getDefaultPartitioner(fullBoundary, epsilon, dx, dy)
     val nPoints = points.rawSpatialRDD.count()
     val timestamps = points.rawSpatialRDD.rdd.map(_.getUserData.toString().split("\t").reverse.head.toInt).distinct.collect()
     val pointset: HashMap[Int, PointRDD] = new HashMap()

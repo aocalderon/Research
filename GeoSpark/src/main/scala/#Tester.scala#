@@ -58,7 +58,6 @@ object Tester{
     var timer = System.currentTimeMillis()
     var stage = "A.Points indexed"
     logStart(stage)
-    points.spatialPartitioning(partitioner, Dpartitions)
     val pointsBuffer = new CircleRDD(points, epsilon + precision)
     pointsBuffer.analyze()
     pointsBuffer.spatialPartitioning(points.getPartitioner)
@@ -131,22 +130,12 @@ object Tester{
     val diskCenters = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
     val diskCircles = new CircleRDD(diskCenters, r + precision)
     diskCenters.analyze()
-    //diskCenters.spatialPartitioning(GridType.EQUALGRID, params.mfpartitions())
     diskCenters.spatialPartitioning(MFPartitioner)
     diskCenters.spatialPartitionedRDD.cache()
     diskCircles.spatialPartitioning(MFPartitioner)
     diskCircles.spatialPartitionedRDD.cache()
     val nDisksRDD = diskCenters.spatialPartitionedRDD.count()
     logEnd(stage, timer, nDisksRDD)
-
-    if(debug){
-      val f = new java.io.PrintWriter("/tmp/disks.wkt")
-      val disksWKT = diskCenters.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (i, points) =>
-        points.map(p => s"$i\t${p.toText()}\n").toIterator
-      }
-      f.write(disksWKT.collect().mkString(""))
-      f.close()
-    }
 
     // Finding maximal disks...
     timer = System.currentTimeMillis()

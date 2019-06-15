@@ -109,7 +109,7 @@ public class AlgoLCM2 {
                         if(!itemset.isEmpty()) {
                             frequentCount++;
                             patterns.add(itemset);
-			    points_and_pids.add(transactionsPe.get(0));
+                            points_and_pids.add(transactionsPe.get(0));
                         }
                     }
 
