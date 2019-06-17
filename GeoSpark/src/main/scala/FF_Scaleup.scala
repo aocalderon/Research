@@ -22,7 +22,8 @@ object FF {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory();
   private val precision: Double = 0.001
-  private var defaultPartitioner: GridPartitioner = new GridPartitioner(List.empty[Envelope].asJava)
+  private var MF_Partitioner: GridPartitioner = new GridPartitioner(List.empty[Envelope].asJava)
+  private var FF_Partitioner: GridPartitioner = new GridPartitioner(List.empty[Envelope].asJava)
   private var tag: String = "-1"
   private var appID: String = "app-00000000000000-0000"
   private var startTime: Long = clocktime
@@ -72,7 +73,7 @@ object FF {
       stage = "1.Maximal disks found"
       logStart(stage)
       val T_i = pointset.get(timestamp).get
-      val C = new PointRDD(Tester.run(spark, T_i, defaultPartitioner, params, s"$timestamp").map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
+      val C = new PointRDD(MF.run(spark, T_i, MF_Partitioner, params, s"$timestamp").map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
       val nDisks = C.rawSpatialRDD.count()
       logEnd(stage, timer, nDisks, s"$timestamp")
 
@@ -86,7 +87,7 @@ object FF {
         logStart(stage)
 
         F.analyze()
-        F.spatialPartitioning(gridType, Dpartitions)
+        F.spatialPartitioning(FF_Partitioner)
         F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
         val buffers = new CircleRDD(C, distance)
         buffers.spatialPartitioning(F.getPartitioner)
@@ -280,10 +281,10 @@ object FF {
 
     val r = epsilon / 2.0 + precision
     val FCircles = new CircleRDD(F, r)
-    FCircles.spatialPartitioning(defaultPartitioner)
+    FCircles.spatialPartitioning(FF_Partitioner)
     FCircles.spatialPartitionedRDD.cache()
     val nFCircles = FCircles.spatialPartitionedRDD.rdd.count()
-    val grids = defaultPartitioner.getGrids.asScala.toList.zipWithIndex.map(g => g._2 -> g._1).toMap
+    val grids = FF_Partitioner.getGrids.asScala.toList.zipWithIndex.map(g => g._2 -> g._1).toMap
     logEnd(stage, timer, nFCircles, s"$timestamp")
 
     timer = System.currentTimeMillis()
@@ -359,23 +360,27 @@ object FF {
 
   def roundAt(p: Int)(n: Double): Double = { val s = math pow (10, p); (math round n * s) / s }
 
-  def getDefaultPartitioner(boundary: Envelope, epsilon: Double, dx: Double, dy: Double): GridPartitioner = {
+  implicit class Crossable[X](xs: Traversable[X]) {
+    def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
+  }
+
+  def getPartitionerByCellNumber(boundary: Envelope, epsilon: Double, x: Double, y: Double): GridPartitioner = {
+    val dx = boundary.getWidth / x
+    val dy = boundary.getHeight / y
+    getPartitionerByCellSize(boundary, epsilon, dx, dy)
+  }
+
+  def getPartitionerByCellSize(boundary: Envelope, epsilon: Double, dx: Double, dy: Double): GridPartitioner = {
     val minx = boundary.getMinX
     val miny = boundary.getMinY
     val maxx = boundary.getMaxX
     val maxy = boundary.getMaxY
     val Xs = (minx until maxx by dx).map(x => roundAt(3)(x))
     val Ys = (miny until maxy by dy).map(y => roundAt(3)(y))
-    implicit class Crossable[X](xs: Traversable[X]) {
-      def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
-    }
     val g = Xs cross Ys
     val error = 0.0000001
     val grids = g.toList.map(g => new Envelope(g._1, g._1 + dx - error, g._2, g._2 + dy - error))
     logger.info(s"Number of grid envelops: ${grids.size}")
-    //val f = new java.io.PrintWriter("/tmp/grids.wkt")
-    //f.write(grids.zipWithIndex.map{h =>  s"${h._2}\t${envelope2Polygon(h._1).toText()}\n"}.mkString(""))
-    //f.close()
     new GridPartitioner(grids.asJava, epsilon, dx, dy, Xs.size, Ys.size)
   }
 
@@ -391,6 +396,7 @@ object FF {
     val epsilon      = params.epsilon()
     val fftimestamp  = params.fftimestamp()
     val debug        = params.ffdebug()
+    val info         = params.info()
     cores            = params.cores()
     executors        = params.executors()
     portUI           = params.portui()
@@ -423,9 +429,12 @@ object FF {
     points.CRSTransform(params.sespg(), params.tespg())
     points.analyze()
     val fullBoundary = points.boundary()
-    val dx = params.ffcustomx()
-    val dy = params.ffcustomy()
-    defaultPartitioner = getDefaultPartitioner(fullBoundary, epsilon, dx, dy)
+    val mf_x = params.mfcustomx()
+    val mf_y = params.mfcustomy()
+    MF_Partitioner = getPartitionerByCellNumber(fullBoundary, epsilon, mf_x, mf_y)
+    val ff_x = params.ffcustomx()
+    val ff_y = params.ffcustomy()
+    FF_Partitioner = getPartitionerByCellNumber(fullBoundary, epsilon, ff_x, ff_y)
     val nPoints = points.rawSpatialRDD.count()
     val timestamps = points.rawSpatialRDD.rdd.map(_.getUserData.toString().split("\t").reverse.head.toInt).distinct.collect()
     val pointset: HashMap[Int, PointRDD] = new HashMap()
@@ -454,19 +463,19 @@ object FF {
     timer = clocktime
     stage = "Session closed"
     logStart(stage)
-    /*
-    InfoTracker.master = master
-    InfoTracker.port = portUI
-    InfoTracker.applicationID = appID
-    InfoTracker.executors = executors
-    InfoTracker.cores = cores
-    val app_count = appID.split("-").reverse.head
-    val f = new java.io.PrintWriter(s"${params.output()}app-${app_count}_info.tsv")
-    f.write(InfoTracker.getExectutorsInfo())
-    f.write(InfoTracker.getStagesInfo())
-    f.write(InfoTracker.getTasksInfo())
-    f.close()
-     */
+    if(info){
+      InfoTracker.master = master
+      InfoTracker.port = portUI
+      InfoTracker.applicationID = appID
+      InfoTracker.executors = executors
+      InfoTracker.cores = cores
+      val app_count = appID.split("-").reverse.head
+      val f = new java.io.PrintWriter(s"${params.output()}app-${app_count}_info.tsv")
+      f.write(InfoTracker.getExectutorsInfo())
+      f.write(InfoTracker.getStagesInfo())
+      f.write(InfoTracker.getTasksInfo())
+      f.close()
+    }
     spark.close()
     logEnd(stage, timer, 0, tag)    
   }

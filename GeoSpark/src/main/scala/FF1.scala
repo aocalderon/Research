@@ -53,7 +53,6 @@ object FF1 {
       case "KDBTREE"   => GridType.KDBTREE
       case "HILBERT"   => GridType.HILBERT
       case "VORONOI"   => GridType.VORONOI
-      case "CUSTOM"    => GridType.CUSTOM
     }
     import spark.implicits._
 
@@ -87,8 +86,6 @@ object FF1 {
         logStart(stage)
 
         F.analyze()
-        F.setNumX(params.dcustomx())
-        F.setNumY(params.dcustomy())
         F.spatialPartitioning(gridType, Dpartitions)
         F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
         val buffers = new CircleRDD(C, distance)
@@ -445,6 +442,7 @@ object FF1 {
     val offset       = params.offset()
     val fftimestamp  = params.fftimestamp()
     val debug        = params.ffdebug()
+    val info         = params.info()
     cores            = params.cores()
     executors        = params.executors()
     portUI           = params.portui()
@@ -503,19 +501,19 @@ object FF1 {
     timer = clocktime
     stage = "Session closed"
     logStart(stage)
-    /*
-    InfoTracker.master = master
-    InfoTracker.port = portUI
-    InfoTracker.applicationID = appID
-    InfoTracker.executors = executors
-    InfoTracker.cores = cores
-    val app_count = appID.split("-").reverse.head
-    val f = new java.io.PrintWriter(s"${params.output()}app-${app_count}_info.tsv")
-    f.write(InfoTracker.getExectutorsInfo())
-    f.write(InfoTracker.getStagesInfo())
-    f.write(InfoTracker.getTasksInfo())
-    f.close()
-     */
+    if(info){
+      InfoTracker.master = master
+      InfoTracker.port = portUI
+      InfoTracker.applicationID = appID
+      InfoTracker.executors = executors
+      InfoTracker.cores = cores
+      val app_count = appID.split("-").reverse.head
+      val f = new java.io.PrintWriter(s"${params.output()}app-${app_count}_info.tsv")
+      f.write(InfoTracker.getExectutorsInfo())
+      f.write(InfoTracker.getStagesInfo())
+      f.write(InfoTracker.getTasksInfo())
+      f.close()
+    }
     spark.close()
     logEnd(stage, timer, 0, tag)    
   }

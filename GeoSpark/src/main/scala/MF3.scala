@@ -15,7 +15,8 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import scala.collection.JavaConverters._
-import SPMF.{AlgoLCM2, Transactions, Transaction}
+import SPMF.{AlgoLCM2, Transactions}
+import SPMF.ScalaLCM.{IterativeLCMmax, Transaction}
 
 object MF3{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -47,6 +48,7 @@ object MF3{
       case "KDBTREE"   => GridType.KDBTREE
       case "HILBERT"   => GridType.HILBERT
       case "VORONOI"   => GridType.VORONOI
+      case "CUSTOM"    => GridType.CUSTOM
     }
     if(params.tag() == ""){ tag = s"$info"} else { tag = s"${params.tag()}|${info}" }
     var Dpartitions: Int  = (cores * executors) * params.dpartitions()
@@ -56,14 +58,15 @@ object MF3{
     var timer = System.currentTimeMillis()
     var stage = "A.Points indexed"
     logStart(stage)
+
     val pointsBuffer = new CircleRDD(points, epsilon + precision)
     points.analyze()
     pointsBuffer.analyze()
-    points.spatialPartitioning(partitioner, MFpartitions) // KDBTREE works better that EQUALGRID and QUADTREE at this point...
+    points.spatialPartitioning(GridType.KDBTREE, Dpartitions) // KDBTREE works better that CUSTOM and QUADTREE at this point...
     pointsBuffer.spatialPartitioning(points.getPartitioner)
-    points.buildIndex(IndexType.QUADTREE, true) // QUADTREE works better as an indexer than RTREE...
+    points.buildIndex(IndexType.QUADTREE, true) 
     points.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
-    points.spatialPartitionedRDD.cache()
+    pointsBuffer.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
     logEnd(stage, timer, points.rawSpatialRDD.count())
 
     // Finding pairs...
@@ -105,6 +108,8 @@ object MF3{
     val centersRDD = new PointRDD(centers.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
     val centersBuffer = new CircleRDD(centersRDD, r + precision)
     centersBuffer.spatialPartitioning(points.getPartitioner)
+
+    timer = System.currentTimeMillis()
     val disks = JoinQuery.DistanceJoinQueryFlat(points, centersBuffer, usingIndex, considerBoundary)
       .rdd.map{ d =>
         val c = d._1.getEnvelope.getCentroid
@@ -123,61 +128,162 @@ object MF3{
     val nDisks = disks.count()
     logEnd(stage, timer, nDisks)
 
-    // Partition disks...
+    // Indexing disks...
     timer = System.currentTimeMillis()
-    stage = "E.Disks partitioned"
+    stage = "E.Disks indexed"
     logStart(stage)
-    val diskCenters = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
-    val diskCircles = new CircleRDD(diskCenters, r + precision)
-    diskCenters.analyze()
-    diskCenters.spatialPartitioning(points.getPartitioner)
-    diskCenters.spatialPartitionedRDD.cache()
-    diskCircles.spatialPartitioning(points.getPartitioner)
-    diskCircles.spatialPartitionedRDD.cache()
-    val nDisksRDD = diskCenters.spatialPartitionedRDD.count()
+    val disksRDD = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
+    val numX = params.mfcustomx().toInt
+    val numY = params.mfcustomy().toInt
+    disksRDD.setNumX(numX)
+    disksRDD.setNumY(numY)
+    disksRDD.analyze()
+    if(spatial == "CUSTOM"){ MFpartitions = numX * numY }
+    disksRDD.spatialPartitioning(partitioner, MFpartitions)
+    disksRDD.spatialPartitionedRDD.cache()
+    val grids = disksRDD.getPartitioner.getGrids.asScala.toList
+    val nDisksRDD = disksRDD.spatialPartitionedRDD.count()
     logEnd(stage, timer, nDisksRDD)
+
+    if(debug){
+      logger.info(s"Saving candidate set $tag...")
+      val data = disksRDD.rawSpatialRDD.rdd.map{ p =>
+        val pids = p.getUserData.toString
+        val x = p.getX
+        val y = p.getY
+        s"${x}\t${y}\t${pids}\n"
+      }.collect().mkString("")
+      
+      val pw = new java.io.PrintWriter(s"/tmp/PartMF_E${epsilon}_N${executors}.tsv")
+      pw.write(data)
+      pw.close
+    }
+
+    // Getting expansions...
+    timer = System.currentTimeMillis()
+    stage = "F.Expansions gotten"
+    logStart(stage)
+    val npartitions = (params.mfcustomx() * params.mfcustomy()).toInt
+    val cellsInX = params.mfcustomx().toInt
+    var expansions = List.empty[(Envelope, Int)]
+    var expansionsRDD = spark.sparkContext.emptyRDD[(Int, Point)]
+    var nExpansionsRDD = 0L
+
+    if(params.expander()){
+      /*
+      val rtree = new STRtree()
+      expansions = disksRDD.getPartitioner.getGrids.asScala.map{ e =>
+        new Envelope(e.getMinX - epsilon, e.getMaxX + epsilon, e.getMinY - epsilon, e.getMaxY + epsilon)
+      }.toList.zipWithIndex
+      expansions.foreach{e => rtree.insert(e._1, e._2)}
+      expansionsRDD = disksRDD.spatialPartitionedRDD.rdd.flatMap{ disk =>
+        rtree.query(disk.getEnvelopeInternal).asScala.map{expansion_id =>
+          (expansion_id.asInstanceOf[Int], disk)
+        }.toList
+      }.partitionBy(new ExpansionPartitioner(npartitions)).persist(StorageLevel.MEMORY_ONLY)
+      nExpansionsRDD = expansionsRDD.count()
+       */
+    } else {
+      expansionsRDD = GridExpander.run(spark, disksRDD, grids, cellsInX, params).filter(_._1 < npartitions)
+        .partitionBy(new ExpansionPartitioner(npartitions)).persist(StorageLevel.MEMORY_ONLY)
+      nExpansionsRDD = expansionsRDD.count()
+      expansions = GridExpander.expansions
+    }
+    logEnd(stage, timer, nExpansionsRDD)
+
+    var statsTime = 0.0
+    if(debug){
+      val startStats = System.currentTimeMillis()
+      val nPartitions = expansionsRDD.getNumPartitions
+      val stats = expansionsRDD.mapPartitions(d => List(d.length).toIterator)
+        .persist(StorageLevel.MEMORY_ONLY)
+      val data = stats.collect()
+      val avg  = mean(data)
+      val sdev = stdDev(data)
+      val vari = variance(data)
+      logger.info(s"Partitions:\t$nPartitions")
+      logger.info(s"Min:\t${stats.min()}")
+      logger.info(s"Max:\t${stats.max()}")
+      logger.info(s"Avg:\t${"%.2f".format(avg)}")
+      logger.info(s"Sd: \t${"%.2f".format(sdev)}")
+      logger.info(s"Var:\t${"%.2f".format(vari)}")
+      statsTime = System.currentTimeMillis() - startStats
+    }
 
     // Finding maximal disks...
     timer = System.currentTimeMillis()
-    stage = "F.Maximal disks found"
+    stage = "G.Maximal disks found"
     logStart(stage)
-    val grids = diskCenters.getPartitioner.getGrids.asScala.toList.zipWithIndex.map(g => g._2 -> g._1).toMap
-    val nGrids = grids.size
-    val maximals = diskCircles.spatialPartitionedRDD.rdd
-      .mapPartitionsWithIndex{ (i, disks) =>
-        var result = List.empty[String]
-        if(i == MFpartitions && spatial == "CUSTOM"){
-        } else {
-          val transactions = disks.map{ d =>
-            val x = d.getCenterPoint.x
-            val y = d.getCenterPoint.y
-            val pids = d.getUserData.toString()
-            new Transaction(x, y, pids)
-          }.toList.asJava
-          val LCM = new AlgoLCM2()
-          val data = new Transactions(transactions, 0)
-          LCM.run(data)
-          result = LCM.getPointsAndPids.asScala
-            .map{ p =>
-              val pids = p.getItems.mkString(" ")
-              val grid = grids(i)
-              val point = geofactory.createPoint(new Coordinate(p.getX, p.getY))
-              
-              val flag = isNotInExpansionArea(point, grid, 0.0)
-              ((pids, p.getX, p.getY),  flag)
-            }
-            .filter(_._2).map(_._1)
-            .map(p => s"${p._1}\t${p._2}\t${p._3}\n").toList
-        }
-        result.toIterator
-      }.persist(StorageLevel.MEMORY_ONLY)
+    val candidates = expansionsRDD.map(_._2).mapPartitionsWithIndex{ (expansion_id, disks) =>
+      val transactions = disks.map{ d =>
+        d.getUserData.toString().split(" ").map(new Integer(_)).toList.asJava
+      }.toList.asJava
+      val LCM = new AlgoLCM2
+      val data = new Transactions(transactions)
+      LCM.run(data).asScala.map{ maximal =>
+        (expansion_id, maximal.asScala.toList.map(_.toInt))
+      }.toIterator
+    }.persist(StorageLevel.MEMORY_ONLY)
+    val nCandidates = candidates.count()
+    logEnd(stage, timer, nCandidates)
+
+    // Prunning maximal disks...
+    timer = System.currentTimeMillis()
+    stage = "H.Maximal disks prunned"
+    logStart(stage)
+    var maximals = spark.sparkContext.emptyRDD[String]
+    val points_positions = points.spatialPartitionedRDD.rdd.map{ point =>
+      val point_id = point.getUserData.toString().split("\t").head.trim().toInt
+      (point_id, point.getX, point.getY)
+    }.toDF("point_id1", "x", "y")
+
+    val candidates_points = candidates
+      .toDF("expansion_id", "points_ids")
+      .withColumn("maximal_id", monotonically_increasing_id())
+      .withColumn("point_id2", explode($"points_ids"))
+      .select("expansion_id", "maximal_id", "point_id2")
+    val expansions_map = expansions.map(e => e._2 -> e._1).toMap
+    val maximals0 = points_positions.join(candidates_points, $"point_id1" === $"point_id2")
+      .groupBy($"expansion_id", $"maximal_id")
+      .agg(min($"x"), min($"y"), max($"x"), max($"y"), collect_list("point_id1"))
+      .map{ m =>
+        val expansion = expansions_map(m.getInt(0))
+        val x = (m.getDouble(2) + m.getDouble(4)) / 2.0
+        val y = (m.getDouble(3) + m.getDouble(5)) / 2.0
+        val pids = m.getList[Int](6).asScala.toList.sorted.mkString(" ")
+        val point = geofactory.createPoint(new Coordinate(x, y))
+        val notInExpansion = isNotInExpansionArea(point, expansion, epsilon)
+        (s"${pids}\t${x}\t${y}", notInExpansion, expansion.toString())
+      }
+
+    maximals = maximals0.filter(_._2).map(_._1).rdd.distinct()
     val nMaximals = maximals.count()
     logEnd(stage, timer, nMaximals)
 
+    if(debug){
+      val maxims = maximals.map{ m =>
+        val arr = m.split(";")
+        s"${arr(0)},POINT(${arr(1)} ${arr(2)})\n"
+      }.toDF("line").sort($"line").rdd.map(_.getString(0))
+      saveLines(maxims, "/tmp/maximals.wkt")
+      val grids = disksRDD.getPartitioner.getGrids().asScala.toList.map{ e =>
+        s"POLYGON((${e.getMinX} ${e.getMinY},${e.getMinX} ${e.getMaxY},${e.getMaxX} ${e.getMaxY},${e.getMaxX} ${e.getMinY},${e.getMinX} ${e.getMinY}))\n"
+      }
+      saveList(grids, s"/tmp/grids_${spatial}_${executors}.wkt")
+      val expans = expansions.map{ ex =>
+        val e = ex._1
+        s"POLYGON((${e.getMinX} ${e.getMinY},${e.getMinX} ${e.getMaxY},${e.getMaxX} ${e.getMaxY},${e.getMaxX} ${e.getMinY},${e.getMinX} ${e.getMinY}))\n"
+      }
+      saveList(expans.toList, "/tmp/expansions.wkt")
+      val disks = disksRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (i, data) =>
+        data.map(d => s"${d.getUserData.toString()},POINT(${d.getX} ${d.getY}),${i}\n")
+      }.sortBy(_.toString())
+      saveLines(disks, "/tmp/disks.wkt")
+      val candids = candidates.map(_._2.sorted.mkString(" ") ++ "\n").sortBy(_.toString())
+      saveLines(candids, "/tmp/candidates.txt")
+    }
     val endTime = System.currentTimeMillis()
-    val executionTime = (endTime - startTime) / 1000.0
-
-    logger.info(s"MAXIMALS|$appID|$cores|$executors|$epsilon|$mu|$nGrids|$executionTime|$nMaximals")
+    val totalTime = (endTime - startTime) / 1000.0
 
     maximals
   }
@@ -301,7 +407,7 @@ object MF3{
     val offset      = params.offset()
     val sepsg       = params.sespg()
     val tepsg       = params.tespg()
-    val info        = params.info()
+    val info       = params.info()
     val timestamp   = params.timestamp()
     val Dpartitions = (cores * executors) * params.dpartitions()
     cores       = params.cores()
