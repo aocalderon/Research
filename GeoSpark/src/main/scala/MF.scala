@@ -183,7 +183,7 @@ object MF{
             .map(p => s"${p._1}\t${p._2}\t${p._3}\n").toList
         }
         result.toIterator
-      }.persist(StorageLevel.MEMORY_ONLY)
+      }.cache()
     val nMaximals = maximals.count()
     logEnd(stage, timer, nMaximals)
     val localEnd = clocktime
