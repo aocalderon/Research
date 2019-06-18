@@ -55,6 +55,7 @@ object MF{
     var MFpartitions: Int = params.mfpartitions()
 
     // Indexing points...
+    val localStart = clocktime
     var timer = System.currentTimeMillis()
     var stage = "A.Points indexed"
     logStart(stage)
@@ -130,18 +131,17 @@ object MF{
     logStart(stage)
     val diskCenters = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
     val diskCircles = new CircleRDD(diskCenters, r + precision)
-    diskCenters.analyze()
-    //diskCenters.spatialPartitioning(GridType.EQUALGRID, params.mfpartitions())
-    diskCenters.spatialPartitioning(MFPartitioner)
-    diskCenters.spatialPartitionedRDD.cache()
+    //diskCenters.analyze()
+    //diskCenters.spatialPartitioning(MFPartitioner)
+    //diskCenters.spatialPartitionedRDD.cache()
     diskCircles.spatialPartitioning(MFPartitioner)
     diskCircles.spatialPartitionedRDD.cache()
-    val nDisksRDD = diskCenters.spatialPartitionedRDD.count()
+    val nDisksRDD = diskCircles.spatialPartitionedRDD.count()
     logEnd(stage, timer, nDisksRDD)
 
     if(debug){
       val f = new java.io.PrintWriter("/tmp/disks.wkt")
-      val disksWKT = diskCenters.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (i, points) =>
+      val disksWKT = diskCircles.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (i, points) =>
         points.map(p => s"$i\t${p.toText()}\n").toIterator
       }
       f.write(disksWKT.collect().mkString(""))
@@ -186,10 +186,8 @@ object MF{
       }.persist(StorageLevel.MEMORY_ONLY)
     val nMaximals = maximals.count()
     logEnd(stage, timer, nMaximals)
-
-    val endTime = System.currentTimeMillis()
-    val executionTime = (endTime - startTime) / 1000.0
-
+    val localEnd = clocktime
+    val executionTime = (localEnd - localStart) / 1000.0
     logger.info(s"MAXIMALS|$appID|$cores|$executors|$epsilon|$mu|$nGrids|$executionTime|$nMaximals")
 
     maximals
@@ -304,6 +302,30 @@ object MF{
 
   def roundAt(p: Int)(n: Double): Double = { val s = math pow (10, p); (math round n * s) / s }
 
+  implicit class Crossable[X](xs: Traversable[X]) {
+    def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
+  }
+
+  def getPartitionerByCellNumber(boundary: Envelope, epsilon: Double, x: Double, y: Double): GridPartitioner = {
+    val dx = boundary.getWidth / x
+    val dy = boundary.getHeight / y
+    getPartitionerByCellSize(boundary, epsilon, dx, dy)
+  }
+
+  def getPartitionerByCellSize(boundary: Envelope, epsilon: Double, dx: Double, dy: Double): GridPartitioner = {
+    val minx = boundary.getMinX
+    val miny = boundary.getMinY
+    val maxx = boundary.getMaxX
+    val maxy = boundary.getMaxY
+    val Xs = (minx until maxx by dx).map(x => roundAt(3)(x))
+    val Ys = (miny until maxy by dy).map(y => roundAt(3)(y))
+    val g = Xs cross Ys
+    val error = 0.0000001
+    val grids = g.toList.map(g => new Envelope(g._1, g._1 + dx - error, g._2, g._2 + dy - error))
+    logger.info(s"Number of grid envelops: ${grids.size}")
+    new GridPartitioner(grids.asJava, epsilon, dx, dy, Xs.size, Ys.size)
+  }
+
   /***
    * The main function...
    **/
@@ -364,26 +386,10 @@ object MF{
     logStart(stage)
     points.analyze()
     val boundary = points.boundary()
-    val minx = boundary.getMinX
-    val miny = boundary.getMinY
-    val maxx = boundary.getMaxX
-    val maxy = boundary.getMaxY
     val dx = params.mfcustomx()
     val dy = params.mfcustomy()
-    val Xs = (minx until maxx by dx).map(x => roundAt(3)(x))
-    val Ys = (miny until maxy by dy).map(y => roundAt(3)(y))
-    implicit class Crossable[X](xs: Traversable[X]) {
-      def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
-    }
-    val g = Xs cross Ys
-    val error = 0.0001
-    val grids = g.toList.map(g => new Envelope(g._1, g._1 + dx - error, g._2, g._2 + dy - error))
-    logger.info(s"Number of grid envelops: ${grids.size}")
-    val f = new java.io.PrintWriter("/tmp/grids.wkt")
-    f.write(grids.zipWithIndex.map{h =>  s"${h._2}\t${envelope2Polygon(h._1).toText()}\n"}.mkString(""))
-    f.close()
-    val MFPartitioner = new GridPartitioner(grids.asJava, epsilon, dx, dy, Xs.size, Ys.size)
-    logEnd(stage, timer, grids.size)
+    val MFPartitioner = getPartitionerByCellNumber(boundary, epsilon, dx, dy)
+    logEnd(stage, timer, MFPartitioner.getGrids.size)
 
     timer = clocktime
     stage = "Default partitioner"
