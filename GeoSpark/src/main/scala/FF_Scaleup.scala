@@ -73,7 +73,7 @@ object FF_Scaleup{
       stage = "1.Maximal disks found"
       logStart(stage)
       val T_i = pointset.get(timestamp).get
-      val C = new PointRDD(MF.run(spark, T_i, MF_Partitioner, params, s"$timestamp").map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
+      val C = new PointRDD(MF.run(spark, T_i, MF_Partitioner, params, s"$timestamp")._1.map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
       val nDisks = C.rawSpatialRDD.count()
       logEnd(stage, timer, nDisks, s"$timestamp")
 

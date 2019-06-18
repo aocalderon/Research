@@ -28,7 +28,7 @@ object MF{
   private var cores: Int = 0
   private var executors: Int = 0
 
-  def run(spark: SparkSession, points: PointRDD, MFPartitioner: GridPartitioner, params: FFConf, info: String = ""): RDD[String] = {
+  def run(spark: SparkSession, points: PointRDD, MFPartitioner: GridPartitioner, params: FFConf, info: String = ""): (RDD[String], Long) = {
     import spark.implicits._
 
     appID     = spark.sparkContext.applicationId
@@ -190,7 +190,7 @@ object MF{
     val executionTime = (localEnd - localStart) / 1000.0
     logger.info(s"MAXIMALS|$appID|$cores|$executors|$epsilon|$mu|$nGrids|$executionTime|$nMaximals")
 
-    maximals
+    (maximals, nMaximals)
   }
 
   def envelope2Polygon(e: Envelope): Polygon = {
@@ -406,8 +406,7 @@ object MF{
     stage = "Maximal finder run"
     logStart(stage)
     val maximals = MF.run(spark, points, MFPartitioner, params)
-    val nMaximals = maximals.count()
-    logEnd(stage, timer, nMaximals)
+    logEnd(stage, timer, maximals._2)
 
     // Closing session...
     timer = System.currentTimeMillis()
