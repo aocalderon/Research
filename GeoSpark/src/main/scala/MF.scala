@@ -64,7 +64,7 @@ object MF{
     pointsBuffer.analyze()
     pointsBuffer.spatialPartitioning(points.getPartitioner)
     points.buildIndex(IndexType.QUADTREE, true) // QUADTREE works better as an indexer than RTREE...
-    points.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
+    points.indexedRDD.cache()
     points.spatialPartitionedRDD.cache()
     logEnd(stage, timer, points.rawSpatialRDD.count())
 
