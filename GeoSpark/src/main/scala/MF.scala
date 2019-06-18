@@ -423,7 +423,7 @@ object MF{
       val f = new java.io.PrintWriter(s"${params.output()}app-${app_count}_info.tsv")
       f.write(InfoTracker.getExectutorsInfo())
       f.write(InfoTracker.getStagesInfo())
-      f.write(InfoTracker.getTasksInfoByDuration(25))
+      f.write(InfoTracker.getTasksInfo())
       f.close()
     }
     spark.close()
