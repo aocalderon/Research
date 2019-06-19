@@ -1,0 +1,69 @@
+---
+title: "R Notebook"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r include=FALSE}
+library(plotly)
+customStageFields2 = c("Timestamp", "Part", "appID", "Executors", "Cores", "Status", "Time", "Stage", "Duration", "Load", "Interval")
+getCustomStages2 <- function(filename, appID){
+  h = as_tibble(readLines(filename)) %>%
+    filter(grepl(paste0("app-\\d{14}-0", appID), value)) %>%
+    filter(grepl("\\|\\d\\.", value)) %>%
+    filter(grepl("END\\|", value)) %>%
+    separate(value, customStageFields2, sep = "\\|")  %>%
+    separate(appID, c(NA,NA,"appID"), sep="-") %>%
+    mutate(Stage = str_trim(Stage, side = "both"), Duration = as.numeric(Duration), Load = as.numeric(Load)) %>%
+    mutate(Status = str_trim(Status, side = "both"), Time = as.numeric(Time))
+}
+
+nohup = "/home/and/Documents/PhD/Research/Scripts/R/R15/nohupKDBTREE.txt"
+
+appsE1_1 = getCustomStages2(nohup, "125")
+appsE1_2 = getCustomStages2(nohup, "137")
+appsE1_4 = getCustomStages2(nohup, "149")
+stagesE1 = rbind(appsE1_1,appsE1_2, appsE1_4)
+appsE3_1 = getCustomStages2(nohup, "133")
+appsE3_2 = getCustomStages2(nohup, "145")
+appsE3_3 = getCustomStages2(nohup, "157")
+stagesE3 = rbind(appsE3_1,appsE3_2,appsE3_3)
+```
+
+
+```{r}
+stages = rbind(stagesE1, stagesE3) %>% select(Interval, Stage, Executors, Duration) %>%
+  mutate(Stage = paste(str_pad(Interval,2,"left"), Stage)) %>%
+  select(Stage, Executors, Duration) %>%
+  group_by(Stage, Executors) %>% summarise(Duration = mean(Duration))
+
+head(stages)
+
+```
+
+```{r}
+p = ggplot(data = stages, aes(x = Stage, y = Duration, fill = Executors)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Stages", y="Duration(s)")
+plot(p)
+```
+
+
+```{r}
+stages = customExecutionTime(nohup)
+
+data = stages %>% select(Executors, Epsilon, Duration) %>%
+  group_by(Executors, Epsilon) %>% summarise(Duration = mean(Duration))
+head(data)
+```
+
+```{r echo=FALSE}
+p = ggplot(data = data, aes(x = Epsilon, y = Duration, fill = Executors)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Epsilon(mts)", y="Duration(s)")
+plot(p)
+```
