@@ -150,29 +150,24 @@ object MF_Scaleup{
     val maximals = diskCircles.spatialPartitionedRDD.rdd
       .mapPartitionsWithIndex{ (i, disks) =>
         var result = List.empty[String]
-        if(i >= nGrids && spatial == "CUSTOM"){
-        } else {
-          val transactions = disks.map{ d =>
-            val x = d.getCenterPoint.x
-            val y = d.getCenterPoint.y
-            val pids = d.getUserData.toString()
-            new Transaction(x, y, pids)
-          }.toList.asJava
-          val LCM = new AlgoLCM2()
-          val data = new Transactions(transactions, 0)
-          LCM.run(data)
-          result = LCM.getPointsAndPids.asScala
-            .map{ p =>
-              val pids = p.getItems.mkString(" ")
-              val grid = grids(i)
-              val point = geofactory.createPoint(new Coordinate(p.getX, p.getY))
-              
-              val flag = isNotInExpansionArea(point, grid, 0.0)
-              ((pids, p.getX, p.getY),  flag)
-            }
-            .filter(_._2).map(_._1)
-            .map(p => s"${p._1}\t${p._2}\t${p._3}\n").toList
-        }
+        val transactions = disks.map{ d =>
+          val x = d.getCenterPoint.x
+          val y = d.getCenterPoint.y
+          val pids = d.getUserData.toString()
+          new Transaction(x, y, pids)
+        }.toList.asJava
+        val LCM = new AlgoLCM2()
+        val data = new Transactions(transactions, 0)
+        LCM.run(data)
+        result = LCM.getPointsAndPids.asScala
+          .map{ p =>
+            val pids = p.getItems.mkString(" ")
+            val x    = p.getX
+            val y    = p.getY
+            (pids, p.getX, p.getY)
+          }
+          //.filter(_._2).map(_._1)
+          .map(p => s"${p._1}\t${p._2}\t${p._3}\n").toList
         result.toIterator
       }.cache()
     val nMaximals = maximals.count()
@@ -183,6 +178,10 @@ object MF_Scaleup{
 
     (maximals, nMaximals)
   }
+
+  // val grid = grids(i)
+  // val point = geofactory.createPoint(new Coordinate(p.getX, p.getY))
+  // val flag = isNotInExpansionArea(point, grid, 0.0)
 
   def envelope2Polygon(e: Envelope): Polygon = {
     val minX = e.getMinX()
@@ -379,7 +378,7 @@ object MF_Scaleup{
     val boundary = points.boundary()
     val dx = params.mfcustomx()
     val dy = params.mfcustomy()
-    val MFPartitioner = getPartitionerByCellSize(boundary, epsilon, dx, dy)
+    val MFPartitioner = getPartitionerByCellNumber(boundary, epsilon, dx, dy)
     logEnd(stage, timer, MFPartitioner.getGrids.size)
 
     timer = clocktime
