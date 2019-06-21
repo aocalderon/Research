@@ -46,7 +46,7 @@ plot(p)
 ```
 
 ```{r}
-p = ggplot(data = data, aes(x = Executors, y = Time, fill = D)) +
+p = ggplot(data = data, aes(x = Executors, y = Time, fill =)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   labs(x="Epsilon(m)", y="Time(s)", title="Execution time after varying Epsilon parameter.") 
