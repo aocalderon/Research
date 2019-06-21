@@ -1,0 +1,74 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r include=FALSE}
+library(tidyverse)
+```
+
+```{r}
+fields = c("Timestamp", "Tag", "appId", "Cores", "Executors", "Epsilon", "Mu", "Delta", "Time", "Load")
+data_path = "~/Documents/PhD/Research/Scripts/R/R01/nohup_FF_Scaleup.txt"
+nohup = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>%
+  filter(grepl("PFLOCK", line)) %>% separate(line, into = fields, sep = "\\|") %>%
+  mutate(Time = as.numeric(Time))
+show(nohup)
+```
+
+```{r}
+spark = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>%
+  filter(grepl("spark-submit", line)) %>% separate(line, into=paste0("A", 1:17), sep = "--") %>% select(A13, A14) %>% 
+  mutate(A13 = str_trim(A13)) %>% separate(A13, c(NA, "Y"), sep = " ") %>%
+  mutate(A14 = str_trim(A14)) %>% separate(A14, c(NA, "X"), sep = " ") %>%
+  mutate(Partitions = as.numeric(X) * as.numeric(Y))
+show(spark)
+```
+
+
+
+```{r}
+data = bind_cols(nohup, spark) %>%
+  group_by(Executors, Epsilon, Partitions, X, Y) %>% summarise(Time = mean(Time)) %>%
+  mutate(X_prime = ifelse(Executors == 15, as.numeric(X) / 3, as.numeric(X))) %>% ungroup() %>%
+  mutate(Partitions = paste0(X,"x",Y,"=",Partitions)) %>%
+  mutate(X = as.numeric(X), Y = as.numeric(Y), Epsilon = as.numeric(Epsilon))
+show(data %>%  arrange(Executors, X_prime))
+```
+
+```{r}
+data1 = data %>% filter(Executors == "15")
+p = ggplot(data = data1, aes(x = factor(Epsilon), y = Time, fill = factor(X))) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Epsilon(m)", y="Time(s)", title="Execution time after varying Epsilon parameter.") 
+plot(p)
+```
+
+```{r}
+data1 = data %>% filter(Executors == "10")
+p = ggplot(data = data1, aes(x = factor(Epsilon), y = Time, fill = factor(X))) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Epsilon(m)", y="Time(s)", title="Execution time after varying Epsilon parameter.") 
+plot(p)
+```
+
+```{r}
+data1 = data %>% filter(Executors == "5")
+p = ggplot(data = data1, aes(x = factor(Epsilon), y = Time, fill = factor(X))) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Epsilon(m)", y="Time(s)", title="Execution time after varying Epsilon parameter.") 
+plot(p)
+```
+
+```{r}
+p = ggplot(data = data, aes(x = Executors, y = Time, fill = D)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Epsilon(m)", y="Time(s)", title="Execution time after varying Epsilon parameter.") 
+plot(p)
+```
