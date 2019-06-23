@@ -16,6 +16,12 @@ GeoSpark/.ensime
 GeoSpark/ensime.sbt
 GeoSpark/.ensime_cache/*
 
+Script/Scala/DatasetReplicator/.idea/*
+Script/Scala/DatasetReplicator/target/*
+Script/Scala/DatasetReplicator/project/*
+Script/Scala/DatasetReplicator/metastore_db/*
+Script/Scala/DatasetReplicator/spark-warehouse/*
+
 Script/Scala/FlockChecker/.idea/*
 Script/Scala/FlockChecker/target/*
 Script/Scala/FlockChecker/project/*
