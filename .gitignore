@@ -16,23 +16,25 @@ GeoSpark/.ensime
 GeoSpark/ensime.sbt
 GeoSpark/.ensime_cache/*
 
-Script/Scala/DatasetReplicator/.idea/*
-Script/Scala/DatasetReplicator/target/*
-Script/Scala/DatasetReplicator/project/*
-Script/Scala/DatasetReplicator/metastore_db/*
-Script/Scala/DatasetReplicator/spark-warehouse/*
+Scripts/Scala/DatasetReplicator/.idea/*
+Scripts/Scala/DatasetReplicator/target/*
+Scripts/Scala/DatasetReplicator/project/*
+Scripts/Scala/DatasetReplicator/.ensime
+Scripts/Scala/DatasetReplicator/.ensime_cache/*
+Scripts/Scala/DatasetReplicator/metastore_db/*
+Scripts/Scala/DatasetReplicator/spark-warehouse/*
 
-Script/Scala/FlockChecker/.idea/*
-Script/Scala/FlockChecker/target/*
-Script/Scala/FlockChecker/project/*
-Script/Scala/FlockChecker/metastore_db/*
-Script/Scala/FlockChecker/spark-warehouse/*
+Scripts/Scala/FlockChecker/.idea/*
+Scripts/Scala/FlockChecker/target/*
+Scripts/Scala/FlockChecker/project/*
+Scripts/Scala/FlockChecker/metastore_db/*
+Scripts/Scala/FlockChecker/spark-warehouse/*
 
-Script/Scala/SimbaTemplate/.idea/*
-Script/Scala/SimbaTemplate/target/*
-Script/Scala/SimbaTemplate/project/*
-Script/Scala/SimbaTemplate/metastore_db/*
-Script/Scala/SimbaTemplate/spark-warehouse/*
+Scripts/Scala/SimbaTemplate/.idea/*
+Scripts/Scala/SimbaTemplate/target/*
+Scripts/Scala/SimbaTemplate/project/*
+Scripts/Scala/SimbaTemplate/metastore_db/*
+Scripts/Scala/SimbaTemplate/spark-warehouse/*
 
 Scripts/Scala/LCM/target/*
 Scripts/Scala/LCM/project/*
