@@ -50,8 +50,8 @@ object MF_Scaleup{
     var timer = System.currentTimeMillis()
     var stage = "A.Points indexed"
     logStart(stage)
-    points.spatialPartitioning(GridType.KDBTREE, Dpartitions)
-    //points.spatialPartitioning(PairPartitioner)
+    //points.spatialPartitioning(GridType.KDBTREE, Dpartitions)
+    points.spatialPartitioning(MFPartitioner)
     if(debug){
       val gridWKT = points.getPartitioner.getGrids.asScala.map(e => s"${envelope2Polygon(e).toText()}\n").mkString("")
       val f = new java.io.PrintWriter("/tmp/pairsGrid.wkt")
