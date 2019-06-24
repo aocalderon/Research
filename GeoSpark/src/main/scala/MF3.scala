@@ -169,26 +169,10 @@ object MF3{
     var expansionsRDD = spark.sparkContext.emptyRDD[(Int, Point)]
     var nExpansionsRDD = 0L
 
-    if(params.expander()){
-      /*
-      val rtree = new STRtree()
-      expansions = disksRDD.getPartitioner.getGrids.asScala.map{ e =>
-        new Envelope(e.getMinX - epsilon, e.getMaxX + epsilon, e.getMinY - epsilon, e.getMaxY + epsilon)
-      }.toList.zipWithIndex
-      expansions.foreach{e => rtree.insert(e._1, e._2)}
-      expansionsRDD = disksRDD.spatialPartitionedRDD.rdd.flatMap{ disk =>
-        rtree.query(disk.getEnvelopeInternal).asScala.map{expansion_id =>
-          (expansion_id.asInstanceOf[Int], disk)
-        }.toList
-      }.partitionBy(new ExpansionPartitioner(npartitions)).persist(StorageLevel.MEMORY_ONLY)
-      nExpansionsRDD = expansionsRDD.count()
-       */
-    } else {
       expansionsRDD = GridExpander.run(spark, disksRDD, grids, cellsInX, params).filter(_._1 < npartitions)
         .partitionBy(new ExpansionPartitioner(npartitions)).persist(StorageLevel.MEMORY_ONLY)
       nExpansionsRDD = expansionsRDD.count()
       expansions = GridExpander.expansions
-    }
     logEnd(stage, timer, nExpansionsRDD)
 
     var statsTime = 0.0

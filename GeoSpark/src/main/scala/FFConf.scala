@@ -31,9 +31,14 @@ class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val tag:          ScallopOption[String]  =  opt[String]   (default  = Some(""))
   val timestamp:    ScallopOption[Int]     =  opt[Int]      (default  = Some(-1))
   val fftimestamp:  ScallopOption[Int]     =  opt[Int]      (default  = Some(10))
+
+  val levels:       ScallopOption[Int]      = opt[Int]     (default  = Some(1024))
+  val entries:      ScallopOption[Int]      = opt[Int]     (default  = Some(500))
+  val frame:        ScallopOption[Double]   = opt[Double]  (default  = Some(1.0))
+  val fraction:     ScallopOption[Double]   = opt[Double]  (default  = Some(1.0))
+  
   val ffdebug:      ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
   val mfdebug:      ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
-  val expander:     ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
   val info:         ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
 
   verify()

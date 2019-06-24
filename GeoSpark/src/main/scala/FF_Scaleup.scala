@@ -8,6 +8,7 @@ import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.spatialRDD.{CircleRDD, PointRDD}
 import org.datasyslab.geospark.spatialPartitioning.{FlatGridPartitioner, GridPartitioner}
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
+import org.datasyslab.geospark.spatialPartitioning.{KDBTree, KDBTreePartitioner}
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.StructType
 import org.slf4j.{Logger, LoggerFactory}
@@ -33,7 +34,7 @@ object FF_Scaleup{
   case class Flock(pids: List[Int], start: Int, end: Int, center: Point)
 
   /* SpatialJoin variant */
-  def runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], MF_Partitioner: GridPartitioner, params: FFConf): RDD[Flock] = {
+  def runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], KTPartitioner: KDBTreePartitioner, MFPartitioner: GridPartitioner, params: FFConf): RDD[Flock] = {
     var clockTime = System.currentTimeMillis()
     cores         = params.cores()
     executors     = params.executors()
@@ -72,7 +73,7 @@ object FF_Scaleup{
       stage = "1.Maximal disks found"
       logStart(stage)
       val T_i = pointset.get(timestamp).get
-      val C = new PointRDD(MF_Scaleup.run(spark, T_i, MF_Partitioner, params, s"$timestamp")._1.map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
+      val C = new PointRDD(MF_Scaleup.run(spark, T_i, KTPartitioner, MFPartitioner, params, s"$timestamp")._1.map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
       val nDisks = C.rawSpatialRDD.count()
       logEnd(stage, timer, nDisks, s"$timestamp")
 
@@ -87,7 +88,7 @@ object FF_Scaleup{
 
         F.analyze()
         //F.spatialPartitioning(gridType, Dpartitions)
-        F.spatialPartitioning(MF_Partitioner)
+        F.spatialPartitioning(KTPartitioner)
         F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
         val buffers = new CircleRDD(C, distance)
         buffers.spatialPartitioning(F.getPartitioner)
@@ -167,7 +168,7 @@ object FF_Scaleup{
         logStart(stage)
         var f0_prime: RDD[String] = spark.sparkContext.emptyRDD[String]
         if(G_prime.boundary() != null){
-          f0_prime = pruneFlockByExpansions(G_prime, MF_Partitioner, epsilon, timestamp, spark, params).cache()
+          f0_prime = pruneFlockByExpansions(G_prime, MFPartitioner, epsilon, timestamp, spark, params).cache()
         }
         val nF0_prime = f0_prime.count()
         logEnd(stage, timer, nF0_prime, s"$timestamp")
@@ -434,6 +435,28 @@ object FF_Scaleup{
     points.CRSTransform(params.sespg(), params.tespg())
     points.analyze()
 
+    // KDBtree partitioner...
+    timer = clocktime
+    stage = "KDBTree partitioner"
+    logStart(stage)
+    val fullBoundary = points.boundary()
+    fullBoundary.expandBy(params.frame())
+    val levels = params.levels()
+    val entries = params.entries()
+    val fraction = params.fraction()
+
+    val tree = new KDBTree(entries, levels, fullBoundary)
+    val sampleSize = points.rawSpatialRDD.rdd.count() * fraction
+    val sample = points.rawSpatialRDD.rdd.takeSample(false, sampleSize.toInt).map{ point =>
+      point.getEnvelopeInternal()
+    }
+    logger.info(s"Sample size: ${sample.size}")
+    sample.foreach(e => tree.insert(e))
+    tree.assignLeafIds()
+    val KTPartitioner = new KDBTreePartitioner(tree)
+    logEnd(stage, timer, KTPartitioner.getGrids.size)
+    
+
     // MF Partitioner...
     timer = clocktime
     stage = "MF partitioner"
@@ -462,7 +485,7 @@ object FF_Scaleup{
     timer = System.currentTimeMillis()
     stage = "Flock Finder run"
     logStart(stage)
-    val flocks = runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], MFPartitioner: GridPartitioner, params: FFConf)
+    val flocks = runSpatialJoin(spark, pointset, KTPartitioner, MFPartitioner, params)
     logEnd(stage, timer, flocks.count(), tag)
 
     if(debug){
