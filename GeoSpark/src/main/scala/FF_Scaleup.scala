@@ -21,9 +21,8 @@ import java.io._
 object FF_Scaleup{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory();
+  private val reader = new com.vividsolutions.jts.io.WKTReader(geofactory)
   private val precision: Double = 0.001
-  private var MF_Partitioner: GridPartitioner = new GridPartitioner(List.empty[Envelope].asJava)
-  private var FF_Partitioner: GridPartitioner = new GridPartitioner(List.empty[Envelope].asJava)
   private var tag: String = "-1"
   private var appID: String = "app-00000000000000-0000"
   private var startTime: Long = clocktime
@@ -34,7 +33,7 @@ object FF_Scaleup{
   case class Flock(pids: List[Int], start: Int, end: Int, center: Point)
 
   /* SpatialJoin variant */
-  def runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf): RDD[Flock] = {
+  def runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], MF_Partitioner: GridPartitioner, params: FFConf): RDD[Flock] = {
     var clockTime = System.currentTimeMillis()
     cores         = params.cores()
     executors     = params.executors()
@@ -73,7 +72,7 @@ object FF_Scaleup{
       stage = "1.Maximal disks found"
       logStart(stage)
       val T_i = pointset.get(timestamp).get
-      val C = new PointRDD(MF.run(spark, T_i, MF_Partitioner, params, s"$timestamp")._1.map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
+      val C = new PointRDD(MF_Scaleup.run(spark, T_i, MF_Partitioner, params, s"$timestamp")._1.map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
       val nDisks = C.rawSpatialRDD.count()
       logEnd(stage, timer, nDisks, s"$timestamp")
 
@@ -167,7 +166,7 @@ object FF_Scaleup{
         logStart(stage)
         var f0_prime: RDD[String] = spark.sparkContext.emptyRDD[String]
         if(G_prime.boundary() != null){
-          f0_prime = pruneFlockByExpansions(G_prime, epsilon, timestamp, spark, params).persist(StorageLevel.MEMORY_ONLY)
+          f0_prime = pruneFlockByExpansions(G_prime, MF_Partitioner, epsilon, timestamp, spark, params).cache()
         }
         val nF0_prime = f0_prime.count()
         logEnd(stage, timer, nF0_prime, s"$timestamp")
@@ -271,7 +270,7 @@ object FF_Scaleup{
       y >= (min_y + epsilon)
   }
 
-  def pruneFlockByExpansions(F: PointRDD, epsilon: Double, timestamp: Int, spark: SparkSession, params: FFConf): RDD[String] = {
+  def pruneFlockByExpansions(F: PointRDD, Partitioner: GridPartitioner, epsilon: Double, timestamp: Int, spark: SparkSession, params: FFConf): RDD[String] = {
     import spark.implicits._
     val debug = params.ffdebug()
 
@@ -281,10 +280,10 @@ object FF_Scaleup{
 
     val r = epsilon / 2.0 + precision
     val FCircles = new CircleRDD(F, r)
-    FCircles.spatialPartitioning(FF_Partitioner)
+    FCircles.spatialPartitioning(Partitioner)
     FCircles.spatialPartitionedRDD.cache()
     val nFCircles = FCircles.spatialPartitionedRDD.rdd.count()
-    val grids = FF_Partitioner.getGrids.asScala.toList.zipWithIndex.map(g => g._2 -> g._1).toMap
+    val grids = Partitioner.getGrids.asScala.toList.zipWithIndex.map(g => g._2 -> g._1).toMap
     logEnd(stage, timer, nFCircles, s"$timestamp")
 
     timer = System.currentTimeMillis()
@@ -384,6 +383,10 @@ object FF_Scaleup{
     new GridPartitioner(grids.asJava, epsilon, dx, dy, Xs.size, Ys.size)
   }
 
+  def readGridCell(wkt: String): Envelope = {
+    reader.read(wkt).getEnvelopeInternal
+  }
+
   /**************************************
    * The main function...   
    *************************************/
@@ -392,6 +395,7 @@ object FF_Scaleup{
     val master       = params.master()
     val port         = params.port()
     val input        = params.input()
+    val m_grid       = params.m_grid()
     val offset       = params.offset()
     val epsilon      = params.epsilon()
     val fftimestamp  = params.fftimestamp()
@@ -428,13 +432,21 @@ object FF_Scaleup{
     val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, Dpartitions)
     points.CRSTransform(params.sespg(), params.tespg())
     points.analyze()
-    val fullBoundary = points.boundary()
-    val mf_x = params.mfcustomx()
-    val mf_y = params.mfcustomy()
-    MF_Partitioner = getPartitionerByCellNumber(fullBoundary, epsilon, mf_x, mf_y)
-    val ff_x = params.ffcustomx()
-    val ff_y = params.ffcustomy()
-    FF_Partitioner = getPartitionerByCellNumber(fullBoundary, epsilon, ff_x, ff_y)
+
+    // MF Partitioner...
+    timer = clocktime
+    stage = "MF partitioner"
+    import scala.io.Source
+    logStart(stage)
+    var cells = Source.fromFile(m_grid).getLines.toList.map(readGridCell)
+    var grid_dims = m_grid.split("/").reverse.head.split("\\.")(0).split("-")(1).split("x")
+    var x_cells = grid_dims(0).toInt
+    var y_cells = grid_dims(1).toInt
+    var w_cell  = cells.head.getWidth
+    var h_cell  = cells.head.getHeight
+    val MFPartitioner = new GridPartitioner(cells.asJava, epsilon, w_cell, h_cell, x_cells, y_cells)
+    logEnd(stage, timer, MFPartitioner.getGrids.size)    
+
     val nPoints = points.rawSpatialRDD.count()
     val timestamps = points.rawSpatialRDD.rdd.map(_.getUserData.toString().split("\t").reverse.head.toInt).distinct.collect()
     val pointset: HashMap[Int, PointRDD] = new HashMap()
@@ -449,7 +461,7 @@ object FF_Scaleup{
     timer = System.currentTimeMillis()
     stage = "Flock Finder run"
     logStart(stage)
-    val flocks = runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], params: FFConf)
+    val flocks = runSpatialJoin(spark: SparkSession, pointset: HashMap[Int, PointRDD], MFPartitioner: GridPartitioner, params: FFConf)
     logEnd(stage, timer, flocks.count(), tag)
 
     if(debug){
