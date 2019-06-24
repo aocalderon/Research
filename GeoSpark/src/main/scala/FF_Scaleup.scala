@@ -42,7 +42,7 @@ object FF_Scaleup{
     val sespg        = params.sespg()
     val tespg        = params.tespg()
     val distance     = params.distance()
-    val Dpartitions  = (cores * executors) * params.dpartitions()
+    val Dpartitions  = params.dpartitions()
     val FFpartitions = params.ffpartitions()
     val epsilon      = params.epsilon()
     val mu           = params.mu()

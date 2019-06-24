@@ -43,7 +43,7 @@ object MF_Scaleup{
     val tespg: String     = params.tespg()
     val spatial: String   = params.spatial()
     if(params.tag() == ""){ tag = s"$info"} else { tag = s"${params.tag()}|${info}" }
-    var Dpartitions: Int  = (cores * executors) * params.dpartitions()
+    var Dpartitions: Int  = params.dpartitions()
 
     // Indexing points...
     val localStart = clocktime
