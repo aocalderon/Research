@@ -86,7 +86,8 @@ object FF_Scaleup{
         logStart(stage)
 
         F.analyze()
-        F.spatialPartitioning(gridType, Dpartitions)
+        //F.spatialPartitioning(gridType, Dpartitions)
+        F.spatialPartitioning(MF_Partitioner)
         F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
         val buffers = new CircleRDD(C, distance)
         buffers.spatialPartitioning(F.getPartitioner)
