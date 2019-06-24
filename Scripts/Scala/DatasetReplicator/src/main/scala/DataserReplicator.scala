@@ -142,7 +142,7 @@ object DatasetReplicator {
 
     val path = input.split("/").reverse.tail.reverse.mkString("/")
     val d = data.toList
-    savePoints(d.map(_._1).reduce(_ union _), s"${path}/${name}${times}_points.wkt")
+    savePoints(d.map(_._1).reduce(_ union _), s"${path}/${name}${times}_points.tsv")
     saveGrid(d.map(_._2).reduce(_ ++ _),      s"${path}/${name}${times}_grid-${times * grid1x}x${grid1y}.wkt") 
     saveGrid(d.map(_._3).reduce(_ ++ _),      s"${path}/${name}${times}_grid-${times * grid2x}x${grid2y}.wkt") 
 
@@ -160,7 +160,7 @@ class DRConf(args: Seq[String]) extends ScallopConf(args) {
   val grid1x: ScallopOption[Int]      = opt[Int]     (default  = Some(9))
   val grid1y: ScallopOption[Int]      = opt[Int]     (default  = Some(6))
   val grid2x: ScallopOption[Int]      = opt[Int]     (default  = Some(15))
-  val grid2y: ScallopOption[Int]      = opt[Int]     (default  = Some(15))
+  val grid2y: ScallopOption[Int]      = opt[Int]     (default  = Some(30))
   val frame:  ScallopOption[Double]   = opt[Double]  (default  = Some(1.0))
   val debug:  ScallopOption[Boolean]  = opt[Boolean] (default  = Some(false))
 

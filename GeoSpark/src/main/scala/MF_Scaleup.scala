@@ -29,7 +29,7 @@ object MF_Scaleup{
   private var cores: Int = 0
   private var executors: Int = 0
 
-  def run(spark: SparkSession, points: PointRDD, PairPartitioner: GridPartitioner, MFPartitioner: GridPartitioner, params: FFConf, info: String = ""): (RDD[String], Long) = {
+  def run(spark: SparkSession, points: PointRDD, MFPartitioner: GridPartitioner, params: FFConf, info: String = ""): (RDD[String], Long) = {
     import spark.implicits._
 
     appID     = spark.sparkContext.applicationId
@@ -366,7 +366,7 @@ object MF_Scaleup{
     val nPoints = points.rawSpatialRDD.count()
     logEnd(stage, timer, nPoints)
 
-    // Pairs partitioner...
+    // MF Partitioner...
     timer = clocktime
     stage = "MF partitioner"
     import scala.io.Source
@@ -380,23 +380,23 @@ object MF_Scaleup{
     val MFPartitioner = new GridPartitioner(cells.asJava, epsilon, w_cell, h_cell, x_cells, y_cells)
     logEnd(stage, timer, MFPartitioner.getGrids.size)
 
-    timer = clocktime
-    stage = "Pair partitioner"
-    logStart(stage)
-    cells = Source.fromFile(p_grid).getLines.toList.map(readGridCell)
-    grid_dims = p_grid.split("/").reverse.head.split("\\.")(0).split("-")(1).split("x")
-    x_cells = grid_dims(0).toInt
-    y_cells = grid_dims(1).toInt
-    w_cell  = cells.head.getWidth
-    h_cell  = cells.head.getHeight
-    val PairPartitioner = new GridPartitioner(cells.asJava, epsilon, w_cell, h_cell, x_cells, y_cells)
-    logEnd(stage, timer, PairPartitioner.getGrids.size)
+    //timer = clocktime
+    //stage = "Pair partitioner"
+    //logStart(stage)
+    //cells = Source.fromFile(p_grid).getLines.toList.map(readGridCell)
+    //grid_dims = p_grid.split("/").reverse.head.split("\\.")(0).split("-")(1).split("x")
+    //x_cells = grid_dims(0).toInt
+    //y_cells = grid_dims(1).toInt
+    //w_cell  = cells.head.getWidth
+    //h_cell  = cells.head.getHeight
+    //val PairPartitioner = new GridPartitioner(cells.asJava, epsilon, w_cell, h_cell, x_cells, y_cells)
+    //logEnd(stage, timer, PairPartitioner.getGrids.size)
 
     // Running maximal finder...
     timer = System.currentTimeMillis()
     stage = "Maximal finder run"
     logStart(stage)
-    val maximals = MF_Scaleup.run(spark, points, PairPartitioner, MFPartitioner, params)
+    val maximals = MF_Scaleup.run(spark, points, MFPartitioner, params)
     logEnd(stage, timer, maximals._2)
 
     // Closing session...
