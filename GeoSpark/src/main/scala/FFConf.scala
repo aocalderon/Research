@@ -3,6 +3,8 @@ import org.rogach.scallop._
 
 class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val input:        ScallopOption[String]  =  opt[String]   (required = true)
+  val p_grid:       ScallopOption[String]  =  opt[String]   (default  = Some(""))
+  val m_grid:       ScallopOption[String]  =  opt[String]   (default  = Some(""))
   val offset:       ScallopOption[Int]     =  opt[Int]      (default  = Some(1))
   val distance:     ScallopOption[Double]  =  opt[Double]   (default  = Some(100.0))
   val epsilon:      ScallopOption[Double]  =  opt[Double]   (default  = Some(10.0))

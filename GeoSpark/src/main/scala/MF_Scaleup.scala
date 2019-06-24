@@ -21,6 +21,7 @@ import org.rogach.scallop._
 object MF_Scaleup{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory();
+  private val reader = new com.vividsolutions.jts.io.WKTReader(geofactory)
   private val precision: Double = 0.001
   private var tag: String = ""
   private var appID: String = "app-00000000000000-0000"
@@ -28,7 +29,7 @@ object MF_Scaleup{
   private var cores: Int = 0
   private var executors: Int = 0
 
-  def run(spark: SparkSession, points: PointRDD, MFPartitioner: GridPartitioner, params: FFConf, info: String = ""): (RDD[String], Long) = {
+  def run(spark: SparkSession, points: PointRDD, PairPartitioner: GridPartitioner, MFPartitioner: GridPartitioner, params: FFConf, info: String = ""): (RDD[String], Long) = {
     import spark.implicits._
 
     appID     = spark.sparkContext.applicationId
@@ -50,6 +51,7 @@ object MF_Scaleup{
     var stage = "A.Points indexed"
     logStart(stage)
     points.spatialPartitioning(GridType.KDBTREE, Dpartitions)
+    //points.spatialPartitioning(PairPartitioner)
     if(debug){
       val gridWKT = points.getPartitioner.getGrids.asScala.map(e => s"${envelope2Polygon(e).toText()}\n").mkString("")
       val f = new java.io.PrintWriter("/tmp/pairsGrid.wkt")
@@ -230,18 +232,6 @@ object MF_Scaleup{
       y >= (min_y + epsilon)
   }
 
-  def castEnvelopeInt(x: Any): Tuple2[Envelope, Int] = {
-    x match {
-      case (e: Envelope, i: Int) => Tuple2(e, i)
-    }
-  }
-
-  def castStringBoolean(x: Any): Tuple2[String, Boolean] = {
-    x match {
-      case (s: String, b: Boolean) => Tuple2(s, b)
-    }
-  }
-
   def clocktime = System.currentTimeMillis()
 
   def logEnd(msg: String, timer: Long, n: Long): Unit ={
@@ -316,15 +306,21 @@ object MF_Scaleup{
     new GridPartitioner(grids.asJava, epsilon, dx, dy, Xs.size, Ys.size)
   }
 
+  def readGridCell(wkt: String): Envelope = {
+    reader.read(wkt).getEnvelopeInternal
+  }
+
   /***
    * The main function...
    **/
   def main(args: Array[String]) = {
-    val params: FFConf      = new FFConf(args)
+    val params: FFConf = new FFConf(args)
+    val input       = params.input()
+    val p_grid      = params.p_grid()
+    val m_grid      = params.m_grid()
     val master      = params.master()
     val port        = params.port()
     val portUI      = params.portui()
-    val input       = params.input()
     val offset      = params.offset()
     val sepsg       = params.sespg()
     val tepsg       = params.tespg()
@@ -370,32 +366,37 @@ object MF_Scaleup{
     val nPoints = points.rawSpatialRDD.count()
     logEnd(stage, timer, nPoints)
 
-    // Custom partitioner...
+    // Pairs partitioner...
     timer = clocktime
-    stage = "Custom partitioner"
+    stage = "MF partitioner"
+    import scala.io.Source
     logStart(stage)
-    points.analyze()
-    val boundary = points.boundary()
-    val dx = params.mfcustomx()
-    val dy = params.mfcustomy()
-    val MFPartitioner = getPartitionerByCellNumber(boundary, epsilon, dx, dy)
+    var cells = Source.fromFile(m_grid).getLines.toList.map(readGridCell)
+    var grid_dims = m_grid.split("/").reverse.head.split("\\.")(0).split("-")(1).split("x")
+    var x_cells = grid_dims(0).toInt
+    var y_cells = grid_dims(1).toInt
+    var w_cell  = cells.head.getWidth
+    var h_cell  = cells.head.getHeight
+    val MFPartitioner = new GridPartitioner(cells.asJava, epsilon, w_cell, h_cell, x_cells, y_cells)
     logEnd(stage, timer, MFPartitioner.getGrids.size)
 
     timer = clocktime
-    stage = "Default partitioner"
+    stage = "Pair partitioner"
     logStart(stage)
-    points.analyze()
-    points.spatialPartitioning(GridType.KDBTREE, Dpartitions)
-    points.spatialPartitionedRDD.cache()
-    val nPartitions = points.spatialPartitionedRDD.rdd.getNumPartitions
-    logger.info(s"Number of partitions: $nPartitions")
-    logEnd(stage, timer, nPartitions)
+    cells = Source.fromFile(p_grid).getLines.toList.map(readGridCell)
+    grid_dims = p_grid.split("/").reverse.head.split("\\.")(0).split("-")(1).split("x")
+    x_cells = grid_dims(0).toInt
+    y_cells = grid_dims(1).toInt
+    w_cell  = cells.head.getWidth
+    h_cell  = cells.head.getHeight
+    val PairPartitioner = new GridPartitioner(cells.asJava, epsilon, w_cell, h_cell, x_cells, y_cells)
+    logEnd(stage, timer, PairPartitioner.getGrids.size)
 
     // Running maximal finder...
     timer = System.currentTimeMillis()
     stage = "Maximal finder run"
     logStart(stage)
-    val maximals = MF_Scaleup.run(spark, points, MFPartitioner, params)
+    val maximals = MF_Scaleup.run(spark, points, PairPartitioner, MFPartitioner, params)
     logEnd(stage, timer, maximals._2)
 
     // Closing session...
