@@ -19,6 +19,7 @@ import java.io._
 object KDBTreeTester2 {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory();
+  private val reader = new com.vividsolutions.jts.io.WKTReader(geofactory)
   private val precision: Double = 0.0001
 
   case class ST_Point(pid: Int, x: Double, y: Double, t: Int)
@@ -55,6 +56,10 @@ object KDBTreeTester2 {
     f.close()
   }
 
+  def readGridCell(wkt: String): Envelope = {
+    reader.read(wkt).getEnvelopeInternal
+  }
+
   def main(args: Array[String]): Unit = {
     val params   = new KT2Conf(args)
     val input    = params.input()
@@ -81,7 +86,9 @@ object KDBTreeTester2 {
     val entries = params.entries()
 
     val tree = new KDBTree(1, 1, fullBoundary)
-    scala.io.Source("/tmp/B1_kdbtree.wkt")
+    import scala.io.Source
+    val cells = Source.fromFile("/tmp/B1_kdbtree.wkt").getLines.toList.map(readGridCell)
+    tree.setChildren(cells.asJava)
     tree.assignLeafIds()
     val partitioner = new KDBTreePartitioner(tree)
 
