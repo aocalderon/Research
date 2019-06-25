@@ -17,6 +17,7 @@ import org.apache.spark.sql.SparkSession
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.HashMap
+import scala.io.Source
 import java.io._
 
 object FF_Scaleup{
@@ -398,6 +399,7 @@ object FF_Scaleup{
     val port         = params.port()
     val input        = params.input()
     val m_grid       = params.m_grid()
+    val p_grid       = params.p_grid()
     val offset       = params.offset()
     val epsilon      = params.epsilon()
     val fftimestamp  = params.fftimestamp()
@@ -433,7 +435,15 @@ object FF_Scaleup{
     logStart(stage)
     val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, Dpartitions)
     points.CRSTransform(params.sespg(), params.tespg())
+    points.rawSpatialRDD.cache()
+    val nPoints = points.rawSpatialRDD.count()
+    val timestamps = points.rawSpatialRDD.rdd.map(_.getUserData.toString().split("\t").reverse.head.toInt).distinct.collect()
+    val pointset: HashMap[Int, PointRDD] = new HashMap()
+    for(timestamp <- timestamps.filter(_ < fftimestamp)){
+      pointset += (timestamp -> extractTimestamp(points, timestamp, params.sespg(), params.tespg()))
+    }
     points.analyze()
+    logEnd(stage, timer, nPoints)
 
     // KDBtree partitioner...
     timer = clocktime
@@ -441,17 +451,9 @@ object FF_Scaleup{
     logStart(stage)
     val fullBoundary = points.boundary()
     fullBoundary.expandBy(params.frame())
-    val levels = params.levels()
-    val entries = params.entries()
-    val fraction = params.fraction()
-
-    val tree = new KDBTree(entries, levels, fullBoundary)
-    val sampleSize = points.rawSpatialRDD.rdd.count() * fraction
-    val sample = points.rawSpatialRDD.rdd.takeSample(false, sampleSize.toInt).map{ point =>
-      point.getEnvelopeInternal()
-    }
-    logger.info(s"Sample size: ${sample.size}")
-    sample.foreach(e => tree.insert(e))
+    val tree = new KDBTree(1, 1, fullBoundary)
+    var cells = Source.fromFile(p_grid).getLines.toList.map(readGridCell)
+    tree.setChildren(cells.asJava)
     tree.assignLeafIds()
     val KTPartitioner = new KDBTreePartitioner(tree)
     logEnd(stage, timer, KTPartitioner.getGrids.size)
@@ -460,24 +462,15 @@ object FF_Scaleup{
     // MF Partitioner...
     timer = clocktime
     stage = "MF partitioner"
-    import scala.io.Source
     logStart(stage)
-    var cells = Source.fromFile(m_grid).getLines.toList.map(readGridCell)
-    var grid_dims = m_grid.split("/").reverse.head.split("\\.")(0).split("-")(1).split("x")
-    var x_cells = grid_dims(0).toInt
-    var y_cells = grid_dims(1).toInt
-    var w_cell  = cells.head.getWidth
-    var h_cell  = cells.head.getHeight
+    cells = Source.fromFile(m_grid).getLines.toList.map(readGridCell)
+    val grid_dims = m_grid.split("/").reverse.head.split("\\.")(0).split("-")(1).split("x")
+    val x_cells = grid_dims(0).toInt
+    val y_cells = grid_dims(1).toInt
+    val w_cell  = cells.head.getWidth
+    val h_cell  = cells.head.getHeight
     val MFPartitioner = new GridPartitioner(cells.asJava, epsilon, w_cell, h_cell, x_cells, y_cells)
     logEnd(stage, timer, MFPartitioner.getGrids.size)    
-
-    val nPoints = points.rawSpatialRDD.count()
-    val timestamps = points.rawSpatialRDD.rdd.map(_.getUserData.toString().split("\t").reverse.head.toInt).distinct.collect()
-    val pointset: HashMap[Int, PointRDD] = new HashMap()
-    for(timestamp <- timestamps.filter(_ < fftimestamp)){
-      pointset += (timestamp -> extractTimestamp(points, timestamp, params.sespg(), params.tespg()))
-    }
-    logEnd(stage, timer, nPoints)
 
     if(debug){ logger.info(s"Current timestamps: ${timestamps.filter(_ < fftimestamp).mkString(" ")}") }
 
