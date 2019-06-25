@@ -63,6 +63,7 @@ object KDBTreeTester2 {
   def main(args: Array[String]): Unit = {
     val params   = new KT2Conf(args)
     val input    = params.input()
+    val grid     = params.grid()
     val name     = params.name()
     val offset   = params.offset()
     val frame    = params.frame()
@@ -75,8 +76,7 @@ object KDBTreeTester2 {
     import spark.implicits._
     logger.info("Session started")
 
-    val filename = params.input()
-    val points = new PointRDD(spark.sparkContext, filename, offset, FileDataSplitter.TSV, true)
+    val points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true)
     points.analyze()
     logger.info("Data read")
 
@@ -87,15 +87,15 @@ object KDBTreeTester2 {
 
     val tree = new KDBTree(1, 1, fullBoundary)
     import scala.io.Source
-    val cells = Source.fromFile("/tmp/B1_kdbtree.wkt").getLines.toList.map(readGridCell)
+    val cells = Source.fromFile(grid).getLines.toList.map(readGridCell)
     tree.setChildren(cells.asJava)
     tree.assignLeafIds()
     val partitioner = new KDBTreePartitioner(tree)
 
     points.spatialPartitioning(partitioner)
 
-    val grid = points.getPartitioner().getGrids().asScala.toList
-    saveGrid(grid, s"/tmp/${name}_kdbtree.wkt")
+    val cells2 = points.getPartitioner().getGrids().asScala.toList
+    saveGrid(cells2, s"/tmp/${name}_kdbtree.wkt")
     logger.info("KDBTree saved")
 
     spark.close()
@@ -104,15 +104,16 @@ object KDBTreeTester2 {
 }
 
 class KT2Conf(args: Seq[String]) extends ScallopConf(args) {
-  val input:   ScallopOption[String]   = opt[String]  (required = true)
-  val name:    ScallopOption[String]   = opt[String]  (required = true)
-  val output:  ScallopOption[String]   = opt[String]  (default  = Some("/tmp/output.tsv"))
-  val offset:  ScallopOption[Int]      = opt[Int]     (default  = Some(1))
-  val levels:  ScallopOption[Int]      = opt[Int]     (default  = Some(5))
-  val entries: ScallopOption[Int]      = opt[Int]     (default  = Some(2000))
-  val frame:   ScallopOption[Double]   = opt[Double]  (default  = Some(1.0))
-  val fraction:ScallopOption[Double]   = opt[Double]  (default  = Some(0.25))
-  val debug:   ScallopOption[Boolean]  = opt[Boolean] (default  = Some(false))
+  val input:   ScallopOption[String]  = opt[String]  (required = true)
+  val grid:    ScallopOption[String]  = opt[String]  (required = true)
+  val name:    ScallopOption[String]  = opt[String]  (required = true)
+  val output:  ScallopOption[String]  = opt[String]  (default  = Some("/tmp/output.tsv"))
+  val offset:  ScallopOption[Int]     = opt[Int]     (default  = Some(1))
+  val levels:  ScallopOption[Int]     = opt[Int]     (default  = Some(5))
+  val entries: ScallopOption[Int]     = opt[Int]     (default  = Some(2000))
+  val frame:   ScallopOption[Double]  = opt[Double]  (default  = Some(1.0))
+  val fraction:ScallopOption[Double]  = opt[Double]  (default  = Some(0.25))
+  val debug:   ScallopOption[Boolean] = opt[Boolean] (default  = Some(false))
 
   verify()
 }
