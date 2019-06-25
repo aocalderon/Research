@@ -234,10 +234,13 @@ object FF_Scaleup{
     Flock(pids, start, end, center)
   }
 
-  def extractTimestamp(points: PointRDD, timestamp:  Int, sespg: String, tespg: String): PointRDD = {
-    new PointRDD(points.rawSpatialRDD.rdd.filter{
+  def extractTimestamp(points: PointRDD, KTPartitioner: KDBTreePartitioner, timestamp:  Int, sespg: String, tespg: String): PointRDD = {
+    val p = new PointRDD(points.rawSpatialRDD.rdd.filter{
       _.getUserData().toString().split("\t").reverse.head.toInt == timestamp
     }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
+    p.spatialPartitioning(KTPartitioner)
+    p.spatialPartitionedRDD.cache()
+    p
   }
 
   def makePoint(pattern: String, timestamp: Int): Point = {
@@ -438,10 +441,6 @@ object FF_Scaleup{
     points.rawSpatialRDD.cache()
     val nPoints = points.rawSpatialRDD.count()
     val timestamps = points.rawSpatialRDD.rdd.map(_.getUserData.toString().split("\t").reverse.head.toInt).distinct.collect()
-    val pointset: HashMap[Int, PointRDD] = new HashMap()
-    for(timestamp <- timestamps.filter(_ < fftimestamp)){
-      pointset += (timestamp -> extractTimestamp(points, timestamp, params.sespg(), params.tespg()))
-    }
     points.analyze()
     logEnd(stage, timer, nPoints)
 
@@ -456,8 +455,7 @@ object FF_Scaleup{
     tree.setChildren(cells.asJava)
     tree.assignLeafIds()
     val KTPartitioner = new KDBTreePartitioner(tree)
-    logEnd(stage, timer, KTPartitioner.getGrids.size)
-    
+    logEnd(stage, timer, KTPartitioner.getGrids.size)    
 
     // MF Partitioner...
     timer = clocktime
@@ -471,6 +469,16 @@ object FF_Scaleup{
     val h_cell  = cells.head.getHeight
     val MFPartitioner = new GridPartitioner(cells.asJava, epsilon, w_cell, h_cell, x_cells, y_cells)
     logEnd(stage, timer, MFPartitioner.getGrids.size)    
+
+    // Pointset done...
+    timer = clocktime
+    stage = "Pointset done"
+    logStart(stage)
+    val pointset: HashMap[Int, PointRDD] = new HashMap()
+    for(timestamp <- timestamps.filter(_ < fftimestamp)){
+      pointset += (timestamp -> extractTimestamp(points, KTPartitioner, timestamp, params.sespg(), params.tespg()))
+    }
+    logEnd(stage, timer, pointset.size)    
 
     if(debug){ logger.info(s"Current timestamps: ${timestamps.filter(_ < fftimestamp).mkString(" ")}") }
 
