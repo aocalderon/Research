@@ -9,7 +9,15 @@ output:
 library(tidyverse)
 ```
 
-```{r}
+Using KDBTree for for the spatial joins...
+
+[Grid B1 (304 partitions)](Figures/KDBTree1/B1.png)
+[Grid B2 (552 partitions)](Figures/KDBTree1/B2.png)
+[Grid B4 (1108 partitions)](Figures/KDBTree1/B4.png)
+
+* KDBTree parameters: Max entries per node=500, Max levels=1024. 
+
+```{r echo=FALSE}
 fields = c("Timestamp", "Tag", "appId", "Cores", "Executors", "Epsilon", "Mu", "Delta", "Time", "Load")
 data_path = "~/Documents/PhD/Research/Scripts/R/R17/nohubKDBTree1.txt"
 data = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>%
@@ -21,7 +29,7 @@ data = enframe(read_lines(data_path), name = "n", value = "line") %>% select(lin
 head(data)
 ```
 
-```{r}
+```{r echo=FALSE}
 data$Executors = factor(data$Executors, levels = c("3","6","12"))
 data$Epsilon   = factor(data$Epsilon,   levels = c("100.0","110.0"))
 p = ggplot(data = data, aes(x = Epsilon, y = Time, fill = Executors)) +
@@ -31,10 +39,10 @@ p = ggplot(data = data, aes(x = Epsilon, y = Time, fill = Executors)) +
 plot(p)
 ```
 
-* Dataset: Berlin (x1) with 5 executors, Berlin (x2) with 10 executors and Berlin (x3) with 15 executors.
+* Dataset: Berlin (x1) with 3 executors, Berlin (x2) with 6 executors and Berlin (x4) with 12 executors.
 * 4 cores per executor.  
 
-```{r}
+```{r echo=FALSE}
 data = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>%
   filter(grepl("PFLOCK", line)) %>% separate(line, into = fields, sep = "\\|") %>%
   select(appId, Epsilon)
@@ -46,8 +54,6 @@ data1 = enframe(read_lines(data_path), name = "n", value = "line") %>% select(li
 data2 = data %>% inner_join(data1, by = "appId") %>% select(Epsilon, Executors, Stage, Time, Interval) %>%
   filter(grepl("[1-6]\\.", Stage)) %>% filter(Epsilon == "110.0") %>% mutate(Stage = paste0(Interval,"-",str_trim(Stage))) %>%
   group_by(Executors, Stage) %>% summarise(Time = mean(Time))
-  
-show(data2)
 
 data2$Executors = factor(data2$Executors, levels = c("3","6","12"))
 p = ggplot(data = data2, aes(x = Stage, y = Time, fill = Executors)) +
@@ -58,7 +64,7 @@ plot(p)
 
 ```
 
-```{r}
+```{r echo=FALSE}
 data = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>%
   filter(grepl("PFLOCK", line)) %>% separate(line, into = fields, sep = "\\|") %>%
   select(appId, Epsilon)
@@ -70,8 +76,6 @@ data1 = enframe(read_lines(data_path), name = "n", value = "line") %>% select(li
 data2 = data %>% inner_join(data1, by = "appId") %>% select(Epsilon, Executors, Stage, Time, Interval) %>%
   filter(grepl("[A-F]\\.", Stage)) %>% filter(Epsilon == "100.0") %>% mutate(Stage = paste0(Interval,"-",str_trim(Stage))) %>%
   group_by(Executors, Stage) %>% summarise(Time = mean(Time))
-  
-show(data2)
 
 data2$Executors = factor(data2$Executors, levels = c("3","6","12"))
 p = ggplot(data = data2, aes(x = Stage, y = Time, fill = Executors)) +
