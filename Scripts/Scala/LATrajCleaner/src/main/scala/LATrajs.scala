@@ -45,7 +45,7 @@ object LATrajs {
   def clocktime = System.currentTimeMillis()
 
   def log(msg: String, timer: Long, n: Long, status: String): Unit ={
-    logger.info("LATs|%6.2f|%-50s|%6.2f|%6d|%s".format((clocktime-startTime)/1000.0, msg, (clocktime-timer)/1000.0, n, status))
+    logger.info("LATs|%6.2f|%-50s|%6.2f|%8d|%s".format((clocktime-startTime)/1000.0, msg, (clocktime-timer)/1000.0, n, status))
   }
 
   def main(args: Array[String]): Unit = {
@@ -55,7 +55,8 @@ object LATrajs {
     val offset = params.offset()
     val cores = params.cores()
     val executors = params.executors()
-    val instant = params.instant()
+    val tstart = params.tstart()
+    val tend = params.tend()
     val master = params.local() match {
       case true  => s"local[${cores}]"
       case false => s"spark://${params.host()}:${params.port()}"
@@ -93,9 +94,16 @@ object LATrajs {
     val nPoints = points.count()
     log(stage, timer, nPoints, "END")
 
-    points.groupBy($"t").count().orderBy($"t").show(200, false)
+    //points.groupBy($"t").count().orderBy($"t").show(200, false)
 
-    savePoints(points.filter(_.t == instant).rdd, output)
+    // Sample saved...
+    timer = clocktime
+    stage = "Sample saved"
+    log(stage, timer, 0, "START")
+    val sample = points.filter(p => tstart <= p.t && p.t <= tend).rdd.cache()
+    savePoints(sample, output)
+    val nSample = sample.count()
+    log(stage, timer, nSample, "END")
 
     timer = clocktime
     stage = "Session close"
@@ -118,7 +126,8 @@ class LATsConf(args: Seq[String]) extends ScallopConf(args) {
   val local:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val offset:     ScallopOption[Int]     = opt[Int]     (default = Some(1))
-  val instant:    ScallopOption[Int]     = opt[Int]     (default = Some(0))  
+  val tstart:     ScallopOption[Int]     = opt[Int]     (default = Some(0))  
+  val tend:       ScallopOption[Int]     = opt[Int]     (default = Some(200))  
 
   verify()
 }
