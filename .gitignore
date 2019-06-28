@@ -41,6 +41,27 @@ Scripts/Scala/LCM/project/*
 Scripts/Scala/LCM/.idea/*
 Scripts/Scala/LCM/.idea/workspace.xml
 
+#Scripts/Scala//target/*
+#Scripts/Scala//project/*
+#Scripts/Scala//.idea/*
+#Scripts/Scala//.idea/workspace.xml
+#Scripts/Scala//.ensime
+#Scripts/Scala//.ensime_cache/*
+
+Scripts/Scala/DatasetReplicator/target/*
+Scripts/Scala/DatasetReplicator/project/*
+Scripts/Scala/DatasetReplicator/.idea/*
+Scripts/Scala/DatasetReplicator/.idea/workspace.xml
+Scripts/Scala/DatasetReplicator/.ensime
+Scripts/Scala/DatasetReplicator/.ensime_cache/*
+
+Scripts/Scala/LATrajCleaner/target/*
+Scripts/Scala/LATrajCleaner/project/*
+Scripts/Scala/LATrajCleaner/.idea/*
+Scripts/Scala/LATrajCleaner/.idea/workspace.xml
+Scripts/Scala/LATrajCleaner/.ensime
+Scripts/Scala/LATrajCleaner/.ensime_cache/*
+
 Scripts/Scala/BerlinCopier/target/*
 Scripts/Scala/BerlinCopier/project/*
 Scripts/Scala/BerlinCopier/.idea/*
