@@ -148,8 +148,6 @@ object MF{
     logStart(stage)
     val grids  = MFPartitioner.getGrids.asScala.toList.zipWithIndex.map(g => g._2 -> g._1).toMap
     val nGrids = MFPartitioner.getGrids.size
-    logger.info(s"Cell dimensions: ${grids(0).getWidth} x ${grids(0).getHeight}")
-    logger.info(s"Cell area: ${grids(0).getArea}")
     val maximals = diskCircles.spatialPartitionedRDD.rdd
       .mapPartitionsWithIndex{ (i, disks) =>
         var result = List.empty[String]
@@ -303,7 +301,6 @@ object MF{
     val g = Xs cross Ys
     val error = 0.0000001
     val grids = g.toList.map(g => new Envelope(g._1, g._1 + dx - error, g._2, g._2 + dy - error))
-    logger.info(s"Number of grid envelops: ${grids.size}")
     new GridPartitioner(grids.asJava, epsilon, dx, dy, Xs.size, Ys.size)
   }
 

@@ -385,7 +385,6 @@ object FF{
     val g = Xs cross Ys
     val error = 0.0000001
     val grids = g.toList.map(g => new Envelope(g._1, g._1 + dx - error, g._2, g._2 + dy - error))
-    logger.info(s"Number of grid envelops: ${grids.size}")
     new GridPartitioner(grids.asJava, epsilon, dx, dy, Xs.size, Ys.size)
   }
 
