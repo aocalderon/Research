@@ -1,0 +1,84 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r include=FALSE}
+library(tidyverse)
+```
+
+```{r}
+fields = c("Timestamp", "Tag", "appId", "Cores", "Executors", "Epsilon", "Mu", "Delta", "Time", "Load")
+data_path = "~/Documents/PhD/Research/Scripts/R/R17/nohubGrid1.txt"
+data = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>%
+  filter(grepl("PFLOCK", line)) %>% separate(line, into = fields, sep = "\\|") %>%
+  mutate(Time = as.numeric(Time)) %>%
+  group_by(Executors, Epsilon) %>% summarise(Time = mean(Time)) %>%
+  arrange(Time)
+
+head(data)
+```
+
+```{r}
+data$Executors = factor(data$Executors, levels = c("5","10","15"))
+data$Epsilon   = factor(data$Epsilon,   levels = c("90.0", "100.0","110.0"))
+p = ggplot(data = data, aes(x = Epsilon, y = Time, fill = Executors)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Epsilon(m)", y="Time(s)", title="Execution time after varying Epsilon parameter.") 
+plot(p)
+```
+
+* Dataset: Berlin (x1) with 5 executors, Berlin (x2) with 10 executors and Berlin (x3) with 15 executors.
+* 4 cores per executor.  
+
+```{r}
+data = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>%
+  filter(grepl("PFLOCK", line)) %>% separate(line, into = fields, sep = "\\|") %>%
+  select(appId, Epsilon)
+
+fields2 = c("Timestamp", "Tag", "appId", "Executors", "Cores", "Status", "Duration", "Stage", "Time", "Load", "Interval")
+data1 = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% filter(grepl("\\|FF\\|", line)) %>%
+  filter(grepl("END", line)) %>% separate(line, into = fields2, sep = "\\|") %>%
+  mutate(Time = as.numeric(Time))
+data2 = data %>% inner_join(data1, by = "appId") %>% select(Epsilon, Executors, Stage, Time, Interval) %>%
+  filter(grepl("[1-6]\\.", Stage)) %>% filter(Epsilon == "100.0") %>% mutate(Stage = paste0(Interval,"-",str_trim(Stage))) %>%
+  group_by(Executors, Stage) %>% summarise(Time = mean(Time))
+  
+show(data2)
+
+data2$Executors = factor(data2$Executors, levels = c("5","10","15"))
+p = ggplot(data = data2, aes(x = Stage, y = Time, fill = Executors)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Stages", y="Time(s)", title="Execution time during the Flock Finding.") 
+plot(p)
+
+```
+
+
+```{r}
+data = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>%
+  filter(grepl("PFLOCK", line)) %>% separate(line, into = fields, sep = "\\|") %>%
+  select(appId, Epsilon)
+
+fields3 = c("Timestamp", "Tag", "appId", "Executors", "Cores", "Status", "Duration", "Stage", "Time", "Load", "Interval")
+data1 = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% filter(grepl("\\|MF\\|", line)) %>%
+  filter(grepl("END", line)) %>% separate(line, into = fields3, sep = "\\|") %>%
+  mutate(Time = as.numeric(Time))
+data2 = data %>% inner_join(data1, by = "appId") %>% select(Epsilon, Executors, Stage, Time, Interval) %>%
+  filter(grepl("[A-F]\\.", Stage)) %>% filter(Epsilon == "100.0") %>% mutate(Stage = paste0(Interval,"-",str_trim(Stage))) %>%
+  group_by(Executors, Stage) %>% summarise(Time = mean(Time))
+  
+show(data2)
+
+data2$Executors = factor(data2$Executors, levels = c("5","10","15"))
+p = ggplot(data = data2, aes(x = Stage, y = Time, fill = Executors)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Stages", y="Time(s)", title="Execution time during the Maximal Disks Finding.") 
+plot(p)
+
+```
