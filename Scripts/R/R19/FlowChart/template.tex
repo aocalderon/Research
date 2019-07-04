@@ -1,0 +1,25 @@
+\documentclass[border=0cm]{standalone}
+\usepackage{tikz}
+\tikzset{
+    dot/.style={
+        draw, scale=0.4, shape=circle, color=black, fill=black
+    },
+    blues/.style={
+        color=blue
+    }
+}
+\definecolor{light-gray}{gray}{0.75}
+
+\newcommand{\points}{1.0/2.0, 3.0/4.0, 1.0/1.0, 5.1/8}
+\newcommand{\eps}{0.5}
+\begin{document}
+    \begin{tikzpicture}
+        \draw[color=light-gray, style=dashed, step=5.0] (0,0) grid (10,10);
+        \foreach \x/\y [count=\k from 0] in \points{
+            \coordinate[dot] (p\k) at (\x,\y);
+        }
+        \foreach \x/\y in \points{
+            \draw[dashed] (\x,\y) circle (\eps);
+        }
+    \end{tikzpicture}
+\end{document}
