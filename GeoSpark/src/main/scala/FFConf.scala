@@ -11,6 +11,7 @@ class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val mu:           ScallopOption[Int]     =  opt[Int]      (default  = Some(3))
   val delta:        ScallopOption[Int]     =  opt[Int]      (default  = Some(3))
   val master:       ScallopOption[String]  =  opt[String]   (default  = Some("169.235.27.138")) //spark://169.235.27.134:7077
+  val host:         ScallopOption[String]  =  opt[String]   (default  = Some("169.235.27.138")) 
   val port:         ScallopOption[String]  =  opt[String]   (default  = Some("7077"))
   val portui:       ScallopOption[String]  =  opt[String]   (default  = Some("4040"))
   val sespg:        ScallopOption[String]  =  opt[String]   (default  = Some("epsg:3068"))
@@ -40,6 +41,7 @@ class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val ffdebug:      ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
   val mfdebug:      ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
   val info:         ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
+  val local:        ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
 
   verify()
 }

@@ -165,9 +165,12 @@ object MF{
             val pids = p.getItems.mkString(" ")
             val x    = p.getX
             val y    = p.getY
-            (pids, p.getX, p.getY)
+            val grid = grids(i)
+            val point = geofactory.createPoint(new Coordinate(x, y))
+            val flag = isNotInExpansionArea(point, grid, 0.0)
+            ((pids, p.getX, p.getY), flag)
           }
-          //.filter(_._2).map(_._1)
+          .filter(_._2).map(_._1)
           .map(p => s"${p._1}\t${p._2}\t${p._3}\n").toList
         result.toIterator
       }.cache()
@@ -177,12 +180,38 @@ object MF{
     val executionTime = (localEnd - localStart) / 1000.0
     logger.info(s"MAXIMALS|$appID|$cores|$executors|$epsilon|$mu|$nGrids|$executionTime|$nMaximals")
 
+    if(debug){
+      val decimals = 2
+
+      logger.info("Points")
+      val pointsTikz = points.rawSpatialRDD.rdd.collect().map(c => s"${roundAt(decimals)(c.getX)}/${roundAt(decimals)(c.getY)}").mkString(", ")
+      logger.info(pointsTikz)
+
+      logger.info("Pairs")
+      val pairsTikz =pairs.collect().map{ p =>
+        s"\\draw[pair] (${roundAt(decimals)(p._1._2.getX)},${roundAt(decimals)(p._1._2.getY)}) -- (${roundAt(decimals)(p._2._2.getX)},${roundAt(decimals)(p._2._2.getY)});"
+      }
+      pairsTikz.foreach(println)
+
+      logger.info("Centers")
+      val centersTikz = centers.collect().map(c => s"${roundAt(decimals)(c.getX)}/${roundAt(decimals)(c.getY)}").mkString(", ")
+      logger.info(centersTikz)
+
+      logger.info("Disks")
+      val disksTikz = disks.collect().map(c => s"${roundAt(decimals)(c.getX)}/${roundAt(decimals)(c.getY)}").mkString(", ")
+      logger.info(disksTikz)
+
+      logger.info("Maximals")
+      val maximalsTikz = maximals.collect().map{ m =>
+        val arr = m.split("\t")
+        s"${roundAt(decimals)(arr(1).toDouble)}/${roundAt(decimals)(arr(2).toDouble)}"
+      }.mkString(", ")
+      logger.info(maximalsTikz)
+
+    }
+
     (maximals, nMaximals)
   }
-
-  // val grid = grids(i)
-  // val point = geofactory.createPoint(new Coordinate(p.getX, p.getY))
-  // val flag = isNotInExpansionArea(point, grid, 0.0)
 
   def envelope2Polygon(e: Envelope): Polygon = {
     val minX = e.getMinX()
@@ -316,7 +345,7 @@ object MF{
     val input       = params.input()
     val p_grid      = params.p_grid()
     val m_grid      = params.m_grid()
-    val master      = params.master()
+    val host        = params.host()
     val port        = params.port()
     val portUI      = params.portui()
     val offset      = params.offset()
@@ -325,8 +354,12 @@ object MF{
     val info        = params.info()
     val timestamp   = params.timestamp()
     val epsilon     = params.epsilon()
-    cores       = params.cores()
-    executors   = params.executors()
+    cores           = params.cores()
+    executors       = params.executors()
+    val master      = params.local() match {
+      case true  => s"local[${cores}]"
+      case false => s"spark://${host}:${port}"
+    }
     val Dpartitions = (cores * executors) * params.dpartitions()
     val Mpartitions = params.mfpartitions()
 
@@ -341,7 +374,7 @@ object MF{
       .config("spark.scheduler.mode", "FAIR")
       .config("spark.cores.max", cores * executors)
       .config("spark.executor.cores", cores)
-      .master(s"spark://${master}:${port}")
+      .master(master)
       .appName("MaximalFinder")
       .getOrCreate()
     import spark.implicits._
