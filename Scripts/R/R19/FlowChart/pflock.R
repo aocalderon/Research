@@ -13,7 +13,7 @@ x = runif(n, 0, size)
 y = runif(n, 0, size)
 pointset=data.frame(x = x, y = y)
 pointset2 = data.frame(id=1:n, x=x, y=y, t=rep(0,n))
-write_table
+write.table(pointset2, "sample.tsv", sep="\t", row.names = F, col.names = F)
 data = sqldf("SELECT p1.x AS x1, p1.y AS y1, p2.x AS x2, p2.y AS y2 FROM pointset p1 CROSS JOIN pointset p2 ")
 dim = 10
 margin = 0

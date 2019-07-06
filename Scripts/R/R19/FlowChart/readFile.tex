@@ -1,0 +1,15 @@
+\documentclass{article}
+\usepackage{datatool}
+\DTLsetseparator{ = }% Set the separator between the columns. Could be
+% anything you like. Whitespaces are not trimmed, so you have to set
+%them as part of the separator.
+
+\begin{document}
+\DTLloaddb[noheader, keys={thekey,thevalue}]{mydata}{mydata.dat}
+% Loads mydata.dat with column headers 'thekey' and 'thevalue'
+
+\newcommand{\missingcommand}[1]{\DTLfetch{mydata}{thekey}{#1}{thevalue}}
+
+The centers are \missingcommand{centers}.
+
+\end{document}

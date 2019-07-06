@@ -10,15 +10,15 @@
 }
 \definecolor{light-gray}{gray}{0.75}
 
-\newcommand{\points}{1.0/2.0, 3.0/4.0, 1.0/1.0, 5.1/8}
-\newcommand{\eps}{0.5}
+\newcommand{\centers}{5.99/9.17, 3.41/7.64, 2.0/7.33}
+\newcommand{\eps}{0.75}
 \begin{document}
     \begin{tikzpicture}
         \draw[color=light-gray, style=dashed, step=5.0] (0,0) grid (10,10);
-        \foreach \x/\y [count=\k from 0] in \points{
+        \foreach \x/\y [count=\k from 0] in \centers {
             \coordinate[dot] (p\k) at (\x,\y);
         }
-        \foreach \x/\y in \points{
+        \foreach \x/\y in \centers {
             \draw[dashed] (\x,\y) circle (\eps);
         }
     \end{tikzpicture}
