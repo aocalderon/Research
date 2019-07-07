@@ -74,8 +74,11 @@ object FF{
       stage = "1.Maximal disks found"
       logStart(stage)
       val T_i = pointset.get(timestamp).get
-      val C = new PointRDD(MF_Scaleup.run(spark, T_i, KTPartitioner, MFPartitioner, params, s"$timestamp")._1.map(c => makePoint(c, timestamp)).toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
-      val nDisks = C.rawSpatialRDD.count()
+      val MFrun = MF.run(spark, T_i, KTPartitioner, MFPartitioner, params, timestamp, s"$timestamp")
+      val C = MFrun._1
+      C.analyze()
+      C.CRSTransform(sespg, tespg)
+      val nDisks = MFrun._2
       logEnd(stage, timer, nDisks, s"$timestamp")
 
       if(firstRun){
@@ -225,10 +228,10 @@ object FF{
   }
 
   def getFlocksFromGeom(g: Geometry): Flock = {
-    val farr = g.getUserData.toString().split(";")
-    val pids = farr(0).split(" ").map(_.toInt).toList
-    val start = farr(1).toInt
-    val end = farr(2).toInt
+    val farr   = g.getUserData.toString().split(";")
+    val pids   = farr(0).split(" ").map(_.toInt).toList
+    val start  = farr(1).toInt
+    val end    = farr(2).toInt
     val center = g.getCentroid
 
     Flock(pids, start, end, center)

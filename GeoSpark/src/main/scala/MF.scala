@@ -30,7 +30,7 @@ object MF{
   private var cores: Int = 0
   private var executors: Int = 0
 
-  def run(spark: SparkSession, points: PointRDD, KTPartitioner: KDBTreePartitioner, MFPartitioner: GridPartitioner, params: FFConf, info: String = ""): (RDD[String], Long) = {
+  def run(spark: SparkSession, points: PointRDD, KTPartitioner: KDBTreePartitioner, MFPartitioner: GridPartitioner, params: FFConf, timestamp: Int = -1, info: String = ""): (PointRDD, Long) = {
     import spark.implicits._
 
     appID     = spark.sparkContext.applicationId
@@ -148,9 +148,10 @@ object MF{
     logStart(stage)
     val grids  = MFPartitioner.getGrids.asScala.toList.zipWithIndex.map(g => g._2 -> g._1).toMap
     val nGrids = MFPartitioner.getGrids.size
+
     val maximals = diskCircles.spatialPartitionedRDD.rdd
-      .mapPartitionsWithIndex{ (i, disks) =>
-        var result = List.empty[String]
+      .mapPartitionsWithIndex{ (i, disks) => 
+        //var result = List.empty[Point]
         val transactions = disks.map{ d =>
           val x = d.getCenterPoint.x
           val y = d.getCenterPoint.y
@@ -160,21 +161,26 @@ object MF{
         val LCM = new AlgoLCM2()
         val data = new Transactions(transactions, 0)
         LCM.run(data)
-        result = LCM.getPointsAndPids.asScala
+        LCM.getPointsAndPids.asScala
           .map{ p =>
             val pids = p.getItems.mkString(" ")
             val x    = p.getX
             val y    = p.getY
+            val t    = timestamp
             val grid = grids(i)
             val point = geofactory.createPoint(new Coordinate(x, y))
             val flag = isNotInExpansionArea(point, grid, 0.0)
-            ((pids, p.getX, p.getY), flag)
-          }
-          .filter(_._2).map(_._1)
-          .map(p => s"${p._1}\t${p._2}\t${p._3}\n").toList
-        result.toIterator
+            point.setUserData(s"$pids;$timestamp;$timestamp")
+            (point, flag)
+          }.filter(_._2).map(_._1).toIterator
       }.cache()
     val nMaximals = maximals.count()
+    val maximalsRDD = new PointRDD()
+    maximalsRDD.rawSpatialRDD = maximals
+    maximalsRDD.spatialPartitionedRDD = maximals
+    maximalsRDD.grids = grids.map(_._2).toList.asJava
+    maximalsRDD.setPartitioner(MFPartitioner)
+
     logEnd(stage, timer, nMaximals)
     val localEnd = clocktime
     val executionTime = (localEnd - localStart) / 1000.0
@@ -202,15 +208,10 @@ object MF{
       logger.info(disksTikz)
 
       logger.info("Maximals")
-      val maximalsTikz = maximals.collect().map{ m =>
-        val arr = m.split("\t")
-        s"${roundAt(decimals)(arr(1).toDouble)}/${roundAt(decimals)(arr(2).toDouble)}"
-      }.mkString(", ")
+      val maximalsTikz = maximals.collect().map(c => s"${roundAt(decimals)(c.getX)}/${roundAt(decimals)(c.getY)}").mkString(", ")
       logger.info(maximalsTikz)
-
     }
-
-    (maximals, nMaximals)
+    (maximalsRDD, nMaximals)
   }
 
   def envelope2Polygon(e: Envelope): Polygon = {
