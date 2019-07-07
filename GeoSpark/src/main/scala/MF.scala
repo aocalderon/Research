@@ -430,7 +430,7 @@ object MF{
     stage = "Session closed"
     logStart(stage)
     if(info){
-      InfoTracker.master = master
+      InfoTracker.master = host
       InfoTracker.port = portUI
       InfoTracker.applicationID = appID
       InfoTracker.executors = executors
