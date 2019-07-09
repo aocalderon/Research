@@ -1,0 +1,66 @@
+---
+title: "LA Dataset"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+## Executors performance at time instant 20
+```{r include=F}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+nExperiments = 180
+ylim = 1150
+```
+
+```{r echo=F}
+fields = c("Timestamp", "Tag", "appId", "Cores", "Executors", "Epsilon", "Mu", "Partitions", "Time", "Flocks")
+data_path = "~/Documents/PhD/Research/Scripts/R/R19/Plots/nohupMF2.txt"
+apps = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% 
+  filter(grepl("MAXIMALS", line)) %>% separate(line, into = fields, sep = "\\|") %>%
+  select(appId, Partitions) 
+
+submit = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% 
+  filter(grepl("spark-submit", line)) %>% separate(line, into=paste0("A", 1:16), sep = "--") %>% 
+  mutate(A11 = str_trim(A11), A12 = str_trim(A12)) %>%
+  separate(A11, c(NA,"Instant"), sep = " ") %>% separate(A12, c(NA,"CellSize"), sep = " ") %>%
+  select(Instant, CellSize) %>% mutate(Instant = as.numeric(Instant), CellSize = as.numeric(CellSize))
+data = bind_cols(apps, submit)
+
+getExecutorInfo <- function(data0, i, c){
+  prefix = "/home/and/Documents/PhD/Research/Scripts/R/R19/Plots/apps2/app-"
+  sufix  = "_info.tsv"
+
+  info = data0 %>% filter(Instant == i, CellSize == c) %>% select(appId) %>%
+    separate(appId, c(NA,NA,"appId"), sep="-") %>%
+    map(function(x){ paste0(prefix,x,sufix)})
+  return(as.vector(info$appId))
+}
+
+executorsFields = c("EXECUTORS","ExecutorId","Executors","Cores","RDDS","Tasks","Time","Input","Host","appId")
+getExecutors <- function(filename){
+  executors = enframe(read_lines(filename)) %>%
+    filter(grepl("EXECUTORS", value)) %>%
+    separate(value, executorsFields, sep = "\\|") %>%
+    separate(appId, c(NA,NA,"appId"), sep="-") %>%
+    mutate(ExecutorId = as.numeric(ExecutorId))
+  return(executors)
+}
+```
+
+### Executors performance for time instance=20 and cell size=400
+```{r echo=F}
+executors400 = bind_rows(getExecutorInfo(data, 20, 400) %>% map(getExecutors)) %>% 
+  select(appId, ExecutorId, Host, Tasks, Input, Time)
+head(executors400 %>% arrange(appId, ExecutorId), n=75)
+```
+
+### Executors performance for time instance=20 and cell size=600
+```{r echo=F}
+
+executors600 = bind_rows(getExecutorInfo(data, 20, 600) %>% map(getExecutors))%>% 
+  select(appId, ExecutorId, Host, Tasks, Input, Time)
+head(executors600 %>% arrange(appId, ExecutorId), n=75)
+
+```

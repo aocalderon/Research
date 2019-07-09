@@ -1,0 +1,87 @@
+---
+title: "LA Dataset"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r include=F}
+library(tidyverse)
+library(cowplot)
+library(knitr)
+library(kableExtra)
+nExperiments = 100
+```
+
+```{r echo=F}
+fields3 = c("Timestamp", "Tag", "appId", "Executors", "Cores", "Status", "Duration", "Stage", "Time", "Load", "Interval")
+data_path = "~/Documents/PhD/Research/Scripts/R/R19/Plots/nohupMF1.txt"
+stages = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% filter(grepl("\\|MF\\|", line)) %>%
+  filter(grepl("END", line)) %>% separate(line, into = fields3, sep = "\\|") %>%
+  filter(grepl("[A-F]\\.", Stage)) %>%
+  mutate(Time = as.numeric(Time), Load = as.numeric(Load)) %>%
+  select(Stage, Time, Load) %>% mutate(id = rep(1:nExperiments, each = 6))
+
+submit = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% 
+  filter(grepl("spark-submit", line)) %>% separate(line, into=paste0("A", 1:16), sep = "--") %>% 
+  mutate(A11 = str_trim(A11), A12 = str_trim(A12)) %>%
+  separate(A11, c(NA,"Instant"), sep = " ") %>% separate(A12, c(NA,"CellSize"), sep = " ") %>%
+  select(Instant, CellSize) %>% mutate(Instant = as.numeric(Instant), CellSize = as.numeric(CellSize)) %>% 
+  mutate(id = 1:nExperiments)
+stage_names = tibble(StageId = c("A","B","C","D","E","F"), StageName = c("Partitioning points", "Finding pairs", "Computing centers", "Finding disks", "Partitioning disks", "Maximal disks"))
+data = stages %>% inner_join(submit, by = "id") %>%
+  group_by(Instant, CellSize, Stage) %>% summarise(Time = mean(Time), Output = mean(Load)) %>%
+  ungroup() %>% separate(Stage, c("StageId", NA), sep = "\\.") %>% inner_join(stage_names, by = "StageId") %>%
+  mutate(Stage = paste0(StageId,".",StageName)) %>% select(Instant, CellSize, Stage, Time, Output)
+data$Input = c(0, data$Output[1:(length(data$Output) - 1)])
+head(data, n=nExperiments)
+```
+
+## At time instant 16
+```{r echo=F, results= 'asis'}
+data0 = data %>% filter(Instant == 16) %>% select(Stage, CellSize, Input, Output, Time)
+data0[data0$Stage == "A.Partitioning points", "Input"] = data0[data0$Stage == "A.Partitioning points", "Output"]
+df = head(data0)
+kable(df, format = "latex", digits = 2, booktabs = T) %>% kable_styling(position = "center")
+```
+
+```{r echo=F, fig.width=10}
+p = ggplot(data = data0, aes(x = Stage, y = Time, fill = factor(CellSize))) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Stage", y="Time [s]", title="Execution time for maximal disk finding per time instant", fill="Cell Size") 
+plot(p)
+
+data1 = data0 %>% select(Stage, CellSize, Input, Output) %>% gather(Params, Records, -Stage, -CellSize)
+g = ggplot(data = data1, aes(x = Stage, y = Records, fill = factor(Params))) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Stage", y="Number of records [n]", title="Input and output at each stage by cell size", fill="") +
+  facet_grid(cols = vars(CellSize))
+plot(g)
+
+```
+
+## At time instant 19
+
+```{r echo=F, fig.width=10}
+data0 = data %>% filter(Instant == 19) %>% select(Stage, CellSize, Input, Output, Time)
+data0[data0$Stage == "A.Partitioning points", "Input"] = data0[data0$Stage == "A.Partitioning points", "Output"]
+head(data0, 30)
+
+p = ggplot(data = data0, aes(x = Stage, y = Time, fill = factor(CellSize))) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Stage", y="Time [s]", title="Execution time for maximal disk finding per time instant", fill="Cell Size") 
+plot(p)
+
+data1 = data0 %>% select(Stage, CellSize, Input, Output) %>% gather(Params, Records, -Stage, -CellSize)
+g = ggplot(data = data1, aes(x = Stage, y = Records, fill = factor(Params))) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Stage", y="Number of records [n]", title="Input and output at each stage by cell size", fill="") +
+  facet_grid(cols = vars(CellSize))
+plot(g)
+
+```

@@ -51,15 +51,15 @@ head(data, n=11)
 
 
 ```{r echo=FALSE}
-p = ggplot(data = data, aes(x = Interval, y = Load)) +
+p1 = ggplot(data = data, aes(x = Interval, y = Load)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   labs(x="Time instant", y="Load (number of disks to filter)", title="Execution time for maximal disk finding per time instant") 
-plot(p)
+plot(p1)
 
-p = ggplot(data = data, aes(x = Interval, y = Time)) +
+p2 = ggplot(data = data, aes(x = Interval, y = Time)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(x="Time instant", y="Time(s)", title="Execution time for maximal disk finding per time instant") 
-plot(p)
+  labs(x="Time instant", y="Time(s)", title="Execution time for maximal\\ disk finding per time instant") 
+plot(p2)
 ```
