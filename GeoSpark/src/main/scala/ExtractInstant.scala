@@ -6,7 +6,7 @@ import org.apache.spark.sql.functions._
 import scala.collection.JavaConverters._
 import org.rogach.scallop._
 
-object RemoveDuplicates{
+object ExtractInstant{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   case class Point(id: Long, x: Double, y: Double, t: Int)
@@ -22,8 +22,9 @@ object RemoveDuplicates{
       .getOrCreate()
     import spark.implicits._
 
+    logger.info("Reading data...")
     val ds = spark.read.option("header", "false").option("delimiter", "\t")
-      .csv("/home/acald013/Datasets/LA/LA.tsv")
+      .csv("/home/acald013/Datasets/LA/LA_clean.tsv")
       .map{ p =>
         val id = p.getString(0).toLong
         val x  = p.getString(1).toDouble
@@ -33,17 +34,18 @@ object RemoveDuplicates{
         Point(id, x, y, t)
       }.cache()
     ds.show()
-    logger.info(s"The initial count is ${ds.count()}")
+    logger.info(s"The total count is ${ds.count()}")
 
-    val ds_clean = ds.groupBy($"x",$"y",$"t").agg(min($"id").alias("id"))
-    .select("id", "x", "y", "t").sort($"t").cache()
-    ds_clean.show()
-    logger.info(s"The new count is ${ds_clean.count()}")
+    val instant = 16
+    logger.info(s"Extracting time instant $instant")
+    val ds_filter = ds.filter($"t" === instant)
+    ds_filter.show()
+    logger.info(s"The count for time instant: ${ds_filter.count()}")
 
-    val records = ds_clean.collect()
-      .map(p => s"${p.getLong(0)}\t${p.getDouble(1)}\t${p.getDouble(2)}\t${p.getInt(3)}\n")
+    val records = ds_filter.collect()
+      .map(p => s"${p.id}\t${p.x}\t${p.y}\t${p.t}\n")
       .mkString("")
-    val f = new java.io.PrintWriter("/home/acald013/Datasets/LA/LA_clean.tsv")
+    val f = new java.io.PrintWriter(s"/home/acald013/Datasets/LA/LA_${instant}.tsv")
     f.write(records)
     f.close()
   }
