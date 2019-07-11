@@ -188,7 +188,7 @@ object MF_Grid{
     val localEnd = clocktime
     val executionTime = (localEnd - localStart) / 1000.0
     //logger.info(s"MAXIMALS|$appID|$cores|$executors|$epsilon|$mu|$nGrids|$executionTime|$nMaximals")
-    logger.info(s"MAXIMALS|$appID|$cores|$executors|$epsilon|$mu|$nMF1Grids$executionTime")
+    logger.info(s"MAXIMALS|$appID|$cores|$executors|$epsilon|$mu|$nMF1Grids|$executionTime")
   }
 
   def envelope2Polygon(e: Envelope): Polygon = {
