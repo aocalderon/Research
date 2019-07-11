@@ -55,15 +55,23 @@ object MF_Grid{
     points.spatialPartitioning(MF1Partitioner)
 
     if(debug){
-      val gridWKT = points.getPartitioner.getGrids.asScala.map(e => s"${envelope2Polygon(e).toText()}\n").mkString("")
+      val gridWKT = points.getPartitioner.getGrids.asScala.zipWithIndex
+        .map(e => s"${envelope2Polygon(e._1).toText()}\t${e._2}\n").mkString("")
       val f = new java.io.PrintWriter("/tmp/pairsGrid.wkt")
       f.write(gridWKT)
       f.close()
+
+      val pointsWKT = points.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (i, points) =>
+        points.map(p => s"POINT(${p.getX} ${p.getY})\t${i}\n")
+      }.collect().mkString("")
+      val g = new java.io.PrintWriter("/tmp/pairsPoints.wkt")
+      g.write(pointsWKT)
+      g.close()
     }
     val pointsBuffer = new CircleRDD(points, epsilon + precision)
     pointsBuffer.analyze()
     pointsBuffer.spatialPartitioning(points.getPartitioner)
-    points.buildIndex(IndexType.QUADTREE, true) // QUADTREE works better as an indexer than RTREE...
+    points.buildIndex(IndexType.QUADTREE, true) // QUADTREE works better as an indexer than RTREE..
     points.indexedRDD.cache()
     points.spatialPartitionedRDD.cache()
     logEnd(stage, timer, points.rawSpatialRDD.count())
@@ -107,6 +115,9 @@ object MF_Grid{
     val centersRDD = new PointRDD(centers.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
     val centersBuffer = new CircleRDD(centersRDD, r + precision)
     centersBuffer.spatialPartitioning(points.getPartitioner)
+    centersBuffer.buildIndex(IndexType.QUADTREE, true) // QUADTREE works better as an indexer than RTREE..
+    centersBuffer.indexedRDD.cache()
+    centersBuffer.spatialPartitionedRDD.cache()
     val disks = JoinQuery.DistanceJoinQueryFlat(points, centersBuffer, usingIndex, considerBoundary)
       .rdd.map{ d =>
         val c = d._1.getEnvelope.getCentroid
@@ -372,6 +383,7 @@ object MF_Grid{
         t == timestamp
       }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sepsg, tepsg)
     }
+    points.analyze()
     points.CRSTransform(sepsg, tepsg)
     val nPoints = points.rawSpatialRDD.count()
     logEnd(stage, timer, nPoints)
@@ -381,26 +393,28 @@ object MF_Grid{
     stage = "MF1 partitioner"
     logStart(stage)
     val fullBoundary = points.boundaryEnvelope
+    fullBoundary.expandBy(epsilon + precision)
     val dx = params.mfcustomx()
     val dy = params.mfcustomy()
-    val MF1Partitioner = getPartitionerByCellSize(fullBoundary, epsilon, dx, dy)
+    val MF1Partitioner = getPartitionerByCellNumber(fullBoundary, epsilon, dx, dy)
     logEnd(stage, timer, MF1Partitioner.getGrids.size)    
 
     // MF2 Partitioner...
+    /*
     timer = clocktime
     stage = "MF2 partitioner"
     logStart(stage)
-    val fullBoundary2 = points.boundaryEnvelope
     val dx2 = params.mfcustomx()
     val dy2 = params.mfcustomy()
-    val MF2Partitioner = getPartitionerByCellSize(fullBoundary2, epsilon, dx2, dy2)
+    val MF2Partitioner = getPartitionerByCellNumber(fullBoundary, epsilon, dx2, dy2)
     logEnd(stage, timer, MF2Partitioner.getGrids.size)    
+     */
 
     // Running maximal finder...
     timer = System.currentTimeMillis()
     stage = "Maximal finder run"
     logStart(stage)
-    val maximals = MF_Grid.run(spark, points, MF1Partitioner, MF2Partitioner, params)
+    val maximals = MF_Grid.run(spark, points, MF1Partitioner, MF1Partitioner, params)
     logEnd(stage, timer, 0)
 
     // Closing session...
