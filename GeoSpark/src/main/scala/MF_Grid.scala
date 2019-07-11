@@ -52,8 +52,8 @@ object MF_Grid{
     var timer = System.currentTimeMillis()
     var stage = "A.Points indexed"
     logStart(stage)
-
     points.spatialPartitioning(MF1Partitioner)
+
     if(debug){
       val gridWKT = points.getPartitioner.getGrids.asScala.map(e => s"${envelope2Polygon(e).toText()}\n").mkString("")
       val f = new java.io.PrintWriter("/tmp/pairsGrid.wkt")
