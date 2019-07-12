@@ -19,7 +19,7 @@ class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val spatial:      ScallopOption[String]  =  opt[String]   (default  = Some("KDBTREE"))
   val output:       ScallopOption[String]  =  opt[String]   (default  = Some("/tmp/"))
   val ffpartitions: ScallopOption[Int]     =  opt[Int]      (default  = Some(625))
-  val mfpartitions: ScallopOption[Int]     =  opt[Int]      (default  = Some(625))
+  val mfpartitions: ScallopOption[Int]     =  opt[Int]      (default  = Some(4))
   val dpartitions:  ScallopOption[Int]     =  opt[Int]      (default  = Some(2))
   val dcustomx:     ScallopOption[Int]     =  opt[Int]      (default  = Some(30))
   val dcustomy:     ScallopOption[Int]     =  opt[Int]      (default  = Some(30))
