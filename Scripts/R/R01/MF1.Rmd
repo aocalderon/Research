@@ -1,0 +1,93 @@
+---
+title: "LA Dataset"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+## Finding grid size for initial stages
+* Extracted datasets with size 25K, 50K and 100K.  Using time instants 16 (26053 records), 32 (50923 records) and 67 (100278 records) from LA dataset.
+* Solved some issues with duplicates points (ensuring that we are getting the correct results).
+* Run experiments in the first 4 stages. Using Epsion = 25m and Mu = 5.  Running 5 sets of experiments and taking the mean.
+
+```{r include=F}
+library(tidyverse)
+```
+
+```{r echo=F}
+fields = c("Timestamp", "Tag", "appId", "Cores", "Executors", "Epsilon", "Mu", "Partitions", "Time")
+data_path = "~/Documents/PhD/Research/Scripts/R/R01/MF1.txt"
+data = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% 
+  separate(line, into = fields, sep = "\\|") %>%
+  mutate(Time = as.numeric(Time), Partitions = as.numeric(Partitions)) %>%
+  select(Partitions, Time) %>% mutate(Dataset = rep(c(25,50,100), each = 5, times = 5)) %>%
+  mutate(P = sqrt(Partitions)) %>% mutate(Partitions = paste0(P,"x",P), Dataset = paste0(Dataset, "K")) %>%
+  group_by(Partitions, Dataset) %>% summarise(Time = mean(Time))
+data$Dataset = factor(data$Dataset, levels = c("25K", "50K", "100K"))
+data$Partitions = factor(data$Partitions, levels = c("4x4", "8x8", "16x16", "32x32", "64x64"))
+
+head(data, n=75)
+
+p = ggplot(data = data, aes(x = factor(Dataset), y = Time, fill = factor(Partitions))) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0 )) +
+  labs(x="Dataset", y="Time [s]", title="Execution time for the first 4 stages by grid size", fill="Grid Size") 
+plot(p)
+```
+
+### Breaking down by each stage
+
+```{r echo=F}
+fieldsMF = c("Timestamp", "Tag", "appId", "Executors", "Cores", "Status", "Duration", "Stage", "Time", "Load", "Interval")
+data_path = "~/Documents/PhD/Research/Scripts/R/R01/nohupApps03.txt"
+stages = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% filter(grepl("\\|MF\\|", line)) %>%
+  filter(grepl("END", line)) %>% separate(line, into = fieldsMF, sep = "\\|") %>%
+  filter(grepl("[A-D]\\.", Stage)) %>%
+  mutate(Time = as.numeric(Time), Load = as.numeric(Load)) %>%
+  select(Stage, Time, Load) %>% mutate(id = rep(1:75, each = 4))
+
+submit = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% 
+  filter(grepl("spark-submit", line)) %>% separate(line, into=paste0("A", 1:13), sep = "--") %>% 
+  mutate(Dataset = str_trim(A3), GridSize = str_trim(A9)) %>% mutate(id = 1:75)
+stage_names = tibble(StageId = c("A","B","C","D","E","F"), StageName = c("Partitioning points", "Finding pairs", "Computing centers", "Finding disks", "Partitioning disks", "Maximal disks"))
+data = stages %>% inner_join(submit, by = "id") %>%
+  group_by(Dataset, GridSize, Stage) %>% summarise(Time = mean(Time)) %>%
+  ungroup() %>% separate(Stage, c("StageId", NA), sep = "\\.") %>% inner_join(stage_names, by = "StageId") %>%
+  mutate(Stage = paste0(StageId,".",StageName)) %>% select(Dataset, GridSize, Stage, Time) %>%
+  separate(Dataset, into=c(NA,"Dataset"), sep = "_") %>% separate(Dataset, into=c("Dataset", NA), sep = "\\.") %>%
+  separate(GridSize, c(NA, "GridSize"), sep = " ") %>% mutate(GridSize = paste0(GridSize, "x", GridSize))
+data$Dataset = factor(data$Dataset, levels = c("25K", "50K", "100K"))
+data$GridSize = factor(data$GridSize, levels = c("4x4", "8x8", "16x16", "32x32", "64x64"))
+#head(data, n=75)
+
+p = ggplot(data = data, aes(x = Stage, y = Time, fill = GridSize)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0 )) +
+  labs(x="Stage", y="Time [s]", title="Execution time for the first 4 stages by grid size", fill="Grid Size") +
+  facet_grid(. ~ Dataset)
+plot(p)
+```
+
+#### Some issues: 
+* Should we see a progression? What happens with the 32x32 grid?
+* Why 100K dataset is so unstable? Is it related with the data or my implementation?
+* Some notes: 
+  + Certainly the datasets are biased, few very crowded cells (talk about this later)...
+  + Should I try with a uniform distributed dataset to test the implementation?
+  + Most costly stage is 'Finding disk', a spatial distance join, it can be related to a problem with indexing...
+  
+## Custom grid implementation
+* Work with the custom GridPartitioner which extend the FlatGridPartitioner from geospark library.  We must use an extension of the original design in order get support for the spatial operations and replication.  The difference is GridPartitioner use directly the location of the point to assign its cell number.  FlatGridPartitioner makes consecutive queries to a list of MBRs to locate the points.  
+* Prepare two instances of GridPartitioner.  The first one (coarse) to use during the first 4 stages (tested in the previous experiments).  A second one (finer) overlaps the first one and use a parameter to tell how much it divides the first grid. 
+* Challenges:
+  + First grid has to provide support for spatial operation.
+  + Second grid has to provide support for replication.
+
+## Some issues with last 2 stages experiments.
+* Based on the results of first experiments I decide to use the 32x32 grid size and test subgrid size from 2 to 10 with steps of 2.  Keeping epsilon = 25 and mu = 5.
+* Experiments with 25K dataset works fine but still working on the analysis.
+* Experiments with 50K dataset do not get results.  It does not finish finding for maximal disks with the current parameters (epsilon=25, mu=5)
+* Experiments reducing the parameters: Epsilon=10, mu=5.  It finished but shows a very unbalance second grid.
+![Caption for the picture.](UnbalanceGrid.png)
+* Just one of the cells collect 16854 of the 21356 disks and the taks which deals with that cell dominates the execution. 
