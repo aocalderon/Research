@@ -31,7 +31,7 @@ object MF_QuadTree2{
   private var cores: Int = 0
   private var executors: Int = 0
 
-  def run(spark: SparkSession, points: PointRDD, MF1Partitioner: QuadTreePartitioner, MF2Partitioner: QuadTreePartitioner, params: FFConf, timestamp: Int = -1, info: String = ""): (PointRDD, Long) = {
+  def run(spark: SparkSession, points: PointRDD, MF1Partitioner: QuadTreePartitioner, params: FFConf, timestamp: Int = -1, info: String = ""): (PointRDD, Long) = {
     import spark.implicits._
 
     appID     = spark.sparkContext.applicationId
@@ -47,7 +47,6 @@ object MF_QuadTree2{
     if(params.tag() == ""){ tag = s"$info"} else { tag = s"${params.tag()}|${info}" }
     var Dpartitions: Int  = params.dpartitions()
     val nMF1Grids = MF1Partitioner.getGrids.size()
-    val nMF2Grids = MF2Partitioner.getGrids.size()
 
     // Indexing points...
     val localStart = clocktime
@@ -55,21 +54,6 @@ object MF_QuadTree2{
     var stage = "A.Points indexed"
     logStart(stage)
     points.spatialPartitioning(MF1Partitioner)
-
-    if(debug){
-      val gridWKT = MF1Partitioner.getGrids.asScala.zipWithIndex
-        .map(e => s"${envelope2Polygon(e._1).toText()}\t${e._2}\n").mkString("")
-      val f = new java.io.PrintWriter("/tmp/pointGrid.wkt")
-      f.write(gridWKT)
-      f.close()
-
-      val pointsWKT = points.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (i, points) =>
-        points.map(p => s"POINT(${p.getX} ${p.getY})\t${i}\n")
-      }.collect().mkString("")
-      val g = new java.io.PrintWriter("/tmp/points.wkt")
-      g.write(pointsWKT)
-      g.close()
-    }
     val pointsBuffer = new CircleRDD(points, epsilon + precision)
     pointsBuffer.analyze()
     pointsBuffer.spatialPartitioning(points.getPartitioner)
@@ -138,7 +122,6 @@ object MF_QuadTree2{
     val nDisks = disks.count()
     logEnd(stage, timer, nDisks)
 
-    //if(false){//if
     // Partition disks...
     timer = System.currentTimeMillis()
     stage = "E.Disks partitioned"
@@ -146,32 +129,34 @@ object MF_QuadTree2{
     val diskCenters = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
     val diskCircles = new CircleRDD(diskCenters, r + precision)
     diskCircles.analyze()
-    diskCircles.spatialPartitioning(MF2Partitioner)
+    val fullBoundary = diskCircles.boundaryEnvelope
+    fullBoundary.expandBy(epsilon + precision)
+    val samples = diskCircles.rawSpatialRDD.rdd
+      .sample(false, 0.5, 42)
+      .map(_.getEnvelopeInternal)
+    val boundary = new QuadRectangle(fullBoundary)
+    val maxLevel = params.levels()
+    val maxItemsPerNode = params.mfpartitions()
+    val quadtree1 = new StandardQuadTree[Geometry](boundary, 0, maxItemsPerNode, maxLevel)
+    if(debug){ logger.info(s"Disks' size of sample: ${samples.count()}") }
+    for(sample <- samples.collect()){
+      quadtree1.insert(new QuadRectangle(sample), null)
+    }
+    quadtree1.assignPartitionIds()
+    val QTPartitioner = new QuadTreePartitioner(quadtree1)
+    val nMF2Grids = QTPartitioner.getGrids.size
+    if(debug) { logger.info(s"Disks' number of cells: ${nMF2Grids}") }
+    diskCircles.spatialPartitioning(QTPartitioner)
     diskCircles.spatialPartitionedRDD.cache()
     val nDisksRDD = diskCircles.spatialPartitionedRDD.count()
     logEnd(stage, timer, nDisksRDD)
-
-    if(debug){
-      val gridWKT = diskCircles.getPartitioner.getGrids.asScala.map(e => s"${envelope2Polygon(e).toText()}\n").mkString("")
-      val f = new java.io.PrintWriter("/tmp/diskGrid.wkt")
-      f.write(gridWKT)
-      f.close()
-
-      val disksWKT = diskCircles.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (i, points) =>
-        points.map(p => s"POINT(${p.getCenterPoint.x} ${p.getCenterPoint.y})\t${p.getRadius}\t${i}\n")
-      }.collect().mkString("")
-      val g = new java.io.PrintWriter("/tmp/disks.wkt")
-      g.write(disksWKT)
-      g.close()
-    }
 
     // Finding maximal disks...
     timer = System.currentTimeMillis()
     stage = "F.Maximal disks found"
     logStart(stage)
-    val grids  = MF2Partitioner.getGrids.asScala.toList.zipWithIndex.map(g => g._2 -> g._1).toMap
-    val nGrids = MF2Partitioner.getGrids.size
-
+    val grids = quadtree1.getAllZones.asScala.filter(_.partitionId != null)
+      .map(r => r.partitionId -> r.getEnvelope).toMap
     val maximals = diskCircles.spatialPartitionedRDD.rdd
       .mapPartitionsWithIndex{ (i, disks) => 
         //var result = List.empty[Point]
@@ -202,9 +187,8 @@ object MF_QuadTree2{
     maximalsRDD.rawSpatialRDD = maximals
     maximalsRDD.spatialPartitionedRDD = maximals
     maximalsRDD.grids = grids.map(_._2).toList.asJava
-    maximalsRDD.setPartitioner(MF2Partitioner)
+    maximalsRDD.setPartitioner(QTPartitioner)
     logEnd(stage, timer, nMaximals)
-    //}// fi
 
     val localEnd = clocktime
     val executionTime = (localEnd - localStart) / 1000.0
@@ -353,6 +337,7 @@ object MF_QuadTree2{
     val tepsg       = params.tespg()
     val info        = params.info()
     val timestamp   = params.timestamp()
+    val debug       = params.mfdebug()
     val epsilon     = params.epsilon()
     cores           = params.cores()
     executors       = params.executors()
@@ -413,34 +398,19 @@ object MF_QuadTree2{
     val maxLevel = params.levels()
     val maxItemsPerNode1 = params.entries()
     val quadtree1 = new StandardQuadTree[Geometry](boundary, 0, maxItemsPerNode1, maxLevel)
-    logger.info(s"Size of sample: ${samples.count()}")
+    if(debug){ logger.info(s"Size of sample: ${samples.count()}") }
     for(sample <- samples.collect()){
       quadtree1.insert(new QuadRectangle(sample), null)
     }
     quadtree1.assignPartitionIds()
     val QTPartitioner1 = new QuadTreePartitioner(quadtree1)
     logEnd(stage, timer, QTPartitioner1.getGrids.size)    
-
-    // MF2 Partitioner...
-    timer = clocktime
-    stage = "MF2 partitioner"
-    logStart(stage)
-    val npart = params.mfpartitions().toInt
-    val maxItemsPerNode2 = params.entries() / npart
-    val quadtree2 = new StandardQuadTree[Geometry](boundary, 0, maxItemsPerNode2, maxLevel)
-    logger.info(s"Size of sample: ${samples.count()}")
-    for(sample <- samples.collect()){
-      quadtree2.insert(new QuadRectangle(sample), null)
-    }
-    quadtree2.assignPartitionIds()
-    val QTPartitioner2 = new QuadTreePartitioner(quadtree2)
-    logEnd(stage, timer, QTPartitioner2.getGrids.size)    
     
     // Running maximal finder...
     timer = System.currentTimeMillis()
     stage = "Maximal finder run"
     logStart(stage)
-    val maximals = MF_QuadTree2.run(spark, points, QTPartitioner1, QTPartitioner2, params)
+    val maximals = MF_QuadTree2.run(spark, points, QTPartitioner1, params)
     logEnd(stage, timer, 0)
 
     // Closing session...
