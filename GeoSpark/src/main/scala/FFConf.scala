@@ -31,6 +31,8 @@ class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val executors:    ScallopOption[Int]     =  opt[Int]      (default  = Some(3))
   val tag:          ScallopOption[String]  =  opt[String]   (default  = Some(""))
   val timestamp:    ScallopOption[Int]     =  opt[Int]      (default  = Some(-1))
+  val mininterval:  ScallopOption[Int]     =  opt[Int]      (default  = Some(0))
+  val maxinterval:  ScallopOption[Int]     =  opt[Int]      (default  = Some(20))
   val fftimestamp:  ScallopOption[Int]     =  opt[Int]      (default  = Some(10))
 
   val levels:       ScallopOption[Int]      = opt[Int]     (default  = Some(1024))
