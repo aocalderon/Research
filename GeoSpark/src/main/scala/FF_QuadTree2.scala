@@ -95,6 +95,12 @@ object FF_QuadTree2{
         val buffers = new CircleRDD(C, distance)
         buffers.spatialPartitioning(C.getPartitioner)
 
+        if(debug){
+          val nF = F.rawSpatialRDD.count()
+          val nBuffers = buffers.rawSpatialRDD.count()
+          logger.info(s"Join between F ($nF) and buffers ($nBuffers)")
+        }
+
         val R = JoinQuery.DistanceJoinQueryWithDuplicates(F, buffers, true, false) // using index, only return geometries fully covered by each buffer...
         var flocks0 = R.rdd.flatMap{ case (g: Geometry, h: java.util.HashSet[Point]) =>
           val f0 = getFlocksFromGeom(g)
@@ -116,14 +122,16 @@ object FF_QuadTree2{
         val nFlocks = flocks.count()
         logEnd(stage, timer, nFlocks, s"$timestamp")
 
+        if(debug){
+          logger.info(s"Flocks from join: $nFlocks")
+        }
+
         // Reporting flocks...
         timer = System.currentTimeMillis()
-        stage = "3.Flocks to report"
+        stage = "3.1.Flocks to clean >= delta"
         logStart(stage)
         var f0 =  flocks.filter{f => f.end - f.start + 1 >= delta}.cache()
         var nF0 = f0.count()
-        val f1 =  flocks.filter{f => f.end - f.start + 1 <  delta}.cache()
-        val nF1 = f1.count()
         val G_prime = new PointRDD(
           f0.map{ f =>
             f.center.setUserData(f.pids.mkString(" ") ++ s";${f.start};${f.end}")
@@ -134,9 +142,30 @@ object FF_QuadTree2{
         val nG_prime = G_prime.rawSpatialRDD.count()
         logEnd(stage, timer, nG_prime, s"$timestamp")
 
+        // Reporting flocks...
+        timer = System.currentTimeMillis()
+        stage = "3.2.Flocks to clean < delta"
+        logStart(stage)
+        var f1 =  flocks.filter{f => f.end - f.start + 1 <  delta}.cache()
+        var nF1 = f1.count()
+        val H_prime = new PointRDD(
+          f1.map{ f =>
+            f.center.setUserData(f.pids.mkString(" ") ++ s";${f.start};${f.end}")
+            f.center
+          }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg
+        )
+        H_prime.analyze()
+        val nH_prime = H_prime.rawSpatialRDD.count()
+        logEnd(stage, timer, nH_prime, s"$timestamp")
+
+        if(debug){
+          logger.info(s"G Flocks before prune: $nG_prime")
+          logger.info(s"H Flocks before prune: $nH_prime")
+        }
+
         // Prunning flocks by expansions...
         timer = System.currentTimeMillis()
-        stage = "4.Flocks prunned by expansion"
+        stage = "4.1. G Flocks prunned by expansion"
         logStart(stage)
         var f0_prime: RDD[String] = spark.sparkContext.emptyRDD[String]
         if(G_prime.boundary() != null){
@@ -145,9 +174,24 @@ object FF_QuadTree2{
         val nF0_prime = f0_prime.count()
         logEnd(stage, timer, nF0_prime, s"$timestamp")
 
+        timer = System.currentTimeMillis()
+        stage = "4.2. H Flocks prunned by expansion"
+        logStart(stage)
+        var f1_prime: RDD[String] = spark.sparkContext.emptyRDD[String]
+        if(H_prime.boundary() != null){
+          f1_prime = pruneFlockByExpansions(H_prime, QTPartitioner, epsilon, timestamp, spark, params).cache()
+        }
+        val nF1_prime = f1_prime.count()
+        logEnd(stage, timer, nF1_prime, s"$timestamp")
+
+        if(debug){
+          logger.info(s"G Flocks after prune: $nF0_prime")
+          logger.info(s"H Flocks after prune: $nF1_prime")
+        }
+
         // Reporting flocks...
         timer = System.currentTimeMillis()
-        stage = "5.Flocks reported"
+        stage = "5.1. G Flocks reported"
         logStart(stage)
         f0 = f0_prime.map{ f =>
             val arr = f.split(";")
@@ -162,6 +206,22 @@ object FF_QuadTree2{
         nF0 = f0.count()
         report = report.union(f0).cache()
         logEnd(stage, timer, nF0, s"$timestamp")
+
+        timer = System.currentTimeMillis()
+        stage = "5.2. H Flocks reported"
+        logStart(stage)
+        f1 = f1_prime.map{ f =>
+            val arr = f.split(";")
+            val p = arr(0).split(" ").map(_.toInt).toList
+            val s = arr(1).toInt
+            val e = arr(2).toInt
+            val x = arr(3).toDouble
+            val y = arr(4).toDouble
+            val c = geofactory.createPoint(new Coordinate(x, y))
+            Flock(p,s,e,c)
+        }.cache()
+        nF1 = f1.count()
+        logEnd(stage, timer, nF1, s"$timestamp")
 
         if(debug) logger.info(s"Flocks reported at ${timestamp}: ${f0.count()}")
 
@@ -181,7 +241,7 @@ object FF_QuadTree2{
             val info = s"${f.pids.mkString(" ")};${f.start};${f.end}"
             f.center.setUserData(info)
             f.center
-          }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
+        }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)        
         logEnd(stage, timer, F.rawSpatialRDD.count(), s"$timestamp")
 
         if(debug) logger.info(s"Candidates at ${timestamp}: ${F.rawSpatialRDD.count()}")
@@ -257,11 +317,11 @@ object FF_QuadTree2{
     val fullBoundary = F.boundaryEnvelope
     fullBoundary.expandBy(epsilon + precision)
     val samples = F.rawSpatialRDD.rdd
-      .sample(false, params.fraction(), 42)
+      .sample(false, params.fraction2(), 42)
       .map(_.getEnvelopeInternal)
     val boundary = new QuadRectangle(fullBoundary)
     val maxLevel = params.levels()
-    val maxItemsPerNode = params.entries()
+    val maxItemsPerNode = params.entries3()
     val quadtreePruneFlocks = new StandardQuadTree[Geometry](boundary, 0, maxItemsPerNode, maxLevel)
     if(debug){ logger.info(s"Disks' size: ${F.rawSpatialRDD.rdd.count()}") }
     if(debug){ logger.info(s"Disks' size of sample: ${samples.count()}") }
