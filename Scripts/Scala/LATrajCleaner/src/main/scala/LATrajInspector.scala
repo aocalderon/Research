@@ -1,7 +1,8 @@
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{Dataset, SparkSession}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.sql.functions._
+import org.apache.spark.storage.StorageLevel
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.datasyslab.geospark.enums.{FileDataSplitter, GridType}
 import org.datasyslab.geospark.spatialRDD.{SpatialRDD, PointRDD}
@@ -99,18 +100,19 @@ object LATrajInspector {
         point.setUserData(s"$pid\t$t")
         point
       }.cache()
-    val pointsRDD = new SpatialRDD[Point]()
-    pointsRDD.setRawSpatialRDD(points0)
-    pointsRDD.analyze()
-    pointsRDD.spatialPartitioning(GridType.KDBTREE, partitions)
-    pointsRDD.spatialPartitionedRDD.cache()
-    var nPoints = pointsRDD.spatialPartitionedRDD.count()
-    log(stage, timer, nPoints, "END")
+    //val pointsRDD = new SpatialRDD[Point]()
+    //pointsRDD.setRawSpatialRDD(points0)
+    //pointsRDD.analyze()
+    //pointsRDD.spatialPartitioning(GridType.KDBTREE, partitions)
+    //pointsRDD.spatialPartitionedRDD.cache()
+    //var nPoints = pointsRDD.spatialPartitionedRDD.count()
+    log(stage, timer, 0, "END")
 
     timer = clocktime
     stage = "Trajectory detection"
     log(stage, timer, 0, "START")
-    val points = pointsRDD.spatialPartitionedRDD.rdd.map{ point =>
+    //val points = pointsRDD.spatialPartitionedRDD.rdd.map{ point =>
+    val points = points0.map{ point =>
       val userData = point.getUserData.toString().split("\t")
       val pid = userData(0).toInt
       val t = userData(1).toInt
@@ -130,6 +132,10 @@ object LATrajInspector {
     val nTrajs = trajs.count()
     log(stage, timer, nTrajs, "END")
 
+    def getPointsByTimeInterval(points: Dataset[ST_Point]): List[(Int, Long)] = {
+      points.groupBy($"t").count().collect().map(r => (r.getInt(0), r.getLong(1))).toList.sortBy(x => x._1)
+    }
+
     timer = clocktime
     stage = "Initial sample"
     log(stage, timer, 0, "START")
@@ -144,30 +150,33 @@ object LATrajInspector {
     logger.info(s"Size of sample: ${sample1.count()}")
     logger.info(s"Size of reminders: ${reminder.count()}")
     logger.info(s"Size of dataset: ${dataset.count()}")
+    var state = getPointsByTimeInterval(dataset)
+    logger.info(s"State: ${state}")
 
     val limit = sample1.count().toInt
     var n = 1
     var reminderCount = reminder.count()
     while(reminderCount > 0){
-      val left = limit - dataset.filter(p => p.t == n).count().toInt
-      var fraction = (left*1.0) / reminderCount
+      val left = limit - state.head._2
+      var fraction = (left * 1.0) / reminderCount
       if(fraction > 1.0) { fraction = 1.0 }
       val newTrajs = reminder.sample(false, fraction)
       val newPoints = newTrajs.flatMap{ traj =>
-          traj.setInitialTime(n)
-          traj.p
-        }
-      dataset = dataset.filter(_.t <= n).union(newPoints).cache()
-      val datasetCount = dataset.count()
-      reminder = reminder.except(newTrajs).cache()
+        traj.setInitialTime(n)
+        traj.p
+      }
+      val newState = getPointsByTimeInterval(newPoints)
+      state = (state ++ newState).groupBy(s => s._1).mapValues(f => f.map(_._2).reduce(_ + _)).toList.sortBy(_._1).filter(_._1 > n)
+
+      reminder = reminder.except(newTrajs).persist(StorageLevel.MEMORY_AND_DISK)
       reminderCount = reminder.count()
      
+      logger.info(s"State: ${state}")
 
       logger.info(s"In time interval $n")
       logger.info(s"Size of original: ${nTrajs}")
       logger.info(s"New trajs: ${left}")
       logger.info(s"Size of reminders: ${reminderCount}")
-      logger.info(s"Size of dataset: ${datasetCount}")
       n = n + 1
     }
     log(stage, timer, 0, "END")

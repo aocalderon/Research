@@ -129,10 +129,10 @@ object MF_QuadTree2{
     val diskCenters = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
     val diskCircles = new CircleRDD(diskCenters, r + precision)
     diskCircles.analyze()
-    val fullBoundary = diskCircles.boundaryEnvelope
+    val fullBoundary = diskCircles.boundary()
     fullBoundary.expandBy(epsilon + precision)
     val samples = diskCircles.rawSpatialRDD.rdd
-      .sample(false, 0.5, 42)
+      .sample(false, params.fraction(), 42)
       .map(_.getEnvelopeInternal)
     val boundary = new QuadRectangle(fullBoundary)
     val maxLevel = params.levels()

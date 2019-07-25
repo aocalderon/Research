@@ -167,17 +167,17 @@ object FF_QuadTree2{
 
         // Indexing candidates...
         timer = System.currentTimeMillis()
-        stage = "6.Candidates indexed"
+        stage = "6.Candidates updated"
         logStart(stage)
-        flocks = f0.map(f => Flock(f.pids, f.start + 1, f.end, f.center))
-          .union(f1)
-          .union(C.rawSpatialRDD.rdd.map(c => getFlocksFromGeom(c)))
+        flocks = f0.map(f => Flock(f.pids, f.start + 1, f.end, f.center)) // Add flock reported with its start updated.
+          .union(f1.filter(_.end == timestamp)) // Add previous flocks which touch current time interval.
+          .union(C.rawSpatialRDD.rdd.map(c => getFlocksFromGeom(c))) // Add current maximal disks as flock size 1.
           .map(f => (f.pids, f))
-          .reduceByKey( (a,b) => if(a.start < b.start) a else b )
+          .reduceByKey( (a,b) => if(a.start < b.start) a else b ) // Prune redundant flocks by time.
           .map(_._2)
           .distinct()
           .persist(StorageLevel.MEMORY_ONLY)
-        F = new PointRDD(flocks.map{ f =>
+        F = new PointRDD(flocks.map{ f =>  // Create spatial RDD with candidate flocks.
             val info = s"${f.pids.mkString(" ")};${f.start};${f.end}"
             f.center.setUserData(info)
             f.center
@@ -257,7 +257,7 @@ object FF_QuadTree2{
     val fullBoundary = F.boundaryEnvelope
     fullBoundary.expandBy(epsilon + precision)
     val samples = F.rawSpatialRDD.rdd
-      .sample(false, 0.25, 42)
+      .sample(false, params.fraction(), 42)
       .map(_.getEnvelopeInternal)
     val boundary = new QuadRectangle(fullBoundary)
     val maxLevel = params.levels()
@@ -272,11 +272,15 @@ object FF_QuadTree2{
     val QTPartitioner = new QuadTreePartitioner(quadtreePruneFlocks)
     val r = (epsilon / 2.0) + precision
     val FCircles = new CircleRDD(F, r)
+
     FCircles.spatialPartitioning(QTPartitioner)
+    //FCircles.spatialPartitioning(GridType.QUADTREE, 512)
+
     FCircles.spatialPartitionedRDD.cache()
     val nFCircles = FCircles.spatialPartitionedRDD.rdd.count()
     val grids = quadtreePruneFlocks.getAllZones.asScala.filter(_.partitionId != null)
       .map(r => r.partitionId -> r.getEnvelope).toMap
+    if(debug){ logger.info(s"Disks' partitions: ${grids.size}") }
     logEnd(stage, timer, nFCircles, s"$timestamp")
 
     timer = System.currentTimeMillis()
