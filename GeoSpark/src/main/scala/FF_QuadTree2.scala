@@ -3,6 +3,10 @@ import com.vividsolutions.jts.geom.impl.CoordinateArraySequence
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.storage.StorageLevel
+import org.apache.spark.sql.functions._
+import org.apache.spark.sql.types.StructType
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.SparkSession
 import org.datasyslab.geospark.enums.{FileDataSplitter, GridType, IndexType}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.spatialRDD.{CircleRDD, PointRDD}
@@ -10,11 +14,8 @@ import org.datasyslab.geospark.spatialPartitioning.{FlatGridPartitioner, GridPar
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.datasyslab.geospark.spatialPartitioning.{KDBTree, KDBTreePartitioner}
 import org.datasyslab.geospark.spatialPartitioning.quadtree.{QuadTreePartitioner, StandardQuadTree, QuadRectangle}
-import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types.StructType
+import org.datasyslab.geospark.utils.RDDSampleUtils
 import org.slf4j.{Logger, LoggerFactory}
-import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.SparkSession
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.HashMap
@@ -316,16 +317,21 @@ object FF_QuadTree2{
     F.analyze()
     val fullBoundary = F.boundaryEnvelope
     fullBoundary.expandBy(epsilon + precision)
+
+    val npartitions = F.countWithoutDuplicates() / 2
+    val approxCount = F.approximateTotalCount
+    val sampleNumberOfRecords = RDDSampleUtils.getSampleNumbers(npartitions.toInt, approxCount, -1)
+    val fraction = RDDSampleUtils.getFraction(sampleNumberOfRecords, approxCount)
     val samples = F.rawSpatialRDD.rdd
-      .sample(false, params.fraction2(), 42)
-      .map(_.getEnvelopeInternal)
+      .sample(false, fraction)
+      .map(_.getEnvelopeInternal).collect()
     val boundary = new QuadRectangle(fullBoundary)
-    val maxLevel = params.levels()
-    val maxItemsPerNode = params.entries3()
+    val maxLevel = params.ffpartitions()
+    val maxItemsPerNode = samples.size / params.ffpartitions()
     val quadtreePruneFlocks = new StandardQuadTree[Geometry](boundary, 0, maxItemsPerNode, maxLevel)
     if(debug){ logger.info(s"Disks' size: ${F.rawSpatialRDD.rdd.count()}") }
-    if(debug){ logger.info(s"Disks' size of sample: ${samples.count()}") }
-    for(sample <- samples.collect()){
+    if(debug){ logger.info(s"Disks' size of sample: ${samples.size}") }
+    for(sample <- samples){
       quadtreePruneFlocks.insert(new QuadRectangle(sample), null)
     }
     quadtreePruneFlocks.assignPartitionIds()

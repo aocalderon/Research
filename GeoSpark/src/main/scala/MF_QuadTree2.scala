@@ -9,7 +9,7 @@ import org.datasyslab.geospark.spatialRDD.{SpatialRDD, PolygonRDD, CircleRDD, Po
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.datasyslab.geospark.spatialPartitioning.{KDBTree, KDBTreePartitioner}
 import org.datasyslab.geospark.spatialPartitioning.quadtree.{QuadTreePartitioner, StandardQuadTree, QuadRectangle}
-import com.vividsolutions.jts.index.strtree.STRtree
+import org.datasyslab.geospark.utils.RDDSampleUtils
 import com.vividsolutions.jts.operation.buffer.BufferParameters
 import com.vividsolutions.jts.geom.{GeometryFactory, Geometry, Envelope, Coordinate, Polygon, LinearRing, Point}
 import com.vividsolutions.jts.geom.impl.CoordinateArraySequence
@@ -53,7 +53,10 @@ object MF_QuadTree2{
     var timer = System.currentTimeMillis()
     var stage = "A.Points indexed"
     logStart(stage)
-    points.spatialPartitioning(MF1Partitioner)
+
+    //points.spatialPartitioning(MF1Partitioner)
+    points.spatialPartitioning(GridType.QUADTREE, params.ffpartitions())
+
     val pointsBuffer = new CircleRDD(points, epsilon + precision)
     pointsBuffer.analyze()
     pointsBuffer.spatialPartitioning(points.getPartitioner)
@@ -131,8 +134,13 @@ object MF_QuadTree2{
     diskCircles.analyze()
     val fullBoundary = diskCircles.boundary()
     fullBoundary.expandBy(epsilon + precision)
+    val approxCount = diskCircles.approximateTotalCount
+    val npartitions = approxCount / 3
+    val sampleNumberOfRecords = RDDSampleUtils.getSampleNumbers(npartitions.toInt, approxCount, -1)
+    val fraction = RDDSampleUtils.getFraction(sampleNumberOfRecords, approxCount)
+    
     val samples = diskCircles.rawSpatialRDD.rdd
-      .sample(false, params.fraction(), 42)
+      .sample(false, fraction)
       .map(_.getEnvelopeInternal)
     val boundary = new QuadRectangle(fullBoundary)
     val maxLevel = params.levels()
