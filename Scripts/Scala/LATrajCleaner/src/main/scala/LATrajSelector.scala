@@ -17,7 +17,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable.WrappedArray
 import java.io.PrintWriter
 
-object LATrajInspector {
+object LATrajSelector {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory()
   private val precision: Double = 0.0001
@@ -58,7 +58,7 @@ object LATrajInspector {
   }
 
   def main(args: Array[String]): Unit = {
-    val params = new LATrajInspectorConf(args)
+    val params = new LATrajSelectorConf(args)
     val input = params.input()
     val output = params.output()
     val offset = params.offset()
@@ -204,7 +204,7 @@ object LATrajInspector {
   }
 }
 
-class LATrajInspectorConf(args: Seq[String]) extends ScallopConf(args) {
+class LATrajSelectorConf(args: Seq[String]) extends ScallopConf(args) {
   val input:      ScallopOption[String]  = opt[String]  (required = true)
   val output:     ScallopOption[String]  = opt[String]  (default  = Some("/tmp/output.tsv"))
   val host:       ScallopOption[String]  = opt[String]  (default = Some("169.235.27.138"))
