@@ -1,0 +1,41 @@
+---
+title: "LA Dataset using Quadtree Partitioning"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+Epsilon = 25
+Mu = 5
+
+```{r include=F}
+library(tidyverse)
+```
+
+```{r echo=F}
+fields = c("Timestamp", "Tag", "appId", "Cores", "Executors", "Epsilon", "Mu", "Partitions", "Time")
+data_path = "~/Documents/PhD/Research/Scripts/R/R02/nohup04.txt"
+maximals = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% 
+  filter(grepl("\\|MAXIMALS\\|", line)) %>%
+  separate(line, into = fields, sep = "\\|") %>%
+  mutate(Time = as.numeric(Time)) 
+submit = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% 
+  filter(grepl("spark-submit", line)) %>% separate(line, into=paste0("A", 1:13), sep = "--") %>%
+  mutate(A3  = str_trim(A3))  %>% separate(A3 , into = c(NA,"Dataset"), sep = " ") %>% 
+  mutate(A10 = str_trim(A10)) %>% separate(A10, into = c(NA,"MaxEntries"), sep = " ") %>% 
+  mutate(MaxEntries = as.numeric(MaxEntries)) %>%
+  separate(Dataset, into=c(NA,"Dataset"), sep = "/LA/") %>% separate(Dataset, into=c("Dataset", NA), sep = "\\.")
+
+data = bind_cols(maximals, submit) %>% group_by(Dataset, MaxEntries, Partitions) %>% summarise(Time = mean(Time)) %>% 
+  filter(MaxEntries <= 5000)
+head(data, n = 24)
+
+data$Dataset = factor(data$Dataset, levels = c("LA_50K", "LA_100K"))
+p = ggplot(data = data, aes(x = factor(Dataset), y = Time, fill = factor(MaxEntries))) +
+ geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+ theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0 )) +
+ labs(x="Epsilon", y="Time [s]", title="Execution time MF algorithm first 4 stages", fill="Max Entries") 
+plot(p)
+```
+
+

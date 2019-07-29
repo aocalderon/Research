@@ -1,0 +1,47 @@
+---
+title: "Uniform dataset find optimal entries 2"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+Epsilon = 100
+Mu = 3
+
+```{r include=F}
+library(tidyverse)
+```
+
+```{r echo=F, fig.width=10}
+fields = c("Timestamp", "Tag", "appId", "Cores", "Executors", "Epsilon", "Mu", "Partitions1", "Partitions", "Time", "Load")
+data_path = "~/Documents/PhD/Research/Scripts/R/R03/nohup02.txt"
+maximals = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% 
+  filter(grepl("\\|MAXIMALS\\|", line)) %>%
+  separate(line, into = fields, sep = "\\|") %>%
+  mutate(Time = as.numeric(Time), Partitions = as.numeric(Partitions)) 
+submit = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% 
+  filter(grepl("spark-submit", line)) %>% separate(line, into=paste0("A", 1:14), sep = "--") %>%
+  mutate(A3  = str_trim(A3))  %>% separate(A3 , into = c(NA,"Dataset"), sep = " ") %>% 
+  mutate(A11 = str_trim(A11)) %>% separate(A11, into = c(NA,"MaxEntries"), sep = " ") %>% 
+  mutate(MaxEntries = as.numeric(MaxEntries)) %>%
+  separate(Dataset, into=c(NA,"Dataset"), sep = "/LA/") %>% separate(Dataset, into=c("Dataset", NA), sep = "\\.")
+data = bind_cols(maximals, submit) %>% filter(MaxEntries < 40000) %>% group_by(Dataset, MaxEntries) %>% summarise(Time = mean(Time)) 
+head(data, n = 24)
+
+p = ggplot(data = data, aes(x = factor(MaxEntries), y = Time, fill = Dataset)) +
+ geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+ theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0 )) +
+ labs(x="Maximum entries per node", y="Time [s]", title="Execution time MF algorithm", fill="Dataset") 
+plot(p)
+
+data = bind_cols(maximals, submit) %>% filter(MaxEntries < 40000) %>% group_by(Dataset, Partitions) %>% summarise(Time = mean(Time)) 
+#data$Partitions = factor(data$Partitions, levels = fct_rev(factor(Partitions)))
+g = ggplot(data = data, aes(x = fct_rev(factor(Partitions)), y = Time, fill = Dataset)) +
+ geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+ theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0 )) +
+ labs(x="Partitions", y="Time [s]", title="Execution time MF algorithm", fill="Dataset") 
+plot(g)
+
+```
+
+

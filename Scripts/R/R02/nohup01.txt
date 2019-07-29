@@ -1,0 +1,500 @@
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 4 --mfcustomy 4 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:12:05,174|MF|app-00000000000000-0000|15|4|START|  0.14|Session started                                   |  0.00|     0|
+2019-07-17 23:12:06,583|MF|app-20190717231206-0009|15|4|  END|  1.39|Session started                                   |  1.41|     0|
+2019-07-17 23:12:06,584|MF|app-20190717231206-0009|15|4|START|  1.39|Data read                                         |  0.00|     0|
+2019-07-17 23:12:10,646|MF|app-20190717231206-0009|15|4|  END|  5.45|Data read                                         |  4.06|100000|
+2019-07-17 23:12:10,647|MF|app-20190717231206-0009|15|4|START|  5.45|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:12:10,678|MF|app-20190717231206-0009|15|4|  END|  5.48|MF1 partitioner                                   |  0.03|    16|
+2019-07-17 23:12:10,679|MF|app-20190717231206-0009|15|4|START|  5.48|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:12:10,679|MF|app-20190717231206-0009|15|4|START|  5.49|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:12:11,201|MF|app-20190717231206-0009|15|4|  END|  6.01|A.Points indexed                                  |  0.52|100000|
+2019-07-17 23:12:11,202|MF|app-20190717231206-0009|15|4|START|  6.01|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:12:13,190|MF|app-20190717231206-0009|15|4|  END|  8.00|B.Pairs found                                     |  1.99|  7578|
+2019-07-17 23:12:13,190|MF|app-20190717231206-0009|15|4|START|  8.00|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:12:13,915|MF|app-20190717231206-0009|15|4|  END|  8.72|C.Centers found                                   |  0.73| 15156|
+2019-07-17 23:12:13,915|MF|app-20190717231206-0009|15|4|START|  8.72|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:12:15,427|MF|app-20190717231206-0009|15|4|  END| 10.23|D.Disks found                                     |  1.51|     0|
+2019-07-17 23:12:15,428|MAXIMALS|app-20190717231206-0009|4|15|25.0|5|16|4.749
+2019-07-17 23:12:15,428|MF|app-20190717231206-0009|15|4|  END| 10.23|Maximal finder run                                |  4.75|     0|
+2019-07-17 23:12:15,428|MF|app-20190717231206-0009|15|4|START| 10.23|Session closed                                    |  0.00|     0|
+2019-07-17 23:12:19,569|MF|app-20190717231206-0009|15|4|  END| 14.38|Session closed                                    |  4.14|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 8 --mfcustomy 8 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:12:21,588|MF|app-00000000000000-0000|15|4|START|  0.13|Session started                                   |  0.00|     0|
+2019-07-17 23:12:22,958|MF|app-20190717231222-0010|15|4|  END|  1.35|Session started                                   |  1.37|     0|
+2019-07-17 23:12:22,959|MF|app-20190717231222-0010|15|4|START|  1.35|Data read                                         |  0.00|     0|
+2019-07-17 23:12:26,902|MF|app-20190717231222-0010|15|4|  END|  5.30|Data read                                         |  3.94|100000|
+2019-07-17 23:12:26,902|MF|app-20190717231222-0010|15|4|START|  5.30|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:12:26,927|MF|app-20190717231222-0010|15|4|  END|  5.32|MF1 partitioner                                   |  0.03|    64|
+2019-07-17 23:12:26,927|MF|app-20190717231222-0010|15|4|START|  5.32|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:12:26,927|MF|app-20190717231222-0010|15|4|START|  5.32|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:12:27,580|MF|app-20190717231222-0010|15|4|  END|  5.98|A.Points indexed                                  |  0.65|100000|
+2019-07-17 23:12:27,581|MF|app-20190717231222-0010|15|4|START|  5.98|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:12:30,258|MF|app-20190717231222-0010|15|4|  END|  8.65|B.Pairs found                                     |  2.68|  7578|
+2019-07-17 23:12:30,259|MF|app-20190717231222-0010|15|4|START|  8.65|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:12:30,704|MF|app-20190717231222-0010|15|4|  END|  9.10|C.Centers found                                   |  0.45| 15156|
+2019-07-17 23:12:30,705|MF|app-20190717231222-0010|15|4|START|  9.10|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:12:32,647|MF|app-20190717231222-0010|15|4|  END| 11.04|D.Disks found                                     |  1.94|     0|
+2019-07-17 23:12:32,647|MAXIMALS|app-20190717231222-0010|4|15|25.0|5|64|5.72
+2019-07-17 23:12:32,648|MF|app-20190717231222-0010|15|4|  END| 11.04|Maximal finder run                                |  5.72|     0|
+2019-07-17 23:12:32,648|MF|app-20190717231222-0010|15|4|START| 11.04|Session closed                                    |  0.00|     0|
+2019-07-17 23:12:36,892|MF|app-20190717231222-0010|15|4|  END| 15.29|Session closed                                    |  4.24|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 16 --mfcustomy 16 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:12:38,971|MF|app-00000000000000-0000|15|4|START|  0.13|Session started                                   |  0.00|     0|
+2019-07-17 23:12:40,273|MF|app-20190717231239-0011|15|4|  END|  1.28|Session started                                   |  1.30|     0|
+2019-07-17 23:12:40,273|MF|app-20190717231239-0011|15|4|START|  1.28|Data read                                         |  0.00|     0|
+2019-07-17 23:12:44,353|MF|app-20190717231239-0011|15|4|  END|  5.36|Data read                                         |  4.08|100000|
+2019-07-17 23:12:44,353|MF|app-20190717231239-0011|15|4|START|  5.36|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:12:44,386|MF|app-20190717231239-0011|15|4|  END|  5.40|MF1 partitioner                                   |  0.03|   256|
+2019-07-17 23:12:44,386|MF|app-20190717231239-0011|15|4|START|  5.40|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:12:44,387|MF|app-20190717231239-0011|15|4|START|  5.40|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:12:44,947|MF|app-20190717231239-0011|15|4|  END|  5.96|A.Points indexed                                  |  0.56|100000|
+2019-07-17 23:12:44,947|MF|app-20190717231239-0011|15|4|START|  5.96|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:12:48,077|MF|app-20190717231239-0011|15|4|  END|  9.09|B.Pairs found                                     |  3.13|  7578|
+2019-07-17 23:12:48,077|MF|app-20190717231239-0011|15|4|START|  9.09|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:12:48,919|MF|app-20190717231239-0011|15|4|  END|  9.93|C.Centers found                                   |  0.84| 15156|
+2019-07-17 23:12:48,919|MF|app-20190717231239-0011|15|4|START|  9.93|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:12:51,585|MF|app-20190717231239-0011|15|4|  END| 12.60|D.Disks found                                     |  2.67|     0|
+2019-07-17 23:12:51,585|MAXIMALS|app-20190717231239-0011|4|15|25.0|5|256|7.199
+2019-07-17 23:12:51,585|MF|app-20190717231239-0011|15|4|  END| 12.60|Maximal finder run                                |  7.20|     0|
+2019-07-17 23:12:51,585|MF|app-20190717231239-0011|15|4|START| 12.60|Session closed                                    |  0.00|     0|
+2019-07-17 23:12:55,841|MF|app-20190717231239-0011|15|4|  END| 16.85|Session closed                                    |  4.26|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 32 --mfcustomy 32 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:12:57,920|MF|app-00000000000000-0000|15|4|START|  0.13|Session started                                   |  0.00|     0|
+2019-07-17 23:12:59,189|MF|app-20190717231258-0012|15|4|  END|  1.25|Session started                                   |  1.27|     0|
+2019-07-17 23:12:59,189|MF|app-20190717231258-0012|15|4|START|  1.25|Data read                                         |  0.00|     0|
+2019-07-17 23:13:03,350|MF|app-20190717231258-0012|15|4|  END|  5.41|Data read                                         |  4.16|100000|
+2019-07-17 23:13:03,350|MF|app-20190717231258-0012|15|4|START|  5.41|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:13:03,385|MF|app-20190717231258-0012|15|4|  END|  5.45|MF1 partitioner                                   |  0.03|  1024|
+2019-07-17 23:13:03,385|MF|app-20190717231258-0012|15|4|START|  5.45|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:13:03,386|MF|app-20190717231258-0012|15|4|START|  5.45|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:13:03,996|MF|app-20190717231258-0012|15|4|  END|  6.06|A.Points indexed                                  |  0.61|100000|
+2019-07-17 23:13:03,996|MF|app-20190717231258-0012|15|4|START|  6.06|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:13:08,947|MF|app-20190717231258-0012|15|4|  END| 11.01|B.Pairs found                                     |  4.95|  7578|
+2019-07-17 23:13:08,947|MF|app-20190717231258-0012|15|4|START| 11.01|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:13:10,658|MF|app-20190717231258-0012|15|4|  END| 12.72|C.Centers found                                   |  1.71| 15156|
+2019-07-17 23:13:10,659|MF|app-20190717231258-0012|15|4|START| 12.72|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:13:15,872|MF|app-20190717231258-0012|15|4|  END| 17.93|D.Disks found                                     |  5.21|     0|
+2019-07-17 23:13:15,872|MAXIMALS|app-20190717231258-0012|4|15|25.0|5|1024|12.486
+2019-07-17 23:13:15,872|MF|app-20190717231258-0012|15|4|  END| 17.93|Maximal finder run                                | 12.49|     0|
+2019-07-17 23:13:15,872|MF|app-20190717231258-0012|15|4|START| 17.93|Session closed                                    |  0.00|     0|
+2019-07-17 23:13:20,155|MF|app-20190717231258-0012|15|4|  END| 22.22|Session closed                                    |  4.28|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 64 --mfcustomy 64 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:13:22,237|MF|app-00000000000000-0000|15|4|START|  0.13|Session started                                   |  0.00|     0|
+2019-07-17 23:13:23,681|MF|app-20190717231323-0013|15|4|  END|  1.43|Session started                                   |  1.45|     0|
+2019-07-17 23:13:23,682|MF|app-20190717231323-0013|15|4|START|  1.43|Data read                                         |  0.00|     0|
+2019-07-17 23:13:27,747|MF|app-20190717231323-0013|15|4|  END|  5.49|Data read                                         |  4.07|100000|
+2019-07-17 23:13:27,747|MF|app-20190717231323-0013|15|4|START|  5.49|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:13:27,775|MF|app-20190717231323-0013|15|4|  END|  5.52|MF1 partitioner                                   |  0.03|  4096|
+2019-07-17 23:13:27,776|MF|app-20190717231323-0013|15|4|START|  5.52|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:13:27,777|MF|app-20190717231323-0013|15|4|START|  5.52|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:13:28,404|MF|app-20190717231323-0013|15|4|  END|  6.15|A.Points indexed                                  |  0.63|100000|
+2019-07-17 23:13:28,404|MF|app-20190717231323-0013|15|4|START|  6.15|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:13:39,074|MF|app-20190717231323-0013|15|4|  END| 16.82|B.Pairs found                                     | 10.67|  7578|
+2019-07-17 23:13:39,074|MF|app-20190717231323-0013|15|4|START| 16.82|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:13:43,065|MF|app-20190717231323-0013|15|4|  END| 20.81|C.Centers found                                   |  3.99| 15156|
+2019-07-17 23:13:43,066|MF|app-20190717231323-0013|15|4|START| 20.81|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:13:57,266|MF|app-20190717231323-0013|15|4|  END| 35.01|D.Disks found                                     | 14.20|     0|
+2019-07-17 23:13:57,266|MAXIMALS|app-20190717231323-0013|4|15|25.0|5|4096|29.49
+2019-07-17 23:13:57,266|MF|app-20190717231323-0013|15|4|  END| 35.01|Maximal finder run                                | 29.49|     0|
+2019-07-17 23:13:57,266|MF|app-20190717231323-0013|15|4|START| 35.01|Session closed                                    |  0.00|     0|
+2019-07-17 23:14:01,543|MF|app-20190717231323-0013|15|4|  END| 39.29|Session closed                                    |  4.28|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 4 --mfcustomy 4 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:14:03,652|MF|app-00000000000000-0000|15|4|START|  0.13|Session started                                   |  0.00|     0|
+2019-07-17 23:14:05,040|MF|app-20190717231404-0014|15|4|  END|  1.37|Session started                                   |  1.39|     0|
+2019-07-17 23:14:05,041|MF|app-20190717231404-0014|15|4|START|  1.37|Data read                                         |  0.00|     0|
+2019-07-17 23:14:09,051|MF|app-20190717231404-0014|15|4|  END|  5.38|Data read                                         |  4.01|100000|
+2019-07-17 23:14:09,052|MF|app-20190717231404-0014|15|4|START|  5.38|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:14:09,074|MF|app-20190717231404-0014|15|4|  END|  5.40|MF1 partitioner                                   |  0.02|    16|
+2019-07-17 23:14:09,074|MF|app-20190717231404-0014|15|4|START|  5.40|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:14:09,075|MF|app-20190717231404-0014|15|4|START|  5.41|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:14:09,602|MF|app-20190717231404-0014|15|4|  END|  5.93|A.Points indexed                                  |  0.53|100000|
+2019-07-17 23:14:09,602|MF|app-20190717231404-0014|15|4|START|  5.93|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:14:11,670|MF|app-20190717231404-0014|15|4|  END|  8.00|B.Pairs found                                     |  2.07|  7578|
+2019-07-17 23:14:11,670|MF|app-20190717231404-0014|15|4|START|  8.00|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:14:12,160|MF|app-20190717231404-0014|15|4|  END|  8.49|C.Centers found                                   |  0.49| 15156|
+2019-07-17 23:14:12,160|MF|app-20190717231404-0014|15|4|START|  8.49|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:14:13,771|MF|app-20190717231404-0014|15|4|  END| 10.10|D.Disks found                                     |  1.61|     0|
+2019-07-17 23:14:13,771|MAXIMALS|app-20190717231404-0014|4|15|25.0|5|16|4.697
+2019-07-17 23:14:13,771|MF|app-20190717231404-0014|15|4|  END| 10.10|Maximal finder run                                |  4.70|     0|
+2019-07-17 23:14:13,771|MF|app-20190717231404-0014|15|4|START| 10.10|Session closed                                    |  0.00|     0|
+2019-07-17 23:14:18,037|MF|app-20190717231404-0014|15|4|  END| 14.37|Session closed                                    |  4.27|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 8 --mfcustomy 8 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:14:20,109|MF|app-00000000000000-0000|15|4|START|  0.14|Session started                                   |  0.00|     0|
+2019-07-17 23:14:21,497|MF|app-20190717231421-0015|15|4|  END|  1.37|Session started                                   |  1.39|     0|
+2019-07-17 23:14:21,498|MF|app-20190717231421-0015|15|4|START|  1.37|Data read                                         |  0.00|     0|
+2019-07-17 23:14:25,563|MF|app-20190717231421-0015|15|4|  END|  5.44|Data read                                         |  4.07|100000|
+2019-07-17 23:14:25,563|MF|app-20190717231421-0015|15|4|START|  5.44|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:14:25,589|MF|app-20190717231421-0015|15|4|  END|  5.46|MF1 partitioner                                   |  0.03|    64|
+2019-07-17 23:14:25,589|MF|app-20190717231421-0015|15|4|START|  5.46|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:14:25,590|MF|app-20190717231421-0015|15|4|START|  5.46|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:14:26,157|MF|app-20190717231421-0015|15|4|  END|  6.03|A.Points indexed                                  |  0.57|100000|
+2019-07-17 23:14:26,158|MF|app-20190717231421-0015|15|4|START|  6.03|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:14:28,733|MF|app-20190717231421-0015|15|4|  END|  8.61|B.Pairs found                                     |  2.58|  7578|
+2019-07-17 23:14:28,733|MF|app-20190717231421-0015|15|4|START|  8.61|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:14:29,229|MF|app-20190717231421-0015|15|4|  END|  9.10|C.Centers found                                   |  0.50| 15156|
+2019-07-17 23:14:29,229|MF|app-20190717231421-0015|15|4|START|  9.10|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:14:31,009|MF|app-20190717231421-0015|15|4|  END| 10.88|D.Disks found                                     |  1.78|     0|
+2019-07-17 23:14:31,010|MAXIMALS|app-20190717231421-0015|4|15|25.0|5|64|5.42
+2019-07-17 23:14:31,010|MF|app-20190717231421-0015|15|4|  END| 10.88|Maximal finder run                                |  5.42|     0|
+2019-07-17 23:14:31,010|MF|app-20190717231421-0015|15|4|START| 10.88|Session closed                                    |  0.00|     0|
+2019-07-17 23:14:35,225|MF|app-20190717231421-0015|15|4|  END| 15.10|Session closed                                    |  4.21|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 16 --mfcustomy 16 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:14:37,308|MF|app-00000000000000-0000|15|4|START|  0.14|Session started                                   |  0.00|     0|
+2019-07-17 23:14:38,729|MF|app-20190717231438-0016|15|4|  END|  1.40|Session started                                   |  1.42|     0|
+2019-07-17 23:14:38,730|MF|app-20190717231438-0016|15|4|START|  1.40|Data read                                         |  0.00|     0|
+2019-07-17 23:14:42,730|MF|app-20190717231438-0016|15|4|  END|  5.40|Data read                                         |  4.00|100000|
+2019-07-17 23:14:42,731|MF|app-20190717231438-0016|15|4|START|  5.40|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:14:42,763|MF|app-20190717231438-0016|15|4|  END|  5.44|MF1 partitioner                                   |  0.03|   256|
+2019-07-17 23:14:42,763|MF|app-20190717231438-0016|15|4|START|  5.44|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:14:42,764|MF|app-20190717231438-0016|15|4|START|  5.44|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:14:43,319|MF|app-20190717231438-0016|15|4|  END|  5.99|A.Points indexed                                  |  0.56|100000|
+2019-07-17 23:14:43,319|MF|app-20190717231438-0016|15|4|START|  5.99|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:14:46,423|MF|app-20190717231438-0016|15|4|  END|  9.10|B.Pairs found                                     |  3.10|  7578|
+2019-07-17 23:14:46,423|MF|app-20190717231438-0016|15|4|START|  9.10|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:14:47,254|MF|app-20190717231438-0016|15|4|  END|  9.93|C.Centers found                                   |  0.83| 15156|
+2019-07-17 23:14:47,254|MF|app-20190717231438-0016|15|4|START|  9.93|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:14:49,934|MF|app-20190717231438-0016|15|4|  END| 12.61|D.Disks found                                     |  2.68|     0|
+2019-07-17 23:14:49,934|MAXIMALS|app-20190717231438-0016|4|15|25.0|5|256|7.17
+2019-07-17 23:14:49,935|MF|app-20190717231438-0016|15|4|  END| 12.61|Maximal finder run                                |  7.17|     0|
+2019-07-17 23:14:49,935|MF|app-20190717231438-0016|15|4|START| 12.61|Session closed                                    |  0.00|     0|
+2019-07-17 23:14:54,389|MF|app-20190717231438-0016|15|4|  END| 17.06|Session closed                                    |  4.45|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 32 --mfcustomy 32 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:14:56,468|MF|app-00000000000000-0000|15|4|START|  0.13|Session started                                   |  0.00|     0|
+2019-07-17 23:14:57,806|MF|app-20190717231457-0017|15|4|  END|  1.32|Session started                                   |  1.34|     0|
+2019-07-17 23:14:57,806|MF|app-20190717231457-0017|15|4|START|  1.32|Data read                                         |  0.00|     0|
+2019-07-17 23:15:01,914|MF|app-20190717231457-0017|15|4|  END|  5.43|Data read                                         |  4.11|100000|
+2019-07-17 23:15:01,914|MF|app-20190717231457-0017|15|4|START|  5.43|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:15:01,946|MF|app-20190717231457-0017|15|4|  END|  5.46|MF1 partitioner                                   |  0.03|  1024|
+2019-07-17 23:15:01,947|MF|app-20190717231457-0017|15|4|START|  5.46|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:15:01,947|MF|app-20190717231457-0017|15|4|START|  5.46|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:15:02,533|MF|app-20190717231457-0017|15|4|  END|  6.05|A.Points indexed                                  |  0.59|100000|
+2019-07-17 23:15:02,534|MF|app-20190717231457-0017|15|4|START|  6.05|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:15:07,545|MF|app-20190717231457-0017|15|4|  END| 11.06|B.Pairs found                                     |  5.01|  7578|
+2019-07-17 23:15:07,545|MF|app-20190717231457-0017|15|4|START| 11.06|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:15:09,337|MF|app-20190717231457-0017|15|4|  END| 12.85|C.Centers found                                   |  1.79| 15156|
+2019-07-17 23:15:09,337|MF|app-20190717231457-0017|15|4|START| 12.85|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:15:14,913|MF|app-20190717231457-0017|15|4|  END| 18.43|D.Disks found                                     |  5.58|     0|
+2019-07-17 23:15:14,913|MAXIMALS|app-20190717231457-0017|4|15|25.0|5|1024|12.966
+2019-07-17 23:15:14,915|MF|app-20190717231457-0017|15|4|  END| 18.43|Maximal finder run                                | 12.97|     0|
+2019-07-17 23:15:14,915|MF|app-20190717231457-0017|15|4|START| 18.43|Session closed                                    |  0.00|     0|
+2019-07-17 23:15:19,123|MF|app-20190717231457-0017|15|4|  END| 22.64|Session closed                                    |  4.21|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 64 --mfcustomy 64 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:15:21,163|MF|app-00000000000000-0000|15|4|START|  0.13|Session started                                   |  0.00|     0|
+2019-07-17 23:15:22,506|MF|app-20190717231522-0018|15|4|  END|  1.32|Session started                                   |  1.34|     0|
+2019-07-17 23:15:22,506|MF|app-20190717231522-0018|15|4|START|  1.33|Data read                                         |  0.00|     0|
+2019-07-17 23:15:26,617|MF|app-20190717231522-0018|15|4|  END|  5.44|Data read                                         |  4.11|100000|
+2019-07-17 23:15:26,617|MF|app-20190717231522-0018|15|4|START|  5.44|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:15:26,654|MF|app-20190717231522-0018|15|4|  END|  5.47|MF1 partitioner                                   |  0.04|  4096|
+2019-07-17 23:15:26,655|MF|app-20190717231522-0018|15|4|START|  5.47|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:15:26,655|MF|app-20190717231522-0018|15|4|START|  5.47|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:15:27,305|MF|app-20190717231522-0018|15|4|  END|  6.12|A.Points indexed                                  |  0.65|100000|
+2019-07-17 23:15:27,306|MF|app-20190717231522-0018|15|4|START|  6.12|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:15:37,708|MF|app-20190717231522-0018|15|4|  END| 16.53|B.Pairs found                                     | 10.40|  7578|
+2019-07-17 23:15:37,708|MF|app-20190717231522-0018|15|4|START| 16.53|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:15:41,650|MF|app-20190717231522-0018|15|4|  END| 20.47|C.Centers found                                   |  3.94| 15156|
+2019-07-17 23:15:41,650|MF|app-20190717231522-0018|15|4|START| 20.47|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:15:55,643|MF|app-20190717231522-0018|15|4|  END| 34.46|D.Disks found                                     | 13.99|     0|
+2019-07-17 23:15:55,643|MAXIMALS|app-20190717231522-0018|4|15|25.0|5|4096|28.988
+2019-07-17 23:15:55,644|MF|app-20190717231522-0018|15|4|  END| 34.46|Maximal finder run                                | 28.99|     0|
+2019-07-17 23:15:55,644|MF|app-20190717231522-0018|15|4|START| 34.46|Session closed                                    |  0.00|     0|
+2019-07-17 23:15:59,797|MF|app-20190717231522-0018|15|4|  END| 38.62|Session closed                                    |  4.15|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 4 --mfcustomy 4 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:16:01,903|MF|app-00000000000000-0000|15|4|START|  0.13|Session started                                   |  0.00|     0|
+2019-07-17 23:16:03,242|MF|app-20190717231602-0019|15|4|  END|  1.32|Session started                                   |  1.34|     0|
+2019-07-17 23:16:03,243|MF|app-20190717231602-0019|15|4|START|  1.32|Data read                                         |  0.00|     0|
+2019-07-17 23:16:07,322|MF|app-20190717231602-0019|15|4|  END|  5.40|Data read                                         |  4.08|100000|
+2019-07-17 23:16:07,323|MF|app-20190717231602-0019|15|4|START|  5.40|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:16:07,353|MF|app-20190717231602-0019|15|4|  END|  5.43|MF1 partitioner                                   |  0.03|    16|
+2019-07-17 23:16:07,353|MF|app-20190717231602-0019|15|4|START|  5.43|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:16:07,354|MF|app-20190717231602-0019|15|4|START|  5.43|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:16:07,882|MF|app-20190717231602-0019|15|4|  END|  5.96|A.Points indexed                                  |  0.53|100000|
+2019-07-17 23:16:07,882|MF|app-20190717231602-0019|15|4|START|  5.96|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:16:09,877|MF|app-20190717231602-0019|15|4|  END|  7.96|B.Pairs found                                     |  2.00|  7578|
+2019-07-17 23:16:09,877|MF|app-20190717231602-0019|15|4|START|  7.96|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:16:10,567|MF|app-20190717231602-0019|15|4|  END|  8.65|C.Centers found                                   |  0.69| 15156|
+2019-07-17 23:16:10,568|MF|app-20190717231602-0019|15|4|START|  8.65|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:16:12,140|MF|app-20190717231602-0019|15|4|  END| 10.22|D.Disks found                                     |  1.57|     0|
+2019-07-17 23:16:12,140|MAXIMALS|app-20190717231602-0019|4|15|25.0|5|16|4.787
+2019-07-17 23:16:12,140|MF|app-20190717231602-0019|15|4|  END| 10.22|Maximal finder run                                |  4.79|     0|
+2019-07-17 23:16:12,140|MF|app-20190717231602-0019|15|4|START| 10.22|Session closed                                    |  0.00|     0|
+2019-07-17 23:16:16,365|MF|app-20190717231602-0019|15|4|  END| 14.44|Session closed                                    |  4.23|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 8 --mfcustomy 8 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:16:18,394|MF|app-00000000000000-0000|15|4|START|  0.13|Session started                                   |  0.00|     0|
+2019-07-17 23:16:19,807|MF|app-20190717231619-0020|15|4|  END|  1.40|Session started                                   |  1.42|     0|
+2019-07-17 23:16:19,807|MF|app-20190717231619-0020|15|4|START|  1.40|Data read                                         |  0.00|     0|
+2019-07-17 23:16:23,769|MF|app-20190717231619-0020|15|4|  END|  5.36|Data read                                         |  3.96|100000|
+2019-07-17 23:16:23,770|MF|app-20190717231619-0020|15|4|START|  5.36|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:16:23,793|MF|app-20190717231619-0020|15|4|  END|  5.38|MF1 partitioner                                   |  0.02|    64|
+2019-07-17 23:16:23,793|MF|app-20190717231619-0020|15|4|START|  5.38|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:16:23,794|MF|app-20190717231619-0020|15|4|START|  5.38|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:16:24,372|MF|app-20190717231619-0020|15|4|  END|  5.96|A.Points indexed                                  |  0.58|100000|
+2019-07-17 23:16:24,372|MF|app-20190717231619-0020|15|4|START|  5.96|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:16:26,831|MF|app-20190717231619-0020|15|4|  END|  8.42|B.Pairs found                                     |  2.46|  7578|
+2019-07-17 23:16:26,831|MF|app-20190717231619-0020|15|4|START|  8.42|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:16:27,345|MF|app-20190717231619-0020|15|4|  END|  8.93|C.Centers found                                   |  0.51| 15156|
+2019-07-17 23:16:27,345|MF|app-20190717231619-0020|15|4|START|  8.93|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:16:29,221|MF|app-20190717231619-0020|15|4|  END| 10.81|D.Disks found                                     |  1.88|     0|
+2019-07-17 23:16:29,221|MAXIMALS|app-20190717231619-0020|4|15|25.0|5|64|5.427
+2019-07-17 23:16:29,221|MF|app-20190717231619-0020|15|4|  END| 10.81|Maximal finder run                                |  5.43|     0|
+2019-07-17 23:16:29,222|MF|app-20190717231619-0020|15|4|START| 10.81|Session closed                                    |  0.00|     0|
+2019-07-17 23:16:33,353|MF|app-20190717231619-0020|15|4|  END| 14.94|Session closed                                    |  4.13|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 16 --mfcustomy 16 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:16:35,460|MF|app-00000000000000-0000|15|4|START|  0.14|Session started                                   |  0.00|     0|
+2019-07-17 23:16:36,883|MF|app-20190717231636-0021|15|4|  END|  1.41|Session started                                   |  1.43|     0|
+2019-07-17 23:16:36,884|MF|app-20190717231636-0021|15|4|START|  1.41|Data read                                         |  0.00|     0|
+2019-07-17 23:16:40,842|MF|app-20190717231636-0021|15|4|  END|  5.36|Data read                                         |  3.96|100000|
+2019-07-17 23:16:40,843|MF|app-20190717231636-0021|15|4|START|  5.37|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:16:40,868|MF|app-20190717231636-0021|15|4|  END|  5.39|MF1 partitioner                                   |  0.03|   256|
+2019-07-17 23:16:40,868|MF|app-20190717231636-0021|15|4|START|  5.39|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:16:40,868|MF|app-20190717231636-0021|15|4|START|  5.39|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:16:41,424|MF|app-20190717231636-0021|15|4|  END|  5.95|A.Points indexed                                  |  0.56|100000|
+2019-07-17 23:16:41,425|MF|app-20190717231636-0021|15|4|START|  5.95|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:16:44,537|MF|app-20190717231636-0021|15|4|  END|  9.06|B.Pairs found                                     |  3.11|  7578|
+2019-07-17 23:16:44,537|MF|app-20190717231636-0021|15|4|START|  9.06|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:16:45,409|MF|app-20190717231636-0021|15|4|  END|  9.93|C.Centers found                                   |  0.87| 15156|
+2019-07-17 23:16:45,410|MF|app-20190717231636-0021|15|4|START|  9.93|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:16:48,091|MF|app-20190717231636-0021|15|4|  END| 12.61|D.Disks found                                     |  2.68|     0|
+2019-07-17 23:16:48,091|MAXIMALS|app-20190717231636-0021|4|15|25.0|5|256|7.223
+2019-07-17 23:16:48,092|MF|app-20190717231636-0021|15|4|  END| 12.61|Maximal finder run                                |  7.22|     0|
+2019-07-17 23:16:48,092|MF|app-20190717231636-0021|15|4|START| 12.61|Session closed                                    |  0.00|     0|
+2019-07-17 23:16:52,272|MF|app-20190717231636-0021|15|4|  END| 16.79|Session closed                                    |  4.18|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 32 --mfcustomy 32 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:16:54,393|MF|app-00000000000000-0000|15|4|START|  0.14|Session started                                   |  0.00|     0|
+2019-07-17 23:16:55,787|MF|app-20190717231655-0022|15|4|  END|  1.38|Session started                                   |  1.40|     0|
+2019-07-17 23:16:55,787|MF|app-20190717231655-0022|15|4|START|  1.38|Data read                                         |  0.00|     0|
+2019-07-17 23:16:59,981|MF|app-20190717231655-0022|15|4|  END|  5.57|Data read                                         |  4.19|100000|
+2019-07-17 23:16:59,982|MF|app-20190717231655-0022|15|4|START|  5.57|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:17:00,008|MF|app-20190717231655-0022|15|4|  END|  5.60|MF1 partitioner                                   |  0.03|  1024|
+2019-07-17 23:17:00,009|MF|app-20190717231655-0022|15|4|START|  5.60|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:17:00,009|MF|app-20190717231655-0022|15|4|START|  5.60|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:17:00,552|MF|app-20190717231655-0022|15|4|  END|  6.14|A.Points indexed                                  |  0.54|100000|
+2019-07-17 23:17:00,552|MF|app-20190717231655-0022|15|4|START|  6.14|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:17:05,451|MF|app-20190717231655-0022|15|4|  END| 11.04|B.Pairs found                                     |  4.90|  7578|
+2019-07-17 23:17:05,451|MF|app-20190717231655-0022|15|4|START| 11.04|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:17:07,246|MF|app-20190717231655-0022|15|4|  END| 12.84|C.Centers found                                   |  1.80| 15156|
+2019-07-17 23:17:07,246|MF|app-20190717231655-0022|15|4|START| 12.84|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:17:12,857|MF|app-20190717231655-0022|15|4|  END| 18.45|D.Disks found                                     |  5.61|     0|
+2019-07-17 23:17:12,857|MAXIMALS|app-20190717231655-0022|4|15|25.0|5|1024|12.848
+2019-07-17 23:17:12,857|MF|app-20190717231655-0022|15|4|  END| 18.45|Maximal finder run                                | 12.85|     0|
+2019-07-17 23:17:12,857|MF|app-20190717231655-0022|15|4|START| 18.45|Session closed                                    |  0.00|     0|
+2019-07-17 23:17:17,150|MF|app-20190717231655-0022|15|4|  END| 22.74|Session closed                                    |  4.29|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 64 --mfcustomy 64 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:17:19,262|MF|app-00000000000000-0000|15|4|START|  0.13|Session started                                   |  0.00|     0|
+2019-07-17 23:17:20,623|MF|app-20190717231720-0023|15|4|  END|  1.34|Session started                                   |  1.36|     0|
+2019-07-17 23:17:20,624|MF|app-20190717231720-0023|15|4|START|  1.35|Data read                                         |  0.00|     0|
+2019-07-17 23:17:24,796|MF|app-20190717231720-0023|15|4|  END|  5.52|Data read                                         |  4.17|100000|
+2019-07-17 23:17:24,796|MF|app-20190717231720-0023|15|4|START|  5.52|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:17:24,835|MF|app-20190717231720-0023|15|4|  END|  5.56|MF1 partitioner                                   |  0.04|  4096|
+2019-07-17 23:17:24,836|MF|app-20190717231720-0023|15|4|START|  5.56|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:17:24,837|MF|app-20190717231720-0023|15|4|START|  5.56|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:17:25,497|MF|app-20190717231720-0023|15|4|  END|  6.22|A.Points indexed                                  |  0.66|100000|
+2019-07-17 23:17:25,497|MF|app-20190717231720-0023|15|4|START|  6.22|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:17:36,263|MF|app-20190717231720-0023|15|4|  END| 16.98|B.Pairs found                                     | 10.77|  7578|
+2019-07-17 23:17:36,263|MF|app-20190717231720-0023|15|4|START| 16.98|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:17:40,462|MF|app-20190717231720-0023|15|4|  END| 21.18|C.Centers found                                   |  4.20| 15156|
+2019-07-17 23:17:40,462|MF|app-20190717231720-0023|15|4|START| 21.18|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:17:55,610|MF|app-20190717231720-0023|15|4|  END| 36.33|D.Disks found                                     | 15.15|     0|
+2019-07-17 23:17:55,610|MAXIMALS|app-20190717231720-0023|4|15|25.0|5|4096|30.774
+2019-07-17 23:17:55,610|MF|app-20190717231720-0023|15|4|  END| 36.33|Maximal finder run                                | 30.77|     0|
+2019-07-17 23:17:55,610|MF|app-20190717231720-0023|15|4|START| 36.33|Session closed                                    |  0.00|     0|
+2019-07-17 23:17:59,865|MF|app-20190717231720-0023|15|4|  END| 40.59|Session closed                                    |  4.26|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 4 --mfcustomy 4 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:18:01,967|MF|app-00000000000000-0000|15|4|START|  0.14|Session started                                   |  0.00|     0|
+2019-07-17 23:18:03,383|MF|app-20190717231802-0024|15|4|  END|  1.40|Session started                                   |  1.42|     0|
+2019-07-17 23:18:03,384|MF|app-20190717231802-0024|15|4|START|  1.40|Data read                                         |  0.00|     0|
+2019-07-17 23:18:07,487|MF|app-20190717231802-0024|15|4|  END|  5.50|Data read                                         |  4.10|100000|
+2019-07-17 23:18:07,487|MF|app-20190717231802-0024|15|4|START|  5.50|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:18:07,517|MF|app-20190717231802-0024|15|4|  END|  5.53|MF1 partitioner                                   |  0.03|    16|
+2019-07-17 23:18:07,517|MF|app-20190717231802-0024|15|4|START|  5.53|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:18:07,518|MF|app-20190717231802-0024|15|4|START|  5.53|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:18:08,045|MF|app-20190717231802-0024|15|4|  END|  6.06|A.Points indexed                                  |  0.53|100000|
+2019-07-17 23:18:08,045|MF|app-20190717231802-0024|15|4|START|  6.06|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:18:10,216|MF|app-20190717231802-0024|15|4|  END|  8.23|B.Pairs found                                     |  2.17|  7578|
+2019-07-17 23:18:10,216|MF|app-20190717231802-0024|15|4|START|  8.23|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:18:10,877|MF|app-20190717231802-0024|15|4|  END|  8.89|C.Centers found                                   |  0.66| 15156|
+2019-07-17 23:18:10,878|MF|app-20190717231802-0024|15|4|START|  8.89|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:18:12,485|MF|app-20190717231802-0024|15|4|  END| 10.50|D.Disks found                                     |  1.61|     0|
+2019-07-17 23:18:12,485|MAXIMALS|app-20190717231802-0024|4|15|25.0|5|16|4.967
+2019-07-17 23:18:12,485|MF|app-20190717231802-0024|15|4|  END| 10.50|Maximal finder run                                |  4.97|     0|
+2019-07-17 23:18:12,485|MF|app-20190717231802-0024|15|4|START| 10.50|Session closed                                    |  0.00|     0|
+2019-07-17 23:18:16,536|MF|app-20190717231802-0024|15|4|  END| 14.55|Session closed                                    |  4.05|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 8 --mfcustomy 8 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:18:18,610|MF|app-00000000000000-0000|15|4|START|  0.13|Session started                                   |  0.00|     0|
+2019-07-17 23:18:19,923|MF|app-20190717231819-0025|15|4|  END|  1.30|Session started                                   |  1.32|     0|
+2019-07-17 23:18:19,924|MF|app-20190717231819-0025|15|4|START|  1.30|Data read                                         |  0.00|     0|
+2019-07-17 23:18:24,003|MF|app-20190717231819-0025|15|4|  END|  5.38|Data read                                         |  4.08|100000|
+2019-07-17 23:18:24,004|MF|app-20190717231819-0025|15|4|START|  5.38|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:18:24,027|MF|app-20190717231819-0025|15|4|  END|  5.40|MF1 partitioner                                   |  0.02|    64|
+2019-07-17 23:18:24,027|MF|app-20190717231819-0025|15|4|START|  5.40|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:18:24,028|MF|app-20190717231819-0025|15|4|START|  5.40|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:18:24,557|MF|app-20190717231819-0025|15|4|  END|  5.93|A.Points indexed                                  |  0.53|100000|
+2019-07-17 23:18:24,557|MF|app-20190717231819-0025|15|4|START|  5.93|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:18:27,072|MF|app-20190717231819-0025|15|4|  END|  8.45|B.Pairs found                                     |  2.52|  7578|
+2019-07-17 23:18:27,072|MF|app-20190717231819-0025|15|4|START|  8.45|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:18:27,597|MF|app-20190717231819-0025|15|4|  END|  8.97|C.Centers found                                   |  0.53| 15156|
+2019-07-17 23:18:27,597|MF|app-20190717231819-0025|15|4|START|  8.97|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:18:29,298|MF|app-20190717231819-0025|15|4|  END| 10.67|D.Disks found                                     |  1.70|     0|
+2019-07-17 23:18:29,298|MAXIMALS|app-20190717231819-0025|4|15|25.0|5|64|5.271
+2019-07-17 23:18:29,298|MF|app-20190717231819-0025|15|4|  END| 10.67|Maximal finder run                                |  5.27|     0|
+2019-07-17 23:18:29,298|MF|app-20190717231819-0025|15|4|START| 10.67|Session closed                                    |  0.00|     0|
+2019-07-17 23:18:33,429|MF|app-20190717231819-0025|15|4|  END| 14.80|Session closed                                    |  4.13|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 16 --mfcustomy 16 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:18:35,506|MF|app-00000000000000-0000|15|4|START|  0.13|Session started                                   |  0.00|     0|
+2019-07-17 23:18:36,959|MF|app-20190717231836-0026|15|4|  END|  1.44|Session started                                   |  1.46|     0|
+2019-07-17 23:18:36,960|MF|app-20190717231836-0026|15|4|START|  1.44|Data read                                         |  0.00|     0|
+2019-07-17 23:18:40,996|MF|app-20190717231836-0026|15|4|  END|  5.47|Data read                                         |  4.04|100000|
+2019-07-17 23:18:40,997|MF|app-20190717231836-0026|15|4|START|  5.47|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:18:41,028|MF|app-20190717231836-0026|15|4|  END|  5.50|MF1 partitioner                                   |  0.03|   256|
+2019-07-17 23:18:41,029|MF|app-20190717231836-0026|15|4|START|  5.51|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:18:41,029|MF|app-20190717231836-0026|15|4|START|  5.51|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:18:41,608|MF|app-20190717231836-0026|15|4|  END|  6.08|A.Points indexed                                  |  0.58|100000|
+2019-07-17 23:18:41,608|MF|app-20190717231836-0026|15|4|START|  6.08|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:18:44,732|MF|app-20190717231836-0026|15|4|  END|  9.21|B.Pairs found                                     |  3.12|  7578|
+2019-07-17 23:18:44,733|MF|app-20190717231836-0026|15|4|START|  9.21|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:18:45,601|MF|app-20190717231836-0026|15|4|  END| 10.08|C.Centers found                                   |  0.87| 15156|
+2019-07-17 23:18:45,602|MF|app-20190717231836-0026|15|4|START| 10.08|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:18:49,142|MF|app-20190717231836-0026|15|4|  END| 13.62|D.Disks found                                     |  3.54|     0|
+2019-07-17 23:18:49,142|MAXIMALS|app-20190717231836-0026|4|15|25.0|5|256|8.113
+2019-07-17 23:18:49,143|MF|app-20190717231836-0026|15|4|  END| 13.62|Maximal finder run                                |  8.11|     0|
+2019-07-17 23:18:49,143|MF|app-20190717231836-0026|15|4|START| 13.62|Session closed                                    |  0.00|     0|
+2019-07-17 23:18:53,493|MF|app-20190717231836-0026|15|4|  END| 17.97|Session closed                                    |  4.35|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 32 --mfcustomy 32 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:18:55,611|MF|app-00000000000000-0000|15|4|START|  0.14|Session started                                   |  0.00|     0|
+2019-07-17 23:18:57,051|MF|app-20190717231856-0027|15|4|  END|  1.42|Session started                                   |  1.44|     0|
+2019-07-17 23:18:57,052|MF|app-20190717231856-0027|15|4|START|  1.42|Data read                                         |  0.00|     0|
+2019-07-17 23:19:01,114|MF|app-20190717231856-0027|15|4|  END|  5.49|Data read                                         |  4.06|100000|
+2019-07-17 23:19:01,114|MF|app-20190717231856-0027|15|4|START|  5.49|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:19:01,148|MF|app-20190717231856-0027|15|4|  END|  5.52|MF1 partitioner                                   |  0.03|  1024|
+2019-07-17 23:19:01,148|MF|app-20190717231856-0027|15|4|START|  5.52|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:19:01,149|MF|app-20190717231856-0027|15|4|START|  5.52|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:19:01,781|MF|app-20190717231856-0027|15|4|  END|  6.15|A.Points indexed                                  |  0.63|100000|
+2019-07-17 23:19:01,782|MF|app-20190717231856-0027|15|4|START|  6.15|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:19:06,644|MF|app-20190717231856-0027|15|4|  END| 11.02|B.Pairs found                                     |  4.86|  7578|
+2019-07-17 23:19:06,645|MF|app-20190717231856-0027|15|4|START| 11.02|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:19:08,461|MF|app-20190717231856-0027|15|4|  END| 12.83|C.Centers found                                   |  1.82| 15156|
+2019-07-17 23:19:08,461|MF|app-20190717231856-0027|15|4|START| 12.83|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:19:13,872|MF|app-20190717231856-0027|15|4|  END| 18.24|D.Disks found                                     |  5.41|     0|
+2019-07-17 23:19:13,872|MAXIMALS|app-20190717231856-0027|4|15|25.0|5|1024|12.723
+2019-07-17 23:19:13,872|MF|app-20190717231856-0027|15|4|  END| 18.24|Maximal finder run                                | 12.72|     0|
+2019-07-17 23:19:13,873|MF|app-20190717231856-0027|15|4|START| 18.24|Session closed                                    |  0.00|     0|
+2019-07-17 23:19:18,174|MF|app-20190717231856-0027|15|4|  END| 22.55|Session closed                                    |  4.30|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 64 --mfcustomy 64 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:19:20,247|MF|app-00000000000000-0000|15|4|START|  0.13|Session started                                   |  0.00|     0|
+2019-07-17 23:19:21,550|MF|app-20190717231921-0028|15|4|  END|  1.29|Session started                                   |  1.31|     0|
+2019-07-17 23:19:21,550|MF|app-20190717231921-0028|15|4|START|  1.29|Data read                                         |  0.00|     0|
+2019-07-17 23:19:25,652|MF|app-20190717231921-0028|15|4|  END|  5.39|Data read                                         |  4.10|100000|
+2019-07-17 23:19:25,652|MF|app-20190717231921-0028|15|4|START|  5.39|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:19:25,690|MF|app-20190717231921-0028|15|4|  END|  5.43|MF1 partitioner                                   |  0.04|  4096|
+2019-07-17 23:19:25,691|MF|app-20190717231921-0028|15|4|START|  5.43|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:19:25,691|MF|app-20190717231921-0028|15|4|START|  5.43|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:19:26,373|MF|app-20190717231921-0028|15|4|  END|  6.11|A.Points indexed                                  |  0.68|100000|
+2019-07-17 23:19:26,374|MF|app-20190717231921-0028|15|4|START|  6.11|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:19:36,912|MF|app-20190717231921-0028|15|4|  END| 16.65|B.Pairs found                                     | 10.54|  7578|
+2019-07-17 23:19:36,912|MF|app-20190717231921-0028|15|4|START| 16.65|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:19:41,077|MF|app-20190717231921-0028|15|4|  END| 20.81|C.Centers found                                   |  4.17| 15156|
+2019-07-17 23:19:41,077|MF|app-20190717231921-0028|15|4|START| 20.81|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:19:54,997|MF|app-20190717231921-0028|15|4|  END| 34.73|D.Disks found                                     | 13.92|     0|
+2019-07-17 23:19:54,997|MAXIMALS|app-20190717231921-0028|4|15|25.0|5|4096|29.306
+2019-07-17 23:19:54,997|MF|app-20190717231921-0028|15|4|  END| 34.73|Maximal finder run                                | 29.31|     0|
+2019-07-17 23:19:54,997|MF|app-20190717231921-0028|15|4|START| 34.73|Session closed                                    |  0.00|     0|
+2019-07-17 23:19:59,172|MF|app-20190717231921-0028|15|4|  END| 38.91|Session closed                                    |  4.18|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 4 --mfcustomy 4 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:20:01,297|MF|app-00000000000000-0000|15|4|START|  0.14|Session started                                   |  0.00|     0|
+2019-07-17 23:20:02,650|MF|app-20190717232002-0029|15|4|  END|  1.34|Session started                                   |  1.36|     0|
+2019-07-17 23:20:02,651|MF|app-20190717232002-0029|15|4|START|  1.34|Data read                                         |  0.00|     0|
+2019-07-17 23:20:06,747|MF|app-20190717232002-0029|15|4|  END|  5.43|Data read                                         |  4.10|100000|
+2019-07-17 23:20:06,747|MF|app-20190717232002-0029|15|4|START|  5.43|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:20:06,778|MF|app-20190717232002-0029|15|4|  END|  5.46|MF1 partitioner                                   |  0.03|    16|
+2019-07-17 23:20:06,779|MF|app-20190717232002-0029|15|4|START|  5.46|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:20:06,780|MF|app-20190717232002-0029|15|4|START|  5.46|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:20:07,315|MF|app-20190717232002-0029|15|4|  END|  6.00|A.Points indexed                                  |  0.54|100000|
+2019-07-17 23:20:07,315|MF|app-20190717232002-0029|15|4|START|  6.00|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:20:09,302|MF|app-20190717232002-0029|15|4|  END|  7.99|B.Pairs found                                     |  1.99|  7578|
+2019-07-17 23:20:09,302|MF|app-20190717232002-0029|15|4|START|  7.99|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:20:09,873|MF|app-20190717232002-0029|15|4|  END|  8.56|C.Centers found                                   |  0.57| 15156|
+2019-07-17 23:20:09,874|MF|app-20190717232002-0029|15|4|START|  8.56|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:20:11,604|MF|app-20190717232002-0029|15|4|  END| 10.29|D.Disks found                                     |  1.73|     0|
+2019-07-17 23:20:11,604|MAXIMALS|app-20190717232002-0029|4|15|25.0|5|16|4.825
+2019-07-17 23:20:11,604|MF|app-20190717232002-0029|15|4|  END| 10.29|Maximal finder run                                |  4.83|     0|
+2019-07-17 23:20:11,604|MF|app-20190717232002-0029|15|4|START| 10.29|Session closed                                    |  0.00|     0|
+2019-07-17 23:20:15,867|MF|app-20190717232002-0029|15|4|  END| 14.55|Session closed                                    |  4.26|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 8 --mfcustomy 8 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:20:17,946|MF|app-00000000000000-0000|15|4|START|  0.13|Session started                                   |  0.00|     0|
+2019-07-17 23:20:19,353|MF|app-20190717232018-0030|15|4|  END|  1.39|Session started                                   |  1.41|     0|
+2019-07-17 23:20:19,353|MF|app-20190717232018-0030|15|4|START|  1.39|Data read                                         |  0.00|     0|
+2019-07-17 23:20:23,266|MF|app-20190717232018-0030|15|4|  END|  5.30|Data read                                         |  3.91|100000|
+2019-07-17 23:20:23,266|MF|app-20190717232018-0030|15|4|START|  5.30|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:20:23,299|MF|app-20190717232018-0030|15|4|  END|  5.34|MF1 partitioner                                   |  0.03|    64|
+2019-07-17 23:20:23,300|MF|app-20190717232018-0030|15|4|START|  5.34|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:20:23,300|MF|app-20190717232018-0030|15|4|START|  5.34|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:20:23,871|MF|app-20190717232018-0030|15|4|  END|  5.91|A.Points indexed                                  |  0.57|100000|
+2019-07-17 23:20:23,871|MF|app-20190717232018-0030|15|4|START|  5.91|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:20:26,753|MF|app-20190717232018-0030|15|4|  END|  8.79|B.Pairs found                                     |  2.88|  7578|
+2019-07-17 23:20:26,753|MF|app-20190717232018-0030|15|4|START|  8.79|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:20:27,230|MF|app-20190717232018-0030|15|4|  END|  9.27|C.Centers found                                   |  0.48| 15156|
+2019-07-17 23:20:27,230|MF|app-20190717232018-0030|15|4|START|  9.27|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:20:29,017|MF|app-20190717232018-0030|15|4|  END| 11.05|D.Disks found                                     |  1.79|     0|
+2019-07-17 23:20:29,017|MAXIMALS|app-20190717232018-0030|4|15|25.0|5|64|5.717
+2019-07-17 23:20:29,019|MF|app-20190717232018-0030|15|4|  END| 11.06|Maximal finder run                                |  5.72|     0|
+2019-07-17 23:20:29,019|MF|app-20190717232018-0030|15|4|START| 11.06|Session closed                                    |  0.00|     0|
+2019-07-17 23:20:33,467|MF|app-20190717232018-0030|15|4|  END| 15.50|Session closed                                    |  4.45|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 16 --mfcustomy 16 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:20:35,605|MF|app-00000000000000-0000|15|4|START|  0.14|Session started                                   |  0.00|     0|
+2019-07-17 23:20:37,003|MF|app-20190717232036-0031|15|4|  END|  1.38|Session started                                   |  1.40|     0|
+2019-07-17 23:20:37,003|MF|app-20190717232036-0031|15|4|START|  1.38|Data read                                         |  0.00|     0|
+2019-07-17 23:20:41,029|MF|app-20190717232036-0031|15|4|  END|  5.40|Data read                                         |  4.03|100000|
+2019-07-17 23:20:41,029|MF|app-20190717232036-0031|15|4|START|  5.41|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:20:41,061|MF|app-20190717232036-0031|15|4|  END|  5.44|MF1 partitioner                                   |  0.03|   256|
+2019-07-17 23:20:41,061|MF|app-20190717232036-0031|15|4|START|  5.44|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:20:41,062|MF|app-20190717232036-0031|15|4|START|  5.44|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:20:41,623|MF|app-20190717232036-0031|15|4|  END|  6.00|A.Points indexed                                  |  0.56|100000|
+2019-07-17 23:20:41,624|MF|app-20190717232036-0031|15|4|START|  6.00|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:20:44,756|MF|app-20190717232036-0031|15|4|  END|  9.13|B.Pairs found                                     |  3.13|  7578|
+2019-07-17 23:20:44,756|MF|app-20190717232036-0031|15|4|START|  9.13|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:20:45,564|MF|app-20190717232036-0031|15|4|  END|  9.94|C.Centers found                                   |  0.81| 15156|
+2019-07-17 23:20:45,564|MF|app-20190717232036-0031|15|4|START|  9.94|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:20:48,311|MF|app-20190717232036-0031|15|4|  END| 12.69|D.Disks found                                     |  2.75|     0|
+2019-07-17 23:20:48,311|MAXIMALS|app-20190717232036-0031|4|15|25.0|5|256|7.249
+2019-07-17 23:20:48,312|MF|app-20190717232036-0031|15|4|  END| 12.69|Maximal finder run                                |  7.25|     0|
+2019-07-17 23:20:48,312|MF|app-20190717232036-0031|15|4|START| 12.69|Session closed                                    |  0.00|     0|
+2019-07-17 23:20:52,677|MF|app-20190717232036-0031|15|4|  END| 17.05|Session closed                                    |  4.37|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 32 --mfcustomy 32 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:20:54,776|MF|app-00000000000000-0000|15|4|START|  0.14|Session started                                   |  0.00|     0|
+2019-07-17 23:20:56,182|MF|app-20190717232055-0032|15|4|  END|  1.39|Session started                                   |  1.41|     0|
+2019-07-17 23:20:56,182|MF|app-20190717232055-0032|15|4|START|  1.39|Data read                                         |  0.00|     0|
+2019-07-17 23:21:00,310|MF|app-20190717232055-0032|15|4|  END|  5.52|Data read                                         |  4.13|100000|
+2019-07-17 23:21:00,311|MF|app-20190717232055-0032|15|4|START|  5.52|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:21:00,344|MF|app-20190717232055-0032|15|4|  END|  5.55|MF1 partitioner                                   |  0.03|  1024|
+2019-07-17 23:21:00,344|MF|app-20190717232055-0032|15|4|START|  5.55|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:21:00,345|MF|app-20190717232055-0032|15|4|START|  5.55|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:21:00,937|MF|app-20190717232055-0032|15|4|  END|  6.14|A.Points indexed                                  |  0.59|100000|
+2019-07-17 23:21:00,937|MF|app-20190717232055-0032|15|4|START|  6.14|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:21:05,867|MF|app-20190717232055-0032|15|4|  END| 11.07|B.Pairs found                                     |  4.93|  7578|
+2019-07-17 23:21:05,867|MF|app-20190717232055-0032|15|4|START| 11.07|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:21:07,608|MF|app-20190717232055-0032|15|4|  END| 12.81|C.Centers found                                   |  1.74| 15156|
+2019-07-17 23:21:07,609|MF|app-20190717232055-0032|15|4|START| 12.82|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:21:12,957|MF|app-20190717232055-0032|15|4|  END| 18.16|D.Disks found                                     |  5.35|     0|
+2019-07-17 23:21:12,957|MAXIMALS|app-20190717232055-0032|4|15|25.0|5|1024|12.612
+2019-07-17 23:21:12,957|MF|app-20190717232055-0032|15|4|  END| 18.16|Maximal finder run                                | 12.61|     0|
+2019-07-17 23:21:12,957|MF|app-20190717232055-0032|15|4|START| 18.16|Session closed                                    |  0.00|     0|
+2019-07-17 23:21:17,169|MF|app-20190717232055-0032|15|4|  END| 22.38|Session closed                                    |  4.21|     0|
+spark-submit --class MF_Grid ~/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input /home/ubuntu/Research/Datasets/LA/uniform.tsv --epsilon 25 --mu 5 --host driver --cores 4 --executors 15 --mfcustomx 64 --mfcustomy 64 --info --portui 4040 --output ~/tmp/apps01/
+2019-07-17 23:21:19,262|MF|app-00000000000000-0000|15|4|START|  0.13|Session started                                   |  0.00|     0|
+2019-07-17 23:21:20,646|MF|app-20190717232120-0033|15|4|  END|  1.37|Session started                                   |  1.39|     0|
+2019-07-17 23:21:20,647|MF|app-20190717232120-0033|15|4|START|  1.37|Data read                                         |  0.00|     0|
+2019-07-17 23:21:24,745|MF|app-20190717232120-0033|15|4|  END|  5.47|Data read                                         |  4.10|100000|
+2019-07-17 23:21:24,746|MF|app-20190717232120-0033|15|4|START|  5.47|MF1 partitioner                                   |  0.00|     0|
+2019-07-17 23:21:24,785|MF|app-20190717232120-0033|15|4|  END|  5.51|MF1 partitioner                                   |  0.04|  4096|
+2019-07-17 23:21:24,786|MF|app-20190717232120-0033|15|4|START|  5.51|Maximal finder run                                |  0.00|     0|
+2019-07-17 23:21:24,787|MF|app-20190717232120-0033|15|4|START|  5.51|A.Points indexed                                  |  0.00|     0|
+2019-07-17 23:21:25,417|MF|app-20190717232120-0033|15|4|  END|  6.14|A.Points indexed                                  |  0.63|100000|
+2019-07-17 23:21:25,418|MF|app-20190717232120-0033|15|4|START|  6.14|B.Pairs found                                     |  0.00|     0|
+2019-07-17 23:21:35,733|MF|app-20190717232120-0033|15|4|  END| 16.45|B.Pairs found                                     | 10.32|  7578|
+2019-07-17 23:21:35,734|MF|app-20190717232120-0033|15|4|START| 16.45|C.Centers found                                   |  0.00|     0|
+2019-07-17 23:21:39,850|MF|app-20190717232120-0033|15|4|  END| 20.57|C.Centers found                                   |  4.12| 15156|
+2019-07-17 23:21:39,850|MF|app-20190717232120-0033|15|4|START| 20.57|D.Disks found                                     |  0.00|     0|
+2019-07-17 23:21:54,250|MF|app-20190717232120-0033|15|4|  END| 34.97|D.Disks found                                     | 14.40|     0|
+2019-07-17 23:21:54,250|MAXIMALS|app-20190717232120-0033|4|15|25.0|5|4096|29.464
+2019-07-17 23:21:54,250|MF|app-20190717232120-0033|15|4|  END| 34.97|Maximal finder run                                | 29.46|     0|
+2019-07-17 23:21:54,250|MF|app-20190717232120-0033|15|4|START| 34.97|Session closed                                    |  0.00|     0|
+2019-07-17 23:21:58,454|MF|app-20190717232120-0033|15|4|  END| 39.17|Session closed                                    |  4.20|     0|

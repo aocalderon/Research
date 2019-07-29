@@ -1,0 +1,37 @@
+---
+title: "MF algortihm in Uniform Dataset"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+Epsilon = 100
+Mu = 5
+Entries 1 = 1000
+
+```{r include=F}
+library(tidyverse)
+```
+
+```{r echo=F}
+fields = c("Timestamp", "Tag", "appId", "Cores", "Executors", "Epsilon", "Mu", "Partitions1", "Partitions2", "Time", "Load")
+data_path = "~/Documents/PhD/Research/Scripts/R/R02/nohup03.txt"
+maximals = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% 
+  filter(grepl("\\|MAXIMALS\\|", line)) %>%
+  separate(line, into = fields, sep = "\\|") %>%
+  mutate(Time = as.numeric(Time)) 
+submit = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% 
+  filter(grepl("spark-submit", line)) %>% separate(line, into=paste0("A", 1:14), sep = "--") %>%
+  mutate(A11 = str_trim(A11)) %>% separate(A11, into = c(NA,"MaxEntries"), sep = " ") %>% 
+  mutate(Dataset = rep(c("uniform"), each = 5, times = 10)) %>%
+  mutate(MaxEntries = as.numeric(MaxEntries))
+
+data = bind_cols(maximals, submit) %>% group_by(Dataset, Epsilon, MaxEntries) %>% summarise(Time = mean(Time))
+head(data)
+
+p = ggplot(data = data, aes(x = factor(Dataset), y = Time, fill = factor(MaxEntries))) +
+ geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+ theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0 )) +
+ labs(x="Dataset", y="Time [s]", title="Execution time MF algorithm", fill="Max Entries") 
+plot(p)
+```

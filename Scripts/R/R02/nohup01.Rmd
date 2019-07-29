@@ -1,0 +1,71 @@
+---
+title: "Uniform Dataset using Grid partitioning"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+Epsilon = 25
+Mu = 5
+
+```{r include=F}
+library(tidyverse)
+```
+
+```{r echo=F}
+fields = c("Timestamp", "Tag", "appId", "Cores", "Executors", "Epsilon", "Mu", "Partitions", "Time")
+data_path = "~/Documents/PhD/Research/Scripts/R/R02/nohup01.txt"
+data = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% 
+  filter(grepl("\\|MAXIMALS\\|", line)) %>%
+  separate(line, into = fields, sep = "\\|") %>%
+  mutate(Time = as.numeric(Time), Partitions = as.numeric(Partitions)) %>%
+  select(Partitions, Time) %>% mutate(Dataset = rep(c("uniform"), each = 5, times = 5)) %>%
+  mutate(P = sqrt(Partitions)) %>% 
+  mutate(Partitions = paste0(P,"x",P)) %>%
+  #mutate(Dataset = paste0(Dataset, "K")) %>%
+  group_by(Partitions, Dataset) %>% summarise(Time = mean(Time))
+data$Dataset = factor(data$Dataset, levels = c("uniform"))
+data$Partitions = factor(data$Partitions, levels = c("4x4", "8x8", "16x16", "32x32", "64x64"))
+
+head(data, n=25)
+
+p = ggplot(data = data, aes(x = factor(Dataset), y = Time, fill = factor(Partitions))) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0 )) +
+  labs(x="Dataset", y="Time [s]", title="Execution time for the first 4 stages by grid size", fill="Grid Size") 
+plot(p)
+```
+
+### Breaking down by each stage
+
+```{r echo=F}
+fieldsMF = c("Timestamp", "Tag", "appId", "Executors", "Cores", "Status", "Duration", "Stage", "Time", "Load", "Interval")
+data_path = "~/Documents/PhD/Research/Scripts/R/R02/nohup01.txt"
+stages = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% filter(grepl("\\|MF\\|", line)) %>%
+  filter(grepl("END", line)) %>% separate(line, into = fieldsMF, sep = "\\|") %>%
+  filter(grepl("[A-D]\\.", Stage)) %>%
+  mutate(Time = as.numeric(Time), Load = as.numeric(Load)) %>%
+  select(Stage, Time, Load) %>% mutate(id = rep(1:25, each = 4))
+
+submit = enframe(read_lines(data_path), name = "n", value = "line") %>% select(line) %>% 
+  filter(grepl("spark-submit", line)) %>% separate(line, into=paste0("A", 1:13), sep = "--") %>% 
+  mutate(Dataset = str_trim(A3), GridSize = str_trim(A9)) %>% mutate(id = 1:25)
+stage_names = tibble(StageId = c("A","B","C","D","E","F"), StageName = c("Partitioning points", "Finding pairs", "Computing centers", "Finding disks", "Partitioning disks", "Maximal disks"))
+data = stages %>% inner_join(submit, by = "id") %>%
+  group_by(Dataset, GridSize, Stage) %>% summarise(Time = mean(Time)) %>%
+  ungroup() %>% separate(Stage, c("StageId", NA), sep = "\\.") %>% inner_join(stage_names, by = "StageId") %>%
+  mutate(Stage = paste0(StageId,".",StageName)) %>% select(Dataset, GridSize, Stage, Time) %>%
+  separate(Dataset, into=c(NA,"Dataset"), sep = "/LA/") %>% separate(Dataset, into=c("Dataset", NA), sep = "\\.") %>%
+  separate(GridSize, c(NA, "GridSize"), sep = " ") %>% mutate(GridSize = paste0(GridSize, "x", GridSize))
+data$Dataset = factor(data$Dataset, levels = c("uniform"))
+data$GridSize = factor(data$GridSize, levels = c("4x4", "8x8", "16x16", "32x32", "64x64"))
+head(data, n=75)
+
+p = ggplot(data = data, aes(x = Stage, y = Time, fill = GridSize)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0 )) +
+  labs(x="Stage", y="Time [s]", title="Execution time for the first 4 stages by stage and grid size", fill="Grid Size") +
+  facet_grid(. ~ Dataset)
+plot(p)
+```
+
