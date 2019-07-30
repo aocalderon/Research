@@ -17,7 +17,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable.WrappedArray
 import java.io.PrintWriter
 
-object LATrajSelector {
+object LATrajMerger {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory()
   private val precision: Double = 0.0001
@@ -32,8 +32,9 @@ object LATrajSelector {
   }
 
   def main(args: Array[String]): Unit = {
-    val params = new LATrajSelectorConf(args)
+    val params = new LATrajMergerConf(args)
     val input = params.input()
+    val indexFile = params.index()
     val output = params.output()
     val offset = params.offset()
     val cores = params.cores()
@@ -77,58 +78,16 @@ object LATrajSelector {
     log(stage, timer, nTrajs, "END")
 
     timer = clocktime
-    stage = "Initial sample"
+    stage = "Index read"
     log(stage, timer, 0, "START")
-    val m = params.m()
-    var start = 0
-    var end = m
-    val sample = trajs.filter{ traj =>
-      val s = indices(start)
-      val e = indices(end)
-      traj.index >= s & traj.index < e
-    }
-    logger.info(s"TRAJS|0|${sample.count()}")
-    var trajCount = trajs.count() - (end - start)
-    val dataset = sample.map( traj => Traj(traj.tid, traj.lenght, 0))
-    def getPointsByTimeInterval(trajs: Dataset[Traj], n: Int): List[(Int, Long)] = {
-      val dataset = trajs.flatMap{ traj =>
-        (n until (n + traj.lenght)).map(t => (traj.tid, t))
-      }.toDF("tid", "t")
-      dataset.groupBy($"t").count().collect().map(r => (r.getInt(0), r.getLong(1))).toList.sortBy(x => x._1)
-    }
-    var state = getPointsByTimeInterval(sample, 0)
-    logger.info(s"Current state: ${state.take(5)}")
-    logger.info(s"Current state: ${state.reverse.take(5)}")
-    var n = 1
-    while(trajCount > 0){
-      val timer2 = clocktime
-      val stage = s"Time interval: $n"
-      log(stage, timer2, 0, "START")
-
-      val left = m - state(1)._2.toInt
-      start = end
-      end = end + left
-      if(end >= indicesCount) {
-        end = indicesCount - 1
+    var index = spark.read.option("header", "false").option("delimiter", "|").csv(indexFile)
+      .map{ index =>
+        val t = index.getString(2).toInt
+        val i = index.getString(3).toInt
+        (t, i)
       }
-      val sample = trajs.filter{ traj =>
-        val s = indices(start)
-        val e = indices(end)
-        traj.index >= s & traj.index < e
-      }
-      logger.info(s"TRAJS|$n|${sample.count()}")
-      trajCount = trajCount - (end - start)
-      logger.info(s"Trajs left: ${trajCount}")
-      val newState = getPointsByTimeInterval(sample, n)
-      state = (state ++ newState).groupBy(s => s._1).mapValues(f => f.map(_._2).reduce(_ + _)).toList.sortBy(_._1).filter(_._1 >= n)
-
-      logger.info(s"Current state: ${state.take(5)}")
-      logger.info(s"Current state: ${state.reverse.take(5)}")
-      n = n + 1
-
-      log(stage, timer2, 0, "END")
-    }
-    log(stage, timer, 0, "END")
+    val nIndex = index.count()
+    log(stage, timer, nTrajs, "END")
 
     timer = clocktime
     stage = "Session close"
@@ -138,15 +97,14 @@ object LATrajSelector {
   }
 }
 
-class LATrajSelectorConf(args: Seq[String]) extends ScallopConf(args) {
+class LATrajMergerConf(args: Seq[String]) extends ScallopConf(args) {
   val input:      ScallopOption[String]  = opt[String]  (required = true)
   val output:     ScallopOption[String]  = opt[String]  (default  = Some("/tmp/output.tsv"))
   val host:       ScallopOption[String]  = opt[String]  (default = Some("169.235.27.138"))
   val port:       ScallopOption[String]  = opt[String]  (default = Some("7077"))
   val cores:      ScallopOption[Int]     = opt[Int]     (default = Some(4))
   val executors:  ScallopOption[Int]     = opt[Int]     (default = Some(3))
-  val grid:       ScallopOption[String]  = opt[String]  (default = Some("KDBTREE"))
-  val index:      ScallopOption[String]  = opt[String]  (default = Some("QUADTREE"))
+  val index:      ScallopOption[String]  = opt[String]  (default = Some("/home/acald013/Research/tmp/traj_index.txt"))
   val partitions: ScallopOption[Int]     = opt[Int]     (default = Some(256))
   val local:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
