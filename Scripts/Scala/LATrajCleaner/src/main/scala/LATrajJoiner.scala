@@ -17,13 +17,14 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable.WrappedArray
 import java.io.PrintWriter
 
-object LATrajMerger {
+object LATrajJoiner {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory()
   private val precision: Double = 0.0001
   private var startTime: Long = System.currentTimeMillis()
 
-  case class Traj(index: Long, tid: Long, lenght: Int, t: Int = -1)
+  case class Traj(tid: Long, t: Int, points: List[String])
+  case class ST_Point(pid: Long, x: Double, y: Double, t: Int)
 
   def clocktime = System.currentTimeMillis()
 
@@ -32,7 +33,7 @@ object LATrajMerger {
   }
 
   def main(args: Array[String]): Unit = {
-    val params = new LATrajMergerConf(args)
+    val params = new LATrajJoinerConf(args)
     val input = params.input()
     val indexFile = params.index()
     val output = params.output()
@@ -67,8 +68,9 @@ object LATrajMerger {
     log(stage, timer, 0, "START")
     var trajs = spark.read.option("header", "false").option("delimiter", "\t").csv(input)
       .map{ traj =>
-        val tid = traj.getString(0).toLong
-        tid
+        val pid = traj.getString(0).toLong
+        val points = traj.getString(2)
+        (pid, points)
       }.cache()
     val nTrajs = trajs.count()
     log(stage, timer, nTrajs, "END")
@@ -76,19 +78,27 @@ object LATrajMerger {
     timer = clocktime
     stage = "Index read"
     log(stage, timer, 0, "START")
-    var index = spark.read.option("header", "false").option("delimiter", "|").csv(indexFile)
+    var index = spark.read.option("header", "false").option("delimiter", "\t").csv(indexFile)
       .map{ index =>
-        val t = index.getString(2).toInt
-        val i = index.getString(3).toInt
-        (t, i)
-      }.flatMap(i => List.fill(i._2)(i._1)).cache()
+        val t = index.getString(0).toLong
+        val pid = index.getString(1).toLong
+        (pid, t)
+      }.cache()
     val nIndex = index.count()
     log(stage, timer, nIndex, "END")
 
-    val table = index.collect().zip(trajs.collect()).map(r => s"${r._1}\t${r._2}\n")
+    timer = clocktime
+    stage = "Join"
+    log(stage, timer, 0, "START")
+    val data = index.toDF("pid","t").join(trajs.toDF("pid","points")).cache()
+    data.show()
+    /*
     val f = new java.io.PrintWriter("/tmp/index_table.tsv")
     f.write(table.mkString(""))
     f.close()
+     */
+    val nData = data.count()
+    log(stage, timer, nData, "END")
 
     timer = clocktime
     stage = "Session close"
@@ -98,7 +108,7 @@ object LATrajMerger {
   }
 }
 
-class LATrajMergerConf(args: Seq[String]) extends ScallopConf(args) {
+class LATrajJoinerConf(args: Seq[String]) extends ScallopConf(args) {
   val input:      ScallopOption[String]  = opt[String]  (required = true)
   val output:     ScallopOption[String]  = opt[String]  (default  = Some("/tmp/output.tsv"))
   val host:       ScallopOption[String]  = opt[String]  (default = Some("169.235.27.138"))
