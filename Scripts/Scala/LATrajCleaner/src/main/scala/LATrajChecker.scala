@@ -17,7 +17,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable.WrappedArray
 import java.io.PrintWriter
 
-object LATrajJoiner {
+object LATrajChecker {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory()
   private val precision: Double = 0.0001
@@ -33,9 +33,8 @@ object LATrajJoiner {
   }
 
   def main(args: Array[String]): Unit = {
-    val params = new LATrajJoinerConf(args)
+    val params = new LATrajCheckerConf(args)
     val input = params.input()
-    val indexFile = params.index()
     val output = params.output()
     val offset = params.offset()
     val cores = params.cores()
@@ -66,54 +65,21 @@ object LATrajJoiner {
     timer = clocktime
     stage = "Data read"
     log(stage, timer, 0, "START")
-    var trajs = spark.read.option("header", "false").option("delimiter", "\t").csv(input)
+    var points = spark.read.option("header", "false").option("delimiter", "\t").csv(input)
       .map{ traj =>
         val pid = traj.getString(0).toLong
-        val points = traj.getString(2)
-        (pid, points)
+        val x = traj.getString(1).toDouble
+        val y = traj.getString(2).toDouble
+        val t = traj.getString(3).toInt
+        ST_Point(pid, x, y, t)
       }.cache()
-    val nTrajs = trajs.count()
+    val nTrajs = points.count()
     log(stage, timer, nTrajs, "END")
 
-    timer = clocktime
-    stage = "Index read"
-    log(stage, timer, 0, "START")
-    var index = spark.read.option("header", "false").option("delimiter", "\t").csv(indexFile)
-      .map{ index =>
-        val t = index.getString(0).toInt
-        val pid = index.getString(1).toLong
-        (pid, t)
-      }.cache()
-    val nIndex = index.count()
-    log(stage, timer, nIndex, "END")
-
-    timer = clocktime
-    stage = "Join"
-    log(stage, timer, 0, "START")
-    val data = index.toDF("pid1","t").join(trajs.toDF("pid2","points"), $"pid1" === $"pid2")
-      .flatMap{ point =>
-        val pid = point.getLong(0)
-        val t = point.getInt(1)
-        val points = point.getString(3).split(", ").map{ p =>
-          val arr = p.split(" ")
-          val x = arr(0).toDouble
-          val y = arr(1).toDouble
-          (x, y)
-        }
-        val n = points.size
-        val pids = List.fill(n)(pid)
-        val ts = (t until (t + n))
-        pids.zip(ts).zip(points).map(p => ST_Point(p._1._1, p._2._1, p._2._2, p._1._2))
-      }
-      .cache()
-    data.show()
-    
-    val f = new java.io.PrintWriter("/home/acald013/Datasets/LA/LA_50Ktrajs.tsv")
-    f.write(data.collect().map(p => s"${p.pid}\t${p.x}\t${p.y}\t${p.t}\n").mkString(""))
-    f.close()
-    
-    val nData = data.count()
-    log(stage, timer, nData, "END")
+    val ts = points.groupBy($"t").count()
+    val nTs = ts.count().toInt
+    ts.orderBy($"t").show(nTs, false)
+    logger.info(s"Total time intervals: ${nTs}")
 
     timer = clocktime
     stage = "Session close"
@@ -123,14 +89,13 @@ object LATrajJoiner {
   }
 }
 
-class LATrajJoinerConf(args: Seq[String]) extends ScallopConf(args) {
+class LATrajCheckerConf(args: Seq[String]) extends ScallopConf(args) {
   val input:      ScallopOption[String]  = opt[String]  (required = true)
   val output:     ScallopOption[String]  = opt[String]  (default  = Some("/tmp/output.tsv"))
   val host:       ScallopOption[String]  = opt[String]  (default = Some("169.235.27.138"))
   val port:       ScallopOption[String]  = opt[String]  (default = Some("7077"))
   val cores:      ScallopOption[Int]     = opt[Int]     (default = Some(4))
   val executors:  ScallopOption[Int]     = opt[Int]     (default = Some(3))
-  val index:      ScallopOption[String]  = opt[String]  (default = Some("/home/acald013/Research/tmp/traj_index.txt"))
   val partitions: ScallopOption[Int]     = opt[Int]     (default = Some(256))
   val local:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
