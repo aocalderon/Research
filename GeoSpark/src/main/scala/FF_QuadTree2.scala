@@ -68,6 +68,7 @@ object FF_QuadTree2{
     var report: RDD[Flock] = spark.sparkContext.emptyRDD[Flock]
     var F: PointRDD = new PointRDD(spark.sparkContext.emptyRDD[Point].toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
     F.analyze()
+    var lastC: PointRDD = null
     for(timestamp <- timestamps){ //for
       // Finding maximal disks...
       tag = s"$timestamp"
@@ -77,6 +78,11 @@ object FF_QuadTree2{
       val T_i = extractTimestamp(points, timestamp, params.sespg(), params.tespg())
       val MFrun = MF_QuadTree2.run(spark, T_i, QTPartitioner, params, timestamp, s"$timestamp")
       val C = MFrun._1
+      if(lastC != null){ // To control GC performance...
+        lastC.rawSpatialRDD.unpersist(false)
+        lastC.spatialPartitionedRDD.unpersist(false)
+      }
+      lastC = C
       C.analyze()
       C.CRSTransform(sespg, tespg)
       val nDisks = MFrun._2

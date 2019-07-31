@@ -189,7 +189,7 @@ object MF_QuadTree2{
             point.setUserData(s"$pids;$timestamp;$timestamp")
             (point, flag)
           }.filter(_._2).map(_._1).toIterator
-      }.cache()
+      }.persist(StorageLevel.MEMORY_ONLY)
     val nMaximals = maximals.count()
     val maximalsRDD = new PointRDD()
     maximalsRDD.rawSpatialRDD = maximals
