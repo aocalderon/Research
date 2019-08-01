@@ -324,20 +324,30 @@ object FF_QuadTree2{
     val fullBoundary = F.boundaryEnvelope
     fullBoundary.expandBy(epsilon + precision)
 
-    val npartitions = F.countWithoutDuplicates() / 2
-    val approxCount = F.approximateTotalCount
-    val sampleNumberOfRecords = RDDSampleUtils.getSampleNumbers(npartitions.toInt, approxCount, -1)
-    val fraction = RDDSampleUtils.getFraction(sampleNumberOfRecords, approxCount)
-    val samples = F.rawSpatialRDD.rdd
-      .sample(false, fraction)
-      .map(_.getEnvelopeInternal).collect()
     val boundary = new QuadRectangle(fullBoundary)
-    val maxLevel = params.ffpartitions()
-    val maxItemsPerNode = samples.size / params.ffpartitions()
+    val npartitions = params.ffpartitions()
+    val approxCount = F.approximateTotalCount
+    var maxLevel = 0
+    var maxItemsPerNode = 0
+    var samples = F.rawSpatialRDD.rdd
+    if(approxCount > 1000){
+      maxLevel = 1
+      maxItemsPerNode = approxCount.toInt
+      val fraction = 0.5
+      samples = F.rawSpatialRDD.rdd
+        .sample(false, fraction)
+  } else {
+      val sampleNumberOfRecords = RDDSampleUtils.getSampleNumbers(npartitions.toInt, approxCount, -1)
+      val fraction = RDDSampleUtils.getFraction(sampleNumberOfRecords, approxCount)
+      maxLevel = params.ffpartitions()
+      maxItemsPerNode = samples.count().toInt / params.ffpartitions()
+      samples = F.rawSpatialRDD.rdd
+        .sample(false, fraction)
+    }
     val quadtreePruneFlocks = new StandardQuadTree[Geometry](boundary, 0, maxItemsPerNode, maxLevel)
     if(debug){ logger.info(s"Disks' size: ${F.rawSpatialRDD.rdd.count()}") }
-    if(debug){ logger.info(s"Disks' size of sample: ${samples.size}") }
-    for(sample <- samples){
+    if(debug){ logger.info(s"Disks' size of sample: ${samples.count()}") }
+    for(sample <- samples.map(_.getEnvelopeInternal).collect()){
       quadtreePruneFlocks.insert(new QuadRectangle(sample), null)
     }
     quadtreePruneFlocks.assignPartitionIds()
@@ -513,6 +523,22 @@ object FF_QuadTree2{
     logEnd(stage, timer, nPoints)
 
     if(debug){ logger.info(s"Current timestamps: ${timestamps.mkString(" ")}") }
+    if(false){
+      val sample = points.rawSpatialRDD.rdd
+        .map{ p =>
+          val arr = p.getUserData.toString().split("\t")
+          val pid = arr(0).toLong
+          val t = arr(1).toInt
+          (pid, p.getX, p.getY, t)
+        }
+        .filter(t => t._4 > mininterval && t._4 < maxinterval)
+        .sortBy(_._4, true, 1024)
+        .map(p => s"${p._1}\t${p._2}\t${p._3}\t${p._4}\n")
+        .collect().mkString("")
+      val f = new java.io.PrintWriter("/tmp/sample.tsv")
+      f.write(sample)
+      f.close()
+    }
 
     // Quadtree partitioner...
     timer = clocktime

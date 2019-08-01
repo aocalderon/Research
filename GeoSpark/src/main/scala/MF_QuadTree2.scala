@@ -61,8 +61,8 @@ object MF_QuadTree2{
     pointsBuffer.analyze()
     pointsBuffer.spatialPartitioning(points.getPartitioner)
     points.buildIndex(IndexType.QUADTREE, true) // QUADTREE works better as an indexer than RTREE..
-    points.indexedRDD.cache()
-    points.spatialPartitionedRDD.cache()
+    points.indexedRDD.persist(StorageLevel.MEMORY_ONLY_SER)
+    points.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY_SER)
     logEnd(stage, timer, points.rawSpatialRDD.count())
 
     // Finding pairs...
@@ -121,9 +121,14 @@ object MF_QuadTree2{
         val centroid = geofactory.createMultiPoint(d).getEnvelope().getCentroid
         centroid.setUserData(pids)
         centroid
-      }.distinct()
+      }.distinct().cache()
     val nDisks = disks.count()
     logEnd(stage, timer, nDisks)
+
+    points.spatialPartitionedRDD.unpersist(false)
+    pairs.unpersist(false)
+    centers.unpersist(false)
+    centersBuffer.spatialPartitionedRDD.unpersist(false)
 
     // Partition disks...
     timer = System.currentTimeMillis()
@@ -167,7 +172,6 @@ object MF_QuadTree2{
       .map(r => r.partitionId -> r.getEnvelope).toMap
     val maximals = diskCircles.spatialPartitionedRDD.rdd
       .mapPartitionsWithIndex{ (i, disks) => 
-        //var result = List.empty[Point]
         val transactions = disks.map{ d =>
           val x = d.getCenterPoint.x
           val y = d.getCenterPoint.y
@@ -189,7 +193,7 @@ object MF_QuadTree2{
             point.setUserData(s"$pids;$timestamp;$timestamp")
             (point, flag)
           }.filter(_._2).map(_._1).toIterator
-      }.persist(StorageLevel.MEMORY_ONLY)
+      }.persist(StorageLevel.MEMORY_ONLY_SER)
     val nMaximals = maximals.count()
     val maximalsRDD = new PointRDD()
     maximalsRDD.rawSpatialRDD = maximals
@@ -197,6 +201,7 @@ object MF_QuadTree2{
     maximalsRDD.grids = grids.map(_._2).toList.asJava
     maximalsRDD.setPartitioner(QTPartitioner)
     logEnd(stage, timer, nMaximals)
+    diskCircles.spatialPartitionedRDD.unpersist(false)
 
     val localEnd = clocktime
     val executionTime = (localEnd - localStart) / 1000.0
