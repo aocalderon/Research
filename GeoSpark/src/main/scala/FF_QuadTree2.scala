@@ -176,7 +176,7 @@ object FF_QuadTree2{
         logStart(stage)
         var f0_prime: RDD[String] = spark.sparkContext.emptyRDD[String]
         if(G_prime.boundary() != null){
-          f0_prime = pruneFlockByExpansions(G_prime, QTPartitioner, epsilon, timestamp, spark, params).cache()
+          f0_prime = pruneFlockByExpansions(G_prime, QTPartitioner, epsilon, timestamp, spark, params).persist(StorageLevel.MEMORY_ONLY_SER)
         }
         val nF0_prime = f0_prime.count()
         logEnd(stage, timer, nF0_prime, s"$timestamp")
@@ -186,7 +186,7 @@ object FF_QuadTree2{
         logStart(stage)
         var f1_prime: RDD[String] = spark.sparkContext.emptyRDD[String]
         if(H_prime.boundary() != null){
-          f1_prime = pruneFlockByExpansions(H_prime, QTPartitioner, epsilon, timestamp, spark, params).cache()
+          f1_prime = pruneFlockByExpansions(H_prime, QTPartitioner, epsilon, timestamp, spark, params).persist(StorageLevel.MEMORY_ONLY_SER)
         }
         val nF1_prime = f1_prime.count()
         logEnd(stage, timer, nF1_prime, s"$timestamp")
@@ -209,7 +209,7 @@ object FF_QuadTree2{
             val y = arr(4).toDouble
             val c = geofactory.createPoint(new Coordinate(x, y))
             Flock(p,s,e,c)
-        }.cache()
+        }.persist(StorageLevel.MEMORY_ONLY_SER)
         nF0 = f0.count()
         report = report.union(f0).cache()
         logEnd(stage, timer, nF0, s"$timestamp")
@@ -226,7 +226,7 @@ object FF_QuadTree2{
             val y = arr(4).toDouble
             val c = geofactory.createPoint(new Coordinate(x, y))
             Flock(p,s,e,c)
-        }.cache()
+        }.persist(StorageLevel.MEMORY_ONLY_SER)
         nF1 = f1.count()
         logEnd(stage, timer, nF1, s"$timestamp")
 
@@ -243,15 +243,22 @@ object FF_QuadTree2{
           .reduceByKey( (a,b) => if(a.start < b.start) a else b ) // Prune redundant flocks by time.
           .map(_._2)
           .distinct()
-          .persist(StorageLevel.MEMORY_ONLY)
+          .persist(StorageLevel.MEMORY_ONLY_SER)
         F = new PointRDD(flocks.map{ f =>  // Create spatial RDD with candidate flocks.
             val info = s"${f.pids.mkString(" ")};${f.start};${f.end}"
             f.center.setUserData(info)
             f.center
-        }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)        
+        }.toJavaRDD(), StorageLevel.MEMORY_ONLY_SER, sespg, tespg)        
         logEnd(stage, timer, F.rawSpatialRDD.count(), s"$timestamp")
 
         if(debug) logger.info(s"Candidates at ${timestamp}: ${F.rawSpatialRDD.count()}")
+
+        // unpersist RDDs...
+        f0_prime.unpersist(false)
+        f1_prime.unpersist(false)
+        f0.unpersist(false)
+        f1.unpersist(false)
+        flocks.unpersist(false)
       }
     } // rof
     logger.info(s"Number of flocks: ${report.count()}")
