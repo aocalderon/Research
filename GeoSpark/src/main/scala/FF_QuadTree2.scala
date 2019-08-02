@@ -400,7 +400,7 @@ object FF_QuadTree2{
          .filter(_._2).map(_._1)
          .map(p => s"${p._1};${p._2};${p._3};${p._4};${p._5}").toList
        result.toIterator
-    }.persist(StorageLevel.MEMORY_ONLY)
+    }.persist(StorageLevel.MEMORY_ONLY_SER)
     val nP = P.count()
     logEnd(stage, timer, nP, s"$timestamp")
 
