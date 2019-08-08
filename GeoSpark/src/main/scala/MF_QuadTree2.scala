@@ -31,7 +31,8 @@ object MF_QuadTree2{
   private var cores: Int = 0
   private var executors: Int = 0
 
-  def run(spark: SparkSession, points: PointRDD, MF1Partitioner: QuadTreePartitioner, params: FFConf, timestamp: Int = -1, info: String = ""): (PointRDD, Long) = {
+  //def run(spark: SparkSession, points: PointRDD, MF1Partitioner: QuadTreePartitioner, params: FFConf, timestamp: Int = -1, info: String = ""): (PointRDD, Long) = {
+  def run(spark: SparkSession, points: PointRDD, params: FFConf, timestamp: Int = -1, info: String = ""): (PointRDD, Long) = {
     import spark.implicits._
 
     appID     = spark.sparkContext.applicationId
@@ -46,7 +47,6 @@ object MF_QuadTree2{
     val spatial: String   = params.spatial()
     if(params.tag() == ""){ tag = s"$info"} else { tag = s"${params.tag()}|${info}" }
     var Dpartitions: Int  = params.dpartitions()
-    val nMF1Grids = MF1Partitioner.getGrids.size()
 
     // Indexing points...
     val localStart = clocktime
@@ -56,6 +56,7 @@ object MF_QuadTree2{
 
     //points.spatialPartitioning(MF1Partitioner)
     points.spatialPartitioning(GridType.QUADTREE, params.ffpartitions())
+    val nMF1Grids = points.getPartitioner.getGrids.size()
 
     val pointsBuffer = new CircleRDD(points, epsilon + precision)
     pointsBuffer.analyze()
@@ -423,7 +424,7 @@ object MF_QuadTree2{
     timer = System.currentTimeMillis()
     stage = "Maximal finder run"
     logStart(stage)
-    val maximals = MF_QuadTree2.run(spark, points, QTPartitioner1, params)
+    val maximals = MF_QuadTree2.run(spark, points, params)
     logEnd(stage, timer, 0)
 
     // Closing session...

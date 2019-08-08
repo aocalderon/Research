@@ -2,7 +2,9 @@
 import org.rogach.scallop._
 
 class FFConf(args: Seq[String]) extends ScallopConf(args) {
-  val input:        ScallopOption[String]  =  opt[String]   (required = true)
+  val input:        ScallopOption[String]  =  opt[String]   (default = Some(""))
+  val input_path:   ScallopOption[String]  =  opt[String]   (default = Some(""))
+  val input_tag:    ScallopOption[String]  =  opt[String]   (default = Some(""))
   val p_grid:       ScallopOption[String]  =  opt[String]   (default  = Some(""))
   val m_grid:       ScallopOption[String]  =  opt[String]   (default  = Some(""))
   val offset:       ScallopOption[Int]     =  opt[Int]      (default  = Some(1))
@@ -14,8 +16,8 @@ class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val host:         ScallopOption[String]  =  opt[String]   (default  = Some("169.235.27.138")) 
   val port:         ScallopOption[String]  =  opt[String]   (default  = Some("7077"))
   val portui:       ScallopOption[String]  =  opt[String]   (default  = Some("4040"))
-  val sespg:        ScallopOption[String]  =  opt[String]   (default  = Some("epsg:3068"))
-  val tespg:        ScallopOption[String]  =  opt[String]   (default  = Some("epsg:3068"))
+  val sespg:        ScallopOption[String]  =  opt[String]   (default  = Some("epsg:6423"))
+  val tespg:        ScallopOption[String]  =  opt[String]   (default  = Some("epsg:6423"))
   val spatial:      ScallopOption[String]  =  opt[String]   (default  = Some("KDBTREE"))
   val output:       ScallopOption[String]  =  opt[String]   (default  = Some("/tmp/"))
   val ffpartitions: ScallopOption[Int]     =  opt[Int]      (default  = Some(625))

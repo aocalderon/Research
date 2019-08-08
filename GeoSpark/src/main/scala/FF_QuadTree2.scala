@@ -36,12 +36,14 @@ object FF_QuadTree2{
 
   case class Flock(pids: List[Int], start: Int, end: Int, center: Point)
 
-  def run(spark: SparkSession, points: PointRDD, timestamps: List[Int], QTPartitioner: QuadTreePartitioner, params: FFConf): RDD[Flock] = {
+  //def run(spark: SparkSession, points: PointRDD, timestamps: List[Int], QTPartitioner: QuadTreePartitioner, params: FFConf): RDD[Flock] = {
+  def run(spark: SparkSession, timestamps: List[Int], params: FFConf): Unit = {
     var clockTime = System.currentTimeMillis()
     cores         = params.cores()
     executors     = params.executors()
     val debug        = params.ffdebug()
     val master       = params.master()
+    val offset       = params.offset()
     val sespg        = params.sespg()
     val tespg        = params.tespg()
     val distance     = params.distance()
@@ -65,18 +67,22 @@ object FF_QuadTree2{
     var timer = System.currentTimeMillis()
     var stage = ""
     var firstRun: Boolean = true
-    var report: RDD[Flock] = spark.sparkContext.emptyRDD[Flock]
     var F: PointRDD = new PointRDD(spark.sparkContext.emptyRDD[Point].toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
     F.analyze()
     var lastC: PointRDD = null
+    var nF0 = 0
     for(timestamp <- timestamps){ //for
       // Finding maximal disks...
       tag = s"$timestamp"
       timer = System.currentTimeMillis()
-      stage = "1.Maximal disks found"
+       stage = "1.Maximal disks found"
       logStart(stage)
-      val T_i = extractTimestamp(points, timestamp, params.sespg(), params.tespg())
-      val MFrun = MF_QuadTree2.run(spark, T_i, QTPartitioner, params, timestamp, s"$timestamp")
+
+      val input = s"${params.input_path()}${params.input_tag()}_${timestamp}.tsv"
+      val T_i = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, Dpartitions)
+      T_i.analyze()
+      T_i.CRSTransform(sespg, tespg)
+      val MFrun = MF_QuadTree2.run(spark, T_i, params, timestamp, s"$timestamp")
       val C = MFrun._1
       if(lastC != null){ // To control GC performance...
         lastC.rawSpatialRDD.unpersist(false)
@@ -109,6 +115,7 @@ object FF_QuadTree2{
         }
 
         val R = JoinQuery.DistanceJoinQueryWithDuplicates(F, buffers, true, false) // using index, only return geometries fully covered by each buffer...
+        F.rawSpatialRDD.unpersist(false)
         var flocks0 = R.rdd.flatMap{ case (g: Geometry, h: java.util.HashSet[Point]) =>
           val f0 = getFlocksFromGeom(g)
           h.asScala.map{ point =>
@@ -138,12 +145,11 @@ object FF_QuadTree2{
         stage = "3.1.Flocks to clean >= delta"
         logStart(stage)
         var f0 =  flocks.filter{f => f.end - f.start + 1 >= delta}.cache()
-        var nF0 = f0.count()
         val G_prime = new PointRDD(
           f0.map{ f =>
             f.center.setUserData(f.pids.mkString(" ") ++ s";${f.start};${f.end}")
             f.center
-          }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg
+          }.toJavaRDD(), StorageLevel.MEMORY_ONLY_SER, sespg, tespg
         )
         G_prime.analyze()
         val nG_prime = G_prime.rawSpatialRDD.count()
@@ -159,7 +165,7 @@ object FF_QuadTree2{
           f1.map{ f =>
             f.center.setUserData(f.pids.mkString(" ") ++ s";${f.start};${f.end}")
             f.center
-          }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg
+          }.toJavaRDD(), StorageLevel.MEMORY_ONLY_SER, sespg, tespg
         )
         H_prime.analyze()
         val nH_prime = H_prime.rawSpatialRDD.count()
@@ -176,8 +182,9 @@ object FF_QuadTree2{
         logStart(stage)
         var f0_prime: RDD[String] = spark.sparkContext.emptyRDD[String]
         if(G_prime.boundary() != null){
-          f0_prime = pruneFlockByExpansions(G_prime, QTPartitioner, epsilon, timestamp, spark, params).persist(StorageLevel.MEMORY_ONLY_SER)
+          f0_prime = pruneFlockByExpansions(G_prime, epsilon, timestamp, spark, params).persist(StorageLevel.MEMORY_ONLY_SER)
         }
+        G_prime.rawSpatialRDD.unpersist(false)
         val nF0_prime = f0_prime.count()
         logEnd(stage, timer, nF0_prime, s"$timestamp")
 
@@ -186,8 +193,9 @@ object FF_QuadTree2{
         logStart(stage)
         var f1_prime: RDD[String] = spark.sparkContext.emptyRDD[String]
         if(H_prime.boundary() != null){
-          f1_prime = pruneFlockByExpansions(H_prime, QTPartitioner, epsilon, timestamp, spark, params).persist(StorageLevel.MEMORY_ONLY_SER)
+          f1_prime = pruneFlockByExpansions(H_prime, epsilon, timestamp, spark, params).persist(StorageLevel.MEMORY_ONLY_SER)
         }
+        H_prime.rawSpatialRDD.unpersist(false)
         val nF1_prime = f1_prime.count()
         logEnd(stage, timer, nF1_prime, s"$timestamp")
 
@@ -210,12 +218,13 @@ object FF_QuadTree2{
             val c = geofactory.createPoint(new Coordinate(x, y))
             Flock(p,s,e,c)
         }.persist(StorageLevel.MEMORY_ONLY_SER)
-        nF0 = f0.count()
-        report = report.union(f0).cache()
+        nF0 += f0.count().toInt
+        // Saving flocks...
+        saveFlocks(f0)
         logEnd(stage, timer, nF0, s"$timestamp")
 
         timer = System.currentTimeMillis()
-        stage = "5.2. H Flocks reported"
+        stage = "5.2. H Flocks candidate"
         logStart(stage)
         f1 = f1_prime.map{ f =>
             val arr = f.split(";")
@@ -230,7 +239,10 @@ object FF_QuadTree2{
         nF1 = f1.count()
         logEnd(stage, timer, nF1, s"$timestamp")
 
-        if(debug) logger.info(s"Flocks reported at ${timestamp}: ${f0.count()}")
+        if(debug){
+          logger.info(s"Flocks reported  at ${timestamp}: ${f0.count()}")
+          logger.info(s"Flocks candidate at ${timestamp}: ${f1.count()}")
+        }
 
         // Indexing candidates...
         timer = System.currentTimeMillis()
@@ -243,7 +255,6 @@ object FF_QuadTree2{
           .reduceByKey( (a,b) => if(a.start < b.start) a else b ) // Prune redundant flocks by time.
           .map(_._2)
           .distinct()
-          .persist(StorageLevel.MEMORY_ONLY_SER)
         F = new PointRDD(flocks.map{ f =>  // Create spatial RDD with candidate flocks.
             val info = s"${f.pids.mkString(" ")};${f.start};${f.end}"
             f.center.setUserData(info)
@@ -261,12 +272,17 @@ object FF_QuadTree2{
         flocks.unpersist(false)
       }
     } // rof
-    logger.info(s"Number of flocks: ${report.count()}")
+    logger.info(s"Number of flocks: ${nF0}")
     val executionTime = "%.2f".format((System.currentTimeMillis() - clockTime) / 1000.0)
     val applicationID = spark.sparkContext.applicationId
-    val nReport = report.count()
+    val nReport = nF0
     logger.info(s"PFLOCK|$applicationID|$cores|$executors|$epsilon|$mu|$delta|$executionTime|$nReport")
-    report
+  }
+
+  def saveFlocks(flocks: RDD[Flock]): Unit = {
+    val fw = new java.io.FileWriter("/tmp/flocks.txt", true) ;
+    fw.write(flocks.map(f => s"${f.pids.mkString(" ")}\t${f.start}\t${f.end}\n").collect().mkString("")) ;
+    fw.close()
   }
 
   def getFlocksFromGeom(g: Geometry): Flock = {
@@ -319,7 +335,7 @@ object FF_QuadTree2{
       y >= (min_y + epsilon)
   }
 
-  def pruneFlockByExpansions(F: PointRDD, Partitioner: QuadTreePartitioner, epsilon: Double, timestamp: Int, spark: SparkSession, params: FFConf): RDD[String] = {
+  def pruneFlockByExpansions(F: PointRDD, epsilon: Double, timestamp: Int, spark: SparkSession, params: FFConf): RDD[String] = {
     import spark.implicits._
     val debug = params.ffdebug()
 
@@ -333,24 +349,25 @@ object FF_QuadTree2{
 
     val boundary = new QuadRectangle(fullBoundary)
     val npartitions = params.ffpartitions()
-    val approxCount = F.approximateTotalCount
+    val approxCount = F.rawSpatialRDD.count()
+    var fraction = 0.0
     var maxLevel = 0
     var maxItemsPerNode = 0
     var samples = F.rawSpatialRDD.rdd
-    if(approxCount > 1000){
+    logger.info(s"approxCount: $approxCount flag: ${approxCount < 100}")
+    if(approxCount < 1000){
+      fraction = 0.5
+      samples = F.rawSpatialRDD.rdd.sample(false, fraction)
       maxLevel = 1
       maxItemsPerNode = approxCount.toInt
-      val fraction = 0.5
-      samples = F.rawSpatialRDD.rdd
-        .sample(false, fraction)
   } else {
-      val sampleNumberOfRecords = RDDSampleUtils.getSampleNumbers(npartitions.toInt, approxCount, -1)
-      val fraction = RDDSampleUtils.getFraction(sampleNumberOfRecords, approxCount)
-      maxLevel = params.ffpartitions()
-      maxItemsPerNode = samples.count().toInt / params.ffpartitions()
-      samples = F.rawSpatialRDD.rdd
-        .sample(false, fraction)
+      val sampleNumberOfRecords = RDDSampleUtils.getSampleNumbers(npartitions, approxCount, -1)
+      fraction = RDDSampleUtils.getFraction(sampleNumberOfRecords, approxCount)
+      samples = F.rawSpatialRDD.rdd.sample(false, fraction)
+      maxLevel = npartitions
+      maxItemsPerNode = (samples.count() / npartitions).toInt
     }
+    if(debug){ logger.info(s"npartitions: $npartitions maxItemsPerNode: $maxItemsPerNode maxLevel: $maxLevel fraction: $fraction")  }
     val quadtreePruneFlocks = new StandardQuadTree[Geometry](boundary, 0, maxItemsPerNode, maxLevel)
     if(debug){ logger.info(s"Disks' size: ${F.rawSpatialRDD.rdd.count()}") }
     if(debug){ logger.info(s"Disks' size of sample: ${samples.count()}") }
@@ -365,7 +382,7 @@ object FF_QuadTree2{
     FCircles.spatialPartitioning(QTPartitioner)
     //FCircles.spatialPartitioning(GridType.QUADTREE, 512)
 
-    FCircles.spatialPartitionedRDD.cache()
+    FCircles.spatialPartitionedRDD
     val nFCircles = FCircles.spatialPartitionedRDD.rdd.count()
     val grids = quadtreePruneFlocks.getAllZones.asScala.filter(_.partitionId != null)
       .map(r => r.partitionId -> r.getEnvelope).toMap
@@ -505,15 +522,19 @@ object FF_QuadTree2{
       .config("spark.scheduler.mode", "FAIR")
       .config("spark.cores.max", cores * executors)
       .config("spark.executor.cores", cores)
+      //.config("spark.extraListeners", "com.qubole.sparklens.QuboleJobListener")
+      //.config("spark.sparklens.reporting.disabled", "true")
       .master(s"spark://${master}:${port}")
       .appName("PFLock")
       .getOrCreate()
     import spark.implicits._
     appID = spark.sparkContext.applicationId
     startTime = spark.sparkContext.startTime
+    
     logEnd(stage, timer, 0, "-1")
 
     // Reading data...
+    /*
     timer = System.currentTimeMillis()
     stage = "Data read"
     logStart(stage)
@@ -528,26 +549,10 @@ object FF_QuadTree2{
       .collect().toList
     points.analyze()
     logEnd(stage, timer, nPoints)
-
-    if(debug){ logger.info(s"Current timestamps: ${timestamps.mkString(" ")}") }
-    if(false){
-      val sample = points.rawSpatialRDD.rdd
-        .map{ p =>
-          val arr = p.getUserData.toString().split("\t")
-          val pid = arr(0).toLong
-          val t = arr(1).toInt
-          (pid, p.getX, p.getY, t)
-        }
-        .filter(t => t._4 > mininterval && t._4 < maxinterval)
-        .sortBy(_._4, true, 1024)
-        .map(p => s"${p._1}\t${p._2}\t${p._3}\t${p._4}\n")
-        .collect().mkString("")
-      val f = new java.io.PrintWriter("/tmp/sample.tsv")
-      f.write(sample)
-      f.close()
-    }
+    */
 
     // Quadtree partitioner...
+    /*
     timer = clocktime
     stage = "QuadTree partitioner"
     logStart(stage)
@@ -567,20 +572,15 @@ object FF_QuadTree2{
     quadtree1.assignPartitionIds()
     val QTPartitioner = new QuadTreePartitioner(quadtree1)
     logEnd(stage, timer, QTPartitioner.getGrids.size)
+    */
 
     // Running maximal finder...
     timer = System.currentTimeMillis()
     stage = "Flock Finder run"
     logStart(stage)
-    val flocks = run(spark, points, timestamps, QTPartitioner, params)
-    logEnd(stage, timer, flocks.count(), tag)
-
-    if(debug){
-      val f = flocks.map(f => s"${f.start}, ${f.end}, ${f.pids.mkString(" ")}\n").sortBy(_.toString()).collect().mkString("")
-      val pw = new PrintWriter(new File("/tmp/flocks.txt"))
-      pw.write(f)
-      pw.close
-    }
+    val timestamps = (mininterval until maxinterval).toList
+    run(spark, timestamps, params)
+    logEnd(stage, timer, 0, tag)
 
     // Closing session...
     timer = clocktime
