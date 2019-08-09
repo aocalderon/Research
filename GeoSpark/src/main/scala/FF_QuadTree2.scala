@@ -501,6 +501,7 @@ object FF_QuadTree2{
     val master       = params.master()
     val port         = params.port()
     val input        = params.input()
+    val checkpointDir= params.check_dir()
     val m_grid       = params.m_grid()
     val p_grid       = params.p_grid()
     val offset       = params.offset()
@@ -534,7 +535,7 @@ object FF_QuadTree2{
     import spark.implicits._
     appID = spark.sparkContext.applicationId
     startTime = spark.sparkContext.startTime
-    spark.sparkContext.setCheckpointDir("hdfs://driver:9000/checkpoints")
+    spark.sparkContext.setCheckpointDir(checkpointDir)
     logEnd(stage, timer, 0, "-1")
 
     // Reading data...

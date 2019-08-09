@@ -3,6 +3,7 @@ import org.rogach.scallop._
 
 class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val input:        ScallopOption[String]  =  opt[String]   (default = Some(""))
+  val check_dir:    ScallopOption[String]  =  opt[String]   (default = Some("hdfs://dblab-rack15:9001/checkpoints"))
   val input_path:   ScallopOption[String]  =  opt[String]   (default = Some(""))
   val input_tag:    ScallopOption[String]  =  opt[String]   (default = Some(""))
   val p_grid:       ScallopOption[String]  =  opt[String]   (default  = Some(""))
