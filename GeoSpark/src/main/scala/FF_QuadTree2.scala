@@ -67,8 +67,8 @@ object FF_QuadTree2{
     var timer = System.currentTimeMillis()
     var stage = ""
     var firstRun: Boolean = true
-    var F: PointRDD = new PointRDD(spark.sparkContext.emptyRDD[Point].toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
-    F.analyze()
+    var flocks: RDD[Flock] = spark.sparkContext.emptyRDD[Flock]
+    var lastFlocks: RDD[Flock] = null
     var lastC: PointRDD = null
     var nF0 = 0
     for(timestamp <- timestamps){ //for
@@ -95,13 +95,18 @@ object FF_QuadTree2{
       logEnd(stage, timer, nDisks, s"$timestamp")
 
       if(firstRun){
-        F = C
+        flocks = C.rawSpatialRDD.rdd.map(c => getFlocksFromGeom(c))
         firstRun = false
       } else {
         // Doing join...
         timer = System.currentTimeMillis()
         stage = "2.Join done"
         logStart(stage)
+        val F: PointRDD = new PointRDD(flocks.map{ f =>  // Create spatial RDD with candidate flocks.
+            val info = s"${f.pids.mkString(" ")};${f.start};${f.end}"
+            f.center.setUserData(info)
+            f.center
+        }.toJavaRDD(), StorageLevel.MEMORY_ONLY_SER, sespg, tespg)        
         F.analyze()
         F.spatialPartitioning(C.getPartitioner)
         F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
@@ -115,15 +120,14 @@ object FF_QuadTree2{
         }
 
         val R = JoinQuery.DistanceJoinQueryWithDuplicates(F, buffers, true, false) // using index, only return geometries fully covered by each buffer...
-        F.rawSpatialRDD.unpersist(false)
-        var flocks0 = R.rdd.flatMap{ case (g: Geometry, h: java.util.HashSet[Point]) =>
+
+        flocks = R.rdd.flatMap{ case (g: Geometry, h: java.util.HashSet[Point]) =>
           val f0 = getFlocksFromGeom(g)
           h.asScala.map{ point =>
             val f1 = getFlocksFromGeom(point)
             (f0, f1)
           }
-        }
-        var flocks = flocks0.map{ flocks =>
+        }.map{ flocks =>
           val f = flocks._1.pids.intersect(flocks._2.pids)
           val s = flocks._2.start
           val e = flocks._1.end
@@ -255,11 +259,12 @@ object FF_QuadTree2{
           .reduceByKey( (a,b) => if(a.start < b.start) a else b ) // Prune redundant flocks by time.
           .map(_._2)
           .distinct()
-        F = new PointRDD(flocks.map{ f =>  // Create spatial RDD with candidate flocks.
-            val info = s"${f.pids.mkString(" ")};${f.start};${f.end}"
-            f.center.setUserData(info)
-            f.center
-        }.toJavaRDD(), StorageLevel.MEMORY_ONLY_SER, sespg, tespg)        
+        .persist(StorageLevel.MEMORY_ONLY_SER)
+        flocks.checkpoint()
+        if(lastFlocks != null){
+          lastFlocks.unpersist(false)
+        }
+        lastFlocks = flocks
         logEnd(stage, timer, F.rawSpatialRDD.count(), s"$timestamp")
 
         if(debug) logger.info(s"Candidates at ${timestamp}: ${F.rawSpatialRDD.count()}")
@@ -269,7 +274,6 @@ object FF_QuadTree2{
         f1_prime.unpersist(false)
         f0.unpersist(false)
         f1.unpersist(false)
-        flocks.unpersist(false)
       }
     } // rof
     logger.info(s"Number of flocks: ${nF0}")
@@ -530,7 +534,7 @@ object FF_QuadTree2{
     import spark.implicits._
     appID = spark.sparkContext.applicationId
     startTime = spark.sparkContext.startTime
-    
+    spark.sparkContext.setCheckpointDir("hdfs://driver:9000/checkpoints")
     logEnd(stage, timer, 0, "-1")
 
     // Reading data...
