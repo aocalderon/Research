@@ -34,7 +34,6 @@ object LATrajSelector {
   def main(args: Array[String]): Unit = {
     val params = new LATrajSelectorConf(args)
     val input = params.input()
-    val output = params.output()
     val offset = params.offset()
     val cores = params.cores()
     val executors = params.executors()
@@ -87,7 +86,10 @@ object LATrajSelector {
       val e = indices(end)
       traj.index >= s & traj.index < e
     }
-    logger.info(s"TRAJS|0|${sample.count()}")
+    val output = new java.io.PrintWriter(params.output())
+    val out = s"0\t${sample.count()}"
+    output.write(s"${out}\n")
+    logger.info(out)
     var trajCount = trajs.count() - (end - start)
     val dataset = sample.map( traj => Traj(traj.tid, traj.lenght, 0))
     def getPointsByTimeInterval(trajs: Dataset[Traj], n: Int): List[(Int, Long)] = {
@@ -100,7 +102,7 @@ object LATrajSelector {
     logger.info(s"Current state: ${state.take(5)}")
     logger.info(s"Current state: ${state.reverse.take(5)}")
     var n = 1
-    while(trajCount > 0){
+    while(trajCount > 0 && n < params.n()){
       val timer2 = clocktime
       val stage = s"Time interval: $n"
       log(stage, timer2, 0, "START")
@@ -116,7 +118,9 @@ object LATrajSelector {
         val e = indices(end)
         traj.index >= s & traj.index < e
       }
-      logger.info(s"TRAJS|$n|${sample.count()}")
+      val out = s"$n\t${sample.count()}"
+      output.write(s"${out}\n")
+      logger.info(out)
       trajCount = trajCount - (end - start)
       logger.info(s"Trajs left: ${trajCount}")
       val newState = getPointsByTimeInterval(sample, n)
@@ -128,6 +132,7 @@ object LATrajSelector {
 
       log(stage, timer2, 0, "END")
     }
+    output.close()
     log(stage, timer, 0, "END")
 
     timer = clocktime
@@ -152,6 +157,7 @@ class LATrajSelectorConf(args: Seq[String]) extends ScallopConf(args) {
   val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val offset:     ScallopOption[Int]     = opt[Int]     (default = Some(2))
   val m:          ScallopOption[Int]     = opt[Int]     (default = Some(50000))
+  val n:          ScallopOption[Int]     = opt[Int]     (default = Some(200))
   val fraction:   ScallopOption[Double]  = opt[Double]  (default = Some(0.1))
 
   verify()

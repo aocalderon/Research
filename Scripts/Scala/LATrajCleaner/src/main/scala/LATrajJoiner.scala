@@ -106,15 +106,17 @@ object LATrajJoiner {
         pids.zip(ts).zip(points).map(p => ST_Point(p._1._1, p._2._1, p._2._2, p._1._2))
       }
       .cache()
-    data.show()
-    
-    val f = new java.io.PrintWriter("/home/acald013/Datasets/LA/LA_50Ktrajs.tsv")
-    f.write(data.collect().map(p => s"${p.pid}\t${p.x}\t${p.y}\t${p.t}\n").mkString(""))
-    f.close()
-    
     val nData = data.count()
     log(stage, timer, nData, "END")
-
+    
+    timer = clocktime
+    stage = "Save"
+    log(stage, timer, 0, "START")
+    val f = new java.io.PrintWriter(params.output())
+    f.write(data.collect().map(p => s"${p.pid}\t${p.x}\t${p.y}\t${p.t}\n").mkString(""))
+    f.close()
+    log(stage, timer, 0, "END")
+    
     timer = clocktime
     stage = "Session close"
     log(stage, timer, 0, "START")
