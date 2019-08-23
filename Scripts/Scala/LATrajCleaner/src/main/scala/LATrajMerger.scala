@@ -76,19 +76,23 @@ object LATrajMerger {
     timer = clocktime
     stage = "Index read"
     log(stage, timer, 0, "START")
-    var index = spark.read.option("header", "false").option("delimiter", "|").csv(indexFile)
+    var index = spark.read.option("header", "false").option("delimiter", "\t").csv(indexFile)
       .map{ index =>
-        val t = index.getString(2).toInt
-        val i = index.getString(3).toInt
+        val t = index.getString(0).toInt
+        val i = index.getString(1).toInt
         (t, i)
       }.flatMap(i => List.fill(i._2)(i._1)).cache()
     val nIndex = index.count()
     log(stage, timer, nIndex, "END")
 
+    timer = clocktime
+    stage = "Saving data"
+    log(stage, timer, 0, "START")
     val table = index.collect().zip(trajs.collect()).map(r => s"${r._1}\t${r._2}\n")
-    val f = new java.io.PrintWriter("/tmp/index_table.tsv")
+    val f = new java.io.PrintWriter(params.output())
     f.write(table.mkString(""))
     f.close()
+    log(stage, timer, 0, "END")
 
     timer = clocktime
     stage = "Session close"

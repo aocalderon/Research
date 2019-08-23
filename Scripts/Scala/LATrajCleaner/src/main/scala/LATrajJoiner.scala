@@ -81,7 +81,7 @@ object LATrajJoiner {
     var index = spark.read.option("header", "false").option("delimiter", "\t").csv(indexFile)
       .map{ index =>
         val t = index.getString(0).toInt
-        val pid = index.getString(1).toLong
+        val pid = index.getString(1).toInt
         (pid, t)
       }.cache()
     val nIndex = index.count()
@@ -113,7 +113,7 @@ object LATrajJoiner {
     stage = "Save"
     log(stage, timer, 0, "START")
     val f = new java.io.PrintWriter(params.output())
-    f.write(data.collect().map(p => s"${p.pid}\t${p.x}\t${p.y}\t${p.t}\n").mkString(""))
+    f.write(data.orderBy($"t").collect().map(p => s"${p.pid}\t${p.x}\t${p.y}\t${p.t}\n").mkString(""))
     f.close()
     log(stage, timer, 0, "END")
     
