@@ -35,7 +35,7 @@ object LATrajJoiner {
   def main(args: Array[String]): Unit = {
     val params = new LATrajJoinerConf(args)
     val input = params.input()
-    val indexFile = params.index()
+    val tableFile = params.table()
     val output = params.output()
     val offset = params.offset()
     val cores = params.cores()
@@ -78,10 +78,10 @@ object LATrajJoiner {
     timer = clocktime
     stage = "Index read"
     log(stage, timer, 0, "START")
-    var index = spark.read.option("header", "false").option("delimiter", "\t").csv(indexFile)
+    var index = spark.read.option("header", "false").option("delimiter", "\t").csv(tableFile)
       .map{ index =>
         val t = index.getString(0).toInt
-        val pid = index.getString(1).toInt
+        val pid = index.getString(1).toLong
         (pid, t)
       }.cache()
     val nIndex = index.count()
@@ -132,7 +132,7 @@ class LATrajJoinerConf(args: Seq[String]) extends ScallopConf(args) {
   val port:       ScallopOption[String]  = opt[String]  (default = Some("7077"))
   val cores:      ScallopOption[Int]     = opt[Int]     (default = Some(4))
   val executors:  ScallopOption[Int]     = opt[Int]     (default = Some(3))
-  val index:      ScallopOption[String]  = opt[String]  (default = Some("/home/acald013/Research/tmp/traj_index.txt"))
+  val table:      ScallopOption[String]  = opt[String]  (default = Some("/home/acald013/Research/tmp/traj_index.txt"))
   val partitions: ScallopOption[Int]     = opt[Int]     (default = Some(256))
   val local:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))

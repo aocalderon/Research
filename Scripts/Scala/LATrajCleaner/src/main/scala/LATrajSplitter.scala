@@ -55,7 +55,7 @@ object LATrajSplitter {
       .config("spark.cores.max", cores * executors)
       .config("spark.executor.cores", cores)
       .master(master)
-      .appName("LATrajCleaner")
+      .appName("LATrajSplitter")
       .getOrCreate()
     import spark.implicits._
     startTime = spark.sparkContext.startTime

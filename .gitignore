@@ -62,6 +62,13 @@ Scripts/Scala/LATrajCleaner/.idea/workspace.xml
 Scripts/Scala/LATrajCleaner/.ensime
 Scripts/Scala/LATrajCleaner/.ensime_cache/*
 
+Scripts/Scala/GLTrajCleaner/target/*
+Scripts/Scala/GLTrajCleaner/project/*
+Scripts/Scala/GLTrajCleaner/.idea/*
+Scripts/Scala/GLTrajCleaner/.idea/workspace.xml
+Scripts/Scala/GLTrajCleaner/.ensime
+Scripts/Scala/GLTrajCleaner/.ensime_cache/*
+
 Scripts/Scala/BerlinCopier/target/*
 Scripts/Scala/BerlinCopier/project/*
 Scripts/Scala/BerlinCopier/.idea/*
