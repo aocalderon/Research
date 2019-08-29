@@ -74,15 +74,14 @@ object FF_QuadTree2{
     for(timestamp <- timestamps){ //for
       // Finding maximal disks...
       tag = s"$timestamp"
-      timer = System.currentTimeMillis()
-       stage = "1.Maximal disks found"
-      logStart(stage)
-
       val input = s"${params.input_path()}${params.input_tag()}_${timestamp}.tsv"
       val T_i = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, Dpartitions)
+      timer = System.currentTimeMillis()
+      stage = "1.Maximal disks found"
+      logStart(stage)
       T_i.analyze()
       T_i.CRSTransform(sespg, tespg)
-      val MFrun = MF_QuadTree2.run(spark, T_i, params, timestamp, s"$timestamp")
+      val MFrun = MF_QuadTree3.run(spark, T_i, params, timestamp, s"$timestamp")
       val C = MFrun._1
       if(lastC != null){ // To control GC performance...
         lastC.rawSpatialRDD.unpersist(false)

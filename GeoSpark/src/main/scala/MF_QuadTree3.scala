@@ -20,7 +20,7 @@ import scala.collection.JavaConverters._
 import SPMF.{AlgoLCM2, Transactions, Transaction}
 import org.rogach.scallop._
 
-object MF_QuadTree2{
+object MF_QuadTree3{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory();
   private val reader = new com.vividsolutions.jts.io.WKTReader(geofactory)
@@ -126,7 +126,9 @@ object MF_QuadTree2{
     val nDisks = disks.count()
     logEnd(stage, timer, nDisks)
 
-    points.spatialPartitionedRDD.unpersist(false)
+    val grids = points.partitionTree.getAllZones.asScala.filter(_.partitionId != null)
+      .map(r => r.partitionId -> r.getEnvelope).toMap
+    //points.spatialPartitionedRDD.unpersist(false)
     pairs.unpersist(false)
     centers.unpersist(false)
     centersBuffer.spatialPartitionedRDD.unpersist(false)
@@ -138,6 +140,8 @@ object MF_QuadTree2{
     val diskCenters = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
     val diskCircles = new CircleRDD(diskCenters, r + precision)
     diskCircles.analyze()
+
+    /*
     val fullBoundary = diskCircles.boundary()
     fullBoundary.expandBy(epsilon + precision)
     val approxCount = diskCircles.approximateTotalCount
@@ -160,8 +164,9 @@ object MF_QuadTree2{
     val QTPartitioner = new QuadTreePartitioner(quadtree1)
     val nMF2Grids = QTPartitioner.getGrids.size
     if(debug) { logger.info(s"Disks' number of cells: ${nMF2Grids}") }
-
     diskCircles.spatialPartitioning(QTPartitioner)
+     */
+    diskCircles.spatialPartitioning(points.getPartitioner)
     diskCircles.spatialPartitionedRDD.cache()
     val nDisksRDD = diskCircles.spatialPartitionedRDD.count()
     logEnd(stage, timer, nDisksRDD)
@@ -170,8 +175,8 @@ object MF_QuadTree2{
     timer = System.currentTimeMillis()
     stage = "F.Maximal disks found"
     logStart(stage)
-    val grids = quadtree1.getAllZones.asScala.filter(_.partitionId != null)
-      .map(r => r.partitionId -> r.getEnvelope).toMap
+    //val grids = quadtree1.getAllZones.asScala.filter(_.partitionId != null)
+      //.map(r => r.partitionId -> r.getEnvelope).toMap
     val maximals = diskCircles.spatialPartitionedRDD.rdd
       .mapPartitionsWithIndex{ (i, disks) => 
         val transactions = disks.map{ d =>
@@ -197,17 +202,19 @@ object MF_QuadTree2{
           }.filter(_._2).map(_._1).toIterator
       }.persist(StorageLevel.MEMORY_ONLY_SER)
     val nMaximals = maximals.count()
+
     val maximalsRDD = new PointRDD()
     maximalsRDD.rawSpatialRDD = maximals
     maximalsRDD.spatialPartitionedRDD = maximals
     maximalsRDD.grids = grids.map(_._2).toList.asJava
-    maximalsRDD.setPartitioner(QTPartitioner)
+    maximalsRDD.setPartitioner(diskCircles.getPartitioner)
+ 
     logEnd(stage, timer, nMaximals)
     diskCircles.spatialPartitionedRDD.unpersist(false)
 
     val localEnd = clocktime
     val executionTime = (localEnd - localStart) / 1000.0
-    logger.info(s"MAXIMALS|$appID|$cores|$executors|$epsilon|$mu|$nMF1Grids|$nMF2Grids|$executionTime|$nMaximals")
+    logger.info(s"MAXIMALS|$appID|$cores|$executors|$epsilon|$mu|$nMF1Grids|$executionTime|$nMaximals")
 
     (maximalsRDD, nMaximals)
   }
