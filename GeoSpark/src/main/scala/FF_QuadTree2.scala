@@ -38,6 +38,7 @@ object FF_QuadTree2{
 
   //def run(spark: SparkSession, points: PointRDD, timestamps: List[Int], QTPartitioner: QuadTreePartitioner, params: FFConf): RDD[Flock] = {
   def run(spark: SparkSession, timestamps: List[Int], params: FFConf): Unit = {
+    val applicationID = spark.sparkContext.applicationId
     var clockTime = System.currentTimeMillis()
     cores         = params.cores()
     executors     = params.executors()
@@ -98,6 +99,7 @@ object FF_QuadTree2{
         firstRun = false
       } else {
         // Doing join...
+        val timerJoinAndReport = System.currentTimeMillis()
         timer = System.currentTimeMillis()
         stage = "2.Join done"
         logStart(stage)
@@ -221,9 +223,12 @@ object FF_QuadTree2{
             val c = geofactory.createPoint(new Coordinate(x, y))
             Flock(p,s,e,c)
         }.persist(StorageLevel.MEMORY_ONLY_SER)
-        nF0 += f0.count().toInt
+        val nnF0 = f0.count().toInt  
+        nF0 += nnF0
         // Saving flocks...
+        val timerSave = System.currentTimeMillis()
         saveFlocks(f0)
+        val SaveTime = (System.currentTimeMillis() - timerSave) / 1000.0
         logEnd(stage, timer, nF0, s"$timestamp")
 
         timer = System.currentTimeMillis()
@@ -258,7 +263,11 @@ object FF_QuadTree2{
           .reduceByKey( (a,b) => if(a.start < b.start) a else b ) // Prune redundant flocks by time.
           .map(_._2)
           .distinct()
-        .persist(StorageLevel.MEMORY_ONLY_SER)
+          .persist(StorageLevel.MEMORY_ONLY_SER)
+        val JoinAndReportTime = (System.currentTimeMillis() - timerJoinAndReport) / 1000.0
+        val JoinTime = "%.2f".format(JoinAndReportTime - SaveTime)
+        logger.info(s"JOIN|$applicationID|$cores|$executors|$epsilon|$mu|$delta|$JoinTime|$nnF0")
+
         flocks.checkpoint()
         if(lastFlocks != null){
           lastFlocks.unpersist(false)
@@ -277,7 +286,6 @@ object FF_QuadTree2{
     } // rof
     logger.info(s"Number of flocks: ${nF0}")
     val executionTime = "%.2f".format((System.currentTimeMillis() - clockTime) / 1000.0)
-    val applicationID = spark.sparkContext.applicationId
     val nReport = nF0
     logger.info(s"PFLOCK|$applicationID|$cores|$executors|$epsilon|$mu|$delta|$executionTime|$nReport")
   }
