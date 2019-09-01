@@ -69,6 +69,13 @@ Scripts/Scala/GLTrajCleaner/.idea/workspace.xml
 Scripts/Scala/GLTrajCleaner/.ensime
 Scripts/Scala/GLTrajCleaner/.ensime_cache/*
 
+Scripts/Scala/TrajFactory/target/*
+Scripts/Scala/TrajFactory/project/*
+Scripts/Scala/TrajFactory/.idea/*
+Scripts/Scala/TrajFactory/.idea/workspace.xml
+Scripts/Scala/TrajFactory/.ensime
+Scripts/Scala/TrajFactory/.ensime_cache/*
+
 Scripts/Scala/BerlinCopier/target/*
 Scripts/Scala/BerlinCopier/project/*
 Scripts/Scala/BerlinCopier/.idea/*
