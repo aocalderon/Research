@@ -69,6 +69,13 @@ Scripts/Scala/GLTrajCleaner/.idea/workspace.xml
 Scripts/Scala/GLTrajCleaner/.ensime
 Scripts/Scala/GLTrajCleaner/.ensime_cache/*
 
+Scripts/Scala/DBSCAN/target/*
+Scripts/Scala/DBSCAN/project/*
+Scripts/Scala/DBSCAN/.idea/*
+Scripts/Scala/DBSCAN/.idea/workspace.xml
+Scripts/Scala/DBSCAN/.ensime
+Scripts/Scala/DBSCAN/.ensime_cache/*
+
 Scripts/Scala/TrajFactory/target/*
 Scripts/Scala/TrajFactory/project/*
 Scripts/Scala/TrajFactory/.idea/*

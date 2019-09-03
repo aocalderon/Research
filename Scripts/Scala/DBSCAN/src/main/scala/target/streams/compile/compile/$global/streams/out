@@ -1,0 +1,187 @@
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:1:12: object apache is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.apache.spark.sql.SparkSession[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:2:12: object apache is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.apache.spark.rdd.RDD[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:3:12: object apache is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.apache.spark.serializer.KryoSerializer[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:4:12: object apache is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.apache.spark.sql.functions.{min, max}[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:5:12: object datasyslab is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.datasyslab.geospark.serde.GeoSparkKryoRegistrator[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:6:12: object datasyslab is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.datasyslab.geospark.enums.{FileDataSplitter, GridType}[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:7:12: object datasyslab is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.datasyslab.geospark.spatialRDD.PointRDD[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:8:12: object geotools is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.geotools.referencing.CRS[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:9:12: object geotools is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.geotools.geometry.jts.JTS[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:10:12: object opengis is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.opengis.referencing.crs.CoordinateReferenceSystem[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:11:12: object opengis is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.opengis.referencing.operation.MathTransform[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:12:12: object vividsolutions is not a member of package com[0m
+[0m[[0m[31merror[0m] [0m[0mimport com.vividsolutions.jts.geom.{GeometryFactory, Geometry, Coordinate, Point}[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:13:12: object slf4j is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.slf4j.{Logger, LoggerFactory}[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:14:12: object rogach is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.rogach.scallop.{ScallopConf, ScallopOption}[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:18:8: not found: object dbscan[0m
+[0m[[0m[31merror[0m] [0m[0mimport dbscan._[0m
+[0m[[0m[31merror[0m] [0m[0m       ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:21:23: not found: type Logger[0m
+[0m[[0m[31merror[0m] [0m[0m  private val logger: Logger = LoggerFactory.getLogger("myLogger")[0m
+[0m[[0m[31merror[0m] [0m[0m                      ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:21:32: not found: value LoggerFactory[0m
+[0m[[0m[31merror[0m] [0m[0m  private val logger: Logger = LoggerFactory.getLogger("myLogger")[0m
+[0m[[0m[31merror[0m] [0m[0m                               ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:22:27: not found: type GeometryFactory[0m
+[0m[[0m[31merror[0m] [0m[0m  private val geofactory: GeometryFactory = new GeometryFactory()[0m
+[0m[[0m[31merror[0m] [0m[0m                          ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:22:49: not found: type GeometryFactory[0m
+[0m[[0m[31merror[0m] [0m[0m  private val geofactory: GeometryFactory = new GeometryFactory()[0m
+[0m[[0m[31merror[0m] [0m[0m                                                ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:78:45: not found: type ScallopConf[0m
+[0m[[0m[31merror[0m] [0m[0mclass DBScanConf(args: Seq[String]) extends ScallopConf(args) {[0m
+[0m[[0m[31merror[0m] [0m[0m                                            ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:79:19: not found: type ScallopOption[0m
+[0m[[0m[31merror[0m] [0m[0m  val input:      ScallopOption[String]  = opt[String]  (required = true)[0m
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:80:19: not found: type ScallopOption[0m
+[0m[[0m[31merror[0m] [0m[0m  val output:     ScallopOption[String]  = opt[String]  (default  = Some("/tmp/output"))[0m
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:83:19: not found: type ScallopOption[0m
+[0m[[0m[31merror[0m] [0m[0m  val cores:      ScallopOption[Int]     = opt[Int]     (default = Some(4))[0m
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:84:19: not found: type ScallopOption[0m
+[0m[[0m[31merror[0m] [0m[0m  val executors:  ScallopOption[Int]     = opt[Int]     (default = Some(3))[0m
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:88:19: not found: type ScallopOption[0m
+[0m[[0m[31merror[0m] [0m[0m  val local:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))[0m
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:81:19: not found: type ScallopOption[0m
+[0m[[0m[31merror[0m] [0m[0m  val host:       ScallopOption[String]  = opt[String]  (default = Some("169.235.27.138"))[0m
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:82:19: not found: type ScallopOption[0m
+[0m[[0m[31merror[0m] [0m[0m  val port:       ScallopOption[String]  = opt[String]  (default = Some("7077"))[0m
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:48:17: not found: value SparkSession[0m
+[0m[[0m[31merror[0m] [0m[0m    val spark = SparkSession.builder()[0m
+[0m[[0m[31merror[0m] [0m[0m                ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:50:42: not found: type KryoSerializer[0m
+[0m[[0m[31merror[0m] [0m[0m      .config("spark.serializer",classOf[KryoSerializer].getName)[0m
+[0m[[0m[31merror[0m] [0m[0m                                         ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:51:49: not found: type GeoSparkKryoRegistrator[0m
+[0m[[0m[31merror[0m] [0m[0m      .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)[0m
+[0m[[0m[31merror[0m] [0m[0m                                                ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:66:20: not found: type AlgoDBSCAN[0m
+[0m[[0m[31merror[0m] [0m[0m    val algo = new AlgoDBSCAN()[0m
+[0m[[0m[31merror[0m] [0m[0m                   ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:78:57: no arguments allowed for nullary constructor Object: ()Object[0m
+[0m[[0m[31merror[0m] [0m[0mclass DBScanConf(args: Seq[String]) extends ScallopConf(args) {[0m
+[0m[[0m[31merror[0m] [0m[0m                                                        ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:79:44: not found: value opt[0m
+[0m[[0m[31merror[0m] [0m[0m  val input:      ScallopOption[String]  = opt[String]  (required = true)[0m
+[0m[[0m[31merror[0m] [0m[0m                                           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:79:58: not found: value required[0m
+[0m[[0m[31merror[0m] [0m[0m  val input:      ScallopOption[String]  = opt[String]  (required = true)[0m
+[0m[[0m[31merror[0m] [0m[0m                                                         ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:80:44: not found: value opt[0m
+[0m[[0m[31merror[0m] [0m[0m  val output:     ScallopOption[String]  = opt[String]  (default  = Some("/tmp/output"))[0m
+[0m[[0m[31merror[0m] [0m[0m                                           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:80:58: not found: value default[0m
+[0m[[0m[31merror[0m] [0m[0m  val output:     ScallopOption[String]  = opt[String]  (default  = Some("/tmp/output"))[0m
+[0m[[0m[31merror[0m] [0m[0m                                                         ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:81:44: not found: value opt[0m
+[0m[[0m[31merror[0m] [0m[0m  val host:       ScallopOption[String]  = opt[String]  (default = Some("169.235.27.138"))[0m
+[0m[[0m[31merror[0m] [0m[0m                                           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:81:58: not found: value default[0m
+[0m[[0m[31merror[0m] [0m[0m  val host:       ScallopOption[String]  = opt[String]  (default = Some("169.235.27.138"))[0m
+[0m[[0m[31merror[0m] [0m[0m                                                         ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:82:44: not found: value opt[0m
+[0m[[0m[31merror[0m] [0m[0m  val port:       ScallopOption[String]  = opt[String]  (default = Some("7077"))[0m
+[0m[[0m[31merror[0m] [0m[0m                                           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:82:58: not found: value default[0m
+[0m[[0m[31merror[0m] [0m[0m  val port:       ScallopOption[String]  = opt[String]  (default = Some("7077"))[0m
+[0m[[0m[31merror[0m] [0m[0m                                                         ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:83:44: not found: value opt[0m
+[0m[[0m[31merror[0m] [0m[0m  val cores:      ScallopOption[Int]     = opt[Int]     (default = Some(4))[0m
+[0m[[0m[31merror[0m] [0m[0m                                           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:83:58: not found: value default[0m
+[0m[[0m[31merror[0m] [0m[0m  val cores:      ScallopOption[Int]     = opt[Int]     (default = Some(4))[0m
+[0m[[0m[31merror[0m] [0m[0m                                                         ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:84:44: not found: value opt[0m
+[0m[[0m[31merror[0m] [0m[0m  val executors:  ScallopOption[Int]     = opt[Int]     (default = Some(3))[0m
+[0m[[0m[31merror[0m] [0m[0m                                           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:84:58: not found: value default[0m
+[0m[[0m[31merror[0m] [0m[0m  val executors:  ScallopOption[Int]     = opt[Int]     (default = Some(3))[0m
+[0m[[0m[31merror[0m] [0m[0m                                                         ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:85:19: not found: type ScallopOption[0m
+[0m[[0m[31merror[0m] [0m[0m  val grid:       ScallopOption[String]  = opt[String]  (default = Some("KDBTREE"))[0m
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:85:44: not found: value opt[0m
+[0m[[0m[31merror[0m] [0m[0m  val grid:       ScallopOption[String]  = opt[String]  (default = Some("KDBTREE"))[0m
+[0m[[0m[31merror[0m] [0m[0m                                           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:85:58: not found: value default[0m
+[0m[[0m[31merror[0m] [0m[0m  val grid:       ScallopOption[String]  = opt[String]  (default = Some("KDBTREE"))[0m
+[0m[[0m[31merror[0m] [0m[0m                                                         ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:86:19: not found: type ScallopOption[0m
+[0m[[0m[31merror[0m] [0m[0m  val index:      ScallopOption[String]  = opt[String]  (default = Some("QUADTREE"))[0m
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:86:44: not found: value opt[0m
+[0m[[0m[31merror[0m] [0m[0m  val index:      ScallopOption[String]  = opt[String]  (default = Some("QUADTREE"))[0m
+[0m[[0m[31merror[0m] [0m[0m                                           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:86:58: not found: value default[0m
+[0m[[0m[31merror[0m] [0m[0m  val index:      ScallopOption[String]  = opt[String]  (default = Some("QUADTREE"))[0m
+[0m[[0m[31merror[0m] [0m[0m                                                         ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:87:19: not found: type ScallopOption[0m
+[0m[[0m[31merror[0m] [0m[0m  val partitions: ScallopOption[Int]     = opt[Int]     (default = Some(512))[0m
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:87:44: not found: value opt[0m
+[0m[[0m[31merror[0m] [0m[0m  val partitions: ScallopOption[Int]     = opt[Int]     (default = Some(512))[0m
+[0m[[0m[31merror[0m] [0m[0m                                           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:87:58: not found: value default[0m
+[0m[[0m[31merror[0m] [0m[0m  val partitions: ScallopOption[Int]     = opt[Int]     (default = Some(512))[0m
+[0m[[0m[31merror[0m] [0m[0m                                                         ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:88:44: not found: value opt[0m
+[0m[[0m[31merror[0m] [0m[0m  val local:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))[0m
+[0m[[0m[31merror[0m] [0m[0m                                           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:88:58: not found: value default[0m
+[0m[[0m[31merror[0m] [0m[0m  val local:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))[0m
+[0m[[0m[31merror[0m] [0m[0m                                                         ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:89:19: not found: type ScallopOption[0m
+[0m[[0m[31merror[0m] [0m[0m  val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))[0m
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:89:44: not found: value opt[0m
+[0m[[0m[31merror[0m] [0m[0m  val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))[0m
+[0m[[0m[31merror[0m] [0m[0m                                           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:89:58: not found: value default[0m
+[0m[[0m[31merror[0m] [0m[0m  val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))[0m
+[0m[[0m[31merror[0m] [0m[0m                                                         ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:90:19: not found: type ScallopOption[0m
+[0m[[0m[31merror[0m] [0m[0m  val offset:     ScallopOption[Int]     = opt[Int]     (default = Some(2))[0m
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:90:44: not found: value opt[0m
+[0m[[0m[31merror[0m] [0m[0m  val offset:     ScallopOption[Int]     = opt[Int]     (default = Some(2))[0m
+[0m[[0m[31merror[0m] [0m[0m                                           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:90:58: not found: value default[0m
+[0m[[0m[31merror[0m] [0m[0m  val offset:     ScallopOption[Int]     = opt[Int]     (default = Some(2))[0m
+[0m[[0m[31merror[0m] [0m[0m                                                         ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/and/Documents/PhD/Research/Scripts/Scala/DBSCAN/src/main/scala/DBScan.scala:92:3: not found: value verify[0m
+[0m[[0m[31merror[0m] [0m[0m  verify()[0m
+[0m[[0m[31merror[0m] [0m[0m  ^[0m
+[0m[[0m[31merror[0m] [0m[0m62 errors found[0m

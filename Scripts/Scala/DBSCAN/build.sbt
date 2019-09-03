@@ -1,4 +1,4 @@
-name := "GLTraj"
+name := "DBSCAN"
 organization := "UCR-DBLab"
 version := "0.1"
 
@@ -11,5 +11,5 @@ libraryDependencies += "org.rogach" % "scallop_2.11" % "2.1.3"
 libraryDependencies += "org.datasyslab" % "geospark" % "1.2.0"
 libraryDependencies += "org.datasyslab" % "JTSplus" % "0.1.4"
 
-mainClass in (Compile, run) := Some("GLTrajCleaner")
-mainClass in (Compile, packageBin) := Some("GLTrajCleaner")
+mainClass in (Compile, run) := Some("DBScan")
+mainClass in (Compile, packageBin) := Some("DBScan")
