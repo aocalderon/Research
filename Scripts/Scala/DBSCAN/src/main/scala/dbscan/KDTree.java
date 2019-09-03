@@ -301,107 +301,6 @@ public class KDTree {
 		}
 	}
 
-	//=====================================================================================
-	//======================= Method to find the k nearest neighboor =========================
-	//=====================================================================================
-	
-	/**
-	 * traverse the tree to find the place where the node would be inserted.
-	 * @param target the vector
-	 * @param node  the current node
-	 * @param d the current dimension
-	 */
-	private void findParent_knn(DoubleArray target, KDNode node, int d) {		
-		// If the node would be inserted in the branch "below"
-		if(target.data[d]  < node.values.data[d]){
-			if (++d == dimensionCount) {
-				d = 0;
-			}
-			if(node.below == null){
-				tryToSave(node, target);
-				return;
-			}
-			tryToSave(node.below, target);
-			findParent_knn(target, node.below, d);
-		}
-		
-		// If the node would be inserted in the branch "above".
-		if(++d == dimensionCount) {
-			d = 0;
-		}
-		
-		if(node.above == null){
-			tryToSave(node, target);
-			return;
-		}
-		tryToSave(node.above, target);
-		findParent_knn(target, node.above, d);
-	}
-
-	/**
-	 * Method to try to save a node in the set of the current closest k neighbors. 
-	 * @param node  the node to be added.
-	 * @param target the target node.
-	 */
-	private void tryToSave(KDNode node, DoubleArray target) {
-		if(node == null){
-			return;
-		}
-		double distance = distanceFunction.calculateDistance(target, node.values);
-		if(resultKNN.size() == k  && resultKNN.maximum().distance < distance){ 
-			return;
-		}
-		KNNPoint point = new KNNPoint(node.values, distance);
-		
-		if(resultKNN.contains(point)){
-			return;
-		}
-		
-		resultKNN.add(point);
-		
-		if(resultKNN.size() > k){
-			resultKNN.popMaximum();
-		}
-	}
-
-	/**
-	 * Start back at the root, and check all rectangles that have a perpendicular distance
-     *  smaller than the k best points found until now.
-	 * @param node  the current node
-	 * @param targetPoint the vector
-	 */
-	private void nearest_knn(KDNode node, DoubleArray targetPoint) {
-		tryToSave(node, targetPoint); 
-
-		
-		double perpendicularDistance = Math.abs(node.values.data[node.d] - targetPoint.data[node.d]);
-		if (perpendicularDistance < resultKNN.maximum().distance) { 
-			// explore the "above" and "below" branches.
-			if (node.above != null) {
-				nearest_knn(node.above, targetPoint);
-			}
-			if (node.below != null) {
-				nearest_knn(node.below, targetPoint);
-			}
-		} else {
-//			
-//			int dMinus1 = node.d-1;
-//			if(dMinus1 < 0){
-//				dMinus1 = dimensionCount - 1;
-//			}
-			// explore one side of the tree.
-			if (targetPoint.data[node.d] < node.values.data[node.d]) {
-				if (node.below != null) {
-					nearest_knn(node.below, targetPoint);
-				}
-			} else {
-				if (node.above != null) {
-					nearest_knn(node.above, targetPoint);
-				}
-			}
-		}
-	}
-
 	// =========================== METHOD TO FIND POINTS WITHIN A RADIUS - used by DBSCAN =============================
 	/**
 	 * Method to get all the points within the radius of a given target point, EXCEPT the target point!
@@ -502,19 +401,6 @@ public class KDTree {
 	}
 
 	/// ---------------------------------------------------------------------------------------------	
-	
-	/**
-	 * Convert a vector of double to a string representation
-	 * @param values  the vector
-	 * @return a string
-	 */
-	private String toString(double [] values){
-		StringBuilder buffer = new StringBuilder();
-		for(Double element : values ){
-			buffer.append(" " + element);
-		}
-		return buffer.toString();
-	}
 	
 	/**
 	 * Convert this tree to a string representation

@@ -26,6 +26,10 @@ public class DoubleArray {
 
 	// the vector
 	public double[] data;
+	// attributes
+	boolean visited = false;
+	Cluster cluster = null;
+
 	
 	/**
 	 * Constructor
