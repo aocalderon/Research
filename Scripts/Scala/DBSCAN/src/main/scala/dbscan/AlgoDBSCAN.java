@@ -68,7 +68,7 @@ public class AlgoDBSCAN {
 		startTimestamp =  System.currentTimeMillis();
 		numberOfNoisePoints =0;
 		kdtree = new KDTree();
-		kdtree.buildtree(points);
+		kdtree.buildtree(new ArrayList(points));
 		clusters = new ArrayList<Cluster>();
 		bufferNeighboors1 = new ArrayList<DoubleArray>();
 		bufferNeighboors2 = new ArrayList<DoubleArray>();

@@ -1,20 +1,14 @@
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.rdd.RDD
 import org.apache.spark.serializer.KryoSerializer
-import org.apache.spark.sql.functions.{min, max}
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.datasyslab.geospark.enums.{FileDataSplitter, GridType}
 import org.datasyslab.geospark.spatialRDD.PointRDD
-import org.geotools.referencing.CRS
-import org.geotools.geometry.jts.JTS
-import org.opengis.referencing.crs.CoordinateReferenceSystem
-import org.opengis.referencing.operation.MathTransform
 import com.vividsolutions.jts.geom.{GeometryFactory, Geometry, Coordinate, Point}
 import org.slf4j.{Logger, LoggerFactory}
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 import scala.collection.JavaConverters._
-import java.io.PrintWriter
-import scala.io.Source
+import scala.collection.mutable.ListBuffer
 import dbscan._
 
 object DBScan {
@@ -28,12 +22,11 @@ object DBScan {
   def clocktime = System.currentTimeMillis()
 
   def log(msg: String, timer: Long, n: Long, status: String): Unit ={
-    logger.info("LATC|%6.2f|%-50s|%6.2f|%6d|%s".format((clocktime-startTime)/1000.0, msg, (clocktime-timer)/1000.0, n, status))
+    logger.info("DBSCAN|%6.2f|%-50s|%6.2f|%6d|%s".format((clocktime-startTime)/1000.0, msg, (clocktime-timer)/1000.0, n, status))
   }
 
   def main(args: Array[String]): Unit = {
     val params = new DBScanConf(args)
-    val input = params.input()
     val output = params.output()
     val cores = params.cores()
     val executors = params.executors()
@@ -63,7 +56,29 @@ object DBScan {
     timer = clocktime
     stage = "Data read"
     log(stage, timer, 0, "START")
+    val rand = scala.util.Random
+    val n = params.n()
+	val points = new ListBuffer[DoubleArray]()
+	(0 to params.m()).foreach{ j =>
+      val x = rand.nextDouble() * n
+      val y = rand.nextDouble() * n
+	  val vector = Array[Double](x, y)
+	  points += new DoubleArray(vector)
+	}
+    val minPts = params.minpts()
+    val epsilon = params.epsilon()
+    
     val algo = new AlgoDBSCAN()
+    
+    val clusters = algo.run(points.toList.asJava, minPts, epsilon)
+    clusters.asScala.zipWithIndex.map{ case (cluster, i) =>
+      val xs = cluster.getVectors.asScala.map(_.get(0)).reduce(_ + _)
+      val ys = cluster.getVectors.asScala.map(_.get(1)).reduce(_ + _)
+      val count = cluster.getVectors.size().toDouble
+
+      s"Cluster's centroid ${i} (${xs/count}, ${ys/count})"
+    }.foreach(println)
+    algo.printStatistics()
 
     log(stage, timer, 0, "END")
 
@@ -76,7 +91,6 @@ object DBScan {
 }
 
 class DBScanConf(args: Seq[String]) extends ScallopConf(args) {
-  val input:      ScallopOption[String]  = opt[String]  (required = true)
   val output:     ScallopOption[String]  = opt[String]  (default  = Some("/tmp/output"))
   val host:       ScallopOption[String]  = opt[String]  (default = Some("169.235.27.138"))
   val port:       ScallopOption[String]  = opt[String]  (default = Some("7077"))
@@ -88,6 +102,10 @@ class DBScanConf(args: Seq[String]) extends ScallopConf(args) {
   val local:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val offset:     ScallopOption[Int]     = opt[Int]     (default = Some(2))
+  val n:          ScallopOption[Double]  = opt[Double]  (default = Some(100.0))
+  val m:          ScallopOption[Int]     = opt[Int]     (default = Some(200))
+  val minpts:     ScallopOption[Int]     = opt[Int]     (default = Some(5))
+  val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(5.0))
 
   verify()
 }
