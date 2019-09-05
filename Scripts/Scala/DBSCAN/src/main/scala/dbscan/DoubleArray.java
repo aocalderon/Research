@@ -27,6 +27,8 @@ public class DoubleArray {
 	// the vector
 	public double[] data;
 	// attributes
+    Integer tid = -1;
+    Integer t = -1; 
 	boolean visited = false;
 	Cluster cluster = null;
 
@@ -77,4 +79,20 @@ public class DoubleArray {
 	public double get(int index) {
 		return data[index];
 	}
+
+    public void setTid(Integer tid){
+        this.tid = tid;
+    }
+
+    public Integer getTid(){
+        return this.tid;
+    }
+
+    public void setT(Integer t){
+        this.t = t;
+    }
+
+    public Integer getT(){
+        return this.t;
+    }
 }
