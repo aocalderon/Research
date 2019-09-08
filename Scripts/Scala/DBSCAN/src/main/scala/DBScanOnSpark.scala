@@ -4,6 +4,7 @@ import org.apache.spark.serializer.KryoSerializer
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.datasyslab.geospark.enums.{FileDataSplitter, GridType}
 import org.datasyslab.geospark.spatialRDD.{SpatialRDD, PointRDD, CircleRDD}
+import org.datasyslab.geospark.spatialOperator.JoinQuery
 import com.vividsolutions.jts.geom.{GeometryFactory, Geometry, Coordinate, Point}
 import org.slf4j.{Logger, LoggerFactory}
 import org.rogach.scallop.{ScallopConf, ScallopOption}
@@ -81,15 +82,29 @@ object DBScanOnSpark {
     timer = clocktime
     stage = "Partitioning"
     log(stage, timer, 0, "START")
-    pointsRDD.spatialPartitioning(GridType.EQUALGRID, params.partitions())
-    val bufferRDD = new CircleRDD(pointsRDD)
-    log(stage, timer, 0, "END")
+    val circlesRDD = new CircleRDD(pointsRDD, params.epsilon())
+    circlesRDD.analyze()
+    circlesRDD.spatialPartitioning(GridType.EQUALGRID, params.partitions())
+    pointsRDD.spatialPartitioning(circlesRDD.getPartitioner)
+    val considerBoundaryIntersection = true
+    val usingIndex = true
+    val pairs = JoinQuery.DistanceJoinQueryFlat(pointsRDD, circlesRDD, usingIndex, considerBoundaryIntersection)
+      .rdd
+      .flatMap { pair =>
+        val p1 = pair._1.asInstanceOf[Point]
+        val p2 = pair._2
+        List(p1, p2)
+      }
+      .distinct()
+      .cache()
+    val nPairs = pairs.count()
+    log(stage, timer, nPairs, "END")
     
     timer = clocktime
     stage = "DBScan run"
     log(stage, timer, 0, "START")
     val algo = new AlgoDBSCAN()
-    val data = pointsRDD.spatialPartitionedRDD.rdd.map{ p =>
+    val data = pairs.map{ p =>
       val arr = p.getUserData().toString().split("\t")
       val tid = arr(0).toInt
       val t = arr(1).toInt

@@ -55,7 +55,16 @@ object MF_QuadTree3{
     logStart(stage)
 
     //points.spatialPartitioning(MF1Partitioner)
-    points.spatialPartitioning(GridType.QUADTREE, params.ffpartitions())
+    val count = points.rawSpatialRDD.count()
+    if(count < params.mu()){
+      points.setRawSpatialRDD(spark.sparkContext.emptyRDD[Point])
+      return (points, 0)
+    }
+    var partitions = params.ffpartitions()
+    if(count <= 8){
+      partitions = 1
+    }
+    points.spatialPartitioning(GridType.QUADTREE, partitions)
     val nMF1Grids = points.getPartitioner.getGrids.size()
 
     val pointsBuffer = new CircleRDD(points, epsilon + precision)

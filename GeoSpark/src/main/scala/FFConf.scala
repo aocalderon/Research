@@ -3,6 +3,7 @@ import org.rogach.scallop._
 
 class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val input:        ScallopOption[String]  =  opt[String]   (default = Some(""))
+  val tsfile:       ScallopOption[String]  =  opt[String]   (default = Some(""))
   val check_dir:    ScallopOption[String]  =  opt[String]   (default = Some("hdfs://dblab-rack15:9001/checkpoints"))
   val input_path:   ScallopOption[String]  =  opt[String]   (default = Some(""))
   val input_tag:    ScallopOption[String]  =  opt[String]   (default = Some(""))
@@ -50,6 +51,7 @@ class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val mfdebug:      ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
   val info:         ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
   val local:        ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
+  val stream:       ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
 
   verify()
 }

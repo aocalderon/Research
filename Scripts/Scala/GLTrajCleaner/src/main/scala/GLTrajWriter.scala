@@ -16,43 +16,26 @@ import scala.collection.JavaConverters._
 import java.io.PrintWriter
 import scala.io.Source
 
-object GLTrajCleaner {
+object GLTrajWriter {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory()
   private val precision: Double = 0.0001
   private var startTime: Long = System.currentTimeMillis()
 
-  case class ST_Row(pid: Long, x: Double, y: Double, date: String)
-  case class ST_Point(pid: Long, x: Double, y: Double, t: Long)
+  case class ST_Point(pid: Long, x: Double, y: Double, t: Long){
+    override def toString(): String = s"$pid\t$x\t$y\t$t\n"
+  }
 
   def round3(n: Double): Double = { math.round( n * 1000) / 1000.0 }
-
-  def savePoints(points: RDD[ST_Point], filename: String): Unit = {
-    val f = new PrintWriter(filename)
-    f.write(points.map{ p =>
-      var arr = p.x.toString().split("\\.")
-      var integers = arr(0)
-      var decimals = arr(1)
-      if(decimals.size > 3) { decimals = decimals.substring(0, 3)}
-      val x = s"${integers}.${decimals}"
-      arr = p.y.toString().split("\\.")
-      integers = arr(0)
-      decimals = arr(1)
-      if(decimals.size > 3) { decimals = decimals.substring(0, 3)}
-      val y = s"${integers}.${decimals}"
-      s"${p.pid}\t${x}\t${y}\t${p.t}\n"
-    }.collect.mkString(""))
-    f.close()
-  }
 
   def clocktime = System.currentTimeMillis()
 
   def log(msg: String, timer: Long, n: Long, status: String): Unit ={
-    logger.info("LATC|%6.2f|%-50s|%6.2f|%6d|%s".format((clocktime-startTime)/1000.0, msg, (clocktime-timer)/1000.0, n, status))
+    logger.info("GLTC2|%6.2f|%-50s|%6.2f|%6d|%s".format((clocktime-startTime)/1000.0, msg, (clocktime-timer)/1000.0, n, status))
   }
 
   def main(args: Array[String]): Unit = {
-    val params = new GLTrajCleanerConf(args)
+    val params = new GLTrajWriterConf(args)
     val input = params.input()
     val output = params.output()
     val offset = params.offset()
@@ -75,7 +58,7 @@ object GLTrajCleaner {
       .config("spark.executor.cores", cores)
       .config("spark.kryoserializer.buffer.max.mb", "1024")
       .master(master)
-      .appName("LATrajCleaner")
+      .appName("GLTrajCleaner")
       .getOrCreate()
     import spark.implicits._
     startTime = spark.sparkContext.startTime
@@ -84,58 +67,32 @@ object GLTrajCleaner {
     timer = clocktime
     stage = "Data read"
     log(stage, timer, 0, "START")
-    val rows = spark.read.textFile(input)
-      .rdd.zipWithUniqueId().flatMap{ f =>
-        val filename = f._1
-        val tid = f._2
-        logger.info(s"Reading file $filename ...")
-        val file = Source.fromFile(filename)
-        val lines = file.getLines.toList.drop(6)
-        val rows = lines.map{ line =>
-          val p = line.split(",")
-          val x = p(0).toDouble
-          val y = p(1).toDouble
-          val t = s"${p(5)} ${p(6)}"
-
-          ST_Row(tid, x, y, t)
-        }
-        file.close()
-        rows
-      }.toDS().cache()
-    val nRows = rows.count()
-    log(stage, timer, nRows, "END")
-
-    rows.show(false)
+    val points = spark.read.option("header", false).option("delimiter", "\t").csv(input)
+      .map{ r =>
+        val p = r.getString(0).toLong
+        val x = r.getString(1).toDouble
+        val y = r.getString(2).toDouble
+        val t = r.getString(3).toLong
+        ST_Point(p, x, y, t)
+      }.cache()
+    val nPoints = points.count()
+    log(stage, timer, nPoints, "END")
 
     timer = clocktime
-    stage = "Coordinate transformation"
+    stage = "Saving new dataset"
     log(stage, timer, 0, "START")
-    val points = rows.withColumn("t", $"date".cast("timestamp").cast("long")).map{ r =>
-      val pid = r.getLong(0)
-      val x = r.getDouble(1)
-      val y = r.getDouble(2)
-      val t = r.getLong(4)
-      ST_Point(pid, x, y, t)
-    }
-    val sourceCRS = CRS.decode("EPSG:4326")
-    val targetCRS = CRS.decode("EPSG:4799")
-    val lenient = true; // allow for some error due to different datums
-    val transform = CRS.findMathTransform(sourceCRS, targetCRS, lenient);
-    val points2 = points.map{ p =>
-      val sourcePoint = geofactory.createPoint(new Coordinate(p.x, p.y))
-      val targetPoint = JTS.transform(sourcePoint, transform).asInstanceOf[Point]
-
-      ST_Point(p.pid, targetPoint.getX, targetPoint.getY, p.t)
-    }.repartition(120).cache()
-    val nPoints2 = points2.count()
-    log(stage, timer, nPoints2, "END")
-
-    points2.show(false)
-    points2.rdd.map(p => s"${p.pid}\t${p.x}\t${p.y}\t${p.t}").saveAsTextFile(output)
-    val ts = points2.select($"t").distinct()
+    val ts = points.select($"t").distinct()
     logger.info(s"# of time instants: ${ts.count()}")
     logger.info(s"Min time instant: ${ts.agg(min($"t")).collect().head.getLong(0)}")
     logger.info(s"Max time instant: ${ts.agg(max($"t")).collect().head.getLong(0)}")
+
+    val data = points.orderBy($"t").map{ p =>
+      ST_Point(p.pid, round3(p.x), round3(p.y), p.t - 946797139).toString()
+    }.collect().mkString("")
+    val f = new java.io.PrintWriter("/tmp/geolife2.tsv")
+    f.write(data)
+    f.close()
+    log(stage, timer, nPoints, "END")
 
     timer = clocktime
     stage = "Session close"
@@ -145,7 +102,7 @@ object GLTrajCleaner {
   }
 }
 
-class GLTrajCleanerConf(args: Seq[String]) extends ScallopConf(args) {
+class GLTrajWriterConf(args: Seq[String]) extends ScallopConf(args) {
   val input:      ScallopOption[String]  = opt[String]  (required = true)
   val output:     ScallopOption[String]  = opt[String]  (default  = Some("/tmp/output"))
   val host:       ScallopOption[String]  = opt[String]  (default = Some("169.235.27.138"))
