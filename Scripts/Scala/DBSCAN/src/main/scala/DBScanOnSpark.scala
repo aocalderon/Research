@@ -18,6 +18,27 @@ object DBScanOnSpark {
   private val precision: Double = 0.0001
   private var startTime: Long = System.currentTimeMillis()
 
+  case class Disk(x: Double, y: Double, pids: List[Int], var subset: Boolean = false) extends Ordered[Disk]{
+    def count: Int = pids.size
+
+    override def compare(that: Disk): Int = {
+      if (x == that.x) y compare that.y
+      else x compare that.x
+    }
+
+    def canEqual(a: Any) = a.isInstanceOf[Disk]
+
+    override def equals(that: Any): Boolean =
+      that match {
+        case that: Disk => {
+          that.canEqual(this) && this.x == that.x && this.y == that.y
+        }
+        case _ => false
+      }
+
+    override def toString: String = s"$$x\t$y\t${pids.mkString(" ")}\n"
+  }
+
   case class ST_Point(tid: Int, x: Double, y: Double, t: Int) extends Ordered[ST_Point]{
     def distance(other: ST_Point): Double = {
       math.sqrt(math.pow(this.x - other.x, 2) + math.pow(this.y - other.y, 2))
@@ -202,19 +223,40 @@ object DBScanOnSpark {
       for(point <- points.map(_.getJTSPoint)){
         rtree.insert(point.getEnvelopeInternal, point)
       }
-      val disks = centers.map{ center =>
-        rtree.query(center.buffer(r).getEnvelopeInternal).asScala
+      val disks = centers.flatMap{ center =>
+        rtree.query(center.buffer(r).getEnvelopeInternal).asScala.toList
           .map(_.asInstanceOf[Point])
           .filter(point => center.distance(point) <= r)
-          .map(point => (center, point)).groupBy(_._1).toList.map{ p =>
-            val key = p._1 // the center
-            val value = p._2.toList.map(_._2) // list of points
-            (key, value)
+          .map(point => (center, point))
+          .groupBy(_._1)
+          .map{ p =>
+            val center = p._1 // the center
+            val points = p._2.map{ p =>  
+              val point = p._2
+              val pid = point.getUserData.toString().split("\t")(0).toInt
+              pid
+            }
+            Disk(center.getX, center.getY, points)
           }
-        .filter(_._2.size > params.mu())
+          .filter(_.count > params.mu())
       }
 
       // Prune duplicates and redundant disks...
+      val n = disks.size
+      for(i <- 0 to n){
+        for(j <- 0 to n){
+          if(i != j){
+            val pids1 = disks(i).pids
+            val pids2 = disks(j).pids
+
+            if(pids1.contains(pids2) || pids1.equals(pids2)){
+              disks(j).subset = true
+            } else if(pids2.contains(pids1)){
+              disks(i).subset = true
+            }
+          }
+        }
+      }
     }
 
     timer = clocktime
