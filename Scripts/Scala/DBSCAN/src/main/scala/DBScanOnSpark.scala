@@ -2,7 +2,7 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.rdd.RDD
 import org.apache.spark.serializer.KryoSerializer
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
-import org.datasyslab.geospark.enums.{FileDataSplitter, GridType}
+import org.datasyslab.geospark.enums.{FileDataSplitter, GridType, IndexType}
 import org.datasyslab.geospark.spatialRDD.{SpatialRDD, PointRDD, CircleRDD}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import com.vividsolutions.jts.geom.{GeometryFactory, Geometry, Coordinate, Point}
@@ -36,7 +36,7 @@ object DBScanOnSpark {
         case _ => false
       }
 
-    override def toString: String = s"$$x\t$y\t${pids.mkString(" ")}\n"
+    override def toString: String = s"${pids.mkString(" ")}\t$x\t$y"
   }
 
   case class ST_Point(tid: Int, x: Double, y: Double, t: Int) extends Ordered[ST_Point]{
@@ -131,26 +131,29 @@ object DBScanOnSpark {
     val pointsRDD = new SpatialRDD[Point]()
     pointsRDD.setRawSpatialRDD(points)
     pointsRDD.analyze()
+    pointsRDD.spatialPartitioning(GridType.EQUALGRID, params.partitions())
     val nPoints = points.count()
     log(stage, timer, nPoints, "END")
     
     timer = clocktime
     stage = "Partitioning"
     log(stage, timer, 0, "START")
-    val circlesRDD = new CircleRDD(pointsRDD, params.epsilon())
+    val circlesRDD = new CircleRDD(pointsRDD, params.epsilon() + 0.0001)
     circlesRDD.analyze()
-    circlesRDD.spatialPartitioning(GridType.EQUALGRID, params.partitions())
-    pointsRDD.spatialPartitioning(circlesRDD.getPartitioner)
+    circlesRDD.spatialPartitioning(pointsRDD.getPartitioner)
+    pointsRDD.buildIndex(IndexType.RTREE, true)
     val considerBoundaryIntersection = true
     val usingIndex = true
     val pairs = JoinQuery.DistanceJoinQueryFlat(pointsRDD, circlesRDD, usingIndex, considerBoundaryIntersection)
       .rdd
-      .flatMap { pair =>
-        val p1 = pair._1.asInstanceOf[Point]
-        val p2 = pair._2
-        List(p1, p2)
-      }
-      .distinct()
+      .map { pair =>
+        val id1 = pair._1.getUserData().toString().split("\t").head.trim().toInt
+        val p1  = pair._1.getCentroid
+        p1.setUserData(pair._1.getUserData.toString())
+        val id2 = pair._2.getUserData().toString().split("\t").head.trim().toInt
+        val p2  = pair._2
+        ( (id1, p1) , (id2, p2) )
+      }.filter(p => p._1._1 < p._2._1)
       .cache()
     val nPairs = pairs.count()
     log(stage, timer, nPairs, "END")
@@ -159,7 +162,11 @@ object DBScanOnSpark {
     stage = "DBScan run"
     log(stage, timer, 0, "START")
     val algo = new AlgoDBSCAN()
-    val data = pairs.map{ p =>
+    val data = pairs.flatMap{ pair =>
+      val p1 = pair._1._2
+      val p2 = pair._2._2
+      List(p1, p2)
+    }.map{ p =>
       val arr = p.getUserData().toString().split("\t")
       val tid = arr(0).toInt
       val t = arr(1).toInt
@@ -180,7 +187,7 @@ object DBScanOnSpark {
         val ys = cluster.getVectors.asScala.map(_.get(1)).reduce(_ + _)
         val count = cluster.getVectors.size().toDouble
 
-        s"Cluster's centroid ${i} (${xs/count}, ${ys/count})"
+        s"Cluster's centroid ${i} (${xs/count}, ${ys/count})\tCluster size: $count"
       }.foreach(println)
       algo.printStatistics()
     }
@@ -205,7 +212,10 @@ object DBScanOnSpark {
       (h, k)
     }
 
-    clusters.map{ cluster =>
+    timer = clocktime
+    stage = "Getting maximals"
+    log(stage, timer, 0, "START")
+    val maximals = clusters.flatMap{ cluster =>
       val points = cluster.getVectors().asScala.map{ v =>
         ST_Point(v.getTid, v.get(0), v.get(1), v.getT)
       }
@@ -219,6 +229,8 @@ object DBScanOnSpark {
           computeCenters(p1, p2)
         }.toList
       val centers = pairs.map(_._1).union(pairs.map(_._2))
+      centers
+      /*
       val rtree = new com.vividsolutions.jts.index.strtree.STRtree()
       for(point <- points.map(_.getJTSPoint)){
         rtree.insert(point.getEnvelopeInternal, point)
@@ -236,27 +248,38 @@ object DBScanOnSpark {
               val pid = point.getUserData.toString().split("\t")(0).toInt
               pid
             }
-            Disk(center.getX, center.getY, points)
+            Disk(center.getX, center.getY, points.distinct.sorted)
           }
           .filter(_.count > params.mu())
       }
 
       // Prune duplicates and redundant disks...
       val n = disks.size
-      for(i <- 0 to n){
-        for(j <- 0 to n){
+      for(i <- 0 until n){
+        for(j <- 0 until n){
           if(i != j){
-            val pids1 = disks(i).pids
-            val pids2 = disks(j).pids
-
-            if(pids1.contains(pids2) || pids1.equals(pids2)){
-              disks(j).subset = true
-            } else if(pids2.contains(pids1)){
-              disks(i).subset = true
+            if(disks(i).subset != true && disks(j).subset != true){
+              val pids1 = disks(i).pids
+              val pids2 = disks(j).pids
+            
+              if(pids1.contains(pids2) || pids1.equals(pids2)){
+                disks(j).subset = true
+              } else if(pids2.contains(pids1)){
+                disks(i).subset = true
+              }
             }
           }
         }
       }
+
+      disks.filter(_.subset == false)
+       */
+    }.toList
+    val nMaximals = maximals.size
+    log(stage, timer, nMaximals, "END")
+
+    if(debug){
+      //maximals.map(_.toString).toDF().show(nMaximals.toInt)
     }
 
     timer = clocktime
