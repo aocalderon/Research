@@ -441,7 +441,7 @@ object MF_QuadTree3{
     timer = System.currentTimeMillis()
     stage = "Maximal finder run"
     logStart(stage)
-    val maximals = MF_QuadTree2.run(spark, points, params)
+    val maximals = MF_QuadTree3.run(spark, points, params)
     logEnd(stage, timer, 0)
 
     // Closing session...

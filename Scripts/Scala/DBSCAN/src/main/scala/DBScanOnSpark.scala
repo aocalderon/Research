@@ -104,7 +104,7 @@ object DBScanOnSpark {
       .config("spark.executor.cores", cores)
       .config("spark.kryoserializer.buffer.max.mb", "1024")
       .master(master)
-      .appName("LATrajCleaner")
+      .appName("DBScanOnSpark")
       .getOrCreate()
     import spark.implicits._
     startTime = spark.sparkContext.startTime
@@ -188,7 +188,7 @@ object DBScanOnSpark {
         val count = cluster.getVectors.size().toDouble
 
         s"Cluster's centroid ${i} (${xs/count}, ${ys/count})\tCluster size: $count"
-      }.foreach(println)
+      }//.foreach(println)
       algo.printStatistics()
     }
 
@@ -215,12 +215,15 @@ object DBScanOnSpark {
     timer = clocktime
     stage = "Getting maximals"
     log(stage, timer, 0, "START")
-    val maximals = clusters.flatMap{ cluster =>
-      val points = cluster.getVectors().asScala.map{ v =>
-        ST_Point(v.getTid, v.get(0), v.get(1), v.getT)
+    val maximals = clusters.zipWithIndex.map{ case (cluster, i) =>
+      val points = cluster.getVectors().asScala.toList.map{ v =>
+        val p = ST_Point(v.getTid, v.get(0), v.get(1), v.getT)
+        (p, i)
       }
+      points
+      /*
       val pairs = points.cross(points)
-        .filter( p => p._1 < p._2)
+        .filter( p => p._1.tid < p._2.tid)
         .map(p => (p, p._1.distance(p._2)))
         .filter(p => p._2 <= params.epsilon())
         .map{ p =>
@@ -229,8 +232,7 @@ object DBScanOnSpark {
           computeCenters(p1, p2)
         }.toList
       val centers = pairs.map(_._1).union(pairs.map(_._2))
-      centers
-      /*
+
       val rtree = new com.vividsolutions.jts.index.strtree.STRtree()
       for(point <- points.map(_.getJTSPoint)){
         rtree.insert(point.getEnvelopeInternal, point)
@@ -279,7 +281,8 @@ object DBScanOnSpark {
     log(stage, timer, nMaximals, "END")
 
     if(debug){
-      //maximals.map(_.toString).toDF().show(nMaximals.toInt)
+      // I need to plot the cluster to understand better...
+      maximals.map(_.toString)
     }
 
     timer = clocktime
