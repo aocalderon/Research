@@ -11,6 +11,10 @@ object RemoveDuplicates{
 
   case class Point(id: Long, x: Double, y: Double, t: Int)
   def main(args: Array[String]) = {
+    val params = new RDConf(args)
+    val input = params.input()
+    val output = params.output()
+
     // Starting session...
     val spark = SparkSession.builder()
       .config("spark.default.parallelism", 36)
@@ -23,7 +27,7 @@ object RemoveDuplicates{
     import spark.implicits._
 
     val ds = spark.read.option("header", "false").option("delimiter", "\t")
-      .csv("/home/acald013/Datasets/LA/LA.tsv")
+      .csv(input)
       .map{ p =>
         val id = p.getString(0).toLong
         val x  = p.getString(1).toDouble
@@ -43,8 +47,18 @@ object RemoveDuplicates{
     val records = ds_clean.collect()
       .map(p => s"${p.getLong(0)}\t${p.getDouble(1)}\t${p.getDouble(2)}\t${p.getInt(3)}\n")
       .mkString("")
-    val f = new java.io.PrintWriter("/home/acald013/Datasets/LA/LA_clean.tsv")
+    val f = new java.io.PrintWriter(output)
     f.write(records)
     f.close()
   }
 }
+
+import org.rogach.scallop._
+
+class RDConf(args: Seq[String]) extends ScallopConf(args) {
+  val input:        ScallopOption[String]  =  opt[String]   (default = Some(""))
+  val output:       ScallopOption[String]  =  opt[String]   (default = Some(""))
+
+  verify()
+}
+

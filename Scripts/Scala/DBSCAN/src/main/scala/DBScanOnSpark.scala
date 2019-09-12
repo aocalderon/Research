@@ -66,6 +66,8 @@ object DBScanOnSpark {
       }
 
     override def toString: String = s"$tid\t$x\t$y\t$t\n"
+
+    def toWKT: String = s"POINT($x $y)\t$tid\t$t\n"
   }
 
   implicit class Crossable[X](xs: Traversable[X]) {
@@ -182,13 +184,17 @@ object DBScanOnSpark {
     log(stage, timer, 0, "END")
 
     if(debug){
-      clusters.zipWithIndex.map{ case (cluster, i) =>
-        val xs = cluster.getVectors.asScala.map(_.get(0)).reduce(_ + _)
-        val ys = cluster.getVectors.asScala.map(_.get(1)).reduce(_ + _)
-        val count = cluster.getVectors.size().toDouble
-
-        s"Cluster's centroid ${i} (${xs/count}, ${ys/count})\tCluster size: $count"
-      }//.foreach(println)
+      val hulls = clusters.zipWithIndex.map{ case (cluster, i) =>
+        val coords = cluster.getVectors.asScala.toArray.map{ v =>
+          new Coordinate(v.get(0), v.get(1))
+        }
+        val convex = new com.vividsolutions.jts.algorithm.ConvexHull(coords, geofactory)
+        s"$i\t${convex.getConvexHull.toText()}\n"
+      }
+      val f = new java.io.PrintWriter("/tmp/hulls.wkt")
+      f.write(hulls.mkString(""))
+      f.close()
+      logger.info(s"hulls.wkt saved [${hulls.size} records]")
       algo.printStatistics()
     }
 
@@ -282,7 +288,13 @@ object DBScanOnSpark {
 
     if(debug){
       // I need to plot the cluster to understand better...
-      maximals.map(_.toString)
+      val content = maximals.flatMap(f => f).map{ p =>
+        s"${p._2}\t${p._1.toWKT}"
+      }
+      val f = new java.io.PrintWriter("/tmp/output.wkt")
+      f.write(content.mkString(""))
+      f.close()
+      logger.info(s"output.wkt saved [${content.size} records]")
     }
 
     timer = clocktime
