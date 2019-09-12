@@ -224,21 +224,23 @@ object DBScanOnSpark {
     val maximals = clusters.zipWithIndex.map{ case (cluster, i) =>
       val points = cluster.getVectors().asScala.toList.map{ v =>
         val p = ST_Point(v.getTid, v.get(0), v.get(1), v.getT)
-        (p, i)
+        p
       }
-      points
-      /*
+
       val pairs = points.cross(points)
         .filter( p => p._1.tid < p._2.tid)
         .map(p => (p, p._1.distance(p._2)))
         .filter(p => p._2 <= params.epsilon())
-        .map{ p =>
-          val p1 = p._1._1
-          val p2 = p._1._2
-          computeCenters(p1, p2)
-        }.toList
-      val centers = pairs.map(_._1).union(pairs.map(_._2))
+        //.map{ p =>
+        //  val p1 = p._1._1
+        //  val p2 = p._1._2
+        //  computeCenters(p1, p2)
+        //}.toList
 
+      pairs.toList.map(_._1)
+
+      /*
+      val centers = pairs.map(_._1).union(pairs.map(_._2))
       val rtree = new com.vividsolutions.jts.index.strtree.STRtree()
       for(point <- points.map(_.getJTSPoint)){
         rtree.insert(point.getEnvelopeInternal, point)
@@ -287,14 +289,23 @@ object DBScanOnSpark {
     log(stage, timer, nMaximals, "END")
 
     if(debug){
-      // I need to plot the cluster to understand better...
       val content = maximals.flatMap(f => f).map{ p =>
-        s"${p._2}\t${p._1.toWKT}"
+        s"${p._1.toWKT}${p._2.toWKT}"
       }
-      val f = new java.io.PrintWriter("/tmp/output.wkt")
+      var f = new java.io.PrintWriter("/tmp/output.wkt")
       f.write(content.mkString(""))
       f.close()
       logger.info(s"output.wkt saved [${content.size} records]")
+
+      val pairs = maximals.flatMap(f => f).map{ p =>
+        s"LINESTRING(${p._1.x} ${p._1.y} , ${p._2.x} ${p._2.y})\n"
+      }
+      val filename = "pairs"
+      f = new java.io.PrintWriter(s"/tmp/${filename}.wkt")
+      f.write(pairs.mkString(""))
+      f.close()
+      logger.info(s"${filename}.wkt saved [${pairs.size} records]")
+
     }
 
     timer = clocktime
