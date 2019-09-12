@@ -1,9 +1,0 @@
-spark-submit --class FF_QuadTree2 /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input_path /home/acald013/Datasets/LA/LA_50Ktrajs/ --input_tag LA --epsilon 5 --distance 10 --mu 5 --delta 3 --master 169.235.27.138 --cores 4 --executors 3 --ffdebug --mininterval 0 --maxinterval 600 --levels 4096 --entries 500 --mfpartitions 50 --ffpartitions 10
-
-spark-submit --class FF_QuadTree2 /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input_path /home/acald013/Datasets/LA/LA_50Ktrajs/ --input_tag LA --epsilon 6 --distance 10 --mu 5 --delta 3 --master 169.235.27.138 --cores 4 --executors 3 --ffdebug --mininterval 0 --maxinterval 600 --levels 4096 --entries 500 --mfpartitions 50 --ffpartitions 10
-
-spark-submit --class FF_QuadTree2 /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input_path /home/acald013/Datasets/LA/LA_50Ktrajs/ --input_tag LA --epsilon 7 --distance 10 --mu 5 --delta 3 --master 169.235.27.138 --cores 4 --executors 3 --ffdebug --mininterval 0 --maxinterval 600 --levels 4096 --entries 500 --mfpartitions 50 --ffpartitions 10
-
-spark-submit --class FF_QuadTree2 /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input_path /home/acald013/Datasets/LA/LA_50Ktrajs/ --input_tag LA --epsilon 8 --distance 10 --mu 5 --delta 3 --master 169.235.27.138 --cores 4 --executors 3 --ffdebug --mininterval 0 --maxinterval 600 --levels 4096 --entries 500 --mfpartitions 50 --ffpartitions 10
-
-spark-submit --class FF_QuadTree2 /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input_path /home/acald013/Datasets/LA/LA_50Ktrajs/ --input_tag LA --epsilon 9 --distance 10 --mu 5 --delta 3 --master 169.235.27.138 --cores 4 --executors 3 --ffdebug --mininterval 0 --maxinterval 600 --levels 4096 --entries 500 --mfpartitions 50 --ffpartitions 10
