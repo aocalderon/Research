@@ -17,8 +17,9 @@ object DBScanOnSpark {
   private val geofactory: GeometryFactory = new GeometryFactory()
   private val precision: Double = 0.0001
   private var startTime: Long = System.currentTimeMillis()
+  private var applicationID: String = "app-00000000000000-0000"
 
-  case class Disk(x: Double, y: Double, pids: List[Int], var subset: Boolean = false) extends Ordered[Disk]{
+  case class Disk(x: Double, y: Double, pids: Set[Int], var subset: Boolean = false) extends Ordered[Disk]{
     def count: Int = pids.size
 
     override def compare(that: Disk): Int = {
@@ -36,7 +37,9 @@ object DBScanOnSpark {
         case _ => false
       }
 
-    override def toString: String = s"${pids.mkString(" ")}\t$x\t$y"
+    override def toString: String = s"${pids.toList.sorted.mkString(" ")}\t$x\t$y"
+
+    def toWKT: String = s"POINT($x $y)\t${pids.toList.sorted.mkString(" ")}\n"
   }
 
   case class ST_Point(tid: Int, x: Double, y: Double, t: Int) extends Ordered[ST_Point]{
@@ -110,6 +113,7 @@ object DBScanOnSpark {
       .getOrCreate()
     import spark.implicits._
     startTime = spark.sparkContext.startTime
+    applicationID = spark.sparkContext.applicationId
     log(stage, timer, 0, "END")
 
     timer = clocktime
@@ -117,6 +121,7 @@ object DBScanOnSpark {
     log(stage, timer, 0, "START")
     val minPts = params.minpts()
     val epsilon = params.epsilon()
+    val mu = params.mu()
     val points = spark.read
       .option("header", false)
       .option("delimiter", "\t")
@@ -133,20 +138,20 @@ object DBScanOnSpark {
     val pointsRDD = new SpatialRDD[Point]()
     pointsRDD.setRawSpatialRDD(points)
     pointsRDD.analyze()
-    pointsRDD.spatialPartitioning(GridType.EQUALGRID, params.partitions())
+    pointsRDD.spatialPartitioning(GridType.QUADTREE, params.partitions())
     val nPoints = points.count()
     log(stage, timer, nPoints, "END")
     
     timer = clocktime
     stage = "Partitioning"
     log(stage, timer, 0, "START")
-    val circlesRDD = new CircleRDD(pointsRDD, params.epsilon() + 0.0001)
+    val circlesRDD = new CircleRDD(pointsRDD, params.epsilon() + precision)
     circlesRDD.analyze()
     circlesRDD.spatialPartitioning(pointsRDD.getPartitioner)
     pointsRDD.buildIndex(IndexType.RTREE, true)
-    val considerBoundaryIntersection = true
+    val considerBoundary = true
     val usingIndex = true
-    val pairs = JoinQuery.DistanceJoinQueryFlat(pointsRDD, circlesRDD, usingIndex, considerBoundaryIntersection)
+    val pairs = JoinQuery.DistanceJoinQueryFlat(pointsRDD, circlesRDD, usingIndex, considerBoundary)
       .rdd
       .map { pair =>
         val id1 = pair._1.getUserData().toString().split("\t").head.trim().toInt
@@ -156,7 +161,6 @@ object DBScanOnSpark {
         val p2  = pair._2
         ( (id1, p1) , (id2, p2) )
       }.filter(p => p._1._1 < p._2._1)
-      .cache()
     val nPairs = pairs.count()
     log(stage, timer, nPairs, "END")
     
@@ -168,7 +172,7 @@ object DBScanOnSpark {
       val p1 = pair._1._2
       val p2 = pair._2._2
       List(p1, p2)
-    }.map{ p =>
+    }.distinct().map{ p =>
       val arr = p.getUserData().toString().split("\t")
       val tid = arr(0).toInt
       val t = arr(1).toInt
@@ -222,7 +226,7 @@ object DBScanOnSpark {
     stage = "Getting maximals"
     log(stage, timer, 0, "START")
     val maximals = clusters.zipWithIndex.map{ case (cluster, i) =>
-      val points = cluster.getVectors().asScala.toList.map{ v =>
+      val points = cluster.getVectors.asScala.toList.map{ v =>
         val p = ST_Point(v.getTid, v.get(0), v.get(1), v.getT)
         p
       }
@@ -231,16 +235,15 @@ object DBScanOnSpark {
         .filter( p => p._1.tid < p._2.tid)
         .map(p => (p, p._1.distance(p._2)))
         .filter(p => p._2 <= params.epsilon())
-        //.map{ p =>
-        //  val p1 = p._1._1
-        //  val p2 = p._1._2
-        //  computeCenters(p1, p2)
-        //}.toList
+        .map(_._1)
+      val pairs_prime = pairs.map{ p =>
+          val p1 = p._1
+          val p2 = p._2
+          computeCenters(p1, p2)
+        }.toList
 
-      pairs.toList.map(_._1)
-
-      /*
-      val centers = pairs.map(_._1).union(pairs.map(_._2))
+      val centers = pairs_prime.map(_._1).union(pairs_prime.map(_._2))
+      
       val rtree = new com.vividsolutions.jts.index.strtree.STRtree()
       for(point <- points.map(_.getJTSPoint)){
         rtree.insert(point.getEnvelopeInternal, point)
@@ -248,7 +251,7 @@ object DBScanOnSpark {
       val disks = centers.flatMap{ center =>
         rtree.query(center.buffer(r).getEnvelopeInternal).asScala.toList
           .map(_.asInstanceOf[Point])
-          .filter(point => center.distance(point) <= r)
+          .filter(point => center.distance(point) <= r + 0.0001)
           .map(point => (center, point))
           .groupBy(_._1)
           .map{ p =>
@@ -258,9 +261,9 @@ object DBScanOnSpark {
               val pid = point.getUserData.toString().split("\t")(0).toInt
               pid
             }
-            Disk(center.getX, center.getY, points.distinct.sorted)
+            Disk(center.getX, center.getY, points.toSet)
           }
-          .filter(_.count > params.mu())
+          .filter(_.count >= params.mu())
       }
 
       // Prune duplicates and redundant disks...
@@ -272,9 +275,9 @@ object DBScanOnSpark {
               val pids1 = disks(i).pids
               val pids2 = disks(j).pids
             
-              if(pids1.contains(pids2) || pids1.equals(pids2)){
+              if(pids2.subsetOf(pids1) || pids2.equals(pids1)){
                 disks(j).subset = true
-              } else if(pids2.contains(pids1)){
+              } else if(pids1.subsetOf(pids2)){
                 disks(i).subset = true
               }
             }
@@ -282,30 +285,96 @@ object DBScanOnSpark {
         }
       }
 
-      disks.filter(_.subset == false)
-       */
+      val maximals = disks.filter(_.subset == false)
+
+      (points, pairs, centers, disks, maximals)
+
     }.toList
     val nMaximals = maximals.size
     log(stage, timer, nMaximals, "END")
 
+    val nP  = maximals.flatMap(m => m._1).size
+    val nP2 = maximals.flatMap(m => m._2).size
+    val nC  = maximals.flatMap(m => m._3).size
+    val nD  = maximals.flatMap(m => m._4).size
+    val nM  = maximals.flatMap(m => m._5).size
+
+    logger.info("ICPE  |%s|%5.1f|%2d|%6d|%6d|%6d|%6d|%6.2f|%6d".format(applicationID, epsilon, mu, nP, nP2, nC, nD, ((clocktime - timer) / 1000.0), nM))
+
     if(debug){
-      val content = maximals.flatMap(f => f).map{ p =>
-        s"${p._1.toWKT}${p._2.toWKT}"
+      val filename = "points"
+      val data = maximals.flatMap{ case (points, pairs, centers, disks, maximals) =>
+        points.map(_.toWKT)
       }
-      var f = new java.io.PrintWriter("/tmp/output.wkt")
-      f.write(content.mkString(""))
+      val f = new java.io.PrintWriter(s"/tmp/${filename}.wkt")
+      f.write(data.mkString(""))
       f.close()
-      logger.info(s"output.wkt saved [${content.size} records]")
+      logger.info(s"${filename}.wkt saved [${data.size} records]")
+    }
 
-      val pairs = maximals.flatMap(f => f).map{ p =>
-        s"LINESTRING(${p._1.x} ${p._1.y} , ${p._2.x} ${p._2.y})\n"
-      }
+    if(debug){
       val filename = "pairs"
-      f = new java.io.PrintWriter(s"/tmp/${filename}.wkt")
-      f.write(pairs.mkString(""))
+      val data = maximals.flatMap{ case (points, pairs, centers, disks, maximals) =>
+        pairs.map{ p =>
+          s"LINESTRING(${p._1.x} ${p._1.y} , ${p._2.x} ${p._2.y})\n"
+        }
+      }
+      val f = new java.io.PrintWriter(s"/tmp/${filename}.wkt")
+      f.write(data.mkString(""))
       f.close()
-      logger.info(s"${filename}.wkt saved [${pairs.size} records]")
+      logger.info(s"${filename}.wkt saved [${data.size} records]")
+    }
 
+    if(debug){
+      val filename = "centers"
+      val data = maximals.flatMap{ case (points, pairs, centers, disks, maximals) =>
+        centers.map{ p =>
+          s"${p.toText()}\n"
+        }
+      }
+      val f = new java.io.PrintWriter(s"/tmp/${filename}.wkt")
+      f.write(data.mkString(""))
+      f.close()
+      logger.info(s"${filename}.wkt saved [${data.size} records]")
+    }
+
+    if(debug){
+      val filename = "disks"
+      val data = maximals.flatMap{ case (points, pairs, centers, disks, maximals) =>
+        disks.map{ p =>
+          p.toWKT
+        }
+      }
+      val f = new java.io.PrintWriter(s"/tmp/${filename}.wkt")
+      f.write(data.mkString(""))
+      f.close()
+      logger.info(s"${filename}.wkt saved [${data.size} records]")
+    }
+
+    if(debug){
+      val filename = "maximals"
+      val data = maximals.flatMap{ case (points, pairs, centers, disks, maximals) =>
+        maximals.map{ p =>
+          p.toWKT
+        }
+      }
+      val f = new java.io.PrintWriter(s"/tmp/${filename}.wkt")
+      f.write(data.mkString(""))
+      f.close()
+      logger.info(s"${filename}.wkt saved [${data.size} records]")
+    }
+
+    if(debug){
+      val filename = "maximals"
+      val data = maximals.flatMap{ case (points, pairs, centers, disks, maximals) =>
+        maximals.map{ p =>
+          s"${p.pids.toList.sorted.mkString(" ")}\n"
+        }
+      }.sorted
+      val f = new java.io.PrintWriter(s"/tmp/${filename}.txt")
+      f.write(data.mkString(""))
+      f.close()
+      logger.info(s"${filename}.txt saved [${data.size} records]")
     }
 
     timer = clocktime
@@ -331,7 +400,7 @@ class DBScanOnSparkConf(args: Seq[String]) extends ScallopConf(args) {
   val offset:     ScallopOption[Int]     = opt[Int]     (default = Some(2))
   val n:          ScallopOption[Double]  = opt[Double]  (default = Some(100.0))
   val m:          ScallopOption[Int]     = opt[Int]     (default = Some(200))
-  val minpts:     ScallopOption[Int]     = opt[Int]     (default = Some(5))
+  val minpts:     ScallopOption[Int]     = opt[Int]     (default = Some(2))
   val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(5.0))
   val mu:         ScallopOption[Int]     = opt[Int]     (default = Some(5))
 

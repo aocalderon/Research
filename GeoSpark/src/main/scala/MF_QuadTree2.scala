@@ -428,6 +428,17 @@ object MF_QuadTree2{
     val maximals = MF_QuadTree2.run(spark, points, params)
     logEnd(stage, timer, 0)
 
+    if(debug){
+      val data = maximals._1.rawSpatialRDD.rdd.map{ m =>
+        val pattern = m.getUserData.toString().split(";")(0)
+        s"$pattern\n"
+      }.collect().sorted
+      val f = new java.io.PrintWriter("/tmp/pflocks.txt")
+      f.write(data.mkString(""))
+      f.close()
+      logger.info(s"pflocks.txt saved [${data.size} records]")
+    }
+
     // Closing session...
     timer = System.currentTimeMillis()
     stage = "Session closed"
