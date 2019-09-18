@@ -1,0 +1,124 @@
+spark-submit --class DBScanOnSpark --master spark://mr-hn:7077 --total-executor-cores 120 /home/acald013/Research/Scripts/Scala/DBSCAN/target/scala-2.11/dbscan_2.11-0.1.jar --input ~/Research/Datasets/LA/LA_25K.tsv --epsilon 5 --mu 3 --partitions 16
+2019-09-17 09:43:04,879|DBSCAN|  0.13|Session start                                     |  0.00|     0|START
+2019-09-17 09:43:06,408|DBSCAN|  1.50|Session start                                     |  1.53|     0|END
+2019-09-17 09:43:06,408|DBSCAN|  1.50|Data read                                         |  0.00|     0|START
+2019-09-17 09:43:17,573|DBSCAN| 12.67|Data read                                         | 11.17| 26053|END
+2019-09-17 09:43:17,573|DBSCAN| 12.67|Partitioning                                      |  0.00|     0|START
+2019-09-17 09:43:18,817|DBSCAN| 13.91|Partitioning                                      |  1.24|  3044|END
+2019-09-17 09:43:18,818|DBSCAN| 13.91|DBScan run                                        |  0.00|     0|START
+2019-09-17 09:43:19,400|DBSCAN| 14.49|DBScan run                                        |  0.58|     0|END
+2019-09-17 09:43:19,401|DBSCAN| 14.50|Getting maximals                                  |  0.00|     0|START
+2019-09-17 09:43:20,335|DBSCAN| 15.43|Getting maximals                                  |  0.93|  1292|END
+2019-09-17 09:43:20,345|ICPE  |app-20190917094306-0064|  5.0| 3|  3317|  3044|  6088|  2429|  0.94|   361
+2019-09-17 09:43:20,345|DBSCAN| 15.44|Session close                                     |  0.00|     0|START
+2019-09-17 09:43:20,403|DBSCAN| 15.50|Session close                                     |  0.06|     0|END
+spark-submit --class MF_QuadTree2 --master spark://mr-hn:7077 --total-executor-cores 120 /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input ~/Research/Datasets/LA/LA_25K.tsv --epsilon 5 --mu 3 --master 169.235.27.138 --cores 4 --executors 3 --ffpartitions 16 --mfpartitions 100 --levels 32
+2019-09-17 09:43:22,929|MF|app-00000000000000-0000|3|4|START|  0.17|Session started                                   |  0.00|     0|
+2019-09-17 09:43:24,514|MF|app-20190917094324-0065|3|4|  END|  1.56|Session started                                   |  1.59|     0|
+2019-09-17 09:43:24,514|MF|app-20190917094324-0065|3|4|START|  1.56|Data read                                         |  0.00|     0|
+2019-09-17 09:43:31,690|MF|app-20190917094324-0065|3|4|  END|  8.74|Data read                                         |  7.18| 26053|
+2019-09-17 09:43:31,690|MF|app-20190917094324-0065|3|4|START|  8.74|MF1 partitioner                                   |  0.00|     0|
+2019-09-17 09:43:31,964|MF|app-20190917094324-0065|3|4|  END|  9.01|MF1 partitioner                                   |  0.27|    73|
+2019-09-17 09:43:31,964|MF|app-20190917094324-0065|3|4|START|  9.01|Maximal finder run                                |  0.00|     0|
+2019-09-17 09:43:31,965|MF|app-20190917094324-0065|3|4|START|  9.01|A.Points indexed                                  |  0.00|     0|
+2019-09-17 09:43:32,414|MF|app-20190917094324-0065|3|4|  END|  9.46|A.Points indexed                                  |  0.45| 26053|
+2019-09-17 09:43:32,414|MF|app-20190917094324-0065|3|4|START|  9.46|B.Pairs found                                     |  0.00|     0|
+2019-09-17 09:43:34,269|MF|app-20190917094324-0065|3|4|  END| 11.32|B.Pairs found                                     |  1.86|  3044|
+2019-09-17 09:43:34,270|MF|app-20190917094324-0065|3|4|START| 11.32|C.Centers found                                   |  0.00|     0|
+2019-09-17 09:43:34,742|MF|app-20190917094324-0065|3|4|  END| 11.79|C.Centers found                                   |  0.47|  6088|
+2019-09-17 09:43:34,742|MF|app-20190917094324-0065|3|4|START| 11.79|D.Disks found                                     |  0.00|     0|
+2019-09-17 09:43:36,393|MF|app-20190917094324-0065|3|4|  END| 13.44|D.Disks found                                     |  1.65|  1383|
+2019-09-17 09:43:36,416|MF|app-20190917094324-0065|3|4|START| 13.46|E.Disks partitioned                               |  0.00|     0|
+2019-09-17 09:43:37,183|MF|app-20190917094324-0065|3|4|  END| 14.23|E.Disks partitioned                               |  0.77|  1561|
+2019-09-17 09:43:37,183|MF|app-20190917094324-0065|3|4|START| 14.23|F.Maximal disks found                             |  0.00|     0|
+2019-09-17 09:43:37,393|MF|app-20190917094324-0065|3|4|  END| 14.44|F.Maximal disks found                             |  0.21|   361|
+2019-09-17 09:43:37,395|MAXIMALS|app-20190917094324-0065|4|3|5.0|3|37|46|5.43|361
+2019-09-17 09:43:37,396|MF|app-20190917094324-0065|3|4|  END| 14.44|Maximal finder run                                |  5.43|     0|
+2019-09-17 09:43:37,396|MF|app-20190917094324-0065|3|4|START| 14.44|Session closed                                    |  0.00|     0|
+2019-09-17 09:43:37,468|MF|app-20190917094324-0065|3|4|  END| 14.51|Session closed                                    |  0.07|     0|
+spark-submit --class DBScanOnSpark --master spark://mr-hn:7077 --total-executor-cores 120 /home/acald013/Research/Scripts/Scala/DBSCAN/target/scala-2.11/dbscan_2.11-0.1.jar --input ~/Research/Datasets/LA/LA_25K.tsv --epsilon 10 --mu 3 --partitions 16
+2019-09-17 09:43:39,914|DBSCAN|  0.13|Session start                                     |  0.00|     0|START
+2019-09-17 09:43:41,419|DBSCAN|  1.47|Session start                                     |  1.51|     0|END
+2019-09-17 09:43:41,419|DBSCAN|  1.47|Data read                                         |  0.00|     0|START
+2019-09-17 09:43:52,898|DBSCAN| 12.95|Data read                                         | 11.48| 26053|END
+2019-09-17 09:43:52,899|DBSCAN| 12.95|Partitioning                                      |  0.00|     0|START
+2019-09-17 09:43:54,166|DBSCAN| 14.22|Partitioning                                      |  1.27|  7272|END
+2019-09-17 09:43:54,166|DBSCAN| 14.22|DBScan run                                        |  0.00|     0|START
+2019-09-17 09:43:54,820|DBSCAN| 14.88|DBScan run                                        |  0.65|     0|END
+2019-09-17 09:43:54,820|DBSCAN| 14.88|Getting maximals                                  |  0.00|     0|START
+2019-09-17 09:51:25,641|DBSCAN|465.70|Getting maximals                                  |450.82|  2052|END
+2019-09-17 09:51:25,658|ICPE  |app-20190917094341-0066| 10.0| 3|  5666|  7272| 14544|  8224|450.84|   821
+2019-09-17 09:51:25,658|DBSCAN|465.71|Session close                                     |  0.00|     0|START
+2019-09-17 09:51:25,738|DBSCAN|465.79|Session close                                     |  0.08|     0|END
+spark-submit --class MF_QuadTree2 --master spark://mr-hn:7077 --total-executor-cores 120 /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input ~/Research/Datasets/LA/LA_25K.tsv --epsilon 10 --mu 3 --master 169.235.27.138 --cores 4 --executors 3 --ffpartitions 16 --mfpartitions 100 --levels 32
+2019-09-17 09:51:28,310|MF|app-00000000000000-0000|3|4|START|  0.17|Session started                                   |  0.00|     0|
+2019-09-17 09:51:29,831|MF|app-20190917095129-0067|3|4|  END|  1.50|Session started                                   |  1.53|     0|
+2019-09-17 09:51:29,832|MF|app-20190917095129-0067|3|4|START|  1.50|Data read                                         |  0.00|     0|
+2019-09-17 09:51:38,359|MF|app-20190917095129-0067|3|4|  END| 10.02|Data read                                         |  8.53| 26053|
+2019-09-17 09:51:38,359|MF|app-20190917095129-0067|3|4|START| 10.02|MF1 partitioner                                   |  0.00|     0|
+2019-09-17 09:51:38,815|MF|app-20190917095129-0067|3|4|  END| 10.48|MF1 partitioner                                   |  0.46|    73|
+2019-09-17 09:51:38,815|MF|app-20190917095129-0067|3|4|START| 10.48|Maximal finder run                                |  0.00|     0|
+2019-09-17 09:51:38,816|MF|app-20190917095129-0067|3|4|START| 10.48|A.Points indexed                                  |  0.00|     0|
+2019-09-17 09:51:39,527|MF|app-20190917095129-0067|3|4|  END| 11.19|A.Points indexed                                  |  0.71| 26053|
+2019-09-17 09:51:39,527|MF|app-20190917095129-0067|3|4|START| 11.19|B.Pairs found                                     |  0.00|     0|
+2019-09-17 09:51:41,587|MF|app-20190917095129-0067|3|4|  END| 13.25|B.Pairs found                                     |  2.06|  7273|
+2019-09-17 09:51:41,588|MF|app-20190917095129-0067|3|4|START| 13.25|C.Centers found                                   |  0.00|     0|
+2019-09-17 09:51:41,995|MF|app-20190917095129-0067|3|4|  END| 13.66|C.Centers found                                   |  0.41| 14546|
+2019-09-17 09:51:41,995|MF|app-20190917095129-0067|3|4|START| 13.66|D.Disks found                                     |  0.00|     0|
+2019-09-17 09:51:44,461|MF|app-20190917095129-0067|3|4|  END| 16.13|D.Disks found                                     |  2.47|  5204|
+2019-09-17 09:51:44,485|MF|app-20190917095129-0067|3|4|START| 16.15|E.Disks partitioned                               |  0.00|     0|
+2019-09-17 09:51:45,734|MF|app-20190917095129-0067|3|4|  END| 17.40|E.Disks partitioned                               |  1.25|  9704|
+2019-09-17 09:51:45,734|MF|app-20190917095129-0067|3|4|START| 17.40|F.Maximal disks found                             |  0.00|     0|
+2019-09-17 09:51:46,090|MF|app-20190917095129-0067|3|4|  END| 17.76|F.Maximal disks found                             |  0.36|   821|
+2019-09-17 09:51:46,093|MAXIMALS|app-20190917095129-0067|4|3|10.0|3|37|94|7.278|821
+2019-09-17 09:51:46,093|MF|app-20190917095129-0067|3|4|  END| 17.76|Maximal finder run                                |  7.28|     0|
+2019-09-17 09:51:46,093|MF|app-20190917095129-0067|3|4|START| 17.76|Session closed                                    |  0.00|     0|
+2019-09-17 09:51:46,155|MF|app-20190917095129-0067|3|4|  END| 17.82|Session closed                                    |  0.06|     0|
+spark-submit --class DBScanOnSpark --master spark://mr-hn:7077 --total-executor-cores 120 /home/acald013/Research/Scripts/Scala/DBSCAN/target/scala-2.11/dbscan_2.11-0.1.jar --input ~/Research/Datasets/LA/LA_25K.tsv --epsilon 15 --mu 3 --partitions 16
+2019-09-17 09:51:48,603|DBSCAN|  0.13|Session start                                     |  0.00|     0|START
+2019-09-17 09:51:50,116|DBSCAN|  1.49|Session start                                     |  1.52|     0|END
+2019-09-17 09:51:50,116|DBSCAN|  1.49|Data read                                         |  0.00|     0|START
+2019-09-17 09:52:02,872|DBSCAN| 14.24|Data read                                         | 12.76| 26053|END
+2019-09-17 09:52:02,872|DBSCAN| 14.24|Partitioning                                      |  0.00|     0|START
+2019-09-17 09:52:04,466|DBSCAN| 15.84|Partitioning                                      |  1.59| 12192|END
+2019-09-17 09:52:04,467|DBSCAN| 15.84|DBScan run                                        |  0.00|     0|START
+2019-09-17 09:52:05,742|DBSCAN| 17.11|DBScan run                                        |  1.28|     0|END
+2019-09-17 09:52:05,742|DBSCAN| 17.11|Getting maximals                                  |  0.00|     0|START
+2019-09-17 11:08:02,258|DBSCAN|4573.63|Getting maximals                                  |4556.52|  2740|END
+2019-09-17 11:08:02,279|ICPE  |app-20190917095149-0068| 15.0| 3|  7757| 12191| 24382| 15770|4556.54|  1329
+2019-09-17 11:08:02,279|DBSCAN|4573.65|Session close                                     |  0.00|     0|START
+2019-09-17 11:08:02,339|DBSCAN|4573.71|Session close                                     |  0.06|     0|END
+spark-submit --class MF_QuadTree2 --master spark://mr-hn:7077 --total-executor-cores 120 /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input ~/Research/Datasets/LA/LA_25K.tsv --epsilon 15 --mu 3 --master 169.235.27.138 --cores 4 --executors 3 --ffpartitions 16 --mfpartitions 100 --levels 32
+2019-09-17 11:08:04,852|MF|app-00000000000000-0000|3|4|START|  0.17|Session started                                   |  0.00|     0|
+2019-09-17 11:08:06,365|MF|app-20190917110806-0069|3|4|  END|  1.49|Session started                                   |  1.52|     0|
+2019-09-17 11:08:06,366|MF|app-20190917110806-0069|3|4|START|  1.49|Data read                                         |  0.00|     0|
+2019-09-17 11:08:16,404|MF|app-20190917110806-0069|3|4|  END| 11.53|Data read                                         | 10.04| 26053|
+2019-09-17 11:08:16,405|MF|app-20190917110806-0069|3|4|START| 11.53|MF1 partitioner                                   |  0.00|     0|
+2019-09-17 11:08:16,803|MF|app-20190917110806-0069|3|4|  END| 11.93|MF1 partitioner                                   |  0.40|    73|
+2019-09-17 11:08:16,804|MF|app-20190917110806-0069|3|4|START| 11.93|Maximal finder run                                |  0.00|     0|
+2019-09-17 11:08:16,804|MF|app-20190917110806-0069|3|4|START| 11.93|A.Points indexed                                  |  0.00|     0|
+2019-09-17 11:08:17,280|MF|app-20190917110806-0069|3|4|  END| 12.40|A.Points indexed                                  |  0.48| 26053|
+2019-09-17 11:08:17,280|MF|app-20190917110806-0069|3|4|START| 12.40|B.Pairs found                                     |  0.00|     0|
+2019-09-17 11:08:18,503|MF|app-20190917110806-0069|3|4|  END| 13.63|B.Pairs found                                     |  1.22| 12193|
+2019-09-17 11:08:18,503|MF|app-20190917110806-0069|3|4|START| 13.63|C.Centers found                                   |  0.00|     0|
+2019-09-17 11:08:18,935|MF|app-20190917110806-0069|3|4|  END| 14.06|C.Centers found                                   |  0.43| 24386|
+2019-09-17 11:08:18,935|MF|app-20190917110806-0069|3|4|START| 14.06|D.Disks found                                     |  0.00|     0|
+2019-09-17 11:08:22,207|MF|app-20190917110806-0069|3|4|  END| 17.33|D.Disks found                                     |  3.27| 10420|
+2019-09-17 11:08:22,235|MF|app-20190917110806-0069|3|4|START| 17.36|E.Disks partitioned                               |  0.00|     0|
+2019-09-17 11:08:25,972|MF|app-20190917110806-0069|3|4|  END| 21.10|E.Disks partitioned                               |  3.74| 25383|
+2019-09-17 11:08:25,973|MF|app-20190917110806-0069|3|4|START| 21.10|F.Maximal disks found                             |  0.00|     0|
+2019-09-17 11:08:27,618|MF|app-20190917110806-0069|3|4|  END| 22.74|F.Maximal disks found                             |  1.65|  1330|
+2019-09-17 11:08:27,622|MAXIMALS|app-20190917110806-0069|4|3|15.0|3|34|121|10.818|1330
+2019-09-17 11:08:27,623|MF|app-20190917110806-0069|3|4|  END| 22.75|Maximal finder run                                | 10.82|     0|
+2019-09-17 11:08:27,623|MF|app-20190917110806-0069|3|4|START| 22.75|Session closed                                    |  0.00|     0|
+2019-09-17 11:08:27,700|MF|app-20190917110806-0069|3|4|  END| 22.82|Session closed                                    |  0.08|     0|
+spark-submit --class DBScanOnSpark --master spark://mr-hn:7077 --total-executor-cores 120 /home/acald013/Research/Scripts/Scala/DBSCAN/target/scala-2.11/dbscan_2.11-0.1.jar --input ~/Research/Datasets/LA/LA_25K.tsv --epsilon 20 --mu 3 --partitions 16
+2019-09-17 11:08:30,135|DBSCAN|  0.14|Session start                                     |  0.00|     0|START
+2019-09-17 11:08:31,627|DBSCAN|  1.47|Session start                                     |  1.50|     0|END
+2019-09-17 11:08:31,628|DBSCAN|  1.47|Data read                                         |  0.00|     0|START
+2019-09-17 11:08:42,712|DBSCAN| 12.55|Data read                                         | 11.08| 26053|END
+2019-09-17 11:08:42,712|DBSCAN| 12.55|Partitioning                                      |  0.00|     0|START
+2019-09-17 11:08:44,005|DBSCAN| 13.84|Partitioning                                      |  1.29| 17822|END
+2019-09-17 11:08:44,005|DBSCAN| 13.84|DBScan run                                        |  0.00|     0|START
+2019-09-17 11:08:44,792|DBSCAN| 14.63|DBScan run                                        |  0.79|     0|END
+2019-09-17 11:08:44,792|DBSCAN| 14.63|Getting maximals                                  |  0.00|     0|START

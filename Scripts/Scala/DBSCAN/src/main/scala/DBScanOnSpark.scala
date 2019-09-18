@@ -105,10 +105,9 @@ object DBScanOnSpark {
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .config("spark.scheduler.mode", "FAIR")
-      .config("spark.cores.max", cores * executors)
-      .config("spark.executor.cores", cores)
-      .config("spark.kryoserializer.buffer.max.mb", "1024")
-      .master(master)
+      //.config("spark.cores.max", cores * executors)
+      //.config("spark.executor.cores", cores)
+      //.master(master)
       .appName("DBScanOnSpark")
       .getOrCreate()
     import spark.implicits._
