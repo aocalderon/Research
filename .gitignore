@@ -76,6 +76,13 @@ Scripts/Scala/DBSCAN/.idea/workspace.xml
 Scripts/Scala/DBSCAN/.ensime
 Scripts/Scala/DBSCAN/.ensime_cache/*
 
+Scripts/Scala/ICPE/target/*
+Scripts/Scala/ICPE/project/*
+Scripts/Scala/ICPE/.idea/*
+Scripts/Scala/ICPE/.idea/workspace.xml
+Scripts/Scala/ICPE/.ensime
+Scripts/Scala/ICPE/.ensime_cache/*
+
 Scripts/Scala/TrajFactory/target/*
 Scripts/Scala/TrajFactory/project/*
 Scripts/Scala/TrajFactory/.idea/*
