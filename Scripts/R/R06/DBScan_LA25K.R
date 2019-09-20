@@ -26,4 +26,4 @@ p = ggplot(data = data, aes(x = factor(Epsilon), y = Time, group = Method)) +
   labs(title="LA_25K dataset", x="Epsilon [m]", y="Time [s]") 
 plot(p)
 
-ggsave("LA25K.pdf", device = "pdf")
+ggsave("LA25K.pdf", width = 7, height = 4, device = "pdf")
