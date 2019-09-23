@@ -26,7 +26,7 @@ case class Disk(x: Double, y: Double, pids: Set[Int], var subset: Boolean = fals
 case class ST_Point(tid: Int, x: Double, y: Double, t: Int) extends Ordered[ST_Point]{
   val geofactory: GeometryFactory = new GeometryFactory()
   
-def distance(other: ST_Point): Double = {
+  def distance(other: ST_Point): Double = {
     math.sqrt(math.pow(this.x - other.x, 2) + math.pow(this.y - other.y, 2))
   }
 
