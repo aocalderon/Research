@@ -112,28 +112,29 @@ object GRIndex {
     timer = clocktime
     stage = "Grid query"
     log(stage, timer, 0, "START")
-    val points = gridObjects.mapPartitions{ gobjects =>
-      var points = new ArrayBuffer[(GridObject, String)]()
+    val pairs = gridObjects.mapPartitions{ gobjects =>
+      var pairs = new ArrayBuffer[(GridObject, GridObject)]()
       var rt: RTree[GridObject] = RTree()
       gobjects.foreach{ o =>
         if(!o.flag){
           val bbox: Box = Box(o.location.x.toFloat - epsilon.toFloat, o.location.y.toFloat - epsilon.toFloat, o.location.x.toFloat + epsilon.toFloat, o.location.y.toFloat + epsilon.toFloat) 
           val query: Seq[Entry[GridObject]] = rt.search(bbox)
-          points ++= query.map{ q => (o, q.toString()) }
+          pairs ++= query.map{ q => (o, q.value) }
           rt = rt.insert(Entry(Point(o.location.x.toFloat, o.location.y.toFloat), o))
         } else {
           val bbox: Box = Box(o.location.x.toFloat - epsilon.toFloat, o.location.y.toFloat - epsilon.toFloat, o.location.x.toFloat + epsilon.toFloat, o.location.y.toFloat + epsilon.toFloat) 
           val query: Seq[Entry[GridObject]] = rt.search(bbox)
-          points ++= query.map{ q => (o, q.toString()) }
+          // It seems we do not need output this query
+          //pairs ++= query.map{ q => (o, q.value) }
         }
       }
-      points.toIterator
+      pairs.toIterator
     }.cache
-    val nPoints = points.count()
-    log(stage, timer, nPoints, "END")
+    val nPairs = pairs.count()
+    log(stage, timer, nPairs, "END")
 
     if(debug){
-      points.show(truncate=false)
+      pairs.show(truncate=false)
     }
 
     timer = clocktime
