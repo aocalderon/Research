@@ -3,7 +3,7 @@ import org.slf4j.{Logger, LoggerFactory}
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ArrayBuffer
-import com.vividsolutions.jts.index.strtree
+import archery._
 
 object GRIndex {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -45,7 +45,7 @@ object GRIndex {
     var stage = "Session start"
     log(stage, timer, 0, "START")
     val spark = SparkSession.builder()
-      //.config("spark.default.parallelism", 3 * cores * executors)
+      .config("spark.default.parallelism", 3 * cores * executors)
       .config("spark.scheduler.mode", "FAIR")
       //.config("spark.cores.max", cores * executors)
       //.config("spark.executor.cores", cores)
@@ -107,6 +107,33 @@ object GRIndex {
     if(debug){
       gridObjects.show(nGridObjects.toInt, truncate=false)
       logger.info(s"Grid objects number of partitions: ${gridObjects.rdd.getNumPartitions}")
+    }
+
+    timer = clocktime
+    stage = "Grid query"
+    log(stage, timer, 0, "START")
+    val points = gridObjects.mapPartitions{ gobjects =>
+      var points = new ArrayBuffer[(GridObject, String)]()
+      var rt: RTree[GridObject] = RTree()
+      gobjects.foreach{ o =>
+        if(!o.flag){
+          val bbox: Box = Box(o.location.x.toFloat - epsilon.toFloat, o.location.y.toFloat - epsilon.toFloat, o.location.x.toFloat + epsilon.toFloat, o.location.y.toFloat + epsilon.toFloat) 
+          val query: Seq[Entry[GridObject]] = rt.search(bbox)
+          points ++= query.map{ q => (o, q.toString()) }
+          rt = rt.insert(Entry(Point(o.location.x.toFloat, o.location.y.toFloat), o))
+        } else {
+          val bbox: Box = Box(o.location.x.toFloat - epsilon.toFloat, o.location.y.toFloat - epsilon.toFloat, o.location.x.toFloat + epsilon.toFloat, o.location.y.toFloat + epsilon.toFloat) 
+          val query: Seq[Entry[GridObject]] = rt.search(bbox)
+          points ++= query.map{ q => (o, q.toString()) }
+        }
+      }
+      points.toIterator
+    }.cache
+    val nPoints = points.count()
+    log(stage, timer, nPoints, "END")
+
+    if(debug){
+      points.show(truncate=false)
     }
 
     timer = clocktime
