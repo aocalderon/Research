@@ -162,6 +162,10 @@ object DBScanOnSpark {
       }.filter(p => p._1._1 < p._2._1)
     val nPairs = pairs.count()
     log(stage, timer, nPairs, "END")
+
+    if(debug){
+      pairs.map(pair => (pair._1._2.toString, pair._2._2.toString)).toDF().show(truncate=false)
+    }
     
     timer = clocktime
     stage = "DBScan run"

@@ -1,4 +1,5 @@
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.Dataset
 import org.slf4j.{Logger, LoggerFactory}
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 import scala.collection.JavaConverters._
@@ -25,6 +26,55 @@ object GRIndex {
 
   def log(msg: String, timer: Long, n: Long, status: String): Unit ={
     logger.info("GRIndex|%6.2f|%-50s|%6.2f|%6d|%s".format((clocktime-startTime)/1000.0, msg, (clocktime-timer)/1000.0, n, status))
+  }
+
+  def allocateGrid(spark: SparkSession, locations: Dataset[ST_Point], width: Double, epsilon: Double): Dataset[GridObject] = {
+    import spark.implicits._
+    val grid_objects = locations.flatMap{ location =>
+      val i = math.floor(location.x / width).toInt
+      val j = math.floor(location.y / width).toInt
+      val key = Key(i,j)
+
+      val data_object = List(GridObject(key, false, location))
+
+      val i_start = math.floor((location.x - epsilon) / width).toInt
+      val i_end   = math.floor((location.x + epsilon) / width).toInt
+      val is = i_start to i_end
+      val j_start = math.floor(location.y / width).toInt
+      val j_end   = math.floor((location.y + epsilon) / width).toInt
+      val js = j_start to j_end 
+      val Skeys = is.cross(js).map(c => Key(c._1, c._2)).filterNot(k => k == key).toList
+
+      val query_objects = Skeys.map(key => GridObject(key, true, location))
+      
+      data_object ++ query_objects
+    }.repartition($"key").cache()
+    grid_objects
+  }
+
+  def queryGrid(spark: SparkSession, gridObjects: Dataset[GridObject], epsilon: Double): Dataset[(ST_Point, ST_Point)] = {
+    import spark.implicits._
+    val pairs = gridObjects.mapPartitions{ gobjects =>
+      var pairs = new ArrayBuffer[(ST_Point, ST_Point)]()
+      var rt: RTree[ST_Point] = RTree()
+      gobjects.foreach{ go =>
+        val o = go.location
+        val bbox: Box = Box(
+          (o.x - epsilon).toFloat, (o.y - epsilon).toFloat,
+          (o.x + epsilon).toFloat, (o.y + epsilon).toFloat
+        )
+        if(!go.flag){
+          val query: Seq[Entry[ST_Point]] = rt.search(bbox)
+          pairs ++= query.map{ q => (o, q.value) }
+          rt = rt.insert(Entry(Point(o.x.toFloat, o.y.toFloat), o))
+        } else {
+          val query: Seq[Entry[ST_Point]] = rt.search(bbox)
+          pairs ++= query.map{ q => (o, q.value) }
+        }
+      }
+      pairs.toIterator
+    }.cache
+    pairs
   }
 
   def main(args: Array[String]): Unit = {
@@ -82,25 +132,7 @@ object GRIndex {
     timer = clocktime
     stage = "Grid allocate"
     log(stage, timer, 0, "START")
-    val gridObjects = locations.flatMap{ location =>
-      val i = math.floor(location.x / width).toInt
-      val j = math.floor(location.y / width).toInt
-      val key = Key(i,j)
-
-      val data_object = List(GridObject(key, false, location))
-
-      val i_start = math.floor((location.x - epsilon) / width).toInt
-      val i_end   = math.floor((location.x + epsilon) / width).toInt
-      val is = i_start to i_end
-      val j_start = math.floor(location.y / width).toInt
-      val j_end   = math.floor((location.y + epsilon) / width).toInt
-      val js = j_start to j_end 
-      val Skeys = is.cross(js).map(c => Key(c._1, c._2)).toList
-
-      val query_objects = Skeys.map(key => GridObject(key, true, location))
-      
-      data_object ++ query_objects
-    }.repartition($"key").cache
+    val gridObjects = allocateGrid(spark, locations, width, epsilon)
     val nGridObjects = gridObjects.count
     log(stage, timer, nGridObjects, "END")
 
@@ -112,29 +144,12 @@ object GRIndex {
     timer = clocktime
     stage = "Grid query"
     log(stage, timer, 0, "START")
-    val pairs = gridObjects.mapPartitions{ gobjects =>
-      var pairs = new ArrayBuffer[(GridObject, GridObject)]()
-      var rt: RTree[GridObject] = RTree()
-      gobjects.foreach{ o =>
-        if(!o.flag){
-          val bbox: Box = Box(o.location.x.toFloat - epsilon.toFloat, o.location.y.toFloat - epsilon.toFloat, o.location.x.toFloat + epsilon.toFloat, o.location.y.toFloat + epsilon.toFloat) 
-          val query: Seq[Entry[GridObject]] = rt.search(bbox)
-          pairs ++= query.map{ q => (o, q.value) }
-          rt = rt.insert(Entry(Point(o.location.x.toFloat, o.location.y.toFloat), o))
-        } else {
-          val bbox: Box = Box(o.location.x.toFloat - epsilon.toFloat, o.location.y.toFloat - epsilon.toFloat, o.location.x.toFloat + epsilon.toFloat, o.location.y.toFloat + epsilon.toFloat) 
-          val query: Seq[Entry[GridObject]] = rt.search(bbox)
-          // It seems we do not need output this query
-          //pairs ++= query.map{ q => (o, q.value) }
-        }
-      }
-      pairs.toIterator
-    }.cache
+    val pairs = queryGrid(spark, gridObjects, epsilon)
     val nPairs = pairs.count()
     log(stage, timer, nPairs, "END")
 
     if(debug){
-      pairs.show(truncate=false)
+      pairs.show(nPairs.toInt, truncate=false)
     }
 
     timer = clocktime
