@@ -55,7 +55,7 @@ object PatternEnumerator {
       //.config("spark.cores.max", cores * executors)
       //.config("spark.executor.cores", cores)
       //.master(master)
-      .appName("ICPE")
+      .appName("PatternEnumerator")
       .getOrCreate()
     import spark.implicits._
     startTime = spark.sparkContext.startTime
@@ -98,7 +98,7 @@ object PatternEnumerator {
     }.foreach(println)
   
     if(debug){
-      logger.info("ICPE|%s|%5.1f|%2d|%6.2f|%6d".format(applicationID, epsilon, mu, ((clocktime - timer) / 1000.0)))
+      logger.info("PatternEnumerator|%s|%5.1f|%2d|%6.2f|%6d".format(applicationID, epsilon, mu, ((clocktime - timer) / 1000.0)))
     }
 
     timer = clocktime

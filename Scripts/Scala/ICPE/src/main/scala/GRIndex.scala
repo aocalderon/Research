@@ -55,13 +55,14 @@ object GRIndex {
   def queryGrid(spark: SparkSession, gridObjects: Dataset[GridObject], epsilon: Double): Dataset[(ST_Point, ST_Point)] = {
     import spark.implicits._
     val pairs = gridObjects.mapPartitions{ gobjects =>
+      val epsilonp = epsilon + precision // Adding a small value to ensure correct results...
       var pairs = new ArrayBuffer[(ST_Point, ST_Point)]()
       var rt: RTree[ST_Point] = RTree()
       gobjects.foreach{ go =>
         val o = go.location
         val bbox: Box = Box(
-          (o.x - epsilon).toFloat, (o.y - epsilon).toFloat,
-          (o.x + epsilon).toFloat, (o.y + epsilon).toFloat
+          (o.x - epsilonp).toFloat, (o.y - epsilonp).toFloat,
+          (o.x + epsilonp).toFloat, (o.y + epsilonp).toFloat
         )
         if(!go.flag){
           val query: Seq[Entry[ST_Point]] = rt.search(bbox)
