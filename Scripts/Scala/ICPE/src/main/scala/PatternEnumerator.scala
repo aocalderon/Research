@@ -10,6 +10,7 @@ import org.slf4j.{Logger, LoggerFactory}
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
+import org.apache.spark.streaming._
 
 object PatternEnumerator {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")

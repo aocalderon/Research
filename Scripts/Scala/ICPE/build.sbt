@@ -13,6 +13,7 @@ libraryDependencies += "org.rogach" % "scallop_2.11" % "2.1.3"
 libraryDependencies += "org.datasyslab" % "geospark" % "1.2.0"
 libraryDependencies += "org.datasyslab" % "JTSplus" % "0.1.4"
 libraryDependencies += "com.meetup" %% "archery" % "0.4.0"
+libraryDependencies += "org.apache.spark" % "spark-streaming_2.11" % "2.4.0"
 
 mainClass in (Compile, run) := Some("ICPE")
 mainClass in (Compile, packageBin) := Some("ICPE")
