@@ -1,8 +1,8 @@
 #!/bin/bash
 
-for EPSILON in `seq 20 2 40`
+for EPSILON in `seq 15 2 31`
 do
-    for MU in `seq 5 5`
+    for MU in `seq 3 4`
     do
         echo "spark-submit --class DBScanOnSpark /home/acald013/Research/Scripts/Scala/DBSCAN/target/scala-2.11/dbscan_2.11-0.1.jar --input ~/Research/Datasets/LA/LA_10K.tsv --epsilon $EPSILON --mu $MU --partitions 16"
         spark-submit --class DBScanOnSpark /home/acald013/Research/Scripts/Scala/DBSCAN/target/scala-2.11/dbscan_2.11-0.1.jar --input ~/Research/Datasets/LA/LA_10K.tsv --epsilon $EPSILON --mu $MU --partitions 16

@@ -15,7 +15,7 @@ import dbscan._
 object DBScanOnSpark {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory()
-  private val precision: Double = 0.0001
+  private val precision: Double = 0.001
   private var startTime: Long = System.currentTimeMillis()
   private var applicationID: String = "app-00000000000000-0000"
 
@@ -234,7 +234,7 @@ object DBScanOnSpark {
       val pairs = points.cross(points)
         .filter( p => p._1.tid < p._2.tid)
         .map(p => (p, p._1.distance(p._2)))
-        .filter(p => p._2 <= params.epsilon())
+        .filter(p => p._2 <= params.epsilon() + precision)
         .map(_._1)
       val pairs_prime = pairs.map{ p =>
           val p1 = p._1
@@ -251,7 +251,7 @@ object DBScanOnSpark {
       val disks = centers.flatMap{ center =>
         rtree.query(center.buffer(r).getEnvelopeInternal).asScala.toList
           .map(_.asInstanceOf[Point])
-          .filter(point => center.distance(point) <= r + 0.0001)
+          .filter(point => center.distance(point) <= r + precision)
           .map(point => (center, point))
           .groupBy(_._1)
           .map{ p =>
