@@ -1,8 +1,13 @@
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 import java.util.{Timer, TimerTask}
-import java.nio.file.{Files, Paths, StandardCopyOption}
+import java.sql.Timestamp
+import scala.io.Source
+import java.io.PrintWriter
+import org.slf4j.{Logger, LoggerFactory}
 
 object TrajectorySource {
+  private val logger: Logger = LoggerFactory.getLogger("myLogger")
+
   def main(args: Array[String]): Unit = {
     val params = new TSConf(args)
     val input = params.input()
@@ -17,14 +22,29 @@ object TrajectorySource {
     timer.scheduleAtFixedRate( new TimerTask {
       override def run() = {
         if(counter <= n){
+          val ts = new Timestamp(System.currentTimeMillis())
+          ts.setNanos(0)
           val A = s"${input}${tag}${separator}${counter}.${extension}"
           val B = s"${output}${tag}${separator}${counter}.${extension}"
-          Files.copy(
-            Paths.get(A),
-            Paths.get(B),
-            StandardCopyOption.REPLACE_EXISTING
-          )
-          println(s"cp $A $B at ${System.currentTimeMillis()}")
+
+          val in = Source.fromFile(A)
+          val content = in.getLines.map{ line => 
+            val arr = line.split("\t")
+            val t = arr(0).toLong
+            val x = arr(1).toDouble
+            val y = arr(2).toDouble
+            val pids = arr(3)
+
+            s"$t\t$x\t$y\t$pids\t$ts\n"
+          }.mkString("")
+          in.close()
+
+          val out = new PrintWriter(B)
+          out.write(content)
+          out.close()
+
+          val filename = s"${tag}${separator}${counter}.${extension}"
+          logger.info(s"$filename has been copied in $output at $ts")
           counter = counter + 1
         } else {
           timer.cancel()

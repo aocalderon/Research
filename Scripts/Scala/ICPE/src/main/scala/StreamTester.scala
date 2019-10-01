@@ -14,34 +14,33 @@ object StreamTester {
   def main(args: Array[String]){
     val spark = SparkSession.builder()
       .config("spark.default.parallelism", 3 * 12 * 10)
-      //.config("spark.serializer",classOf[KryoSerializer].getName)
-      //.config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .config("spark.scheduler.mode", "FAIR")
-      //.config("spark.cores.max", cores * executors)
-      //.config("spark.executor.cores", cores)
-      //.master(master)
       .appName("PatternEnumerator")
       .getOrCreate()
     import spark.implicits._
 
-    val pointSchema = new StructType()
-      .add("id", IntegerType, false)
+    val schema = new StructType()
+      .add("t", IntegerType, false)
       .add("x", DoubleType, false)
       .add("y", DoubleType, false)
-      .add("t", IntegerType, false)
-    val pointsSSDF = spark.readStream.schema(pointSchema)
+      .add("pids", StringType, false)
+      .add("ts", TimestampType, false)
+    val SSDF = spark.readStream.schema(schema)
       .option("delimiter","\t")
-      .csv("/tmp/points")
-    logger.info(s"Is pointsSSDF streaming... ${pointsSSDF.isStreaming}")
+      .csv("/home/acald013/Datasets/ICPE/Demo/out")
+    logger.info(s"Is pointsSSDF streaming... ${SSDF.isStreaming}")
 
-    val currentPoints = pointsSSDF.withColumn("time", current_timestamp())
-    val stream = currentPoints.as[(Int, Double, Double, Int, Timestamp)]
+    val stream = SSDF.as[(Int, Double, Double, String, Timestamp)]
 
-    val countPoints = stream.groupBy(window($"time", "10 minutes"), $"id")
+    val count = stream.withWatermark("ts", "0 seconds")
+      .groupBy(
+        window($"ts", "4 seconds", "1 seconds"), 
+        $"t"
+      )
       .count()
-      .orderBy($"window")
+      .orderBy($"window", $"t")
 
-    val query = countPoints.writeStream.format("console")
+    val query = count.writeStream.format("console")
       .option("truncate", "false")
       .outputMode(OutputMode.Complete())
       .start()
