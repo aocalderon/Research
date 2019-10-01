@@ -24,7 +24,7 @@ object MF_QuadTree2{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory();
   private val reader = new com.vividsolutions.jts.io.WKTReader(geofactory)
-  private val precision: Double = 0.001
+  private val precision: Double = 0.0001
   private var tag: String = ""
   private var appID: String = "app-00000000000000-0000"
   private var startTime: Long = clocktime
@@ -372,9 +372,9 @@ object MF_QuadTree2{
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .config("spark.scheduler.mode", "FAIR")
-      .config("spark.cores.max", cores * executors)
-      .config("spark.executor.cores", cores)
-      .master(master)
+      //.config("spark.cores.max", cores * executors)
+      //.config("spark.executor.cores", cores)
+      //.master(master)
       .appName("MaximalFinder")
       .getOrCreate()
     import spark.implicits._
