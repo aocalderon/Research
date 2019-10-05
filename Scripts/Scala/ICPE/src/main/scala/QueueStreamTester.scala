@@ -35,7 +35,7 @@ object QueueStreamTester {
       .map(d => (d.t, d.disk))
     stream.foreachRDD { (disks: RDD[(Int, Disk)], t: Time) =>
       println(t.toString())
-
+      
       val partitions = disks.flatMap{ disk =>
         val t = disk._1
         val pids = disk._2.pids.toList.sorted
@@ -43,21 +43,19 @@ object QueueStreamTester {
           (pid, Pids(t, pids.filter(_ > pid)))
         }
       }.filter(!_._2.pids.isEmpty)
-
+      
       val ids = partitions.map(_._1).distinct()
       val nPartitions = ids.count().toInt
 
-      partitions.toDF().show(100, truncate=false)
       val index = ids.collect().sorted
-
-      println(s"Index: ${index.mkString(" ")}")
-      println(s"Number of partitions: ${nPartitions}")
 
       val partitioner = new IdPartitioner(nPartitions, index)
       val data = partitions.partitionBy(partitioner)
-      data.mapPartitionsWithIndex{ case (i, pids) => 
-        pids.map(p => s"${i}->${p._1}: ${p._2}") 
-      }.foreach(println)
+      data.mapPartitionsWithIndex{ case (i, pids) =>
+        pids.map(p => (p._1, p._2)).toList.groupBy(_._1).map(p => (p._1, p._2.map(_._2.pids.mkString(" ")))).toIterator
+        //pids.map(p => s"${i}->${p._1}: ${p._2}") 
+      }.collect().sortBy(_._1).foreach(println)
+      
     }
 
     // Let's start the stream...
@@ -67,7 +65,7 @@ object QueueStreamTester {
     for (t <- i to n) {
       rddQueue.synchronized {
         val filename = s"${input}${tag}${separator}${t}.${extension}"
-        /*
+        
         val in = Source.fromFile(filename)
         val disks = in.getLines.map{ line => 
           val arr = line.split("\t")
@@ -76,14 +74,6 @@ object QueueStreamTester {
           TDisk(t, disk)
         }.toList
         rddQueue += ssc.sparkContext.parallelize(disks)
-         */
-        rddQueue += spark.read.option("delimiter", "\t").csv(filename).map{ line =>
-          val t = line.getString(0).toInt
-          val x = line.getString(1).toDouble
-          val y = line.getString(2).toDouble
-          val pids = line.getString(3).split(" ").map(_.toInt).toSet
-          TDisk(t, Disk(x, y, pids))
-        }.rdd
       }
       Thread.sleep(rate)
     }
