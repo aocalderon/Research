@@ -118,6 +118,10 @@ public class AlgoDBSCAN {
 		}
 	}
 
+    public long getTime(){
+	return (endTimestamp - startTimestamp);
+    }
+
 	/**
 	 * Print statistics of the latest execution to System.out.
 	 */

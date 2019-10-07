@@ -16,7 +16,7 @@ object ICPE {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory()
   private val precision: Double = 0.0001
-  private var startTime: Long = System.currentTimeMillis()
+  private var startApp: Long = System.currentTimeMillis()
   private var applicationID: String = "app-00000000000000-0000"
 
   case class Pids(t: Int, pids: List[Int])
@@ -30,7 +30,7 @@ object ICPE {
   def clocktime = System.currentTimeMillis()
 
   def log(msg: String, timer: Long, n: Long, status: String): Unit ={
-    logger.info("ICPE|%6.2f|%-50s|%6.2f|%6d|%s".format((clocktime-startTime)/1000.0, msg, (clocktime-timer)/1000.0, n, status))
+    logger.info("ICPE|%6.2f|%-50s|%6.2f|%6d|%s".format((clocktime-startApp)/1000.0, msg, (clocktime-timer)/1000.0, n, status))
   }
 
   def main(args: Array[String]): Unit = {
@@ -63,7 +63,7 @@ object ICPE {
       .appName("ICPE")
       .getOrCreate()
     import spark.implicits._
-    startTime = spark.sparkContext.startTime
+    startApp = spark.sparkContext.startTime
     applicationID = spark.sparkContext.applicationId
     log(stage, timer, 0, "END")
 
@@ -88,11 +88,12 @@ object ICPE {
       locations.show(truncate=false)
       logger.info(s"Locations number of partitions: ${locations.rdd.getNumPartitions}")
     }
-    
+
+    val startTime = clocktime
     timer = clocktime
     stage = "Grid allocate"
     log(stage, timer, 0, "START")
-    val gridObjects = GRIndex.allocateGrid(spark, locations, width, epsilon)
+    val gridObjects = GRIndex.allocateGrid(spark, locations, width, epsilon).cache()
     val nGridObjects = gridObjects.count
     log(stage, timer, nGridObjects, "END")
 
@@ -104,7 +105,7 @@ object ICPE {
     timer = clocktime
     stage = "Grid query"
     log(stage, timer, 0, "START")
-    val pairs = GRIndex.queryGrid(spark, gridObjects, epsilon)
+    val pairs = GRIndex.queryGrid(spark, gridObjects, epsilon).cache()
     val nPairs = pairs.count()
     log(stage, timer, nPairs, "END")
 
@@ -113,9 +114,8 @@ object ICPE {
     }
 
     timer = clocktime
-    stage = "DBScan run"
+    stage = "Grid sync"
     log(stage, timer, 0, "START")
-    val algo = new AlgoDBSCAN()
     val data = pairs.rdd.flatMap{ pair =>
       val p1 = pair._1
       val p2 = pair._2
@@ -128,9 +128,18 @@ object ICPE {
       da.setT(p.t)
       da
     }.collect().toList.asJava
+    val nData = data.size
+    log(stage, timer, nData, "END")
+
+
+    timer = clocktime
+    stage = "DBScan run"
+    log(stage, timer, 0, "START")
+    val algo = new AlgoDBSCAN()
     val clusters = algo.run(data, minpts, epsilon).asScala.toList
+    val dbscanTime = (algo.getTime() / 1000.0)
     val nClusters = clusters.size
-    log(stage, timer, 0, "END")
+    log(stage, timer, nClusters, "END")
 
     if(debug){
       val hulls = clusters.zipWithIndex.map{ case (cluster, i) =>
@@ -238,17 +247,18 @@ object ICPE {
 
       (points, pairs, centers, disks, maximals)
     }.toList
-    val nMaximals = maximals.size
+    val nMaximals = maximals.flatMap(m => m._5).size
+    val maximalsTime = (clocktime - timer) / 1000.0
     log(stage, timer, nMaximals, "END")
+    val endTime = clocktime
 
     // Reporting results...
     val nP  = maximals.flatMap(m => m._1).size
     val nP2 = maximals.flatMap(m => m._2).size
     val nC  = maximals.flatMap(m => m._3).size
     val nD  = maximals.flatMap(m => m._4).size
-    val nM  = maximals.flatMap(m => m._5).size
 
-    logger.info("ICPE  |%s|%5.1f|%2d|%6d|%6d|%6d|%6d|%6.2f|%6d".format(applicationID, epsilon, mu, nP, nP2, nC, nD, ((clocktime - timer) / 1000.0), nM))
+    logger.info("ICPE  |%s|%5.1f|%2d|%6d|%6d|%6d|%6d|%6.3f|%6.3f|%6.2f|%6d".format(applicationID, epsilon, mu, nP, nP2, nC, nD, dbscanTime, maximalsTime, ((endTime - startTime) / 1000.0), nMaximals))
 
     if(debug){
       val filename = "points"
