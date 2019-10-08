@@ -4,10 +4,13 @@ import scala.io.Source
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.{Seconds, StreamingContext, Time}
+import scala.collection.mutable.ArrayBuffer
 
 object QueueStreamTester {
   case class TDisk(t: Int, disk: Disk)
-  case class Pids(t: Int, pids: List[Int])
+  case class Pids(t: Int, pids: List[Int]){
+    override def toString: String = s"$t:{${pids.mkString(" ")}}"
+  }
 
   def main(args: Array[String]) {
     val params = new QueueStreamerConf(args)
@@ -33,9 +36,9 @@ object QueueStreamTester {
     val stream = ssc.queueStream(rddQueue)
       .window(Seconds(delta), Seconds(interval))
       .map(d => (d.t, d.disk))
-    stream.foreachRDD { (disks: RDD[(Int, Disk)], t: Time) =>
-      println(t.toString())
-      
+    stream.foreachRDD { (disks: RDD[(Int, Disk)], ts: Time) =>
+      println(ts.toString())
+
       val partitions = disks.flatMap{ disk =>
         val t = disk._1
         val pids = disk._2.pids.toList.sorted
@@ -44,24 +47,30 @@ object QueueStreamTester {
         }
       }.filter(!_._2.pids.isEmpty)
       
+      val t = partitions.map(_._2.t).min
+      println(t)
       val ids = partitions.map(_._1).distinct()
       val nPartitions = ids.count().toInt
 
       val index = ids.collect().sorted
 
       val partitioner = new IdPartitioner(nPartitions, index)
-      val data = partitions.partitionBy(partitioner)
-      data.mapPartitionsWithIndex{ case (i, pids) =>
-        pids.map(p => (p._1, p._2)).toList.groupBy(_._1).map(p => (p._1, p._2.map(_._2.pids.mkString(" ")))).toIterator
-        //pids.map(p => s"${i}->${p._1}: ${p._2}") 
-      }.collect().sortBy(_._1).foreach(println)
+      val parts = partitions.partitionBy(partitioner)
+        .mapPartitionsWithIndex{ case (i, pids) =>
+          pids.map(p => (p._1, p._2)).toList.groupBy(_._1).map(p =>  (p._1, p._2.map(_._2), i)).toIterator
+        }
+
+      // Working with t, range, zip and flatmap to generate the bit string... 
+      parts.sortBy(_._1).collect().map{ p =>
+        s"Subtask ${p._3} for o${p._1}: ${p._2.map(_.toString).mkString(" ")}"
+      }.foreach(println)
       
     }
 
     // Let's start the stream...
     ssc.start()
     
-    // Read and push some RDDs into the queue...
+    // Let's feed the stream...
     for (t <- i to n) {
       rddQueue.synchronized {
         val filename = s"${input}${tag}${separator}${t}.${extension}"
