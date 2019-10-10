@@ -6,14 +6,14 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.{Seconds, StreamingContext, Time}
 import scala.collection.mutable.ArrayBuffer
 
-object QueueStreamTester {
+object QueueStreamer {
   case class TDisk(t: Int, disk: Disk)
-  case class Pids(t: Int, pids: List[Int]){
-    override def toString: String = s"$t:{${pids.mkString(" ")}}"
+  case class Partition(o: Int, t: Int, neighbours: List[Int]){
+    override def toString: String = s"($o, $t): {${neighbours.mkString(" ")}}"
   }
 
   def main(args: Array[String]) {
-    val params = new QueueStreamerConf(args)
+    val params = new QSConf(args)
     val input = params.input()
     val tag = params.tag()
     val separator = params.sep()
@@ -39,41 +39,50 @@ object QueueStreamTester {
     stream.foreachRDD { (disks: RDD[(Int, Disk)], ts: Time) =>
       println(ts.toString())
 
-      val partitions = disks.flatMap{ disk =>
+      var partitions = disks.flatMap{ disk =>
         val t = disk._1
-        val pids = disk._2.pids.toList.sorted
-        pids.map{ pid =>
-          (pid, Pids(t, pids.filter(_ > pid)))
+        val objects = disk._2.pids.toList.sorted
+        objects.map{ o =>
+          Partition(o, t, objects.filter(_ > o))
         }
-      }.filter(!_._2.pids.isEmpty)
+      }.filter(!_.neighbours.isEmpty)
       
-      val t = partitions.map(_._2.t).min
-      val ids = partitions.map(_._1).distinct()
-      val nPartitions = ids.count().toInt
+      val t = partitions.map(_.t).min
+      val index = partitions.map(_.o).distinct().collect().sorted
 
-      val index = ids.collect().sorted
+      val partitioner = new IdPartitioner(index.size, index)
+      partitions = partitions.map(p => (p.o, p)).partitionBy(partitioner).map(_._2)
 
-      val partitioner = new IdPartitioner(nPartitions, index)
-      val parts = partitions.partitionBy(partitioner)
-        .mapPartitionsWithIndex{ case (i, pids) =>
-          pids.map(p => (p._1, p._2)).toList.groupBy(_._1).map(p =>  (p._1, p._2.map(_._2), i)).toIterator
-        }
+      partitions.mapPartitions{ partition =>
+        val Pj = partition.toList.groupBy(_.o).map(_._2).head
+        val Pt = Pj.filter(_.t == t).flatMap(_.neighbours)
+        Pt.map{ obj =>
+          val B = Array.ofDim[Int](delta)
+          Pj.filter(_.neighbours contains obj).foreach{ p =>
+            val i = p.t - t
+            B(i) = 1
+          }
+          s"$obj ${B.mkString("  ")}"
+          
+        }.toIterator
+      }.foreach(println)
 
+      // Output results...
       val T = (t until (t + delta)).map(s => "%-20s".format(s)).toList.mkString("")
       println(s"                  $T")
-      parts.mapPartitions{ p =>
-        val B = Array.ofDim[String](delta).map(x => "{}")
-        val part = p.next()
-        part._2.foreach { pid =>
-          val i = pid.t - t
-          B(i) = "{%s}".format(pid.pids.mkString(","))
+      partitions.mapPartitions{ pids =>
+          pids.toList.groupBy(_.o).map(_._2).toIterator
         }
-        val Pt = B.map(s => "%-20s".format(s)).mkString("")
-        List(s"Subtask ${part._3} for o${part._1}: ${Pt}").toIterator
-      }.collect().sorted.foreach(println)
-
-      // Working with t, range, zip and flatmap to generate the bit string... 
-      
+        .mapPartitionsWithIndex{ case (i, p) =>
+          val B = Array.ofDim[String](delta).map(x => "{}")
+          val part = p.next()
+          part.foreach { pid =>
+            val i = pid.t - t
+            B(i) = "{%s}".format(pid.neighbours.mkString(","))
+          }
+          val Pt = B.map(s => "%-20s".format(s)).mkString("")
+          List(s"Subtask ${i} for o${i+1}: ${Pt}").toIterator
+        }.collect().sorted.foreach(println)
     }
 
     // Let's start the stream...
@@ -98,28 +107,28 @@ object QueueStreamTester {
     ssc.stop()
     spark.close()
   }
-}
 
-import org.apache.spark.Partitioner
-import scala.collection.Searching._
-class IdPartitioner(override val numPartitions: Int, index: Array[Int]) extends Partitioner {
-  override def  getPartition(key: Any): Int = {
-    val i = key.asInstanceOf[Int]
-    
-    index.search(i) match {
-      case f: Found => f.foundIndex
-      case _ => -1
+  import org.apache.spark.Partitioner
+  import scala.collection.Searching._
+  class IdPartitioner(override val numPartitions: Int, index: Array[Int]) extends Partitioner {
+    override def  getPartition(key: Any): Int = {
+      val i = key.asInstanceOf[Int]
+
+      index.search(i) match {
+        case f: Found => f.foundIndex
+        case _ => -1
+      }
+    }
+    override def equals(other: Any): Boolean = {
+      other match {
+        case obj: IdPartitioner => obj.numPartitions == numPartitions
+        case _ => false
+      }
     }
   }
-  override def equals(other: Any): Boolean = {
-    other match {
-      case obj: IdPartitioner => obj.numPartitions == numPartitions
-      case _ => false
-    }
-  }
 }
 
-class QueueStreamerConf(args: Seq[String]) extends ScallopConf(args) {
+class QSConf(args: Seq[String]) extends ScallopConf(args) {
   val input: ScallopOption[String] = opt[String] (default = Some("/home/acald013/Datasets/ICPE/Demo/in/"))
   val tag:      ScallopOption[String] = opt[String] (default = Some("LA"))
   val sep:      ScallopOption[String] = opt[String] (default = Some("_"))
