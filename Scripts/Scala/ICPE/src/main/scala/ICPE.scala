@@ -93,7 +93,7 @@ object ICPE {
     timer = clocktime
     stage = "Grid allocate"
     log(stage, timer, 0, "START")
-    val gridObjects = GRIndex.allocateGrid(spark, locations, width, epsilon).cache()
+    val gridObjects = GRIndex.allocateGrid(spark, locations, width, epsilon + precision).cache()
     val nGridObjects = gridObjects.count
     log(stage, timer, nGridObjects, "END")
 
@@ -105,7 +105,7 @@ object ICPE {
     timer = clocktime
     stage = "Grid query"
     log(stage, timer, 0, "START")
-    val pairs = GRIndex.queryGrid(spark, gridObjects, epsilon).cache()
+    val pairs = GRIndex.queryGrid(spark, gridObjects, epsilon + precision).cache()
     val nPairs = pairs.count()
     log(stage, timer, nPairs, "END")
 

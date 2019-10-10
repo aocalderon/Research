@@ -31,7 +31,6 @@ object MF_QuadTree2{
   private var cores: Int = 0
   private var executors: Int = 0
 
-  //def run(spark: SparkSession, points: PointRDD, MF1Partitioner: QuadTreePartitioner, params: FFConf, timestamp: Int = -1, info: String = ""): (PointRDD, Long) = {
   def run(spark: SparkSession, points: PointRDD, params: FFConf, timestamp: Int = -1, info: String = ""): (PointRDD, Long) = {
     import spark.implicits._
 
@@ -54,7 +53,6 @@ object MF_QuadTree2{
     var stage = "A.Points indexed"
     logStart(stage)
 
-    //points.spatialPartitioning(MF1Partitioner)
     points.spatialPartitioning(GridType.QUADTREE, params.ffpartitions())
     val nMF1Grids = points.getPartitioner.getGrids.size()
 
@@ -64,7 +62,7 @@ object MF_QuadTree2{
     points.buildIndex(IndexType.QUADTREE, true) // QUADTREE works better as an indexer than RTREE..
     points.indexedRDD.persist(StorageLevel.MEMORY_ONLY_SER)
     points.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY_SER)
-    logEnd(stage, timer, points.rawSpatialRDD.count())
+    logEnd(stage, timer, nMF1Grids)
 
     // Finding pairs...
     timer = System.currentTimeMillis()
@@ -102,7 +100,7 @@ object MF_QuadTree2{
     stage = "D.Disks found"
     logStart(stage)
     val r = epsilon / 2.0
-    val centersRDD = new PointRDD(centers.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
+    val centersRDD = new PointRDD(centers.toJavaRDD(), StorageLevel.MEMORY_ONLY)
     val centersBuffer = new CircleRDD(centersRDD, r + precision)
     centersBuffer.spatialPartitioning(points.getPartitioner)
     centersBuffer.buildIndex(IndexType.QUADTREE, true) // QUADTREE works better as an indexer than RTREE..
@@ -135,7 +133,7 @@ object MF_QuadTree2{
     timer = System.currentTimeMillis()
     stage = "E.Disks partitioned"
     logStart(stage)
-    val diskCenters = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY, sespg, tespg)
+    val diskCenters = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY)
     val diskCircles = new CircleRDD(diskCenters, r + precision)
     diskCircles.analyze()
     val fullBoundary = diskCircles.boundary()
@@ -150,14 +148,14 @@ object MF_QuadTree2{
       .map(_.getEnvelopeInternal)
     val boundary = new QuadRectangle(fullBoundary)
     val maxLevel = params.levels()
-    val maxItemsPerNode = params.mfpartitions()
-    val quadtree1 = new StandardQuadTree[Geometry](boundary, 0, maxItemsPerNode, maxLevel)
+    val maxItemsPerNode = params.entries()
+    val quadtree = new StandardQuadTree[Geometry](boundary, 0, maxItemsPerNode, maxLevel)
     if(debug){ logger.info(s"Disks' size of sample: ${samples.count()}") }
     for(sample <- samples.collect()){
-      quadtree1.insert(new QuadRectangle(sample), null)
+      quadtree.insert(new QuadRectangle(sample), null)
     }
-    quadtree1.assignPartitionIds()
-    val QTPartitioner = new QuadTreePartitioner(quadtree1)
+    quadtree.assignPartitionIds()
+    val QTPartitioner = new QuadTreePartitioner(quadtree)
     val nMF2Grids = QTPartitioner.getGrids.size
     if(debug) { logger.info(s"Disks' number of cells: ${nMF2Grids}") }
 
@@ -170,7 +168,7 @@ object MF_QuadTree2{
     timer = System.currentTimeMillis()
     stage = "F.Maximal disks found"
     logStart(stage)
-    val grids = quadtree1.getAllZones.asScala.filter(_.partitionId != null)
+    val grids = quadtree.getAllZones.asScala.filter(_.partitionId != null)
       .map(r => r.partitionId -> r.getEnvelope).toMap
     val maximals = diskCircles.spatialPartitionedRDD.rdd
       .mapPartitionsWithIndex{ (i, disks) => 
@@ -395,31 +393,8 @@ object MF_QuadTree2{
       }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sepsg, tepsg)
     }
     points.analyze()
-    points.CRSTransform(sepsg, tepsg)
     val nPoints = points.rawSpatialRDD.count()
     logEnd(stage, timer, nPoints)
-
-    // MF1 Partitioner...
-    timer = clocktime
-    stage = "MF1 partitioner"
-    logStart(stage)
-    val fullBoundary = points.boundaryEnvelope
-    fullBoundary.expandBy(epsilon + precision)
-
-    val samples = points.rawSpatialRDD.rdd
-      .sample(false, 0.5, 42)
-      .map(_.getEnvelopeInternal)
-    val boundary = new QuadRectangle(fullBoundary)
-    val maxLevel = params.levels()
-    val maxItemsPerNode1 = params.entries()
-    val quadtree1 = new StandardQuadTree[Geometry](boundary, 0, maxItemsPerNode1, maxLevel)
-    if(debug){ logger.info(s"Size of sample: ${samples.count()}") }
-    for(sample <- samples.collect()){
-      quadtree1.insert(new QuadRectangle(sample), null)
-    }
-    quadtree1.assignPartitionIds()
-    val QTPartitioner1 = new QuadTreePartitioner(quadtree1)
-    logEnd(stage, timer, QTPartitioner1.getGrids.size)    
     
     // Running maximal finder...
     timer = System.currentTimeMillis()

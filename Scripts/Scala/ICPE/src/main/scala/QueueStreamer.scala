@@ -53,8 +53,10 @@ object QueueStreamer {
       val partitioner = new IdPartitioner(index.size, index)
       partitions = partitions.map(p => (p.o, p)).partitionBy(partitioner).map(_._2)
 
-      partitions.mapPartitions{ partition =>
-        val Pj = partition.toList.groupBy(_.o).map(_._2).head
+      partitions.mapPartitionsWithIndex{ case (index, partition) =>
+        val P = partition.toList.groupBy(_.o).head
+        val o  = P._1
+        val Pj = P._2
         val Pt = Pj.filter(_.t == t).flatMap(_.neighbours)
         Pt.map{ obj =>
           val B = Array.ofDim[Int](delta)
@@ -62,10 +64,13 @@ object QueueStreamer {
             val i = p.t - t
             B(i) = 1
           }
-          s"$obj ${B.mkString("  ")}"
-          
-        }.toIterator
-      }.foreach(println)
+          (obj, B)
+        }.filter(b => b._2.reduce(_ + _) == delta)
+          .map{ case (obj, b) =>
+            (o, s"[$index] P${t}(o${o}): o($obj) ${b.mkString("  ")}")
+          }
+          .toIterator
+      }.collect().sortBy(_._1).map(_._2).foreach(println)
 
       // Output results...
       val T = (t until (t + delta)).map(s => "%-20s".format(s)).toList.mkString("")
