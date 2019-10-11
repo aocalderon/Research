@@ -1,5 +1,6 @@
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.Dataset
+import org.apache.spark.sql.functions._
 import org.slf4j.{Logger, LoggerFactory}
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 import scala.collection.JavaConverters._
@@ -30,26 +31,60 @@ object GRIndex {
 
   def allocateGrid(spark: SparkSession, locations: Dataset[ST_Point], width: Double, epsilon: Double): Dataset[GridObject] = {
     import spark.implicits._
+    val extents = locations.agg(min("x"), max("x"), min("y"), max("y")).collect().head
+    val minX = extents.getDouble(0)
+    val maxX = extents.getDouble(1)
+    val minY = extents.getDouble(2)
+    val maxY = extents.getDouble(3)
+    val extentX = maxX - minX
+    val extentY = maxY - minY
+    val columns = math.ceil(extentX / width).toInt
+    val rows    = math.ceil(extentY / width).toInt
+    val minColumn = math.floor(minX / width).toInt
+    val minRow    = math.floor(minY / width).toInt
+    logger.info(s"Columns = $columns")
+    logger.info(s"Rows    = $rows")
+    logger.info(s"n Partitions = ${columns * rows}")
     val grid_objects = locations.flatMap{ location =>
-      val i = math.floor(location.x / width).toInt
-      val j = math.floor(location.y / width).toInt
+      val i = math.floor(location.x / width).toInt - minColumn
+      val j = math.floor(location.y / width).toInt - minRow
       val key = Key(i,j)
 
       val data_object = List(GridObject(key, false, location))
 
-      val i_start = math.floor((location.x - epsilon) / width).toInt
-      val i_end   = math.floor((location.x + epsilon) / width).toInt
+      val i_start = math.floor((location.x - epsilon) / width).toInt - minColumn
+      val i_end   = math.floor((location.x + epsilon) / width).toInt - minColumn
       val is = i_start to i_end
-      val j_start = math.floor(location.y / width).toInt
-      val j_end   = math.floor((location.y + epsilon) / width).toInt
+      val j_start = math.floor(location.y / width).toInt - minRow
+      val j_end   = math.floor((location.y + epsilon) / width).toInt - minRow
       val js = j_start to j_end 
       val Skeys = is.cross(js).map(c => Key(c._1, c._2)).filterNot(k => k == key).toList
 
       val query_objects = Skeys.map(key => GridObject(key, true, location))
       
       data_object ++ query_objects
-    }.repartition($"key").cache()
-    grid_objects
+    }
+
+    grid_objects.map(g => (g.key.i * columns + g.key.j, g)).filter(_._1 >= columns * rows).show(200, false)
+
+    grid_objects.map(g => (g.key.i * columns + g.key.j, g)).rdd
+      .partitionBy(new KeyPartitioner(columns * rows))
+      .map(_._2).toDS()
+
+    //grid_objects
+  }
+
+  import org.apache.spark.Partitioner
+  class KeyPartitioner(override val numPartitions: Int) extends Partitioner {
+    override def getPartition(key: Any): Int = {
+      key.asInstanceOf[Int]
+    }
+    override def equals(other: Any): Boolean = {
+      other match {
+        case obj: KeyPartitioner => obj.numPartitions == numPartitions
+        case _ => false
+      }
+    }
   }
 
   def queryGrid(spark: SparkSession, gridObjects: Dataset[GridObject], epsilon: Double): Dataset[(ST_Point, ST_Point)] = {

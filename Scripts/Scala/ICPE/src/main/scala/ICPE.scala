@@ -93,7 +93,7 @@ object ICPE {
     timer = clocktime
     stage = "Grid allocate"
     log(stage, timer, 0, "START")
-    val gridObjects = GRIndex.allocateGrid(spark, locations, width, epsilon + precision).cache()
+    val gridObjects = GRIndex.allocateGrid(spark, locations, width, epsilon).cache()
     val nGridObjects = gridObjects.count
     log(stage, timer, nGridObjects, "END")
 
@@ -105,7 +105,7 @@ object ICPE {
     timer = clocktime
     stage = "Grid query"
     log(stage, timer, 0, "START")
-    val pairs = GRIndex.queryGrid(spark, gridObjects, epsilon + precision).cache()
+    val pairs = GRIndex.queryGrid(spark, gridObjects, epsilon).cache()
     val nPairs = pairs.count()
     log(stage, timer, nPairs, "END")
 
@@ -208,7 +208,7 @@ object ICPE {
         rtree.insert(point.getEnvelopeInternal, point)
       }
       val disks = centers.flatMap{ center =>
-        rtree.query(center.buffer(r).getEnvelopeInternal).asScala.toList
+        rtree.query(center.buffer(r + precision).getEnvelopeInternal).asScala.toList
           .map(_.asInstanceOf[Point])
           .filter(point => center.distance(point) <= r + precision)
           .map(point => (center, point))
