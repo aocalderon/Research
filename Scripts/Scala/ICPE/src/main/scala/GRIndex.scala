@@ -31,6 +31,32 @@ object GRIndex {
 
   def allocateGrid(spark: SparkSession, locations: Dataset[ST_Point], width: Double, epsilon: Double): Dataset[GridObject] = {
     import spark.implicits._
+    val grid_objects = locations.flatMap{ location =>
+      val i = math.floor(location.x / width).toInt
+      val j = math.floor(location.y / width).toInt
+      val key = Key(i,j)
+
+      val data_object = List(GridObject(key, false, location))
+
+      val i_start = math.floor((location.x - epsilon) / width).toInt
+      val i_end   = math.floor((location.x + epsilon) / width).toInt
+      val is = i_start to i_end
+      val j_start = math.floor(location.y / width).toInt
+      val j_end   = math.floor((location.y + epsilon) / width).toInt
+      val js = j_start to j_end 
+      val Skeys = is.cross(js).map(c => Key(c._1, c._2)).filterNot(k => k == key).toList
+
+      val query_objects = Skeys.map(key => GridObject(key, true, location))
+      
+      data_object ++ query_objects
+    }.repartition($"key").cache
+
+    grid_objects
+  }
+
+  /*
+  def allocateGrid2(spark: SparkSession, locations: Dataset[ST_Point], width: Double, epsilon: Double): Dataset[GridObject] = {
+    import spark.implicits._
     val extents = locations.agg(min("x"), max("x"), min("y"), max("y")).collect().head
     val minX = extents.getDouble(0)
     val maxX = extents.getDouble(1)
@@ -86,6 +112,7 @@ object GRIndex {
       }
     }
   }
+   */
 
   def queryGrid(spark: SparkSession, gridObjects: Dataset[GridObject], epsilon: Double): Dataset[(ST_Point, ST_Point)] = {
     import spark.implicits._
