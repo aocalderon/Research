@@ -3,6 +3,7 @@ import org.rogach.scallop._
 
 class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val input:        ScallopOption[String]  =  opt[String]   (default = Some(""))
+  val output:       ScallopOption[String]  =  opt[String]   (default = Some("/tmp/"))
   val tsfile:       ScallopOption[String]  =  opt[String]   (default = Some(""))
   val check_dir:    ScallopOption[String]  =  opt[String]   (default = Some("hdfs://dblab-rack15:9001/checkpoints"))
   val input_path:   ScallopOption[String]  =  opt[String]   (default = Some(""))
@@ -21,7 +22,6 @@ class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val sespg:        ScallopOption[String]  =  opt[String]   (default  = Some("epsg:6423"))
   val tespg:        ScallopOption[String]  =  opt[String]   (default  = Some("epsg:6423"))
   val spatial:      ScallopOption[String]  =  opt[String]   (default  = Some("KDBTREE"))
-  val output:       ScallopOption[String]  =  opt[String]   (default  = Some("/tmp/"))
   val ffpartitions: ScallopOption[Int]     =  opt[Int]      (default  = Some(625))
   val mfpartitions: ScallopOption[Int]     =  opt[Int]      (default  = Some(4))
   val dpartitions:  ScallopOption[Int]     =  opt[Int]      (default  = Some(2))
