@@ -1,0 +1,18 @@
+\documentclass[border=0.5cm]{standalone}
+\usepackage{tikz}
+
+\usetikzlibrary{shapes,arrows,arrows.meta,fit,positioning,decorations.pathreplacing}
+
+\definecolor{light-gray}{gray}{0.9}
+\definecolor{light-blue}{rgb}{0.5,0.5,0.8}
+\newcommand\xmin{-0.08}
+\newcommand\ymin{-2}
+\newcommand\xmax{4.29}
+\newcommand\ymax{2}
+\begin{document}
+    \begin{tikzpicture}
+        \node (partitions) at (0,0) {\includegraphics[clip,trim=2.47cm 22.3cm 8.3cm 2cm, width=.9\textwidth]{chen}};
+        \draw[color=blue, dashed, thick, label={t}] (\xmin,\ymin) rectangle (\xmax,\ymax) node[below] at (\xmax,\ymin) {$t_7$};
+        \draw[decorate,decoration={brace,amplitude=5pt,raise=2pt}](\xmin,\ymax) -- (\xmax,\ymax) node [black,midway,yshift=0.5cm]{$\delta$};
+    \end{tikzpicture}
+\end{document}
