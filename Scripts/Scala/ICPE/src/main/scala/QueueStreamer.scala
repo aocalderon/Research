@@ -51,12 +51,10 @@ object QueueStreamer {
       
       val t = partitions.map(_.t).min
 
-      // FIX TO PREVIOUS INDEXING!!!
+      val index = partitions.map(_.o).distinct().collect().sorted
 
-      val index = partitions.map(p => s"${p.o} ${p.d}").distinct().collect().sorted.zipWithIndex.map(i => i._1 -> i._2).toMap
-
-      val partitioner = new IdPartitioner(index.size, index.values.toArray)
-      partitions = partitions.map(p => ( index(s"${p.o} ${p.d}") , p)).partitionBy(partitioner).map(_._2)
+      val partitioner = new IdPartitioner(index.size, index)
+      partitions = partitions.map(p => ( p.o , p)).partitionBy(partitioner).map(_._2)
 
       /*
       partitions.mapPartitionsWithIndex{ case (index, partition) =>
