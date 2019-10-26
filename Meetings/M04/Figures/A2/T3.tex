@@ -138,28 +138,5 @@
         \draw[fill=Pink](E\t) circle (\R);
     \end{scope}
     \node[time] at (T) {$t_\t$};
-    
-    \def\t{4}
-    \begin{scope}
-        [yshift=\t*\z, every node/.append style={yslant=\ySlant,xslant=\xSlant},yslant=\ySlant,xslant=\xSlant]
-        \coordinate (T) at (\xMin, \xMax);
-        \coordinate (A\t) at (1.80, 0.85);
-        \coordinate (B\t) at (1.25, 1.75);
-        \coordinate (C\t) at (1.35, 0.85);
-        \coordinate (D\t) at (1.95, 1.30);
-        \coordinate (E\t) at (1.60, 1.65);
-
-        \drawTrajs{\t}
-        \def\i{};\ADD{\t}{-1}{\i}
-        \draw[traj] (D\i) -- (D\t);
-        \draw[traj] (E\i) -- (E\t);
-        \drawGrid
-        \drawFrame{1}{1}{2}{2}{orange};
-        \drawFrame{1}{0}{2}{1}{blue};
-        \drawFlocks{\t}
-        \draw[fill=olive](D\t) circle (\R);
-        \draw[fill=Pink](E\t) circle (\R);
-    \end{scope}
-    \node[time] at (T) {$t_\t$};
 \end{tikzpicture}
 \end{document} 

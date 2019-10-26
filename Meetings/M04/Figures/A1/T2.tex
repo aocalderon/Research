@@ -8,7 +8,8 @@
     traj/.style={ thin, dotted, -Latex },
     point/.style={ color=black, circle, scale=0.3, fill },
     partition/.style={ right, scale=0.75 },
-    label/.style={ scale=0.5, black, below = 0.5mm }
+    label/.style={ scale=0.5, black, below = 0.5mm },
+    time/.style={ scale=0.75, above left }
 }
 
 \definecolor{light-gray}{gray}{0.45}
@@ -52,10 +53,12 @@
 }
 
 \begin{document}
-\begin{tikzpicture}    
-    \fill[white] (0,0) rectangle (6,10.5);
+\begin{tikzpicture}
+    \fill[white] (0,0) rectangle (6.5,10.5);
+    \def\t{0};
     \begin{scope}
         [yshift=0*\z, every node/.append style={yslant=\ySlant,xslant=\xSlant},yslant=\ySlant,xslant=\xSlant]
+        \coordinate (T) at (\xMin, \xMax);
         \coordinate (A0) at (1.85, 1.75);
         \coordinate (B0) at (1.25, 1.75);
         \coordinate (C0) at (1.40, 1.10);
@@ -65,9 +68,13 @@
         \drawFlocks{0}
         \drawLabels{0}
     \end{scope}
-    	
+    \node[time] at (T) {$t_\t$};
+    
+    \def\t{1};
     \begin{scope}
         [yshift=1*\z, every node/.append style={yslant=\ySlant,xslant=\xSlant},yslant=\ySlant,xslant=\xSlant]
+        \coordinate (T) at (\xMin, \xMax);
+        \coordinate (InfoPointer) at (2.05,0.95);\coordinate (InfoText) at (3.5,-0.5);
         \coordinate (A1) at (2.00, 1.50);
         \coordinate (B1) at (1.50, 1.50);
         \coordinate (C1) at (1.20, 1.00);
@@ -77,9 +84,13 @@
         \drawFrame{1}{2}{1*\speed};
         \drawFlocks{1}
     \end{scope}
+    \node[time] at (T) {$t_\t$};
+    \draw[-latex,thick] (InfoText) node[scale=0.75,right,text width=3cm]{Expansion depends on $speed$ parameter} to[out=180,in=90] (InfoPointer);
     
+    \def\t{2};
     \begin{scope}
         [yshift=2*\z, every node/.append style={yslant=\ySlant,xslant=\xSlant},yslant=\ySlant,xslant=\xSlant]
+        \coordinate (T) at (\xMin, \xMax);
         \coordinate (A2) at (2.10, 1.25);
         \coordinate (B2) at (1.50, 1.75);
         \coordinate (C2) at (1.05, 0.80);
@@ -89,18 +100,6 @@
         \drawFrame{1}{2}{2*\speed};
         \drawFlocks{2}
     \end{scope}
-
-    \begin{scope}
-        [yshift=3*\z, every node/.append style={yslant=\ySlant,xslant=\xSlant},yslant=\ySlant,xslant=\xSlant]
-        \coordinate (A3) at (2.15, 1.00);
-        \coordinate (B3) at (1.50, 1.50);
-        \coordinate (C3) at (1.05, 0.50);
-
-        \drawTrajs{3}
-        \drawGrid
-        \drawFrame{1}{2}{3*\speed};
-        \drawFlocks{3}
-    \end{scope}
-    
+    \node[time] at (T) {$t_\t$};
 \end{tikzpicture}
 \end{document} 
