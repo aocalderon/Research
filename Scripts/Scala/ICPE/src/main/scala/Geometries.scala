@@ -1,5 +1,7 @@
 import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Envelope, Coordinate, Point, Polygon}
 
+case class TDisk(t: Int, disk: Disk)
+
 case class Disk(x: Double, y: Double, pids: Set[Int], var subset: Boolean = false) extends Ordered[Disk]{
   val model: PrecisionModel = new PrecisionModel(1000)
   val geofactory: GeometryFactory = new GeometryFactory(model)
@@ -65,6 +67,75 @@ case class ST_Point(tid: Int, x: Double, y: Double, t: Int) extends Ordered[ST_P
   override def toString: String = s"$tid\t$x\t$y\t$t\n"
 
   def toWKT: String = s"POINT($x $y)\t$tid\t$t\n"
+}
+
+import org.apache.spark.rdd.RDD
+case class DiskPartitioner(boundary: Envelope, width: Double) {
+  private val model: PrecisionModel = new PrecisionModel(1000)
+  private val geofactory: GeometryFactory = new GeometryFactory(model)
+  private val maxX: Double = boundary.getMaxX
+  private val minX: Double = boundary.getMinX
+  private val minY: Double = boundary.getMinY
+  private val maxY: Double = boundary.getMaxY
+  private val columns: Int = math.floor((maxX - minX) / width).toInt + 1
+  private val rows: Int = math.floor((maxY - minY) / width).toInt + 1
+
+  implicit class Crossable[X](xs: Traversable[X]) {
+    def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
+  }
+
+  def getNumPartitions: Int = rows * columns
+
+  private def getIndices(x: Double, y: Double): (Int, Int) = {
+    val i = math.floor((x - minX) / width).toInt
+    val j = math.floor((y - minY) / width).toInt
+    (i, j)
+  }
+
+  private def getKey(x: Double, y: Double): Int = {
+    val (i, j) = getIndices(x, y)
+    i + j * columns
+  }
+
+  def indexByExpansion(tdisk: TDisk, expansion: Double): List[(Int, TDisk)] = {
+    val disk = tdisk.disk
+    val key = getKey(disk.x, disk.y)
+    val partition = List((key, tdisk))
+
+    val x1 = disk.x - expansion
+    val x2 = disk.x + expansion
+    val y1 = disk.y - expansion
+    val y2 = disk.y + expansion
+
+    val is = getIndices(x1, y1)
+    val js = getIndices(x2, y2)
+
+    val Skeys = (is._1 to js._1).cross(is._2 to js._2).map{ c =>
+      c._1 + c._2 * columns
+    }.filter(_ != key).toList
+
+    val neighborhood = Skeys.map(key => (key, tdisk))
+
+    partition ++ neighborhood        
+  }
+
+  def getGrids(): List[(Int, Polygon)] = {    
+    val Xs = minX to maxX by width
+    val Ys = minY to maxY by width
+    Xs.cross(Ys).map{ coord =>
+      val x = coord._1
+      val y = coord._2
+      val p1 = new Coordinate(x, y)
+      val p2 = new Coordinate(x + width, y)
+      val p3 = new Coordinate(x + width, y + width)
+      val p4 = new Coordinate(x, y + width)
+      val coords = Array(p1,p2,p3,p4,p1)
+      val grid = geofactory.createPolygon(coords)
+      val key = getKey(x, y)
+
+      (key, grid)
+    }.toList
+  }
 }
 
 import org.apache.spark.rdd.RDD

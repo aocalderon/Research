@@ -11,11 +11,6 @@ import com.vividsolutions.jts.geom.Envelope
 object FlockEnumerator1 {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
 
-  case class TDisk(t: Int, disk: Disk)
-  case class Partition(o: Int, t: Int, d: Long, neighbours: List[Int]){
-    override def toString: String = s"($o, $t): {${neighbours.mkString(" ")}}"
-  }
-
   def getFullBoundary(disks: RDD[Disk]): Envelope = {
     val maxX = disks.map(_.x).max()
     val minX = disks.map(_.x).min()
@@ -37,6 +32,10 @@ object FlockEnumerator1 {
     val mu = params.mu()
     val interval = params.interval()
     val width = params.width()
+    val xMin  = params.xmin()
+    val yMin  = params.ymin()
+    val xMax  = params.xmax()
+    val yMax  = params.ymax()
     val speed = params.speed()
     val debug = params.debug()
 
@@ -51,39 +50,39 @@ object FlockEnumerator1 {
     val rddQueue = new SynchronizedQueue[RDD[TDisk]]()
     val stream = ssc.queueStream(rddQueue)
       .window(Seconds(delta), Seconds(interval))
-      .map(d => (d.t, d.disk))
 
     // Working with the batch window...
-    stream.foreachRDD { (disks: RDD[(Int, Disk)], ts: Time) =>
+    stream.foreachRDD { (disks: RDD[TDisk], ts: Time) =>
       println(ts.toString())
       println(disks.count())
-      val boundary = getFullBoundary(disks.map(_._2))
-      val timestamps = disks.map(_._1).distinct().collect().sorted
+      val boundary = new Envelope(xMin, xMax, yMin, yMax)
+      //val boundary = getFullBoundary(disks.map(_.disk))
+      val timestamps = disks.map(_.t).distinct().collect().sorted
       val t_0 = timestamps.head
       println(timestamps.mkString(" "))
 
-      for(t_i <- timestamps){
-        println(s"Timestamp: $t_i")
-        val T_i = disks.filter(_._1 == t_i).map(_._2).cache
-        val expansion = (t_i - t_0) * speed
-        val data = DiskIndex(T_i, boundary, width, expansion)
-        val I_i = data.index().cache
-        
-        if(debug){
-          val f = new java.io.PrintWriter(s"/tmp/T_${t_i}.wkt")
-          f.write(
-            I_i.mapPartitionsWithIndex{ case(i, disks) =>
-              disks.map(d => s"${i}\t${d.toWKT}\n")
-            }.collect().mkString("")
-          )
-          f.close()
-          println(s"Index's size: ${I_i.count()}")
-          val grids = data.getGrids()
-          val g = new java.io.PrintWriter(s"/tmp/I_${t_i}.wkt")
-          g.write(grids.map(g => s"${g._1}\t${g._2.toText()}\t${g._3.toText()}\n").mkString(""))
-          g.close()
+      val indexer = DiskPartitioner(boundary, width)
+      //println(s"Indexer's count: ${indexer}")
+      val partitions = disks.flatMap{ disk =>
+        val expansion = (disk.t - t_0) * speed
+        //println(expansion)
+        val i = indexer.indexByExpansion(disk, expansion)
+        //println(i)
+        i
+      }.partitionBy(new KeyPartitioner(indexer.getNumPartitions))
+      .map(_._2).cache
+      println(s"Partition's count: ${partitions.count}")
+
+      val WKT = partitions.mapPartitionsWithIndex{ case(index, partition) =>
+        partition.map{ p =>
+          s"$index\t${p.disk.toWKT}\t${p.disk.x}\t${p.disk.y}\t${p.t}\n"
         }
-      }
+      }.collect()
+      var filename = "/tmp/pflockPartitions.wkt"
+      var f = new java.io.PrintWriter(filename)
+      f.write(WKT.mkString(""))
+      f.close()
+      logger.info(s"Saved $filename [${WKT.size} records].")
     }
 
     // Let's start the stream...
@@ -126,6 +125,11 @@ class FE1Conf(args: Seq[String]) extends ScallopConf(args) {
   val debug:    ScallopOption[Boolean]= opt[Boolean](default = Some(false))
 
   val width:    ScallopOption[Double] = opt[Double]    (default = Some(500.0))
+  val xmin:     ScallopOption[Double] = opt[Double]    (default = Some(0.0))
+  val ymin:     ScallopOption[Double] = opt[Double]    (default = Some(0.0))
+  val xmax:     ScallopOption[Double] = opt[Double]    (default = Some(3.0))
+  val ymax:     ScallopOption[Double] = opt[Double]    (default = Some(3.0))
+
   val speed:    ScallopOption[Double] = opt[Double]    (default = Some(10.0))
 
   verify()
