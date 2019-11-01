@@ -24,18 +24,25 @@
     \draw[color=light-gray, style=dotted, step=0.5] (\xMin,\yMin) grid (\xMax,\yMax);
     \draw[dashed] (0,\yMin-\gap) -- (0,\yMax+\gap);
     \draw[disk] (1.00, 1.00) circle (\R);
+    \node[very thin, above, scale=0.4] at (0.55,2.65) {$D_1$};
     \draw[disk] (1.80, 1.50) circle (\R);
+    \node[very thin, below, scale=0.4] at (0.35,0.50) {$D_2$};
     \draw[disk] (1.00, 2.00) circle (\R);
+    \node[very thin, below, scale=0.4] at (2.40,0.90) {$D_3$};
     \draw[dashed] (3,\yMin-\gap) -- (3,\yMax+\gap);
     \draw[disk] (4.50, 3.00) circle (\R);
+    \node[very thin, below, scale=0.4] at (3.80,3.75) {$D_4$};
     \draw[disk] (4.50, 2.00) circle (\R);
+    \node[very thin, below, scale=0.4] at (3.85,1.45) {$D_5$};
     \draw[dashed] (6,\yMin-\gap) -- (6,\yMax+\gap);
     \draw[disk] (7.50, 2.00) circle (\R);
+    \node[very thin, below, scale=0.4] at (8.20,0.50) {$D_7$};
     \draw[disk] (7.50, 1.00) circle (\R);
+    \node[very thin, below, scale=0.4] at (8.20,2.80) {$D_6$};
     \draw[dashed] (9,\yMin-\gap) -- (9,\yMax+\gap);
-    \node[very thick, below] at (1.5,\yMin-\gap-\gap) {$t_1$};
-    \node[very thick, below] at (4.5,\yMin-\gap-\gap) {$t_2$};
-    \node[very thick, below] at (7.5,\yMin-\gap-\gap) {$t_3$};
+    \node[very thick, below] at (1.5,\yMin-\gap-\gap) {$t_0$};
+    \node[very thick, below] at (4.5,\yMin-\gap-\gap) {$t_1$};
+    \node[very thick, below] at (7.5,\yMin-\gap-\gap) {$t_2$};
     
     % Trajectories
     \node[point, blue] (o11) at (1.30, 1.50) {$o_1$};
