@@ -112,7 +112,7 @@ case class DiskPartitioner(boundary: Envelope, width: Double) {
 
     val Skeys = (is._1 to js._1).cross(is._2 to js._2).map{ c =>
       c._1 + c._2 * columns
-    }.filter(_ != key).toList
+    }.filter(_ != key).filter(_ >= 0).toList
 
     val neighborhood = Skeys.map(key => (key, tdisk))
 

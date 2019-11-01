@@ -7,6 +7,8 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.{Seconds, StreamingContext, Time}
 import scala.collection.mutable.ArrayBuffer
 import com.vividsolutions.jts.geom.Envelope
+import collection.JavaConverters._
+import SPMF.{AlgoFPMax, Transaction}
 
 object FlockEnumerator1 {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -53,36 +55,68 @@ object FlockEnumerator1 {
 
     // Working with the batch window...
     stream.foreachRDD { (disks: RDD[TDisk], ts: Time) =>
-      println(ts.toString())
-      println(disks.count())
+      println(s"Time: ${ts.toString()}")
+      println(s"# of disks: ${disks.count()}")
       val boundary = new Envelope(xMin, xMax, yMin, yMax)
       //val boundary = getFullBoundary(disks.map(_.disk))
       val timestamps = disks.map(_.t).distinct().collect().sorted
       val t_0 = timestamps.head
-      println(timestamps.mkString(" "))
+      println(s"Times in window: ${timestamps.mkString(" ")}")
 
       val indexer = DiskPartitioner(boundary, width)
-      //println(s"Indexer's count: ${indexer}")
       val partitions = disks.flatMap{ disk =>
         val expansion = (disk.t - t_0) * speed
-        //println(expansion)
-        val i = indexer.indexByExpansion(disk, expansion)
-        //println(i)
-        i
+        val index = indexer.indexByExpansion(disk, expansion)
+        if(debug){ println(s"Index in ${disk.t}: $index") }
+        index
       }.partitionBy(new KeyPartitioner(indexer.getNumPartitions))
       .map(_._2).cache
       println(s"Partition's count: ${partitions.count}")
 
-      val WKT = partitions.mapPartitionsWithIndex{ case(index, partition) =>
-        partition.map{ p =>
-          s"$index\t${p.disk.toWKT}\t${p.disk.x}\t${p.disk.y}\t${p.t}\n"
-        }
-      }.collect()
-      var filename = "/tmp/pflockPartitions.wkt"
-      var f = new java.io.PrintWriter(filename)
-      f.write(WKT.mkString(""))
-      f.close()
-      logger.info(s"Saved $filename [${WKT.size} records].")
+      partitions.mapPartitionsWithIndex{ case(index, partition) =>
+        val part = partition.toList.groupBy(_.t).map{ t =>
+          (t._1 -> t._2.sortBy(_.t))
+        }.toMap
+        val disks_0 = part.get(t_0).get.map(p => p.disk)
+        val trajectories = disks_0.flatMap(_.pids).distinct.sorted
+        trajectories.map{ tid =>
+          var B = new ArrayBuffer[TDisk]()
+          timestamps.map{ t =>
+            part.get(t).get.foreach{ tdisk =>
+              if(tdisk.disk.pids.contains(tid)){
+                val disk = tdisk.disk
+                B += TDisk(tdisk.t, Disk(disk.x, disk.y, disk.pids.filter(_ > tid)))
+              }
+            }
+          }
+          val transactions = B.toList.map{ tdisk =>
+            tdisk.disk.pids.map(p => new Integer(p)).toList.sorted.asJava
+          }.asJava
+          val fpmax = new AlgoFPMax()
+          val maximals = fpmax.runAlgorithm(transactions, mu)
+            .getLevels.asScala.flatMap{ level =>
+              level.asScala.map{ itemset =>
+                val items = itemset.getItems
+                val support = itemset.getAbsoluteSupport
+                s"[${items.mkString(" ")}: $support]"
+              }
+            }
+          s"${index}\t${tid}\t${maximals.mkString(" ")}"
+        }.toIterator
+      }.foreach(println)
+
+      if(debug){
+        val WKT = partitions.mapPartitionsWithIndex{ case(index, partition) =>
+          partition.map{ p =>
+            s"$index\t${p.disk.toWKT}\t${p.disk.x}\t${p.disk.y}\t${p.t}\n"
+          }
+        }.collect()
+        var filename = "/tmp/pflockPartitions.wkt"
+        var f = new java.io.PrintWriter(filename)
+        f.write(WKT.mkString(""))
+        f.close()
+        logger.info(s"Saved $filename [${WKT.size} records].")
+      }
     }
 
     // Let's start the stream...
