@@ -67,13 +67,13 @@ object FlockEnumerator1 {
       val partitions = disks.flatMap{ disk =>
         val expansion = (disk.t - t_0) * speed
         val index = indexer.indexByExpansion(disk, expansion)
-        if(debug){ println(s"Index in ${disk.t}: $index") }
+        //if(debug){ println(s"Index in ${disk.t}: $index") }
         index
       }.partitionBy(new KeyPartitioner(indexer.getNumPartitions))
       .map(_._2).cache
       println(s"Partition's count: ${partitions.count}")
 
-      partitions.mapPartitionsWithIndex{ case(index, partition) =>
+      val patterns = partitions.mapPartitionsWithIndex{ case(index, partition) =>
         val part = partition.toList.groupBy(_.t).map{ t =>
           (t._1 -> t._2.sortBy(_.t))
         }.toMap
@@ -88,11 +88,12 @@ object FlockEnumerator1 {
                 B += TDisk(tdisk.t, Disk(disk.x, disk.y, disk.pids.filter(_ > tid)))
               }
             }
-          }
+          }          
           val transactions = B.toList.map{ tdisk =>
             tdisk.disk.pids.map(p => new Integer(p)).toList.sorted.asJava
           }.asJava
           val fpmax = new AlgoFPMax()
+          
           val maximals = fpmax.runAlgorithm(transactions, mu)
             .getLevels.asScala.flatMap{ level =>
               level.asScala.map{ itemset =>
@@ -101,12 +102,13 @@ object FlockEnumerator1 {
                 s"[${items.mkString(" ")}: $support]"
               }
             }
-          s"${index}\t${tid}\t${maximals.mkString(" ")}"
+          val bStr = s"${B.toList.map(b => s"{${b.t}=>${b.disk.pids.mkString(" ")}}").mkString(" ")}"
+          s"${index}\t${tid}\t${bStr}\t${maximals.mkString(" ")}"
         }.toIterator
-      }.foreach(println)
+      }
 
       if(debug){
-        val WKT = partitions.mapPartitionsWithIndex{ case(index, partition) =>
+        var WKT = partitions.mapPartitionsWithIndex{ case(index, partition) =>
           partition.map{ p =>
             s"$index\t${p.disk.toWKT}\t${p.disk.x}\t${p.disk.y}\t${p.t}\n"
           }
@@ -116,6 +118,8 @@ object FlockEnumerator1 {
         f.write(WKT.mkString(""))
         f.close()
         logger.info(s"Saved $filename [${WKT.size} records].")
+
+        patterns.foreach(println)
       }
     }
 
