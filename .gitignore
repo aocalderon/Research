@@ -85,6 +85,8 @@ Scripts/Scala/ICPE/.ensime_cache/*
 Scripts/Scala/ICPE/.classpath
 Scripts/Scala/ICPE/.project
 Scripts/Scala/ICPE/.settings/*
+Scripts/Scala/ICPE/.bloop/
+Scripts/Scala/ICPE/.metals/
 
 Scripts/Scala/TrajFactory/target/*
 Scripts/Scala/TrajFactory/project/*
