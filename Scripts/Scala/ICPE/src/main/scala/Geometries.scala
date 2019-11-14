@@ -1,12 +1,44 @@
 import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Envelope, Coordinate, Point, Polygon}
 
-case class TDisk(t: Int, disk: Disk)
+case class Flock(items: Array[Int], start: Int, end: Int){
+  var subset = false
+
+  def getItemset: Set[Int] = items.toSet
+
+  def getItems: List[Int] = items.toList.sorted
+
+  def size: Int = items.size
+  
+  override def toString(): String = s"${getItems.mkString(" ")}\t$start\t$end"
+}
+
+case class TDisk(t: Int, disk: Disk) extends Ordered[TDisk]{
+  override def compare(that: TDisk): Int = {
+    if (t == that.t) disk compare that.disk
+    else t compare that.t
+  }
+
+  def canEqual(a: Any) = a.isInstanceOf[TDisk]
+
+  override def equals(that: Any): Boolean =
+    that match {
+      case that: TDisk => {
+        that.canEqual(this) && this.t == that.t && this.disk == that.disk
+      }
+      case _ => false
+    }
+  override def toString(): String = s"(${disk.x}, ${disk.y}, $t): ${disk.pids.toList.sorted.mkString(" ")}"
+}
 
 case class Disk(x: Double, y: Double, pids: Set[Int], var subset: Boolean = false) extends Ordered[Disk]{
   val model: PrecisionModel = new PrecisionModel(1000)
   val geofactory: GeometryFactory = new GeometryFactory(model)
 
   def count: Int = pids.size
+
+  def getItemset: Set[Int] = pids
+
+  def getItems: List[Int] = pids.toList.sorted
 
   override def compare(that: Disk): Int = {
     if (x == that.x) y compare that.y

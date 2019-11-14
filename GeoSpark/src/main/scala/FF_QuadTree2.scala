@@ -10,7 +10,7 @@ import org.apache.spark.sql.SparkSession
 import org.datasyslab.geospark.enums.{FileDataSplitter, GridType, IndexType}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.spatialRDD.{SpatialRDD, CircleRDD, PointRDD}
-import org.datasyslab.geospark.spatialPartitioning.{FlatGridPartitioner, GridPartitioner}
+import org.datasyslab.geospark.spatialPartitioning.{FlatGridPartitioner}
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.datasyslab.geospark.spatialPartitioning.{KDBTree, KDBTreePartitioner}
 import org.datasyslab.geospark.spatialPartitioning.quadtree.{QuadTreePartitioner, StandardQuadTree, QuadRectangle}
@@ -280,9 +280,9 @@ object FF_QuadTree2{
         val JoinTime = "%.2f".format(JoinAndReportTime - SaveTime)
         logger.info(s"JOIN|$applicationID|$cores|$executors|$epsilon|$mu|$delta|$JoinTime|$nnF0")
 
-        if(timestamp % 10 == 0){
-          flocks.checkpoint()
-        }
+        //if(timestamp % 10 == 0){
+        //  flocks.checkpoint()
+        //}
         if(lastFlocks != null){
           lastFlocks.unpersist(false)
         }
@@ -762,25 +762,6 @@ object FF_QuadTree2{
     def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
   }
 
-  def getPartitionerByCellNumber(boundary: Envelope, epsilon: Double, x: Double, y: Double): GridPartitioner = {
-    val dx = boundary.getWidth / x
-    val dy = boundary.getHeight / y
-    getPartitionerByCellSize(boundary, epsilon, dx, dy)
-  }
-
-  def getPartitionerByCellSize(boundary: Envelope, epsilon: Double, dx: Double, dy: Double): GridPartitioner = {
-    val minx = boundary.getMinX
-    val miny = boundary.getMinY
-    val maxx = boundary.getMaxX
-    val maxy = boundary.getMaxY
-    val Xs = (minx until maxx by dx).map(x => roundAt(3)(x))
-    val Ys = (miny until maxy by dy).map(y => roundAt(3)(y))
-    val g = Xs cross Ys
-    val error = 0.0000001
-    val grids = g.toList.map(g => new Envelope(g._1, g._1 + dx - error, g._2, g._2 + dy - error))
-    new GridPartitioner(grids.asJava, epsilon, dx, dy, Xs.size, Ys.size)
-  }
-
   def readGridCell(wkt: String): Envelope = {
     reader.read(wkt).getEnvelopeInternal
   }
@@ -817,17 +798,15 @@ object FF_QuadTree2{
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .config("spark.scheduler.mode", "FAIR")
-      .config("spark.cores.max", cores * executors)
-      .config("spark.executor.cores", cores)
-      //.config("spark.extraListeners", "com.qubole.sparklens.QuboleJobListener")
-      //.config("spark.sparklens.reporting.disabled", "true")
-      .master(s"spark://${master}:${port}")
+      //.config("spark.cores.max", cores * executors)
+      //.config("spark.executor.cores", cores)
+      //.master(s"spark://${master}:${port}")
       .appName("PFLock")
       .getOrCreate()
     import spark.implicits._
     appID = spark.sparkContext.applicationId
     startTime = spark.sparkContext.startTime
-    spark.sparkContext.setCheckpointDir(checkpointDir)
+    //spark.sparkContext.setCheckpointDir(checkpointDir)
     logEnd(stage, timer, 0, "-1")
 
     // Reading data...

@@ -19,7 +19,7 @@ import scala.collection.JavaConverters._
 import SPMF.{AlgoLCM2, Transactions, Transaction}
 import org.rogach.scallop._
 
-object MF{
+object MF4{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory();
   private val reader = new com.vividsolutions.jts.io.WKTReader(geofactory)
@@ -424,7 +424,7 @@ object MF{
     timer = System.currentTimeMillis()
     stage = "Maximal finder run"
     logStart(stage)
-    val maximals = MF.run(spark, points, KTPartitioner, MFPartitioner, params)
+    val maximals = MF4.run(spark, points, KTPartitioner, MFPartitioner, params)
     logEnd(stage, timer, maximals._2)
 
     // Closing session...

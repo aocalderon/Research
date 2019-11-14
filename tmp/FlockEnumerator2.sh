@@ -1,0 +1,1 @@
+spark-submit --master local[*] --num-executors 40 --executor-cores 3 --class FlockEnumerator2 /home/acald013/Research/Scripts/Scala/ICPE/target/scala-2.11/icpe_2.11-0.1.jar --input ~/Datasets/LA/LA_5KTrajs/ --tag LA --i 0 --n 5 --epsilon 20 --delta 5 --mu 3 --entries 200 --ffpartitions 10 --envelope --interval 15 --save

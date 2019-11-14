@@ -1,0 +1,1 @@
+spark-submit --master spark://mr-hn:7077 --num-executors 40 --executor-cores 3 --class FF /home/acald013/Research/GeoSpark/target/scala-2.11/pflock_2.11-0.1.jar --input_path /home/acald013/Datasets/LA/LA_5KTrajs/ --input_tag LA --epsilon 20 --distance 10 --mu 3 --delta 5 --ffdebug --levels 8 --entries 200 --ffpartitions 10 --stream --mininterval 0 --maxinterval 6
