@@ -36,7 +36,25 @@ object FF{
   private var executors: Int = 0
   private var portUI: String = "4040"
 
-  case class Flock(pids: List[Int], start: Int, end: Int, center: Point)
+  case class Flock(pids: List[Int], start: Int, end: Int, center: Point){
+    def canEqual(a: Any) = a.isInstanceOf[Flock]
+
+    override def equals(that: Any): Boolean =
+      that match {
+        case that: Flock => {
+          that.canEqual(this) && this.start.equals(that.start) && this.end.equals(that.end) && this.pids.equals(that.pids)
+        }
+        case _ => false
+      }
+
+    override def toString: String = s"$start\t$end\t${pids.sorted.mkString(" ")}"
+
+    def toWKT: String = s"POINT(${center.getX}, ${center.getY})\t${this.toString()}"
+
+    def size: Int = pids.size
+
+    def lenght: Int = end - start + 1
+  }
 
   def run(spark: SparkSession, timestamps: List[Int], params: FFConf): Unit = {
     val applicationID = spark.sparkContext.applicationId
@@ -95,7 +113,6 @@ object FF{
       }
       lastC = C
       C.analyze()
-      //C.CRSTransform(sespg, tespg)
       C.spatialPartitioning(gridType, FFpartitions)
       logEnd(stage, timer, nDisks, s"$timestamp")
 
@@ -124,16 +141,16 @@ object FF{
         F.analyze()
         F.spatialPartitioning(C.getPartitioner)
         F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
-        val buffers = new CircleRDD(C, distance)
-        buffers.spatialPartitioning(C.getPartitioner)
+        val disks = new CircleRDD(C, distance)
+        disks.spatialPartitioning(C.getPartitioner)
 
         if(debug){
           val nF = F.rawSpatialRDD.count()
-          val nBuffers = buffers.rawSpatialRDD.count()
-          logger.info(s"Join between F ($nF) and buffers ($nBuffers)")
+          val nDisks = disks.rawSpatialRDD.count()
+          logger.info(s"Join between F ($nF) and buffers ($nDisks)")
         }
 
-        val R = JoinQuery.DistanceJoinQueryWithDuplicates(F, buffers, true, false) // using index, only return geometries fully covered by each buffer...
+        val R = JoinQuery.DistanceJoinQueryWithDuplicates(F, disks, true, false) // using index, only return geometries fully covered by each buffer...
 
         flocks = R.rdd.flatMap{ case (g: Geometry, h: java.util.HashSet[Point]) =>
           val f0 = getFlocksFromGeom(g)
@@ -141,7 +158,7 @@ object FF{
             val f1 = getFlocksFromGeom(point)
             (f0, f1)
           }
-        }.map{ flocks => // HAVE TO DOUBLE CHECK THIS!!! 
+        }.map{ flocks => 
           val f = flocks._1.pids.intersect(flocks._2.pids)
           val s = flocks._2.start
           val e = flocks._1.end
@@ -151,14 +168,53 @@ object FF{
           .map(f => (s"${f.pids};${f.start};${f.end}", f))
           .reduceByKey( (f0, f1) => f0).map(_._2)
           .cache()
-        val nFlocks = flocks.count()
+        var nFlocks = flocks.count()
         logEnd(stage, timer, nFlocks, s"$timestamp")
 
         if(debug){
           logger.info(s"Flocks from join: $nFlocks")
-          flocks.sortBy(_.start).map(f => s"${f.start}\t${f.end}\t${f.pids.sorted.mkString(" ")}").toDS().show(nFlocks.toInt, false)
         }
 
+        ///////////////////////////////////////////////////////////////////////
+        timer = System.currentTimeMillis()
+        stage = "Reporting"
+        logStart(stage)
+        if(debug){
+          logger.info("Candidate flocks")
+          flocks.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks.toInt, false)
+        }
+        val flocks_delta =  flocks.filter(_.lenght == delta).cache
+        val nFlocks_delta = flocks_delta.count()
+        val flocks_delta_to_prune = getRedundants(flocks_delta, epsilon, spark, params, true).cache
+        val flocks_to_report = flocks_delta.subtract(flocks_delta_to_prune).cache
+        val nFlocks_to_report = flocks_to_report.count()
+        if(debug){
+          logger.info("Reported flocks")
+          flocks_delta.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks_to_report.toInt, false)
+          flocks_to_report.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks_to_report.toInt, false)
+        }
+        val flocks_updated = flocks_to_report.map(f => new Flock(f.pids, f.start + 1, f.end, f.center))
+        val previous_flocks = flocks_updated.union(flocks.filter(_.lenght < delta))
+        val new_flocks = disks.getCenterPointAsSpatialRDD.getRawSpatialRDD.rdd.map{ getFlocksFromGeom }
+        if(debug){
+          logger.info("Previous flocks")
+          previous_flocks.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks.toInt, false)
+          logger.info("New flocks")
+          new_flocks.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nDisks.toInt, false)
+        }
+        val flocks_to_prune = getFlocksToPrune(previous_flocks, disks, spark)
+        if(debug){
+          logger.info("Prunned flocks")
+          flocks_to_prune.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks.toInt, false)
+        }
+
+        flocks = flocks.union(new_flocks.subtract(flocks_to_prune)).cache
+        nFlocks = flocks.count()
+
+        logEnd(stage, timer, nFlocks, "$timestamp")
+        ///////////////////////////////////////////////////////////////////////
+
+        /*
         // Reporting flocks...
         timer = System.currentTimeMillis()
         stage = "3.1.Flocks to clean >= delta"
@@ -221,6 +277,7 @@ object FF{
         if(debug){
           logger.info(s"G Flocks after prune: $nF0_prime")
           logger.info(s"H Flocks after prune: $nF1_prime")
+          f1_prime.toDS().show(nF1_prime.toInt, false)
         }
 
         // Reporting flocks...
@@ -298,6 +355,7 @@ object FF{
         f1_prime.unpersist(false)
         f0.unpersist(false)
         f1.unpersist(false)
+         */
       }
     } // rof
     logger.info(s"Number of flocks: ${nF0}")
@@ -359,6 +417,93 @@ object FF{
       x >= (min_x + epsilon) &&
       y <= (max_y - epsilon) &&
       y >= (min_y + epsilon)
+  }
+
+  def getFlocksToPrune(flocksRDD: RDD[Flock], disks: CircleRDD, spark: SparkSession, debug: Boolean = false): RDD[Flock] = {
+    import spark.implicits._
+    val flockPoints = flocksRDD.map{ flock => 
+      val point = flock.center
+      point.setUserData(s"${flock.pids.sorted.mkString(" ")};${flock.start};${flock.end}")
+      point
+    }
+    val flocks = new SpatialRDD[Point]()
+    flocks.setRawSpatialRDD(flockPoints)
+    flocks.analyze()
+    flocks.spatialPartitioning(disks.getPartitioner)
+    flocks.buildIndex(IndexType.QUADTREE, true) 
+    val F = JoinQuery.DistanceJoinQueryFlat(flocks, disks, true, false)
+    val flocks_prime = F.rdd.map{ case (disk: Point, flock: Point) =>
+      (disk, flock)
+    }.groupByKey()
+
+    if(debug){
+      flocks_prime.flatMap{ entry =>
+        val disk = getFlocksFromGeom(entry._1).toString()
+        val flocks = entry._2.map(getFlocksFromGeom).map(flock => (disk, flock.toString())).toList
+
+        flocks
+      }.toDS().show(100, false)
+    }
+
+    flocks_prime.map{ entry =>
+      val disk  = getFlocksFromGeom(entry._1)
+      val flocks = entry._2.map(getFlocksFromGeom)
+      var subset = false
+      for(flock <- flocks){
+        if(disk.pids.toSet.subsetOf(flock.pids.toSet)){
+          subset = true
+        }
+      }
+      (disk, subset)
+    }.filter(_._2).map(_._1)
+  }
+
+  def getRedundants(flocks: RDD[Flock], epsilon: Double, spark: SparkSession, params: FFConf, debug: Boolean = false): RDD[Flock] = {
+    if(flocks.isEmpty()){
+      flocks
+    } else {
+      import spark.implicits._
+      val points = flocks.map{ flock =>
+        val point = flock.center
+        point.setUserData(s"${flock.pids.sorted.mkString(" ")};${flock.start};${flock.end}")
+        point
+      }.cache
+      val nPoints = points.count().toInt
+      val pointsRDD = new SpatialRDD[Point]()
+      pointsRDD.setRawSpatialRDD(points)
+      pointsRDD.analyze()
+      var nPartitions = params.ffpartitions()
+      if(nPartitions > nPoints / 2){
+        nPartitions =  4
+      }
+      pointsRDD.spatialPartitioning(GridType.KDBTREE, nPartitions)
+      //pointsRDD.buildIndex(IndexType.QUADTREE, true)
+      val bufferRDD = new CircleRDD(pointsRDD, epsilon)
+      bufferRDD.spatialPartitioning(pointsRDD.getPartitioner)
+      val F = JoinQuery.DistanceJoinQuery(pointsRDD, bufferRDD, false, false)
+      val flocks_prime = F.rdd.map{ case (flock: Point, flocks: java.util.HashSet[Point]) =>
+        (flock, flocks.asScala.toList)
+      }
+
+      val f = flocks_prime.flatMap{ entry =>
+        val flock1  = getFlocksFromGeom(entry._1)
+        val flocks = entry._2.map(getFlocksFromGeom)
+        flocks.map{ flock2 => (flock1, flock2) }
+          .filter(flocks => flocks._1.size < flocks._2.size)
+          .map{flocks =>
+            val flock1 = flocks._1
+            val flock2 = flocks._2
+            val subset = flock1.pids.toSet.subsetOf(flock2.pids.toSet)
+            (flock1, flock2, subset)
+          }
+      }
+
+      if(debug){
+        f.map(f => (f._1.toString(), f._2.toString(), f._3)).toDS().show(100, false)
+      }
+
+      f.filter(_._3).map(_._1)
+    }
   }
 
   def pruneFlockByExpansions(F: PointRDD, epsilon: Double, timestamp: Int, spark: SparkSession, params: FFConf): RDD[String] = {
