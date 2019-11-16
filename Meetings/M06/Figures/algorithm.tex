@@ -1,0 +1,33 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{caption}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage[margin=2cm]{geometry}
+
+\algnewcommand\algorithmicforeach{\textbf{for each}}
+\algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
+
+\begin{document}
+    \begin{algorithm} \caption{\textsc{updateFlocks} algorithm}
+        \textbf{Require:} RDD of current flocks $\mathcal F$, RDD of new new flocks $\mathcal N$ and the $\varepsilon$ value.
+        \begin{algorithmic}[1]
+            \State $\mathcal R \gets \mathcal N \Join_{d=\varepsilon} \mathcal F$ \Comment{Distributed spatial join supported by GeoSpark}
+            \State $\mathcal J \gets \emptyset$ \Comment{a list of redundant flocks}
+            \ForEach{$entry \in \mathcal R$} 
+                \State $newflock \gets entry(0)$ \Comment{a Flock from $\mathcal N$}
+                \State $oldflocks \gets entry(1)$ \Comment{a list of Flocks from $\mathcal F$ intersected by $newflock$}
+                \ForEach{$oldflock \in oldflocks$}
+                    \If{$newflock \subset oldflock$}
+                        \State $\mathcal J \gets \mathcal J \cup newflock$
+                    \EndIf
+                \EndFor
+            \EndFor
+            \State $\mathcal F \gets \mathcal F \cup (\mathcal N \setminus \mathcal J)$ 
+        \end{algorithmic}
+        \textbf{Ensure:} RDD of updated flocks $\mathcal F$.
+    \end{algorithm}
+\end{document}
