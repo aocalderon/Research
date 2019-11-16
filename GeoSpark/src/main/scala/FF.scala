@@ -86,9 +86,10 @@ object FF{
     var stage = ""
     var firstRun: Boolean = true
     var flocks: RDD[Flock] = spark.sparkContext.emptyRDD[Flock]
+    var nFlocks: Long = 0L
     var lastFlocks: RDD[Flock] = null
     var lastC: SpatialRDD[Point] = null
-    var nF0 = 0
+    var nReported = 0
     for(timestamp <- timestamps){ //for
       // Finding maximal disks...
       tag = s"$timestamp"
@@ -132,12 +133,13 @@ object FF{
         timer = System.currentTimeMillis()
         stage = "2.Join done"
         logStart(stage)
-        val F: PointRDD = new PointRDD(flocks.map{ f =>  // Create spatial RDD with candidate flocks.
-            val info = s"${f.pids.mkString(" ")};${f.start};${f.end}"
-            f.center.setUserData(info)
-            f.center
-        }.toJavaRDD(), StorageLevel.MEMORY_ONLY_SER//, sespg, tespg
-        )
+        val F = new SpatialRDD[Point]()
+        val flockPoints = flocks.map{ f =>  // Create spatial RDD with candidate flocks.
+          val userData = s"${f.pids.mkString(" ")};${f.start};${f.end}"
+          f.center.setUserData(userData)
+          f.center
+        }
+        F.setRawSpatialRDD(flockPoints)
         F.analyze()
         F.spatialPartitioning(C.getPartitioner)
         F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
@@ -145,9 +147,15 @@ object FF{
         disks.spatialPartitioning(C.getPartitioner)
 
         if(debug){
-          val nF = F.rawSpatialRDD.count()
+          logger.info(s"Candidate flocks ($nFlocks)")
+          flocks.sortBy(_.pids.sorted.head).map(_.toWKT).toDS().show(nFlocks.toInt, false)
+          val nF = F.spatialPartitionedRDD.rdd.count()
           val nDisks = disks.rawSpatialRDD.count()
           logger.info(s"Join between F ($nF) and buffers ($nDisks)")
+          F.rawSpatialRDD.rdd.map{ getFlocksFromGeom }.sortBy(_.pids.sorted.head)
+            .map{_.toString()}.toDS().show(nF.toInt, false)
+          disks.getCenterPointAsSpatialRDD.rawSpatialRDD.rdd.map{ getFlocksFromGeom }
+            .sortBy(_.pids.sorted.head).map{_.toString()}.toDS().show(nDisks.toInt, false)
         }
 
         val R = JoinQuery.DistanceJoinQueryWithDuplicates(F, disks, true, false) // using index, only return geometries fully covered by each buffer...
@@ -168,7 +176,7 @@ object FF{
           .map(f => (s"${f.pids};${f.start};${f.end}", f))
           .reduceByKey( (f0, f1) => f0).map(_._2)
           .cache()
-        var nFlocks = flocks.count()
+        nFlocks = flocks.count()
         logEnd(stage, timer, nFlocks, s"$timestamp")
 
         if(debug){
@@ -176,42 +184,66 @@ object FF{
         }
 
         ///////////////////////////////////////////////////////////////////////
-        timer = System.currentTimeMillis()
-        stage = "Reporting"
-        logStart(stage)
         if(debug){
-          logger.info("Candidate flocks")
+          logger.info(s"Candidate flocks ($nFlocks)")
           flocks.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks.toInt, false)
         }
+
+        timer = System.currentTimeMillis()
+        stage = "3.Flocks reported"
+        logStart(stage)
         val flocks_delta =  flocks.filter(_.lenght == delta).cache
-        val nFlocks_delta = flocks_delta.count()
+        val nFlocks_delta = flocks_delta.count().toInt
+
         val flocks_delta_to_prune = getRedundants(flocks_delta, epsilon, spark, params, true).cache
+        val nFlocks_delta_to_prune = flocks_delta_to_prune.count().toInt
         val flocks_to_report = flocks_delta.subtract(flocks_delta_to_prune).cache
-        val nFlocks_to_report = flocks_to_report.count()
+        val nFlocks_to_report = flocks_to_report.count().toInt
+        logEnd(stage, timer, nFlocks_to_report, s"$timestamp")
+        saveFlocks(flocks_to_report, timestamp)
+        nReported = nReported + nFlocks_to_report
+
         if(debug){
-          logger.info("Reported flocks")
-          flocks_delta.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks_to_report.toInt, false)
-          flocks_to_report.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks_to_report.toInt, false)
-        }
-        val flocks_updated = flocks_to_report.map(f => new Flock(f.pids, f.start + 1, f.end, f.center))
-        val previous_flocks = flocks_updated.union(flocks.filter(_.lenght < delta))
-        val new_flocks = disks.getCenterPointAsSpatialRDD.getRawSpatialRDD.rdd.map{ getFlocksFromGeom }
-        if(debug){
-          logger.info("Previous flocks")
-          previous_flocks.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks.toInt, false)
-          logger.info("New flocks")
-          new_flocks.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nDisks.toInt, false)
-        }
-        val flocks_to_prune = getFlocksToPrune(previous_flocks, disks, spark)
-        if(debug){
-          logger.info("Prunned flocks")
-          flocks_to_prune.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks.toInt, false)
+          logger.info(s"flocks_delta ($nFlocks_delta)")
+          flocks_delta.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks_delta, false)
+          logger.info(s"flocks_delta_to_prune ($nFlocks_delta_to_prune)")
+          flocks_delta_to_prune.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks_delta_to_prune, false)
+          logger.info(s"flocks_to_report ($nFlocks_to_report)")
+          flocks_to_report.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks_to_report, false)
         }
 
-        flocks = flocks.union(new_flocks.subtract(flocks_to_prune)).cache
+        timer = System.currentTimeMillis()
+        stage = "4.Flocks updated"
+        logStart(stage)
+        val flocks_updated = flocks_to_report.map(f => new Flock(f.pids, f.start + 1, f.end, f.center)).cache
+        val nFlocks_updated = flocks_updated.count().toInt
+        val previous_flocks = flocks_updated.union(flocks.filter(_.lenght < delta)).cache
+        val nPrevious_flocks = previous_flocks.count().toInt
+        val new_flocks = disks.getCenterPointAsSpatialRDD.getRawSpatialRDD.rdd.map{ getFlocksFromGeom }.cache
+        val nNew_flocks= new_flocks.count().toInt
+
+        val flocks_to_prune = getFlocksToPrune(previous_flocks, disks, spark, true).cache
+        val nFlocks_to_prune = flocks_to_prune.count().toInt
+        val flocks_pruned = new_flocks.subtract(flocks_to_prune).cache
+        val nFlocks_pruned = flocks_pruned.count().toInt
+        flocks = previous_flocks.union(flocks_pruned).cache
         nFlocks = flocks.count()
+        logEnd(stage, timer, nFlocks, s"$timestamp")
 
-        logEnd(stage, timer, nFlocks, "$timestamp")
+        if(debug){
+          logger.info(s"flocks_updated ($nFlocks_updated)")
+          flocks_updated.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks_updated, false)
+          logger.info(s"previous_flocks ($nPrevious_flocks)")
+          previous_flocks.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nPrevious_flocks, false)
+          logger.info(s"new_flocks ($nNew_flocks)")
+          new_flocks.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nNew_flocks, false)
+          logger.info(s"flocks_to_prune ($nFlocks_to_prune)")
+          flocks_to_prune.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks_to_prune, false)
+          logger.info(s"flocks_pruned ($nFlocks_pruned)")
+          flocks_pruned.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks_pruned, false)
+          logger.info(s"New candidate flocks ($nFlocks)")
+          flocks.sortBy(_.pids.sorted.head).map(_.toString()).toDS().show(nFlocks.toInt, false)
+        }
         ///////////////////////////////////////////////////////////////////////
 
         /*
@@ -358,10 +390,9 @@ object FF{
          */
       }
     } // rof
-    logger.info(s"Number of flocks: ${nF0}")
+    logger.info(s"Number of flocks: ${nReported}")
     val executionTime = "%.2f".format((System.currentTimeMillis() - clockTime) / 1000.0)
-    val nReport = nF0
-    logger.info(s"PFLOCK|$applicationID|$cores|$executors|$epsilon|$mu|$delta|$executionTime|$nReport")
+    logger.info(s"PFLOCK|$applicationID|$cores|$executors|$epsilon|$mu|$delta|$executionTime|$nReported")
   }
 
   def saveFlocks(flocks: RDD[Flock], instant: Int): Unit = {
@@ -436,26 +467,20 @@ object FF{
       (disk, flock)
     }.groupByKey()
 
-    if(debug){
-      flocks_prime.flatMap{ entry =>
-        val disk = getFlocksFromGeom(entry._1).toString()
-        val flocks = entry._2.map(getFlocksFromGeom).map(flock => (disk, flock.toString())).toList
-
-        flocks
-      }.toDS().show(100, false)
-    }
-
-    flocks_prime.map{ entry =>
+    val f = flocks_prime.flatMap{ entry =>
       val disk  = getFlocksFromGeom(entry._1)
       val flocks = entry._2.map(getFlocksFromGeom)
-      var subset = false
-      for(flock <- flocks){
-        if(disk.pids.toSet.subsetOf(flock.pids.toSet)){
-          subset = true
-        }
+      flocks.map{ flock =>
+        val subset = disk.pids.toSet.subsetOf(flock.pids.toSet)
+        (disk, flock, subset)
       }
-      (disk, subset)
-    }.filter(_._2).map(_._1)
+    }
+
+    if(debug){
+      f.map{ f => (f._1.toString(), f._2.toString(), f._3)  }.toDS().show(100, false)
+    }
+
+    f.filter(_._3).map(_._1)
   }
 
   def getRedundants(flocks: RDD[Flock], epsilon: Double, spark: SparkSession, params: FFConf, debug: Boolean = false): RDD[Flock] = {

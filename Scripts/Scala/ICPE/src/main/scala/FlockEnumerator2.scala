@@ -142,13 +142,6 @@ object FlockEnumerator2 {
                 }
               }
             }
-
-            //////////////////
-            if(tid == 1048492){
-            //  B.foreach(println)
-            }
-            //////////////////
-
             val transactions = B.toList.map{ tdisk =>
               tdisk.disk.getItems.map(p => new Integer(p)).asJava
             }.asJava
