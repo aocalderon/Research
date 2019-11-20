@@ -140,11 +140,24 @@ object FF{
           f.center
         }
         F.setRawSpatialRDD(flockPoints)
+        if(debug){
+          val nF = F.rawSpatialRDD.rdd.count()
+          logger.info(s"F ($nF)")
+          F.rawSpatialRDD.rdd.map{ getFlocksFromGeom }.sortBy(_.pids.sorted.head)
+            .map{_.toString()}.toDS().show(nF.toInt, false)
+        }
         F.analyze()
-        F.spatialPartitioning(C.getPartitioner)
+        F.spatialPartitioning(gridType, FFpartitions)
+        F.spatialPartitionedRDD.rdd.cache
+        if(debug){
+          val nF = F.spatialPartitionedRDD.rdd.count()
+          logger.info(s"F ($nF)")
+          F.spatialPartitionedRDD.rdd.map{ getFlocksFromGeom }.sortBy(_.pids.sorted.head)
+            .map{_.toString()}.toDS().show(nF.toInt, false)
+        }
         F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
         val disks = new CircleRDD(C, distance)
-        disks.spatialPartitioning(C.getPartitioner)
+        disks.spatialPartitioning(F.getPartitioner)
 
         if(debug){
           logger.info(s"Candidate flocks ($nFlocks)")
@@ -152,7 +165,7 @@ object FF{
           val nF = F.spatialPartitionedRDD.rdd.count()
           val nDisks = disks.rawSpatialRDD.count()
           logger.info(s"Join between F ($nF) and buffers ($nDisks)")
-          F.rawSpatialRDD.rdd.map{ getFlocksFromGeom }.sortBy(_.pids.sorted.head)
+          F.spatialPartitionedRDD.rdd.map{ getFlocksFromGeom }.sortBy(_.pids.sorted.head)
             .map{_.toString()}.toDS().show(nF.toInt, false)
           disks.getCenterPointAsSpatialRDD.rawSpatialRDD.rdd.map{ getFlocksFromGeom }
             .sortBy(_.pids.sorted.head).map{_.toString()}.toDS().show(nDisks.toInt, false)
