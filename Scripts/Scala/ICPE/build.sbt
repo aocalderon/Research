@@ -2,7 +2,7 @@ name := "ICPE"
 organization := "UCR-DBLab"
 version := "0.1"
 
-scalaVersion in ThisBuild := "2.12.10"
+scalaVersion in ThisBuild := "2.11.8"
 
 resolvers += "bintray/meetup" at "http://dl.bintray.com/meetup/maven"
 

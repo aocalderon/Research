@@ -252,12 +252,12 @@ object MF{
 
   def logEnd(msg: String, timer: Long, n: Long): Unit ={
     val duration = (clocktime - startTime) / 1000.0
-    logger.info("MF|%-30s|%6.2f|%-50s|%6.2f|%6d|%s".format(s"$appID|$executors|$cores|  END", duration, msg, (System.currentTimeMillis()-timer)/1000.0, n, tag))
+    logger.info("MF|%-30s|%6.2f|%-30s|%6.2f|%6d|%s".format(s"$appID|$executors|$cores|  END", duration, msg, (System.currentTimeMillis()-timer)/1000.0, n, tag))
   }
 
   def logStart(msg: String): Unit ={
     val duration = (clocktime - startTime) / 1000.0
-    logger.info("MF|%-30s|%6.2f|%-50s|%6.2f|%6d|%s".format(s"$appID|$executors|$cores|START", duration, msg, 0.0, 0, tag))
+    logger.info("MF|%-30s|%6.2f|%-30s|%6.2f|%6d|%s".format(s"$appID|$executors|$cores|START", duration, msg, 0.0, 0, tag))
   }
 
   import java.io._

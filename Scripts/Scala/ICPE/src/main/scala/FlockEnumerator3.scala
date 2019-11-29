@@ -15,13 +15,17 @@ import com.vividsolutions.jts.geom.{PrecisionModel, GeometryFactory, Geometry}
 import collection.JavaConverters._
 import SPMF.{AlgoFPMax, Transaction}
 
-object FlockEnumerator2 {
+object FlockEnumerator3 {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
-  private val model: PrecisionModel = new PrecisionModel(100000)
+  private val model: PrecisionModel = new PrecisionModel(10000)
   private val geofactory: GeometryFactory = new GeometryFactory(model)
   private var stage: String = ""
   private var timer: Long = 0L
   private var counter: Int = 0
+
+  implicit class Crossable[X](xs: Traversable[X]) {
+    def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
+  }
 
   def getFullBoundary(disks: RDD[Disk]): Envelope = {
     val maxX = disks.map(_.x).max()
@@ -56,6 +60,38 @@ object FlockEnumerator2 {
       flocksMap += (keys(i + 1) -> currs)
     }
     flocksMap.values.flatMap(_.toList).toArray
+  }
+
+  def pruneSubsets(flocks: Array[Flock]): Array[Flock] = {
+    var flocksMap = flocks.groupBy(_.size).map(p => p._1 -> p._2).toMap
+    val keys = flocksMap.keys.toList.sorted.reverse
+    for(i <- 0 until keys.length - 1){
+      val prevs = (0 to i).map{ j =>
+        flocksMap.get(keys(j)).get.toArray.map(_.getItemset)
+      }.reduce(_ ++ _)
+      val currs = flocksMap.get(keys(i + 1)).get.filterNot{ f =>
+        val flock = f.getItemset
+        prevs.map(prev => flock.subsetOf(prev)).reduce(_ || _)
+      }
+      flocksMap += (keys(i + 1) -> currs)
+    }
+    flocksMap.values.flatMap(_.toList).toArray
+  }
+
+  def pruneSubsets(tdisks: List[TDisk]): List[TDisk] = {
+    var disksMap = tdisks.groupBy(_.size).map(p => p._1 -> p._2).toMap
+    val keys = disksMap.keys.toList.sorted.reverse
+    for(i <- 0 until keys.length - 1){
+      val prevs = (0 to i).map{ j =>
+        disksMap.get(keys(j)).get.toArray.map(_.getItems.toSet)
+      }.reduce(_ ++ _)
+      val currs = disksMap.get(keys(i + 1)).get.filterNot{ f =>
+        val flock = f.getItems.toSet
+        prevs.map(prev => flock.subsetOf(prev)).reduce(_ || _)
+      }
+      disksMap += (keys(i + 1) -> currs)
+    }
+    disksMap.values.flatMap(_.toList).toList.distinct
   }
 
   def getFlocksFromGeom(g: Geometry): Flock = {
@@ -121,7 +157,6 @@ object FlockEnumerator2 {
   def enumerate(disks: RDD[TDisk], spark: SparkSession, params: FFConf): Unit = {
     import spark.implicits._
 
-    val epsilon = params.epsilon()
     val delta = params.delta()
     val mu    = params.mu()
     val width = params.width()
@@ -208,60 +243,75 @@ object FlockEnumerator2 {
                 }
               }
             }
-            val transactions = B.toList.map{ tdisk =>
-              tdisk.disk.getItems.map(p => new Integer(p)).asJava
-            }.asJava
-
-            val tidTest = 1380563
+            val tidTest = -1
             if(tid == tidTest){
               B.toList.sortBy(b => (b.t,  b.disk.getItems.head))
                 .map(b => s"${b.t}\t${b.disk.getItems.mkString(" ")}")
                 .foreach{println}
-              val D = B.toList
-              for(t <- timestamps){
-                val D_prime = D.filter(d => t == d.t).sortBy(_.disk.getItems.head)
-                  .map(d => s"${d.t}\t${d.disk.getItems.mkString(" ")}\t${d.disk.toCircle(epsilon/2.0).toText()}\n")
-                val filename = s"/tmp/windowTest_${t}.wkt"
-                val f = new java.io.PrintWriter(filename)
-                f.write(D_prime.mkString(""))
-                f.close()
-                logger.info(s"Saved $filename [${D_prime.size} records].")
-              }
             }
+
+            val S = B.toList.groupBy(_.t) // Set of disks intersecting a trajectory...
+            var flocks = List.empty[Flock]
+
+            if(S.map(_._1).size == delta){
+              var C = S.get(t_0).get // Candidates in time 0 of this window...
+              val D = timestamps.tail.map{ t => S.get(t).get } // Remaining disks in this windows sorted by time...
+              for(d <- D){
+                if(tid == tidTest){
+                  logger.info(s"Size of C: ${C.size}")
+                  C.distinct.sortBy(c => c.getItems.mkString(" "))
+                    .map{ c =>
+                      s"${c.t}\t${c.disk.toString()}"
+                    }
+                    .foreach{println}
+                  logger.info(s"Size of d: ${d.size}")
+                  d.sortBy(d => d.getItems.mkString(" "))
+                    .map{ d =>
+                      s"${d.t}\t${d.getItems.mkString(" ")}"
+                    }
+                    .foreach{println}
+                }
+
+                C = C.cross(d).map{ pair => // Compare each candidate in C with the disks in next timestamp...
+                  val disk1 = pair._1.disk
+                  val disk2 = pair._2.disk
+
+                  val items = disk1.getItemset.intersect(disk2.getItemset)
+                  TDisk(pair._2.t, Disk(disk2.x, disk2.y, items)) // Update new disks with the intersection...
+                }.filter(_.size + 1 >= mu).toList // Add tid into the count...
+                C = pruneSubsets(C) // Update C
+              }
+              val F = pruneSubsets(C.map{ c =>
+                val items = Array(tid) ++ c.getItems
+                val flock = Flock(items, t_0, c.t)
+                flock.center = c.getCenter
+                flock
+              }.toArray).distinct
+              
+              if(tid == tidTest){
+                logger.info(s"Size of F: ${F.size}")
+                F.sortBy(f => (f.start, f.items.head))
+                  .map{ f =>
+                    s"${f.toString()}"
+                  }
+                  .foreach{println}
+              }
+
+              flocks = F.toList
+            }
+            /*
+            val transactions = B.toList.map{ tdisk =>
+              tdisk.disk.getItems.map(p => new Integer(p)).asJava
+            }.asJava
+
 
             val fpmax = new AlgoFPMax()
             val maximals = fpmax.runAlgorithm(transactions, timestamps.size) // Should be delta
               .getLevels.asScala.flatMap{ level =>
                 level.asScala
               }
+             */
 
-            if(tid == tidTest){
-              maximals.sortBy(_.getItems.sorted.head)
-                .map(_.getItems.mkString(" "))
-                .foreach{println}
-            }
-
-            val flocks = maximals.filter(_.getItems.size + 1 >= mu)
-              .map{ maximal => // Checking consecutiveness ...
-                val m = maximal.getItems.toSet
-                (maximal, B.par.filter(b => m.subsetOf(b.disk.getItemset)))
-              }.filter{ case (maximal, tdisks) =>
-                  val b = tdisks.map(_.t)
-                  b.size >= delta // Keeping just those which touch delta timestamps
-              }.map{ case(maximal, tdisks) =>
-                  val items = (maximal.getItems ++ Array(tid)).sorted
-                  val t_n = t_0 + delta - 1
-                  val flock = Flock(items, t_0, t_n)
-                  val last_disk = tdisks.filter(_.t == t_n).head.disk // Keeping last position of flock...
-                  flock.center = geofactory.createPoint(new Coordinate(last_disk.x, last_disk.y))
-                  flock 
-              }
-
-            if(tid == tidTest){
-              flocks.sortBy(_.getItems.head)
-                .map(_.toString())
-                .foreach{println}
-            }
 
             flocks
           }.toIterator
@@ -283,17 +333,7 @@ object FlockEnumerator2 {
         logger.info(s"Saved $filename [${WKT.size} records].")
       }
     } else {
-      var flocksMap = patterns.groupBy(_.size).map(p => p._1 -> p._2).collect().toMap
-      val keys = flocksMap.keys.toList.sorted.reverse
-      for(i <- 0 until keys.length - 1){
-        val prevs = flocksMap.get(keys(i)).get.toList.map(_.getItemset)
-        val currs = flocksMap.get(keys(i + 1)).get.filterNot{ f =>
-          val flock = f.getItemset
-          prevs.map(prev => flock.subsetOf(prev)).reduce(_ || _)
-        }
-        flocksMap += (keys(i + 1) -> currs)
-      }
-      flocksMap.values.flatMap(_.toList).map(_.toString()).toList.sorted.foreach{println}
+      pruneSubsets(patterns).map(_.toString()).sorted.foreach{println}
     }
   }
 

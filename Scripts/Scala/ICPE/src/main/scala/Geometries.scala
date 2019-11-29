@@ -1,7 +1,8 @@
 import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Envelope, Coordinate, Point, Polygon}
 
 case class Flock(items: Array[Int], start: Int, end: Int){
-  var subset = false
+  var center: Point = null
+  var subset: Boolean = false
 
   def getItemset: Set[Int] = items.toSet
 
@@ -12,25 +13,43 @@ case class Flock(items: Array[Int], start: Int, end: Int){
   override def toString(): String = s"${getItems.mkString(" ")}\t$start\t$end"
 }
 
-case class TDisk(t: Int, disk: Disk) extends Ordered[TDisk]{
+case class TDisk(t: Int, disk: Disk) {
+  /*
   override def compare(that: TDisk): Int = {
     if (t == that.t) disk compare that.disk
     else t compare that.t
   }
+   */
 
   def canEqual(a: Any) = a.isInstanceOf[TDisk]
 
   override def equals(that: Any): Boolean =
     that match {
       case that: TDisk => {
-        that.canEqual(this) && this.t == that.t && this.disk == that.disk
+        that.canEqual(this) && this.t == that.t && this.disk.equals(that.disk)
       }
       case _ => false
     }
   override def toString(): String = s"(${disk.x}, ${disk.y}, $t): ${disk.pids.toList.sorted.mkString(" ")}"
+
+  def size: Int = disk.size
+
+  def toWKT: String = s"$t\t${disk.toWKT}"
+
+  def getCenter: Point = disk.toPoint
+
+  def getItems: Array[Int] = disk.getItems.toArray
+
+  override def hashCode: Int = {
+    val prime = 31
+    var result = 1
+    result = prime * result + t;
+    result = prime * result + (if (disk == null) 0 else disk.hashCode)
+    result
+  }
 }
 
-case class Disk(x: Double, y: Double, pids: Set[Int], var subset: Boolean = false) extends Ordered[Disk]{
+case class Disk(x: Double, y: Double, pids: Set[Int], var subset: Boolean = false) {
   val model: PrecisionModel = new PrecisionModel(1000)
   val geofactory: GeometryFactory = new GeometryFactory(model)
 
@@ -40,22 +59,26 @@ case class Disk(x: Double, y: Double, pids: Set[Int], var subset: Boolean = fals
 
   def getItems: List[Int] = pids.toList.sorted
 
+  /*
   override def compare(that: Disk): Int = {
     if (x == that.x) y compare that.y
     else x compare that.x
   }
+   */
 
   def canEqual(a: Any) = a.isInstanceOf[Disk]
 
   override def equals(that: Any): Boolean =
     that match {
       case that: Disk => {
-        that.canEqual(this) && this.x == that.x && this.y == that.y
+        this.canEqual(that) && this.getItems.equals(that.getItems)
       }
       case _ => false
     }
 
   override def toString: String = s"${pids.toList.sorted.mkString(" ")}\t$x\t$y"
+
+  def size: Int = getItemset.size
 
   def toWKT: String = s"POINT($x $y)\t${pids.toList.sorted.mkString(" ")}"
 
@@ -64,6 +87,19 @@ case class Disk(x: Double, y: Double, pids: Set[Int], var subset: Boolean = fals
     val point = geofactory.createPoint(coord)
     point.setUserData(s"${pids.mkString(" ")}")
     point
+  }
+
+  def toCircle(radius: Double): Polygon = {
+    val point = toPoint
+    point.buffer(radius, radius.toInt).asInstanceOf[Polygon]
+  }
+
+  override def hashCode: Int = {
+    val prime = 31
+    var result = 1
+    result = prime * result + pids.size;
+    result = prime * result + (if (pids == null) 0 else pids.hashCode)
+    result
   }
 }
 

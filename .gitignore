@@ -55,6 +55,13 @@ Scripts/Scala/DatasetReplicator/.idea/workspace.xml
 Scripts/Scala/DatasetReplicator/.ensime
 Scripts/Scala/DatasetReplicator/.ensime_cache/*
 
+Scripts/Scala/DatasetSplitter/target/*
+Scripts/Scala/DatasetSplitter/project/*
+Scripts/Scala/DatasetSplitter/.idea/*
+Scripts/Scala/DatasetSplitter/.idea/workspace.xml
+Scripts/Scala/DatasetSplitter/.ensime
+Scripts/Scala/DatasetSplitter/.ensime_cache/*
+
 Scripts/Scala/LATrajCleaner/target/*
 Scripts/Scala/LATrajCleaner/project/*
 Scripts/Scala/LATrajCleaner/.idea/*
