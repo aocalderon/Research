@@ -1,35 +1,118 @@
 import org.apache.spark.sql.{Dataset, SparkSession}
 import org.apache.spark.rdd.RDD
-import org.apache.spark.serializer.KryoSerializer
-import org.apache.spark.sql.functions._
-import org.apache.spark.storage.StorageLevel
-import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
-import org.datasyslab.geospark.enums.{FileDataSplitter, GridType}
-import org.datasyslab.geospark.spatialRDD.{SpatialRDD, PointRDD}
-import org.geotools.referencing.CRS
-import org.geotools.geometry.jts.JTS
-import org.opengis.referencing.crs.CoordinateReferenceSystem
-import org.opengis.referencing.operation.MathTransform
-import com.vividsolutions.jts.geom.{GeometryFactory, Geometry, Coordinate, Point, LineString}
 import org.slf4j.{Logger, LoggerFactory}
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 import scala.collection.JavaConverters._
-import scala.collection.mutable.WrappedArray
+import scala.collection.mutable.ArrayBuffer
 import java.io.PrintWriter
 
 object LATrajJoiner {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
-  private val geofactory: GeometryFactory = new GeometryFactory()
-  private val precision: Double = 0.0001
-  private var startTime: Long = System.currentTimeMillis()
 
-  case class Traj(tid: Long, t: Int, points: List[String])
-  case class ST_Point(pid: Long, x: Double, y: Double, t: Int)
+  case class ST_Point(pid: Int, x: Double, y: Double, t: Int)
+  case class Traj(index: Long, tid: Int, lenght: Int, coords: Vector[String] = Vector.empty)
+  case class Settings(trajs_per_time: Int, max_time: Int)
+  case class TrajDB(trajs: RDD[Traj], index: Vector[Long], size: Int, settings: Settings)
+  case class State(time: Int, ntrajs: Int)
 
-  def clocktime = System.currentTimeMillis()
+  def timer[R](msg: String = "")(block: => R): R = {
+    val t0 = System.nanoTime()
+    val result = block    // call-by-name
+    val t1 = System.nanoTime()
+    logger.info("LATI|%-30s|%6.2f".format(msg, (t1 - t0) / 1e9))
+    result
+  }
 
-  def log(msg: String, timer: Long, n: Long, status: String): Unit ={
-    logger.info("LATC|%6.2f|%-50s|%6.2f|%6d|%s".format((clocktime-startTime)/1000.0, msg, (clocktime-timer)/1000.0, n, status))
+  def selectTrajs(trajs: RDD[Traj], m: Int, n: Int): Vector[(Int, Int)] = {
+    val indices = trajs.map(_.index).collect().sorted
+    val indicesCount = indices.size
+    var start = 0
+    var end = m
+    var trajCount = trajs.count() - (end - start)
+
+    val sample = trajs.filter{ traj =>
+      val s = indices(start)
+      val e = indices(end)
+      traj.index >= s & traj.index < e
+    }
+    val output = new ArrayBuffer[(Int, Int)]()
+    val out = (0, sample.count().toInt)
+    output += out
+
+    def getPointsByTimeInterval(sample: RDD[Traj], n: Int): Vector[(Int, Int)] = {
+      val dataset = sample.flatMap{ traj =>
+        (n until (n + traj.lenght)).map(t => (t, traj.tid))
+      }
+      dataset.groupBy(_._1).map(traj => (traj._1, traj._2.size)).collect()
+        .map(r => (r._1, r._2)).toVector.sortBy(x => x._1)
+    }
+
+    var state = getPointsByTimeInterval(sample, 0)
+    logger.info(s"${state.take(3)} ... ${state.reverse.take(3)}")
+    var i = 1
+    while(trajCount > 0 && i < n){
+      val stage = s"Time interval: $i"
+      logger.info(stage)
+
+      val left = m - state(1)._1.toInt
+      start = end
+      end = end + left
+      if(end >= indicesCount) {
+        end = indicesCount - 1
+      }
+      val sample = trajs.filter{ traj =>
+        val s = indices(start)
+        val e = indices(end)
+        traj.index >= s & traj.index < e
+      }
+      val out = (i, sample.count().toInt)
+      output += out
+      trajCount = trajCount - (end - start)
+      logger.info(s"Trajs left: ${trajCount}")
+      val newState = getPointsByTimeInterval(sample, i)
+      state = (state ++ newState).groupBy(_._1).mapValues{ f =>
+        f.map(_._2).reduce(_ + _)
+      }.toVector.sortBy(_._1).filter(_._1 >= i)
+
+      logger.info(s"${state.take(3)} ... ${state.reverse.take(3)}")
+      i = i + 1
+    }
+    output.toVector
+  }
+
+  def loop(trajDB: TrajDB, state: Vector[State], cursor: Int): Vector[State] = {
+    if(cursor > trajDB.size || state.isEmpty){
+      state
+    } else {
+      val time = state.head.time
+      if(time > trajDB.settings.max_time){
+        state
+      } else {
+        val ntrajs = state.head.ntrajs
+        logger.info(s"Evaluating time $time")
+        state.takeRight(5).foreach { println }
+
+        val trajs_needed = trajDB.settings.trajs_per_time - ntrajs
+        val sample = trajDB.trajs.filter{ traj =>
+          val s = trajDB.index(cursor)
+          val e = trajDB.index(cursor + trajs_needed)
+          traj.index >= s & traj.index < e
+        }
+        val new_state = (sample.flatMap{ traj =>
+          (time until (time + traj.lenght)).map(t => (t, traj.tid))
+        }.groupBy(_._1).map(traj => State(traj._1, traj._2.size)).collect()
+          .toVector ++ state).groupBy(_.time).mapValues{ f =>
+          f.reduce{ (a, b) => State(a.time, a.ntrajs + b.ntrajs) }
+        }.values.toVector.sortBy(_.time)
+
+
+        if(new_state.isEmpty){
+          new_state
+        } else {
+          State(time, trajs_needed) +: loop(trajDB, new_state.tail, cursor + trajs_needed)
+        }
+      }
+    }
   }
 
   def main(args: Array[String]): Unit = {
@@ -37,108 +120,110 @@ object LATrajJoiner {
     val input = params.input()
     val tableFile = params.table()
     val output = params.output()
-    val offset = params.offset()
-    val cores = params.cores()
-    val executors = params.executors()
     val partitions = params.partitions()
-    val master = params.local() match {
-      case true  => s"local[${cores}]"
-      case false => s"spark://${params.host()}:${params.port()}"
+    def debug[R](block: => R): Unit = { if(params.debug()) block }
+
+    val spark = timer{"Starting session"}{
+      SparkSession.builder()
+        .appName("LATrajJoiner")
+        .getOrCreate()
+    }
+    import spark.implicits._
+
+    val (trajs, nTrajs) = timer{"Reading trajectories"}{
+      val trajs = spark.read.option("header", "false").option("delimiter", "\t").csv(input)
+        .map{ row =>
+          val pid = row.getString(0).toInt
+          val x = row.getString(1).toDouble
+          val y = row.getString(2).toDouble
+          val t = row.getString(3).toInt
+          ST_Point(pid, x, y, t)
+        }
+        .rdd.groupBy(_.pid).map{ case (tid, points) =>
+            val coords = points.toVector.sortBy(_.t).map(point => s"${point.x},${point.y}")
+            (tid, coords)
+        }
+        .zipWithUniqueId()
+        .map{ case((tid, coords), id ) =>
+          Traj(id, tid, coords.length, coords)
+        }.cache
+      val nTrajs = trajs.count()
+      (trajs, nTrajs)
     }
 
-    var timer = clocktime
-    var stage = "Session start"
-    log(stage, timer, 0, "START")
-    val spark = SparkSession.builder()
-      .config("spark.default.parallelism", 3 * cores * executors)
-      .config("spark.serializer",classOf[KryoSerializer].getName)
-      .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
-      .config("spark.scheduler.mode", "FAIR")
-      .config("spark.cores.max", cores * executors)
-      .config("spark.executor.cores", cores)
-      .master(master)
-      .appName("LATrajCleaner")
-      .getOrCreate()
-    import spark.implicits._
-    startTime = spark.sparkContext.startTime
-    log(stage, timer, 0, "END")
+    debug{
+      logger.info(s"Trajs number of records: ${nTrajs}")
+    }
 
-    timer = clocktime
-    stage = "Data read"
-    log(stage, timer, 0, "START")
-    var trajs = spark.read.option("header", "false").option("delimiter", "\t").csv(input)
-      .map{ traj =>
-        val pid = traj.getString(0).toLong
-        val points = traj.getString(2)
-        (pid, points)
-      }.cache()
-    val nTrajs = trajs.count()
-    log(stage, timer, nTrajs, "END")
+    val table = timer{"Testing recursion"}{
+      val settings = Settings(params.ntrajs(), params.ntime())
+      val index = trajs.map(_.index).collect().toVector.sorted
+      val size = index.size
+      val trajDB = TrajDB(trajs, index, size, settings)
+      val state = Vector(State(0, 0))
+      val cursor = 0
+      loop(trajDB, state, cursor)
+    }
 
-    timer = clocktime
-    stage = "Index read"
-    log(stage, timer, 0, "START")
-    var index = spark.read.option("header", "false").option("delimiter", "\t").csv(tableFile)
+    debug{
+      table.map(state => (state.time, state.ntrajs)).toDF("Time", "N").show
+    }
+
+    /*
+    val index = timer{"Reading table"}{
+      val index = spark.read.option("header", "false").option("delimiter", "\t").csv(tableFile)
       .map{ index =>
         val t = index.getString(0).toInt
-        val pid = index.getString(1).toLong
+        val pid = index.getString(1).toInt
         (pid, t)
       }.cache()
-    val nIndex = index.count()
-    log(stage, timer, nIndex, "END")
+      val nIndex = index.count()
+      index
+    }
 
-    timer = clocktime
-    stage = "Join"
-    log(stage, timer, 0, "START")
-    val data = index.toDF("pid1","t").join(trajs.toDF("pid2","points"), $"pid1" === $"pid2")
+    val data = timer{"Join trajectories and table"}{
+      val data = index.toDF("pid1","t").join(trajs.toDF("pid2","points"), $"pid1" === $"pid2")
       .flatMap{ point =>
-        val pid = point.getLong(0)
+        val pid = point.getInt(0)
         val t = point.getInt(1)
-        val points = point.getString(3).split(", ").map{ p =>
-          val arr = p.split(" ")
-          val x = arr(0).toDouble
-          val y = arr(1).toDouble
-          (x, y)
-        }
+        val points = point.getList[String](3).asScala
+          .map{ p => (p.split(",")(0).toDouble, p.split(",")(1).toDouble)}
         val n = points.size
         val pids = List.fill(n)(pid)
         val ts = (t until (t + n))
         pids.zip(ts).zip(points).map(p => ST_Point(p._1._1, p._2._1, p._2._2, p._1._2))
       }
       .cache()
-    val nData = data.count()
-    log(stage, timer, nData, "END")
-    
-    timer = clocktime
-    stage = "Save"
-    log(stage, timer, 0, "START")
-    val f = new java.io.PrintWriter(params.output())
-    f.write(data.orderBy($"t").collect().map(p => s"${p.pid}\t${p.x}\t${p.y}\t${p.t}\n").mkString(""))
-    f.close()
-    log(stage, timer, 0, "END")
-    
-    timer = clocktime
-    stage = "Session close"
-    log(stage, timer, 0, "START")
-    spark.close()
-    log(stage, timer, 0, "END")
+      val nData = data.count()
+      data
+    }
+
+    timer{"Saving dataset"}{
+      val f = new java.io.PrintWriter(output)
+      f.write(
+        data.orderBy($"t").collect()
+          .map{ p =>
+            s"${p.pid}\t${p.x}\t${p.y}\t${p.t}\n"
+          }.mkString("")
+      )
+      f.close()
+    }
+     */
+
+    timer{"Closing session"}{
+      spark.close()
+    }
   }
 }
 
 class LATrajJoinerConf(args: Seq[String]) extends ScallopConf(args) {
-  val input:      ScallopOption[String]  = opt[String]  (required = true)
-  val output:     ScallopOption[String]  = opt[String]  (default  = Some("/tmp/output.tsv"))
-  val host:       ScallopOption[String]  = opt[String]  (default = Some("169.235.27.138"))
-  val port:       ScallopOption[String]  = opt[String]  (default = Some("7077"))
-  val cores:      ScallopOption[Int]     = opt[Int]     (default = Some(4))
-  val executors:  ScallopOption[Int]     = opt[Int]     (default = Some(3))
-  val table:      ScallopOption[String]  = opt[String]  (default = Some("/home/acald013/Research/tmp/traj_index.txt"))
-  val partitions: ScallopOption[Int]     = opt[Int]     (default = Some(256))
-  val local:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
-  val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
-  val offset:     ScallopOption[Int]     = opt[Int]     (default = Some(2))
-  val m:          ScallopOption[Int]     = opt[Int]     (default = Some(50000))
-  val fraction:   ScallopOption[Double]  = opt[Double]  (default = Some(0.1))
+  val input: ScallopOption[String] = opt[String] (required = true)
+  val table: ScallopOption[String] = opt[String] (required = true)
+  val output: ScallopOption[String] = opt[String] (default  = Some("/tmp/output.tsv"))
+  val ntrajs: ScallopOption[Int] = opt[Int] (required = true)
+  val ntime: ScallopOption[Int] = opt[Int] (default = Some(10))
+  val partitions: ScallopOption[Int] = opt[Int] (default = Some(256))
+  val debug: ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
 
   verify()
 }

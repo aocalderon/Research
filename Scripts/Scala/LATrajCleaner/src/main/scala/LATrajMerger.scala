@@ -53,10 +53,10 @@ object LATrajMerger {
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .config("spark.scheduler.mode", "FAIR")
-      .config("spark.cores.max", cores * executors)
-      .config("spark.executor.cores", cores)
-      .master(master)
-      .appName("LATrajCleaner")
+      //.config("spark.cores.max", cores * executors)
+      //.config("spark.executor.cores", cores)
+      //.master(master)
+      .appName("LATrajMerger")
       .getOrCreate()
     import spark.implicits._
     startTime = spark.sparkContext.startTime

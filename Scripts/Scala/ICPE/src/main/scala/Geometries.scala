@@ -10,6 +10,8 @@ case class Flock(items: Array[Int], start: Int, end: Int){
 
   def size: Int = items.size
   
+  def toCSV(): String = s"$start, $end, ${getItems.mkString(" ")}"
+
   override def toString(): String = s"${getItems.mkString(" ")}\t$start\t$end"
 }
 

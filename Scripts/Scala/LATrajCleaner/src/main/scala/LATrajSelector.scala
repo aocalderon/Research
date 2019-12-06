@@ -1,63 +1,90 @@
 import org.apache.spark.sql.{Dataset, SparkSession}
 import org.apache.spark.rdd.RDD
-import org.apache.spark.serializer.KryoSerializer
-import org.apache.spark.sql.functions._
-import org.apache.spark.storage.StorageLevel
-import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
-import org.datasyslab.geospark.enums.{FileDataSplitter, GridType}
-import org.datasyslab.geospark.spatialRDD.{SpatialRDD, PointRDD}
-import org.geotools.referencing.CRS
-import org.geotools.geometry.jts.JTS
-import org.opengis.referencing.crs.CoordinateReferenceSystem
-import org.opengis.referencing.operation.MathTransform
-import com.vividsolutions.jts.geom.{GeometryFactory, Geometry, Coordinate, Point, LineString}
 import org.slf4j.{Logger, LoggerFactory}
 import org.rogach.scallop.{ScallopConf, ScallopOption}
-import scala.collection.JavaConverters._
-import scala.collection.mutable.WrappedArray
-import java.io.PrintWriter
+import scala.collection.mutable.ArrayBuffer
 
 object LATrajSelector {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
-  private val geofactory: GeometryFactory = new GeometryFactory()
-  private val precision: Double = 0.0001
-  private var startTime: Long = System.currentTimeMillis()
 
-  case class Traj(index: Long, tid: Long, lenght: Int, t: Int = -1)
+  case class Traj(index: Long, tid: Int, lenght: Int, coords: Vector[String] = Vector.empty)
+
+  def selectTrajs(trajs: RDD[Traj], m: Int, n: Int): Vector[(Int, Int)] = {
+    val indices = trajs.map(_.index).collect().sorted
+    val indicesCount = indices.size
+    val nTrajs = trajs.count()
+    var start = 0
+    var end = m
+    val sample = trajs.filter{ traj =>
+      val s = indices(start)
+      val e = indices(end)
+      traj.index >= s & traj.index < e
+    }
+    val output = new ArrayBuffer[(Int, Int)]()
+    val out = (0, sample.count().toInt)
+    output += out
+    var trajCount = trajs.count() - (end - start)
+
+    def getPointsByTimeInterval(sample: RDD[Traj], n: Int): Vector[(Int, Int)] = {
+      val dataset = sample.flatMap{ traj =>
+        (n until (n + traj.lenght)).map(t => (t, traj.tid))
+      }
+      dataset.groupBy(_._1).map(traj => (traj._1, traj._2.size)).collect()
+        .map(r => (r._1, r._2)).toVector.sortBy(x => x._1)
+    }
+
+    var state = getPointsByTimeInterval(sample, 0)
+    logger.info(s"Current state: ${state.take(5)}")
+    logger.info(s"Current state: ${state.reverse.take(5)}")
+    var i = 1
+    while(trajCount > 0 && i < n){
+      val stage = s"Time interval: $i"
+      logger.info(stage)
+
+      val left = m - state(1)._1.toInt
+      start = end
+      end = end + left
+      if(end >= indicesCount) {
+        end = indicesCount - 1
+      }
+      val sample = trajs.filter{ traj =>
+        val s = indices(start)
+        val e = indices(end)
+        traj.index >= s & traj.index < e
+      }
+      val out = (i, sample.count().toInt)
+      output += out
+      trajCount = trajCount - (end - start)
+      logger.info(s"Trajs left: ${trajCount}")
+      val newState = getPointsByTimeInterval(sample, i)
+      state = (state ++ newState).groupBy(_._1).mapValues(f => f.map(_._2).reduce(_ + _)).toVector.sortBy(_._1).filter(_._1 >= i)
+
+      logger.info(s"Current state: ${state.take(5)}")
+      logger.info(s"Current state: ${state.reverse.take(5)}")
+      i = i + 1
+    }
+    output.toVector
+  }
+
 
   def clocktime = System.currentTimeMillis()
 
   def log(msg: String, timer: Long, n: Long, status: String): Unit ={
-    logger.info("LATC|%6.2f|%-50s|%6.2f|%6d|%s".format((clocktime-startTime)/1000.0, msg, (clocktime-timer)/1000.0, n, status))
+    logger.info("LATS|%-30s|%6.2f|%6d|%s".format(msg, (clocktime-timer)/1000.0, n, status))
   }
 
   def main(args: Array[String]): Unit = {
     val params = new LATrajSelectorConf(args)
     val input = params.input()
-    val offset = params.offset()
-    val cores = params.cores()
-    val executors = params.executors()
     val partitions = params.partitions()
-    val master = params.local() match {
-      case true  => s"local[${cores}]"
-      case false => s"spark://${params.host()}:${params.port()}"
-    }
 
     var timer = clocktime
     var stage = "Session start"
     log(stage, timer, 0, "START")
     val spark = SparkSession.builder()
-      .config("spark.default.parallelism", 3 * cores * executors)
-      .config("spark.serializer",classOf[KryoSerializer].getName)
-      .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
-      .config("spark.scheduler.mode", "FAIR")
-      .config("spark.cores.max", cores * executors)
-      .config("spark.executor.cores", cores)
-      .master(master)
-      .appName("LATrajCleaner")
+      .appName("LATrajSelector")
       .getOrCreate()
     import spark.implicits._
-    startTime = spark.sparkContext.startTime
     log(stage, timer, 0, "END")
 
     timer = clocktime
@@ -66,7 +93,7 @@ object LATrajSelector {
     var trajs = spark.read.option("header", "false").option("delimiter", "\t").csv(input)
       .rdd.zipWithUniqueId()
       .map{ traj =>
-        val tid = traj._1.getString(0).toLong
+        val tid = traj._1.getString(0).toInt
         val length = traj._1.getString(1).toInt
         Traj(traj._2, tid, length)
       }.toDS()
@@ -146,19 +173,11 @@ object LATrajSelector {
 class LATrajSelectorConf(args: Seq[String]) extends ScallopConf(args) {
   val input:      ScallopOption[String]  = opt[String]  (required = true)
   val output:     ScallopOption[String]  = opt[String]  (default  = Some("/tmp/output.tsv"))
-  val host:       ScallopOption[String]  = opt[String]  (default = Some("169.235.27.138"))
-  val port:       ScallopOption[String]  = opt[String]  (default = Some("7077"))
-  val cores:      ScallopOption[Int]     = opt[Int]     (default = Some(4))
-  val executors:  ScallopOption[Int]     = opt[Int]     (default = Some(3))
-  val grid:       ScallopOption[String]  = opt[String]  (default = Some("KDBTREE"))
-  val index:      ScallopOption[String]  = opt[String]  (default = Some("QUADTREE"))
   val partitions: ScallopOption[Int]     = opt[Int]     (default = Some(256))
   val local:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
-  val offset:     ScallopOption[Int]     = opt[Int]     (default = Some(2))
   val m:          ScallopOption[Int]     = opt[Int]     (default = Some(50000))
   val n:          ScallopOption[Int]     = opt[Int]     (default = Some(200))
-  val fraction:   ScallopOption[Double]  = opt[Double]  (default = Some(0.1))
 
   verify()
 }

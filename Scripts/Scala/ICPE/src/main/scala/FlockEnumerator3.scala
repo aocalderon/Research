@@ -17,11 +17,13 @@ import SPMF.{AlgoFPMax, Transaction}
 
 object FlockEnumerator3 {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
-  private val model: PrecisionModel = new PrecisionModel(10000)
-  private val geofactory: GeometryFactory = new GeometryFactory(model)
+  private val model: PrecisionModel = new PrecisionModel(1000)
+  private val geofactory: GeometryFactory = new GeometryFactory()
+  private val precision: Double = 0.001
   private var stage: String = ""
   private var timer: Long = 0L
   private var counter: Int = 0
+  private var filenames: ArrayBuffer[Int] = new ArrayBuffer()
 
   implicit class Crossable[X](xs: Traversable[X]) {
     def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
@@ -46,7 +48,7 @@ object FlockEnumerator3 {
     logger.info("PE|%-35s|%6.2f|%6d|%s".format(stage, (clocktime-timer)/1000.0, n, status))
   }
 
-  def pruneSubsets(flocks: RDD[Flock]): Array[Flock] = {
+  def pruneSubsetsInRDD(flocks: RDD[Flock]): Vector[String] = {
     var flocksMap = flocks.groupBy(_.size).map(p => p._1 -> p._2).collect().toMap
     val keys = flocksMap.keys.toList.sorted.reverse
     for(i <- 0 until keys.length - 1){
@@ -59,7 +61,7 @@ object FlockEnumerator3 {
       }
       flocksMap += (keys(i + 1) -> currs)
     }
-    flocksMap.values.flatMap(_.toList).toArray
+    flocksMap.values.flatMap(_.toList).toVector.map(_.toCSV()).distinct
   }
 
   def pruneSubsets(flocks: Array[Flock]): Array[Flock] = {
@@ -75,7 +77,7 @@ object FlockEnumerator3 {
       }
       flocksMap += (keys(i + 1) -> currs)
     }
-    flocksMap.values.flatMap(_.toList).toArray
+    flocksMap.values.flatMap(_.toList).toArray.distinct
   }
 
   def pruneSubsets(tdisks: List[TDisk]): List[TDisk] = {
@@ -126,7 +128,7 @@ object FlockEnumerator3 {
       }
       pointsRDD.spatialPartitioning(GridType.KDBTREE, nPartitions)
       //pointsRDD.buildIndex(IndexType.QUADTREE, true)
-      val bufferRDD = new CircleRDD(pointsRDD, epsilon)
+      val bufferRDD = new CircleRDD(pointsRDD, epsilon + precision)
       bufferRDD.spatialPartitioning(pointsRDD.getPartitioner)
       val F = JoinQuery.DistanceJoinQuery(pointsRDD, bufferRDD, false, false)
       val flocks_prime = F.rdd.map{ case (flock: Point, flocks: java.util.HashSet[Point]) =>
@@ -243,7 +245,7 @@ object FlockEnumerator3 {
                 }
               }
             }
-            val tidTest = -1
+            val tidTest = 1252
             if(tid == tidTest){
               B.toList.sortBy(b => (b.t,  b.disk.getItems.head))
                 .map(b => s"${b.t}\t${b.disk.getItems.mkString(" ")}")
@@ -299,19 +301,6 @@ object FlockEnumerator3 {
 
               flocks = F.toList
             }
-            /*
-            val transactions = B.toList.map{ tdisk =>
-              tdisk.disk.getItems.map(p => new Integer(p)).asJava
-            }.asJava
-
-
-            val fpmax = new AlgoFPMax()
-            val maximals = fpmax.runAlgorithm(transactions, timestamps.size) // Should be delta
-              .getLevels.asScala.flatMap{ level =>
-                level.asScala
-              }
-             */
-
 
             flocks
           }.toIterator
@@ -324,16 +313,17 @@ object FlockEnumerator3 {
 
     if(save){
       if(nPatterns > 0 && timestamps.size == delta){
-        var WKT = pruneSubsets(patterns).map(_.toString()).sorted
-        var filename = s"/tmp/windowFlocks_${t_0 + delta - 1}.tsv"
-        var f = new java.io.PrintWriter(filename)
+        val WKT = pruneSubsetsInRDD(patterns).sorted
+        val filename = s"/tmp/windowFlocks_${t_0 + delta - 1}.tsv"
+        val f = new java.io.PrintWriter(filename)
         f.write(WKT.mkString("\n"))
         f.write("\n")
         f.close()
         logger.info(s"Saved $filename [${WKT.size} records].")
+        filenames += t_0 + delta - 1
       }
     } else {
-      pruneSubsets(patterns).map(_.toString()).sorted.foreach{println}
+      pruneSubsetsInRDD(patterns).sorted.foreach{println}
     }
   }
 
@@ -346,9 +336,11 @@ object FlockEnumerator3 {
     val rate = params.rate()
     val i = params.i()
     val n = params.n()
+    val epsilon = params.epsilon()
     val delta = params.delta()
     val mu = params.mu()
     val interval = params.interval()
+    val save = params.save()
     val debug = params.debug()
 
     // Creating the session...
@@ -378,34 +370,36 @@ object FlockEnumerator3 {
       disksMap.keys.filter(_ < t_0).foreach{ k =>
         disksMap -= k
       }
-      // Add new timestamp to map...
-      val p = points.filter(_.t == t_d).map{ point =>
-        val p = geofactory.createPoint(new Coordinate(point.x, point.y))
-        p.setUserData(s"${point.tid}\t${point.t}")
-        p
-      }.cache
-      val nP = p.count()
-      logger.info(s"Points in timestamp: $nP")
-      val pointsRDD = new SpatialRDD[Point]()
-      pointsRDD.setRawSpatialRDD(p)
-      pointsRDD.analyze()
-      val result = MF.run(spark, pointsRDD, params, t_d, s"${t_d}")
-      val maximals = result._1
-      val nM = result._2
-      logger.info(s"Points in timestamp: $nM")
-      disksMap += t_d -> maximals.map{ d =>
-        val itemset = d.getUserData.toString().split(";")(0).split(" ").map(_.toInt).toSet
-        Disk(d.getX, d.getY, itemset)
+      if(!disksMap.keySet.contains(t_d)){
+        // Add new timestamp to map...
+        val p = points.filter(_.t == t_d).map{ point =>
+          val p = geofactory.createPoint(new Coordinate(point.x, point.y))
+          p.setUserData(s"${point.tid}\t${point.t}")
+          p
+        }.cache
+        val nP = p.count()
+        logger.info(s"Points in timestamp: $nP")
+        val pointsRDD = new SpatialRDD[Point]()
+        pointsRDD.setRawSpatialRDD(p)
+        pointsRDD.analyze()
+        val result = MF.run(spark, pointsRDD, params, t_d, s"${t_d}")
+        val maximals = result._1
+        val nM = result._2
+        logger.info(s"Points in timestamp: $nM")
+        disksMap += t_d -> maximals.map{ d =>
+          val itemset = d.getUserData.toString().split(";")(0).split(" ").map(_.toInt).toSet
+          Disk(d.getX, d.getY, itemset)
+        }
+
+        val tdisks = disksMap.map(t => t._2.map(d => TDisk(t._1, d))).reduce(_ union _).cache
+        val nDisks = tdisks.count()
+
+        if(debug){
+          tdisks.toDS().orderBy($"t").map(_.toString()).show(nDisks.toInt, false)
+        }
+
+        enumerate(tdisks, spark, params)
       }
-
-      val tdisks = disksMap.map(t => t._2.map(d => TDisk(t._1, d))).reduce(_ union _).cache
-      val nDisks = tdisks.count()
-
-      if(debug){
-        tdisks.toDS().orderBy($"t").map(_.toString()).show(nDisks.toInt, false)
-      }
-
-      enumerate(tdisks, spark, params)
     }
 
     // Let's start the stream...
@@ -426,12 +420,32 @@ object FlockEnumerator3 {
       Thread.sleep(interval * 1000L)
     }
 
+    do{
+    }while(!filenames.contains(n))
+
     // Closing the session...
     timer = clocktime
     stage = "Closing"
     log()
     ssc.stop()
     spark.close()
+    if(save){
+      val txtFlocks = filenames.map(i => s"/tmp/windowFlocks_${i}.tsv").flatMap{ filename =>
+        scala.io.Source.fromFile(filename).getLines
+      }
+
+      val E = if(epsilon.toString().takeRight(1) == "0"){
+        epsilon.toInt.toString()
+      } else {
+        epsilon.toString()
+      }
+      val output = s"/tmp/FE_E${E}_M${mu}_D${delta}.tsv"
+      val f = new java.io.PrintWriter(output)
+      f.write(txtFlocks.mkString("\n"))
+      f.write("\n")
+      f.close()
+      logger.info(s"Saved $output [${txtFlocks.size} flocks].")
+    }
     log()
   }
 }

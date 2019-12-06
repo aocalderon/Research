@@ -23,7 +23,7 @@ object MF{
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
   private val geofactory: GeometryFactory = new GeometryFactory();
   private val reader = new com.vividsolutions.jts.io.WKTReader(geofactory)
-  private val precision: Double = 0.0001
+  private val precision: Double = 0.001
   private var tag: String = ""
   private var appID: String = "app-00000000000000-0000"
   private var startTime: Long = clocktime
@@ -135,27 +135,36 @@ object MF{
     val diskCenters = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY)
     val diskCircles = new CircleRDD(diskCenters, r + precision)
     diskCircles.analyze()
-    val fullBoundary = diskCircles.boundary()
-    fullBoundary.expandBy(epsilon + precision)
-    val fraction = params.fraction()
-    
-    val samples = diskCircles.rawSpatialRDD.rdd
-      .sample(false, fraction, 42)
-      .map(_.getEnvelopeInternal)
-    val boundary = new QuadRectangle(fullBoundary)
-    val maxLevel = params.levels()
-    val maxItemsPerNode = params.entries()
-    val quadtree = new StandardQuadTree[Geometry](boundary, 0, maxItemsPerNode, maxLevel)
-    if(debug){ logger.info(s"Disks' size of sample: ${samples.count()}") }
-    for(sample <- samples.collect()){
-      quadtree.insert(new QuadRectangle(sample), null)
-    }
-    quadtree.assignPartitionIds()
-    val QTPartitioner = new QuadTreePartitioner(quadtree)
-    val nMF2Grids = QTPartitioner.getGrids.size
-    if(debug) { logger.info(s"Disks' number of cells: ${nMF2Grids}") }
+    val (quadtree, nMF2Grids) = if(params.mfgrid()){
+      diskCircles.spatialPartitioning(GridType.QUADTREE, params.mfpartitions())
+      val nGrids = diskCircles.getPartitioner.getGrids.size()
+      if(debug){ logger.info(s"Disks' number of cells: ${nGrids}") }
+      (diskCircles.partitionTree, nGrids) 
+    } else {
+      val fullBoundary = diskCircles.boundary()
+      fullBoundary.expandBy(epsilon + precision)
+      val fraction = params.fraction()
+      
+      val samples = diskCircles.rawSpatialRDD.rdd
+        .sample(false, fraction, 42)
+        .map(_.getEnvelopeInternal)
+      val boundary = new QuadRectangle(fullBoundary)
+      val maxLevel = params.levels()
+      val maxItemsPerNode = params.entries()
+      val quadtree = new StandardQuadTree[Geometry](boundary, 0, maxItemsPerNode, maxLevel)
+      if(debug){ logger.info(s"Disks' size of sample: ${samples.count()}") }
+      for(sample <- samples.collect()){
+        quadtree.insert(new QuadRectangle(sample), null)
+      }
+      quadtree.assignPartitionIds()
+      val QTPartitioner = new QuadTreePartitioner(quadtree)
+      val nGrids = QTPartitioner.getGrids.size
+      if(debug) { logger.info(s"Disks' number of cells: ${nGrids}") }
 
-    diskCircles.spatialPartitioning(QTPartitioner)
+      diskCircles.spatialPartitioning(QTPartitioner)
+
+      (quadtree, nGrids)
+    }
     diskCircles.spatialPartitionedRDD.cache()
     val nDisksRDD = diskCircles.spatialPartitionedRDD.count()
     logEnd(stage, timer, nDisksRDD)

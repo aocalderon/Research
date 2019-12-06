@@ -50,6 +50,7 @@ class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val info:         ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
   val local:        ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
   val stream:       ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
+  val mfgrid:       ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
 
   val sep:      ScallopOption[String] = opt[String] (default = Some("_"))
   val ext:      ScallopOption[String] = opt[String] (default = Some("tsv"))
