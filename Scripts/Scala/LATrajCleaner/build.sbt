@@ -11,5 +11,7 @@ libraryDependencies += "org.rogach" % "scallop_2.11" % "2.1.3"
 libraryDependencies += "org.datasyslab" % "geospark" % "1.2.0"
 libraryDependencies += "org.datasyslab" % "JTSplus" % "0.1.4"
 
+libraryDependencies += "org.andress" % "utils_2.11" % "0.1"
+
 mainClass in (Compile, run) := Some("LATrajCleaner")
 mainClass in (Compile, packageBin) := Some("LATrajCleaner")
