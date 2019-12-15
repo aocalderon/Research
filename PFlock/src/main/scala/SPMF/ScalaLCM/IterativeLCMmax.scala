@@ -1,7 +1,6 @@
 package SPMF.ScalaLCM
 
 import scala.collection.Map
-import org.apache.spark.sql.simba.SimbaSession
 import org.slf4j.{Logger, LoggerFactory}
 import scala.collection.mutable._
 
@@ -11,58 +10,14 @@ object IterativeLCMmax {
   var N: Int = 0
   var debug: Boolean = false
 
-  def main(args: Array[String]): Unit = {
-    val conf = new ConfIterativeLCMmax(args)
-    val input      = conf.input() 
-    val output     = conf.output()
-    val master     = conf.master()
-    val partitions = conf.partitions()
-    val cores      = conf.cores()
-    val print      = conf.print()
-    debug      = conf.debug()
-    N          = conf.iterations()
-
-    val simba = SimbaSession.builder()
-      .master(master)
-      .appName("IterativeLCMmax")
-      .config("simba.index.partitions", partitions)
-      .config("spark.cores.max", cores)
-      .getOrCreate()
-    import simba.implicits._
-
-    // Reading file...
-    var timer = System.currentTimeMillis()
-    val data = simba.read.option("header", "false")
-      .csv(input)
-      .map(_.getString(0))
-      .repartition(partitions)
-      .cache()
-    val nData = data.count()
-    if(debug) logging("Reading file...", timer, nData, "records")
-    if(debug) data.show(10, truncate=false)
-
-    val T = data.collect().map{ line =>
-      new Transaction(line.split(" ").map(_.toInt).toList)
-    }.toList
-
-    timer = System.currentTimeMillis()
-    val patterns = run(T)
-    if(debug) logging("Finding patterns...", timer, patterns.length, "patterns")
-
-    if(debug) println("")
-    if(print) patterns.foreach(println)
-    if(output.nonEmpty) savePatterns(patterns, output)
-    if(debug) printN()
-  }
-
-  def run(T: List[Transaction]): List[String] = {
+  def run(T: List[Transaction]): List[List[Int]] = {
     val buckets = occurrenceDeliver(T)
 
     var Ps = Stack[(Itemset, Map[Int, List[Transaction]])]()
     val P = new Itemset(List.empty)
     Ps.push((P, buckets))
 
-    var patterns = ListBuffer[String]()
+    var patterns = ListBuffer[List[Int]]()
     while(Ps.nonEmpty){
       n = n + 1
       val call = Ps.pop
@@ -85,7 +40,7 @@ object IterativeLCMmax {
 
           if(isPPC){
             if(P_prime.count == 1){
-              val pattern = s"${P_prime.toString}"
+              val pattern = P_prime.items
               patterns += pattern
             }
             val T_prime = buckets(e).map(t => new Transaction(t.items))
@@ -99,7 +54,7 @@ object IterativeLCMmax {
         }
       }
     }
-    patterns.toList.distinct
+    patterns.toList
   }
 
   private def isPPCExtension(P: Itemset, P_prime: Itemset, e: Integer): Boolean = {
@@ -166,20 +121,4 @@ object IterativeLCMmax {
   def printN(): Unit = {
     println(s"Number of iterations: $n")
   }
-}
-
-import org.rogach.scallop.{ScallopConf, ScallopOption}
-
-class ConfIterativeLCMmax(arguments: Seq[String]) extends ScallopConf(arguments) {
-  val input:      ScallopOption[String]  = opt[String]  (required = true)
-  val output:     ScallopOption[String]  = opt[String]  (default = Some(""))
-  val master:     ScallopOption[String]  = opt[String]  (default = Some("local[*]"))
-  val partitions: ScallopOption[Int]     = opt[Int]     (default = Some(16))
-  val cores:      ScallopOption[Int]     = opt[Int]     (default = Some(7))
-  val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
-  val print:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
-  val iterations: ScallopOption[Int]     = opt[Int]     (default = Some(100))
-
-
-  verify()
 }

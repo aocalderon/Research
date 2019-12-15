@@ -29,8 +29,7 @@ import java.util.Set;
  */
 public class MainTestLCM_saveToMemory {
 	public static void main(String [] arg) throws IOException{
-	    System.out.println(arg[1]);
-		String input = arg[1];
+		String input = "/home/and/Documents/PhD/Research/Validation/LCM_max/test.dat";
 		String separator = " ";
 		BufferedReader reader = new BufferedReader(new FileReader(input));
 		String line;
@@ -44,14 +43,11 @@ public class MainTestLCM_saveToMemory {
 			}
 			transactions.add(transaction);
 		}
+		int support = 1;
 		Transactions dataset = new Transactions(transactions);
 
-		AlgoLCM2 lcm = new AlgoLCM2();
-		ArrayList<List<Integer>> m = lcm.run(dataset);
-		for(List<Integer> n: m){
-		    System.out.println(n.toString());
-		}
-		lcm.getN();
-		lcm.printStats();
+		AlgoLCM algoLCM = new AlgoLCM();
+		Itemsets closed = algoLCM.runAlgorithm(support, dataset);
+		closed.printItemsets();
 	}
 }

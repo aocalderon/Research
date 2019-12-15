@@ -18,11 +18,15 @@ package SPMF;
 import java.util.Arrays;
 import java.util.List;
 
-class Transaction implements Comparable<Transaction>{
-	private static Integer[] temp = new Integer[500];
-	private Transaction originalTransaction;
-	private int offset;
+public class Transaction implements Comparable<Transaction>{
+    private static Integer[] temp = new Integer[500];
+    private Transaction originalTransaction;
+    private int offset;
     private Integer[] items;
+    private Double x = 0.0;
+    private Double y = 0.0;
+    private Integer s = -1;
+    private Integer e = -1;
 
     Transaction(Integer[] items) {
     	originalTransaction = this;
@@ -34,12 +38,48 @@ class Transaction implements Comparable<Transaction>{
     	this.originalTransaction = transaction.originalTransaction; 	
     	this.items = transaction.getItems();
     	this.offset = offset;
+        this.x = transaction.getX();
+        this.y = transaction.getY();
+        this.s = transaction.getStart();
+        this.e = transaction.getEnd();
+    }
+
+    public Transaction(Double x, Double y, String pids){
+        String[] arr = pids.split(" ");
+        int n = arr.length;
+        items = new Integer[n];
+        for(int i = 0; i < n; i++){
+            items[i] = Integer.parseInt(arr[i]);
+        }
+        originalTransaction = this;
+        this.offset = 0;
+        this.x = x;
+        this.y = y;
+    }
+
+    public Transaction(Double x, Double y, Integer s, Integer e, String pids){
+        String[] arr = pids.split(" ");
+        int n = arr.length;
+        items = new Integer[n];
+        for(int i = 0; i < n; i++){
+            items[i] = Integer.parseInt(arr[i]);
+        }
+        originalTransaction = this;
+        this.offset = 0;
+        this.x = x;
+        this.y = y;
+        this.s = s;
+        this.e = e;
     }
 
     public Integer[] getItems() {
         return items;
     }
-
+    
+    public Double getX() { return x; }
+    public Double getY() { return y; }
+    public Integer getStart() { return s; }
+    public Integer getEnd()   { return e; }
     public int getOffset() { return offset; }
 
 	public int containsByBinarySearch(Integer item) {
@@ -84,6 +124,19 @@ class Transaction implements Comparable<Transaction>{
     @Override
     public String toString() {
         return Arrays.asList(this.items).toString();
+    }
+
+    private String itemsToString(){
+        String[] str = new String[this.items.length];
+        int i = 0;
+        for(Integer item: items){
+            str[i] = String.format("%d", item);
+        }
+        return String.join(" ", str);
+    }
+
+    public String asDiskString(){
+        return String.format("%.3f\t%.3f\t%s", this.getX(), this.getY(), this.itemsToString());
     }
 
 	public void removeInfrequentItems(List<Transaction>[] buckets, int minsupRelative) {
