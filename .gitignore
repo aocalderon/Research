@@ -41,13 +41,6 @@ Scripts/Scala/LCM/project/*
 Scripts/Scala/LCM/.idea/*
 Scripts/Scala/LCM/.idea/workspace.xml
 
-#Scripts/Scala//target/*
-#Scripts/Scala//project/*
-#Scripts/Scala//.idea/*
-#Scripts/Scala//.idea/workspace.xml
-#Scripts/Scala//.ensime
-#Scripts/Scala//.ensime_cache/*
-
 Scripts/Scala/DatasetReplicator/target/*
 Scripts/Scala/DatasetReplicator/project/*
 Scripts/Scala/DatasetReplicator/.idea/*
