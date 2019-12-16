@@ -4,10 +4,10 @@ DATASET_PATH="/home/acald013/Datasets/LA/LA_25KTrajs/"
 DATASET_NAME="LA_25KTrajs"
 DATASET_EXT="tsv"
 JAR="/home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar"
-START=1
-END=5
+START=0
+END=100
 SPEED=100
-EPSILON=( 10 )
+EPSILON=( 15 20 25 30 )
 MU=( 3 )
 DELTA=( 3 )
 
@@ -30,7 +30,7 @@ do
 	    sort /tmp/FF_E${E}_M${M}_D${D}.tsv -o /tmp/FF_E${E}_M${M}_D${D}_sorted.tsv
 
 	    echo "diff -s /tmp/FE_E${E}_M${M}_D${D}_sorted.tsv /tmp/FF_E${E}_M${M}_D${D}_sorted.tsv"
-	    #diff -s /tmp/FE_E${E}_M${M}_D${D}_sorted.tsv /tmp/FF_E${E}_M${M}_D${D}_sorted.tsv
+	    diff -s /tmp/FE_E${E}_M${M}_D${D}_sorted.tsv /tmp/FF_E${E}_M${M}_D${D}_sorted.tsv
 	done
     done
 done
