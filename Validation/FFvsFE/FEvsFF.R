@@ -10,4 +10,4 @@ p = ggplot(data = data, aes(x = factor(Epsilon), y = Time, group = Method)) +
   theme(legend.position="top")
 plot(p)
 
-ggsave("~/Documents/PhD/Research/Validation/FFvsFE/LA25K.pdf", width = 10, height = 6, device = "pdf")
+ggsave("~/Documents/PhD/Research/Validation/FFvsFE/LA25K.pdf", width = 7, height = 5, device = "pdf")
