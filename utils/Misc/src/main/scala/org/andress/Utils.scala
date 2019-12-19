@@ -27,9 +27,9 @@ object Utils {
     }
 
     timer{"Another test"}{
-      val v = Vector(1,2,3,4,5,6,7,8)
+      val v = Vector(1,2,3,4,5)
 
-      val fold = v.foldLeft(10)(_ + _)
+      val fold = v.foldLeft(1)(_ + _)
 
       logger.info(s"$fold")
     }
