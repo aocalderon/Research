@@ -20,6 +20,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import java.io.PrintWriter
+import org.apache.spark.TaskContext
 
 object FF{
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -71,12 +72,11 @@ object FF{
     var nReported = 0
     for(timestamp <- timestamps){ //for
       // Finding maximal disks...
-      tag = s"$timestamp"
       val input = s"${params.input_path()}${params.input_tag()}_${timestamp}.tsv"
       val T_i = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, Dpartitions)
       timer = System.currentTimeMillis()
       stage = "1.Maximal disks found"
-      logStart(stage)
+      logStart(stage, timestamp)
       T_i.analyze()
       val (disks, nDisks) = MF.run(spark, T_i, params, timestamp, s"$timestamp")
       val C = new SpatialRDD[Point]()
@@ -93,7 +93,7 @@ object FF{
       lastC = C
       C.analyze()
       C.spatialPartitioning(gridType, FFpartitions)
-      logEnd(stage, timer, nDisks, s"$timestamp")
+      logEnd(stage, timer, nDisks, timestamp)
 
       flocks = if(nDisks != 0){
         if(flocks.isEmpty())
@@ -111,7 +111,7 @@ object FF{
         val timerJoinAndReport = System.currentTimeMillis()
         timer = System.currentTimeMillis()
         stage = "2.Join done"
-        logStart(stage)
+        logStart(stage, timestamp)
         val F = new SpatialRDD[Point]()
         val flockPoints = flocks.map{ f =>  // Create spatial RDD with candidate flocks.
           val userData = s"${f.getItems.mkString(" ")};${f.start};${f.end}"
@@ -169,7 +169,7 @@ object FF{
           .reduceByKey( (f0, f1) => f0).map(_._2)
           .cache()
         nFlocks = flocks.count()
-        logEnd(stage, timer, nFlocks, s"$timestamp")
+        logEnd(stage, timer, nFlocks, timestamp)
 
         if(debug){
           logger.info(s"Flocks from join: $nFlocks")
@@ -183,7 +183,7 @@ object FF{
 
         timer = System.currentTimeMillis()
         stage = "3.Flocks reported"
-        logStart(stage)
+        logStart(stage, timestamp)
         val flocks_delta =  flocks.filter(_.length == delta).cache
         val nFlocks_delta = flocks_delta.count().toInt
 
@@ -191,7 +191,8 @@ object FF{
         val nFlocks_delta_to_prune = flocks_delta_to_prune.count().toInt
         val flocks_to_report = flocks_delta.subtract(flocks_delta_to_prune).cache
         val nFlocks_to_report = flocks_to_report.count().toInt
-        logEnd(stage, timer, nFlocks_to_report, s"$timestamp")
+        logEnd(stage, timer, nFlocks_to_report, timestamp)
+
         saveFlocks(flocks_to_report, timestamp)
         nReported = nReported + nFlocks_to_report
 
@@ -206,7 +207,7 @@ object FF{
 
         timer = System.currentTimeMillis()
         stage = "4.Flocks updated"
-        logStart(stage)
+        logStart(stage, timestamp)
         val flocks_updated = flocks_to_report.map{ f =>
           //new Flock(f.pids, f.start + 1, f.end, f.center)
           f.copy(start = f.start + 1)
@@ -224,7 +225,7 @@ object FF{
         val nFlocks_pruned = flocks_pruned.count().toInt
         flocks = previous_flocks.union(flocks_pruned).cache
         nFlocks = flocks.count()
-        logEnd(stage, timer, nFlocks, s"$timestamp")
+        logEnd(stage, timer, nFlocks, timestamp)
 
         if(debug){
           logger.info(s"flocks_updated ($nFlocks_updated)")
@@ -395,14 +396,19 @@ object FF{
 
   def clocktime = System.currentTimeMillis()
 
-  def logStart(msg: String): Unit ={
+  def logStart(msg: String, t: Int): Unit ={
     val duration = (clocktime - startTime) / 1000.0
-    logger.info("FF|%-30s|%6.2f|%-50s|%6.2f|%6d|%s".format(s"$appID|$executors|$cores|START", duration, msg, 0.0, 0, tag))
+    val time = 0.0
+    val n = 0
+    val log = f"FF|START|$appID%s|$executors%d|$cores%d|$duration%6.2f|$msg%-30s|$time%6.2f|$n%6d|$t"
+    logger.info(log)
   }
 
-  def logEnd(msg: String, timer: Long, n: Long = -1, tag: String = "-1"): Unit ={
+  def logEnd(msg: String, timer: Long, n: Long, t: Int): Unit ={
     val duration = (clocktime - startTime) / 1000.0
-    logger.info("FF|%-30s|%6.2f|%-50s|%6.2f|%6d|%s".format(s"$appID|$executors|$cores|  END", duration, msg, (System.currentTimeMillis()-timer)/1000.0, n, tag))
+    val time = (clocktime - timer) / 1000.0
+    val log = f"FF|  END|$appID%s|$executors%d|$cores%d|$duration%6.2f|$msg%-30s|$time%6.2f|$n%6d|$t"
+    logger.info(log)
   }
 
   def envelope2Polygon(e: Envelope): Polygon = {
@@ -450,25 +456,22 @@ object FF{
     val Dpartitions  = (cores * executors) * params.dpartitions()
     
     // Starting session...
-    var timer = System.currentTimeMillis()
-    var stage = "Session start"
-    logStart(stage)
     val spark = SparkSession.builder()
       .config("spark.default.parallelism", 3 * cores * executors)
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .config("spark.scheduler.mode", "FAIR")
+      .config("spark.executor.cores", cores)
+      .config("spark.cores.max", executors * cores)
       .appName("PFLock")
       .getOrCreate()
     import spark.implicits._
-    appID = spark.sparkContext.applicationId
+    appID = spark.sparkContext.applicationId.split("-").last
     startTime = spark.sparkContext.startTime
-    logEnd(stage, timer, 0, "-1")
+    val config = spark.sparkContext.getConf.getAll.mkString("\n")
+    logger.info(config)
 
     // Running maximal finder...
-    timer = System.currentTimeMillis()
-    stage = "Flock Finder run"
-    logStart(stage)
     var timestamps = (mininterval to maxinterval).toList
     if(params.tsfile() != ""){
       val ts = scala.io.Source.fromFile(params.tsfile())
@@ -478,12 +481,9 @@ object FF{
 
     logger.info("Reading data file by file...")
     run(spark, timestamps, params)
-    logEnd(stage, timer, 0, tag)
 
     // Closing session...
-    timer = clocktime
-    stage = "Session closed"
-    logStart(stage)
+    logger.info("Closing session...")
     if(info){
       InfoTracker.master = master
       InfoTracker.port = portUI
@@ -498,6 +498,6 @@ object FF{
       f.close()
     }
     spark.close()
-    logEnd(stage, timer, 0, tag)    
+    logger.info("Closing session... Done!")
   }
 }

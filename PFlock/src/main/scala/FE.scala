@@ -1,5 +1,6 @@
 import org.rogach.scallop.{ScallopConf, ScallopOption}
 import org.slf4j.{Logger, LoggerFactory}
+import org.apache.spark.serializer.KryoSerializer
 import scala.collection.mutable.SynchronizedQueue
 import scala.io.Source
 import scala.collection.mutable.{HashMap, HashSet}
@@ -9,6 +10,7 @@ import org.apache.spark.streaming.{Seconds, StreamingContext, Time}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.enums.{GridType}
 import org.datasyslab.geospark.spatialRDD.{SpatialRDD, PointRDD, CircleRDD}
+import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import scala.collection.mutable.ArrayBuffer
 import com.vividsolutions.jts.geom.{Envelope, Coordinate, Point}
 import com.vividsolutions.jts.geom.{PrecisionModel, GeometryFactory, Geometry}
@@ -20,10 +22,14 @@ object FE {
   private val model: PrecisionModel = new PrecisionModel(1000)
   private val geofactory: GeometryFactory = new GeometryFactory()
   private val precision: Double = 0.001
+  private var startTime: Long = clocktime
+  private var executors: Int = 0
+  private var cores: Int = 0
   private var stage: String = ""
   private var timer: Long = 0L
-  private var counter: Int = 0
   private var filenames: ArrayBuffer[Int] = new ArrayBuffer()
+  private var appId: String = ""
+  private var currentTS: Int = -1 
 
   implicit class Crossable[X](xs: Traversable[X]) {
     def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
@@ -39,13 +45,11 @@ object FE {
 
   def clocktime: Long = System.currentTimeMillis()
 
-  def log(n: Long = 0): Unit = {
-    val status = counter % 2 match {
-      case 0 => "START"
-      case _ => "END"
-    }
-    counter = counter + 1
-    logger.info("PE|%-35s|%6.2f|%6d|%s".format(stage, (clocktime-timer)/1000.0, n, status))
+  def log(status: String, n: Long = 0): Unit = {
+    val duration = (clocktime - startTime) / 1000.0
+    val time = (clocktime - timer) / 1000.0
+    val log = f"FE|$status%-5s|$appId%s|$executors%d|$cores%d|$duration%6.2f|$stage%-30s|$time%6.2f|$n%6d|$currentTS"
+    logger.info(log)    
   }
 
   def pruneSubsetsInRDD(flocks: RDD[Flock]): Vector[String] = {
@@ -183,8 +187,8 @@ object FE {
 
     // Indexing...
     timer = clocktime
-    stage = "Indexing"
-    log()
+    stage = "2.Indexing"
+    log("START")
     val indexer = DiskPartitioner(boundary, width)
     val disksIndexed = disks.flatMap{ disk =>
       val expansion = (disk.t - t_0) * speed
@@ -192,7 +196,7 @@ object FE {
       index
     }.cache
     nDisks = disksIndexed.count()
-    log(nDisks)
+    log("END", nDisks)
 
     if(debug){
       disksIndexed.map(i => (i._1, i._2.toString())).foreach(println)
@@ -200,8 +204,8 @@ object FE {
 
     // Partitioning...
     timer = clocktime
-    stage = "Partitioning"
-    log()
+    stage = "3.Partitioning"
+    log("START")
     var disksPartitioned = disksIndexed
       .partitionBy(new KeyPartitioner(indexer.getNumPartitions))
       .map(_._2).cache
@@ -211,7 +215,7 @@ object FE {
     }
     disksPartitioned = disksPartitioned.coalesce(nonEmpty.value.toInt)
     nDisks = disksPartitioned.count()
-    log(nDisks)
+    log("END", nDisks)
 
     if(debug){
       disksPartitioned.mapPartitions(partition => List(partition.size).toIterator).foreach(println)
@@ -221,8 +225,8 @@ object FE {
 
     // Mining...
     timer = clocktime
-    stage = "Mining"
-    log()
+    stage = "4.Mining"
+    log("START")
     val patterns = disksPartitioned.mapPartitionsWithIndex{ case(index, partition) =>
       val part = partition.toList.groupBy(_.t).map{ t =>
         (t._1 -> t._2.sortBy(_.t))
@@ -307,7 +311,7 @@ object FE {
       }
     }.cache
     val nPatterns = patterns.count()
-    log(nPatterns)    
+    log("END", nPatterns)    
 
     if(save){
       if(nPatterns > 0 && timestamps.size == delta){
@@ -340,22 +344,30 @@ object FE {
     val interval = params.interval()
     val save = params.save()
     val debug = params.debug()
+    cores = params.cores()
+    executors= params.executors()
 
     // Creating the session...
-    timer = clocktime
-    stage = "Starting"
-    log()
     val spark = SparkSession.builder()
+      .config("spark.default.parallelism", 3 * cores * executors)
+      .config("spark.serializer",classOf[KryoSerializer].getName)
+      .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
+      .config("spark.scheduler.mode", "FAIR")
+      .config("spark.executor.cores", cores)
+      .config("spark.cores.max", executors * cores)
       .appName("FlockEnumerator")
       .getOrCreate()
     import spark.implicits._
+    appId = spark.sparkContext.applicationId.split("-").last
+    startTime = spark.sparkContext.startTime
+    val config = spark.sparkContext.getConf.getAll.mkString("\n")
+    logger.info(config)
 
     // Setting the queue...
     val ssc = new StreamingContext(spark.sparkContext, Seconds(interval))
     val rddQueue = new SynchronizedQueue[RDD[ST_Point]]()
     val stream = ssc.queueStream(rddQueue)
       .window(Seconds(delta * interval), Seconds(interval))
-    log()
 
     // Working with the batch window...
     var disksMap: HashMap[Int, RDD[Disk]] = HashMap.empty[Int, RDD[Disk]] 
@@ -364,26 +376,26 @@ object FE {
       logger.info(s"Timestamps in window: ${timestamps.mkString(" ")}")
       val t_0 = timestamps.head
       val t_d = timestamps.takeRight(1).head
+      currentTS = t_d
       // Remove previous timestamps from map...
       disksMap.keys.filter(_ < t_0).foreach{ k =>
         disksMap -= k
       }
       if(!disksMap.keySet.contains(t_d)){
         // Add new timestamp to map...
+        timer = clocktime
+        stage = "1.Getting maximal disks"
+        log("START")
         val p = points.filter(_.t == t_d).map{ point =>
           val p = geofactory.createPoint(new Coordinate(point.x, point.y))
           p.setUserData(s"${point.tid}\t${point.t}")
           p
         }.cache
         val nP = p.count()
-        logger.info(s"Points in timestamp: $nP")
         val pointsRDD = new SpatialRDD[Point]()
         pointsRDD.setRawSpatialRDD(p)
         pointsRDD.analyze()
-        val result = MF.run(spark, pointsRDD, params, t_d, s"${t_d}")
-        val maximals = result._1
-        val nM = result._2
-        logger.info(s"Points in timestamp: $nM")
+        val (maximals, nMaximals) = MF.run(spark, pointsRDD, params, t_d, s"${t_d}")
         disksMap += t_d -> maximals.map{ d =>
           val itemset = d.getUserData.toString().split(";")(0).split(" ").map(_.toInt).toSet
           Disk(d.getX, d.getY, itemset)
@@ -391,6 +403,7 @@ object FE {
 
         val tdisks = disksMap.map(t => t._2.map(d => TDisk(t._1, d))).reduce(_ union _).cache
         val nDisks = tdisks.count()
+        log("END", nMaximals)
 
         if(debug){
           tdisks.toDS().orderBy($"t").map(_.toString()).show(nDisks.toInt, false)
@@ -422,9 +435,7 @@ object FE {
     }while(!filenames.contains(n))
 
     // Closing the session...
-    timer = clocktime
-    stage = "Closing"
-    log()
+    logger.info("Closing session...")
     ssc.stop()
     spark.close()
     if(save){
@@ -444,6 +455,6 @@ object FE {
       f.close()
       logger.info(s"Saved $output [${txtFlocks.size} flocks].")
     }
-    log()
+    logger.info("Closing session... Done!")
   }
 }
