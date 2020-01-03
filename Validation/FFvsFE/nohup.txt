@@ -26318,3 +26318,176 @@ Exception in thread "dag-scheduler-event-loop" java.lang.StackOverflowError
 	at scala.collection.TraversableLike$$anonfun$map$1.apply(TraversableLike.scala:234)
 	at scala.collection.TraversableLike$$anonfun$map$1.apply(TraversableLike.scala:234)
 	at scala.collection.immutable.List.foreach(List.scala:392)
+./Validator.sh: line 18: 28475 Killed                  spark-submit --master spark://mr-hn:7077 --num-executors 40 --executor-cores 3 --class FF $JAR --input_path $DATASET_PATH --input_tag $DATASET_NAME --epsilon $E --distance $SPEED --mu $M --delta $D --levels 8 --entries 200 --ffpartitions 10 --stream --mininterval $START --maxinterval $END --save
+spark-submit --master spark://mr-hn:7077 --num-executors 40 --executor-cores 3 --class FE /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /home/acald013/Datasets/LA/LA_25KTrajs/ --tag LA_25KTrajs --i 0 --n 100 --epsilon 30 --mu 3 --delta 3 --entries 20 --ffpartitions 8 --envelope --interval 10 --save --width 5000 --speed 100
+2019-12-19 10:57:41,356|(spark.jars,file:/home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar)
+(spark.driver.memory,32g)
+(spark.scheduler.mode,FAIR)
+(spark.kryo.registrator,org.datasyslab.geospark.serde.GeoSparkKryoRegistrator)
+(spark.executor.id,driver)
+(spark.app.name,FlockEnumerator)
+(spark.executor.cores,4)
+(spark.driver.port,34112)
+(spark.serializer,org.apache.spark.serializer.KryoSerializer)
+(spark.driver.host,mr-hn)
+(spark.default.parallelism,36)
+(spark.executor.memory,17g)
+(spark.master,spark://mr-hn:7077)
+(spark.app.id,app-20191219105741-0048)
+(spark.submit.deployMode,client)
+(spark.driver.maxResultSize,17g)
+(spark.cores.max,12)
+2019-12-19 10:57:52,656|Timestamps in window: 0
+2019-12-19 10:57:52,656|FE|START|0048|3|4| 12.72|1.Getting maximal disks       |  0.00|     0|0
+2019-12-19 10:57:53,641|MF|app-20191219105741-0048|3|4|START| 13.70|A.Points indexed              |  0.00|     0|LA_25KTrajs|0
+2019-12-19 10:57:54,141|MF|app-20191219105741-0048|3|4|  END| 14.20|A.Points indexed              |  0.50|    16|LA_25KTrajs|0
+2019-12-19 10:57:54,142|MF|app-20191219105741-0048|3|4|START| 14.20|B.Pairs found                 |  0.00|     0|LA_25KTrajs|0
+2019-12-19 10:57:55,234|MF|app-20191219105741-0048|3|4|  END| 15.30|B.Pairs found                 |  1.09| 14402|LA_25KTrajs|0
+2019-12-19 10:57:55,234|MF|app-20191219105741-0048|3|4|START| 15.30|C.Centers found               |  0.00|     0|LA_25KTrajs|0
+2019-12-19 10:57:55,555|MF|app-20191219105741-0048|3|4|  END| 15.62|C.Centers found               |  0.32| 28804|LA_25KTrajs|0
+2019-12-19 10:57:55,556|MF|app-20191219105741-0048|3|4|START| 15.62|D.Disks found                 |  0.00|     0|LA_25KTrajs|0
+2019-12-19 10:57:57,606|MF|app-20191219105741-0048|3|4|  END| 17.67|D.Disks found                 |  2.05| 10462|LA_25KTrajs|0
+2019-12-19 10:57:57,674|MF|app-20191219105741-0048|3|4|START| 17.74|E.Disks partitioned           |  0.00|     0|LA_25KTrajs|0
+2019-12-19 10:57:58,532|MF|app-20191219105741-0048|3|4|  END| 18.59|E.Disks partitioned           |  0.86| 13126|LA_25KTrajs|0
+2019-12-19 10:57:58,532|MF|app-20191219105741-0048|3|4|START| 18.59|F.Maximal disks found         |  0.00|     0|LA_25KTrajs|0
+2019-12-19 10:58:00,037|MF|app-20191219105741-0048|3|4|  END| 20.10|F.Maximal disks found         |  1.51|  2213|LA_25KTrajs|0
+2019-12-19 10:58:00,037|MAXIMALS|app-20191219105741-0048|4|3|30.0|3|16|85|6.396|2213
+2019-12-19 10:58:00,212|FE|END  |0048|3|4| 20.27|1.Getting maximal disks       |  7.56|  2213|0
+2019-12-19 10:58:00,405|Times in window: 0
+2019-12-19 10:58:00,473|Disks in window: 2213
+2019-12-19 10:58:00,821|FE|START|0048|3|4| 20.88|2.Indexing                    |  0.00|     0|0
+2019-12-19 10:58:00,984|FE|END  |0048|3|4| 21.05|2.Indexing                    |  0.16|  2213|0
+2019-12-19 10:58:00,984|FE|START|0048|3|4| 21.05|3.Partitioning                |  0.00|     0|0
+2019-12-19 10:58:01,476|FE|END  |0048|3|4| 21.54|3.Partitioning                |  0.49|  2213|0
+2019-12-19 10:58:01,476|FE|START|0048|3|4| 21.54|4.Mining                      |  0.00|     0|0
+2019-12-19 10:58:01,735|FE|END  |0048|3|4| 21.80|4.Mining                      |  0.26|     0|0
+2019-12-19 10:58:02,089|Timestamps in window: 0 1
+2019-12-19 10:58:02,090|FE|START|0048|3|4| 22.15|1.Getting maximal disks       |  0.00|     0|1
+2019-12-19 10:58:02,698|MF|app-20191219105741-0048|3|4|START| 22.76|A.Points indexed              |  0.00|     0|LA_25KTrajs|1
+2019-12-19 10:58:03,400|MF|app-20191219105741-0048|3|4|  END| 23.46|A.Points indexed              |  0.70|    19|LA_25KTrajs|1
+2019-12-19 10:58:03,400|MF|app-20191219105741-0048|3|4|START| 23.46|B.Pairs found                 |  0.00|     0|LA_25KTrajs|1
+2019-12-19 10:58:04,415|MF|app-20191219105741-0048|3|4|  END| 24.48|B.Pairs found                 |  1.01| 17593|LA_25KTrajs|1
+2019-12-19 10:58:04,415|MF|app-20191219105741-0048|3|4|START| 24.48|C.Centers found               |  0.00|     0|LA_25KTrajs|1
+2019-12-19 10:58:04,558|MF|app-20191219105741-0048|3|4|  END| 24.62|C.Centers found               |  0.14| 35186|LA_25KTrajs|1
+2019-12-19 10:58:04,558|MF|app-20191219105741-0048|3|4|START| 24.62|D.Disks found                 |  0.00|     0|LA_25KTrajs|1
+2019-12-19 10:58:07,160|MF|app-20191219105741-0048|3|4|  END| 27.22|D.Disks found                 |  2.60| 14435|LA_25KTrajs|1
+2019-12-19 10:58:07,168|MF|app-20191219105741-0048|3|4|START| 27.23|E.Disks partitioned           |  0.00|     0|LA_25KTrajs|1
+2019-12-19 10:58:08,469|MF|app-20191219105741-0048|3|4|  END| 28.53|E.Disks partitioned           |  1.30| 18419|LA_25KTrajs|1
+2019-12-19 10:58:08,470|MF|app-20191219105741-0048|3|4|START| 28.53|F.Maximal disks found         |  0.00|     0|LA_25KTrajs|1
+2019-12-19 10:58:12,121|MF|app-20191219105741-0048|3|4|  END| 32.18|F.Maximal disks found         |  3.65|  2400|LA_25KTrajs|1
+2019-12-19 10:58:12,121|MAXIMALS|app-20191219105741-0048|4|3|30.0|3|19|94|9.423|2400
+2019-12-19 10:58:12,447|FE|END  |0048|3|4| 32.51|1.Getting maximal disks       | 10.36|  2400|1
+2019-12-19 10:58:12,753|Times in window: 0 1
+2019-12-19 10:58:12,879|Disks in window: 4613
+2019-12-19 10:58:13,463|FE|START|0048|3|4| 33.52|2.Indexing                    |  0.00|     0|1
+2019-12-19 10:58:13,725|FE|END  |0048|3|4| 33.79|2.Indexing                    |  0.26|  4699|1
+2019-12-19 10:58:13,725|FE|START|0048|3|4| 33.79|3.Partitioning                |  0.00|     0|1
+2019-12-19 10:58:14,457|FE|END  |0048|3|4| 34.52|3.Partitioning                |  0.73|  4699|1
+2019-12-19 10:58:14,457|FE|START|0048|3|4| 34.52|4.Mining                      |  0.00|     0|1
+2019-12-19 10:58:14,811|FE|END  |0048|3|4| 34.87|4.Mining                      |  0.35|     0|1
+2019-12-19 10:58:15,240|Timestamps in window: 0 1 2
+2019-12-19 10:58:15,240|FE|START|0048|3|4| 35.30|1.Getting maximal disks       |  0.00|     0|2
+2019-12-19 10:58:15,985|MF|app-20191219105741-0048|3|4|START| 36.05|A.Points indexed              |  0.00|     0|LA_25KTrajs|2
+2019-12-19 10:58:16,652|MF|app-20191219105741-0048|3|4|  END| 36.71|A.Points indexed              |  0.67|    16|LA_25KTrajs|2
+2019-12-19 10:58:16,652|MF|app-20191219105741-0048|3|4|START| 36.71|B.Pairs found                 |  0.00|     0|LA_25KTrajs|2
+2019-12-19 10:58:17,418|MF|app-20191219105741-0048|3|4|  END| 37.48|B.Pairs found                 |  0.77| 18214|LA_25KTrajs|2
+2019-12-19 10:58:17,418|MF|app-20191219105741-0048|3|4|START| 37.48|C.Centers found               |  0.00|     0|LA_25KTrajs|2
+2019-12-19 10:58:17,555|MF|app-20191219105741-0048|3|4|  END| 37.62|C.Centers found               |  0.14| 36428|LA_25KTrajs|2
+2019-12-19 10:58:17,555|MF|app-20191219105741-0048|3|4|START| 37.62|D.Disks found                 |  0.00|     0|LA_25KTrajs|2
+2019-12-19 10:58:19,983|MF|app-20191219105741-0048|3|4|  END| 40.04|D.Disks found                 |  2.43| 15149|LA_25KTrajs|2
+2019-12-19 10:58:19,992|MF|app-20191219105741-0048|3|4|START| 40.05|E.Disks partitioned           |  0.00|     0|LA_25KTrajs|2
+2019-12-19 10:58:21,215|MF|app-20191219105741-0048|3|4|  END| 41.28|E.Disks partitioned           |  1.22| 19209|LA_25KTrajs|2
+2019-12-19 10:58:21,215|MF|app-20191219105741-0048|3|4|START| 41.28|F.Maximal disks found         |  0.00|     0|LA_25KTrajs|2
+2019-12-19 10:58:24,101|MF|app-20191219105741-0048|3|4|  END| 44.16|F.Maximal disks found         |  2.89|  2429|LA_25KTrajs|2
+2019-12-19 10:58:24,101|MAXIMALS|app-20191219105741-0048|4|3|30.0|3|16|103|8.116|2429
+2019-12-19 10:58:24,456|FE|END  |0048|3|4| 44.52|1.Getting maximal disks       |  9.22|  2429|2
+2019-12-19 10:58:24,956|Times in window: 0 1 2
+2019-12-19 10:58:25,112|Disks in window: 7042
+2019-12-19 10:58:25,873|FE|START|0048|3|4| 45.93|2.Indexing                    |  0.00|     0|2
+2019-12-19 10:58:26,197|FE|END  |0048|3|4| 46.26|2.Indexing                    |  0.32|  7324|2
+2019-12-19 10:58:26,198|FE|START|0048|3|4| 46.26|3.Partitioning                |  0.00|     0|2
+2019-12-19 10:58:27,327|FE|END  |0048|3|4| 47.39|3.Partitioning                |  1.13|  7324|2
+2019-12-19 10:58:27,327|FE|START|0048|3|4| 47.39|4.Mining                      |  0.00|     0|2
+2019-12-19 10:58:28,464|FE|END  |0048|3|4| 48.53|4.Mining                      |  1.14|  3573|2
+2019-12-19 10:58:28,985|Saved /tmp/windowFlocks_2.tsv [1778 records].
+2019-12-19 10:58:29,393|Timestamps in window: 1 2 3
+2019-12-19 10:58:29,393|FE|START|0048|3|4| 49.45|1.Getting maximal disks       |  0.00|     0|3
+2019-12-19 10:58:30,102|MF|app-20191219105741-0048|3|4|START| 50.16|A.Points indexed              |  0.00|     0|LA_25KTrajs|3
+2019-12-19 10:58:30,717|MF|app-20191219105741-0048|3|4|  END| 50.78|A.Points indexed              |  0.62|    16|LA_25KTrajs|3
+2019-12-19 10:58:30,717|MF|app-20191219105741-0048|3|4|START| 50.78|B.Pairs found                 |  0.00|     0|LA_25KTrajs|3
+2019-12-19 10:58:31,483|MF|app-20191219105741-0048|3|4|  END| 51.54|B.Pairs found                 |  0.77| 18571|LA_25KTrajs|3
+2019-12-19 10:58:31,483|MF|app-20191219105741-0048|3|4|START| 51.54|C.Centers found               |  0.00|     0|LA_25KTrajs|3
+2019-12-19 10:58:31,609|MF|app-20191219105741-0048|3|4|  END| 51.67|C.Centers found               |  0.13| 37142|LA_25KTrajs|3
+2019-12-19 10:58:31,609|MF|app-20191219105741-0048|3|4|START| 51.67|D.Disks found                 |  0.00|     0|LA_25KTrajs|3
+2019-12-19 10:58:34,528|MF|app-20191219105741-0048|3|4|  END| 54.59|D.Disks found                 |  2.92| 15580|LA_25KTrajs|3
+2019-12-19 10:58:34,535|MF|app-20191219105741-0048|3|4|START| 54.60|E.Disks partitioned           |  0.00|     0|LA_25KTrajs|3
+2019-12-19 10:58:35,944|MF|app-20191219105741-0048|3|4|  END| 56.01|E.Disks partitioned           |  1.41| 20111|LA_25KTrajs|3
+2019-12-19 10:58:35,944|MF|app-20191219105741-0048|3|4|START| 56.01|F.Maximal disks found         |  0.00|     0|LA_25KTrajs|3
+2019-12-19 10:58:40,615|MF|app-20191219105741-0048|3|4|  END| 60.68|F.Maximal disks found         |  4.67|  2467|LA_25KTrajs|3
+2019-12-19 10:58:40,616|MAXIMALS|app-20191219105741-0048|4|3|30.0|3|16|124|10.514|2467
+2019-12-19 10:58:40,927|FE|END  |0048|3|4| 60.99|1.Getting maximal disks       | 11.53|  2467|3
+2019-12-19 10:58:41,344|Times in window: 1 2 3
+2019-12-19 10:58:41,496|Disks in window: 7296
+2019-12-19 10:58:42,156|FE|START|0048|3|4| 62.22|2.Indexing                    |  0.00|     0|3
+2019-12-19 10:58:42,429|FE|END  |0048|3|4| 62.49|2.Indexing                    |  0.27|  7583|3
+2019-12-19 10:58:42,429|FE|START|0048|3|4| 62.49|3.Partitioning                |  0.00|     0|3
+2019-12-19 10:58:43,231|FE|END  |0048|3|4| 63.29|3.Partitioning                |  0.80|  7583|3
+2019-12-19 10:58:43,231|FE|START|0048|3|4| 63.29|4.Mining                      |  0.00|     0|3
+2019-12-19 10:58:44,656|FE|END  |0048|3|4| 64.72|4.Mining                      |  1.43|  4597|3
+2019-12-19 10:58:45,217|Saved /tmp/windowFlocks_3.tsv [2103 records].
+2019-12-19 10:58:45,622|Timestamps in window: 2 3 4
+2019-12-19 10:58:45,622|FE|START|0048|3|4| 65.68|1.Getting maximal disks       |  0.00|     0|4
+2019-12-19 10:58:46,422|MF|app-20191219105741-0048|3|4|START| 66.48|A.Points indexed              |  0.00|     0|LA_25KTrajs|4
+2019-12-19 10:58:47,023|MF|app-20191219105741-0048|3|4|  END| 67.08|A.Points indexed              |  0.60|    16|LA_25KTrajs|4
+2019-12-19 10:58:47,024|MF|app-20191219105741-0048|3|4|START| 67.09|B.Pairs found                 |  0.00|     0|LA_25KTrajs|4
+2019-12-19 10:58:47,948|MF|app-20191219105741-0048|3|4|  END| 68.01|B.Pairs found                 |  0.92| 18784|LA_25KTrajs|4
+2019-12-19 10:58:47,948|MF|app-20191219105741-0048|3|4|START| 68.01|C.Centers found               |  0.00|     0|LA_25KTrajs|4
+2019-12-19 10:58:48,132|MF|app-20191219105741-0048|3|4|  END| 68.19|C.Centers found               |  0.18| 37568|LA_25KTrajs|4
+2019-12-19 10:58:48,132|MF|app-20191219105741-0048|3|4|START| 68.19|D.Disks found                 |  0.00|     0|LA_25KTrajs|4
+2019-12-19 10:58:50,773|MF|app-20191219105741-0048|3|4|  END| 70.83|D.Disks found                 |  2.64| 15841|LA_25KTrajs|4
+2019-12-19 10:58:50,783|MF|app-20191219105741-0048|3|4|START| 70.84|E.Disks partitioned           |  0.00|     0|LA_25KTrajs|4
+2019-12-19 10:58:52,088|MF|app-20191219105741-0048|3|4|  END| 72.15|E.Disks partitioned           |  1.31| 20563|LA_25KTrajs|4
+2019-12-19 10:58:52,088|MF|app-20191219105741-0048|3|4|START| 72.15|F.Maximal disks found         |  0.00|     0|LA_25KTrajs|4
+2019-12-19 10:58:55,932|MF|app-20191219105741-0048|3|4|  END| 75.99|F.Maximal disks found         |  3.84|  2476|LA_25KTrajs|4
+2019-12-19 10:58:55,933|MAXIMALS|app-20191219105741-0048|4|3|30.0|3|16|115|9.51|2476
+2019-12-19 10:58:56,273|FE|END  |0048|3|4| 76.33|1.Getting maximal disks       | 10.65|  2476|4
+2019-12-19 10:58:56,779|Times in window: 2 3 4
+2019-12-19 10:58:56,943|Disks in window: 7372
+2019-12-19 10:58:57,702|FE|START|0048|3|4| 77.76|2.Indexing                    |  0.00|     0|4
+2019-12-19 10:58:57,990|FE|END  |0048|3|4| 78.05|2.Indexing                    |  0.29|  7660|4
+2019-12-19 10:58:57,990|FE|START|0048|3|4| 78.05|3.Partitioning                |  0.00|     0|4
+2019-12-19 10:58:58,795|FE|END  |0048|3|4| 78.86|3.Partitioning                |  0.81|  7660|4
+2019-12-19 10:58:58,795|FE|START|0048|3|4| 78.86|4.Mining                      |  0.00|     0|4
+2019-12-19 10:59:00,046|FE|END  |0048|3|4| 80.11|4.Mining                      |  1.25|  4669|4
+2019-12-19 10:59:00,555|Saved /tmp/windowFlocks_4.tsv [2133 records].
+2019-12-19 10:59:01,117|Timestamps in window: 3 4 5
+2019-12-19 10:59:01,118|FE|START|0048|3|4| 81.18|1.Getting maximal disks       |  0.00|     0|5
+2019-12-19 10:59:01,877|MF|app-20191219105741-0048|3|4|START| 81.94|A.Points indexed              |  0.00|     0|LA_25KTrajs|5
+2019-12-19 10:59:02,475|MF|app-20191219105741-0048|3|4|  END| 82.54|A.Points indexed              |  0.60|    16|LA_25KTrajs|5
+2019-12-19 10:59:02,475|MF|app-20191219105741-0048|3|4|START| 82.54|B.Pairs found                 |  0.00|     0|LA_25KTrajs|5
+2019-12-19 10:59:03,405|MF|app-20191219105741-0048|3|4|  END| 83.47|B.Pairs found                 |  0.93| 19490|LA_25KTrajs|5
+2019-12-19 10:59:03,405|MF|app-20191219105741-0048|3|4|START| 83.47|C.Centers found               |  0.00|     0|LA_25KTrajs|5
+2019-12-19 10:59:03,554|MF|app-20191219105741-0048|3|4|  END| 83.62|C.Centers found               |  0.15| 38980|LA_25KTrajs|5
+2019-12-19 10:59:03,554|MF|app-20191219105741-0048|3|4|START| 83.62|D.Disks found                 |  0.00|     0|LA_25KTrajs|5
+2019-12-19 10:59:05,635|MF|app-20191219105741-0048|3|4|  END| 85.70|D.Disks found                 |  2.08| 16741|LA_25KTrajs|5
+2019-12-19 10:59:05,648|MF|app-20191219105741-0048|3|4|START| 85.71|E.Disks partitioned           |  0.00|     0|LA_25KTrajs|5
+2019-12-19 10:59:06,509|MF|app-20191219105741-0048|3|4|  END| 86.57|E.Disks partitioned           |  0.86| 22187|LA_25KTrajs|5
+2019-12-19 10:59:06,509|MF|app-20191219105741-0048|3|4|START| 86.57|F.Maximal disks found         |  0.00|     0|LA_25KTrajs|5
+2019-12-19 10:59:11,080|MF|app-20191219105741-0048|3|4|  END| 91.14|F.Maximal disks found         |  4.57|  2554|LA_25KTrajs|5
+2019-12-19 10:59:11,081|MAXIMALS|app-20191219105741-0048|4|3|30.0|3|16|109|9.204|2554
+2019-12-19 10:59:11,451|FE|END  |0048|3|4| 91.51|1.Getting maximal disks       | 10.33|  2554|5
+2019-12-19 10:59:11,943|Times in window: 3 4 5
+2019-12-19 10:59:12,122|Disks in window: 7497
+2019-12-19 10:59:12,932|FE|START|0048|3|4| 92.99|2.Indexing                    |  0.00|     0|5
+2019-12-19 10:59:13,242|FE|END  |0048|3|4| 93.30|2.Indexing                    |  0.31|  7809|5
+2019-12-19 10:59:13,243|FE|START|0048|3|4| 93.30|3.Partitioning                |  0.00|     0|5
+./Validator.sh: line 18: 12972 Killed                  spark-submit --master spark://mr-hn:7077 --num-executors 40 --executor-cores 3 --class FE $JAR --input $DATASET_PATH --tag $DATASET_NAME --i $START --n $END --epsilon $E --mu $M --delta $D --entries 20 --ffpartitions 8 --envelope --interval 10 --save --width 5000 --speed $SPEED
+sort /tmp/FE_E30_M3_D3.tsv -o /tmp/FE_E30_M3_D3_sorted.tsv
+sort: cannot read: /tmp/FE_E30_M3_D3.tsv: No such file or directory
+sort /tmp/FF_E30_M3_D3.tsv -o /tmp/FF_E30_M3_D3_sorted.tsv
+sort: cannot read: /tmp/FF_E30_M3_D3.tsv: No such file or directory
+diff -s /tmp/FE_E30_M3_D3_sorted.tsv /tmp/FF_E30_M3_D3_sorted.tsv
+diff: /tmp/FE_E30_M3_D3_sorted.tsv: No such file or directory
+diff: /tmp/FF_E30_M3_D3_sorted.tsv: No such file or directory
+./Validator.sh: line 37: unexpected EOF while looking for matching `"'
+./Validator.sh: line 44: syntax error: unexpected end of file
