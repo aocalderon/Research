@@ -16,11 +16,11 @@ case class TimeByTime(n: Long, timestamp: String, tag: String, status: String, a
 case class TimeByWindow(n: Long, timestamp: String, tag: String, status: String, appId: String,
   executors: Int, cores: Int, timer: Double, stage: String, time: Double, load: Int, instant: Int)
 
-case class Task(n: Long,
-  timestamp: String, tag: String, taskId: Int, index: Int, executor: String, duration: Int,
+case class Task(n: Long, timestamp: String, tag: String, stageName: String,
+  taskId: Int, index: Int, executor: String, duration: Int,
   recordsRead: Long, bytesRead: Long,
   recordsWritten: Long, bytesWritten: Long,
-  shuffleReadTime: Long, shuffleWriteTime: Long,
+  shuffleRead: Long, shuffleWritten: Long,
   stageId: Int, jobId: Int, appId: String
 )
 
@@ -143,10 +143,10 @@ object TaskInfoAnalizer extends App {
   val joinedFF = timer{"Join tasks and FF tables"}{
     FF.alias("A")
       .join(tasks.alias("B"), $"A.start" <= $"B.n" && $"B.n" <= $"A.end" && $"A.appId" === $"B.appId"
-      ).select($"B.timestamp", $"executor", $"duration",
+      ).select($"B.timestamp", $"executor", $"duration", $"stageName",
         $"recordsRead", $"bytesRead",
         $"recordsWritten", $"bytesWritten",
-        $"shuffleReadTime", $"shuffleWriteTime",
+        $"shuffleRead", $"shuffleWritten",
         $"B.taskId", $"B.index", $"B.stageId", $"B.jobId",
         $"A.stage", $"A.time", $"A.instant", $"A.appId")
   }
@@ -157,7 +157,7 @@ object TaskInfoAnalizer extends App {
       ).select($"B.timestamp", $"executor", $"duration",
         $"recordsRead", $"bytesRead",
         $"recordsWritten", $"bytesWritten",
-        $"shuffleReadTime", $"shuffleWriteTime",
+        $"shuffleRead", $"shuffleWritten",
         $"B.taskId", $"B.index", $"B.stageId", $"B.jobId",
         $"A.stage", $"A.time", $"A.instant", $"A.appId")
   }

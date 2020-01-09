@@ -14,7 +14,7 @@ case class StageInfo(n: Long, timestamp: String, tag: String, name: String, ntas
   duration: Long, stageId: Int, jobId: Int, appId: String
 )
 
-case class StageDetails(n: Long, timestamp: String, stageId: Int, details: String)
+case class StageDetails(n: Long, timestamp: String, tag: String, stageId: Int, details: String)
 
 object StageInfoAnalizer extends App {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -118,13 +118,13 @@ object StageInfoAnalizer extends App {
 
   val joinedFF = timer{"Join tasks and FF tables"}{
     val stages2 = stages.alias("s").join(details.alias("d"), $"s.stageId" === $"d.stageId")
+      .select($"s.n", $"s.timestamp", $"s.name", $"s.ntasks", $"s.duration",
+        $"s.stageId", $"s.jobId", $"s.appId", $"d.details")
 
-    stages2
-    
-    //FF.alias("A")
-      //.join(stages2.alias("B"), $"A.start" <= $"B.n" && $"B.n" <= $"A.end" && $"A.appId" === $"B.appId"
-      //).select($"B.timestamp", $"B.stageId", $"B.name", $"B.ntasks", $"B.duration", 
-      //  $"A.stage", $"A.time", $"A.instant", $"A.appId")
+    FF.alias("A")
+      .join(stages2.alias("B"), $"A.start" <= $"B.n" && $"B.n" <= $"A.end" && $"A.appId" === $"B.appId")
+      .select($"B.timestamp", $"B.stageId", $"B.name", $"B.ntasks", $"B.duration", $"B.details", 
+        $"A.stage", $"A.time", $"A.instant", $"A.appId")
   }
 
   FF.printSchema()
@@ -133,10 +133,16 @@ object StageInfoAnalizer extends App {
   stages.printSchema()
   stages.show(5, truncate = false)
 
-  joinedFF.show()
+  details.printSchema()
+  details.show(5, truncate = false)
 
-  //joinedFF.orderBy($"duration".desc).show(params.n(), truncate=false)
-  //nrecords("Number of records after join:", joinedFF.count())
+  joinedFF.printSchema()
+  joinedFF.show(5, truncate = false)
+
+  joinedFF.orderBy($"duration".desc)
+    .select($"stage", $"name", $"instant", $"duration", $"time", $"ntasks", $"details")
+    .show(params.n(), truncate=false)
+  nrecords("Number of records after join:", joinedFF.count())
 
   logger.info("Closing session...")
   spark.close()

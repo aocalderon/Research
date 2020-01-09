@@ -374,9 +374,10 @@ object FF{
         case x if x <  n / 2 => params.ffpartitions()
         case _ => 1
       }
-      pointRDD.spatialPartitioning(GridType.KDBTREE, partitions)
+      pointRDD.spatialPartitioning(GridType.QUADTREE, partitions)
       val bufferRDD = new CircleRDD(pointRDD, epsilon)
       bufferRDD.spatialPartitioning(pointRDD.getPartitioner)
+      if(params.debug()){ logger.info(s"Number of partition in getRedundants: ${pointRDD.spatialPartitionedRDD.rdd.getNumPartitions}") }
       val F = JoinQuery.DistanceJoinQueryFlat(pointRDD, bufferRDD, false, false)
       val flocks_prime = F.rdd
         .map{ case (point1, point2) => (geom2flock(point1), geom2flock(point2)) }
@@ -387,7 +388,7 @@ object FF{
         }
       
       if(debug){
-        flocks_prime.map(f => (f._1.toString(), f._2.toString(), f._3)).toDS().show(100, false)
+        flocks_prime.map(f => (f._1.toString(), f._2.toString(), f._3)).toDS().show(5, false)
       }
 
       flocks_prime.filter(_._3).map(_._1)

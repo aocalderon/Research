@@ -12,6 +12,7 @@ class CustomSparkListener extends SparkListener {
   var jobId = 0
   var nstages = 0
   var stageId = 0
+  var stageName = ""
   var ntasks = 0
 
   override def onApplicationStart(app: SparkListenerApplicationStart): Unit = {
@@ -34,17 +35,18 @@ class CustomSparkListener extends SparkListener {
 
   override def onStageSubmitted(stage: SparkListenerStageSubmitted): Unit = {
     stageId = stage.stageInfo.stageId
+    stageName = stage.stageInfo.name
     ntasks = stage.stageInfo.numTasks
-    logger.info(s"STAGE|START|$stageId|$ntasks")
+    logger.info(s"STAGE|START|$stageName|$ntasks")
   }
   override def onStageCompleted(stage: SparkListenerStageCompleted): Unit = {
-    logger.info(s"STAGE|END|$stageId|$ntasks")
+    logger.info(s"STAGE|END|$stageName")
   }
 
   override def onTaskEnd(task: SparkListenerTaskEnd): Unit = {
     val t = task.taskInfo
     val m = task.taskMetrics
-    val info = s"TASKINFO|" +
+    val info = s"TASKINFO|$stageName|" +
     s"${t.taskId}|" +
     s"${t.index}|" +
     s"${t.host}:${t.executorId}|" +
