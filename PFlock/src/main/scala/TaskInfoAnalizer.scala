@@ -11,12 +11,12 @@ import org.andress.Utils._
 import org.rogach.scallop._
 
 case class TimeByTime(n: Long, timestamp: String, tag: String, status: String, appId: String,
-  executors: Int, cores: Int, timer: Double, stage: String, time: Double, load: Int, instant: Int)
+  executors: Int, cores: Int, timer: Double, phase: String, phaseTime: Double, load: Int, timeInstant: Int)
 
 case class TimeByWindow(n: Long, timestamp: String, tag: String, status: String, appId: String,
-  executors: Int, cores: Int, timer: Double, stage: String, time: Double, load: Int, instant: Int)
+  executors: Int, cores: Int, timer: Double, phase: String, phaseTime: Double, load: Int, timeInstant: Int)
 
-case class Task(n: Long, timestamp: String, tag: String, stageName: String,
+case class Task(n: Long, timestamp: String, tag: String, //stageName: String,
   taskId: Int, index: Int, executor: String, duration: Int,
   recordsRead: Long, bytesRead: Long,
   recordsWritten: Long, bytesWritten: Long,
@@ -143,23 +143,23 @@ object TaskInfoAnalizer extends App {
   val joinedFF = timer{"Join tasks and FF tables"}{
     FF.alias("A")
       .join(tasks.alias("B"), $"A.start" <= $"B.n" && $"B.n" <= $"A.end" && $"A.appId" === $"B.appId"
-      ).select($"B.timestamp", $"executor", $"duration", $"stageName",
+      ).select($"B.timestamp", $"executor", ($"duration" / 1000.0).as("duration"), //$"stageName",
         $"recordsRead", $"bytesRead",
         $"recordsWritten", $"bytesWritten",
         $"shuffleRead", $"shuffleWritten",
         $"B.taskId", $"B.index", $"B.stageId", $"B.jobId",
-        $"A.stage", $"A.time", $"A.instant", $"A.appId")
+        $"A.phase", $"A.phaseTime", $"A.timeInstant", $"A.appId")
   }
 
   val joinedFE = timer{"Join tasks and FE tables"}{
     FE.alias("A")
       .join(tasks.alias("B"), $"A.start" <= $"B.n" && $"B.n" <= $"A.end" && $"A.appId" === $"B.appId"
-      ).select($"B.timestamp", $"executor", $"duration",
+      ).select($"B.timestamp", $"executor", ($"duration" / 1000.0).as("duration"),
         $"recordsRead", $"bytesRead",
         $"recordsWritten", $"bytesWritten",
         $"shuffleRead", $"shuffleWritten",
         $"B.taskId", $"B.index", $"B.stageId", $"B.jobId",
-        $"A.stage", $"A.time", $"A.instant", $"A.appId")
+        $"A.phase", $"A.phaseTime", $"A.timeInstant", $"A.appId")
   }
 
   FE.printSchema()
@@ -171,10 +171,10 @@ object TaskInfoAnalizer extends App {
   tasks.printSchema()
   tasks.show(5, truncate = false)
 
-  joinedFF.orderBy($"duration".desc).show(20, truncate=false)
+  joinedFF.orderBy($"duration".desc).show(params.n(), truncate=false)
   nrecords("Number of records after join:", joinedFF.count())
 
-  joinedFE.orderBy($"duration".desc).show(20, truncate=false)
+  joinedFE.orderBy($"duration".desc).show(params.n(), truncate=false)
   nrecords("Number of records after join:", joinedFE.count())
 
   logger.info("Closing session...")
@@ -184,7 +184,8 @@ object TaskInfoAnalizer extends App {
 
 class TaskInfoAnalizerConf(args: Seq[String]) extends ScallopConf(args) {
   val input = opt[String](default = Some("/home/acald013/Datasets/ValidationLogs/sample2.txt"))
-  val appid = opt[String](default = Some("0032"))
+  val n = opt[Int](default = Some(50))
+  val appid = opt[String](default = Some(""))
 
   verify()
 }

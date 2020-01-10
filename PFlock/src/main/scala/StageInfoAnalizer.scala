@@ -124,7 +124,7 @@ object StageInfoAnalizer extends App {
     FF.alias("A")
       .join(stages2.alias("B"), $"A.start" <= $"B.n" && $"B.n" <= $"A.end" && $"A.appId" === $"B.appId")
       .select($"B.timestamp", $"B.stageId", $"B.name", $"B.ntasks", $"B.duration", $"B.details", 
-        $"A.stage", $"A.time", $"A.instant", $"A.appId")
+        $"A.phase", $"A.phaseTime", $"A.timeInstant", $"A.appId")
   }
 
   FF.printSchema()
@@ -140,7 +140,7 @@ object StageInfoAnalizer extends App {
   joinedFF.show(5, truncate = false)
 
   joinedFF.orderBy($"duration".desc)
-    .select($"stage", $"name", $"instant", $"duration", $"time", $"ntasks", $"details")
+    .select($"phase", $"timeInstant", $"stageId", $"name", $"ntasks", $"duration", $"details")
     .show(params.n(), truncate=false)
   nrecords("Number of records after join:", joinedFF.count())
 
