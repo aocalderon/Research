@@ -8,10 +8,16 @@
 \usepackage{animate}
 \usepackage{graphicx}
 \def\Put(#1,#2)#3{\leavevmode\makebox(0,0){\put(#1,#2){#3}}}
-\usepackage{color}
+\usepackage{colortbl}
 \usepackage{tikz}
 \usepackage{amssymb}
 \usepackage{enumerate}
+\usepackage{arydshln}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\colorlet{lightred}{red!25}
+\colorlet{lightgreen}{green!25}
 
 
 \newcommand\blfootnote[1]{%
@@ -84,70 +90,77 @@
     \end{frame}
 }
 
-\begin{frame}{Working on Brinkhoff dataset}
+\begin{frame}{Task analysis...}
     \begin{itemize}
-        \item Double-checking some figures. Length of trajectories (in time instants):
-        \item Original dataset: \\
-        \begin{tabular}{|c|c|c|} 
-            \hline
-            avg & min & max \\ \hline
-            2218.39 & 82 & 2665 \\ \hline
-        \end{tabular}
-        \item New dataset: \\
-        \begin{tabular}{|c|c|c|} 
-            \hline
-            avg & min & max \\ \hline
-            556.40 & 1 & 1134 \\ \hline
-        \end{tabular}
-        \item I have prepared some notebooks with additional computations...
+        \item Apache Spark divides the work into a number of Stages, each one is also divide into a number of Tasks.
+        \item Each Task evaluates the data from a particular Partition and it is sent to an Executor for evaluation.
+        \item Tracking the Tasks will give us a notion of the Partitions and Executors performance...
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Performing experiments in Brinkhoff dataset}
+\begin{frame}{Task analysis...}
     \begin{itemize}
-        \item I have run two set of experiments on the Brinkhoff data.  They are based on some samples in order to not run over the full set of time instants (92286).
-        \item First sample run over the first 100 time instants which have a low number of points per time instant.
-        \item Second sample run over 200 time instants around the peak concentration of points (time instant 44166).
+        \item SparkListener class allows us to monitor Taks metrics.  We can capture info about:
+        \begin{itemize}
+            \item executor: The id of the executor where the Task was evaluated.
+            \item duration: Execution time of the task.
+            \item recordsRead/Written: Total number of records read or written.
+            \item bytesRead/Written: Total number of bytes read or written.
+            \item shuffleRead/Written: Total number of records read or written from the shuffle by this task.
+        \end{itemize}
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Performing experiments in Brinkhoff dataset}
-    {\small Sample 1: 100 Time instants from 0 to 100 ($\approx$360 points per time instant).}
-    \centering
-    \begin{figure}
-        \includegraphics[width=.9\textwidth]{ICPE_B0-1K}
-    \end{figure}    
-\end{frame}
-
-\begin{frame}{Performing experiments in Brinkhoff dataset}
-    {\small Sample 2: 200 Time instants from 44K to 44.2K ($\approx$813 points per time instant).}
-    \centering
-    \begin{figure}
-        \includegraphics[width=.9\textwidth]{ICPE_B43K-44K}
-    \end{figure}    
-\end{frame}
-
-\begin{frame}{Re-visiting LA dataset}
-    {\small with updated code.}
-    \centering
-    \begin{figure}
-        \includegraphics[width=.9\textwidth]{ICPE_10K}
-    \end{figure}    
-\end{frame}
-
-\begin{frame}{Re-visiting LA dataset}
-    {\small with updated code.}
-    \centering
-    \begin{figure}
-        \includegraphics[width=.9\textwidth]{ICPE_25K}
-    \end{figure}    
-\end{frame}
-
-\begin{frame}{What is next?}
+\begin{frame}{Task analysis...}
     \begin{itemize}
-        \item I am still working on adapting the ID-based partitioning under the Spark Streaming environment. I have finished integrating the code but I am getting problems to coordinate the window operations and the ingestion of the data.
-        
-        \item Once it is fixed I expect to implement the Fixed Length Bit Compression method as proposed on Chen et al.
+        \item Running experiments with Epsilon=30, Mu=3 and Delta=3.
+        \item Collecting Task metrics.  Focus on Time by time implementation...
+    \end{itemize}
+    \begin{figure}
+        \includegraphics[width=1\textwidth]{figures/TaskAnalysisFF1}
+        \caption{\small Top 30 longest tasks}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Task analysis...}
+    \begin{itemize}
+        \item Running experiments with Epsilon=30, Mu=3 and Delta=3.
+        \item Collecting Task metrics.  Focus on Time by time implementation...
+    \end{itemize}
+    \begin{figure}
+        \includegraphics[width=1\textwidth]{figures/TaskAnalysisFF2}
+        \caption{\small Top 30 longest tasks}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Stage analysis...}
+    \begin{itemize}
+        \item SparkListener also provide info about the whole stage.  Some interesting metrics are:
+        \begin{itemize}
+            \item numTasks: The number of tasks in which the Stage is divided.
+            \item name: The Spark function which invoke the Stage and its line of code.
+            \item details: The stack trace when the Stage was called.
+        \end{itemize}
+    \end{itemize}
+
+    \begin{figure}
+        \includegraphics[width=1\textwidth]{figures/StageAnalysisFF1}
+        \caption{\small Top 20 longest stages}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Stage analysis...}
+    \begin{itemize}
+        \item FF.scala:191 makes a call to the redundant flocks prunning routine.
+        \item I have noted that I am repartitioning the data in order to match the prevoius set of flocks which could be causing the shuffling.
+        \item Currently I have extracted some data for testing (time instant 19) and making some improvements.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{What is next...}
+    \begin{itemize}
+        \item Fixi the shuffling overheard during the prunning routine.
+        \item Perform similar analysis for the Time window implementation.
     \end{itemize}
 \end{frame}
 
