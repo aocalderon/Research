@@ -39,7 +39,7 @@ object FF{
   def run(spark: SparkSession, timestamps: List[Int], params: FFConf): Unit = {
     val applicationID = spark.sparkContext.applicationId
     var clockTime = System.currentTimeMillis()
-    val debug        = params.ffdebug()
+    val debug        = params.debug()
     val master       = params.master()
     val offset       = params.offset()
     val sespg        = params.sespg()
@@ -187,6 +187,15 @@ object FF{
         val flocks_delta =  flocks.filter(_.length == delta).cache
         val nFlocks_delta = flocks_delta.count().toInt
 
+        if(debug){
+          val flocks = flocks_delta.map(_.toTSV + "\n").collect()
+          val filename = "/tmp/redundants.txt"
+          val f = new java.io.PrintWriter(filename)
+          f.write(flocks.mkString(""))
+          f.close()
+          logger.info(s"Saved $filename [${flocks.size} records]")
+        }
+
         val flocks_delta_to_prune = getRedundants(flocks_delta, epsilon, spark, params).cache
         val nFlocks_delta_to_prune = flocks_delta_to_prune.count().toInt
         val flocks_to_report = flocks_delta.subtract(flocks_delta_to_prune).cache
@@ -195,15 +204,6 @@ object FF{
 
         saveFlocks(flocks_to_report, timestamp)
         nReported = nReported + nFlocks_to_report
-
-        if(debug){
-          logger.info(s"flocks_delta ($nFlocks_delta)")
-          flocks_delta.sortBy(_.getItems.head).map(_.toString()).toDS().show(nFlocks_delta, false)
-          logger.info(s"flocks_delta_to_prune ($nFlocks_delta_to_prune)")
-          flocks_delta_to_prune.sortBy(_.getItems.head).map(_.toString()).toDS().show(nFlocks_delta_to_prune, false)
-          logger.info(s"flocks_to_report ($nFlocks_to_report)")
-          flocks_to_report.sortBy(_.getItems.head).map(_.toString()).toDS().show(nFlocks_to_report, false)
-        }
 
         timer = System.currentTimeMillis()
         stage = "4.Flocks updated"
@@ -448,7 +448,7 @@ object FF{
     val epsilon      = params.epsilon()
     val mininterval  = params.mininterval()
     val maxinterval  = params.maxinterval()
-    val debug        = params.ffdebug()
+    val debug        = params.debug()
     val info         = params.info()
     cores            = params.cores()
     executors        = params.executors()

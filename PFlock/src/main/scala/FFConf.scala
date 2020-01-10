@@ -45,7 +45,6 @@ class FFConf(args: Seq[String]) extends ScallopConf(args) {
   val fraction:     ScallopOption[Double]   = opt[Double]  (default  = Some(0.1))
   val fraction2:    ScallopOption[Double]   = opt[Double]  (default  = Some(0.1))
   
-  val ffdebug:      ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
   val mfdebug:      ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
   val info:         ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
   val local:        ScallopOption[Boolean] =  opt[Boolean]  (default  = Some(false))
