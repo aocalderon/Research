@@ -1,0 +1,93 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{caption}
+\usepackage{amsthm}
+\usepackage[margin=2cm]{geometry}
+
+\pagestyle{empty}
+\setlist{nosep}
+\algnewcommand\algorithmicforeach{\textbf{for each}}
+\algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
+\algnewcommand\algorithmicswitch{\textbf{switch}}
+\algnewcommand\algorithmiccase{\textbf{case}}
+\algdef{SE}[SWITCH]{Switch}{EndSwitch}[1]{\algorithmicswitch\ #1\ \algorithmicdo}{\algorithmicend\ \algorithmicswitch}%
+\algdef{SE}[CASE]{Case}{EndCase}[1]{\algorithmiccase\ #1}{\algorithmicend\ \algorithmiccase}%
+\algtext*{EndSwitch}%
+\algtext*{EndCase}%
+\newtheorem*{lemma}{Lemma}
+
+\begin{document}
+    \section*{Flock record}
+    Flock(items, start, end, center):
+    \begin{itemize}
+        \item items: Set[Int].  Set of point identifiers.
+        \item start: Int.  Time instant when the flock starts. 
+        \item end:   Int.  Time instant when the flock finishes.
+        \item center: Point.  Geometric representation of the center of the flock.
+    \end{itemize}
+    
+    \section*{Pseudo-code}
+    \begin{algorithm} \caption{Reporting current flocks}
+        \textbf{Require:} Set of previous flocks $\mathcal F^\prime$, Set of current maximal disks $\mathcal D$, a maximal distance a flock can travel between time intervals $\theta$, minimum distance between points in a flock $\varepsilon$, minimum flock size $\mu$ and minimun flock duration $\delta$.
+        \begin{algorithmic}[1]
+            \State $\mathcal R \gets $ apply \textsc{distanceJoin} operation between $\mathcal F^\prime$ and $\mathcal D$ using $\theta$ as distance constraint. \Comment{ Joining phase }
+            \State $\mathcal F^\prime \gets \emptyset$
+            \ForEach{ $r: (disk, intersected\_flocks)$ in $\mathcal R $ }
+                \State $new\_flocks \gets \emptyset$
+                \State $flock1 \gets$ convert $disk$ into a flock \Comment{start and end become the current time instant.}
+                \ForEach{ $flock2$ in $intersected\_flocks$ }
+                    \State $i \gets flock1.items \cap flock2.items$
+                    \State $s \gets flock2.start$
+                    \State $e \gets flock1.end$
+                    \State $c \gets flock1.center$
+                    \If{ $i.size >= \mu$ }
+                        \State $new\_flocks \gets new\_flocks \cup Flock(i,s,e,c)$
+                    \EndIf
+                \EndFor
+                \State $subsets \gets \emptyset$
+                \ForEach{ $f_1$ in $new\_flocks$ }
+                    \ForEach{ $f_2$ in $new\_flocks$ }
+                        \If{ $f_1.items.size < f_2.items.size$ }
+                            \If{ $f_1.items$ is subset of $f_2.items$ and $f_1.start >= f_2.start$ }
+                                \State $subsets \gets subsets \cup f_1$
+                            \EndIf
+                        \EndIf
+                    \EndFor
+                \EndFor
+                \State $\mathcal F^\prime \gets \mathcal F^\prime \cup (new\_flocks - subsets)$
+            \EndFor
+            \State $\mathcal F_\delta \gets \emptyset$ \Comment{ Reporting phase }
+            \ForEach{ $flock$ in $\mathcal F^\prime$ }
+                \If{ $flock.end - flock.start + 1 = \delta$ }
+                    \State $\mathcal F_\delta \gets \mathcal F_\delta \cup flock$
+                \EndIf
+            \EndFor
+            \State $\mathcal F_\delta \gets \textsc{removePossibleRedundants}(\mathcal F_\delta, \epsilon)$
+            \State Report flocks in $\mathcal F_\delta$ 
+        \end{algorithmic}
+    \end{algorithm}
+    
+    \begin{algorithm} \caption{\textsc{removePossibleRedundants} function}
+        \textbf{Require:} Set of flocks $\mathcal F$ and a minimun distance $\varepsilon$.
+        \begin{algorithmic}[1]
+        \Function{ removePossibleRedundants }{ $\mathcal F$, $\varepsilon$ }
+            \State $\mathcal R \gets $ apply \textsc{self-distanceJoin} operation on $\mathcal F$ using $\varepsilon$ as distance constraint. 
+            \State $subsets \gets \emptyset$
+            \ForEach{ $r: (flock, intersected\_flocks)$ in $\mathcal R $ }
+                \ForEach{ $flock2$ in $intersected\_flocks$ }
+                    \If{ $flock.size < flock2.size$ }
+                        \If{ $flock.items$ is subset of $flock2.items$ }
+                            \State $subsets \gets subsets \cup flock$
+                        \EndIf
+                    \EndIf
+                \EndFor
+            \EndFor
+            \State \Return{ ($\mathcal F - subsets$) }
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+\end{document}
