@@ -11,7 +11,7 @@ case class Flock(items: Vector[Int], start: Int, end: Int, center: Point){
   
   override def toString(): String = s"${getItems.mkString(" ")}\t$start\t$end"
 
-  def toTSV(): String = s"${getItems.mkString(" ")}\t$start\t$end\t${center.getX}\t${center.getY}"
+  def toTSV(): String = f"$start\t$end\t${center.getX}%.3f\t${center.getY}%.3f\t${getItems.mkString(" ")}"
 
   def toCSV(): String = s"$start, $end, ${getItems.mkString(" ")}"
 

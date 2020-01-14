@@ -13,7 +13,7 @@ import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.spatialRDD.{SpatialRDD, CircleRDD, PointRDD}
 import org.datasyslab.geospark.spatialPartitioning.{FlatGridPartitioner}
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
-import org.datasyslab.geospark.spatialPartitioning.{KDBTree, KDBTreePartitioner}
+import org.datasyslab.geospark.spatialPartitioning.{SpatialPartitioner}
 import org.datasyslab.geospark.spatialPartitioning.quadtree.{QuadTreePartitioner, StandardQuadTree, QuadRectangle}
 import org.slf4j.{Logger, LoggerFactory}
 import scala.collection.JavaConverters._
@@ -74,15 +74,18 @@ object FF{
       // Finding maximal disks...
       val input = s"${params.input_path()}${params.input_tag()}_${timestamp}.tsv"
       val T_i = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, Dpartitions)
+
+      //////////////////////////////////////////////////////////
+      // Getting maximal disks...
+      //////////////////////////////////////////////////////////
       timer = System.currentTimeMillis()
-      stage = "1.Maximal disks found"
+      stage = "1.Getting maximal disks"
       logStart(stage, timestamp)
       T_i.analyze()
       val (disks, nDisks) = MF.run(spark, T_i, params, timestamp, s"$timestamp")
       val C = new SpatialRDD[Point]()
       C.setRawSpatialRDD(disks)
       if(nDisks == 0){
-        //firstRun = true
         lastC == null
       }
 
@@ -109,6 +112,10 @@ object FF{
       if(!flocks.isEmpty()){
         // Doing join...
         val timerJoinAndReport = System.currentTimeMillis()
+
+        //////////////////////////////////////////////////////////
+        // Join done...
+        //////////////////////////////////////////////////////////
         timer = System.currentTimeMillis()
         stage = "2.Join done"
         logStart(stage, timestamp)
@@ -119,97 +126,139 @@ object FF{
           f.center
         }
         F.setRawSpatialRDD(flockPoints)
-        if(debug){
-          val nF = F.rawSpatialRDD.rdd.count()
-          logger.info(s"F ($nF)")
-          F.rawSpatialRDD.rdd.map{ geom2flock }.sortBy(_.getItems.head)
-            .map{_.toString()}.toDS().show(nF.toInt, false)
-        }
         F.analyze()
         F.spatialPartitioning(gridType, FFpartitions)
         F.spatialPartitionedRDD.rdd.cache
-        if(debug){
-          val nF = F.spatialPartitionedRDD.rdd.count()
-          logger.info(s"F ($nF)")
-          F.spatialPartitionedRDD.rdd.map{ geom2flock }.sortBy(_.getItems.head)
-            .map{_.toString()}.toDS().show(nF.toInt, false)
-        }
         F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
         val disks = new CircleRDD(C, distance)
         disks.spatialPartitioning(F.getPartitioner)
 
         if(debug){
           logger.info(s"Candidate flocks ($nFlocks)")
-          flocks.sortBy(_.getItems.head).map(_.toWKT).toDS().show(nFlocks.toInt, false)
           val nF = F.spatialPartitionedRDD.rdd.count()
           val nDisks = disks.rawSpatialRDD.count()
           logger.info(s"Join between F ($nF) and buffers ($nDisks)")
-          F.spatialPartitionedRDD.rdd.map{ geom2flock }.sortBy(_.getItems.head)
-            .map{_.toString()}.toDS().show(nF.toInt, false)
-          disks.getCenterPointAsSpatialRDD.rawSpatialRDD.rdd.map{ geom2flock }
-            .sortBy(_.getItems.head).map{_.toString()}.toDS().show(nDisks.toInt, false)
         }
 
-        val R = JoinQuery.DistanceJoinQueryWithDuplicates(F, disks, true, false) // using index, only return geometries fully covered by each buffer...
+        val usingIndex = true 
+        val fullyCovered = false // only return geometries fully covered by each buffer...
+        val R = JoinQuery.DistanceJoinQuery(F, disks, usingIndex, fullyCovered)
 
-        flocks = R.rdd.flatMap{ case (g: Geometry, h: java.util.HashSet[Point]) =>
-          val f0 = geom2flock(g)
-          h.asScala.map{ point =>
-            val f1 = geom2flock(point)
-            (f0, f1)
+        val flocks0 = R.rdd.map{ case (disk: Geometry, flocks: java.util.HashSet[Point]) =>
+          val flock1 = geom2flock(disk)
+          val f =  flocks.asScala.map{ flock =>
+            val flock2 = geom2flock(flock)
+            val i = flock1.getItems.intersect(flock2.getItems)
+            val s = flock2.start
+            val e = flock1.end
+            val c = flock1.center
+            Flock(i, s, e, c)
+          }.filter(_.size >= mu)
+            .map(f => (s"${f.getItems};${f.start};${f.end}", f))
+            .groupBy(_._1).mapValues(_.head._2).values
+
+          f
+        }
+
+        if(debug){
+          /*
+          val g0 = R.rdd.map{ case (disk: Geometry, flocks: java.util.HashSet[Point]) =>
+            val flock1 = geom2flock(disk)
+            flocks.asScala.map{ d =>
+              val flock2 = geom2flock(d)
+              val i = flock1.getItems.intersect(flock2.getItems)
+              val s = flock2.start
+              val e = flock1.end
+              val c = flock1.center
+              (flock1, flock2, Flock(i, s, e, c))
+            }.filter(_._3.size >= mu)
           }
-        }.map{ flocks => 
-          val f = flocks._1.getItems.intersect(flocks._2.getItems)
-          val s = flocks._2.start
-          val e = flocks._1.end
-          val c = flocks._1.center
-          Flock(f, s, e, c)
-        }.filter(_.size >= mu)
-          .map(f => (s"${f.getItems};${f.start};${f.end}", f))
-          .reduceByKey( (f0, f1) => f0).map(_._2)
-          .cache()
+          g0.map { f =>
+            f.filter(t => Set(40,53,56).subsetOf(t._3.getItemset))
+              .map(t => s"${t._1.toTSV()} =VS= ${t._2.toTSV()} => ${t._3.toTSV()}")
+          }.foreach{ println }
+          logger.info(s"Join: ${g0.count()}")
+           
+
+          val g1 = flocks0.zipWithIndex().flatMap{ case (flocks, i) =>
+            flocks.toVector
+              .map(f => (i,f)).sortBy(_._1)
+              .map{ case(i, flock) => s"${i}\t${flock.toTSV()}" }
+          }
+
+          g1.foreach{ println }
+          logger.info(s"Initial: ${g1.count()}")
+
+          val g2 = flocks0.zipWithIndex().flatMap{ case (flocks, i) =>
+            val subsets = for{
+              f1 <- flocks
+              f2 <- flocks if f1.size < f2.size
+            } yield {
+              val isSubset = f1.getItemset.subsetOf(f2.getItemset) && f1.start >= f2.start
+              (f1, f2, isSubset)
+            }
+            subsets.filter(_._3).map(_._1).toVector.distinct
+              .map(f => (i,f)).sortBy(_._1)
+              .map{ case(i, flock) => s"${i}\t${flock.toTSV()}" }
+          }
+
+          g2.foreach{ println }
+          logger.info(s"Remove: ${g2.count()}")
+           */
+        }
+
+        val flocks1 = flocks0.map{ flocks =>
+            val subsets = for{
+              f1 <- flocks
+              f2 <- flocks if f1.size < f2.size
+            } yield {
+              val isSubset = f1.getItemset.subsetOf(f2.getItemset) && f1.start >= f2.start
+              (f1, f2, isSubset)
+            }
+            subsets.filter(_._3).map(_._1).toVector.distinct
+        }
+
+        flocks = flocks0.flatMap(f => f).subtract(flocks1.flatMap(f => f))
+
+        if(debug){
+          //flocks.map(_.toTSV()).foreach{ println }
+          //logger.info(s"Final: ${flocks.count()}")
+        }
+
         nFlocks = flocks.count()
         logEnd(stage, timer, nFlocks, timestamp)
 
-        if(debug){
-          logger.info(s"Flocks from join: $nFlocks")
-        }
-
-        ///////////////////////////////////////////////////////////////////////
-        if(debug){
-          logger.info(s"Candidate flocks ($nFlocks)")
-          flocks.sortBy(_.getItems.head).map(_.toString()).toDS().show(nFlocks.toInt, false)
-        }
-
+        //////////////////////////////////////////////////////////
+        // Flocks reported...
+        //////////////////////////////////////////////////////////
         timer = System.currentTimeMillis()
         stage = "3.Flocks reported"
         logStart(stage, timestamp)
         val flocks_delta =  flocks.filter(_.length == delta).cache
         val nFlocks_delta = flocks_delta.count().toInt
 
-        if(debug){
-          val flocks = flocks_delta.map(_.toTSV + "\n").collect()
-          val filename = "/tmp/redundants.txt"
-          val f = new java.io.PrintWriter(filename)
-          f.write(flocks.mkString(""))
-          f.close()
-          logger.info(s"Saved $filename [${flocks.size} records]")
-        }
-
-        val flocks_delta_to_prune = getRedundants(flocks_delta, epsilon, spark, params).cache
+        val partitioner = F.getPartitioner
+        val flocks_delta_to_prune = getRedundants(flocks_delta, partitioner, epsilon, spark, params)
+          .cache
         val nFlocks_delta_to_prune = flocks_delta_to_prune.count().toInt
         val flocks_to_report = flocks_delta.subtract(flocks_delta_to_prune).cache
         val nFlocks_to_report = flocks_to_report.count().toInt
+
+        //val flocks_to_report = flocks_delta
+        //val nFlocks_to_report = flocks_to_report.count().toInt
+
         logEnd(stage, timer, nFlocks_to_report, timestamp)
 
-        saveFlocks(flocks_to_report, timestamp)
-        nReported = nReported + nFlocks_to_report
+        val n = saveFlocks2(flocks_to_report, timestamp)
+        nReported = nReported + n
 
+        //////////////////////////////////////////////////////////
+        // Flocks updateed...
+        //////////////////////////////////////////////////////////
         timer = System.currentTimeMillis()
         stage = "4.Flocks updated"
         logStart(stage, timestamp)
         val flocks_updated = flocks_to_report.map{ f =>
-          //new Flock(f.pids, f.start + 1, f.end, f.center)
           f.copy(start = f.start + 1)
         }.cache
         val nFlocks_updated = flocks_updated.count().toInt
@@ -226,21 +275,6 @@ object FF{
         flocks = previous_flocks.union(flocks_pruned).cache
         nFlocks = flocks.count()
         logEnd(stage, timer, nFlocks, timestamp)
-
-        if(debug){
-          logger.info(s"flocks_updated ($nFlocks_updated)")
-          flocks_updated.sortBy(_.getItems.head).map(_.toString()).toDS().show(nFlocks_updated, false)
-          logger.info(s"previous_flocks ($nPrevious_flocks)")
-          previous_flocks.sortBy(_.getItems.head).map(_.toString()).toDS().show(nPrevious_flocks, false)
-          logger.info(s"new_flocks ($nNew_flocks)")
-          new_flocks.sortBy(_.getItems.head).map(_.toString()).toDS().show(nNew_flocks, false)
-          logger.info(s"flocks_to_prune ($nFlocks_to_prune)")
-          flocks_to_prune.sortBy(_.getItems.head).map(_.toString()).toDS().show(nFlocks_to_prune, false)
-          logger.info(s"flocks_pruned ($nFlocks_pruned)")
-          flocks_pruned.sortBy(_.getItems.head).map(_.toString()).toDS().show(nFlocks_pruned, false)
-          logger.info(s"New candidate flocks ($nFlocks)")
-          flocks.sortBy(_.getItems.head).map(_.toString()).toDS().show(nFlocks.toInt, false)
-        }
       }
     } // rof
     logger.info(s"Number of flocks: ${nReported}")
@@ -272,6 +306,21 @@ object FF{
     }
   }
 
+  def saveFlocks2(flocks: RDD[Flock], instant: Int): Int = {
+    if(flocks.count() > 0){
+      val filename = s"/tmp/joinFlocks_${instant}.tsv"
+      val fw = new java.io.FileWriter(filename)
+      val out = flocks.map(f => s"${f.start}, ${f.end}, ${f.getItems.mkString(" ")}\n").distinct
+        .collect()
+      fw.write(out.mkString(""))
+      fw.close()
+      logger.info(s"Flocks saved at $filename [${out.size} records]")
+      filenames += filename
+      out.size
+    } else {
+      0
+    }
+  }
 
   def makePoint(pattern: String, timestamp: Int): Point = {
     val arr = pattern.split("\t")
@@ -364,7 +413,7 @@ object FF{
     (pointRDD, points.count())
   }
 
-  def getRedundants(flocks: RDD[Flock], epsilon: Double, spark: SparkSession, params: FFConf, debug: Boolean = false): RDD[Flock] = {
+  def getRedundants(flocks: RDD[Flock], partitioner: SpatialPartitioner,epsilon: Double, spark: SparkSession, params: FFConf, debug: Boolean = false): RDD[Flock] = {
     if(flocks.isEmpty()){
       flocks
     } else {
@@ -374,7 +423,8 @@ object FF{
         case x if x <  n / 2 => params.ffpartitions()
         case _ => 1
       }
-      pointRDD.spatialPartitioning(GridType.QUADTREE, partitions)
+      //pointRDD.spatialPartitioning(GridType.QUADTREE, partitions)
+      pointRDD.spatialPartitioning(partitioner)
       val bufferRDD = new CircleRDD(pointRDD, epsilon)
       bufferRDD.spatialPartitioning(pointRDD.getPartitioner)
       if(params.debug()){ logger.info(s"Number of partition in getRedundants: ${pointRDD.spatialPartitionedRDD.rdd.getNumPartitions}") }

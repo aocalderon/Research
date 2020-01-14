@@ -4,11 +4,11 @@ DATASET_PATH="/home/acald013/Datasets/LA/LA_25KTrajs/"
 DATASET_NAME="LA_25KTrajs"
 DATASET_EXT="tsv"
 JAR="/home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar"
-LISTENER="--conf spark.extraListeners=StageSparkListener"
+LISTENER="--conf spark.extraListeners=TaskSparkListener"
 CORES=4
 EXECUTORS=10
-START=15
-END=20
+START=0
+END=50
 SPEED=100
 EPSILON=( 30 )
 MU=( 3 )

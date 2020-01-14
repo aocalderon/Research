@@ -37,6 +37,7 @@ class TaskSparkListener extends SparkListener {
     s"${t.taskId}|" +
     s"${t.index}|" +
     s"${t.host}:${t.executorId}|" +
+    s"${t.taskLocality}|" +
     s"${t.duration}|" +
     s"${m.inputMetrics.recordsRead}|" +
     s"${m.inputMetrics.bytesRead}|" +
