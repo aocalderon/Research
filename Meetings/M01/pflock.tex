@@ -114,7 +114,7 @@
 \begin{frame}{Task analysis...}
     \begin{itemize}
         \item Running experiments with Epsilon=30, Mu=3 and Delta=3.
-        \item Collecting Task metrics.  Focus on Time by time implementation...
+        \item Collecting Task metrics.  Focus on Time-by-time implementation...
     \end{itemize}
     \begin{figure}
         \includegraphics[width=1\textwidth]{figures/TaskAnalysisFF1}
@@ -135,7 +135,7 @@
 
 \begin{frame}{Stage analysis...}
     \begin{itemize}
-        \item SparkListener also provide info about the whole stage.  Some interesting metrics are:
+        \item SparkListener also provide info about each Stage.  Some interesting metrics are:
         \begin{itemize}
             \item numTasks: The number of tasks in which the Stage is divided.
             \item name: The Spark function which invoke the Stage and its line of code.
@@ -151,16 +151,16 @@
 
 \begin{frame}{Stage analysis...}
     \begin{itemize}
-        \item FF.scala:191 makes a call to the redundant flocks prunning routine.
-        \item I have noted that I am repartitioning the data in order to match the prevoius set of flocks which could be causing the shuffling.
+        \item FF.scala:191 makes a call to the redundant flocks pruning routine.
+        \item Recently I modify this routine to be call during the join between time instants.  I will double-check the code.
         \item Currently I have extracted some data for testing (time instant 19) and making some improvements.
     \end{itemize}
 \end{frame}
 
 \begin{frame}{What is next...}
     \begin{itemize}
-        \item Fixi the shuffling overheard during the prunning routine.
-        \item Perform similar analysis for the Time window implementation.
+        \item Fixing the shuffling overheard during the prunning routine.
+        \item Performing similar analysis for the Time-window implementation.
     \end{itemize}
 \end{frame}
 
