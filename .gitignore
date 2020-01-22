@@ -6,6 +6,9 @@ PFlock/spark-warehouse/*
 PFlock/.ensime
 PFlock/ensime.sbt
 PFlock/.ensime_cache/*
+PFlock/.metals/*
+PFlock/.bloop/*
+PFlock/project/metals.sbt
 
 GeoSpark/.idea/*
 GeoSpark/target/*
