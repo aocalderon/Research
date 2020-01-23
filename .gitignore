@@ -115,6 +115,19 @@ utils/Misc/.settings/*
 utils/Misc/.bloop/
 utils/Misc/.metals/
 
+/utils/PFLogger/target/*
+/utils/PFLogger/project/*
+/utils/PFLogger/.idea/*
+/utils/PFLogger/.idea/workspace.xml
+/utils/PFLogger/.ensime
+/utils/PFLogger/.ensime_cache/*
+/utils/PFLogger/.classpath
+/utils/PFLogger/.project
+/utils/PFLogger/.settings/*
+/utils/PFLogger/.bloop/
+/utils/PFLogger/.metals/
+
+
 Scripts/Scala/TrajFactory/target/*
 Scripts/Scala/TrajFactory/project/*
 Scripts/Scala/TrajFactory/.idea/*

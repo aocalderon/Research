@@ -2,7 +2,7 @@ name := "PFlock"
 organization := "ucr.dblab"
 version := "0.1"
 
-scalaVersion in ThisBuild := "2.11.12"
+scalaVersion in ThisBuild := "2.11.8"
 
 val SparkVersion = "2.3.0"
 val GeoSparkVersion = "1.2.0"
