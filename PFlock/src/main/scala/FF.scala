@@ -238,19 +238,13 @@ object FF{
         val nFlocks_delta = flocks_delta.count().toInt
 
         val partitioner = F.getPartitioner
-        val flocks_delta_to_prune = getRedundants(flocks_delta, partitioner, epsilon, spark, params)
-          .cache
-        val nFlocks_delta_to_prune = flocks_delta_to_prune.count().toInt
-        val flocks_to_report = flocks_delta.subtract(flocks_delta_to_prune).cache
+        val flocks_to_report = getRedundants(flocks_delta, partitioner, epsilon, spark, params).cache
         val nFlocks_to_report = flocks_to_report.count().toInt
-
-        //val flocks_to_report = flocks_delta
-        //val nFlocks_to_report = flocks_to_report.count().toInt
-
         logEnd(stage, timer, nFlocks_to_report, timestamp)
 
-        val n = saveFlocks2(flocks_to_report, timestamp)
-        nReported = nReported + n
+        // Saving partial results...
+        val n = saveFlocks(flocks_to_report, timestamp)
+        nReported = nReported + n 
 
         //////////////////////////////////////////////////////////
         // Flocks updateed...
@@ -293,7 +287,7 @@ object FF{
     }
   }
 
-  def saveFlocks(flocks: RDD[Flock], instant: Int): Unit = {
+  def saveFlocks(flocks: RDD[Flock], instant: Int): Int = {
     if(flocks.count() > 0){
       val filename = s"/tmp/joinFlocks_${instant}.tsv"
       val fw = new java.io.FileWriter(filename)
@@ -303,6 +297,9 @@ object FF{
       fw.close()
       logger.info(s"Flocks saved at $filename [${out.size} records]")
       filenames += filename
+      out.size
+    } else {
+      0
     }
   }
 
@@ -413,21 +410,22 @@ object FF{
     (pointRDD, points.count())
   }
 
+  def pruneDuplicates(flocks: RDD[Flock]): RDD[Flock] = {
+    flocks.map(f => ((f.start, f.end, f.items), f)).groupByKey().mapValues(_.head).values
+  }
+
   def getRedundants(flocks: RDD[Flock], partitioner: SpatialPartitioner,epsilon: Double, spark: SparkSession, params: FFConf, debug: Boolean = false): RDD[Flock] = {
     if(flocks.isEmpty()){
       flocks
     } else {
       import spark.implicits._
       val (pointRDD, n) = flockRDD2pointRDD(flocks)
-      val partitions = params.ffpartitions() match {
-        case x if x <  n / 2 => params.ffpartitions()
-        case _ => 1
-      }
-      //pointRDD.spatialPartitioning(GridType.QUADTREE, partitions)
       pointRDD.spatialPartitioning(partitioner)
       val bufferRDD = new CircleRDD(pointRDD, epsilon)
       bufferRDD.spatialPartitioning(pointRDD.getPartitioner)
-      if(params.debug()){ logger.info(s"Number of partition in getRedundants: ${pointRDD.spatialPartitionedRDD.rdd.getNumPartitions}") }
+      if(params.debug()){
+        logger.info(s"Number of partition in getRedundants: ${pointRDD.spatialPartitionedRDD.rdd.getNumPartitions}")
+      }
       val F = JoinQuery.DistanceJoinQueryFlat(pointRDD, bufferRDD, false, false)
       val flocks_prime = F.rdd
         .map{ case (point1, point2) => (geom2flock(point1), geom2flock(point2)) }
@@ -441,7 +439,7 @@ object FF{
         flocks_prime.map(f => (f._1.toString(), f._2.toString(), f._3)).toDS().show(5, false)
       }
 
-      flocks_prime.filter(_._3).map(_._1)
+      pruneDuplicates(flocks.subtract(flocks_prime.filter(_._3).map(_._1)))
     }
   }
 
