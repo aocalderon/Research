@@ -8,6 +8,7 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.{SparkContext, SparkConf}
 import org.datasyslab.geospark.enums.{FileDataSplitter, GridType, IndexType}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.spatialRDD.{SpatialRDD, CircleRDD, PointRDD}
@@ -29,15 +30,14 @@ object FF{
   private val reader = new com.vividsolutions.jts.io.WKTReader(geofactory)
   private val precision: Double = 0.001
   private var tag: String = "-1"
-  private var appID: String = "app-00000000000000-0000"
   private var startTime: Long = clocktime
-  private var cores: Int = 0
-  private var executors: Int = 0
-  private var portUI: String = "4040"
   private var filenames: ArrayBuffer[String] = new ArrayBuffer()
 
-  def run(spark: SparkSession, timestamps: List[Int], params: FFConf): Unit = {
-    val applicationID = spark.sparkContext.applicationId
+  case class Settings(spark: SparkSession, params: FFConf, conf: SparkConf)
+
+  def run(spark: SparkSession, timestamps: List[Int], params: FFConf)
+    (implicit settings: Settings): Unit = {
+    val appId = spark.sparkContext.applicationId.takeRight(4)
     var clockTime = System.currentTimeMillis()
     val debug        = params.debug()
     val master       = params.master()
@@ -88,14 +88,11 @@ object FF{
       if(nDisks == 0){
         lastC == null
       }
-
       if(lastC != null){ // To control GC performance...
         lastC.rawSpatialRDD.unpersist(false)
-        lastC.spatialPartitionedRDD.unpersist(false)
       }
       lastC = C
       C.analyze()
-      C.spatialPartitioning(gridType, FFpartitions)
       logEnd(stage, timer, nDisks, timestamp)
 
       flocks = if(nDisks != 0){
@@ -127,7 +124,7 @@ object FF{
         }
         F.setRawSpatialRDD(flockPoints)
         F.analyze()
-        F.spatialPartitioning(gridType, FFpartitions)
+        F.spatialPartitioning(gridType, params.ffpartitions())
         F.spatialPartitionedRDD.rdd.cache
         F.buildIndex(IndexType.QUADTREE, true) // Set to TRUE if run join query...
         val disks = new CircleRDD(C, distance)
@@ -272,9 +269,13 @@ object FF{
       }
     } // rof
     logger.info(s"Number of flocks: ${nReported}")
+
     val executionTime = "%.2f".format((System.currentTimeMillis() - clockTime) / 1000.0)
-    logger.info(s"PFLOCK|$applicationID|$cores|$executors|$epsilon|$mu|$delta|$executionTime|$nReported")
-    if(params.save()){ 
+    val executors = settings.conf.get("spark.executor.cores").toInt
+    val cores = settings.conf.get("spark.executor.instances").toInt
+    logger.info(s"PFLOCK|$appId|$cores|$executors|$epsilon|$mu|$delta|$executionTime|$nReported")
+
+    if(params.save()){
       val txtFlocks = filenames.flatMap{ filename =>
         scala.io.Source.fromFile(filename).getLines
       }
@@ -445,18 +446,26 @@ object FF{
 
   def clocktime = System.currentTimeMillis()
 
-  def logStart(msg: String, t: Int): Unit ={
+  def logStart(msg: String, t: Int)(implicit settings: Settings): Unit ={
     val duration = (clocktime - startTime) / 1000.0
     val time = 0.0
     val n = 0
-    val log = f"FF|START|$appID%s|$executors%d|$cores%d|$duration%6.2f|$msg%-30s|$time%6.2f|$n%6d|$t"
+    val executors = settings.conf.get("spark.executor.cores").toInt
+    val cores = settings.conf.get("spark.executor.instances").toInt
+    val appId = settings.conf.get("spark.app.id").takeRight(4)
+    
+    val log = f"FF|$appId|$executors%d|$cores%d|START|$duration%6.2f|$msg%-30s|$time%6.2f|$n%6d|$t"
     logger.info(log)
   }
 
-  def logEnd(msg: String, timer: Long, n: Long, t: Int): Unit ={
+  def logEnd(msg: String, timer: Long, n: Long, t: Int)(implicit settings: Settings): Unit ={
     val duration = (clocktime - startTime) / 1000.0
     val time = (clocktime - timer) / 1000.0
-    val log = f"FF|  END|$appID%s|$executors%d|$cores%d|$duration%6.2f|$msg%-30s|$time%6.2f|$n%6d|$t"
+    val executors = settings.conf.get("spark.executor.cores").toInt
+    val cores = settings.conf.get("spark.executor.instances").toInt
+    val appId = settings.conf.get("spark.app.id").takeRight(4)
+
+    val log = f"FF|$appId|$executors%d|$cores%d|  END|$duration%6.2f|$msg%-30s|$time%6.2f|$n%6d|$t"
     logger.info(log)
   }
 
@@ -498,27 +507,24 @@ object FF{
     val maxinterval  = params.maxinterval()
     val debug        = params.debug()
     val info         = params.info()
-    cores            = params.cores()
-    executors        = params.executors()
-    portUI           = params.portui()
     val Mpartitions  = params.mfpartitions()
-    val Dpartitions  = (cores * executors) * params.dpartitions()
+    //val Dpartitions  = params.dpartitions()
     
     // Starting session...
     val spark = SparkSession.builder()
-      .config("spark.default.parallelism", 3 * cores * executors)
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .config("spark.scheduler.mode", "FAIR")
-      .config("spark.executor.cores", cores)
-      .config("spark.cores.max", executors * cores)
       .appName("PFLock")
       .getOrCreate()
     import spark.implicits._
-    appID = spark.sparkContext.applicationId.split("-").last
     startTime = spark.sparkContext.startTime
-    val config = spark.sparkContext.getConf.getAll.mkString("\n")
-    logger.info(config)
+    val conf = spark.sparkContext.getConf
+    implicit val settings = Settings(spark: SparkSession, params: FFConf, conf: SparkConf)
+
+    val appId = spark.sparkContext.applicationId.takeRight(4)
+    val command = System.getProperty("sun.java.command")
+    logger.info(s"INFO|$appId|$command")
 
     // Running maximal finder...
     var timestamps = (mininterval to maxinterval).toList
@@ -533,19 +539,6 @@ object FF{
 
     // Closing session...
     logger.info("Closing session...")
-    if(info){
-      InfoTracker.master = master
-      InfoTracker.port = portUI
-      InfoTracker.applicationID = appID
-      InfoTracker.executors = executors
-      InfoTracker.cores = cores
-      val app_count = appID.split("-").reverse.head
-      val f = new java.io.PrintWriter(s"${params.output()}app-${app_count}_info.tsv")
-      f.write(InfoTracker.getExectutorsInfo())
-      f.write(InfoTracker.getStagesInfo())
-      f.write(InfoTracker.getTasksInfoByDuration(25))
-      f.close()
-    }
     spark.close()
     logger.info("Closing session... Done!")
   }

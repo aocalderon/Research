@@ -25,20 +25,15 @@ object MF{
   private val reader = new com.vividsolutions.jts.io.WKTReader(geofactory)
   private val precision: Double = 0.001
   private var tag: String = ""
-  private var appID: String = "app-00000000000000-0000"
   private var startTime: Long = clocktime
-  private var cores: Int = 0
-  private var executors: Int = 0
-
-  
 
   def run(spark: SparkSession, points: SpatialRDD[Point], params: FFConf, timestamp: Int = -1, info: String = ""): (RDD[Point], Long) = {
     import spark.implicits._
-
-    appID     = spark.sparkContext.applicationId
-    startTime = spark.sparkContext.startTime
-    cores     = params.cores()
-    executors = params.executors()
+    implicit val conf = spark.sparkContext.getConf
+    val appId = conf.get("spark.app.id").takeRight(4)
+    val executors = conf.get("spark.executor.cores").toInt
+    val cores = conf.get("spark.executor.instances").toInt
+    
     val debug: Boolean    = params.mfdebug()
     val epsilon: Double   = params.epsilon()
     val mu: Int           = params.mu()
@@ -54,7 +49,7 @@ object MF{
     var stage = "A.Points indexed"
     logStart(stage)
 
-    points.spatialPartitioning(GridType.QUADTREE, params.ffpartitions())
+    points.spatialPartitioning(GridType.QUADTREE, params.mfpartitions())
     val nMF1Grids = points.getPartitioner.getGrids.size()
 
     val pointsBuffer = new CircleRDD(points, epsilon + precision)
@@ -206,7 +201,7 @@ object MF{
 
     val localEnd = clocktime
     val executionTime = (localEnd - localStart) / 1000.0
-    logger.info(s"MAXIMALS|$appID|$cores|$executors|$epsilon|$mu|$nMF1Grids|$nMF2Grids|$executionTime|$nMaximals")
+    logger.info(s"MAXIMALS|$appId|$cores|$executors|$epsilon|$mu|$nMF1Grids|$nMF2Grids|$executionTime|$nMaximals")
     diskCircles.spatialPartitionedRDD.unpersist(false)
 
     (maximals, nMaximals)
@@ -261,14 +256,31 @@ object MF{
 
   def clocktime = System.currentTimeMillis()
 
-  def logEnd(msg: String, timer: Long, n: Long): Unit ={
+  def logEnd(msg: String, timer: Long, n: Long)(implicit conf: SparkConf): Unit ={
+    val appId = conf.get("spark.app.id").takeRight(4)
+    val executors = conf.get("spark.executor.cores").toInt
+    val cores = conf.get("spark.executor.instances").toInt
     val duration = (clocktime - startTime) / 1000.0
-    logger.info("MF|%-30s|%6.2f|%-30s|%6.2f|%6d|%s".format(s"$appID|$executors|$cores|  END", duration, msg, (System.currentTimeMillis()-timer)/1000.0, n, tag))
+    val t = (System.currentTimeMillis() - timer)/1000.0
+
+    logger.info{
+      "MF|%-4s|%d|%d|  END|%6.2f|%-30s|%6.2f|%6d|%s".format(
+        appId, executors, cores, duration, msg, t, n, tag
+      )
+    }
   }
 
-  def logStart(msg: String): Unit ={
+  def logStart(msg: String)(implicit conf: SparkConf): Unit ={
+    val appId = conf.get("spark.app.id").takeRight(4)
+    val executors = conf.get("spark.executor.cores").toInt
+    val cores = conf.get("spark.executor.instances").toInt
     val duration = (clocktime - startTime) / 1000.0
-    logger.info("MF|%-30s|%6.2f|%-30s|%6.2f|%6d|%s".format(s"$appID|$executors|$cores|START", duration, msg, 0.0, 0, tag))
+
+    logger.info{
+      "MF|%-4s|%d|%d|START|%6.2f|%-30s|%6.2f|%6d|%s".format(
+        appId, executors, cores, duration, msg, 0.0, 0, tag
+      )
+    }
   }
 
   import java.io._
@@ -336,30 +348,27 @@ object MF{
     val timestamp   = params.timestamp()
     val debug       = params.mfdebug()
     val epsilon     = params.epsilon()
-    cores           = params.cores()
-    executors       = params.executors()
     val master      = params.local() match {
-      case true  => s"local[${cores}]"
+      case true  => s"local[*]"
       case false => s"spark://${host}:${port}"
     }
-    val Dpartitions = (cores * executors) * params.dpartitions()
+    val Dpartitions = params.dpartitions()
     val Mpartitions = params.mfpartitions()
 
     // Starting session...
     var timer = clocktime
     var stage = "Session started"
-    logStart(stage)
+    logger.info("Starting session...")
     val spark = SparkSession.builder()
-      .config("spark.default.parallelism", 3 * cores * executors)
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .config("spark.scheduler.mode", "FAIR")
       .appName("MF")
       .getOrCreate()
     import spark.implicits._
-    appID = spark.sparkContext.applicationId
     startTime = spark.sparkContext.startTime
-    logEnd(stage, timer, 0)
+    implicit val conf = spark.sparkContext.getConf
+    logger.info("Starting session... Done!")
 
     // Reading data...
     timer = System.currentTimeMillis()
@@ -401,10 +410,8 @@ object MF{
     }
 
     // Closing session...
-    timer = System.currentTimeMillis()
-    stage = "Session closed"
-    logStart(stage)
+    logger.info("Closing session...")
     spark.close()
-    logEnd(stage, timer, 0)
+    logger.info("Closing session... Done!")
   }  
 }
