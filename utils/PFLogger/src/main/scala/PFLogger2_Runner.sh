@@ -9,6 +9,6 @@ spark-submit \
     --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:$LOG_FILE \
     --master local[10] \
     --class org.dblab.PFLogger2 /home/acald013/Research/utils/PFLogger/target/scala-2.11/pflogger_2.11-0.1.jar \
-    --input /user/acald013/Datasets/Logs/FF-Logs_2020-01-25.txt \
-    --output ~/Research/tmp/FF-data_2020-01-25.txt
+    --input /user/acald013/Datasets/Logs/FF-Logs_2020-01-29.txt \
+    --output ~/Research/tmp/FF-data_2020-01-29.txt
     
