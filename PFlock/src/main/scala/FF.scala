@@ -82,7 +82,7 @@ object FF{
       stage = "1.Getting maximal disks"
       logStart(stage, timestamp)
       T_i.analyze()
-      val (disks, nDisks) = MF.run(spark, T_i, params, timestamp, s"$timestamp")
+      val (disks, nDisks) = MF.run(spark, T_i, params, timestamp)
       val C = new SpatialRDD[Point]()
       C.setRawSpatialRDD(disks)
       if(nDisks == 0){
@@ -514,7 +514,6 @@ object FF{
     val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
-      .config("spark.scheduler.mode", "FAIR")
       .appName("PFLock")
       .getOrCreate()
     import spark.implicits._

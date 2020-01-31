@@ -2,21 +2,16 @@
 
 EPSILON=$1
 MU=$2
-DELTA=$3
-FF_PARTITIONS=$4
-MF_PARTITIONS=$5
-MF_ENTRIES=$6
-MIN_INTERVAL=$7
-MAX_INTERVAL=$8
+MF_PARTITIONS=$3
+D_PARTITIONS=$4
 
-DISTANCE=100
+MF_ENTRIES=10
 MF_LEVELS=8
-MF_FRACTION=0.1
-INPUT_PATH=/user/acald013/Datasets/LA/LA_25KTrajs/
-INPUT_TAG=LA_25KTrajs
+MF_FRACTION=0.25
+INPUT_PATH=/user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv
 MASTER=yarn
-CORES=3
-EXECUTORS=40
+CORES=4
+EXECUTORS=36
 
 SPARK_JARS=/home/acald013/Spark/2.4/jars/
 CLASS_JAR=/home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar
@@ -32,10 +27,11 @@ spark-submit \
     --executor-cores $CORES \
     --driver-memory 16g \
     --executor-memory 12g \
-    --class FF $CLASS_JAR \
-    --input_path $INPUT_PATH --input_tag $INPUT_TAG \
-    --epsilon $EPSILON --distance $DISTANCE --mu $MU --delta $DELTA \
-    --ffpartitions $FF_PARTITIONS --mfpartitions $MF_PARTITIONS \
+    --class MF $CLASS_JAR \
+    --input $INPUT_PATH \
+    --epsilon $EPSILON --mu $MU \
+    --mfpartitions $MF_PARTITIONS \
     --levels $MF_LEVELS --entries $MF_ENTRIES --fraction $MF_FRACTION \
-    --stream --save \
-    --mininterval $MIN_INTERVAL --maxinterval $MAX_INTERVAL 
+    --dpartitions $D_PARTITIONS \
+    --mfgrid
+

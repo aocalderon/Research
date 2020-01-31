@@ -1,0 +1,210 @@
+0390	F.Maximal disks found         	  2.24	0	1000	144
+0390	E.Disks partitioned           	  3.48	0	1000	144
+0390	D.Disks found                 	  9.64	0	1000	144
+0390	C.Centers found               	  2.01	0	1000	144
+0390	B.Pairs found                 	  4.48	0	1000	144
+0390	A.Points indexed              	  0.31	0	1000	144
+0391	F.Maximal disks found         	  2.09	0	1500	144
+0391	E.Disks partitioned           	  2.88	0	1500	144
+0391	D.Disks found                 	  9.26	0	1500	144
+0391	C.Centers found               	  2.08	0	1500	144
+0391	B.Pairs found                 	  4.73	0	1500	144
+0391	A.Points indexed              	  0.38	0	1500	144
+0392	F.Maximal disks found         	  3.07	0	2000	144
+0392	E.Disks partitioned           	  4.62	0	2000	144
+0392	D.Disks found                 	  9.69	0	2000	144
+0392	C.Centers found               	  2.02	0	2000	144
+0392	B.Pairs found                 	  4.26	0	2000	144
+0392	A.Points indexed              	  0.32	0	2000	144
+0393	F.Maximal disks found         	  1.99	0	2500	144
+0393	E.Disks partitioned           	  3.35	0	2500	144
+0393	D.Disks found                 	  9.07	0	2500	144
+0393	C.Centers found               	  2.01	0	2500	144
+0393	B.Pairs found                 	  4.63	0	2500	144
+0393	A.Points indexed              	  0.34	0	2500	144
+0394	F.Maximal disks found         	  2.05	0	3000	144
+0394	E.Disks partitioned           	  3.57	0	3000	144
+0394	D.Disks found                 	  8.96	0	3000	144
+0394	C.Centers found               	  1.96	0	3000	144
+0394	B.Pairs found                 	  4.45	0	3000	144
+0394	A.Points indexed              	  0.32	0	3000	144
+0395	F.Maximal disks found         	  2.88	0	3500	144
+0395	E.Disks partitioned           	  5.03	0	3500	144
+0395	D.Disks found                 	 10.07	0	3500	144
+0395	C.Centers found               	  2.29	0	3500	144
+0395	B.Pairs found                 	  4.84	0	3500	144
+0395	A.Points indexed              	  0.35	0	3500	144
+0396	F.Maximal disks found         	  3.31	0	4000	144
+0396	E.Disks partitioned           	  4.89	0	4000	144
+0396	D.Disks found                 	  9.74	0	4000	144
+0396	C.Centers found               	  2.04	0	4000	144
+0396	B.Pairs found                 	  4.50	0	4000	144
+0396	A.Points indexed              	  0.35	0	4000	144
+0397	F.Maximal disks found         	  1.94	0	1000	288
+0397	E.Disks partitioned           	  5.66	0	1000	288
+0397	D.Disks found                 	 13.79	0	1000	288
+0397	C.Centers found               	  3.47	0	1000	288
+0397	B.Pairs found                 	  6.05	0	1000	288
+0397	A.Points indexed              	  0.34	0	1000	288
+0398	F.Maximal disks found         	  1.78	0	1500	288
+0398	E.Disks partitioned           	  6.11	0	1500	288
+0398	D.Disks found                 	 13.52	0	1500	288
+0398	C.Centers found               	  3.39	0	1500	288
+0398	B.Pairs found                 	  6.29	0	1500	288
+0398	A.Points indexed              	  0.36	0	1500	288
+0399	F.Maximal disks found         	  2.29	0	2000	288
+0399	E.Disks partitioned           	  5.82	0	2000	288
+0399	D.Disks found                 	 13.51	0	2000	288
+0399	C.Centers found               	  3.41	0	2000	288
+0399	B.Pairs found                 	  5.98	0	2000	288
+0399	A.Points indexed              	  0.32	0	2000	288
+0400	F.Maximal disks found         	  1.92	0	2500	288
+0400	E.Disks partitioned           	  5.90	0	2500	288
+0400	D.Disks found                 	 14.37	0	2500	288
+0400	C.Centers found               	  3.70	0	2500	288
+0400	B.Pairs found                 	  6.80	0	2500	288
+0400	A.Points indexed              	  0.34	0	2500	288
+0401	F.Maximal disks found         	  2.02	0	3000	288
+0401	E.Disks partitioned           	  4.61	0	3000	288
+0401	D.Disks found                 	 13.76	0	3000	288
+0401	C.Centers found               	  3.49	0	3000	288
+0401	B.Pairs found                 	  6.00	0	3000	288
+0401	A.Points indexed              	  0.36	0	3000	288
+0402	F.Maximal disks found         	  2.36	0	3500	288
+0402	E.Disks partitioned           	  7.14	0	3500	288
+0402	D.Disks found                 	 13.92	0	3500	288
+0402	C.Centers found               	  3.49	0	3500	288
+0402	B.Pairs found                 	  6.05	0	3500	288
+0402	A.Points indexed              	  0.50	0	3500	288
+0403	F.Maximal disks found         	  2.16	0	4000	288
+0403	E.Disks partitioned           	  5.38	0	4000	288
+0403	D.Disks found                 	 14.87	0	4000	288
+0403	C.Centers found               	  3.72	0	4000	288
+0403	B.Pairs found                 	  6.35	0	4000	288
+0403	A.Points indexed              	  0.35	0	4000	288
+0404	F.Maximal disks found         	  0.96	0	1000	432
+0404	E.Disks partitioned           	  3.43	0	1000	432
+0404	D.Disks found                 	  8.42	0	1000	432
+0404	C.Centers found               	  2.49	0	1000	432
+0404	B.Pairs found                 	  3.85	0	1000	432
+0404	A.Points indexed              	  0.42	0	1000	432
+0405	F.Maximal disks found         	  1.27	0	1500	432
+0405	E.Disks partitioned           	  3.11	0	1500	432
+0405	D.Disks found                 	  9.36	0	1500	432
+0405	C.Centers found               	  2.45	0	1500	432
+0405	B.Pairs found                 	  4.10	0	1500	432
+0405	A.Points indexed              	  0.35	0	1500	432
+0406	F.Maximal disks found         	  1.69	0	2000	432
+0406	E.Disks partitioned           	  3.52	0	2000	432
+0406	D.Disks found                 	  8.71	0	2000	432
+0406	C.Centers found               	  2.56	0	2000	432
+0406	B.Pairs found                 	  3.79	0	2000	432
+0406	A.Points indexed              	  0.53	0	2000	432
+0407	F.Maximal disks found         	  1.36	0	2500	432
+0407	E.Disks partitioned           	  3.75	0	2500	432
+0407	D.Disks found                 	  8.59	0	2500	432
+0407	C.Centers found               	  2.51	0	2500	432
+0407	B.Pairs found                 	  3.92	0	2500	432
+0407	A.Points indexed              	  0.39	0	2500	432
+0408	F.Maximal disks found         	  1.55	0	3000	432
+0408	E.Disks partitioned           	  3.90	0	3000	432
+0408	D.Disks found                 	  8.82	0	3000	432
+0408	C.Centers found               	  2.28	0	3000	432
+0408	B.Pairs found                 	  3.97	0	3000	432
+0408	A.Points indexed              	  0.35	0	3000	432
+0409	F.Maximal disks found         	  1.58	0	3500	432
+0409	E.Disks partitioned           	  4.13	0	3500	432
+0409	D.Disks found                 	  8.69	0	3500	432
+0409	C.Centers found               	  2.46	0	3500	432
+0409	B.Pairs found                 	  4.22	0	3500	432
+0409	A.Points indexed              	  0.43	0	3500	432
+0410	F.Maximal disks found         	  1.81	0	4000	432
+0410	E.Disks partitioned           	  5.48	0	4000	432
+0410	D.Disks found                 	  8.17	0	4000	432
+0410	C.Centers found               	  2.02	0	4000	432
+0410	B.Pairs found                 	  3.96	0	4000	432
+0410	A.Points indexed              	  0.36	0	4000	432
+0411	F.Maximal disks found         	  1.30	0	1000	576
+0411	E.Disks partitioned           	  3.39	0	1000	576
+0411	D.Disks found                 	 10.26	0	1000	576
+0411	C.Centers found               	  2.65	0	1000	576
+0411	B.Pairs found                 	  4.30	0	1000	576
+0411	A.Points indexed              	  0.37	0	1000	576
+0412	F.Maximal disks found         	  1.14	0	1500	576
+0412	E.Disks partitioned           	  3.63	0	1500	576
+0412	D.Disks found                 	 10.18	0	1500	576
+0412	C.Centers found               	  2.75	0	1500	576
+0412	B.Pairs found                 	  4.89	0	1500	576
+0412	A.Points indexed              	  0.39	0	1500	576
+0413	F.Maximal disks found         	  1.52	0	2000	576
+0413	E.Disks partitioned           	  3.87	0	2000	576
+0413	D.Disks found                 	  8.86	0	2000	576
+0413	C.Centers found               	  2.56	0	2000	576
+0413	B.Pairs found                 	  4.43	0	2000	576
+0413	A.Points indexed              	  0.37	0	2000	576
+0414	F.Maximal disks found         	  1.31	0	2500	576
+0414	E.Disks partitioned           	  4.41	0	2500	576
+0414	D.Disks found                 	 10.21	0	2500	576
+0414	C.Centers found               	  2.75	0	2500	576
+0414	B.Pairs found                 	  4.09	0	2500	576
+0414	A.Points indexed              	  0.37	0	2500	576
+0415	F.Maximal disks found         	  1.54	0	3000	576
+0415	E.Disks partitioned           	  4.57	0	3000	576
+0415	D.Disks found                 	  9.19	0	3000	576
+0415	C.Centers found               	  2.57	0	3000	576
+0415	B.Pairs found                 	  4.37	0	3000	576
+0415	A.Points indexed              	  0.36	0	3000	576
+0416	F.Maximal disks found         	  1.39	0	3500	576
+0416	E.Disks partitioned           	  4.79	0	3500	576
+0416	D.Disks found                 	 10.65	0	3500	576
+0416	C.Centers found               	  2.53	0	3500	576
+0416	B.Pairs found                 	  4.16	0	3500	576
+0416	A.Points indexed              	  0.50	0	3500	576
+0417	F.Maximal disks found         	  1.84	0	4000	576
+0417	E.Disks partitioned           	  5.55	0	4000	576
+0417	D.Disks found                 	 10.15	0	4000	576
+0417	C.Centers found               	  2.75	0	4000	576
+0417	B.Pairs found                 	  4.44	0	4000	576
+0417	A.Points indexed              	  0.39	0	4000	576
+0418	F.Maximal disks found         	  1.18	0	1000	720
+0418	E.Disks partitioned           	  4.47	0	1000	720
+0418	D.Disks found                 	 11.88	0	1000	720
+0418	C.Centers found               	  3.24	0	1000	720
+0418	B.Pairs found                 	  4.69	0	1000	720
+0418	A.Points indexed              	  0.39	0	1000	720
+0419	F.Maximal disks found         	  1.15	0	1500	720
+0419	E.Disks partitioned           	  4.70	0	1500	720
+0419	D.Disks found                 	  9.53	0	1500	720
+0419	C.Centers found               	  3.07	0	1500	720
+0419	B.Pairs found                 	  5.49	0	1500	720
+0419	A.Points indexed              	  0.51	0	1500	720
+0420	F.Maximal disks found         	  1.26	0	2000	720
+0420	E.Disks partitioned           	  4.40	0	2000	720
+0420	D.Disks found                 	  9.61	0	2000	720
+0420	C.Centers found               	  3.00	0	2000	720
+0420	B.Pairs found                 	  4.71	0	2000	720
+0420	A.Points indexed              	  0.44	0	2000	720
+0421	F.Maximal disks found         	  1.34	0	2500	720
+0421	E.Disks partitioned           	  5.06	0	2500	720
+0421	D.Disks found                 	 10.00	0	2500	720
+0421	C.Centers found               	  3.17	0	2500	720
+0421	B.Pairs found                 	  4.81	0	2500	720
+0421	A.Points indexed              	  0.39	0	2500	720
+0422	F.Maximal disks found         	  1.67	0	3000	720
+0422	E.Disks partitioned           	  4.42	0	3000	720
+0422	D.Disks found                 	  9.80	0	3000	720
+0422	C.Centers found               	  2.98	0	3000	720
+0422	B.Pairs found                 	  4.58	0	3000	720
+0422	A.Points indexed              	  0.37	0	3000	720
+0423	F.Maximal disks found         	  1.60	0	3500	720
+0423	E.Disks partitioned           	  5.18	0	3500	720
+0423	D.Disks found                 	 11.74	0	3500	720
+0423	C.Centers found               	  3.39	0	3500	720
+0423	B.Pairs found                 	  4.51	0	3500	720
+0423	A.Points indexed              	  0.36	0	3500	720
+0424	F.Maximal disks found         	  1.54	0	4000	720
+0424	E.Disks partitioned           	  4.90	0	4000	720
+0424	D.Disks found                 	 11.07	0	4000	720
+0424	C.Centers found               	  3.10	0	4000	720
+0424	B.Pairs found                 	  4.86	0	4000	720
+0424	A.Points indexed              	  0.38	0	4000	720

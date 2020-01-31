@@ -2,14 +2,12 @@ import org.slf4j.{LoggerFactory, Logger}
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.{SparkConf, SparkContext}
-import org.datasyslab.geospark.enums.{FileDataSplitter, GridType, IndexType}
+import org.datasyslab.geospark.enums.{GridType, IndexType}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.spatialRDD.{SpatialRDD, PolygonRDD, CircleRDD, PointRDD}
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.datasyslab.geospark.spatialPartitioning.{KDBTree, KDBTreePartitioner}
 import org.datasyslab.geospark.spatialPartitioning.quadtree.{QuadTreePartitioner, StandardQuadTree, QuadRectangle}
-import org.datasyslab.geospark.utils.RDDSampleUtils
-import com.vividsolutions.jts.operation.buffer.BufferParameters
 import com.vividsolutions.jts.geom.{GeometryFactory, Geometry, Envelope, Coordinate, Polygon, LinearRing, Point}
 import com.vividsolutions.jts.geom.impl.CoordinateArraySequence
 import org.apache.spark.rdd.RDD
@@ -24,30 +22,20 @@ object MF{
   private val geofactory: GeometryFactory = new GeometryFactory();
   private val reader = new com.vividsolutions.jts.io.WKTReader(geofactory)
   private val precision: Double = 0.001
-  private var tag: String = ""
-  private var startTime: Long = clocktime
 
-  def run(spark: SparkSession, points: SpatialRDD[Point], params: FFConf, timestamp: Int = -1, info: String = ""): (RDD[Point], Long) = {
+  def run(spark: SparkSession, points: SpatialRDD[Point], params: FFConf, timestamp: Int = -1): (RDD[Point], Long) = {
+    implicit val session = spark
     import spark.implicits._
-    implicit val conf = spark.sparkContext.getConf
-    val appId = conf.get("spark.app.id").takeRight(4)
-    val executors = conf.get("spark.executor.cores").toInt
-    val cores = conf.get("spark.executor.instances").toInt
     
-    val debug: Boolean    = params.mfdebug()
     val epsilon: Double   = params.epsilon()
     val mu: Int           = params.mu()
-    val sespg: String     = params.sespg()
-    val tespg: String     = params.tespg()
-    val spatial: String   = params.spatial()
-    if(params.tag() == ""){ tag = s"$info"} else { tag = s"${params.tag()}|${info}" }
-    var Dpartitions: Int  = params.dpartitions()
+    val debug: Boolean    = params.mfdebug()
 
     // Indexing points...
     val localStart = clocktime
-    var timer = System.currentTimeMillis()
-    var stage = "A.Points indexed"
-    logStart(stage)
+    val stage1 = "A.Points indexed"
+    logStart(stage1, timestamp)
+    val timer1 = clocktime
 
     points.spatialPartitioning(GridType.QUADTREE, params.mfpartitions())
     val nMF1Grids = points.getPartitioner.getGrids.size()
@@ -58,12 +46,12 @@ object MF{
     points.buildIndex(IndexType.QUADTREE, true) // QUADTREE works better as an indexer than RTREE..
     points.indexedRDD.persist(StorageLevel.MEMORY_ONLY_SER)
     points.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY_SER)
-    logEnd(stage, timer, nMF1Grids)
+    logEnd(stage1, timer1, nMF1Grids, timestamp)
 
     // Finding pairs...
-    timer = System.currentTimeMillis()
-    stage = "B.Pairs found"
-    logStart(stage)
+    val stage2 = "B.Pairs found"
+    logStart(stage2, timestamp)
+    val timer2 = clocktime
     val considerBoundary = true
     val usingIndex = true
     val pairs = JoinQuery.DistanceJoinQueryFlat(points, pointsBuffer, usingIndex, considerBoundary)
@@ -75,12 +63,12 @@ object MF{
         ( (id1, p1) , (id2, p2) )
       }.filter(p => p._1._1 < p._2._1)
     val nPairs = pairs.count()
-    logEnd(stage, timer, nPairs)
+    logEnd(stage2, timer2, nPairs, timestamp)
 
     // Finding centers...
-    timer = System.currentTimeMillis()
-    stage = "C.Centers found"
-    logStart(stage)
+    val stage3 = "C.Centers found"
+    logStart(stage3, timestamp)
+    val timer3 = clocktime
     val r2: Double = math.pow(epsilon / 2.0, 2)
     val centersPairs = pairs.map{ p =>
         val p1 = p._1._2
@@ -89,12 +77,12 @@ object MF{
     }
     val centers = centersPairs.map(_._1).union(centersPairs.map(_._2))
     val nCenters = centers.count()
-    logEnd(stage, timer, nCenters)
+    logEnd(stage3, timer3, nCenters, timestamp)
 
     // Finding disks...
-    timer = System.currentTimeMillis()
-    stage = "D.Disks found"
-    logStart(stage)
+    val stage4 = "D.Disks found"
+    logStart(stage4, timestamp)
+    val timer4 = clocktime
     val r = epsilon / 2.0
     val centersRDD = new PointRDD(centers.toJavaRDD(), StorageLevel.MEMORY_ONLY)
     val centersBuffer = new CircleRDD(centersRDD, r + precision)
@@ -118,7 +106,7 @@ object MF{
         centroid
       }.distinct().cache()
     val nDisks = disks.count()
-    logEnd(stage, timer, nDisks)
+    logEnd(stage4, timer4, nDisks, timestamp)
 
     points.spatialPartitionedRDD.unpersist(false)
     pairs.unpersist(false)
@@ -126,18 +114,19 @@ object MF{
     centersBuffer.spatialPartitionedRDD.unpersist(false)
 
     // Partition disks...
-    timer = System.currentTimeMillis()
-    stage = "E.Disks partitioned"
-    logStart(stage)
+    val stage5 = "E.Disks partitioned"
+    logStart(stage5, timestamp)
+    val timer5 = clocktime
     val diskCenters = new PointRDD(disks.toJavaRDD(), StorageLevel.MEMORY_ONLY)
     val diskCircles = new CircleRDD(diskCenters, r + precision)
     diskCircles.analyze()
     val (quadtree, nMF2Grids) = if(params.mfgrid()){
-      diskCircles.spatialPartitioning(GridType.QUADTREE, params.mfpartitions())
+      if(debug){ logger.info("Building finer partitions by default quadtree...") }
+      diskCircles.spatialPartitioning(GridType.QUADTREE, params.dpartitions())
       val nGrids = diskCircles.getPartitioner.getGrids.size()
-      if(debug){ logger.info(s"Disks' number of cells: ${nGrids}") }
       (diskCircles.partitionTree, nGrids) 
     } else {
+      if(debug){ logger.info("Building finer partitions by custom quadtree...") }
       val fullBoundary = diskCircles.boundary()
       fullBoundary.expandBy(epsilon + precision)
       val fraction = params.fraction()
@@ -149,14 +138,13 @@ object MF{
       val maxLevel = params.levels()
       val maxItemsPerNode = params.entries()
       val quadtree = new StandardQuadTree[Geometry](boundary, 0, maxItemsPerNode, maxLevel)
-      if(debug){ logger.info(s"Disks' size of sample: ${samples.count()}") }
+      if(debug){ logger.info(s"Sample size during quadtree creation: ${samples.count()}") }
       for(sample <- samples.collect()){
         quadtree.insert(new QuadRectangle(sample), null)
       }
       quadtree.assignPartitionIds()
       val QTPartitioner = new QuadTreePartitioner(quadtree)
       val nGrids = QTPartitioner.getGrids.size
-      if(debug) { logger.info(s"Disks' number of cells: ${nGrids}") }
 
       diskCircles.spatialPartitioning(QTPartitioner)
 
@@ -164,12 +152,12 @@ object MF{
     }
     diskCircles.spatialPartitionedRDD.cache()
     val nDisksRDD = diskCircles.spatialPartitionedRDD.count()
-    logEnd(stage, timer, nDisksRDD)
+    logEnd(stage5, timer5, nDisksRDD, timestamp)
 
     // Finding maximal disks...
-    timer = System.currentTimeMillis()
-    stage = "F.Maximal disks found"
-    logStart(stage)
+    val stage6 = "F.Maximal disks found"
+    logStart(stage6, timestamp)
+    val timer6 = clocktime
     val grids = quadtree.getAllZones.asScala.filter(_.partitionId != null)
       .map(r => r.partitionId -> r.getEnvelope).toMap
     val maximals = diskCircles.spatialPartitionedRDD.rdd
@@ -197,10 +185,21 @@ object MF{
           }.filter(_._2).map(_._1).toIterator
       }.persist(StorageLevel.MEMORY_ONLY_SER)
     val nMaximals = maximals.count()
-    logEnd(stage, timer, nMaximals)
+    logEnd(stage6, timer6, nMaximals, timestamp)
 
     val localEnd = clocktime
-    val executionTime = (localEnd - localStart) / 1000.0
+    val executionTime = f"${(localEnd - localStart) / 1e9}%.2f"
+    val (appId, cores, executors) = if(getConf("spark.master").contains("local")){
+      val appId = getConf("spark.app.id")
+      val cores = getConf("spark.master").split("\\[")(1).replace("]", "").toInt
+      val executors = 1
+      (appId, cores, executors)
+    } else {
+      val appId = getConf("spark.app.id").takeRight(4)
+      val cores = getConf("spark.executor.instances").toInt
+      val executors = getConf("spark.executor.cores").toInt
+      (appId, cores, executors)
+    }
     logger.info(s"MAXIMALS|$appId|$cores|$executors|$epsilon|$mu|$nMF1Grids|$nMF2Grids|$executionTime|$nMaximals")
     diskCircles.spatialPartitionedRDD.unpersist(false)
 
@@ -254,31 +253,58 @@ object MF{
       y >= (min_y + epsilon)
   }
 
-  def clocktime = System.currentTimeMillis()
+  def clocktime = System.nanoTime()
 
-  def logEnd(msg: String, timer: Long, n: Long)(implicit conf: SparkConf): Unit ={
-    val appId = conf.get("spark.app.id").takeRight(4)
-    val executors = conf.get("spark.executor.cores").toInt
-    val cores = conf.get("spark.executor.instances").toInt
-    val duration = (clocktime - startTime) / 1000.0
-    val t = (System.currentTimeMillis() - timer)/1000.0
+  def getConf(param: String)(implicit spark: SparkSession): String = {
+    spark.sparkContext.getConf.get(param)
+  }
 
+  def logStart(msg: String, timestamp: Int = -1)(implicit spark: SparkSession): Unit ={
+    val startTime = spark.sparkContext.startTime 
+    val duration = (System.currentTimeMillis() - startTime) / 1e3
+    val (appId, cores, executors) = if(getConf("spark.master").contains("local")){
+      val appId = getConf("spark.app.id")
+      val cores = getConf("spark.master").split("\\[")(1).replace("]", "").toInt
+      val executors = 1
+
+      (appId, cores, executors)
+
+    } else {
+      val appId = getConf("spark.app.id").takeRight(4)
+      val cores = getConf("spark.executor.instances").toInt
+      val executors = getConf("spark.executor.cores").toInt
+
+      (appId, cores, executors)
+    }
     logger.info{
-      "MF|%-4s|%d|%d|  END|%6.2f|%-30s|%6.2f|%6d|%s".format(
-        appId, executors, cores, duration, msg, t, n, tag
+      "MF|%-4s|%d|%d|START|%6.2f|%-30s|%6.2f|%6d|%s".format(
+        appId, executors, cores, duration, msg, 0.0, 0, timestamp
       )
     }
   }
 
-  def logStart(msg: String)(implicit conf: SparkConf): Unit ={
-    val appId = conf.get("spark.app.id").takeRight(4)
-    val executors = conf.get("spark.executor.cores").toInt
-    val cores = conf.get("spark.executor.instances").toInt
-    val duration = (clocktime - startTime) / 1000.0
+  def logEnd(msg: String, timer: Long, n: Long, timestamp: Int = -1)(implicit spark: SparkSession): Unit ={
+    val t = (clocktime - timer) / 1e9
 
+    val startTime = spark.sparkContext.startTime
+    val duration = (System.currentTimeMillis() - startTime) / 1e3
+    val (appId, cores, executors) = if(getConf("spark.master").contains("local")){
+      val appId = getConf("spark.app.id")
+      val cores = getConf("spark.master").split("\\[")(1).replace("]", "").toInt
+      val executors = 1
+
+      (appId, cores, executors)
+
+    } else {
+      val appId = getConf("spark.app.id").takeRight(4)
+      val cores = getConf("spark.executor.instances").toInt
+      val executors = getConf("spark.executor.cores").toInt
+
+      (appId, cores, executors)
+    }
     logger.info{
-      "MF|%-4s|%d|%d|START|%6.2f|%-30s|%6.2f|%6d|%s".format(
-        appId, executors, cores, duration, msg, 0.0, 0, tag
+      "MF|%-4s|%d|%d|  END|%6.2f|%-30s|%6.2f|%6d|%s".format(
+        appId, executors, cores, duration, msg, t, n, timestamp
       )
     }
   }
@@ -309,18 +335,6 @@ object MF{
     }
   }
 
-  import Numeric.Implicits._
-  def mean[T: Numeric](xs: Iterable[T]): Double = xs.sum.toDouble / xs.size
-
-  def variance[T: Numeric](xs: Iterable[T]): Double = {
-    val avg = mean(xs)
-    xs.map(_.toDouble).map(a => math.pow(a - avg, 2)).sum / xs.size
-  }
-
-  def stdDev[T: Numeric](xs: Iterable[T]): Double = math.sqrt(variance(xs))
-
-  def roundAt(p: Int)(n: Double): Double = { val s = math pow (10, p); (math round n * s) / s }
-
   implicit class Crossable[X](xs: Traversable[X]) {
     def cross[Y](ys: Traversable[Y]) = for { x <- xs; y <- ys } yield (x, y)
   }
@@ -334,80 +348,44 @@ object MF{
    **/
   def main(args: Array[String]) = {
     val params: FFConf = new FFConf(args)
-    val input       = params.input()
-    val output      = params.output()
-    val p_grid      = params.p_grid()
-    val m_grid      = params.m_grid()
-    val host        = params.host()
-    val port        = params.port()
-    val portUI      = params.portui()
-    val offset      = params.offset()
-    val sepsg       = params.sespg()
-    val tepsg       = params.tespg()
-    val info        = params.info()
-    val timestamp   = params.timestamp()
-    val debug       = params.mfdebug()
-    val epsilon     = params.epsilon()
-    val master      = params.local() match {
-      case true  => s"local[*]"
-      case false => s"spark://${host}:${port}"
-    }
-    val Dpartitions = params.dpartitions()
-    val Mpartitions = params.mfpartitions()
+    val input  = params.input()
+    val offset = params.offset()
+    val debug  = params.mfdebug()
 
     // Starting session...
-    var timer = clocktime
-    var stage = "Session started"
     logger.info("Starting session...")
-    val spark = SparkSession.builder()
+    implicit val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
-      .config("spark.scheduler.mode", "FAIR")
       .appName("MF")
       .getOrCreate()
     import spark.implicits._
-    startTime = spark.sparkContext.startTime
-    implicit val conf = spark.sparkContext.getConf
     logger.info("Starting session... Done!")
 
+    logger.info(s"INFO|${getConf("spark.app.id").takeRight(4)}|${System.getProperty("sun.java.command")}")
+
     // Reading data...
-    timer = System.currentTimeMillis()
-    stage = "Data read"
-    logStart(stage)
-    var points = new PointRDD(spark.sparkContext, input, offset, FileDataSplitter.TSV, true, Dpartitions)
-    if(timestamp >= 0){
-      points = new PointRDD(points.rawSpatialRDD.rdd.filter{p =>
-        val arr = p.getUserData.toString().split("\t")
-        val t = arr(1).toInt
-        t == timestamp
-      }.toJavaRDD(), StorageLevel.MEMORY_ONLY, sepsg, tepsg)
-    }
+    logger.info("Reading data...")
+    val points = new SpatialRDD[Point]()
+    val pointsRDD = spark.read.option("delimiter", "\t").option("header", false).csv(input).rdd
+      .map{ row =>
+        val id = row.getString(0)
+        val x  = row.getString(1).toDouble
+        val y  = row.getString(2).toDouble
+        val t  = row.getString(3)
+
+        val point = geofactory.createPoint(new Coordinate(x, y))
+        point.setUserData(s"$id\t$t")
+        point
+      }
+      .cache
+    val nPointsRDD = pointsRDD.count()
+    points.setRawSpatialRDD(pointsRDD)
     points.analyze()
-    val nPoints = points.rawSpatialRDD.count()
-    logEnd(stage, timer, nPoints)
+    logger.info("Reading data... Done!")
     
     // Running maximal finder...
-    timer = System.currentTimeMillis()
-    stage = "Maximal finder run"
-    logStart(stage)
-    val maximals = MF.run(spark, points, params)
-    logEnd(stage, timer, maximals._2)
-
-    if(debug){
-      val filename = new java.io.File(input).getName()
-      val regex = "(\\d+)".r
-      val t = regex.findFirstIn(filename).get
-      val data = maximals._1.map{ m =>
-        val pids = m.getUserData.toString().split(";")(0)
-        val x = roundAt(3)(m.getX)
-        val y = roundAt(3)(m.getY)
-        s"$t\t$x\t$y\t$pids\n"
-      }.collect().sorted
-      val f = new java.io.PrintWriter(s"${output}Disks_${t}.tsv")
-      f.write(data.mkString(""))
-      f.close()
-      logger.info(s"Disks from $filename saved [${data.size} records]")
-    }
+    val maximals = MF.run(spark, points, params, 0)
 
     // Closing session...
     logger.info("Closing session...")

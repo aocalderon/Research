@@ -395,7 +395,7 @@ object FE {
         val pointsRDD = new SpatialRDD[Point]()
         pointsRDD.setRawSpatialRDD(p)
         pointsRDD.analyze()
-        val (maximals, nMaximals) = MF.run(spark, pointsRDD, params, t_d, s"${t_d}")
+        val (maximals, nMaximals) = MF.run(spark, pointsRDD, params, t_d)
         disksMap += t_d -> maximals.map{ d =>
           val itemset = d.getUserData.toString().split(";")(0).split(" ").map(_.toInt).toSet
           Disk(d.getX, d.getY, itemset)
