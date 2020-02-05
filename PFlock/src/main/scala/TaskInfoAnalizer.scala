@@ -144,7 +144,7 @@ object TaskInfoAnalizer extends App {
   val joinedFF = timer{"Join tasks and FF tables"}{
     FF.alias("A")
       .join(tasks.alias("B"), $"A.start" <= $"B.n" && $"B.n" <= $"A.end" && $"A.appId" === $"B.appId"
-      ).select($"B.timestamp", $"executor", ($"duration" / 1000.0).as("duration"), $"stageName",
+      ).select($"B.timestamp", $"executor", ($"duration" / 1000.0).as("duration"), //$"stageName",
         $"recordsRead", $"bytesRead",
         $"recordsWritten", $"bytesWritten",
         $"shuffleRead", $"shuffleWritten",
@@ -155,7 +155,7 @@ object TaskInfoAnalizer extends App {
   val joinedFE = timer{"Join tasks and FE tables"}{
     FE.alias("A")
       .join(tasks.alias("B"), $"A.start" <= $"B.n" && $"B.n" <= $"A.end" && $"A.appId" === $"B.appId"
-      ).select($"B.timestamp", $"executor", ($"duration" / 1000.0).as("duration"),
+      ).select($"B.timestamp", $"executor", ($"duration" / 1000.0).as("duration"), //$"stageName",
         $"recordsRead", $"bytesRead",
         $"recordsWritten", $"bytesWritten",
         $"shuffleRead", $"shuffleWritten",
@@ -184,9 +184,8 @@ object TaskInfoAnalizer extends App {
 }
 
 class TaskInfoAnalizerConf(args: Seq[String]) extends ScallopConf(args) {
-  val input = opt[String](default = Some("/home/acald013/Datasets/ValidationLogs/sample2.txt"))
+  val input = opt[String](default = Some(""))
   val n = opt[Int](default = Some(50))
-  val appid = opt[String](default = Some(""))
 
   verify()
 }
