@@ -1,0 +1,700 @@
+2020-01-31 10:47:13,803|Starting session...
+2020-01-31 10:47:45,157|Starting session... Done!
+2020-01-31 10:47:45,157|INFO|0485|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 144 --levels 8 --entries 10 --fraction 0.25 --dpartitions 1000 --mfgrid
+2020-01-31 10:47:45,158|Reading data...
+2020-01-31 10:47:56,753|Reading data... Done!
+2020-01-31 10:47:56,754|MF|0485|4|36|START| 42.92|A.Points indexed              |  0.00|     0|0
+2020-01-31 10:47:57,079|MF|0485|4|36|  END| 43.24|A.Points indexed              |  0.32|   445|0
+2020-01-31 10:47:57,080|MF|0485|4|36|START| 43.24|B.Pairs found                 |  0.00|     0|0
+2020-01-31 10:48:01,390|MF|0485|4|36|  END| 47.55|B.Pairs found                 |  4.31| 11711|0
+2020-01-31 10:48:01,390|MF|0485|4|36|START| 47.55|C.Centers found               |  0.00|     0|0
+2020-01-31 10:48:03,383|MF|0485|4|36|  END| 49.55|C.Centers found               |  1.99| 23422|0
+2020-01-31 10:48:03,384|MF|0485|4|36|START| 49.55|D.Disks found                 |  0.00|     0|0
+2020-01-31 10:48:12,949|MF|0485|4|36|  END| 59.11|D.Disks found                 |  9.56|  9134|0
+2020-01-31 10:48:13,006|MF|0485|4|36|START| 59.17|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 10:48:16,413|MF|0485|4|36|  END| 62.58|E.Disks partitioned           |  3.41| 29385|0
+2020-01-31 10:48:16,413|MF|0485|4|36|START| 62.58|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 10:48:18,344|MF|0485|4|36|  END| 64.51|F.Maximal disks found         |  1.93|  1391|0
+2020-01-31 10:48:18,345|MAXIMALS|0485|36|4|20.0|3|445|1060|21.59|1391
+2020-01-31 10:48:18,355|Closing session...
+2020-01-31 10:48:18,595|Closing session... Done!
+2020-01-31 10:48:21,900|Starting session...
+2020-01-31 10:48:53,296|Starting session... Done!
+2020-01-31 10:48:53,297|INFO|0486|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 144 --levels 8 --entries 10 --fraction 0.25 --dpartitions 1500 --mfgrid
+2020-01-31 10:48:53,297|Reading data...
+2020-01-31 10:49:04,973|Reading data... Done!
+2020-01-31 10:49:04,974|MF|0486|4|36|START| 43.04|A.Points indexed              |  0.00|     0|0
+2020-01-31 10:49:05,330|MF|0486|4|36|  END| 43.39|A.Points indexed              |  0.35|   439|0
+2020-01-31 10:49:05,330|MF|0486|4|36|START| 43.39|B.Pairs found                 |  0.00|     0|0
+2020-01-31 10:49:09,987|MF|0486|4|36|  END| 48.05|B.Pairs found                 |  4.66| 11711|0
+2020-01-31 10:49:09,987|MF|0486|4|36|START| 48.05|C.Centers found               |  0.00|     0|0
+2020-01-31 10:49:12,028|MF|0486|4|36|  END| 50.09|C.Centers found               |  2.04| 23422|0
+2020-01-31 10:49:12,029|MF|0486|4|36|START| 50.09|D.Disks found                 |  0.00|     0|0
+2020-01-31 10:49:21,860|MF|0486|4|36|  END| 59.92|D.Disks found                 |  9.83|  9134|0
+2020-01-31 10:49:21,923|MF|0486|4|36|START| 59.99|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 10:49:26,070|MF|0486|4|36|  END| 64.13|E.Disks partitioned           |  4.15| 30815|0
+2020-01-31 10:49:26,070|MF|0486|4|36|START| 64.13|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 10:49:28,747|MF|0486|4|36|  END| 66.81|F.Maximal disks found         |  2.68|  1391|0
+2020-01-31 10:49:28,747|MAXIMALS|0486|36|4|20.0|3|439|1417|23.77|1391
+2020-01-31 10:49:28,756|Closing session...
+2020-01-31 10:49:28,934|Closing session... Done!
+2020-01-31 10:49:32,208|Starting session...
+2020-01-31 10:50:03,484|Starting session... Done!
+2020-01-31 10:50:03,484|INFO|0487|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 144 --levels 8 --entries 10 --fraction 0.25 --dpartitions 2000 --mfgrid
+2020-01-31 10:50:03,484|Reading data...
+2020-01-31 10:50:15,038|Reading data... Done!
+2020-01-31 10:50:15,038|MF|0487|4|36|START| 42.80|A.Points indexed              |  0.00|     0|0
+2020-01-31 10:50:15,343|MF|0487|4|36|  END| 43.10|A.Points indexed              |  0.30|   493|0
+2020-01-31 10:50:15,343|MF|0487|4|36|START| 43.10|B.Pairs found                 |  0.00|     0|0
+2020-01-31 10:50:19,961|MF|0487|4|36|  END| 47.72|B.Pairs found                 |  4.62| 11711|0
+2020-01-31 10:50:19,961|MF|0487|4|36|START| 47.72|C.Centers found               |  0.00|     0|0
+2020-01-31 10:50:22,109|MF|0487|4|36|  END| 49.87|C.Centers found               |  2.15| 23422|0
+2020-01-31 10:50:22,109|MF|0487|4|36|START| 49.87|D.Disks found                 |  0.00|     0|0
+2020-01-31 10:50:31,505|MF|0487|4|36|  END| 59.26|D.Disks found                 |  9.40|  9134|0
+2020-01-31 10:50:31,556|MF|0487|4|36|START| 59.31|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 10:50:35,382|MF|0487|4|36|  END| 63.14|E.Disks partitioned           |  3.82| 31491|0
+2020-01-31 10:50:35,382|MF|0487|4|36|START| 63.14|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 10:50:37,934|MF|0487|4|36|  END| 65.69|F.Maximal disks found         |  2.55|  1391|0
+2020-01-31 10:50:37,934|MAXIMALS|0487|36|4|20.0|3|493|1582|22.90|1391
+2020-01-31 10:50:37,949|Closing session...
+2020-01-31 10:50:38,234|Closing session... Done!
+2020-01-31 10:50:41,490|Starting session...
+2020-01-31 10:51:12,824|Starting session... Done!
+2020-01-31 10:51:12,825|INFO|0488|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 144 --levels 8 --entries 10 --fraction 0.25 --dpartitions 2500 --mfgrid
+2020-01-31 10:51:12,825|Reading data...
+2020-01-31 10:51:24,296|Reading data... Done!
+2020-01-31 10:51:24,297|MF|0488|4|36|START| 42.77|A.Points indexed              |  0.00|     0|0
+2020-01-31 10:51:24,607|MF|0488|4|36|  END| 43.08|A.Points indexed              |  0.31|   478|0
+2020-01-31 10:51:24,607|MF|0488|4|36|START| 43.08|B.Pairs found                 |  0.00|     0|0
+2020-01-31 10:51:29,023|MF|0488|4|36|  END| 47.50|B.Pairs found                 |  4.42| 11711|0
+2020-01-31 10:51:29,024|MF|0488|4|36|START| 47.50|C.Centers found               |  0.00|     0|0
+2020-01-31 10:51:30,991|MF|0488|4|36|  END| 49.47|C.Centers found               |  1.97| 23422|0
+2020-01-31 10:51:30,991|MF|0488|4|36|START| 49.47|D.Disks found                 |  0.00|     0|0
+2020-01-31 10:51:39,928|MF|0488|4|36|  END| 58.40|D.Disks found                 |  8.94|  9134|0
+2020-01-31 10:51:39,983|MF|0488|4|36|START| 58.46|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 10:51:43,331|MF|0488|4|36|  END| 61.80|E.Disks partitioned           |  3.35| 31954|0
+2020-01-31 10:51:43,331|MF|0488|4|36|START| 61.81|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 10:51:45,323|MF|0488|4|36|  END| 63.80|F.Maximal disks found         |  1.99|  1391|0
+2020-01-31 10:51:45,323|MAXIMALS|0488|36|4|20.0|3|478|1984|21.03|1391
+2020-01-31 10:51:45,332|Closing session...
+2020-01-31 10:51:45,532|Closing session... Done!
+2020-01-31 10:51:48,917|Starting session...
+2020-01-31 10:52:20,240|Starting session... Done!
+2020-01-31 10:52:20,241|INFO|0489|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 144 --levels 8 --entries 10 --fraction 0.25 --dpartitions 3000 --mfgrid
+2020-01-31 10:52:20,241|Reading data...
+2020-01-31 10:52:32,417|Reading data... Done!
+2020-01-31 10:52:32,418|MF|0489|4|36|START| 43.47|A.Points indexed              |  0.00|     0|0
+2020-01-31 10:52:32,733|MF|0489|4|36|  END| 43.78|A.Points indexed              |  0.31|   451|0
+2020-01-31 10:52:32,733|MF|0489|4|36|START| 43.78|B.Pairs found                 |  0.00|     0|0
+2020-01-31 10:52:36,988|MF|0489|4|36|  END| 48.04|B.Pairs found                 |  4.25| 11711|0
+2020-01-31 10:52:36,988|MF|0489|4|36|START| 48.04|C.Centers found               |  0.00|     0|0
+2020-01-31 10:52:39,065|MF|0489|4|36|  END| 50.11|C.Centers found               |  2.08| 23422|0
+2020-01-31 10:52:39,065|MF|0489|4|36|START| 50.11|D.Disks found                 |  0.00|     0|0
+2020-01-31 10:52:48,466|MF|0489|4|36|  END| 59.51|D.Disks found                 |  9.40|  9134|0
+2020-01-31 10:52:48,518|MF|0489|4|36|START| 59.57|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 10:52:53,203|MF|0489|4|36|  END| 64.25|E.Disks partitioned           |  4.69| 32188|0
+2020-01-31 10:52:53,204|MF|0489|4|36|START| 64.25|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 10:52:55,928|MF|0489|4|36|  END| 66.98|F.Maximal disks found         |  2.72|  1391|0
+2020-01-31 10:52:55,928|MAXIMALS|0489|36|4|20.0|3|451|2149|23.51|1391
+2020-01-31 10:52:55,950|Closing session...
+2020-01-31 10:52:56,210|Closing session... Done!
+2020-01-31 10:52:59,538|Starting session...
+2020-01-31 10:53:30,923|Starting session... Done!
+2020-01-31 10:53:30,923|INFO|0490|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 144 --levels 8 --entries 10 --fraction 0.25 --dpartitions 3500 --mfgrid
+2020-01-31 10:53:30,923|Reading data...
+2020-01-31 10:53:42,522|Reading data... Done!
+2020-01-31 10:53:42,523|MF|0490|4|36|START| 42.95|A.Points indexed              |  0.00|     0|0
+2020-01-31 10:53:42,844|MF|0490|4|36|  END| 43.27|A.Points indexed              |  0.32|   427|0
+2020-01-31 10:53:42,845|MF|0490|4|36|START| 43.27|B.Pairs found                 |  0.00|     0|0
+2020-01-31 10:53:47,216|MF|0490|4|36|  END| 47.64|B.Pairs found                 |  4.37| 11711|0
+2020-01-31 10:53:47,217|MF|0490|4|36|START| 47.64|C.Centers found               |  0.00|     0|0
+2020-01-31 10:53:49,125|MF|0490|4|36|  END| 49.55|C.Centers found               |  1.91| 23422|0
+2020-01-31 10:53:49,125|MF|0490|4|36|START| 49.55|D.Disks found                 |  0.00|     0|0
+2020-01-31 10:53:58,683|MF|0490|4|36|  END| 59.11|D.Disks found                 |  9.56|  9134|0
+2020-01-31 10:53:58,744|MF|0490|4|36|START| 59.17|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 10:54:03,605|MF|0490|4|36|  END| 64.03|E.Disks partitioned           |  4.86| 32636|0
+2020-01-31 10:54:03,605|MF|0490|4|36|START| 64.03|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 10:54:06,824|MF|0490|4|36|  END| 67.25|F.Maximal disks found         |  3.22|  1391|0
+2020-01-31 10:54:06,824|MAXIMALS|0490|36|4|20.0|3|427|2350|24.30|1391
+2020-01-31 10:54:06,833|Closing session...
+2020-01-31 10:54:07,107|Closing session... Done!
+2020-01-31 10:54:10,372|Starting session...
+2020-01-31 10:54:41,671|Starting session... Done!
+2020-01-31 10:54:41,672|INFO|0491|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 144 --levels 8 --entries 10 --fraction 0.25 --dpartitions 4000 --mfgrid
+2020-01-31 10:54:41,672|Reading data...
+2020-01-31 10:54:53,156|Reading data... Done!
+2020-01-31 10:54:53,157|MF|0491|4|36|START| 42.75|A.Points indexed              |  0.00|     0|0
+2020-01-31 10:54:53,483|MF|0491|4|36|  END| 43.08|A.Points indexed              |  0.33|   466|0
+2020-01-31 10:54:53,484|MF|0491|4|36|START| 43.08|B.Pairs found                 |  0.00|     0|0
+2020-01-31 10:54:58,128|MF|0491|4|36|  END| 47.72|B.Pairs found                 |  4.64| 11711|0
+2020-01-31 10:54:58,128|MF|0491|4|36|START| 47.72|C.Centers found               |  0.00|     0|0
+2020-01-31 10:55:00,329|MF|0491|4|36|  END| 49.92|C.Centers found               |  2.20| 23422|0
+2020-01-31 10:55:00,329|MF|0491|4|36|START| 49.92|D.Disks found                 |  0.00|     0|0
+2020-01-31 10:55:09,303|MF|0491|4|36|  END| 58.90|D.Disks found                 |  8.97|  9134|0
+2020-01-31 10:55:09,365|MF|0491|4|36|START| 58.96|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 10:55:13,313|MF|0491|4|36|  END| 62.91|E.Disks partitioned           |  3.95| 32815|0
+2020-01-31 10:55:13,313|MF|0491|4|36|START| 62.91|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 10:55:15,645|MF|0491|4|36|  END| 65.24|F.Maximal disks found         |  2.33|  1391|0
+2020-01-31 10:55:15,645|MAXIMALS|0491|36|4|20.0|3|466|2539|22.49|1391
+2020-01-31 10:55:15,659|Closing session...
+2020-01-31 10:55:15,853|Closing session... Done!
+2020-01-31 10:55:19,161|Starting session...
+2020-01-31 10:55:50,499|Starting session... Done!
+2020-01-31 10:55:50,500|INFO|0492|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 288 --levels 8 --entries 10 --fraction 0.25 --dpartitions 1000 --mfgrid
+2020-01-31 10:55:50,500|Reading data...
+2020-01-31 10:56:02,132|Reading data... Done!
+2020-01-31 10:56:02,133|MF|0492|4|36|START| 42.94|A.Points indexed              |  0.00|     0|0
+2020-01-31 10:56:02,483|MF|0492|4|36|  END| 43.29|A.Points indexed              |  0.35|   856|0
+2020-01-31 10:56:02,483|MF|0492|4|36|START| 43.29|B.Pairs found                 |  0.00|     0|0
+2020-01-31 10:56:08,132|MF|0492|4|36|  END| 48.94|B.Pairs found                 |  5.65| 11711|0
+2020-01-31 10:56:08,133|MF|0492|4|36|START| 48.94|C.Centers found               |  0.00|     0|0
+2020-01-31 10:56:11,462|MF|0492|4|36|  END| 52.26|C.Centers found               |  3.33| 23422|0
+2020-01-31 10:56:11,462|MF|0492|4|36|START| 52.27|D.Disks found                 |  0.00|     0|0
+2020-01-31 10:56:24,585|MF|0492|4|36|  END| 65.39|D.Disks found                 | 13.12|  9134|0
+2020-01-31 10:56:24,656|MF|0492|4|36|START| 65.46|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 10:56:28,002|MF|0492|4|36|  END| 68.80|E.Disks partitioned           |  3.35| 29842|0
+2020-01-31 10:56:28,002|MF|0492|4|36|START| 68.81|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 10:56:29,590|MF|0492|4|36|  END| 70.39|F.Maximal disks found         |  1.59|  1391|0
+2020-01-31 10:56:29,590|MAXIMALS|0492|36|4|20.0|3|856|1003|27.46|1391
+2020-01-31 10:56:29,603|Closing session...
+2020-01-31 10:56:29,779|Closing session... Done!
+2020-01-31 10:56:33,093|Starting session...
+2020-01-31 10:57:04,542|Starting session... Done!
+2020-01-31 10:57:04,543|INFO|0493|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 288 --levels 8 --entries 10 --fraction 0.25 --dpartitions 1500 --mfgrid
+2020-01-31 10:57:04,543|Reading data...
+2020-01-31 10:57:16,236|Reading data... Done!
+2020-01-31 10:57:16,237|MF|0493|4|36|START| 43.11|A.Points indexed              |  0.00|     0|0
+2020-01-31 10:57:16,578|MF|0493|4|36|  END| 43.45|A.Points indexed              |  0.34|   808|0
+2020-01-31 10:57:16,578|MF|0493|4|36|START| 43.45|B.Pairs found                 |  0.00|     0|0
+2020-01-31 10:57:22,568|MF|0493|4|36|  END| 49.44|B.Pairs found                 |  5.99| 11711|0
+2020-01-31 10:57:22,569|MF|0493|4|36|START| 49.44|C.Centers found               |  0.00|     0|0
+2020-01-31 10:57:25,705|MF|0493|4|36|  END| 52.58|C.Centers found               |  3.14| 23422|0
+2020-01-31 10:57:25,705|MF|0493|4|36|START| 52.58|D.Disks found                 |  0.00|     0|0
+2020-01-31 10:57:38,743|MF|0493|4|36|  END| 65.61|D.Disks found                 | 13.04|  9134|0
+2020-01-31 10:57:38,810|MF|0493|4|36|START| 65.68|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 10:57:41,970|MF|0493|4|36|  END| 68.84|E.Disks partitioned           |  3.16| 30444|0
+2020-01-31 10:57:41,971|MF|0493|4|36|START| 68.84|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 10:57:43,761|MF|0493|4|36|  END| 70.63|F.Maximal disks found         |  1.79|  1391|0
+2020-01-31 10:57:43,762|MAXIMALS|0493|36|4|20.0|3|808|1387|27.53|1391
+2020-01-31 10:57:43,773|Closing session...
+2020-01-31 10:57:44,007|Closing session... Done!
+2020-01-31 10:57:47,407|Starting session...
+2020-01-31 10:58:18,653|Starting session... Done!
+2020-01-31 10:58:18,653|INFO|0495|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 288 --levels 8 --entries 10 --fraction 0.25 --dpartitions 2000 --mfgrid
+2020-01-31 10:58:18,653|Reading data...
+2020-01-31 11:05:24,079|Reading data... Done!
+2020-01-31 11:05:24,080|MF|0495|4|36|START|456.64|A.Points indexed              |  0.00|     0|0
+2020-01-31 11:05:24,429|MF|0495|4|36|  END|456.99|A.Points indexed              |  0.35|   907|0
+2020-01-31 11:05:24,430|MF|0495|4|36|START|456.99|B.Pairs found                 |  0.00|     0|0
+2020-01-31 11:05:30,624|MF|0495|4|36|  END|463.18|B.Pairs found                 |  6.19| 11711|0
+2020-01-31 11:05:30,625|MF|0495|4|36|START|463.18|C.Centers found               |  0.00|     0|0
+2020-01-31 11:05:34,156|MF|0495|4|36|  END|466.72|C.Centers found               |  3.53| 23422|0
+2020-01-31 11:05:34,157|MF|0495|4|36|START|466.72|D.Disks found                 |  0.00|     0|0
+2020-01-31 11:05:48,771|MF|0495|4|36|  END|481.33|D.Disks found                 | 14.61|  9134|0
+2020-01-31 11:05:48,839|MF|0495|4|36|START|481.40|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 11:05:54,414|MF|0495|4|36|  END|486.97|E.Disks partitioned           |  5.57| 31308|0
+2020-01-31 11:05:54,414|MF|0495|4|36|START|486.97|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 11:05:56,708|MF|0495|4|36|  END|489.27|F.Maximal disks found         |  2.29|  1391|0
+2020-01-31 11:05:56,708|MAXIMALS|0495|36|4|20.0|3|907|1624|32.63|1391
+2020-01-31 11:05:56,718|Closing session...
+2020-01-31 11:05:56,895|Closing session... Done!
+2020-01-31 11:06:00,284|Starting session...
+2020-01-31 11:06:31,681|Starting session... Done!
+2020-01-31 11:06:31,681|INFO|0496|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 288 --levels 8 --entries 10 --fraction 0.25 --dpartitions 2500 --mfgrid
+2020-01-31 11:06:31,681|Reading data...
+2020-01-31 11:06:43,405|Reading data... Done!
+2020-01-31 11:06:43,407|MF|0496|4|36|START| 43.09|A.Points indexed              |  0.00|     0|0
+2020-01-31 11:06:43,758|MF|0496|4|36|  END| 43.44|A.Points indexed              |  0.35|   862|0
+2020-01-31 11:06:43,759|MF|0496|4|36|START| 43.44|B.Pairs found                 |  0.00|     0|0
+2020-01-31 11:06:49,822|MF|0496|4|36|  END| 49.50|B.Pairs found                 |  6.06| 11711|0
+2020-01-31 11:06:49,822|MF|0496|4|36|START| 49.50|C.Centers found               |  0.00|     0|0
+2020-01-31 11:06:53,091|MF|0496|4|36|  END| 52.77|C.Centers found               |  3.27| 23422|0
+2020-01-31 11:06:53,091|MF|0496|4|36|START| 52.77|D.Disks found                 |  0.00|     0|0
+2020-01-31 11:07:06,901|MF|0496|4|36|  END| 66.58|D.Disks found                 | 13.81|  9134|0
+2020-01-31 11:07:06,972|MF|0496|4|36|START| 66.65|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 11:07:10,782|MF|0496|4|36|  END| 70.46|E.Disks partitioned           |  3.81| 31908|0
+2020-01-31 11:07:10,782|MF|0496|4|36|START| 70.46|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 11:07:12,651|MF|0496|4|36|  END| 72.33|F.Maximal disks found         |  1.87|  1391|0
+2020-01-31 11:07:12,651|MAXIMALS|0496|36|4|20.0|3|862|1855|29.24|1391
+2020-01-31 11:07:12,660|Closing session...
+2020-01-31 11:07:12,848|Closing session... Done!
+2020-01-31 11:07:16,197|Starting session...
+2020-01-31 11:07:47,455|Starting session... Done!
+2020-01-31 11:07:47,455|INFO|0497|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 288 --levels 8 --entries 10 --fraction 0.25 --dpartitions 3000 --mfgrid
+2020-01-31 11:07:47,456|Reading data...
+2020-01-31 11:07:59,013|Reading data... Done!
+2020-01-31 11:07:59,013|MF|0497|4|36|START| 42.78|A.Points indexed              |  0.00|     0|0
+2020-01-31 11:07:59,343|MF|0497|4|36|  END| 43.11|A.Points indexed              |  0.33|   886|0
+2020-01-31 11:07:59,344|MF|0497|4|36|START| 43.11|B.Pairs found                 |  0.00|     0|0
+2020-01-31 11:08:05,560|MF|0497|4|36|  END| 49.33|B.Pairs found                 |  6.22| 11711|0
+2020-01-31 11:08:05,560|MF|0497|4|36|START| 49.33|C.Centers found               |  0.00|     0|0
+2020-01-31 11:08:09,474|MF|0497|4|36|  END| 53.24|C.Centers found               |  3.91| 23422|0
+2020-01-31 11:08:09,475|MF|0497|4|36|START| 53.25|D.Disks found                 |  0.00|     0|0
+2020-01-31 11:08:22,930|MF|0497|4|36|  END| 66.70|D.Disks found                 | 13.46|  9134|0
+2020-01-31 11:08:23,015|MF|0497|4|36|START| 66.79|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 11:08:27,312|MF|0497|4|36|  END| 71.08|E.Disks partitioned           |  4.30| 32520|0
+2020-01-31 11:08:27,312|MF|0497|4|36|START| 71.08|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 11:08:29,334|MF|0497|4|36|  END| 73.10|F.Maximal disks found         |  2.02|  1391|0
+2020-01-31 11:08:29,334|MAXIMALS|0497|36|4|20.0|3|886|2215|30.32|1391
+2020-01-31 11:08:29,345|Closing session...
+2020-01-31 11:08:29,634|Closing session... Done!
+2020-01-31 11:08:33,042|Starting session...
+2020-01-31 11:09:04,422|Starting session... Done!
+2020-01-31 11:09:04,422|INFO|0498|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 288 --levels 8 --entries 10 --fraction 0.25 --dpartitions 3500 --mfgrid
+2020-01-31 11:09:04,423|Reading data...
+2020-01-31 11:09:16,092|Reading data... Done!
+2020-01-31 11:09:16,092|MF|0498|4|36|START| 43.01|A.Points indexed              |  0.00|     0|0
+2020-01-31 11:09:16,428|MF|0498|4|36|  END| 43.35|A.Points indexed              |  0.33|   892|0
+2020-01-31 11:09:16,428|MF|0498|4|36|START| 43.35|B.Pairs found                 |  0.00|     0|0
+2020-01-31 11:09:22,483|MF|0498|4|36|  END| 49.41|B.Pairs found                 |  6.05| 11711|0
+2020-01-31 11:09:22,484|MF|0498|4|36|START| 49.41|C.Centers found               |  0.00|     0|0
+2020-01-31 11:09:25,841|MF|0498|4|36|  END| 52.76|C.Centers found               |  3.36| 23422|0
+2020-01-31 11:09:25,841|MF|0498|4|36|START| 52.76|D.Disks found                 |  0.00|     0|0
+2020-01-31 11:09:39,112|MF|0498|4|36|  END| 66.03|D.Disks found                 | 13.27|  9134|0
+2020-01-31 11:09:39,180|MF|0498|4|36|START| 66.10|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 11:09:43,690|MF|0498|4|36|  END| 70.61|E.Disks partitioned           |  4.51| 32502|0
+2020-01-31 11:09:43,691|MF|0498|4|36|START| 70.61|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 11:09:45,815|MF|0498|4|36|  END| 72.74|F.Maximal disks found         |  2.12|  1391|0
+2020-01-31 11:09:45,815|MAXIMALS|0498|36|4|20.0|3|892|2275|29.72|1391
+2020-01-31 11:09:45,827|Closing session...
+2020-01-31 11:09:46,077|Closing session... Done!
+2020-01-31 11:09:49,530|Starting session...
+2020-01-31 11:10:20,885|Starting session... Done!
+2020-01-31 11:10:20,886|INFO|0499|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 288 --levels 8 --entries 10 --fraction 0.25 --dpartitions 4000 --mfgrid
+2020-01-31 11:10:20,886|Reading data...
+2020-01-31 11:10:32,587|Reading data... Done!
+2020-01-31 11:10:32,588|MF|0499|4|36|START| 43.02|A.Points indexed              |  0.00|     0|0
+2020-01-31 11:10:32,955|MF|0499|4|36|  END| 43.39|A.Points indexed              |  0.37|   856|0
+2020-01-31 11:10:32,956|MF|0499|4|36|START| 43.39|B.Pairs found                 |  0.00|     0|0
+2020-01-31 11:10:39,138|MF|0499|4|36|  END| 49.57|B.Pairs found                 |  6.18| 11711|0
+2020-01-31 11:10:39,139|MF|0499|4|36|START| 49.57|C.Centers found               |  0.00|     0|0
+2020-01-31 11:10:42,535|MF|0499|4|36|  END| 52.97|C.Centers found               |  3.40| 23422|0
+2020-01-31 11:10:42,535|MF|0499|4|36|START| 52.97|D.Disks found                 |  0.00|     0|0
+2020-01-31 11:10:55,932|MF|0499|4|36|  END| 66.37|D.Disks found                 | 13.40|  9134|0
+2020-01-31 11:10:55,998|MF|0499|4|36|START| 66.43|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 11:11:01,065|MF|0499|4|36|  END| 71.50|E.Disks partitioned           |  5.07| 32796|0
+2020-01-31 11:11:01,065|MF|0499|4|36|START| 71.50|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 11:11:03,444|MF|0499|4|36|  END| 73.88|F.Maximal disks found         |  2.38|  1391|0
+2020-01-31 11:11:03,444|MAXIMALS|0499|36|4|20.0|3|856|2542|30.86|1391
+2020-01-31 11:11:03,459|Closing session...
+2020-01-31 11:11:03,704|Closing session... Done!
+2020-01-31 11:11:07,092|Starting session...
+2020-01-31 11:11:38,357|Starting session... Done!
+2020-01-31 11:11:38,358|INFO|0500|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 432 --levels 8 --entries 10 --fraction 0.25 --dpartitions 1000 --mfgrid
+2020-01-31 11:11:38,358|Reading data...
+2020-01-31 11:11:49,923|Reading data... Done!
+2020-01-31 11:11:49,924|MF|0500|4|36|START| 42.79|A.Points indexed              |  0.00|     0|0
+2020-01-31 11:11:50,285|MF|0500|4|36|  END| 43.15|A.Points indexed              |  0.36|  1435|0
+2020-01-31 11:11:50,286|MF|0500|4|36|START| 43.16|B.Pairs found                 |  0.00|     0|0
+2020-01-31 11:11:54,447|MF|0500|4|36|  END| 47.32|B.Pairs found                 |  4.16| 11711|0
+2020-01-31 11:11:54,447|MF|0500|4|36|START| 47.32|C.Centers found               |  0.00|     0|0
+2020-01-31 11:11:56,890|MF|0500|4|36|  END| 49.76|C.Centers found               |  2.44| 23422|0
+2020-01-31 11:11:56,890|MF|0500|4|36|START| 49.76|D.Disks found                 |  0.00|     0|0
+2020-01-31 11:12:05,695|MF|0500|4|36|  END| 58.56|D.Disks found                 |  8.80|  9134|0
+2020-01-31 11:12:05,779|MF|0500|4|36|START| 58.65|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 11:12:08,974|MF|0500|4|36|  END| 61.84|E.Disks partitioned           |  3.19| 29706|0
+2020-01-31 11:12:08,974|MF|0500|4|36|START| 61.84|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 11:12:10,117|MF|0500|4|36|  END| 62.99|F.Maximal disks found         |  1.14|  1391|0
+2020-01-31 11:12:10,117|MAXIMALS|0500|36|4|20.0|3|1435|1084|20.19|1391
+2020-01-31 11:12:10,125|Closing session...
+2020-01-31 11:12:10,302|Closing session... Done!
+2020-01-31 11:12:16,399|Starting session...
+2020-01-31 11:12:47,699|Starting session... Done!
+2020-01-31 11:12:47,700|INFO|0501|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 432 --levels 8 --entries 10 --fraction 0.25 --dpartitions 1500 --mfgrid
+2020-01-31 11:12:47,700|Reading data...
+2020-01-31 11:12:59,087|Reading data... Done!
+2020-01-31 11:12:59,088|MF|0501|4|36|START| 42.65|A.Points indexed              |  0.00|     0|0
+2020-01-31 11:12:59,473|MF|0501|4|36|  END| 43.04|A.Points indexed              |  0.38|  1294|0
+2020-01-31 11:12:59,473|MF|0501|4|36|START| 43.04|B.Pairs found                 |  0.00|     0|0
+2020-01-31 11:13:03,397|MF|0501|4|36|  END| 46.96|B.Pairs found                 |  3.92| 11711|0
+2020-01-31 11:13:03,397|MF|0501|4|36|START| 46.96|C.Centers found               |  0.00|     0|0
+2020-01-31 11:13:05,524|MF|0501|4|36|  END| 49.09|C.Centers found               |  2.13| 23422|0
+2020-01-31 11:13:05,524|MF|0501|4|36|START| 49.09|D.Disks found                 |  0.00|     0|0
+2020-01-31 11:13:13,927|MF|0501|4|36|  END| 57.49|D.Disks found                 |  8.40|  9134|0
+2020-01-31 11:13:14,012|MF|0501|4|36|START| 57.58|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 11:13:17,633|MF|0501|4|36|  END| 61.20|E.Disks partitioned           |  3.62| 29942|0
+2020-01-31 11:13:17,633|MF|0501|4|36|START| 61.20|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 11:13:19,070|MF|0501|4|36|  END| 62.64|F.Maximal disks found         |  1.44|  1391|0
+2020-01-31 11:13:19,071|MAXIMALS|0501|36|4|20.0|3|1294|1447|19.98|1391
+2020-01-31 11:13:19,081|Closing session...
+2020-01-31 11:13:19,257|Closing session... Done!
+2020-01-31 11:13:22,683|Starting session...
+2020-01-31 11:13:54,023|Starting session... Done!
+2020-01-31 11:13:54,024|INFO|0502|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 432 --levels 8 --entries 10 --fraction 0.25 --dpartitions 2000 --mfgrid
+2020-01-31 11:13:54,024|Reading data...
+2020-01-31 11:14:03,191|Reading data... Done!
+2020-01-31 11:14:03,193|MF|0502|4|36|START| 40.47|A.Points indexed              |  0.00|     0|0
+2020-01-31 11:14:03,703|MF|0502|4|36|  END| 40.98|A.Points indexed              |  0.51|  1300|0
+2020-01-31 11:14:03,703|MF|0502|4|36|START| 40.98|B.Pairs found                 |  0.00|     0|0
+2020-01-31 11:14:07,522|MF|0502|4|36|  END| 44.80|B.Pairs found                 |  3.82| 11711|0
+2020-01-31 11:14:07,522|MF|0502|4|36|START| 44.80|C.Centers found               |  0.00|     0|0
+2020-01-31 11:14:09,823|MF|0502|4|36|  END| 47.10|C.Centers found               |  2.30| 23422|0
+2020-01-31 11:14:09,823|MF|0502|4|36|START| 47.10|D.Disks found                 |  0.00|     0|0
+2020-01-31 11:14:19,498|MF|0502|4|36|  END| 56.78|D.Disks found                 |  9.67|  9134|0
+2020-01-31 11:14:19,593|MF|0502|4|36|START| 56.87|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 11:14:23,250|MF|0502|4|36|  END| 60.53|E.Disks partitioned           |  3.66| 31131|0
+2020-01-31 11:14:23,251|MF|0502|4|36|START| 60.53|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 11:14:24,643|MF|0502|4|36|  END| 61.92|F.Maximal disks found         |  1.39|  1391|0
+2020-01-31 11:14:24,643|MAXIMALS|0502|36|4|20.0|3|1300|1555|21.45|1391
+2020-01-31 11:14:24,651|Closing session...
+2020-01-31 11:14:24,835|Closing session... Done!
+2020-01-31 11:14:28,326|Starting session...
+2020-01-31 11:14:59,692|Starting session... Done!
+2020-01-31 11:14:59,692|INFO|0503|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 432 --levels 8 --entries 10 --fraction 0.25 --dpartitions 2500 --mfgrid
+2020-01-31 11:14:59,693|Reading data...
+2020-01-31 11:15:11,420|Reading data... Done!
+2020-01-31 11:15:11,421|MF|0503|4|36|START| 43.06|A.Points indexed              |  0.00|     0|0
+2020-01-31 11:15:11,788|MF|0503|4|36|  END| 43.42|A.Points indexed              |  0.37|  1363|0
+2020-01-31 11:15:11,789|MF|0503|4|36|START| 43.42|B.Pairs found                 |  0.00|     0|0
+2020-01-31 11:15:15,856|MF|0503|4|36|  END| 47.49|B.Pairs found                 |  4.07| 11711|0
+2020-01-31 11:15:15,856|MF|0503|4|36|START| 47.49|C.Centers found               |  0.00|     0|0
+2020-01-31 11:15:18,357|MF|0503|4|36|  END| 49.99|C.Centers found               |  2.50| 23422|0
+2020-01-31 11:15:18,357|MF|0503|4|36|START| 49.99|D.Disks found                 |  0.00|     0|0
+2020-01-31 11:15:27,475|MF|0503|4|36|  END| 59.11|D.Disks found                 |  9.12|  9134|0
+2020-01-31 11:15:27,568|MF|0503|4|36|START| 59.20|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 11:15:31,336|MF|0503|4|36|  END| 62.97|E.Disks partitioned           |  3.77| 32196|0
+2020-01-31 11:15:31,336|MF|0503|4|36|START| 62.97|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 11:15:32,719|MF|0503|4|36|  END| 64.36|F.Maximal disks found         |  1.38|  1391|0
+2020-01-31 11:15:32,720|MAXIMALS|0503|36|4|20.0|3|1363|1954|21.30|1391
+2020-01-31 11:15:32,732|Closing session...
+2020-01-31 11:15:32,919|Closing session... Done!
+2020-01-31 11:15:36,283|Starting session...
+2020-01-31 11:16:07,519|Starting session... Done!
+2020-01-31 11:16:07,520|INFO|0504|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 432 --levels 8 --entries 10 --fraction 0.25 --dpartitions 3000 --mfgrid
+2020-01-31 11:16:07,520|Reading data...
+2020-01-31 11:16:18,990|Reading data... Done!
+2020-01-31 11:16:18,991|MF|0504|4|36|START| 42.67|A.Points indexed              |  0.00|     0|0
+2020-01-31 11:16:19,341|MF|0504|4|36|  END| 43.03|A.Points indexed              |  0.35|  1282|0
+2020-01-31 11:16:19,342|MF|0504|4|36|START| 43.03|B.Pairs found                 |  0.00|     0|0
+2020-01-31 11:16:23,344|MF|0504|4|36|  END| 47.03|B.Pairs found                 |  4.00| 11711|0
+2020-01-31 11:16:23,344|MF|0504|4|36|START| 47.03|C.Centers found               |  0.00|     0|0
+2020-01-31 11:16:25,907|MF|0504|4|36|  END| 49.59|C.Centers found               |  2.56| 23422|0
+2020-01-31 11:16:25,907|MF|0504|4|36|START| 49.59|D.Disks found                 |  0.00|     0|0
+2020-01-31 11:16:34,248|MF|0504|4|36|  END| 57.93|D.Disks found                 |  8.34|  9134|0
+2020-01-31 11:16:34,331|MF|0504|4|36|START| 58.02|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 11:16:38,562|MF|0504|4|36|  END| 62.25|E.Disks partitioned           |  4.23| 32269|0
+2020-01-31 11:16:38,562|MF|0504|4|36|START| 62.25|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 11:16:40,306|MF|0504|4|36|  END| 63.99|F.Maximal disks found         |  1.74|  1391|0
+2020-01-31 11:16:40,307|MAXIMALS|0504|36|4|20.0|3|1282|2170|21.32|1391
+2020-01-31 11:16:40,318|Closing session...
+2020-01-31 11:16:40,517|Closing session... Done!
+2020-01-31 11:16:43,921|Starting session...
+2020-01-31 11:17:15,265|Starting session... Done!
+2020-01-31 11:17:15,266|INFO|0505|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 432 --levels 8 --entries 10 --fraction 0.25 --dpartitions 3500 --mfgrid
+2020-01-31 11:17:15,266|Reading data...
+2020-01-31 11:17:26,739|Reading data... Done!
+2020-01-31 11:17:26,740|MF|0505|4|36|START| 42.78|A.Points indexed              |  0.00|     0|0
+2020-01-31 11:17:27,098|MF|0505|4|36|  END| 43.14|A.Points indexed              |  0.36|  1360|0
+2020-01-31 11:17:27,098|MF|0505|4|36|START| 43.14|B.Pairs found                 |  0.00|     0|0
+2020-01-31 11:17:31,137|MF|0505|4|36|  END| 47.18|B.Pairs found                 |  4.04| 11711|0
+2020-01-31 11:17:31,138|MF|0505|4|36|START| 47.18|C.Centers found               |  0.00|     0|0
+2020-01-31 11:17:33,446|MF|0505|4|36|  END| 49.49|C.Centers found               |  2.31| 23422|0
+2020-01-31 11:17:33,447|MF|0505|4|36|START| 49.49|D.Disks found                 |  0.00|     0|0
+2020-01-31 11:17:42,740|MF|0505|4|36|  END| 58.78|D.Disks found                 |  9.29|  9134|0
+2020-01-31 11:17:42,829|MF|0505|4|36|START| 58.87|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 11:17:46,568|MF|0505|4|36|  END| 62.61|E.Disks partitioned           |  3.74| 32575|0
+2020-01-31 11:17:46,568|MF|0505|4|36|START| 62.61|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 11:17:48,112|MF|0505|4|36|  END| 64.15|F.Maximal disks found         |  1.54|  1391|0
+2020-01-31 11:17:48,112|MAXIMALS|0505|36|4|20.0|3|1360|2263|21.37|1391
+2020-01-31 11:17:48,124|Closing session...
+2020-01-31 11:17:48,323|Closing session... Done!
+2020-01-31 11:17:51,721|Starting session...
+2020-01-31 11:18:23,005|Starting session... Done!
+2020-01-31 11:18:23,005|INFO|0506|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 432 --levels 8 --entries 10 --fraction 0.25 --dpartitions 4000 --mfgrid
+2020-01-31 11:18:23,006|Reading data...
+2020-01-31 11:18:34,681|Reading data... Done!
+2020-01-31 11:18:34,682|MF|0506|4|36|START| 42.93|A.Points indexed              |  0.00|     0|0
+2020-01-31 11:18:35,037|MF|0506|4|36|  END| 43.28|A.Points indexed              |  0.35|  1357|0
+2020-01-31 11:18:35,037|MF|0506|4|36|START| 43.28|B.Pairs found                 |  0.00|     0|0
+2020-01-31 11:18:39,287|MF|0506|4|36|  END| 47.53|B.Pairs found                 |  4.25| 11711|0
+2020-01-31 11:18:39,288|MF|0506|4|36|START| 47.53|C.Centers found               |  0.00|     0|0
+2020-01-31 11:18:41,558|MF|0506|4|36|  END| 49.80|C.Centers found               |  2.27| 23422|0
+2020-01-31 11:18:41,558|MF|0506|4|36|START| 49.80|D.Disks found                 |  0.00|     0|0
+2020-01-31 11:18:49,399|MF|0506|4|36|  END| 57.64|D.Disks found                 |  7.84|  9134|0
+2020-01-31 11:18:49,494|MF|0506|4|36|START| 57.74|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 11:18:54,410|MF|0506|4|36|  END| 62.65|E.Disks partitioned           |  4.92| 32792|0
+2020-01-31 11:18:54,410|MF|0506|4|36|START| 62.65|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 11:18:56,266|MF|0506|4|36|  END| 64.51|F.Maximal disks found         |  1.86|  1391|0
+2020-01-31 11:18:56,266|MAXIMALS|0506|36|4|20.0|3|1357|2503|21.58|1391
+2020-01-31 11:18:56,279|Closing session...
+2020-01-31 11:18:56,473|Closing session... Done!
+2020-01-31 11:18:59,846|Starting session...
+2020-01-31 11:19:31,109|Starting session... Done!
+2020-01-31 11:19:31,109|INFO|0507|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 576 --levels 8 --entries 10 --fraction 0.25 --dpartitions 1000 --mfgrid
+2020-01-31 11:19:31,110|Reading data...
+2020-01-31 11:19:42,923|Reading data... Done!
+2020-01-31 11:19:42,925|MF|0507|4|36|START| 43.04|A.Points indexed              |  0.00|     0|0
+2020-01-31 11:19:43,322|MF|0507|4|36|  END| 43.44|A.Points indexed              |  0.40|  1765|0
+2020-01-31 11:19:43,323|MF|0507|4|36|START| 43.44|B.Pairs found                 |  0.00|     0|0
+2020-01-31 11:19:48,105|MF|0507|4|36|  END| 48.23|B.Pairs found                 |  4.78| 11711|0
+2020-01-31 11:19:48,106|MF|0507|4|36|START| 48.23|C.Centers found               |  0.00|     0|0
+2020-01-31 11:19:51,069|MF|0507|4|36|  END| 51.19|C.Centers found               |  2.96| 23422|0
+2020-01-31 11:19:51,069|MF|0507|4|36|START| 51.19|D.Disks found                 |  0.00|     0|0
+2020-01-31 11:20:00,526|MF|0507|4|36|  END| 60.65|D.Disks found                 |  9.46|  9134|0
+2020-01-31 11:20:00,608|MF|0507|4|36|START| 60.73|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 11:20:04,565|MF|0507|4|36|  END| 64.68|E.Disks partitioned           |  3.96| 28779|0
+2020-01-31 11:20:04,565|MF|0507|4|36|START| 64.69|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 11:20:05,656|MF|0507|4|36|  END| 65.78|F.Maximal disks found         |  1.09|  1391|0
+2020-01-31 11:20:05,656|MAXIMALS|0507|36|4|20.0|3|1765|1027|22.73|1391
+2020-01-31 11:20:05,668|Closing session...
+2020-01-31 11:20:05,900|Closing session... Done!
+2020-01-31 11:20:09,346|Starting session...
+2020-01-31 11:20:40,777|Starting session... Done!
+2020-01-31 11:20:40,777|INFO|0508|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 576 --levels 8 --entries 10 --fraction 0.25 --dpartitions 1500 --mfgrid
+2020-01-31 11:20:40,777|Reading data...
+2020-01-31 11:20:52,693|Reading data... Done!
+2020-01-31 11:20:52,694|MF|0508|4|36|START| 43.31|A.Points indexed              |  0.00|     0|0
+2020-01-31 11:20:53,076|MF|0508|4|36|  END| 43.69|A.Points indexed              |  0.38|  1726|0
+2020-01-31 11:20:53,077|MF|0508|4|36|START| 43.69|B.Pairs found                 |  0.00|     0|0
+2020-01-31 11:20:57,350|MF|0508|4|36|  END| 47.97|B.Pairs found                 |  4.27| 11711|0
+2020-01-31 11:20:57,351|MF|0508|4|36|START| 47.97|C.Centers found               |  0.00|     0|0
+2020-01-31 11:21:00,085|MF|0508|4|36|  END| 50.70|C.Centers found               |  2.73| 23422|0
+2020-01-31 11:21:00,086|MF|0508|4|36|START| 50.70|D.Disks found                 |  0.00|     0|0
+2020-01-31 11:21:09,665|MF|0508|4|36|  END| 60.28|D.Disks found                 |  9.58|  9134|0
+2020-01-31 11:21:09,759|MF|0508|4|36|START| 60.38|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 11:21:13,646|MF|0508|4|36|  END| 64.26|E.Disks partitioned           |  3.89| 30481|0
+2020-01-31 11:21:13,646|MF|0508|4|36|START| 64.26|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 11:21:14,883|MF|0508|4|36|  END| 65.50|F.Maximal disks found         |  1.24|  1391|0
+2020-01-31 11:21:14,883|MAXIMALS|0508|36|4|20.0|3|1726|1381|22.19|1391
+2020-01-31 11:21:14,894|Closing session...
+2020-01-31 11:21:15,259|Closing session... Done!
+2020-01-31 11:21:18,768|Starting session...
+2020-01-31 11:21:50,155|Starting session... Done!
+2020-01-31 11:21:50,156|INFO|0510|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 576 --levels 8 --entries 10 --fraction 0.25 --dpartitions 2000 --mfgrid
+2020-01-31 11:21:50,156|Reading data...
+2020-01-31 11:41:26,776|Reading data... Done!
+2020-01-31 11:41:26,777|MF|0510|4|36|START|1207.97|A.Points indexed              |  0.00|     0|0
+2020-01-31 11:41:27,170|MF|0510|4|36|  END|1208.37|A.Points indexed              |  0.39|  1762|0
+2020-01-31 11:41:27,171|MF|0510|4|36|START|1208.37|B.Pairs found                 |  0.00|     0|0
+2020-01-31 11:41:32,016|MF|0510|4|36|  END|1213.21|B.Pairs found                 |  4.85| 11711|0
+2020-01-31 11:41:32,017|MF|0510|4|36|START|1213.21|C.Centers found               |  0.00|     0|0
+2020-01-31 11:41:35,036|MF|0510|4|36|  END|1216.23|C.Centers found               |  3.02| 23422|0
+2020-01-31 11:41:35,037|MF|0510|4|36|START|1216.23|D.Disks found                 |  0.00|     0|0
+2020-01-31 11:41:45,143|MF|0510|4|36|  END|1226.34|D.Disks found                 | 10.11|  9134|0
+2020-01-31 11:41:45,242|MF|0510|4|36|START|1226.44|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 11:41:48,962|MF|0510|4|36|  END|1230.16|E.Disks partitioned           |  3.72| 31396|0
+2020-01-31 11:41:48,962|MF|0510|4|36|START|1230.16|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 11:41:50,534|MF|0510|4|36|  END|1231.73|F.Maximal disks found         |  1.57|  1391|0
+2020-01-31 11:41:50,535|MAXIMALS|0510|36|4|20.0|3|1762|1690|23.76|1391
+2020-01-31 11:41:50,557|Closing session...
+2020-01-31 11:41:50,741|Closing session... Done!
+2020-01-31 11:41:54,101|Starting session...
+2020-01-31 11:42:25,432|Starting session... Done!
+2020-01-31 11:42:25,432|INFO|0511|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 576 --levels 8 --entries 10 --fraction 0.25 --dpartitions 2500 --mfgrid
+2020-01-31 11:42:25,433|Reading data...
+2020-01-31 11:42:37,507|Reading data... Done!
+2020-01-31 11:42:37,508|MF|0511|4|36|START| 43.37|A.Points indexed              |  0.00|     0|0
+2020-01-31 11:42:37,880|MF|0511|4|36|  END| 43.75|A.Points indexed              |  0.37|  1696|0
+2020-01-31 11:42:37,881|MF|0511|4|36|START| 43.75|B.Pairs found                 |  0.00|     0|0
+2020-01-31 11:42:42,270|MF|0511|4|36|  END| 48.14|B.Pairs found                 |  4.39| 11711|0
+2020-01-31 11:42:42,270|MF|0511|4|36|START| 48.14|C.Centers found               |  0.00|     0|0
+2020-01-31 11:42:45,458|MF|0511|4|36|  END| 51.32|C.Centers found               |  3.19| 23422|0
+2020-01-31 11:42:45,458|MF|0511|4|36|START| 51.32|D.Disks found                 |  0.00|     0|0
+2020-01-31 11:42:56,536|MF|0511|4|36|  END| 62.40|D.Disks found                 | 11.08|  9134|0
+2020-01-31 11:42:56,640|MF|0511|4|36|START| 62.51|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 11:43:02,411|MF|0511|4|36|  END| 68.28|E.Disks partitioned           |  5.77| 32127|0
+2020-01-31 11:43:02,411|MF|0511|4|36|START| 68.28|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 11:43:04,011|MF|0511|4|36|  END| 69.88|F.Maximal disks found         |  1.60|  1391|0
+2020-01-31 11:43:04,011|MAXIMALS|0511|36|4|20.0|3|1696|1888|26.50|1391
+2020-01-31 11:43:04,034|Closing session...
+2020-01-31 11:43:04,203|Closing session... Done!
+2020-01-31 11:43:07,697|Starting session...
+2020-01-31 11:43:38,966|Starting session... Done!
+2020-01-31 11:43:38,966|INFO|0513|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 576 --levels 8 --entries 10 --fraction 0.25 --dpartitions 3000 --mfgrid
+2020-01-31 11:43:38,966|Reading data...
+2020-01-31 12:18:06,441|Reading data... Done!
+2020-01-31 12:18:06,443|MF|0513|4|36|START|2098.71|A.Points indexed              |  0.00|     0|0
+2020-01-31 12:18:06,837|MF|0513|4|36|  END|2099.11|A.Points indexed              |  0.39|  1624|0
+2020-01-31 12:18:06,837|MF|0513|4|36|START|2099.11|B.Pairs found                 |  0.00|     0|0
+2020-01-31 12:18:11,851|MF|0513|4|36|  END|2104.12|B.Pairs found                 |  5.01| 11711|0
+2020-01-31 12:18:11,851|MF|0513|4|36|START|2104.12|C.Centers found               |  0.00|     0|0
+2020-01-31 12:18:15,235|MF|0513|4|36|  END|2107.50|C.Centers found               |  3.38| 23422|0
+2020-01-31 12:18:15,235|MF|0513|4|36|START|2107.50|D.Disks found                 |  0.00|     0|0
+2020-01-31 12:18:25,910|MF|0513|4|36|  END|2118.18|D.Disks found                 | 10.67|  9134|0
+2020-01-31 12:18:26,008|MF|0513|4|36|START|2118.28|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 12:18:30,938|MF|0513|4|36|  END|2123.21|E.Disks partitioned           |  4.93| 32401|0
+2020-01-31 12:18:30,938|MF|0513|4|36|START|2123.21|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 12:18:32,774|MF|0513|4|36|  END|2125.04|F.Maximal disks found         |  1.84|  1391|0
+2020-01-31 12:18:32,774|MAXIMALS|0513|36|4|20.0|3|1624|2131|26.33|1391
+2020-01-31 12:18:32,787|Closing session...
+2020-01-31 12:18:33,051|Closing session... Done!
+2020-01-31 12:18:36,402|Starting session...
+2020-01-31 12:19:07,731|Starting session... Done!
+2020-01-31 12:19:07,731|INFO|0514|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 576 --levels 8 --entries 10 --fraction 0.25 --dpartitions 3500 --mfgrid
+2020-01-31 12:19:07,732|Reading data...
+2020-01-31 12:22:03,876|Reading data... Done!
+2020-01-31 12:22:03,877|MF|0514|4|36|START|207.44|A.Points indexed              |  0.00|     0|0
+2020-01-31 12:22:04,295|MF|0514|4|36|  END|207.86|A.Points indexed              |  0.42|  1693|0
+2020-01-31 12:22:04,296|MF|0514|4|36|START|207.86|B.Pairs found                 |  0.00|     0|0
+2020-01-31 12:22:09,250|MF|0514|4|36|  END|212.81|B.Pairs found                 |  4.95| 11711|0
+2020-01-31 12:22:09,250|MF|0514|4|36|START|212.81|C.Centers found               |  0.00|     0|0
+2020-01-31 12:22:12,038|MF|0514|4|36|  END|215.60|C.Centers found               |  2.79| 23422|0
+2020-01-31 12:22:12,039|MF|0514|4|36|START|215.60|D.Disks found                 |  0.00|     0|0
+2020-01-31 12:22:23,225|MF|0514|4|36|  END|226.79|D.Disks found                 | 11.19|  9134|0
+2020-01-31 12:22:23,315|MF|0514|4|36|START|226.88|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 12:22:28,950|MF|0514|4|36|  END|232.51|E.Disks partitioned           |  5.63| 32696|0
+2020-01-31 12:22:28,951|MF|0514|4|36|START|232.51|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 12:22:31,697|MF|0514|4|36|  END|235.26|F.Maximal disks found         |  2.75|  1391|0
+2020-01-31 12:22:31,697|MAXIMALS|0514|36|4|20.0|3|1693|2278|27.82|1391
+2020-01-31 12:22:31,713|Closing session...
+2020-01-31 12:22:31,966|Closing session... Done!
+2020-01-31 12:22:35,439|Starting session...
+2020-01-31 12:23:06,816|Starting session... Done!
+2020-01-31 12:23:06,816|INFO|0515|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 576 --levels 8 --entries 10 --fraction 0.25 --dpartitions 4000 --mfgrid
+2020-01-31 12:23:06,816|Reading data...
+2020-01-31 12:23:19,607|Reading data... Done!
+2020-01-31 12:23:19,608|MF|0515|4|36|START| 44.13|A.Points indexed              |  0.00|     0|0
+2020-01-31 12:23:19,992|MF|0515|4|36|  END| 44.52|A.Points indexed              |  0.38|  1717|0
+2020-01-31 12:23:19,993|MF|0515|4|36|START| 44.52|B.Pairs found                 |  0.00|     0|0
+2020-01-31 12:23:24,834|MF|0515|4|36|  END| 49.36|B.Pairs found                 |  4.84| 11711|0
+2020-01-31 12:23:24,834|MF|0515|4|36|START| 49.36|C.Centers found               |  0.00|     0|0
+2020-01-31 12:23:27,802|MF|0515|4|36|  END| 52.33|C.Centers found               |  2.97| 23422|0
+2020-01-31 12:23:27,803|MF|0515|4|36|START| 52.33|D.Disks found                 |  0.00|     0|0
+2020-01-31 12:23:38,830|MF|0515|4|36|  END| 63.36|D.Disks found                 | 11.03|  9134|0
+2020-01-31 12:23:38,911|MF|0515|4|36|START| 63.44|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 12:23:44,050|MF|0515|4|36|  END| 68.58|E.Disks partitioned           |  5.14| 32814|0
+2020-01-31 12:23:44,050|MF|0515|4|36|START| 68.58|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 12:23:47,148|MF|0515|4|36|  END| 71.67|F.Maximal disks found         |  3.10|  1391|0
+2020-01-31 12:23:47,148|MAXIMALS|0515|36|4|20.0|3|1717|2539|27.54|1391
+2020-01-31 12:23:47,174|Closing session...
+2020-01-31 12:23:47,410|Closing session... Done!
+2020-01-31 12:23:50,838|Starting session...
+2020-01-31 12:24:22,131|Starting session... Done!
+2020-01-31 12:24:22,132|INFO|0516|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 720 --levels 8 --entries 10 --fraction 0.25 --dpartitions 1000 --mfgrid
+2020-01-31 12:24:22,132|Reading data...
+2020-01-31 12:24:31,456|Reading data... Done!
+2020-01-31 12:24:31,457|MF|0516|4|36|START| 40.58|A.Points indexed              |  0.00|     0|0
+2020-01-31 12:24:31,999|MF|0516|4|36|  END| 41.13|A.Points indexed              |  0.54|  2128|0
+2020-01-31 12:24:31,999|MF|0516|4|36|START| 41.13|B.Pairs found                 |  0.00|     0|0
+2020-01-31 12:24:37,277|MF|0516|4|36|  END| 46.40|B.Pairs found                 |  5.28| 11711|0
+2020-01-31 12:24:37,278|MF|0516|4|36|START| 46.41|C.Centers found               |  0.00|     0|0
+2020-01-31 12:24:40,973|MF|0516|4|36|  END| 50.10|C.Centers found               |  3.70| 23422|0
+2020-01-31 12:24:40,974|MF|0516|4|36|START| 50.10|D.Disks found                 |  0.00|     0|0
+2020-01-31 12:24:54,756|MF|0516|4|36|  END| 63.88|D.Disks found                 | 13.78|  9134|0
+2020-01-31 12:24:54,862|MF|0516|4|36|START| 63.99|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 12:24:59,548|MF|0516|4|36|  END| 68.68|E.Disks partitioned           |  4.69| 29204|0
+2020-01-31 12:24:59,548|MF|0516|4|36|START| 68.68|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 12:25:01,486|MF|0516|4|36|  END| 70.61|F.Maximal disks found         |  1.94|  1391|0
+2020-01-31 12:25:01,486|MAXIMALS|0516|36|4|20.0|3|2128|1072|30.03|1391
+2020-01-31 12:25:01,499|Closing session...
+2020-01-31 12:25:01,736|Closing session... Done!
+2020-01-31 12:25:05,183|Starting session...
+2020-01-31 12:25:36,508|Starting session... Done!
+2020-01-31 12:25:36,509|INFO|0517|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 720 --levels 8 --entries 10 --fraction 0.25 --dpartitions 1500 --mfgrid
+2020-01-31 12:25:36,509|Reading data...
+2020-01-31 12:25:48,417|Reading data... Done!
+2020-01-31 12:25:48,418|MF|0517|4|36|START| 43.20|A.Points indexed              |  0.00|     0|0
+2020-01-31 12:25:48,816|MF|0517|4|36|  END| 43.60|A.Points indexed              |  0.40|  2095|0
+2020-01-31 12:25:48,816|MF|0517|4|36|START| 43.60|B.Pairs found                 |  0.00|     0|0
+2020-01-31 12:25:54,557|MF|0517|4|36|  END| 49.34|B.Pairs found                 |  5.74| 11711|0
+2020-01-31 12:25:54,557|MF|0517|4|36|START| 49.34|C.Centers found               |  0.00|     0|0
+2020-01-31 12:25:57,664|MF|0517|4|36|  END| 52.44|C.Centers found               |  3.11| 23422|0
+2020-01-31 12:25:57,664|MF|0517|4|36|START| 52.44|D.Disks found                 |  0.00|     0|0
+2020-01-31 12:26:09,746|MF|0517|4|36|  END| 64.53|D.Disks found                 | 12.08|  9134|0
+2020-01-31 12:26:09,851|MF|0517|4|36|START| 64.63|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 12:26:14,741|MF|0517|4|36|  END| 69.52|E.Disks partitioned           |  4.89| 30698|0
+2020-01-31 12:26:14,741|MF|0517|4|36|START| 69.52|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 12:26:18,641|MF|0517|4|36|  END| 73.42|F.Maximal disks found         |  3.90|  1391|0
+2020-01-31 12:26:18,642|MAXIMALS|0517|36|4|20.0|3|2095|1453|30.22|1391
+2020-01-31 12:26:18,656|Closing session...
+2020-01-31 12:26:18,865|Closing session... Done!
+2020-01-31 12:26:22,392|Starting session...
+2020-01-31 12:26:53,702|Starting session... Done!
+2020-01-31 12:26:53,703|INFO|0518|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 720 --levels 8 --entries 10 --fraction 0.25 --dpartitions 2000 --mfgrid
+2020-01-31 12:26:53,703|Reading data...
+2020-01-31 12:27:05,683|Reading data... Done!
+2020-01-31 12:27:05,684|MF|0518|4|36|START| 43.25|A.Points indexed              |  0.00|     0|0
+2020-01-31 12:27:06,060|MF|0518|4|36|  END| 43.63|A.Points indexed              |  0.38|  2197|0
+2020-01-31 12:27:06,060|MF|0518|4|36|START| 43.63|B.Pairs found                 |  0.00|     0|0
+2020-01-31 12:27:11,741|MF|0518|4|36|  END| 49.31|B.Pairs found                 |  5.68| 11711|0
+2020-01-31 12:27:11,741|MF|0518|4|36|START| 49.31|C.Centers found               |  0.00|     0|0
+2020-01-31 12:27:15,531|MF|0518|4|36|  END| 53.10|C.Centers found               |  3.79| 23422|0
+2020-01-31 12:27:15,531|MF|0518|4|36|START| 53.10|D.Disks found                 |  0.00|     0|0
+2020-01-31 12:27:30,481|MF|0518|4|36|  END| 68.05|D.Disks found                 | 14.95|  9134|0
+2020-01-31 12:27:30,589|MF|0518|4|36|START| 68.16|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 12:27:35,892|MF|0518|4|36|  END| 73.46|E.Disks partitioned           |  5.30| 30981|0
+2020-01-31 12:27:35,892|MF|0518|4|36|START| 73.46|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 12:27:38,462|MF|0518|4|36|  END| 76.03|F.Maximal disks found         |  2.57|  1391|0
+2020-01-31 12:27:38,462|MAXIMALS|0518|36|4|20.0|3|2197|1636|32.78|1391
+2020-01-31 12:27:38,483|Closing session...
+2020-01-31 12:27:38,870|Closing session... Done!
+2020-01-31 12:27:42,380|Starting session...
+2020-01-31 12:28:13,769|Starting session... Done!
+2020-01-31 12:28:13,770|INFO|0519|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 720 --levels 8 --entries 10 --fraction 0.25 --dpartitions 2500 --mfgrid
+2020-01-31 12:28:13,770|Reading data...
+2020-01-31 12:28:25,575|Reading data... Done!
+2020-01-31 12:28:25,576|MF|0519|4|36|START| 43.16|A.Points indexed              |  0.00|     0|0
+2020-01-31 12:28:25,958|MF|0519|4|36|  END| 43.54|A.Points indexed              |  0.38|  2173|0
+2020-01-31 12:28:25,958|MF|0519|4|36|START| 43.54|B.Pairs found                 |  0.00|     0|0
+2020-01-31 12:28:31,630|MF|0519|4|36|  END| 49.21|B.Pairs found                 |  5.67| 11711|0
+2020-01-31 12:28:31,631|MF|0519|4|36|START| 49.21|C.Centers found               |  0.00|     0|0
+2020-01-31 12:28:35,276|MF|0519|4|36|  END| 52.86|C.Centers found               |  3.65| 23422|0
+2020-01-31 12:28:35,277|MF|0519|4|36|START| 52.86|D.Disks found                 |  0.00|     0|0
+2020-01-31 12:28:55,987|MF|0519|4|36|  END| 73.57|D.Disks found                 | 20.71|  9134|0
+2020-01-31 12:28:56,100|MF|0519|4|36|START| 73.68|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 12:29:01,930|MF|0519|4|36|  END| 79.51|E.Disks partitioned           |  5.83| 31833|0
+2020-01-31 12:29:01,930|MF|0519|4|36|START| 79.51|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 12:29:04,434|MF|0519|4|36|  END| 82.02|F.Maximal disks found         |  2.50|  1391|0
+2020-01-31 12:29:04,435|MAXIMALS|0519|36|4|20.0|3|2173|1912|38.86|1391
+2020-01-31 12:29:04,467|Closing session...
+2020-01-31 12:29:04,666|Closing session... Done!
+2020-01-31 12:29:08,111|Starting session...
+2020-01-31 12:29:39,580|Starting session... Done!
+2020-01-31 12:29:39,580|INFO|0520|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 720 --levels 8 --entries 10 --fraction 0.25 --dpartitions 3000 --mfgrid
+2020-01-31 12:29:39,581|Reading data...
+2020-01-31 12:29:51,277|Reading data... Done!
+2020-01-31 12:29:51,277|MF|0520|4|36|START| 43.13|A.Points indexed              |  0.00|     0|0
+2020-01-31 12:29:51,660|MF|0520|4|36|  END| 43.52|A.Points indexed              |  0.38|  2155|0
+2020-01-31 12:29:51,661|MF|0520|4|36|START| 43.52|B.Pairs found                 |  0.00|     0|0
+2020-01-31 12:29:57,315|MF|0520|4|36|  END| 49.17|B.Pairs found                 |  5.65| 11711|0
+2020-01-31 12:29:57,316|MF|0520|4|36|START| 49.17|C.Centers found               |  0.00|     0|0
+2020-01-31 12:30:00,582|MF|0520|4|36|  END| 52.44|C.Centers found               |  3.27| 23422|0
+2020-01-31 12:30:00,583|MF|0520|4|36|START| 52.44|D.Disks found                 |  0.00|     0|0
+2020-01-31 12:30:14,574|MF|0520|4|36|  END| 66.43|D.Disks found                 | 13.99|  9134|0
+2020-01-31 12:30:14,685|MF|0520|4|36|START| 66.54|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 12:30:20,428|MF|0520|4|36|  END| 72.28|E.Disks partitioned           |  5.74| 32402|0
+2020-01-31 12:30:20,428|MF|0520|4|36|START| 72.28|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 12:30:23,414|MF|0520|4|36|  END| 75.27|F.Maximal disks found         |  2.99|  1391|0
+2020-01-31 12:30:23,415|MAXIMALS|0520|36|4|20.0|3|2155|2110|32.14|1391
+2020-01-31 12:30:23,428|Closing session...
+2020-01-31 12:30:23,628|Closing session... Done!
+2020-01-31 12:30:27,113|Starting session...
+2020-01-31 12:30:58,441|Starting session... Done!
+2020-01-31 12:30:58,442|INFO|0521|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 720 --levels 8 --entries 10 --fraction 0.25 --dpartitions 3500 --mfgrid
+2020-01-31 12:30:58,442|Reading data...
+2020-01-31 12:31:07,851|Reading data... Done!
+2020-01-31 12:31:07,853|MF|0521|4|36|START| 40.71|A.Points indexed              |  0.00|     0|0
+2020-01-31 12:31:08,430|MF|0521|4|36|  END| 41.28|A.Points indexed              |  0.58|  2248|0
+2020-01-31 12:31:08,430|MF|0521|4|36|START| 41.28|B.Pairs found                 |  0.00|     0|0
+2020-01-31 12:31:13,819|MF|0521|4|36|  END| 46.67|B.Pairs found                 |  5.39| 11711|0
+2020-01-31 12:31:13,820|MF|0521|4|36|START| 46.67|C.Centers found               |  0.00|     0|0
+2020-01-31 12:31:25,672|MF|0521|4|36|  END| 58.53|C.Centers found               | 11.85| 23422|0
+2020-01-31 12:31:25,673|MF|0521|4|36|START| 58.53|D.Disks found                 |  0.00|     0|0
+2020-01-31 12:31:38,969|MF|0521|4|36|  END| 71.82|D.Disks found                 | 13.30|  9134|0
+2020-01-31 12:31:39,083|MF|0521|4|36|START| 71.94|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 12:31:45,326|MF|0521|4|36|  END| 78.18|E.Disks partitioned           |  6.24| 32714|0
+2020-01-31 12:31:45,326|MF|0521|4|36|START| 78.18|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 12:31:48,697|MF|0521|4|36|  END| 81.55|F.Maximal disks found         |  3.37|  1391|0
+2020-01-31 12:31:48,697|MAXIMALS|0521|36|4|20.0|3|2248|2410|40.84|1391
+2020-01-31 12:31:48,712|Closing session...
+2020-01-31 12:31:48,989|Closing session... Done!
+2020-01-31 12:31:52,439|Starting session...
+2020-01-31 12:32:23,764|Starting session... Done!
+2020-01-31 12:32:23,765|INFO|0522|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=16g --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class MF --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar --num-executors 36 --executor-cores 4 --executor-memory 12g /home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv --epsilon 20 --mu 3 --mfpartitions 720 --levels 8 --entries 10 --fraction 0.25 --dpartitions 4000 --mfgrid
+2020-01-31 12:32:23,765|Reading data...
+2020-01-31 12:32:35,497|Reading data... Done!
+2020-01-31 12:32:35,498|MF|0522|4|36|START| 43.03|A.Points indexed              |  0.00|     0|0
+2020-01-31 12:32:35,885|MF|0522|4|36|  END| 43.41|A.Points indexed              |  0.39|  2134|0
+2020-01-31 12:32:35,886|MF|0522|4|36|START| 43.41|B.Pairs found                 |  0.00|     0|0
+2020-01-31 12:32:41,512|MF|0522|4|36|  END| 49.04|B.Pairs found                 |  5.63| 11711|0
+2020-01-31 12:32:41,512|MF|0522|4|36|START| 49.04|C.Centers found               |  0.00|     0|0
+2020-01-31 12:32:45,100|MF|0522|4|36|  END| 52.63|C.Centers found               |  3.59| 23422|0
+2020-01-31 12:32:45,101|MF|0522|4|36|START| 52.63|D.Disks found                 |  0.00|     0|0
+2020-01-31 12:32:57,096|MF|0522|4|36|  END| 64.62|D.Disks found                 | 11.99|  9134|0
+2020-01-31 12:32:57,192|MF|0522|4|36|START| 64.72|E.Disks partitioned           |  0.00|     0|0
+2020-01-31 12:33:03,030|MF|0522|4|36|  END| 70.56|E.Disks partitioned           |  5.84| 32805|0
+2020-01-31 12:33:03,031|MF|0522|4|36|START| 70.56|F.Maximal disks found         |  0.00|     0|0
+2020-01-31 12:33:05,861|MF|0522|4|36|  END| 73.39|F.Maximal disks found         |  2.83|  1391|0
+2020-01-31 12:33:05,861|MAXIMALS|0522|36|4|20.0|3|2134|2470|30.36|1391
+2020-01-31 12:33:05,882|Closing session...
+2020-01-31 12:33:06,088|Closing session... Done!

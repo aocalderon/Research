@@ -103,6 +103,18 @@ Scripts/Scala/ICPE/.metals/
 #/.bloop/
 #/.metals/
 
+Scripts/Scala/Geo/target/*
+Scripts/Scala/Geo/project/*
+Scripts/Scala/Geo/.idea/*
+Scripts/Scala/Geo/.idea/workspace.xml
+Scripts/Scala/Geo/.ensime
+Scripts/Scala/Geo/.ensime_cache/*
+Scripts/Scala/Geo/.classpath
+Scripts/Scala/Geo/.project
+Scripts/Scala/Geo/.settings/*
+Scripts/Scala/Geo/.bloop/
+Scripts/Scala/Geo/.metals/
+
 utils/Misc/target/*
 utils/Misc/project/*
 utils/Misc/.idea/*
