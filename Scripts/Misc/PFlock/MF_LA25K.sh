@@ -10,8 +10,11 @@ MF_LEVELS=8
 MF_FRACTION=0.25
 INPUT_PATH=/user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv
 MASTER=yarn
-CORES=4
-EXECUTORS=36
+
+EXECUTORS=18
+CORES=3
+DMEMORY=18g
+EMEMORY=10g
 
 SPARK_JARS=/home/acald013/Spark/2.4/jars/
 CLASS_JAR=/home/acald013/Research/PFlock/target/scala-2.11/pflock_2.11-0.1.jar
@@ -21,12 +24,8 @@ spark-submit \
     --files $LOG_FILE \
     --jars ${SPARK_JARS}geospark-1.2.0.jar,${SPARK_JARS}scallop_2.11-3.1.5.jar \
     --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:$LOG_FILE \
-    --master $MASTER \
-    --deploy-mode client \
-    --num-executors $EXECUTORS \
-    --executor-cores $CORES \
-    --driver-memory 16g \
-    --executor-memory 12g \
+    --master $MASTER --deploy-mode client \
+    --num-executors $EXECUTORS --executor-cores $CORES --executor-memory $EMEMORY --driver-memory $DMEMORY \
     --class MF $CLASS_JAR \
     --input $INPUT_PATH \
     --epsilon $EPSILON --mu $MU \

@@ -31,7 +31,7 @@ object GeoTesterRDD{
     implicit val params = new GeoTesterConf(args)
     implicit val geofactory = new GeometryFactory()
     implicit val spark = SparkSession.builder()
-      .appName("GeoTester")
+      .appName("GeoTesterRDD")
       .config("spark.serializer", classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .getOrCreate()
@@ -44,11 +44,14 @@ object GeoTesterRDD{
       case "kdbtree"  => GridType.KDBTREE
       case "quadtree" => GridType.QUADTREE
     }
-    val precision = 0.001
     implicit val conf = spark.sparkContext.getConf
     logger.info(s"${appId}|${System.getProperty("sun.java.command")}")
     def getConf(property: String)(implicit conf: SparkConf): String = conf.get(property)
-    def appId: String = getConf("spark.app.id")
+    def appId: String = if(getConf("spark.master").contains("local")){
+      getConf("spark.app.id")
+    } else {
+      getConf("spark.app.id").takeRight(4)
+    }
     def header(msg: String): String = s"GeoTesterRDD|${appId}|$msg"
 
     logger.info("Starting session... Done!")
@@ -76,13 +79,14 @@ object GeoTesterRDD{
       pointsRDD
     }
 
+    val distance = params.epsilon() + params.precision()    
     val pairs = timer{header("Distance self-join")}{
-      val pointsBuffer = new CircleRDD(points, params.epsilon() + precision)
+      points.spatialPartitioning(gridtype, params.partitions())
+      points.spatialPartitionedRDD.cache()
+      val pointsBuffer = new CircleRDD(points, distance)
       pointsBuffer.analyze()
       pointsBuffer.spatialPartitioning(points.getPartitioner)
-      points.spatialPartitioning(gridtype, params.partitions())
       points.buildIndex(indextype, true)
-      points.spatialPartitionedRDD.cache()
 
       val considerBoundary = true
       val usingIndex = true

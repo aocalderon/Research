@@ -1,5 +1,5 @@
-import org.apache.spark.scheduler.{SparkListener,
-  SparkListenerApplicationStart, SparkListenerJobEnd, SparkListenerJobStart,
+import org.apache.spark.scheduler.{SparkListener, SparkListenerApplicationStart,
+  SparkListenerJobEnd, SparkListenerJobStart,
   SparkListenerStageSubmitted, SparkListenerStageCompleted,
   SparkListenerTaskStart, SparkListenerTaskEnd}
 import org.slf4j.{Logger, LoggerFactory}
@@ -11,22 +11,27 @@ class TaskSparkListener extends SparkListener {
     override def toString: String = s"STAGEINFO|$stageId|$name|$duration|$ntasks|$jobId|$appId|$details"
   }
 
+  case class Job(jobId: Int, start: Long, stageIds: String, appId: String)
+
   var stage = Stage(0,"",0,0,"",0,"")
-  var jobStart = 0L
-  var stageIds = ""
+  var job   = Job(0,0,"","")
 
   override def onApplicationStart(app: SparkListenerApplicationStart): Unit = {
-    val appId = app.appId.get
+    val appId = if(app.appId.get.contains("local")){
+      app.appId.get
+    } else {
+      app.appId.get.takeRight(4)
+    }
+    job   = job.copy(appId = appId)
     stage = stage.copy(appId = appId)
   }
 
-  override def onJobStart(job: SparkListenerJobStart): Unit = {
-    jobStart = job.time
-    stageIds = job.stageIds.mkString(" ")
+  override def onJobStart(jobStart: SparkListenerJobStart): Unit = {
+    job = job.copy(jobId = jobStart.jobId, start = jobStart.time, stageIds = jobStart.stageIds.mkString(" "))
   }
 
-  override def onJobEnd(job: SparkListenerJobEnd): Unit = {
-    logger.info(s"JOBINFO|${job.jobId}|${(job.time - jobStart) / 1e3}|${stageIds}|${stage.appId}")
+  override def onJobEnd(jobEnd: SparkListenerJobEnd): Unit = {
+    logger.info(s"JOBINFO|${job.jobId}|${(jobEnd.time - job.start) / 1e3}|${job.stageIds}|${job.appId}")
   }
 
   override def onStageSubmitted(submitted: SparkListenerStageSubmitted): Unit = {
