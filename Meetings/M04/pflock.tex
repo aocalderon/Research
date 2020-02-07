@@ -90,6 +90,34 @@
     \end{frame}
 }
 
+\begin{frame}{Experiment setup...}
+    \begin{enumerate}
+        \item Running a distance self-join to find the pairs of points far each other less than $\varepsilon$.
+        \item Using LA\_25K dataset (time instant 19), quadtree partitioner and quadtree local indexing.
+        \item $\varepsilon=20$,  $partitions \approx 150$ (3x number of available cores).
+        \item 18 executors, 3 cores each.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Partitions performace...}
+    \begin{figure}
+        \includegraphics[width=0.725\textwidth]{figures/Tasks}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}{Finding pairs algorithm...}
+    \begin{figure}
+        \includegraphics[trim=1cm 15cm 1cm 3cm, clip, width=1\textwidth]{figures/pseudocode}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{GeoSpark Partitioning algorithm...}
+    \begin{figure}
+        \includegraphics[trim=3cm 12cm 3cm 8cm, clip, width=1\textwidth]{figures/Partitioning}
+    \end{figure}
+\end{frame}
+
 \begin{frame}{GeoSpark GSJoin algorithm...}
     \begin{figure}
         \includegraphics[trim=3cm 11.5cm 3cm 8cm, clip, width=1\textwidth]{figures/GSJoin}
