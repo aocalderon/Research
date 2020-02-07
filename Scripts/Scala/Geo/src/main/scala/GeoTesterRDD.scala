@@ -60,10 +60,11 @@ object GeoTesterRDD{
       val pointsSchema = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
       val points = spark.read.schema(pointsSchema)
         .option("delimiter", "\t").option("header", false)
-        .csv(params.input()).as[ST_Point].rdd.cache
-      n(points.count(), "Raw points")
+        .csv(params.input()).as[ST_Point].rdd
       points
     }
+    pointsRaw.cache
+    n(pointsRaw.count(), "Raw points")
 
     val points = timer{header("Casting geometries")}{
       val pointsRDD = new SpatialRDD[Point]

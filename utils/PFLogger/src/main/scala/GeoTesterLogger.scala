@@ -123,7 +123,7 @@ object GeoTesterLogger {
     }
 
     save{"/home/acald013/Research/tmp/GeoTesterRDD_tasks.txt"}{
-      tasks.select($"stageId",$"stage",$"ntasks",$"taskId",$"host",$"locality",$"duration",$"jobId",$"appId")
+      tasks.select($"stageId",$"stage",$"ntasks",$"taskId",$"host",$"locality",$"duration", $"rRead", $"bRead", $"rWritten", $"bWritten", $"rShuffleRead", $"rShuffleWritten", $"jobId",$"appId")
         .map{ t =>
           s"${t.getString(0)}\t" +
           s"${t.getString(1)}\t" +
@@ -133,7 +133,13 @@ object GeoTesterLogger {
           s"${t.getString(5)}\t" +
           s"${t.getString(6)}\t" +
           s"${t.getString(7)}\t" +
-          s"${t.getString(8)}\n" 
+          s"${t.getString(8)}\t" +
+          s"${t.getString(9)}\t" +
+          s"${t.getString(10)}\t" +
+          s"${t.getString(11)}\t" +
+          s"${t.getString(12)}\t" +
+          s"${t.getString(13)}\t" +
+          s"${t.getString(14)}\n" 
         }
         .collect()          
     }
