@@ -1,0 +1,1176 @@
+0272	4.Flocks updated              	  2.11	20	60	800
+0272	3.Flocks reported             	  1.46	20	60	800
+0272	2.Join done                   	  1.76	20	60	800
+0272	1.Getting maximal disks       	 24.27	20	60	800
+0272	4.Flocks updated              	  2.00	19	60	800
+0272	3.Flocks reported             	  1.71	19	60	800
+0272	2.Join done                   	  2.08	19	60	800
+0272	1.Getting maximal disks       	 20.11	19	60	800
+0272	4.Flocks updated              	  1.92	18	60	800
+0272	3.Flocks reported             	  1.26	18	60	800
+0272	2.Join done                   	  2.11	18	60	800
+0272	1.Getting maximal disks       	 19.21	18	60	800
+0272	4.Flocks updated              	  2.02	17	60	800
+0272	3.Flocks reported             	  1.69	17	60	800
+0272	2.Join done                   	  1.59	17	60	800
+0272	1.Getting maximal disks       	 20.42	17	60	800
+0272	4.Flocks updated              	  2.30	16	60	800
+0272	3.Flocks reported             	  0.29	16	60	800
+0272	2.Join done                   	  3.26	16	60	800
+0272	1.Getting maximal disks       	 21.06	16	60	800
+0272	4.Flocks updated              	  2.56	15	60	800
+0272	3.Flocks reported             	  0.37	15	60	800
+0272	2.Join done                   	  4.08	15	60	800
+0272	1.Getting maximal disks       	 33.24	15	60	800
+0273	4.Flocks updated              	  2.26	20	60	900
+0273	3.Flocks reported             	  1.33	20	60	900
+0273	2.Join done                   	  1.81	20	60	900
+0273	1.Getting maximal disks       	 24.59	20	60	900
+0273	4.Flocks updated              	  1.97	19	60	900
+0273	3.Flocks reported             	  1.70	19	60	900
+0273	2.Join done                   	  1.89	19	60	900
+0273	1.Getting maximal disks       	 21.19	19	60	900
+0273	4.Flocks updated              	  1.89	18	60	900
+0273	3.Flocks reported             	  1.87	18	60	900
+0273	2.Join done                   	  1.79	18	60	900
+0273	1.Getting maximal disks       	 30.83	18	60	900
+0273	4.Flocks updated              	  4.19	17	60	900
+0273	3.Flocks reported             	  2.10	17	60	900
+0273	2.Join done                   	  6.34	17	60	900
+0273	1.Getting maximal disks       	 23.56	17	60	900
+0273	4.Flocks updated              	  1.90	16	60	900
+0273	3.Flocks reported             	  0.29	16	60	900
+0273	2.Join done                   	  3.63	16	60	900
+0273	1.Getting maximal disks       	 23.40	16	60	900
+0273	4.Flocks updated              	  2.74	15	60	900
+0273	3.Flocks reported             	  0.73	15	60	900
+0273	2.Join done                   	  3.88	15	60	900
+0273	1.Getting maximal disks       	 39.49	15	60	900
+0274	4.Flocks updated              	  2.29	20	60	950
+0274	3.Flocks reported             	  2.27	20	60	950
+0274	2.Join done                   	  1.95	20	60	950
+0274	1.Getting maximal disks       	 23.73	20	60	950
+0274	4.Flocks updated              	  2.88	19	60	950
+0274	3.Flocks reported             	  1.62	19	60	950
+0274	2.Join done                   	  5.05	19	60	950
+0274	1.Getting maximal disks       	 24.06	19	60	950
+0274	4.Flocks updated              	  1.89	18	60	950
+0274	3.Flocks reported             	  1.28	18	60	950
+0274	2.Join done                   	  1.74	18	60	950
+0274	1.Getting maximal disks       	 23.18	18	60	950
+0274	4.Flocks updated              	  2.75	17	60	950
+0274	3.Flocks reported             	  1.88	17	60	950
+0274	2.Join done                   	  3.18	17	60	950
+0274	1.Getting maximal disks       	 22.36	17	60	950
+0274	4.Flocks updated              	  2.31	16	60	950
+0274	3.Flocks reported             	  0.30	16	60	950
+0274	2.Join done                   	  4.50	16	60	950
+0274	1.Getting maximal disks       	 25.21	16	60	950
+0274	4.Flocks updated              	  2.78	15	60	950
+0274	3.Flocks reported             	  0.66	15	60	950
+0274	2.Join done                   	  4.54	15	60	950
+0274	1.Getting maximal disks       	 35.85	15	60	950
+0275	4.Flocks updated              	  2.14	20	60	1000
+0275	3.Flocks reported             	  1.38	20	60	1000
+0275	2.Join done                   	  1.51	20	60	1000
+0275	1.Getting maximal disks       	 27.11	20	60	1000
+0275	4.Flocks updated              	  1.84	19	60	1000
+0275	3.Flocks reported             	  1.36	19	60	1000
+0275	2.Join done                   	  1.60	19	60	1000
+0275	1.Getting maximal disks       	 25.10	19	60	1000
+0275	4.Flocks updated              	  2.28	18	60	1000
+0275	3.Flocks reported             	  1.38	18	60	1000
+0275	2.Join done                   	  1.87	18	60	1000
+0275	1.Getting maximal disks       	 21.89	18	60	1000
+0275	4.Flocks updated              	  3.48	17	60	1000
+0275	3.Flocks reported             	  1.61	17	60	1000
+0275	2.Join done                   	  2.16	17	60	1000
+0275	1.Getting maximal disks       	 22.83	17	60	1000
+0275	4.Flocks updated              	  2.42	16	60	1000
+0275	3.Flocks reported             	  0.33	16	60	1000
+0275	2.Join done                   	  3.46	16	60	1000
+0275	1.Getting maximal disks       	 22.94	16	60	1000
+0275	4.Flocks updated              	  2.76	15	60	1000
+0275	3.Flocks reported             	  0.50	15	60	1000
+0275	2.Join done                   	  3.08	15	60	1000
+0275	1.Getting maximal disks       	 38.21	15	60	1000
+0276	4.Flocks updated              	  1.65	20	60	1050
+0276	3.Flocks reported             	  1.96	20	60	1050
+0276	2.Join done                   	  1.58	20	60	1050
+0276	1.Getting maximal disks       	 27.32	20	60	1050
+0276	4.Flocks updated              	  2.40	19	60	1050
+0276	3.Flocks reported             	  1.64	19	60	1050
+0276	2.Join done                   	  1.93	19	60	1050
+0276	1.Getting maximal disks       	 25.54	19	60	1050
+0276	4.Flocks updated              	  1.61	18	60	1050
+0276	3.Flocks reported             	  1.46	18	60	1050
+0276	2.Join done                   	  1.61	18	60	1050
+0276	1.Getting maximal disks       	 27.52	18	60	1050
+0276	4.Flocks updated              	  2.49	17	60	1050
+0276	3.Flocks reported             	  1.40	17	60	1050
+0276	2.Join done                   	  4.45	17	60	1050
+0276	1.Getting maximal disks       	 24.66	17	60	1050
+0276	4.Flocks updated              	  2.93	16	60	1050
+0276	3.Flocks reported             	  0.31	16	60	1050
+0276	2.Join done                   	  2.40	16	60	1050
+0276	1.Getting maximal disks       	 26.08	16	60	1050
+0276	4.Flocks updated              	  2.64	15	60	1050
+0276	3.Flocks reported             	  0.36	15	60	1050
+0276	2.Join done                   	  2.69	15	60	1050
+0276	1.Getting maximal disks       	 37.36	15	60	1050
+0277	4.Flocks updated              	  1.63	20	60	1100
+0277	3.Flocks reported             	  1.25	20	60	1100
+0277	2.Join done                   	  1.56	20	60	1100
+0277	1.Getting maximal disks       	 26.72	20	60	1100
+0277	4.Flocks updated              	  1.86	19	60	1100
+0277	3.Flocks reported             	  1.46	19	60	1100
+0277	2.Join done                   	  1.91	19	60	1100
+0277	1.Getting maximal disks       	 26.94	19	60	1100
+0277	4.Flocks updated              	  1.81	18	60	1100
+0277	3.Flocks reported             	  1.59	18	60	1100
+0277	2.Join done                   	  1.69	18	60	1100
+0277	1.Getting maximal disks       	 28.15	18	60	1100
+0277	4.Flocks updated              	  2.87	17	60	1100
+0277	3.Flocks reported             	  2.50	17	60	1100
+0277	2.Join done                   	  4.67	17	60	1100
+0277	1.Getting maximal disks       	 24.13	17	60	1100
+0277	4.Flocks updated              	  1.91	16	60	1100
+0277	3.Flocks reported             	  0.40	16	60	1100
+0277	2.Join done                   	  2.10	16	60	1100
+0277	1.Getting maximal disks       	 25.91	16	60	1100
+0277	4.Flocks updated              	  2.45	15	60	1100
+0277	3.Flocks reported             	  0.40	15	60	1100
+0277	2.Join done                   	  3.44	15	60	1100
+0277	1.Getting maximal disks       	 38.35	15	60	1100
+0278	4.Flocks updated              	  2.30	20	60	1200
+0278	3.Flocks reported             	  1.62	20	60	1200
+0278	2.Join done                   	  1.94	20	60	1200
+0278	1.Getting maximal disks       	 29.50	20	60	1200
+0278	4.Flocks updated              	  2.12	19	60	1200
+0278	3.Flocks reported             	  1.51	19	60	1200
+0278	2.Join done                   	  2.15	19	60	1200
+0278	1.Getting maximal disks       	 29.16	19	60	1200
+0278	4.Flocks updated              	  2.31	18	60	1200
+0278	3.Flocks reported             	  1.30	18	60	1200
+0278	2.Join done                   	  3.27	18	60	1200
+0278	1.Getting maximal disks       	 30.52	18	60	1200
+0278	4.Flocks updated              	  1.90	17	60	1200
+0278	3.Flocks reported             	  1.67	17	60	1200
+0278	2.Join done                   	  1.95	17	60	1200
+0278	1.Getting maximal disks       	 30.39	17	60	1200
+0278	4.Flocks updated              	  2.59	16	60	1200
+0278	3.Flocks reported             	  0.29	16	60	1200
+0278	2.Join done                   	  1.46	16	60	1200
+0278	1.Getting maximal disks       	 26.34	16	60	1200
+0278	4.Flocks updated              	  2.52	15	60	1200
+0278	3.Flocks reported             	  0.43	15	60	1200
+0278	2.Join done                   	  3.36	15	60	1200
+0278	1.Getting maximal disks       	 38.44	15	60	1200
+0279	4.Flocks updated              	  2.00	20	80	800
+0279	3.Flocks reported             	  1.54	20	80	800
+0279	2.Join done                   	  1.83	20	80	800
+0279	1.Getting maximal disks       	 21.87	20	80	800
+0279	4.Flocks updated              	  2.40	19	80	800
+0279	3.Flocks reported             	  2.28	19	80	800
+0279	2.Join done                   	  1.79	19	80	800
+0279	1.Getting maximal disks       	 22.23	19	80	800
+0279	4.Flocks updated              	  4.23	18	80	800
+0279	3.Flocks reported             	  1.74	18	80	800
+0279	2.Join done                   	  7.14	18	80	800
+0279	1.Getting maximal disks       	 20.33	18	80	800
+0279	4.Flocks updated              	  2.85	17	80	800
+0279	3.Flocks reported             	  1.52	17	80	800
+0279	2.Join done                   	  2.41	17	80	800
+0279	1.Getting maximal disks       	 22.52	17	80	800
+0279	4.Flocks updated              	  2.24	16	80	800
+0279	3.Flocks reported             	  0.40	16	80	800
+0279	2.Join done                   	  1.72	16	80	800
+0279	1.Getting maximal disks       	 22.08	16	80	800
+0279	4.Flocks updated              	  2.70	15	80	800
+0279	3.Flocks reported             	  0.51	15	80	800
+0279	2.Join done                   	  3.35	15	80	800
+0279	1.Getting maximal disks       	 33.57	15	80	800
+0280	4.Flocks updated              	  2.35	20	80	900
+0280	3.Flocks reported             	  2.04	20	80	900
+0280	2.Join done                   	  1.95	20	80	900
+0280	1.Getting maximal disks       	 26.46	20	80	900
+0280	4.Flocks updated              	  2.04	19	80	900
+0280	3.Flocks reported             	  2.23	19	80	900
+0280	2.Join done                   	  1.93	19	80	900
+0280	1.Getting maximal disks       	 24.38	19	80	900
+0280	4.Flocks updated              	  2.30	18	80	900
+0280	3.Flocks reported             	  1.48	18	80	900
+0280	2.Join done                   	  1.84	18	80	900
+0280	1.Getting maximal disks       	 21.56	18	80	900
+0280	4.Flocks updated              	  2.17	17	80	900
+0280	3.Flocks reported             	  1.59	17	80	900
+0280	2.Join done                   	  2.04	17	80	900
+0280	1.Getting maximal disks       	 22.92	17	80	900
+0280	4.Flocks updated              	  3.10	16	80	900
+0280	3.Flocks reported             	  0.38	16	80	900
+0280	2.Join done                   	  4.11	16	80	900
+0280	1.Getting maximal disks       	 23.94	16	80	900
+0280	4.Flocks updated              	  3.18	15	80	900
+0280	3.Flocks reported             	  0.45	15	80	900
+0280	2.Join done                   	  3.75	15	80	900
+0280	1.Getting maximal disks       	 35.16	15	80	900
+0281	4.Flocks updated              	  2.44	20	80	950
+0281	3.Flocks reported             	  1.72	20	80	950
+0281	2.Join done                   	  1.99	20	80	950
+0281	1.Getting maximal disks       	 25.90	20	80	950
+0281	4.Flocks updated              	  3.02	19	80	950
+0281	3.Flocks reported             	  1.76	19	80	950
+0281	2.Join done                   	  1.96	19	80	950
+0281	1.Getting maximal disks       	 23.65	19	80	950
+0281	4.Flocks updated              	  2.28	18	80	950
+0281	3.Flocks reported             	  1.74	18	80	950
+0281	2.Join done                   	  2.31	18	80	950
+0281	1.Getting maximal disks       	 23.35	18	80	950
+0281	4.Flocks updated              	  2.95	17	80	950
+0281	3.Flocks reported             	  1.68	17	80	950
+0281	2.Join done                   	  3.00	17	80	950
+0281	1.Getting maximal disks       	 24.19	17	80	950
+0281	4.Flocks updated              	  3.12	16	80	950
+0281	3.Flocks reported             	  0.38	16	80	950
+0281	2.Join done                   	  4.32	16	80	950
+0281	1.Getting maximal disks       	 22.18	16	80	950
+0281	4.Flocks updated              	  2.93	15	80	950
+0281	3.Flocks reported             	  0.46	15	80	950
+0281	2.Join done                   	  4.60	15	80	950
+0281	1.Getting maximal disks       	 36.45	15	80	950
+0282	4.Flocks updated              	  1.92	20	80	1000
+0282	3.Flocks reported             	  1.86	20	80	1000
+0282	2.Join done                   	  1.97	20	80	1000
+0282	1.Getting maximal disks       	 25.67	20	80	1000
+0282	4.Flocks updated              	  2.25	19	80	1000
+0282	3.Flocks reported             	  1.68	19	80	1000
+0282	2.Join done                   	  2.19	19	80	1000
+0282	1.Getting maximal disks       	 26.67	19	80	1000
+0282	4.Flocks updated              	  3.50	18	80	1000
+0282	3.Flocks reported             	  1.69	18	80	1000
+0282	2.Join done                   	  2.95	18	80	1000
+0282	1.Getting maximal disks       	 24.81	18	80	1000
+0282	4.Flocks updated              	  2.04	17	80	1000
+0282	3.Flocks reported             	  2.23	17	80	1000
+0282	2.Join done                   	  2.23	17	80	1000
+0282	1.Getting maximal disks       	 23.61	17	80	1000
+0282	4.Flocks updated              	  3.19	16	80	1000
+0282	3.Flocks reported             	  0.39	16	80	1000
+0282	2.Join done                   	  3.77	16	80	1000
+0282	1.Getting maximal disks       	 25.03	16	80	1000
+0282	4.Flocks updated              	  2.65	15	80	1000
+0282	3.Flocks reported             	  0.48	15	80	1000
+0282	2.Join done                   	  3.19	15	80	1000
+0282	1.Getting maximal disks       	 36.96	15	80	1000
+0283	4.Flocks updated              	  2.48	20	80	1050
+0283	3.Flocks reported             	  1.40	20	80	1050
+0283	2.Join done                   	  2.54	20	80	1050
+0283	1.Getting maximal disks       	 27.61	20	80	1050
+0283	4.Flocks updated              	  2.68	19	80	1050
+0283	3.Flocks reported             	  1.80	19	80	1050
+0283	2.Join done                   	  1.70	19	80	1050
+0283	1.Getting maximal disks       	 27.22	19	80	1050
+0283	4.Flocks updated              	  2.73	18	80	1050
+0283	3.Flocks reported             	  1.51	18	80	1050
+0283	2.Join done                   	  2.44	18	80	1050
+0283	1.Getting maximal disks       	 26.74	18	80	1050
+0283	4.Flocks updated              	  4.56	17	80	1050
+0283	3.Flocks reported             	  1.90	17	80	1050
+0283	2.Join done                   	  4.45	17	80	1050
+0283	1.Getting maximal disks       	 24.66	17	80	1050
+0283	4.Flocks updated              	  4.14	16	80	1050
+0283	3.Flocks reported             	  0.38	16	80	1050
+0283	2.Join done                   	  6.24	16	80	1050
+0283	1.Getting maximal disks       	 23.82	16	80	1050
+0283	4.Flocks updated              	  3.13	15	80	1050
+0283	3.Flocks reported             	  0.50	15	80	1050
+0283	2.Join done                   	  3.09	15	80	1050
+0283	1.Getting maximal disks       	 36.84	15	80	1050
+0284	4.Flocks updated              	  2.50	20	80	1100
+0284	3.Flocks reported             	  2.07	20	80	1100
+0284	2.Join done                   	  2.85	20	80	1100
+0284	1.Getting maximal disks       	 26.45	20	80	1100
+0284	4.Flocks updated              	  2.67	19	80	1100
+0284	3.Flocks reported             	  1.57	19	80	1100
+0284	2.Join done                   	  2.22	19	80	1100
+0284	1.Getting maximal disks       	 26.65	19	80	1100
+0284	4.Flocks updated              	  2.45	18	80	1100
+0284	3.Flocks reported             	  1.47	18	80	1100
+0284	2.Join done                   	  1.94	18	80	1100
+0284	1.Getting maximal disks       	 25.77	18	80	1100
+0284	4.Flocks updated              	  4.61	17	80	1100
+0284	3.Flocks reported             	  1.62	17	80	1100
+0284	2.Join done                   	  6.13	17	80	1100
+0284	1.Getting maximal disks       	 28.06	17	80	1100
+0284	4.Flocks updated              	  2.05	16	80	1100
+0284	3.Flocks reported             	  0.37	16	80	1100
+0284	2.Join done                   	  2.10	16	80	1100
+0284	1.Getting maximal disks       	 26.38	16	80	1100
+0284	4.Flocks updated              	  2.71	15	80	1100
+0284	3.Flocks reported             	  0.50	15	80	1100
+0284	2.Join done                   	  1.85	15	80	1100
+0284	1.Getting maximal disks       	 39.53	15	80	1100
+0285	4.Flocks updated              	  3.31	20	80	1200
+0285	3.Flocks reported             	  2.37	20	80	1200
+0285	2.Join done                   	  1.88	20	80	1200
+0285	1.Getting maximal disks       	 28.79	20	80	1200
+0285	4.Flocks updated              	  3.07	19	80	1200
+0285	3.Flocks reported             	  1.62	19	80	1200
+0285	2.Join done                   	  2.40	19	80	1200
+0285	1.Getting maximal disks       	 27.45	19	80	1200
+0285	4.Flocks updated              	  2.82	18	80	1200
+0285	3.Flocks reported             	  1.50	18	80	1200
+0285	2.Join done                   	  4.63	18	80	1200
+0285	1.Getting maximal disks       	 26.56	18	80	1200
+0285	4.Flocks updated              	  3.47	17	80	1200
+0285	3.Flocks reported             	  2.37	17	80	1200
+0285	2.Join done                   	  5.43	17	80	1200
+0285	1.Getting maximal disks       	 26.57	17	80	1200
+0285	4.Flocks updated              	  1.92	16	80	1200
+0285	3.Flocks reported             	  0.36	16	80	1200
+0285	2.Join done                   	  1.75	16	80	1200
+0285	1.Getting maximal disks       	 28.53	16	80	1200
+0285	4.Flocks updated              	  3.26	15	80	1200
+0285	3.Flocks reported             	  0.52	15	80	1200
+0285	2.Join done                   	  3.42	15	80	1200
+0285	1.Getting maximal disks       	 40.73	15	80	1200
+0286	4.Flocks updated              	  2.33	20	100	800
+0286	3.Flocks reported             	  1.94	20	100	800
+0286	2.Join done                   	  2.37	20	100	800
+0286	1.Getting maximal disks       	 22.45	20	100	800
+0286	4.Flocks updated              	  2.73	19	100	800
+0286	3.Flocks reported             	  1.90	19	100	800
+0286	2.Join done                   	  2.82	19	100	800
+0286	1.Getting maximal disks       	 21.21	19	100	800
+0286	4.Flocks updated              	  2.18	18	100	800
+0286	3.Flocks reported             	  1.58	18	100	800
+0286	2.Join done                   	  1.86	18	100	800
+0286	1.Getting maximal disks       	 21.79	18	100	800
+0286	4.Flocks updated              	  3.87	17	100	800
+0286	3.Flocks reported             	  2.12	17	100	800
+0286	2.Join done                   	  6.37	17	100	800
+0286	1.Getting maximal disks       	 20.43	17	100	800
+0286	4.Flocks updated              	  1.83	16	100	800
+0286	3.Flocks reported             	  0.43	16	100	800
+0286	2.Join done                   	  1.46	16	100	800
+0286	1.Getting maximal disks       	 22.23	16	100	800
+0286	4.Flocks updated              	  3.47	15	100	800
+0286	3.Flocks reported             	  0.50	15	100	800
+0286	2.Join done                   	  5.46	15	100	800
+0286	1.Getting maximal disks       	 30.15	15	100	800
+0287	4.Flocks updated              	  2.21	20	100	900
+0287	3.Flocks reported             	  1.34	20	100	900
+0287	2.Join done                   	  1.56	20	100	900
+0287	1.Getting maximal disks       	 24.84	20	100	900
+0287	4.Flocks updated              	  2.71	19	100	900
+0287	3.Flocks reported             	  2.05	19	100	900
+0287	2.Join done                   	  2.18	19	100	900
+0287	1.Getting maximal disks       	 24.01	19	100	900
+0287	4.Flocks updated              	  3.70	18	100	900
+0287	3.Flocks reported             	  1.67	18	100	900
+0287	2.Join done                   	  6.34	18	100	900
+0287	1.Getting maximal disks       	 21.77	18	100	900
+0287	4.Flocks updated              	  2.34	17	100	900
+0287	3.Flocks reported             	  2.20	17	100	900
+0287	2.Join done                   	  1.89	17	100	900
+0287	1.Getting maximal disks       	 22.45	17	100	900
+0287	4.Flocks updated              	  2.67	16	100	900
+0287	3.Flocks reported             	  0.40	16	100	900
+0287	2.Join done                   	  2.75	16	100	900
+0287	1.Getting maximal disks       	 23.59	16	100	900
+0287	4.Flocks updated              	  3.29	15	100	900
+0287	3.Flocks reported             	  0.51	15	100	900
+0287	2.Join done                   	  2.85	15	100	900
+0287	1.Getting maximal disks       	 36.20	15	100	900
+0288	4.Flocks updated              	  2.02	20	100	950
+0288	3.Flocks reported             	  1.23	20	100	950
+0288	2.Join done                   	  2.00	20	100	950
+0288	1.Getting maximal disks       	 27.72	20	100	950
+0288	4.Flocks updated              	  2.47	19	100	950
+0288	3.Flocks reported             	  1.95	19	100	950
+0288	2.Join done                   	  2.16	19	100	950
+0288	1.Getting maximal disks       	 21.71	19	100	950
+0288	4.Flocks updated              	  3.43	18	100	950
+0288	3.Flocks reported             	  2.02	18	100	950
+0288	2.Join done                   	  5.01	18	100	950
+0288	1.Getting maximal disks       	 22.68	18	100	950
+0288	4.Flocks updated              	  2.81	17	100	950
+0288	3.Flocks reported             	  1.68	17	100	950
+0288	2.Join done                   	  1.98	17	100	950
+0288	1.Getting maximal disks       	 23.07	17	100	950
+0288	4.Flocks updated              	  3.10	16	100	950
+0288	3.Flocks reported             	  0.54	16	100	950
+0288	2.Join done                   	  2.36	16	100	950
+0288	1.Getting maximal disks       	 23.12	16	100	950
+0288	4.Flocks updated              	  2.40	15	100	950
+0288	3.Flocks reported             	  0.48	15	100	950
+0288	2.Join done                   	  2.14	15	100	950
+0288	1.Getting maximal disks       	 37.59	15	100	950
+0289	4.Flocks updated              	  2.81	20	100	1000
+0289	3.Flocks reported             	  1.83	20	100	1000
+0289	2.Join done                   	  3.58	20	100	1000
+0289	1.Getting maximal disks       	 26.60	20	100	1000
+0289	4.Flocks updated              	  2.79	19	100	1000
+0289	3.Flocks reported             	  2.17	19	100	1000
+0289	2.Join done                   	  2.15	19	100	1000
+0289	1.Getting maximal disks       	 23.85	19	100	1000
+0289	4.Flocks updated              	  2.47	18	100	1000
+0289	3.Flocks reported             	  1.68	18	100	1000
+0289	2.Join done                   	  2.90	18	100	1000
+0289	1.Getting maximal disks       	 23.08	18	100	1000
+0289	4.Flocks updated              	  2.62	17	100	1000
+0289	3.Flocks reported             	  2.31	17	100	1000
+0289	2.Join done                   	  2.48	17	100	1000
+0289	1.Getting maximal disks       	 24.21	17	100	1000
+0289	4.Flocks updated              	  2.65	16	100	1000
+0289	3.Flocks reported             	  0.43	16	100	1000
+0289	2.Join done                   	  1.92	16	100	1000
+0289	1.Getting maximal disks       	 22.66	16	100	1000
+0289	4.Flocks updated              	  2.86	15	100	1000
+0289	3.Flocks reported             	  0.57	15	100	1000
+0289	2.Join done                   	  3.08	15	100	1000
+0289	1.Getting maximal disks       	 36.21	15	100	1000
+0290	4.Flocks updated              	  3.10	20	100	1050
+0290	3.Flocks reported             	  2.40	20	100	1050
+0290	2.Join done                   	  2.61	20	100	1050
+0290	1.Getting maximal disks       	 27.23	20	100	1050
+0290	4.Flocks updated              	  2.03	19	100	1050
+0290	3.Flocks reported             	  1.55	19	100	1050
+0290	2.Join done                   	  1.69	19	100	1050
+0290	1.Getting maximal disks       	 26.79	19	100	1050
+0290	4.Flocks updated              	  2.50	18	100	1050
+0290	3.Flocks reported             	  1.59	18	100	1050
+0290	2.Join done                   	  2.45	18	100	1050
+0290	1.Getting maximal disks       	 25.24	18	100	1050
+0290	4.Flocks updated              	  3.44	17	100	1050
+0290	3.Flocks reported             	  1.82	17	100	1050
+0290	2.Join done                   	  3.24	17	100	1050
+0290	1.Getting maximal disks       	 25.38	17	100	1050
+0290	4.Flocks updated              	  2.45	16	100	1050
+0290	3.Flocks reported             	  0.46	16	100	1050
+0290	2.Join done                   	  2.25	16	100	1050
+0290	1.Getting maximal disks       	 23.17	16	100	1050
+0290	4.Flocks updated              	  2.77	15	100	1050
+0290	3.Flocks reported             	  0.50	15	100	1050
+0290	2.Join done                   	  2.84	15	100	1050
+0290	1.Getting maximal disks       	 40.34	15	100	1050
+0291	4.Flocks updated              	  4.58	20	100	1100
+0291	3.Flocks reported             	  1.98	20	100	1100
+0291	2.Join done                   	  6.64	20	100	1100
+0291	1.Getting maximal disks       	 29.51	20	100	1100
+0291	4.Flocks updated              	  3.61	19	100	1100
+0291	3.Flocks reported             	  1.69	19	100	1100
+0291	2.Join done                   	  5.08	19	100	1100
+0291	1.Getting maximal disks       	 27.21	19	100	1100
+0291	4.Flocks updated              	  2.92	18	100	1100
+0291	3.Flocks reported             	  1.87	18	100	1100
+0291	2.Join done                   	  3.11	18	100	1100
+0291	1.Getting maximal disks       	 27.54	18	100	1100
+0291	4.Flocks updated              	  3.20	17	100	1100
+0291	3.Flocks reported             	  1.89	17	100	1100
+0291	2.Join done                   	  3.77	17	100	1100
+0291	1.Getting maximal disks       	 25.22	17	100	1100
+0291	4.Flocks updated              	  2.10	16	100	1100
+0291	3.Flocks reported             	  0.43	16	100	1100
+0291	2.Join done                   	  1.58	16	100	1100
+0291	1.Getting maximal disks       	 27.16	16	100	1100
+0291	4.Flocks updated              	  2.29	15	100	1100
+0291	3.Flocks reported             	  0.66	15	100	1100
+0291	2.Join done                   	  2.24	15	100	1100
+0291	1.Getting maximal disks       	 40.64	15	100	1100
+0292	4.Flocks updated              	  3.91	20	100	1200
+0292	3.Flocks reported             	  2.37	20	100	1200
+0292	2.Join done                   	  3.24	20	100	1200
+0292	1.Getting maximal disks       	 31.90	20	100	1200
+0292	4.Flocks updated              	  2.36	19	100	1200
+0292	3.Flocks reported             	  2.27	19	100	1200
+0292	2.Join done                   	  2.00	19	100	1200
+0292	1.Getting maximal disks       	 28.89	19	100	1200
+0292	4.Flocks updated              	  2.34	18	100	1200
+0292	3.Flocks reported             	  1.70	18	100	1200
+0292	2.Join done                   	  2.14	18	100	1200
+0292	1.Getting maximal disks       	 27.23	18	100	1200
+0292	4.Flocks updated              	  3.00	17	100	1200
+0292	3.Flocks reported             	  2.30	17	100	1200
+0292	2.Join done                   	  2.60	17	100	1200
+0292	1.Getting maximal disks       	 29.22	17	100	1200
+0292	4.Flocks updated              	  2.23	16	100	1200
+0292	3.Flocks reported             	  0.47	16	100	1200
+0292	2.Join done                   	  1.86	16	100	1200
+0292	1.Getting maximal disks       	 26.08	16	100	1200
+0292	4.Flocks updated              	  3.04	15	100	1200
+0292	3.Flocks reported             	  0.51	15	100	1200
+0292	2.Join done                   	  3.20	15	100	1200
+0292	1.Getting maximal disks       	 39.20	15	100	1200
+0293	4.Flocks updated              	  1.93	20	120	800
+0293	3.Flocks reported             	  1.88	20	120	800
+0293	2.Join done                   	  1.70	20	120	800
+0293	1.Getting maximal disks       	 22.18	20	120	800
+0293	4.Flocks updated              	  2.27	19	120	800
+0293	3.Flocks reported             	  1.34	19	120	800
+0293	2.Join done                   	  2.77	19	120	800
+0293	1.Getting maximal disks       	 21.96	19	120	800
+0293	4.Flocks updated              	  2.44	18	120	800
+0293	3.Flocks reported             	  1.34	18	120	800
+0293	2.Join done                   	  2.75	18	120	800
+0293	1.Getting maximal disks       	 20.04	18	120	800
+0293	4.Flocks updated              	  2.77	17	120	800
+0293	3.Flocks reported             	  1.34	17	120	800
+0293	2.Join done                   	  2.89	17	120	800
+0293	1.Getting maximal disks       	 22.12	17	120	800
+0293	4.Flocks updated              	  2.28	16	120	800
+0293	3.Flocks reported             	  0.46	16	120	800
+0293	2.Join done                   	  1.77	16	120	800
+0293	1.Getting maximal disks       	 19.95	16	120	800
+0293	4.Flocks updated              	  2.97	15	120	800
+0293	3.Flocks reported             	  0.61	15	120	800
+0293	2.Join done                   	  2.78	15	120	800
+0293	1.Getting maximal disks       	 35.55	15	120	800
+0294	4.Flocks updated              	  2.31	20	120	900
+0294	3.Flocks reported             	  1.36	20	120	900
+0294	2.Join done                   	  1.63	20	120	900
+0294	1.Getting maximal disks       	 23.09	20	120	900
+0294	4.Flocks updated              	  3.12	19	120	900
+0294	3.Flocks reported             	  1.80	19	120	900
+0294	2.Join done                   	  2.47	19	120	900
+0294	1.Getting maximal disks       	 23.60	19	120	900
+0294	4.Flocks updated              	  2.47	18	120	900
+0294	3.Flocks reported             	  1.65	18	120	900
+0294	2.Join done                   	  1.98	18	120	900
+0294	1.Getting maximal disks       	 22.58	18	120	900
+0294	4.Flocks updated              	  2.72	17	120	900
+0294	3.Flocks reported             	  1.23	17	120	900
+0294	2.Join done                   	  2.57	17	120	900
+0294	1.Getting maximal disks       	 25.17	17	120	900
+0294	4.Flocks updated              	  1.93	16	120	900
+0294	3.Flocks reported             	  0.50	16	120	900
+0294	2.Join done                   	  1.44	16	120	900
+0294	1.Getting maximal disks       	 21.89	16	120	900
+0294	4.Flocks updated              	  2.86	15	120	900
+0294	3.Flocks reported             	  0.74	15	120	900
+0294	2.Join done                   	  1.90	15	120	900
+0294	1.Getting maximal disks       	 35.14	15	120	900
+0295	4.Flocks updated              	  2.37	20	120	950
+0295	3.Flocks reported             	  1.43	20	120	950
+0295	2.Join done                   	  2.44	20	120	950
+0295	1.Getting maximal disks       	 26.41	20	120	950
+0295	4.Flocks updated              	  2.13	19	120	950
+0295	3.Flocks reported             	  1.51	19	120	950
+0295	2.Join done                   	  1.54	19	120	950
+0295	1.Getting maximal disks       	 23.83	19	120	950
+0295	4.Flocks updated              	  2.09	18	120	950
+0295	3.Flocks reported             	  1.30	18	120	950
+0295	2.Join done                   	  1.48	18	120	950
+0295	1.Getting maximal disks       	 23.56	18	120	950
+0295	4.Flocks updated              	  2.57	17	120	950
+0295	3.Flocks reported             	  1.33	17	120	950
+0295	2.Join done                   	  1.80	17	120	950
+0295	1.Getting maximal disks       	 22.91	17	120	950
+0295	4.Flocks updated              	  1.71	16	120	950
+0295	3.Flocks reported             	  0.46	16	120	950
+0295	2.Join done                   	  1.73	16	120	950
+0295	1.Getting maximal disks       	 24.66	16	120	950
+0295	4.Flocks updated              	  3.03	15	120	950
+0295	3.Flocks reported             	  0.56	15	120	950
+0295	2.Join done                   	  1.50	15	120	950
+0295	1.Getting maximal disks       	 35.05	15	120	950
+0296	4.Flocks updated              	  2.25	20	120	1000
+0296	3.Flocks reported             	  1.49	20	120	1000
+0296	2.Join done                   	  1.76	20	120	1000
+0296	1.Getting maximal disks       	 28.07	20	120	1000
+0296	4.Flocks updated              	  2.72	19	120	1000
+0296	3.Flocks reported             	  1.33	19	120	1000
+0296	2.Join done                   	  1.40	19	120	1000
+0296	1.Getting maximal disks       	 22.12	19	120	1000
+0296	4.Flocks updated              	  2.15	18	120	1000
+0296	3.Flocks reported             	  1.59	18	120	1000
+0296	2.Join done                   	  1.65	18	120	1000
+0296	1.Getting maximal disks       	 26.00	18	120	1000
+0296	4.Flocks updated              	  2.51	17	120	1000
+0296	3.Flocks reported             	  1.44	17	120	1000
+0296	2.Join done                   	  1.95	17	120	1000
+0296	1.Getting maximal disks       	 24.15	17	120	1000
+0296	4.Flocks updated              	  2.89	16	120	1000
+0296	3.Flocks reported             	  0.41	16	120	1000
+0296	2.Join done                   	  2.26	16	120	1000
+0296	1.Getting maximal disks       	 25.70	16	120	1000
+0296	4.Flocks updated              	  2.50	15	120	1000
+0296	3.Flocks reported             	  0.53	15	120	1000
+0296	2.Join done                   	  2.70	15	120	1000
+0296	1.Getting maximal disks       	 35.90	15	120	1000
+0297	4.Flocks updated              	  2.08	20	120	1050
+0297	3.Flocks reported             	  1.35	20	120	1050
+0297	2.Join done                   	  1.73	20	120	1050
+0297	1.Getting maximal disks       	 28.65	20	120	1050
+0297	4.Flocks updated              	  2.84	19	120	1050
+0297	3.Flocks reported             	  1.28	19	120	1050
+0297	2.Join done                   	  2.34	19	120	1050
+0297	1.Getting maximal disks       	 23.86	19	120	1050
+0297	4.Flocks updated              	  2.15	18	120	1050
+0297	3.Flocks reported             	  1.05	18	120	1050
+0297	2.Join done                   	  1.36	18	120	1050
+0297	1.Getting maximal disks       	 27.69	18	120	1050
+0297	4.Flocks updated              	  2.26	17	120	1050
+0297	3.Flocks reported             	  1.72	17	120	1050
+0297	2.Join done                   	  1.59	17	120	1050
+0297	1.Getting maximal disks       	 23.65	17	120	1050
+0297	4.Flocks updated              	  1.88	16	120	1050
+0297	3.Flocks reported             	  0.47	16	120	1050
+0297	2.Join done                   	  1.37	16	120	1050
+0297	1.Getting maximal disks       	 26.44	16	120	1050
+0297	4.Flocks updated              	  2.77	15	120	1050
+0297	3.Flocks reported             	  0.52	15	120	1050
+0297	2.Join done                   	  3.05	15	120	1050
+0297	1.Getting maximal disks       	 37.63	15	120	1050
+0298	4.Flocks updated              	  2.25	20	120	1100
+0298	3.Flocks reported             	  1.31	20	120	1100
+0298	2.Join done                   	  2.34	20	120	1100
+0298	1.Getting maximal disks       	 28.56	20	120	1100
+0298	4.Flocks updated              	  3.02	19	120	1100
+0298	3.Flocks reported             	  1.22	19	120	1100
+0298	2.Join done                   	  2.37	19	120	1100
+0298	1.Getting maximal disks       	 23.93	19	120	1100
+0298	4.Flocks updated              	  2.17	18	120	1100
+0298	3.Flocks reported             	  1.96	18	120	1100
+0298	2.Join done                   	  1.57	18	120	1100
+0298	1.Getting maximal disks       	 26.24	18	120	1100
+0298	4.Flocks updated              	  2.61	17	120	1100
+0298	3.Flocks reported             	  1.36	17	120	1100
+0298	2.Join done                   	  2.12	17	120	1100
+0298	1.Getting maximal disks       	 27.82	17	120	1100
+0298	4.Flocks updated              	  2.19	16	120	1100
+0298	3.Flocks reported             	  0.47	16	120	1100
+0298	2.Join done                   	  2.02	16	120	1100
+0298	1.Getting maximal disks       	 28.10	16	120	1100
+0298	4.Flocks updated              	  2.74	15	120	1100
+0298	3.Flocks reported             	  0.55	15	120	1100
+0298	2.Join done                   	  3.44	15	120	1100
+0298	1.Getting maximal disks       	 35.77	15	120	1100
+0299	4.Flocks updated              	  2.94	20	120	1200
+0299	3.Flocks reported             	  2.49	20	120	1200
+0299	2.Join done                   	  2.60	20	120	1200
+0299	1.Getting maximal disks       	 29.56	20	120	1200
+0299	4.Flocks updated              	  2.38	19	120	1200
+0299	3.Flocks reported             	  1.70	19	120	1200
+0299	2.Join done                   	  1.79	19	120	1200
+0299	1.Getting maximal disks       	 28.19	19	120	1200
+0299	4.Flocks updated              	  2.08	18	120	1200
+0299	3.Flocks reported             	  1.75	18	120	1200
+0299	2.Join done                   	  1.60	18	120	1200
+0299	1.Getting maximal disks       	 27.49	18	120	1200
+0299	4.Flocks updated              	  2.78	17	120	1200
+0299	3.Flocks reported             	  1.70	17	120	1200
+0299	2.Join done                   	  2.44	17	120	1200
+0299	1.Getting maximal disks       	 28.26	17	120	1200
+0299	4.Flocks updated              	  2.23	16	120	1200
+0299	3.Flocks reported             	  0.44	16	120	1200
+0299	2.Join done                   	  1.84	16	120	1200
+0299	1.Getting maximal disks       	 29.55	16	120	1200
+0299	4.Flocks updated              	  2.08	15	120	1200
+0299	3.Flocks reported             	  0.69	15	120	1200
+0299	2.Join done                   	  1.42	15	120	1200
+0299	1.Getting maximal disks       	 40.72	15	120	1200
+0300	4.Flocks updated              	  2.31	20	140	800
+0300	3.Flocks reported             	  1.81	20	140	800
+0300	2.Join done                   	  1.81	20	140	800
+0300	1.Getting maximal disks       	 22.85	20	140	800
+0300	4.Flocks updated              	  2.42	19	140	800
+0300	3.Flocks reported             	  1.66	19	140	800
+0300	2.Join done                   	  1.90	19	140	800
+0300	1.Getting maximal disks       	 23.18	19	140	800
+0300	4.Flocks updated              	  2.03	18	140	800
+0300	3.Flocks reported             	  1.66	18	140	800
+0300	2.Join done                   	  1.93	18	140	800
+0300	1.Getting maximal disks       	 21.20	18	140	800
+0300	4.Flocks updated              	  3.17	17	140	800
+0300	3.Flocks reported             	  1.80	17	140	800
+0300	2.Join done                   	  3.82	17	140	800
+0300	1.Getting maximal disks       	 21.52	17	140	800
+0300	4.Flocks updated              	  2.04	16	140	800
+0300	3.Flocks reported             	  0.55	16	140	800
+0300	2.Join done                   	  2.02	16	140	800
+0300	1.Getting maximal disks       	 21.10	16	140	800
+0300	4.Flocks updated              	  2.30	15	140	800
+0300	3.Flocks reported             	  0.81	15	140	800
+0300	2.Join done                   	  2.13	15	140	800
+0300	1.Getting maximal disks       	 35.67	15	140	800
+0301	4.Flocks updated              	  2.63	20	140	900
+0301	3.Flocks reported             	  1.67	20	140	900
+0301	2.Join done                   	  2.09	20	140	900
+0301	1.Getting maximal disks       	 24.75	20	140	900
+0301	4.Flocks updated              	  2.07	19	140	900
+0301	3.Flocks reported             	  1.17	19	140	900
+0301	2.Join done                   	  1.78	19	140	900
+0301	1.Getting maximal disks       	 22.47	19	140	900
+0301	4.Flocks updated              	  1.88	18	140	900
+0301	3.Flocks reported             	  1.48	18	140	900
+0301	2.Join done                   	  1.76	18	140	900
+0301	1.Getting maximal disks       	 23.30	18	140	900
+0301	4.Flocks updated              	  2.53	17	140	900
+0301	3.Flocks reported             	  1.69	17	140	900
+0301	2.Join done                   	  1.95	17	140	900
+0301	1.Getting maximal disks       	 24.43	17	140	900
+0301	4.Flocks updated              	  2.51	16	140	900
+0301	3.Flocks reported             	  0.52	16	140	900
+0301	2.Join done                   	  2.65	16	140	900
+0301	1.Getting maximal disks       	 23.55	16	140	900
+0301	4.Flocks updated              	  2.54	15	140	900
+0301	3.Flocks reported             	  0.62	15	140	900
+0301	2.Join done                   	  1.60	15	140	900
+0301	1.Getting maximal disks       	 37.13	15	140	900
+0302	4.Flocks updated              	  2.12	20	140	950
+0302	3.Flocks reported             	  1.44	20	140	950
+0302	2.Join done                   	  2.54	20	140	950
+0302	1.Getting maximal disks       	 24.34	20	140	950
+0302	4.Flocks updated              	  2.69	19	140	950
+0302	3.Flocks reported             	  1.46	19	140	950
+0302	2.Join done                   	  2.03	19	140	950
+0302	1.Getting maximal disks       	 23.87	19	140	950
+0302	4.Flocks updated              	  2.86	18	140	950
+0302	3.Flocks reported             	  1.80	18	140	950
+0302	2.Join done                   	  2.59	18	140	950
+0302	1.Getting maximal disks       	 26.16	18	140	950
+0302	4.Flocks updated              	  3.02	17	140	950
+0302	3.Flocks reported             	  1.58	17	140	950
+0302	2.Join done                   	  2.96	17	140	950
+0302	1.Getting maximal disks       	 23.02	17	140	950
+0302	4.Flocks updated              	  2.42	16	140	950
+0302	3.Flocks reported             	  0.43	16	140	950
+0302	2.Join done                   	  2.03	16	140	950
+0302	1.Getting maximal disks       	 24.17	16	140	950
+0302	4.Flocks updated              	  3.04	15	140	950
+0302	3.Flocks reported             	  0.69	15	140	950
+0302	2.Join done                   	  2.22	15	140	950
+0302	1.Getting maximal disks       	 35.72	15	140	950
+0303	4.Flocks updated              	  2.50	20	140	1000
+0303	3.Flocks reported             	  1.67	20	140	1000
+0303	2.Join done                   	  1.64	20	140	1000
+0303	1.Getting maximal disks       	 28.25	20	140	1000
+0303	4.Flocks updated              	  2.77	19	140	1000
+0303	3.Flocks reported             	  1.38	19	140	1000
+0303	2.Join done                   	  2.94	19	140	1000
+0303	1.Getting maximal disks       	 24.87	19	140	1000
+0303	4.Flocks updated              	  2.34	18	140	1000
+0303	3.Flocks reported             	  1.68	18	140	1000
+0303	2.Join done                   	  2.41	18	140	1000
+0303	1.Getting maximal disks       	 23.54	18	140	1000
+0303	4.Flocks updated              	  2.67	17	140	1000
+0303	3.Flocks reported             	  1.60	17	140	1000
+0303	2.Join done                   	  2.28	17	140	1000
+0303	1.Getting maximal disks       	 24.33	17	140	1000
+0303	4.Flocks updated              	  2.32	16	140	1000
+0303	3.Flocks reported             	  0.51	16	140	1000
+0303	2.Join done                   	  2.22	16	140	1000
+0303	1.Getting maximal disks       	 24.39	16	140	1000
+0303	4.Flocks updated              	  2.92	15	140	1000
+0303	3.Flocks reported             	  0.59	15	140	1000
+0303	2.Join done                   	  3.17	15	140	1000
+0303	1.Getting maximal disks       	 37.25	15	140	1000
+0304	4.Flocks updated              	  2.84	20	140	1050
+0304	3.Flocks reported             	  1.78	20	140	1050
+0304	2.Join done                   	  2.09	20	140	1050
+0304	1.Getting maximal disks       	 27.78	20	140	1050
+0304	4.Flocks updated              	  2.68	19	140	1050
+0304	3.Flocks reported             	  1.79	19	140	1050
+0304	2.Join done                   	  1.64	19	140	1050
+0304	1.Getting maximal disks       	 26.82	19	140	1050
+0304	4.Flocks updated              	  2.15	18	140	1050
+0304	3.Flocks reported             	  1.42	18	140	1050
+0304	2.Join done                   	  1.97	18	140	1050
+0304	1.Getting maximal disks       	 24.40	18	140	1050
+0304	4.Flocks updated              	  2.88	17	140	1050
+0304	3.Flocks reported             	  1.66	17	140	1050
+0304	2.Join done                   	  3.36	17	140	1050
+0304	1.Getting maximal disks       	 26.95	17	140	1050
+0304	4.Flocks updated              	  2.92	16	140	1050
+0304	3.Flocks reported             	  0.45	16	140	1050
+0304	2.Join done                   	  2.73	16	140	1050
+0304	1.Getting maximal disks       	 24.89	16	140	1050
+0304	4.Flocks updated              	  2.33	15	140	1050
+0304	3.Flocks reported             	  0.58	15	140	1050
+0304	2.Join done                   	  2.00	15	140	1050
+0304	1.Getting maximal disks       	 36.82	15	140	1050
+0305	4.Flocks updated              	  2.19	20	140	1100
+0305	3.Flocks reported             	  1.61	20	140	1100
+0305	2.Join done                   	  1.88	20	140	1100
+0305	1.Getting maximal disks       	 29.47	20	140	1100
+0305	4.Flocks updated              	  2.61	19	140	1100
+0305	3.Flocks reported             	  1.70	19	140	1100
+0305	2.Join done                   	  2.32	19	140	1100
+0305	1.Getting maximal disks       	 25.82	19	140	1100
+0305	4.Flocks updated              	  2.05	18	140	1100
+0305	3.Flocks reported             	  1.63	18	140	1100
+0305	2.Join done                   	  2.50	18	140	1100
+0305	1.Getting maximal disks       	 28.53	18	140	1100
+0305	4.Flocks updated              	  2.13	17	140	1100
+0305	3.Flocks reported             	  1.40	17	140	1100
+0305	2.Join done                   	  1.66	17	140	1100
+0305	1.Getting maximal disks       	 25.08	17	140	1100
+0305	4.Flocks updated              	  1.83	16	140	1100
+0305	3.Flocks reported             	  0.45	16	140	1100
+0305	2.Join done                   	  1.90	16	140	1100
+0305	1.Getting maximal disks       	 25.59	16	140	1100
+0305	4.Flocks updated              	  2.45	15	140	1100
+0305	3.Flocks reported             	  0.69	15	140	1100
+0305	2.Join done                   	  2.08	15	140	1100
+0305	1.Getting maximal disks       	 42.84	15	140	1100
+0306	4.Flocks updated              	  2.83	20	140	1200
+0306	3.Flocks reported             	  1.61	20	140	1200
+0306	2.Join done                   	  2.25	20	140	1200
+0306	1.Getting maximal disks       	 28.37	20	140	1200
+0306	4.Flocks updated              	  2.17	19	140	1200
+0306	3.Flocks reported             	  1.88	19	140	1200
+0306	2.Join done                   	  1.86	19	140	1200
+0306	1.Getting maximal disks       	 30.07	19	140	1200
+0306	4.Flocks updated              	  2.25	18	140	1200
+0306	3.Flocks reported             	  1.50	18	140	1200
+0306	2.Join done                   	  2.33	18	140	1200
+0306	1.Getting maximal disks       	 29.45	18	140	1200
+0306	4.Flocks updated              	  2.30	17	140	1200
+0306	3.Flocks reported             	  2.04	17	140	1200
+0306	2.Join done                   	  2.28	17	140	1200
+0306	1.Getting maximal disks       	 30.18	17	140	1200
+0306	4.Flocks updated              	  2.80	16	140	1200
+0306	3.Flocks reported             	  1.02	16	140	1200
+0306	2.Join done                   	  2.66	16	140	1200
+0306	1.Getting maximal disks       	 28.21	16	140	1200
+0306	4.Flocks updated              	  3.19	15	140	1200
+0306	3.Flocks reported             	  0.59	15	140	1200
+0306	2.Join done                   	  2.69	15	140	1200
+0306	1.Getting maximal disks       	 43.32	15	140	1200
+0307	4.Flocks updated              	  2.56	20	160	800
+0307	3.Flocks reported             	  1.55	20	160	800
+0307	2.Join done                   	  2.24	20	160	800
+0307	1.Getting maximal disks       	 21.83	20	160	800
+0307	4.Flocks updated              	  2.79	19	160	800
+0307	3.Flocks reported             	  1.54	19	160	800
+0307	2.Join done                   	  2.36	19	160	800
+0307	1.Getting maximal disks       	 20.81	19	160	800
+0307	4.Flocks updated              	  2.59	18	160	800
+0307	3.Flocks reported             	  1.86	18	160	800
+0307	2.Join done                   	  2.42	18	160	800
+0307	1.Getting maximal disks       	 20.97	18	160	800
+0307	4.Flocks updated              	  2.96	17	160	800
+0307	3.Flocks reported             	  2.67	17	160	800
+0307	2.Join done                   	  1.93	17	160	800
+0307	1.Getting maximal disks       	 17.46	17	160	800
+0307	4.Flocks updated              	  2.13	16	160	800
+0307	3.Flocks reported             	  0.48	16	160	800
+0307	2.Join done                   	  1.90	16	160	800
+0307	1.Getting maximal disks       	 20.91	16	160	800
+0307	4.Flocks updated              	  2.89	15	160	800
+0307	3.Flocks reported             	  0.94	15	160	800
+0307	2.Join done                   	  2.30	15	160	800
+0307	1.Getting maximal disks       	 32.95	15	160	800
+0308	4.Flocks updated              	  2.48	20	160	900
+0308	3.Flocks reported             	  1.98	20	160	900
+0308	2.Join done                   	  1.82	20	160	900
+0308	1.Getting maximal disks       	 26.09	20	160	900
+0308	4.Flocks updated              	  2.30	19	160	900
+0308	3.Flocks reported             	  1.86	19	160	900
+0308	2.Join done                   	  2.38	19	160	900
+0308	1.Getting maximal disks       	 21.76	19	160	900
+0308	4.Flocks updated              	  3.21	18	160	900
+0308	3.Flocks reported             	  2.15	18	160	900
+0308	2.Join done                   	  3.76	18	160	900
+0308	1.Getting maximal disks       	 22.84	18	160	900
+0308	4.Flocks updated              	  2.23	17	160	900
+0308	3.Flocks reported             	  2.01	17	160	900
+0308	2.Join done                   	  1.86	17	160	900
+0308	1.Getting maximal disks       	 23.95	17	160	900
+0308	4.Flocks updated              	  2.55	16	160	900
+0308	3.Flocks reported             	  0.55	16	160	900
+0308	2.Join done                   	  2.05	16	160	900
+0308	1.Getting maximal disks       	 23.43	16	160	900
+0308	4.Flocks updated              	  2.74	15	160	900
+0308	3.Flocks reported             	  0.89	15	160	900
+0308	2.Join done                   	  2.43	15	160	900
+0308	1.Getting maximal disks       	 33.84	15	160	900
+0309	4.Flocks updated              	  2.16	20	160	950
+0309	3.Flocks reported             	  2.52	20	160	950
+0309	2.Join done                   	  1.81	20	160	950
+0309	1.Getting maximal disks       	 27.34	20	160	950
+0309	4.Flocks updated              	  2.50	19	160	950
+0309	3.Flocks reported             	  1.65	19	160	950
+0309	2.Join done                   	  1.96	19	160	950
+0309	1.Getting maximal disks       	 22.16	19	160	950
+0309	4.Flocks updated              	  2.11	18	160	950
+0309	3.Flocks reported             	  1.47	18	160	950
+0309	2.Join done                   	  2.00	18	160	950
+0309	1.Getting maximal disks       	 24.17	18	160	950
+0309	4.Flocks updated              	  3.18	17	160	950
+0309	3.Flocks reported             	  1.92	17	160	950
+0309	2.Join done                   	  3.43	17	160	950
+0309	1.Getting maximal disks       	 23.18	17	160	950
+0309	4.Flocks updated              	  2.29	16	160	950
+0309	3.Flocks reported             	  0.50	16	160	950
+0309	2.Join done                   	  2.38	16	160	950
+0309	1.Getting maximal disks       	 25.16	16	160	950
+0309	4.Flocks updated              	  3.28	15	160	950
+0309	3.Flocks reported             	  0.66	15	160	950
+0309	2.Join done                   	  3.32	15	160	950
+0309	1.Getting maximal disks       	 37.75	15	160	950
+0310	4.Flocks updated              	  2.43	20	160	1000
+0310	3.Flocks reported             	  1.68	20	160	1000
+0310	2.Join done                   	  2.35	20	160	1000
+0310	1.Getting maximal disks       	 25.26	20	160	1000
+0310	4.Flocks updated              	  2.81	19	160	1000
+0310	3.Flocks reported             	  1.76	19	160	1000
+0310	2.Join done                   	  2.62	19	160	1000
+0310	1.Getting maximal disks       	 23.64	19	160	1000
+0310	4.Flocks updated              	  3.01	18	160	1000
+0310	3.Flocks reported             	  1.83	18	160	1000
+0310	2.Join done                   	  3.46	18	160	1000
+0310	1.Getting maximal disks       	 24.56	18	160	1000
+0310	4.Flocks updated              	  2.94	17	160	1000
+0310	3.Flocks reported             	  1.66	17	160	1000
+0310	2.Join done                   	  2.64	17	160	1000
+0310	1.Getting maximal disks       	 23.28	17	160	1000
+0310	4.Flocks updated              	  2.06	16	160	1000
+0310	3.Flocks reported             	  0.49	16	160	1000
+0310	2.Join done                   	  1.89	16	160	1000
+0310	1.Getting maximal disks       	 24.49	16	160	1000
+0310	4.Flocks updated              	  3.23	15	160	1000
+0310	3.Flocks reported             	  0.62	15	160	1000
+0310	2.Join done                   	  3.18	15	160	1000
+0310	1.Getting maximal disks       	 35.63	15	160	1000
+0311	4.Flocks updated              	  2.49	20	160	1050
+0311	3.Flocks reported             	  1.88	20	160	1050
+0311	2.Join done                   	  2.33	20	160	1050
+0311	1.Getting maximal disks       	 28.30	20	160	1050
+0311	4.Flocks updated              	  2.59	19	160	1050
+0311	3.Flocks reported             	  1.63	19	160	1050
+0311	2.Join done                   	  2.16	19	160	1050
+0311	1.Getting maximal disks       	 24.42	19	160	1050
+0311	4.Flocks updated              	  2.60	18	160	1050
+0311	3.Flocks reported             	  1.68	18	160	1050
+0311	2.Join done                   	  2.21	18	160	1050
+0311	1.Getting maximal disks       	 26.30	18	160	1050
+0311	4.Flocks updated              	  2.98	17	160	1050
+0311	3.Flocks reported             	  1.57	17	160	1050
+0311	2.Join done                   	  2.37	17	160	1050
+0311	1.Getting maximal disks       	 23.43	17	160	1050
+0311	4.Flocks updated              	  2.17	16	160	1050
+0311	3.Flocks reported             	  0.63	16	160	1050
+0311	2.Join done                   	  2.78	16	160	1050
+0311	1.Getting maximal disks       	 25.06	16	160	1050
+0311	4.Flocks updated              	  3.21	15	160	1050
+0311	3.Flocks reported             	  0.61	15	160	1050
+0311	2.Join done                   	  2.88	15	160	1050
+0311	1.Getting maximal disks       	 37.86	15	160	1050
+0312	4.Flocks updated              	  2.36	20	160	1100
+0312	3.Flocks reported             	  1.71	20	160	1100
+0312	2.Join done                   	  2.35	20	160	1100
+0312	1.Getting maximal disks       	 27.38	20	160	1100
+0312	4.Flocks updated              	  3.31	19	160	1100
+0312	3.Flocks reported             	  1.54	19	160	1100
+0312	2.Join done                   	  3.40	19	160	1100
+0312	1.Getting maximal disks       	 24.90	19	160	1100
+0312	4.Flocks updated              	  2.33	18	160	1100
+0312	3.Flocks reported             	  1.72	18	160	1100
+0312	2.Join done                   	  2.12	18	160	1100
+0312	1.Getting maximal disks       	 26.69	18	160	1100
+0312	4.Flocks updated              	  2.97	17	160	1100
+0312	3.Flocks reported             	  1.95	17	160	1100
+0312	2.Join done                   	  2.92	17	160	1100
+0312	1.Getting maximal disks       	 25.62	17	160	1100
+0312	4.Flocks updated              	  1.97	16	160	1100
+0312	3.Flocks reported             	  0.51	16	160	1100
+0312	2.Join done                   	  1.87	16	160	1100
+0312	1.Getting maximal disks       	 27.33	16	160	1100
+0312	4.Flocks updated              	  2.92	15	160	1100
+0312	3.Flocks reported             	  1.23	15	160	1100
+0312	2.Join done                   	  3.09	15	160	1100
+0312	1.Getting maximal disks       	 38.06	15	160	1100
+0313	4.Flocks updated              	  2.06	20	160	1200
+0313	3.Flocks reported             	  1.47	20	160	1200
+0313	2.Join done                   	  1.82	20	160	1200
+0313	1.Getting maximal disks       	 30.87	20	160	1200
+0313	4.Flocks updated              	  2.27	19	160	1200
+0313	3.Flocks reported             	  1.49	19	160	1200
+0313	2.Join done                   	  2.59	19	160	1200
+0313	1.Getting maximal disks       	 26.00	19	160	1200
+0313	4.Flocks updated              	  2.53	18	160	1200
+0313	3.Flocks reported             	  1.67	18	160	1200
+0313	2.Join done                   	  1.99	18	160	1200
+0313	1.Getting maximal disks       	 27.63	18	160	1200
+0313	4.Flocks updated              	  3.54	17	160	1200
+0313	3.Flocks reported             	  1.63	17	160	1200
+0313	2.Join done                   	  2.80	17	160	1200
+0313	1.Getting maximal disks       	 25.17	17	160	1200
+0313	4.Flocks updated              	  1.94	16	160	1200
+0313	3.Flocks reported             	  0.54	16	160	1200
+0313	2.Join done                   	  1.77	16	160	1200
+0313	1.Getting maximal disks       	 26.20	16	160	1200
+0313	4.Flocks updated              	  2.43	15	160	1200
+0313	3.Flocks reported             	  0.61	15	160	1200
+0313	2.Join done                   	  1.91	15	160	1200
+0313	1.Getting maximal disks       	 43.78	15	160	1200
+0314	4.Flocks updated              	  2.30	20	180	800
+0314	3.Flocks reported             	  1.88	20	180	800
+0314	2.Join done                   	  1.69	20	180	800
+0314	1.Getting maximal disks       	 20.36	20	180	800
+0314	4.Flocks updated              	  2.94	19	180	800
+0314	3.Flocks reported             	  1.68	19	180	800
+0314	2.Join done                   	  2.56	19	180	800
+0314	1.Getting maximal disks       	 20.05	19	180	800
+0314	4.Flocks updated              	  3.21	18	180	800
+0314	3.Flocks reported             	  1.67	18	180	800
+0314	2.Join done                   	  2.95	18	180	800
+0314	1.Getting maximal disks       	 17.29	18	180	800
+0314	4.Flocks updated              	  3.49	17	180	800
+0314	3.Flocks reported             	  1.61	17	180	800
+0314	2.Join done                   	  2.35	17	180	800
+0314	1.Getting maximal disks       	 21.28	17	180	800
+0314	4.Flocks updated              	  2.40	16	180	800
+0314	3.Flocks reported             	  0.57	16	180	800
+0314	2.Join done                   	  2.49	16	180	800
+0314	1.Getting maximal disks       	 20.05	16	180	800
+0314	4.Flocks updated              	  3.28	15	180	800
+0314	3.Flocks reported             	  0.65	15	180	800
+0314	2.Join done                   	  3.70	15	180	800
+0314	1.Getting maximal disks       	 32.66	15	180	800
+0315	4.Flocks updated              	  2.52	20	180	900
+0315	3.Flocks reported             	  2.17	20	180	900
+0315	2.Join done                   	  2.70	20	180	900
+0315	1.Getting maximal disks       	 23.14	20	180	900
+0315	4.Flocks updated              	  2.49	19	180	900
+0315	3.Flocks reported             	  1.59	19	180	900
+0315	2.Join done                   	  1.98	19	180	900
+0315	1.Getting maximal disks       	 24.53	19	180	900
+0315	4.Flocks updated              	  2.71	18	180	900
+0315	3.Flocks reported             	  1.52	18	180	900
+0315	2.Join done                   	  2.78	18	180	900
+0315	1.Getting maximal disks       	 21.27	18	180	900
+0315	4.Flocks updated              	  2.84	17	180	900
+0315	3.Flocks reported             	  2.00	17	180	900
+0315	2.Join done                   	  3.26	17	180	900
+0315	1.Getting maximal disks       	 19.39	17	180	900
+0315	4.Flocks updated              	  2.68	16	180	900
+0315	3.Flocks reported             	  0.56	16	180	900
+0315	2.Join done                   	  2.59	16	180	900
+0315	1.Getting maximal disks       	 24.24	16	180	900
+0315	4.Flocks updated              	  3.07	15	180	900
+0315	3.Flocks reported             	  0.58	15	180	900
+0315	2.Join done                   	  2.80	15	180	900
+0315	1.Getting maximal disks       	 33.30	15	180	900
+0316	4.Flocks updated              	  2.60	20	180	950
+0316	3.Flocks reported             	  1.54	20	180	950
+0316	2.Join done                   	  2.65	20	180	950
+0316	1.Getting maximal disks       	 22.36	20	180	950
+0316	4.Flocks updated              	  2.75	19	180	950
+0316	3.Flocks reported             	  1.47	19	180	950
+0316	2.Join done                   	  3.20	19	180	950
+0316	1.Getting maximal disks       	 24.21	19	180	950
+0316	4.Flocks updated              	  3.24	18	180	950
+0316	3.Flocks reported             	  1.98	18	180	950
+0316	2.Join done                   	  3.47	18	180	950
+0316	1.Getting maximal disks       	 22.68	18	180	950
+0316	4.Flocks updated              	  2.61	17	180	950
+0316	3.Flocks reported             	  1.76	17	180	950
+0316	2.Join done                   	  2.05	17	180	950
+0316	1.Getting maximal disks       	 21.74	17	180	950
+0316	4.Flocks updated              	  2.80	16	180	950
+0316	3.Flocks reported             	  0.63	16	180	950
+0316	2.Join done                   	  2.56	16	180	950
+0316	1.Getting maximal disks       	 23.24	16	180	950
+0316	4.Flocks updated              	  2.93	15	180	950
+0316	3.Flocks reported             	  0.66	15	180	950
+0316	2.Join done                   	  2.36	15	180	950
+0316	1.Getting maximal disks       	 33.78	15	180	950
+0317	4.Flocks updated              	  3.30	20	180	1000
+0317	3.Flocks reported             	  1.62	20	180	1000
+0317	2.Join done                   	  2.43	20	180	1000
+0317	1.Getting maximal disks       	 25.80	20	180	1000
+0317	4.Flocks updated              	  2.79	19	180	1000
+0317	3.Flocks reported             	  2.20	19	180	1000
+0317	2.Join done                   	  1.89	19	180	1000
+0317	1.Getting maximal disks       	 24.83	19	180	1000
+0317	4.Flocks updated              	  2.67	18	180	1000
+0317	3.Flocks reported             	  1.75	18	180	1000
+0317	2.Join done                   	  2.42	18	180	1000
+0317	1.Getting maximal disks       	 24.83	18	180	1000
+0317	4.Flocks updated              	  2.32	17	180	1000
+0317	3.Flocks reported             	  1.72	17	180	1000
+0317	2.Join done                   	  1.89	17	180	1000
+0317	1.Getting maximal disks       	 24.63	17	180	1000
+0317	4.Flocks updated              	  1.91	16	180	1000
+0317	3.Flocks reported             	  0.51	16	180	1000
+0317	2.Join done                   	  1.70	16	180	1000
+0317	1.Getting maximal disks       	 22.91	16	180	1000
+0317	4.Flocks updated              	  3.09	15	180	1000
+0317	3.Flocks reported             	  0.60	15	180	1000
+0317	2.Join done                   	  3.04	15	180	1000
+0317	1.Getting maximal disks       	 36.37	15	180	1000
+0318	4.Flocks updated              	  2.74	20	180	1050
+0318	3.Flocks reported             	  1.40	20	180	1050
+0318	2.Join done                   	  1.74	20	180	1050
+0318	1.Getting maximal disks       	 24.60	20	180	1050
+0318	4.Flocks updated              	  2.35	19	180	1050
+0318	3.Flocks reported             	  2.19	19	180	1050
+0318	2.Join done                   	  2.50	19	180	1050
+0318	1.Getting maximal disks       	 22.16	19	180	1050
+0318	4.Flocks updated              	  2.84	18	180	1050
+0318	3.Flocks reported             	  1.51	18	180	1050
+0318	2.Join done                   	  3.08	18	180	1050
+0318	1.Getting maximal disks       	 22.66	18	180	1050
+0318	4.Flocks updated              	  2.70	17	180	1050
+0318	3.Flocks reported             	  2.11	17	180	1050
+0318	2.Join done                   	  2.45	17	180	1050
+0318	1.Getting maximal disks       	 23.69	17	180	1050
+0318	4.Flocks updated              	  3.03	16	180	1050
+0318	3.Flocks reported             	  0.51	16	180	1050
+0318	2.Join done                   	  2.16	16	180	1050
+0318	1.Getting maximal disks       	 25.08	16	180	1050
+0318	4.Flocks updated              	  2.89	15	180	1050
+0318	3.Flocks reported             	  0.79	15	180	1050
+0318	2.Join done                   	  1.83	15	180	1050
+0318	1.Getting maximal disks       	 35.59	15	180	1050
+0319	4.Flocks updated              	  2.77	20	180	1100
+0319	3.Flocks reported             	  2.28	20	180	1100
+0319	2.Join done                   	  2.01	20	180	1100
+0319	1.Getting maximal disks       	 25.98	20	180	1100
+0319	4.Flocks updated              	  3.22	19	180	1100
+0319	3.Flocks reported             	  1.99	19	180	1100
+0319	2.Join done                   	  2.67	19	180	1100
+0319	1.Getting maximal disks       	 26.98	19	180	1100
+0319	4.Flocks updated              	  2.55	18	180	1100
+0319	3.Flocks reported             	  1.65	18	180	1100
+0319	2.Join done                   	  2.11	18	180	1100
+0319	1.Getting maximal disks       	 24.97	18	180	1100
+0319	4.Flocks updated              	  2.49	17	180	1100
+0319	3.Flocks reported             	  1.84	17	180	1100
+0319	2.Join done                   	  1.98	17	180	1100
+0319	1.Getting maximal disks       	 25.12	17	180	1100
+0319	4.Flocks updated              	  2.23	16	180	1100
+0319	3.Flocks reported             	  0.55	16	180	1100
+0319	2.Join done                   	  2.07	16	180	1100
+0319	1.Getting maximal disks       	 24.94	16	180	1100
+0319	4.Flocks updated              	  3.11	15	180	1100
+0319	3.Flocks reported             	  0.72	15	180	1100
+0319	2.Join done                   	  3.05	15	180	1100
+0319	1.Getting maximal disks       	 36.80	15	180	1100
+0320	4.Flocks updated              	  3.22	20	180	1200
+0320	3.Flocks reported             	  2.00	20	180	1200
+0320	2.Join done                   	  3.17	20	180	1200
+0320	1.Getting maximal disks       	 30.89	20	180	1200
+0320	4.Flocks updated              	  3.58	19	180	1200
+0320	3.Flocks reported             	  1.68	19	180	1200
+0320	2.Join done                   	  2.87	19	180	1200
+0320	1.Getting maximal disks       	 26.29	19	180	1200
+0320	4.Flocks updated              	  3.14	18	180	1200
+0320	3.Flocks reported             	  1.77	18	180	1200
+0320	2.Join done                   	  2.40	18	180	1200
+0320	1.Getting maximal disks       	 28.55	18	180	1200
+0320	4.Flocks updated              	  3.47	17	180	1200
+0320	3.Flocks reported             	  2.00	17	180	1200
+0320	2.Join done                   	  3.41	17	180	1200
+0320	1.Getting maximal disks       	 27.88	17	180	1200
+0320	4.Flocks updated              	  2.03	16	180	1200
+0320	3.Flocks reported             	  0.57	16	180	1200
+0320	2.Join done                   	  2.41	16	180	1200
+0320	1.Getting maximal disks       	 28.72	16	180	1200
+0320	4.Flocks updated              	  3.26	15	180	1200
+0320	3.Flocks reported             	  0.86	15	180	1200
+0320	2.Join done                   	  2.94	15	180	1200
+0320	1.Getting maximal disks       	 40.75	15	180	1200
