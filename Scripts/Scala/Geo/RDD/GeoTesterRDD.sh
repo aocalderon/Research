@@ -2,8 +2,9 @@
 
 EPSILON=$1
 PARTITIONS=$2
-GRIDTYPE=$3
-INDEXTYPE=$4
+DPARTITIONS=$3
+GRIDTYPE=$4
+INDEXTYPE=$5
 
 SPARK_JARS=/home/acald013/Spark/2.4/jars/
 CLASS_JAR=/home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar
@@ -29,6 +30,7 @@ spark-submit --conf spark.default.parallelism=72 \
     --num-executors $EXECUTORS --executor-cores $CORES --executor-memory $EMEMORY --driver-memory $DMEMORY \
     --class $CLASS_NAME $CLASS_JAR \
     --input $DATASET \
-    --epsilon $EPSILON --partitions $PARTITIONS --gridtype $GRIDTYPE --indextype $INDEXTYPE
+    --epsilon $EPSILON --partitions $PARTITIONS --dpartitions $DPARTITIONS \
+    --gridtype $GRIDTYPE --indextype $INDEXTYPE
 
 #--conf spark.driver.maxResultSize=10g 

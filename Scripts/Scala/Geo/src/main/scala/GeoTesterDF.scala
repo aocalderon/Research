@@ -97,6 +97,7 @@ class GeoTesterConf(args: Seq[String]) extends ScallopConf(args) {
   val epsilon = opt[Double](default = Some(10.0))
   val precision = opt[Double](default = Some(0.001))
   val partitions = opt[Int](default = Some(256))
+  val dpartitions = opt[Int](default = Some(1024))
   val indextype = opt[String](default = Some("quadtree"))
   val gridtype = opt[String](default = Some("quadtree"))
 

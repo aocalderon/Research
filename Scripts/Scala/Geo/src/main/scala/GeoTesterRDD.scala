@@ -56,17 +56,14 @@ object GeoTesterRDD{
 
     logger.info("Starting session... Done!")
 
-    val pointsRaw = timer{"Reading data"}{
+    val dpartitions = params.dpartitions()
+    val pointsRDD = timer{"Reading data"}{
       val pointsSchema = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
-      val points = spark.read.schema(pointsSchema)
+      val pointsRaw = spark.read.schema(pointsSchema)
         .option("delimiter", "\t").option("header", false)
-        .csv(params.input()).as[ST_Point].repartition(1024).rdd
-      points
-    }
-    pointsRaw.cache
-    n(pointsRaw.count(), "Raw points")
-
-    val points = timer{header("Casting geometries")}{
+        .csv(params.input()).as[ST_Point]
+        .repartition(dpartitions)
+        .rdd
       val pointsRDD = new SpatialRDD[Point]
       val points = pointsRaw.map{ point =>
         val userData = s"${point.id}\t${point.t}"
@@ -75,34 +72,42 @@ object GeoTesterRDD{
         p
       }
       pointsRDD.setRawSpatialRDD(points)
-      pointsRDD.rawSpatialRDD.cache()
       pointsRDD.analyze()
-      pointsRDD.rawSpatialRDD.repartition(72)
       pointsRDD
     }
+    pointsRDD.rawSpatialRDD.cache()
+    n(pointsRDD.rawSpatialRDD.count(), "PointsRDD")
 
-    val distance = params.epsilon() + params.precision()    
+    val distance = params.epsilon() + params.precision()
+    val (points, buffers) = timer{header("Distance self-join")}{
+      pointsRDD.spatialPartitioning(gridtype, params.partitions())
+      //pointsRDD.spatialPartitionedRDD.cache
+      pointsRDD.buildIndex(indextype, true)
+      //pointsRDD.indexedRDD.cache
+      //n(pointsRDD.indexedRDD.count(), "Points")
+      val buffersRDD = new CircleRDD(pointsRDD, distance)
+      buffersRDD.analyze()
+      buffersRDD.spatialPartitioning(pointsRDD.getPartitioner)
+      buffersRDD.spatialPartitionedRDD.cache
+      n(buffersRDD.spatialPartitionedRDD.count(), "Bufferes")
+      (pointsRDD, buffersRDD)
+    }
+
+    val considerBoundary = true
+    val usingIndex = true
     val pairs = timer{header("Distance self-join")}{
-      points.spatialPartitioning(gridtype, params.partitions())
-      points.spatialPartitionedRDD.cache()
-      val pointsBuffer = new CircleRDD(points, distance)
-      pointsBuffer.analyze()
-      pointsBuffer.spatialPartitioning(points.getPartitioner)
-      points.buildIndex(indextype, true)
-
-      val considerBoundary = true
-      val usingIndex = true
-      val pairs = JoinQuery.DistanceJoinQueryFlat(points, pointsBuffer, usingIndex, considerBoundary)
+      val pairs = JoinQuery.DistanceJoinQueryFlat(points, buffers, usingIndex, considerBoundary)
         .rdd.map{ pair =>
           val id1 = pair._1.getUserData().toString().split("\t").head.trim().toInt
           val p1  = pair._1.getCentroid
           val id2 = pair._2.getUserData().toString().split("\t").head.trim().toInt
           val p2  = pair._2
           ( (id1, p1) , (id2, p2) )
-        }.filter(p => p._1._1 < p._2._1).cache
-      n(pairs.count(), "Pairs")
+        }.filter(p => p._1._1 < p._2._1)
       pairs
     }
+    pairs.cache
+    n(pairs.count(), "Pairs")
 
     logger.info("Closing session...")
     spark.close()
