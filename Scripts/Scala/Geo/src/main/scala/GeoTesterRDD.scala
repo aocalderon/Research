@@ -60,7 +60,7 @@ object GeoTesterRDD{
       val pointsSchema = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
       val points = spark.read.schema(pointsSchema)
         .option("delimiter", "\t").option("header", false)
-        .csv(params.input()).as[ST_Point].rdd
+        .csv(params.input()).as[ST_Point].repartition(1024).rdd
       points
     }
     pointsRaw.cache
@@ -77,6 +77,7 @@ object GeoTesterRDD{
       pointsRDD.setRawSpatialRDD(points)
       pointsRDD.rawSpatialRDD.cache()
       pointsRDD.analyze()
+      pointsRDD.rawSpatialRDD.repartition(72)
       pointsRDD
     }
 
