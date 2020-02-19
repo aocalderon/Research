@@ -13,19 +13,23 @@ LISTENER=spark.extraListeners=TaskSparkListener
 LOG_FILE=/home/acald013/Spark/2.4/conf/log4j.properties
 
 MASTER=yarn
-EXECUTORS=6
-CORES=4
-DMEMORY=18g
-EMEMORY=5g
+EXECUTORS=36
+CORES=3
+DMEMORY=4g
+EMEMORY=4g
+PARALLELISM=$((10*CORES*EXECUTORS))
 
 #DATASET=/user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv
 DATASET=file:///tmp/LA_25KTrajs_19.tsv
 
-spark-submit --conf spark.default.parallelism=72 \
+spark-submit --conf spark.default.parallelism=${PARALLELISM} \
+    --conf spark.driver.maxResultSize=4g \
+    --conf spark.locality.wait=0s \
+    --conf spark.locality.wait.node=0s \
+    --conf spark.locality.wait.rack=3s \
     --files $LOG_FILE \
-    --conf $LISTENER \
-    --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:$LOG_FILE \
-    --jars ${SPARK_JARS}geospark-1.2.0.jar,${SPARK_JARS}scallop_2.11-3.1.5.jar,${SPARK_JARS}utils_2.11.jar \
+    --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:${LOG_FILE} \
+    --jars ${SPARK_JARS}geospark-1.2.0.jar,${SPARK_JARS}geospark-sql_2.3-1.2.0.jar,${SPARK_JARS}scallop_2.11-3.1.5.jar,${SPARK_JARS}utils_2.11.jar \
     --master $MASTER --deploy-mode client \
     --num-executors $EXECUTORS --executor-cores $CORES --executor-memory $EMEMORY --driver-memory $DMEMORY \
     --class $CLASS_NAME $CLASS_JAR \
@@ -33,4 +37,4 @@ spark-submit --conf spark.default.parallelism=72 \
     --epsilon $EPSILON --partitions $PARTITIONS --dpartitions $DPARTITIONS \
     --gridtype $GRIDTYPE --indextype $INDEXTYPE
 
-#--conf spark.driver.maxResultSize=10g 
+#    --conf $LISTENER \

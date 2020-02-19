@@ -2,15 +2,16 @@
 
 N=$1
 EPSILON=20
-PS=( 1 2 4 8 16 32 64 128 256 512 1024 )
-GS=( "kdbtree" "quadtree" )
-IS=( "rtree" "quadtree" )
+CORES=108
+PS=( 54 $CORES $((2*CORES)) $((4*CORES)) $((6*CORES)) $((8*CORES)) $((10*CORES)) )
+DS=( 1 54 108 162 216 324 )
+IS=( "quadtree" "none")
 
 for n in `seq 1 $N`; do
     for P in ${PS[@]}; do
-	for G in ${GS[@]}; do
+	for D in ${DS[@]}; do
 	    for I in ${IS[@]}; do
-		./GeoTesterRDD.sh  $EPSILON $P $G $I
+		./GeoTesterRDD.sh $EPSILON $P $D quadtree $I
 	    done
 	done
     done

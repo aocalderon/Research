@@ -7,11 +7,13 @@ import org.apache.spark.sql.{SparkSession}
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.serializer.KryoSerializer
+import org.apache.spark.storage.StorageLevel
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.datasyslab.geospark.spatialRDD.{SpatialRDD, CircleRDD}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.enums.{GridType, IndexType}
-import com.vividsolutions.jts.geom.{Coordinate, Point}
+import org.datasyslab.geosparksql.utils.{Adapter, GeoSparkSQLRegistrator}
+import com.vividsolutions.jts.geom.{Envelope, Coordinate, Point}
 import com.vividsolutions.jts.geom.GeometryFactory
 import edu.ucr.dblab.Utils._
 
@@ -31,14 +33,16 @@ object GeoTesterRDD{
     implicit val params = new GeoTesterConf(args)
     implicit val geofactory = new GeometryFactory()
     implicit val spark = SparkSession.builder()
-      .appName("GeoTesterRDD")
+      .appName(s"GeoTesterRDD ${params.partitions()} ${params.dpartitions()} ${params.gridtype()} ${params.indextype()}")
       .config("spark.serializer", classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .getOrCreate()
+    GeoSparkSQLRegistrator.registerAll(spark)
     import spark.implicits._
     val indextype = params.indextype() match {
-      case "rtree"    => IndexType.RTREE
-      case "quadtree" => IndexType.QUADTREE
+      case "rtree"    => Some(IndexType.RTREE)
+      case "quadtree" => Some(IndexType.QUADTREE)
+      case _ => None
     }
     val gridtype = params.gridtype() match {
       case "kdbtree"  => GridType.KDBTREE
@@ -57,7 +61,8 @@ object GeoTesterRDD{
     logger.info("Starting session... Done!")
 
     val dpartitions = params.dpartitions()
-    val pointsRDD = timer{"Reading data"}{
+    val envelope = new Envelope(1963862.582, 1995915.392, 533608.982, 574098.423)
+    val (pointsRDD, nPointsRDD) = timer{"Reading data"}{
       val pointsSchema = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
       val pointsRaw = spark.read.schema(pointsSchema)
         .option("delimiter", "\t").option("header", false)
@@ -72,29 +77,38 @@ object GeoTesterRDD{
         p
       }
       pointsRDD.setRawSpatialRDD(points)
-      pointsRDD.analyze()
-      pointsRDD
+      pointsRDD.rawSpatialRDD.persist(StorageLevel.MEMORY_ONLY)
+      val nPointsRDD = pointsRDD.rawSpatialRDD.count()
+      pointsRDD.analyze(envelope, nPointsRDD.toInt)
+      n(nPointsRDD, "PointsRDD")
+      (pointsRDD, nPointsRDD)
     }
-    pointsRDD.rawSpatialRDD.cache()
-    n(pointsRDD.rawSpatialRDD.count(), "PointsRDD")
 
     val distance = params.epsilon() + params.precision()
-    val (points, buffers) = timer{header("Distance self-join")}{
+    val (points, buffers, usingIndex) = timer{header("Partitioning")}{
       pointsRDD.spatialPartitioning(gridtype, params.partitions())
-      //pointsRDD.spatialPartitionedRDD.cache
-      pointsRDD.buildIndex(indextype, true)
-      //pointsRDD.indexedRDD.cache
-      //n(pointsRDD.indexedRDD.count(), "Points")
+      val usingIndex =  indextype match {
+        case Some(index) => {
+          pointsRDD.buildIndex(index, true)
+          pointsRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
+          logger.info(s"IndexType: ${index.name()}.")
+          true
+        }
+        case None => {
+          pointsRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+          logger.info("IndexType: None.")
+          false
+        }
+      }
       val buffersRDD = new CircleRDD(pointsRDD, distance)
-      buffersRDD.analyze()
+      buffersRDD.analyze(envelope, nPointsRDD.toInt)
       buffersRDD.spatialPartitioning(pointsRDD.getPartitioner)
       buffersRDD.spatialPartitionedRDD.cache
       n(buffersRDD.spatialPartitionedRDD.count(), "Bufferes")
-      (pointsRDD, buffersRDD)
+      (pointsRDD, buffersRDD, usingIndex)
     }
 
     val considerBoundary = true
-    val usingIndex = true
     val pairs = timer{header("Distance self-join")}{
       val pairs = JoinQuery.DistanceJoinQueryFlat(points, buffers, usingIndex, considerBoundary)
         .rdd.map{ pair =>
@@ -103,11 +117,10 @@ object GeoTesterRDD{
           val id2 = pair._2.getUserData().toString().split("\t").head.trim().toInt
           val p2  = pair._2
           ( (id1, p1) , (id2, p2) )
-        }.filter(p => p._1._1 < p._2._1)
+        }.filter(p => p._1._1 < p._2._1).cache
+      n(pairs.count(), "Pairs")
       pairs
     }
-    pairs.cache
-    n(pairs.count(), "Pairs")
 
     logger.info("Closing session...")
     spark.close()

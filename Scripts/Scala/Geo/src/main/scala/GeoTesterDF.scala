@@ -31,8 +31,9 @@ object GeoTesterDF{
       .config("spark.serializer", classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .config("geospark.join.numpartition", params.partitions())
-      .config("geospark.global.indextype", params.indextype())
       .config("geospark.join.gridtype", params.gridtype())
+      .config("geospark.join.index", if(params.indextype() == "none") false else true)
+      .config("geospark.join.indextype", params.indextype())
       .getOrCreate()
     import spark.implicits._
     GeoSparkSQLRegistrator.registerAll(spark)
@@ -48,16 +49,11 @@ object GeoTesterDF{
 
     logger.info("Starting session... Done!")
 
-    val pointsRaw = timer{"Reading data"}{
+    val points = timer{"Reading data"}{
       val pointsSchema = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
-      val points = spark.read.schema(pointsSchema)
+      val pointsRaw = spark.read.schema(pointsSchema)
         .option("delimiter", "\t").option("header", false)
-        .csv(params.input()).as[ST_Point].cache
-      n(points.count(), "Raw points")
-      points
-    }
-
-    val points = timer{header("Casting geometries")}{
+        .csv(params.input()).as[ST_Point].repartition(params.dpartitions()).cache
       pointsRaw.createOrReplaceTempView("points")
       val sql = """
         |SELECT 
@@ -66,7 +62,8 @@ object GeoTesterDF{
         |  points
         """.stripMargin
       val points = spark.sql(sql)
-      points.cache
+      points.cache()
+      n(points.count(), "Points")
       points
     }
 
