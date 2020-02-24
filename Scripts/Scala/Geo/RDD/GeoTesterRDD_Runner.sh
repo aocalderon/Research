@@ -3,8 +3,8 @@
 N=$1
 EPSILON=20
 CORES=108
-PS=( 54 $CORES $((2*CORES)) $((4*CORES)) $((6*CORES)) $((8*CORES)) $((10*CORES)) )
-DS=( 1 54 108 162 216 324 )
+PS=( 54 $((1*CORES)) $((2*CORES)) $((3*CORES)) $((4*CORES)) )
+DS=( 1 54 108 162 216)
 IS=( "quadtree" "none")
 
 for n in `seq 1 $N`; do

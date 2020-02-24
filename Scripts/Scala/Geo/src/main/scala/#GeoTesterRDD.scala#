@@ -163,7 +163,8 @@ object GeoTesterRDD{
       centersBuffer.analyze(envelope, nCenters.toInt)
       centersBuffer.spatialPartitioning(points.getPartitioner)
       centersBuffer.spatialPartitionedRDD.cache()
-      val disks = JoinQuery.DistanceJoinQuery(points, centersBuffer, usingIndex, considerBoundary).cache()
+      val disks = JoinQuery
+        .DistanceJoinQuery(points, centersBuffer, usingIndex, considerBoundary).cache()
       n(disks.count(), "Disks")
       disks
     }
