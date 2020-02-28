@@ -2,7 +2,7 @@
 
 N=$1
 MU=3
-ES=( 15 30 45 )
+ES=( 20 )
 CORES=108
 PS=( $((1*CORES)) $((2*CORES)) $((3*CORES)) $((4*CORES)) )
 QS=( $((1*CORES)) $((2*CORES)) $((3*CORES)) $((4*CORES)) )
