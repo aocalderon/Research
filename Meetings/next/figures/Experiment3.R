@@ -30,4 +30,11 @@ p = ggplot(data = data1, aes(x = factor(Partitions), y = Time, fill = Epsilon)) 
   labs(x="Number of partitions", y="Time [s]", title="Execution time initial phases MF") 
 plot(p)
 ggsave("Experiment3.pdf", width = 8, height = 7, device = "pdf")
-  
+
+data2 = data1 %>% group_by(Partitions, Epsilon) %>% summarise(Time = sum(Time))
+p = ggplot(data = data2, aes(x = factor(Partitions), y = Time, fill = Epsilon)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  labs(x="Number of partitions", y="Time [s]", title="Total execution time MF") 
+plot(p)
+ggsave("Total.pdf", width = 8, height = 7, device = "pdf")  
