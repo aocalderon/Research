@@ -1,10 +1,9 @@
 #!/bin/bash
 
 EPSILON=$1
-PARTITIONS=$2
-DPARTITIONS=$3
-GRIDTYPE=$4
-INDEXTYPE=$5
+MU=$2
+PARTITIONS=$3
+PARALLELISM=$4
 
 SPARK_JARS=/home/acald013/Spark/2.4/jars/
 CLASS_JAR=/home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar
@@ -13,14 +12,15 @@ LISTENER=spark.extraListeners=TaskSparkListener
 LOG_FILE=/home/acald013/Spark/2.4/conf/log4j.properties
 
 MASTER=yarn
-EXECUTORS=36
-CORES=3
+EXECUTORS=12
+CORES=9
 DMEMORY=4g
 EMEMORY=4g
-PARALLELISM=$((10*CORES*EXECUTORS))
+GRIDTYPE=quadtree
+INDEXTYPE=none
 
-#DATASET=/user/acald013/Datasets/LA/LA_25KTrajs/LA_25KTrajs_19.tsv
-DATASET=file:///tmp/LA_25KTrajs_19.tsv
+DATASET=/user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv
+#DATASET=file:///tmp/LA_25KTrajs_19.tsv
 
 spark-submit --conf spark.default.parallelism=${PARALLELISM} \
     --conf spark.driver.maxResultSize=4g \
@@ -34,7 +34,7 @@ spark-submit --conf spark.default.parallelism=${PARALLELISM} \
     --num-executors $EXECUTORS --executor-cores $CORES --executor-memory $EMEMORY --driver-memory $DMEMORY \
     --class $CLASS_NAME $CLASS_JAR \
     --input $DATASET \
-    --epsilon $EPSILON --partitions $PARTITIONS --dpartitions $DPARTITIONS \
+    --epsilon $EPSILON --mu $MU --partitions $PARTITIONS --parallelism $PARALLELISM \
     --gridtype $GRIDTYPE --indextype $INDEXTYPE
 
 #    --conf $LISTENER \

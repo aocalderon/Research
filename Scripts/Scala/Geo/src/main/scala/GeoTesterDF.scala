@@ -53,7 +53,7 @@ object GeoTesterDF{
       val pointsSchema = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
       val pointsRaw = spark.read.schema(pointsSchema)
         .option("delimiter", "\t").option("header", false)
-        .csv(params.input()).as[ST_Point].repartition(params.dpartitions()).cache
+        .csv(params.input()).as[ST_Point].repartition(params.parallelism()).cache
       pointsRaw.createOrReplaceTempView("points")
       val sql = """
         |SELECT 
@@ -87,17 +87,4 @@ object GeoTesterDF{
     spark.close()
     logger.info("Closing session... Done!")
   }
-}
-
-class GeoTesterConf(args: Seq[String]) extends ScallopConf(args) {
-  val input = opt[String](default = Some(""))
-  val epsilon = opt[Double](default = Some(10.0))
-  val mu = opt[Int](default = Some(2))
-  val precision = opt[Double](default = Some(0.001))
-  val partitions = opt[Int](default = Some(256))
-  val dpartitions = opt[Int](default = Some(1024))
-  val indextype = opt[String](default = Some("quadtree"))
-  val gridtype = opt[String](default = Some("quadtree"))
-
-  verify()
 }

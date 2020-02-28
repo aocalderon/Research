@@ -1,17 +1,17 @@
 #!/bin/bash
 
 N=$1
-EPSILON=20
+MU=3
+ES=( 15 30 45 )
 CORES=108
-PS=( 54 $((1*CORES)) $((2*CORES)) $((3*CORES)) $((4*CORES)) )
-DS=( 1 54 108 162 216)
-IS=( "quadtree" "none")
+PS=( $((1*CORES)) $((2*CORES)) $((3*CORES)) $((4*CORES)) )
+QS=( $((1*CORES)) $((2*CORES)) $((3*CORES)) $((4*CORES)) )
 
 for n in `seq 1 $N`; do
     for P in ${PS[@]}; do
-	for D in ${DS[@]}; do
-	    for I in ${IS[@]}; do
-		./GeoTesterRDD.sh $EPSILON $P $D quadtree $I
+	for Q in ${QS[@]}; do
+	    for E in ${ES[@]}; do
+		./GeoTesterRDD.sh $E $MU $P $Q
 	    done
 	done
     done

@@ -27,14 +27,17 @@ object GeoTesterRDD{
     def asWKT = PointWKT(s"POINT($x $y)", id, t)
   }
 
-  def n(count: Long, name: String = ""): Unit = logger.info(s"$name: $count")
-
   def main(args: Array[String]): Unit = {
     logger.info("Starting session...")
     implicit val params = new GeoTesterConf(args)
+    val appName = s"GeoTesterRDD: " +
+    s"epslion=${params.epsilon()} " +
+    s"grid=${params.gridtype()} " +
+    s"partitions=${params.partitions()} " +
+    s"parallelism=${params.parallelism()}"
     implicit val geofactory = new GeometryFactory()
     implicit val spark = SparkSession.builder()
-      .appName(s"GeoTesterRDD ${params.partitions()} ${params.dpartitions()} ${params.gridtype()} ${params.indextype()}")
+      .appName(appName)
       .config("spark.serializer", classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .getOrCreate()
@@ -50,25 +53,28 @@ object GeoTesterRDD{
       case "quadtree" => GridType.QUADTREE
     }
     implicit val conf = spark.sparkContext.getConf
-    logger.info(s"${appId}|${System.getProperty("sun.java.command")}")
     def getConf(property: String)(implicit conf: SparkConf): String = conf.get(property)
     def appId: String = if(getConf("spark.master").contains("local")){
       getConf("spark.app.id")
     } else {
       getConf("spark.app.id").takeRight(4)
     }
-    def header(msg: String): String = s"GeoTesterRDD|${appId}|$msg"
+    def header(msg: String): String = s"GeoTesterRDD|${appId}|$msg|Time"
+
+    def n(msg:String, count: Long): Unit = {
+      logger.info(s"GeoTesterRDD|${appId}|$msg|Load|$count")
+    }
 
     logger.info("Starting session... Done!")
 
-    val dpartitions = params.dpartitions()
+    val parallelism = params.parallelism()
     val envelope = new Envelope(1963862.582, 1995915.392, 533608.982, 574098.423)
     val (pointsRDD, nPointsRDD) = timer{"Reading data"}{
       val pointsSchema = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
       val pointsRaw = spark.read.schema(pointsSchema)
         .option("delimiter", "\t").option("header", false)
         .csv(params.input()).as[ST_Point]
-        .repartition(dpartitions)
+        .repartition(parallelism)
         .rdd
       val pointsRDD = new SpatialRDD[Point]
       val points = pointsRaw.map{ point =>
@@ -81,12 +87,13 @@ object GeoTesterRDD{
       pointsRDD.rawSpatialRDD.persist(StorageLevel.MEMORY_ONLY)
       val nPointsRDD = pointsRDD.rawSpatialRDD.count()
       pointsRDD.analyze(envelope, nPointsRDD.toInt)
-      n(nPointsRDD, "PointsRDD")
+      n("Data", nPointsRDD)
       (pointsRDD, nPointsRDD)
     }
 
     val distance = params.epsilon() + params.precision()
-    val (points, buffers, usingIndex) = timer{header("A.Partitions done")}{
+    val stageA = "A.Partitions done"
+    val (points, buffers, npartitions, usingIndex) = timer{header(stageA)}{
       pointsRDD.spatialPartitioning(gridtype, params.partitions())
       val usingIndex =  indextype match {
         case Some(index) => {
@@ -101,17 +108,19 @@ object GeoTesterRDD{
           false
         }
       }
+      val npartitions = pointsRDD.getPartitioner.getGrids.size()
       val buffersRDD = new CircleRDD(pointsRDD, distance)
       buffersRDD.analyze(envelope, nPointsRDD.toInt)
       buffersRDD.spatialPartitioning(pointsRDD.getPartitioner)
       buffersRDD.spatialPartitionedRDD.cache
-      n(buffersRDD.spatialPartitionedRDD.count(), "Buffers")
-      (pointsRDD, buffersRDD, usingIndex)
+      n(stageA, buffersRDD.spatialPartitionedRDD.count())
+      (pointsRDD, buffersRDD, npartitions, usingIndex)
     }
 
     // Finding pairs...
     val considerBoundary = true
-    val pairs = timer{header("B.Pairs found")}{
+    val stageB = "B.Pairs found"
+    val pairs = timer{header(stageB)}{
       val pairs = JoinQuery.DistanceJoinQueryFlat(points, buffers, usingIndex, considerBoundary)
         .rdd.map{ pair =>
           val id1 = pair._1.getUserData().toString().split("\t").head.trim().toInt
@@ -120,7 +129,7 @@ object GeoTesterRDD{
           val p2  = pair._2
           ( (id1, p1) , (id2, p2) )
         }.filter(p => p._1._1 < p._2._1).cache
-      n(pairs.count(), "Pairs")
+      n("B.Pairs found", pairs.count())
       pairs
     }
 
@@ -143,7 +152,8 @@ object GeoTesterRDD{
       (h, k)
     }
     val r2: Double = math.pow(params.epsilon() / 2.0, 2)
-    val (centers, nCenters) = timer{header("C.Centers found")}{
+    val stageC = "C.Centers found"
+    val (centers, nCenters) = timer{header(stageC)}{
       val centersPairs = pairs.map{ p =>
         val p1 = p._1._2
         val p2 = p._2._2
@@ -151,26 +161,28 @@ object GeoTesterRDD{
       }
       val centers = centersPairs.map(_._1).union(centersPairs.map(_._2)).cache
       val nCenters = centers.count()
-      n(nCenters, "Centers")
+      n(stageC, nCenters)
       (centers, nCenters)
     }
 
     // Finding disks...
     val r = params.epsilon() / 2.0
-    val disks = timer{header("D.Disks found")}{
+    val stageD = "D.Disks found"
+    val disks = timer{header(stageD)}{
       val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
       val centersBuffer = new CircleRDD(centersRDD, r + params.precision())
       centersBuffer.analyze(envelope, nCenters.toInt)
       centersBuffer.spatialPartitioning(points.getPartitioner)
       centersBuffer.spatialPartitionedRDD.cache()
       val disks = JoinQuery.DistanceJoinQuery(points, centersBuffer, usingIndex, considerBoundary).cache()
-      n(disks.count(), "Disks")
+      n("D.Disks found", disks.count())
       disks
     }
 
     // Cleaning disks...
     val mu = params.mu()
-    timer{header("Disks cleaned")}{
+    val stageE = "E.Disks cleaned"
+    timer{header(stageE)}{
       val d = disks.rdd.map{ d =>
         val points = d._2.asScala.toArray
         val centroid = geofactory.createMultiPoint(points).getEnvelope().getCentroid
@@ -178,12 +190,27 @@ object GeoTesterRDD{
         centroid.setUserData(pids)
         centroid
       }.distinct().cache()
-      n(d.count(), "Disks")
+      n(stageE, d.count())
       d
     }
 
     logger.info("Closing session...")
+    logger.info(s"Number of partition on default quadtree: $npartitions.")
+    logger.info(s"${appId}|${System.getProperty("sun.java.command")} --npartitions $npartitions")
     spark.close()
     logger.info("Closing session... Done!")
   }
+}
+
+class GeoTesterConf(args: Seq[String]) extends ScallopConf(args) {
+  val input = opt[String](default = Some(""))
+  val epsilon = opt[Double](default = Some(10.0))
+  val mu = opt[Int](default = Some(2))
+  val precision = opt[Double](default = Some(0.001))
+  val partitions = opt[Int](default = Some(256))
+  val parallelism = opt[Int](default = Some(324))
+  val gridtype = opt[String](default = Some("quadtree"))
+  val indextype = opt[String](default = Some("none"))
+
+  verify()
 }
