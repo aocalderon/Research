@@ -46,6 +46,10 @@
 2020-02-26 16:56:22,150|GeoTesterRDD|2502|B.Pairs found|Load|217567
 2020-02-26 16:56:22,151|GeoTesterRDD|2502|B.Pairs found|Time|  1.36
 2020-02-26 16:56:22,885|GeoTesterRDD|2502|C.Centers found|Load|435134
+
+move indexing to this point
+indexing the centers and join with points
+
 2020-02-26 16:56:22,885|GeoTesterRDD|2502|C.Centers found|Time|  0.73
 2020-02-26 16:56:42,483|GeoTesterRDD|2502|D.Disks found|Load|435134
 2020-02-26 16:56:42,484|GeoTesterRDD|2502|D.Disks found|Time| 19.59
@@ -117,6 +121,10 @@
 2020-02-26 16:59:20,015|GeoTesterRDD|2506|Data|Load|50419
 2020-02-26 16:59:20,015|Reading data                  |  8.78
 2020-02-26 16:59:20,499|IndexType: None.
+
+Find the number of partitions in quadtree, start the time after that
+use the number of partitions in the quadthree to set parallelism...
+
 2020-02-26 16:59:22,362|GeoTesterRDD|2506|A.Partitions done|Load|53595
 2020-02-26 16:59:22,363|GeoTesterRDD|2506|A.Partitions done|Time|  2.35
 2020-02-26 16:59:23,572|GeoTesterRDD|2506|B.Pairs found|Load|46561
