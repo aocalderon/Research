@@ -67,8 +67,8 @@ object GeoTesterRDD{
     logger.info(s"Level of parallelism: ${getConf("spark.default.parallelism")}")
 
     val parallelism = params.parallelism()
-    val envelope = new Envelope(1963862.582, 1995915.392, 533608.982, 574098.423)
-    val (pointsRDD, nPointsRDD) = timer{"Reading data"}{
+    //val envelope = new Envelope(1963862.582, 1995915.392, 533608.982, 574098.423)
+    val (pointsRDD, nPointsRDD, envelope) = timer{"Reading data"}{
       val pointsSchema = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
       val pointsRaw = spark.read.schema(pointsSchema)
         .option("delimiter", "\t").option("header", false)
@@ -85,9 +85,9 @@ object GeoTesterRDD{
       pointsRDD.setRawSpatialRDD(points)
       pointsRDD.rawSpatialRDD.persist(StorageLevel.MEMORY_ONLY)
       val nPointsRDD = pointsRDD.rawSpatialRDD.count()
-      pointsRDD.analyze(envelope, nPointsRDD.toInt)
+      pointsRDD.analyze()
       n("Data", nPointsRDD)
-      (pointsRDD, nPointsRDD)
+      (pointsRDD, nPointsRDD, pointsRDD.boundaryEnvelope)
     }
 
     val distance = params.epsilon() + params.precision()
@@ -126,7 +126,7 @@ object GeoTesterRDD{
     }
     val r2: Double = math.pow(params.epsilon() / 2.0, 2)
     val considerBoundary = true
-    val stageB = "B.Pairs and centers found"
+    val stageB = "A.Pairs and centers found"
     val (centers, nCenters) = timer{header(stageB)}{
       val usingIndex = false
       val centersPairs = JoinQuery.DistanceJoinQueryFlat(points, buffers, usingIndex, considerBoundary)
@@ -151,42 +151,50 @@ object GeoTesterRDD{
 
     // Finding disks...
     val r = params.epsilon() / 2.0
-    val stageC = "C.Disks found"
+    val stageC = "B.Disks found"
     val disks = timer{header(stageC)}{
       val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
-      val centersBuffer = new CircleRDD(centersRDD, r + params.precision())
-      centersBuffer.analyze(envelope, nCenters.toInt)
-      centersBuffer.spatialPartitioning(points.getPartitioner)
-      centersBuffer.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
-      val usingIndex =  indextype match {
+      centersRDD.analyze(envelope, nCenters.toInt)
+      centersRDD.spatialPartitioning(points.getPartitioner)
+      centersRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+      val pointsBuffer = new CircleRDD(points, r + params.precision())
+      pointsBuffer.spatialPartitioning(centersRDD.getPartitioner)
+      pointsBuffer.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+      val usingIndex = indextype match {
         case Some(index) => {
-          centersBuffer.buildIndex(index, true)
-          centersBuffer.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
+          centersRDD.buildIndex(index, true)
+          centersRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
           logger.info(s"IndexType: ${index.name()}.")
           true
         }
         case None => {
-          centersBuffer.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+          centersRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
           logger.info("IndexType: None.")
           false
         }
       }      
-      val disks = JoinQuery.DistanceJoinQuery(points, centersBuffer, usingIndex, considerBoundary).cache()
+      val disks = JoinQuery.DistanceJoinQueryFlat(centersRDD, pointsBuffer, usingIndex, considerBoundary)
       n(stageC, disks.count())
       disks
     }
+    //disks.take(10).foreach{println}
 
     // Cleaning disks...
     val mu = params.mu()
-    val stageD = "D.Disks cleaned"
+    val stageD = "C.Disks cleaned"
     timer{header(stageD)}{
       val d = disks.rdd.map{ d =>
-        val points = d._2.asScala.toArray
-        val centroid = geofactory.createMultiPoint(points).getEnvelope().getCentroid
-        val pids = points.map(_.getUserData.toString().split("\t").head.toInt).sorted.mkString(" ")
-        centroid.setUserData(pids)
-        centroid
-      }.distinct().cache()
+        val point  = d._1
+        val center = d._2
+        (center, point)
+      }.groupByKey()
+        .map{ d =>
+          val points = d._2.toArray
+          val centroid = geofactory.createMultiPoint(points.map(_.getCentroid)).getEnvelope().getCentroid
+          val pids = points.map(_.getUserData.toString().split("\t").head.toInt).sorted.mkString(" ")
+          centroid.setUserData(pids)
+          centroid
+        }.distinct().cache()
       n(stageD, d.count())
       d
     }
