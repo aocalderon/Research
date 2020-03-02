@@ -60,12 +60,11 @@ object GeoTesterRDD{
       getConf("spark.app.id").takeRight(4)
     }
     def header(msg: String): String = s"GeoTesterRDD|${appId}|$msg|Time"
-
     def n(msg:String, count: Long): Unit = {
       logger.info(s"GeoTesterRDD|${appId}|$msg|Load|$count")
     }
-
     logger.info("Starting session... Done!")
+    logger.info(s"Level of parallelism: ${getConf("spark.default.parallelism")}")
 
     val parallelism = params.parallelism()
     val envelope = new Envelope(1963862.582, 1995915.392, 533608.982, 574098.423)
@@ -92,48 +91,22 @@ object GeoTesterRDD{
     }
 
     val distance = params.epsilon() + params.precision()
-    val stageA = "A.Partitions done"
-    val (points, buffers, npartitions, usingIndex) = timer{header(stageA)}{
+    val stageA = "Partitions done"
+    val (points, buffers, npartitions) = timer{stageA}{
       pointsRDD.spatialPartitioning(gridtype, params.partitions())
-      val usingIndex =  indextype match {
-        case Some(index) => {
-          pointsRDD.buildIndex(index, true)
-          pointsRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
-          logger.info(s"IndexType: ${index.name()}.")
-          true
-        }
-        case None => {
-          pointsRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
-          logger.info("IndexType: None.")
-          false
-        }
-      }
+      pointsRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
       val npartitions = pointsRDD.getPartitioner.getGrids.size()
       val buffersRDD = new CircleRDD(pointsRDD, distance)
       buffersRDD.analyze(envelope, nPointsRDD.toInt)
       buffersRDD.spatialPartitioning(pointsRDD.getPartitioner)
-      buffersRDD.spatialPartitionedRDD.cache
+      buffersRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
       n(stageA, buffersRDD.spatialPartitionedRDD.count())
-      (pointsRDD, buffersRDD, npartitions, usingIndex)
+      (pointsRDD, buffersRDD, npartitions)
     }
+    spark.conf.set("spark.default.parallelism", npartitions)
+    logger.info(s"Updating level of parallelism: ${getConf("spark.default.parallelism")}")
 
-    // Finding pairs...
-    val considerBoundary = true
-    val stageB = "B.Pairs found"
-    val pairs = timer{header(stageB)}{
-      val pairs = JoinQuery.DistanceJoinQueryFlat(points, buffers, usingIndex, considerBoundary)
-        .rdd.map{ pair =>
-          val id1 = pair._1.getUserData().toString().split("\t").head.trim().toInt
-          val p1  = pair._1.getCentroid
-          val id2 = pair._2.getUserData().toString().split("\t").head.trim().toInt
-          val p2  = pair._2
-          ( (id1, p1) , (id2, p2) )
-        }.filter(p => p._1._1 < p._2._1).cache
-      n("B.Pairs found", pairs.count())
-      pairs
-    }
-
-    // Finding centers...
+    // Finding pairs and centers...
     def calculateCenterCoordinates(p1: Point, p2: Point, r2: Double): (Point, Point) = {
       var h = geofactory.createPoint(new Coordinate(-1.0,-1.0))
       var k = geofactory.createPoint(new Coordinate(-1.0,-1.0))
@@ -152,37 +125,61 @@ object GeoTesterRDD{
       (h, k)
     }
     val r2: Double = math.pow(params.epsilon() / 2.0, 2)
-    val stageC = "C.Centers found"
-    val (centers, nCenters) = timer{header(stageC)}{
-      val centersPairs = pairs.map{ p =>
+    val considerBoundary = true
+    val stageB = "B.Pairs and centers found"
+    val (centers, nCenters) = timer{header(stageB)}{
+      val usingIndex = false
+      val centersPairs = JoinQuery.DistanceJoinQueryFlat(points, buffers, usingIndex, considerBoundary)
+        .rdd.map{ pair =>
+          val id1 = pair._1.getUserData().toString().split("\t").head.trim().toInt
+          val p1  = pair._1.getCentroid
+          val id2 = pair._2.getUserData().toString().split("\t").head.trim().toInt
+          val p2  = pair._2
+          ( (id1, p1) , (id2, p2) )
+        }.filter(p => p._1._1 < p._2._1).map{ p =>
         val p1 = p._1._2
         val p2 = p._2._2
         calculateCenterCoordinates(p1, p2, r2)
-      }
-      val centers = centersPairs.map(_._1).union(centersPairs.map(_._2)).cache
+      }.persist(StorageLevel.MEMORY_ONLY)
+      val centers = centersPairs.map(_._1)
+        .union(centersPairs.map(_._2))
+        .persist(StorageLevel.MEMORY_ONLY)
       val nCenters = centers.count()
-      n(stageC, nCenters)
+      n(stageB, nCenters)
       (centers, nCenters)
     }
 
     // Finding disks...
     val r = params.epsilon() / 2.0
-    val stageD = "D.Disks found"
-    val disks = timer{header(stageD)}{
+    val stageC = "C.Disks found"
+    val disks = timer{header(stageC)}{
       val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
       val centersBuffer = new CircleRDD(centersRDD, r + params.precision())
       centersBuffer.analyze(envelope, nCenters.toInt)
       centersBuffer.spatialPartitioning(points.getPartitioner)
-      centersBuffer.spatialPartitionedRDD.cache()
+      centersBuffer.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+      val usingIndex =  indextype match {
+        case Some(index) => {
+          centersBuffer.buildIndex(index, true)
+          centersBuffer.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
+          logger.info(s"IndexType: ${index.name()}.")
+          true
+        }
+        case None => {
+          centersBuffer.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+          logger.info("IndexType: None.")
+          false
+        }
+      }      
       val disks = JoinQuery.DistanceJoinQuery(points, centersBuffer, usingIndex, considerBoundary).cache()
-      n("D.Disks found", disks.count())
+      n(stageC, disks.count())
       disks
     }
 
     // Cleaning disks...
     val mu = params.mu()
-    val stageE = "E.Disks cleaned"
-    timer{header(stageE)}{
+    val stageD = "D.Disks cleaned"
+    timer{header(stageD)}{
       val d = disks.rdd.map{ d =>
         val points = d._2.asScala.toArray
         val centroid = geofactory.createMultiPoint(points).getEnvelope().getCentroid
@@ -190,7 +187,7 @@ object GeoTesterRDD{
         centroid.setUserData(pids)
         centroid
       }.distinct().cache()
-      n(stageE, d.count())
+      n(stageD, d.count())
       d
     }
 

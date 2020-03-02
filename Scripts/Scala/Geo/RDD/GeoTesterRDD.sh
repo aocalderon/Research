@@ -2,8 +2,7 @@
 
 EPSILON=$1
 MU=$2
-PARTITIONS=$3
-PARALLELISM=$4
+INDEXTYPE=$3
 
 SPARK_JARS=/home/acald013/Spark/2.4/jars/
 CLASS_JAR=/home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar
@@ -14,10 +13,11 @@ LOG_FILE=/home/acald013/Spark/2.4/conf/log4j.properties
 MASTER=yarn
 EXECUTORS=12
 CORES=9
-DMEMORY=4g
-EMEMORY=4g
+DMEMORY=10g
+EMEMORY=30g
 GRIDTYPE=quadtree
-INDEXTYPE=none
+PARTITIONS=216
+PARALLELISM=216
 
 DATASET=/user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv
 #DATASET=file:///tmp/LA_25KTrajs_19.tsv
