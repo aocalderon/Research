@@ -1,6 +1,6 @@
 require(tidyverse)
 
-log = enframe(readLines("ByIndexer.txt"))
+log = enframe(readLines("ByIndexer2.txt"))
 paramsPattern = "indextype "
 getParams <- function(command){
   params = str_trim(str_split(command, "--")[[1]])
@@ -11,13 +11,14 @@ spark = log %>% filter(grepl(value, pattern = "SparkSubmit")) %>%
   separate(value, into = c(NA, "appId", "command"), sep = "\\|")
 spark$params = spark$command %>% map(getParams)
 spark = spark %>% separate(params, into = c(NA,"Index"), sep = " ") %>%
-  select(appId, Index)
+  mutate(appId = as.numeric(appId)) %>%
+  select(appId, Index) %>% filter(appId >= 2957)
 
 fieldsGeoTester = c("Timestamp","Tag1","appId","Phase","Tag2","Time")
 mf = log %>% filter(grepl(value, pattern = "\\|Time\\|")) %>% 
   separate(value, fieldsGeoTester, sep = "\\|") %>%
-  mutate(Time = as.numeric(Time)) %>%
-  select(appId, Phase, Time)
+  mutate(Time = as.numeric(Time), appId = as.numeric(appId)) %>%
+  select(appId, Phase, Time) %>% filter(appId >= 2957)
 
 data = mf %>% inner_join(spark, by = c("appId")) %>% select(Index, Phase, Time)
 
