@@ -32,7 +32,7 @@ object QuadtreeReader {
       Grid(id, lineage, envelope)
     }.toList
     //**
-    val samples = grids.map(_.envelope)
+    val samples = grids.sortBy(_.lineage.size).map(_.envelope)
     val minX = grids.map(_.envelope.getMinX()).min
     val minY = grids.map(_.envelope.getMinY()).min
     val maxX = grids.map(_.envelope.getMaxX()).max

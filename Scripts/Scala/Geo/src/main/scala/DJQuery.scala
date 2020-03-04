@@ -18,7 +18,7 @@ import com.vividsolutions.jts.geom.{Envelope, Coordinate, Point}
 import com.vividsolutions.jts.geom.GeometryFactory
 import edu.ucr.dblab.Utils._
 
-object GeoTesterRDD{
+object DJQuery{
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   case class PointWKT(wkt: String, id: Int, t: Int)
@@ -29,7 +29,7 @@ object GeoTesterRDD{
 
   def main(args: Array[String]): Unit = {
     logger.info("Starting session...")
-    implicit val params = new GeoTesterConf(args)
+    implicit val params = new DJQueryConf(args)
     val appName = s"GeoTesterRDD: " +
     s"epslion=${params.epsilon()} " +
     s"grid=${params.gridtype()} " +
@@ -177,7 +177,7 @@ object GeoTesterRDD{
       n(stageC, disks.count())
       disks
     }
-    //disks.take(10).foreach{println}
+    disks.rdd.take(10).foreach{println}
 
     // Cleaning disks...
     val mu = params.mu()
@@ -208,7 +208,7 @@ object GeoTesterRDD{
   }
 }
 
-class GeoTesterConf(args: Seq[String]) extends ScallopConf(args) {
+class DJQueryConf(args: Seq[String]) extends ScallopConf(args) {
   val input = opt[String](default = Some(""))
   val epsilon = opt[Double](default = Some(10.0))
   val mu = opt[Int](default = Some(2))
@@ -217,6 +217,7 @@ class GeoTesterConf(args: Seq[String]) extends ScallopConf(args) {
   val parallelism = opt[Int](default = Some(324))
   val gridtype = opt[String](default = Some("quadtree"))
   val indextype = opt[String](default = Some("none"))
+  val side = opt[String](default = Some("left"))
 
   verify()
 }
