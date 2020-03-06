@@ -10,8 +10,7 @@ import com.vividsolutions.jts.geom.GeometryFactory
 import scala.annotation.tailrec
 import edu.ucr.dblab.Utils._
 
-class Quadtree(zone: QuadRectangle, level: Int, maxItemsPerZone: Int, maxLevel: Int, lineage: String)
-    extends StandardQuadTree(zone, level, maxItemsPerZone, maxLevel) {
+class Quadtree(zone: QuadRectangle, level: Int, maxItemsPerZone: Int, maxLevel: Int, lineage: String){
 
   var regions = List.empty[Quadtree]
 
@@ -82,9 +81,6 @@ object Quadtree {
     val path = List(0,1,3)
 
     Quadtree.walk(path, root)
-
-    root.assignPartitionIds()
-    root.assignPartitionLineage()
 
     root.regions.foreach { println }
   }

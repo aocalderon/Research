@@ -14,6 +14,7 @@ import org.datasyslab.geospark.spatialRDD.{SpatialRDD, CircleRDD, PointRDD}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.enums.{GridType, IndexType}
 import org.datasyslab.geosparksql.utils.{Adapter, GeoSparkSQLRegistrator}
+//import org.datasyslab.geospark.spatialPartitioning.quadtree.{QuadNode, QuadRectangle}
 import com.vividsolutions.jts.geom.{Envelope, Coordinate, Point}
 import com.vividsolutions.jts.geom.GeometryFactory
 import edu.ucr.dblab.Utils._
@@ -90,10 +91,30 @@ object DJQueryFlat{
       (pointsRDD, nPointsRDD, pointsRDD.boundaryEnvelope)
     }
 
+    case class Grid(id: Int, lineage: String, envelope: Envelope)
+    val partitioner = timer{"Reading partitions"}{
+      val envelopes = scala.io.Source.fromFile("/tmp/envelopes.tsv")
+      val grids = envelopes.getLines.map{ line =>
+        val arr = line.split("\t")
+        val id = arr(0).toInt
+        val lineage = arr(1)
+        val envelope = new Envelope(arr(2).toDouble, arr(4).toDouble, arr(3).toDouble, arr(5).toDouble)
+        Grid(id, lineage, envelope)
+      }.toList
+      val samples = grids.sortBy(_.lineage.size).map(_.envelope)
+      envelopes.close
+      new CustomPartitioner(GridType.QUADTREE, samples.asJava)
+    }
+
+    //val quadtree = new StandardQuadTree[Point](new QuadRectangle(envelope), 0, 1, 10)
+    //quadtree.split()
+    //quadtree.getRegions().foreach{println}
+
     val distance = params.epsilon() + params.precision()
     val stageA = "Partitions done"
     val (points, buffers, npartitions) = timer{stageA}{
-      pointsRDD.spatialPartitioning(gridtype, params.partitions())
+      //pointsRDD.spatialPartitioning(gridtype, params.partitions())
+      pointsRDD.spatialPartitioning(partitioner)
       pointsRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
       val npartitions = pointsRDD.getPartitioner.getGrids.size()
       val buffersRDD = new CircleRDD(pointsRDD, distance)
@@ -171,7 +192,12 @@ object DJQueryFlat{
           false
         }
       }      
-      val disks = JoinQuery.DistanceJoinQueryFlat(centersRDD, pointsBuffer, usingIndex, considerBoundary)
+      val disks = JoinQuery.DistanceJoinQueryFlat(centersRDD, pointsBuffer, usingIndex, considerBoundary).rdd
+        .map{ d =>
+          val point  = d._1
+          val center = d._2
+          (center, Array(point))
+        }.reduceByKey( (pids1, pids2) => pids1 ++ pids2)
       n(stageC, disks.count())
       disks
     }
@@ -181,11 +207,7 @@ object DJQueryFlat{
     val mu = params.mu()
     val stageD = "C.Disks cleaned"
     timer{header(stageD)}{
-      val d = disks.rdd.map{ d =>
-        val point  = d._1
-        val center = d._2
-        (center, Array(point))
-      }.reduceByKey( (pids1, pids2) => pids1 ++ pids2)
+      val d = disks
         .filter(_._2.length >= mu)
         .map{ d =>
           val points = d._2.toArray
@@ -206,3 +228,15 @@ object DJQueryFlat{
   }
 }
 
+class DJQueryConf(args: Seq[String]) extends ScallopConf(args) {
+  val input = opt[String](default = Some(""))
+  val epsilon = opt[Double](default = Some(10.0))
+  val mu = opt[Int](default = Some(2))
+  val precision = opt[Double](default = Some(0.001))
+  val partitions = opt[Int](default = Some(256))
+  val parallelism = opt[Int](default = Some(324))
+  val gridtype = opt[String](default = Some("quadtree"))
+  val indextype = opt[String](default = Some("none"))
+
+  verify()
+}
