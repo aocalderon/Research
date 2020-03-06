@@ -1,0 +1,10 @@
+Phase	Index	Time
+A.Pairs and centers found	none	1.9535
+A.Pairs and centers found	quadtree	1.956
+A.Pairs and centers found	rtree	1.9665
+B.Disks found	none	9.876
+B.Disks found	quadtree	8.197
+B.Disks found	rtree	8.79
+C.Disks cleaned	none	2.921
+C.Disks cleaned	quadtree	2.73
+C.Disks cleaned	rtree	2.853

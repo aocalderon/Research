@@ -22,9 +22,9 @@ mf = log %>% filter(grepl(value, pattern = "\\|Time\\|")) %>%
 
 data = mf %>% inner_join(spark, by = c("appId")) %>% select(Index, Phase, Time)
 
-data2 = data %>% group_by(Phase, Index) %>% summarise(Time = mean(Time))
+data1 = data %>% group_by(Phase, Index) %>% summarise(Time = mean(Time))
 
-p = ggplot(data = data2, aes(x = Phase, y = Time, fill = Index)) +
+p = ggplot(data = data1, aes(x = Phase, y = Time, fill = Index)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
   labs(x="Phase", y="Time [s]", title="Execution time initial phases in MF by index type") 

@@ -1,0 +1,570 @@
+2020-02-29 20:35:21,301|Starting session...
+2020-02-29 20:35:35,575|Starting session... Done!
+2020-02-29 20:35:35,576|Level of parallelism: 216
+2020-02-29 20:35:44,339|GeoTesterRDD|2856|Data|Load|50419
+2020-02-29 20:35:44,339|Reading data                  |  8.76
+2020-02-29 20:35:46,775|GeoTesterRDD|2856|Partitions done|Load|66569
+2020-02-29 20:35:46,775|Partitions done               |  2.43
+2020-02-29 20:35:46,776|Updating level of parallelism: 216
+2020-02-29 20:35:48,790|GeoTesterRDD|2856|B.Pairs and centers found|Load|435134
+2020-02-29 20:35:48,790|GeoTesterRDD|2856|B.Pairs and centers found|Time|  2.01
+2020-02-29 20:35:49,715|IndexType: None.
+2020-02-29 20:36:04,752|GeoTesterRDD|2856|C.Disks found|Load|435134
+2020-02-29 20:36:04,752|GeoTesterRDD|2856|C.Disks found|Time| 15.96
+2020-02-29 20:36:06,886|GeoTesterRDD|2856|D.Disks cleaned|Load|300851
+2020-02-29 20:36:06,887|GeoTesterRDD|2856|D.Disks cleaned|Time|  2.13
+2020-02-29 20:36:06,887|Closing session...
+2020-02-29 20:36:06,887|Number of partition on default quadtree: 769.
+2020-02-29 20:36:06,887|2856|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype none --npartitions 769
+2020-02-29 20:36:07,067|Closing session... Done!
+2020-02-29 20:36:10,034|Starting session...
+2020-02-29 20:36:24,063|Starting session... Done!
+2020-02-29 20:36:24,064|Level of parallelism: 216
+2020-02-29 20:36:32,920|GeoTesterRDD|2857|Data|Load|50419
+2020-02-29 20:36:32,921|Reading data                  |  8.85
+2020-02-29 20:36:35,194|GeoTesterRDD|2857|Partitions done|Load|64871
+2020-02-29 20:36:35,194|Partitions done               |  2.27
+2020-02-29 20:36:35,197|Updating level of parallelism: 216
+2020-02-29 20:36:36,896|GeoTesterRDD|2857|B.Pairs and centers found|Load|435134
+2020-02-29 20:36:36,896|GeoTesterRDD|2857|B.Pairs and centers found|Time|  1.70
+2020-02-29 20:36:37,493|IndexType: RTREE.
+2020-02-29 20:36:54,316|GeoTesterRDD|2857|C.Disks found|Load|435134
+2020-02-29 20:36:54,316|GeoTesterRDD|2857|C.Disks found|Time| 17.42
+2020-02-29 20:36:57,068|GeoTesterRDD|2857|D.Disks cleaned|Load|300851
+2020-02-29 20:36:57,068|GeoTesterRDD|2857|D.Disks cleaned|Time|  2.75
+2020-02-29 20:36:57,068|Closing session...
+2020-02-29 20:36:57,068|Number of partition on default quadtree: 523.
+2020-02-29 20:36:57,069|2857|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype rtree --npartitions 523
+2020-02-29 20:36:57,264|Closing session... Done!
+2020-02-29 20:37:00,172|Starting session...
+2020-02-29 20:37:14,169|Starting session... Done!
+2020-02-29 20:37:14,169|Level of parallelism: 216
+2020-02-29 20:37:23,018|GeoTesterRDD|2858|Data|Load|50419
+2020-02-29 20:37:23,018|Reading data                  |  8.84
+2020-02-29 20:37:25,597|GeoTesterRDD|2858|Partitions done|Load|68656
+2020-02-29 20:37:25,597|Partitions done               |  2.58
+2020-02-29 20:37:25,599|Updating level of parallelism: 216
+2020-02-29 20:37:27,915|GeoTesterRDD|2858|B.Pairs and centers found|Load|435134
+2020-02-29 20:37:27,916|GeoTesterRDD|2858|B.Pairs and centers found|Time|  2.32
+2020-02-29 20:37:28,800|IndexType: QUADTREE.
+2020-02-29 20:37:48,816|GeoTesterRDD|2858|C.Disks found|Load|435134
+2020-02-29 20:37:48,817|GeoTesterRDD|2858|C.Disks found|Time| 20.90
+2020-02-29 20:37:50,587|GeoTesterRDD|2858|D.Disks cleaned|Load|300851
+2020-02-29 20:37:50,587|GeoTesterRDD|2858|D.Disks cleaned|Time|  1.77
+2020-02-29 20:37:50,587|Closing session...
+2020-02-29 20:37:50,587|Number of partition on default quadtree: 811.
+2020-02-29 20:37:50,587|2858|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype quadtree --npartitions 811
+2020-02-29 20:37:50,763|Closing session... Done!
+2020-02-29 20:37:53,768|Starting session...
+2020-02-29 20:38:07,620|Starting session... Done!
+2020-02-29 20:38:07,621|Level of parallelism: 216
+2020-02-29 20:38:16,469|GeoTesterRDD|2859|Data|Load|50419
+2020-02-29 20:38:16,470|Reading data                  |  8.84
+2020-02-29 20:38:19,053|GeoTesterRDD|2859|Partitions done|Load|67246
+2020-02-29 20:38:19,053|Partitions done               |  2.58
+2020-02-29 20:38:19,055|Updating level of parallelism: 216
+2020-02-29 20:38:20,943|GeoTesterRDD|2859|B.Pairs and centers found|Load|435134
+2020-02-29 20:38:20,943|GeoTesterRDD|2859|B.Pairs and centers found|Time|  1.89
+2020-02-29 20:38:22,077|IndexType: None.
+2020-02-29 20:38:36,013|GeoTesterRDD|2859|C.Disks found|Load|435134
+2020-02-29 20:38:36,013|GeoTesterRDD|2859|C.Disks found|Time| 15.07
+2020-02-29 20:38:38,739|GeoTesterRDD|2859|D.Disks cleaned|Load|300851
+2020-02-29 20:38:38,739|GeoTesterRDD|2859|D.Disks cleaned|Time|  2.72
+2020-02-29 20:38:38,739|Closing session...
+2020-02-29 20:38:38,739|Number of partition on default quadtree: 793.
+2020-02-29 20:38:38,739|2859|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype none --npartitions 793
+2020-02-29 20:38:38,919|Closing session... Done!
+2020-02-29 20:38:41,931|Starting session...
+2020-02-29 20:38:56,174|Starting session... Done!
+2020-02-29 20:38:56,174|Level of parallelism: 216
+2020-02-29 20:39:04,759|GeoTesterRDD|2860|Data|Load|50419
+2020-02-29 20:39:04,760|Reading data                  |  8.58
+2020-02-29 20:39:07,191|GeoTesterRDD|2860|Partitions done|Load|67777
+2020-02-29 20:39:07,192|Partitions done               |  2.43
+2020-02-29 20:39:07,193|Updating level of parallelism: 216
+2020-02-29 20:39:09,019|GeoTesterRDD|2860|B.Pairs and centers found|Load|435134
+2020-02-29 20:39:09,020|GeoTesterRDD|2860|B.Pairs and centers found|Time|  1.83
+2020-02-29 20:39:10,036|IndexType: RTREE.
+2020-02-29 20:39:27,324|GeoTesterRDD|2860|C.Disks found|Load|435134
+2020-02-29 20:39:27,324|GeoTesterRDD|2860|C.Disks found|Time| 18.30
+2020-02-29 20:39:29,963|GeoTesterRDD|2860|D.Disks cleaned|Load|300851
+2020-02-29 20:39:29,963|GeoTesterRDD|2860|D.Disks cleaned|Time|  2.64
+2020-02-29 20:39:29,964|Closing session...
+2020-02-29 20:39:29,964|Number of partition on default quadtree: 760.
+2020-02-29 20:39:29,964|2860|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype rtree --npartitions 760
+2020-02-29 20:39:30,231|Closing session... Done!
+2020-02-29 20:39:33,278|Starting session...
+2020-02-29 20:39:47,413|Starting session... Done!
+2020-02-29 20:39:47,414|Level of parallelism: 216
+2020-02-29 20:39:56,223|GeoTesterRDD|2861|Data|Load|50419
+2020-02-29 20:39:56,223|Reading data                  |  8.80
+2020-02-29 20:39:58,795|GeoTesterRDD|2861|Partitions done|Load|67084
+2020-02-29 20:39:58,796|Partitions done               |  2.57
+2020-02-29 20:39:58,797|Updating level of parallelism: 216
+2020-02-29 20:40:00,798|GeoTesterRDD|2861|B.Pairs and centers found|Load|435134
+2020-02-29 20:40:00,798|GeoTesterRDD|2861|B.Pairs and centers found|Time|  2.00
+2020-02-29 20:40:01,724|IndexType: QUADTREE.
+2020-02-29 20:40:17,270|GeoTesterRDD|2861|C.Disks found|Load|435134
+2020-02-29 20:40:17,270|GeoTesterRDD|2861|C.Disks found|Time| 16.47
+2020-02-29 20:40:19,988|GeoTesterRDD|2861|D.Disks cleaned|Load|300851
+2020-02-29 20:40:19,988|GeoTesterRDD|2861|D.Disks cleaned|Time|  2.72
+2020-02-29 20:40:19,988|Closing session...
+2020-02-29 20:40:19,988|Number of partition on default quadtree: 775.
+2020-02-29 20:40:19,989|2861|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype quadtree --npartitions 775
+2020-02-29 20:40:20,291|Closing session... Done!
+2020-02-29 20:40:23,362|Starting session...
+2020-02-29 20:40:37,056|Starting session... Done!
+2020-02-29 20:40:37,056|Level of parallelism: 216
+2020-02-29 20:40:45,824|GeoTesterRDD|2862|Data|Load|50419
+2020-02-29 20:40:45,825|Reading data                  |  8.76
+2020-02-29 20:40:48,384|GeoTesterRDD|2862|Partitions done|Load|68724
+2020-02-29 20:40:48,384|Partitions done               |  2.56
+2020-02-29 20:40:48,385|Updating level of parallelism: 216
+2020-02-29 20:40:50,532|GeoTesterRDD|2862|B.Pairs and centers found|Load|435134
+2020-02-29 20:40:50,532|GeoTesterRDD|2862|B.Pairs and centers found|Time|  2.15
+2020-02-29 20:40:51,482|IndexType: None.
+2020-02-29 20:41:05,737|GeoTesterRDD|2862|C.Disks found|Load|435134
+2020-02-29 20:41:05,738|GeoTesterRDD|2862|C.Disks found|Time| 15.20
+2020-02-29 20:41:07,991|GeoTesterRDD|2862|D.Disks cleaned|Load|300851
+2020-02-29 20:41:07,991|GeoTesterRDD|2862|D.Disks cleaned|Time|  2.25
+2020-02-29 20:41:07,991|Closing session...
+2020-02-29 20:41:07,991|Number of partition on default quadtree: 763.
+2020-02-29 20:41:07,991|2862|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype none --npartitions 763
+2020-02-29 20:41:08,160|Closing session... Done!
+2020-02-29 20:41:11,215|Starting session...
+2020-02-29 20:41:25,134|Starting session... Done!
+2020-02-29 20:41:25,134|Level of parallelism: 216
+2020-02-29 20:41:33,929|GeoTesterRDD|2863|Data|Load|50419
+2020-02-29 20:41:33,929|Reading data                  |  8.79
+2020-02-29 20:41:36,484|GeoTesterRDD|2863|Partitions done|Load|69087
+2020-02-29 20:41:36,485|Partitions done               |  2.55
+2020-02-29 20:41:36,486|Updating level of parallelism: 216
+2020-02-29 20:41:38,343|GeoTesterRDD|2863|B.Pairs and centers found|Load|435134
+2020-02-29 20:41:38,343|GeoTesterRDD|2863|B.Pairs and centers found|Time|  1.86
+2020-02-29 20:41:39,256|IndexType: RTREE.
+2020-02-29 20:41:57,608|GeoTesterRDD|2863|C.Disks found|Load|435134
+2020-02-29 20:41:57,609|GeoTesterRDD|2863|C.Disks found|Time| 19.26
+2020-02-29 20:41:59,841|GeoTesterRDD|2863|D.Disks cleaned|Load|300851
+2020-02-29 20:41:59,841|GeoTesterRDD|2863|D.Disks cleaned|Time|  2.23
+2020-02-29 20:41:59,841|Closing session...
+2020-02-29 20:41:59,841|Number of partition on default quadtree: 799.
+2020-02-29 20:41:59,841|2863|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype rtree --npartitions 799
+2020-02-29 20:42:00,031|Closing session... Done!
+2020-02-29 20:42:03,107|Starting session...
+2020-02-29 20:42:17,309|Starting session... Done!
+2020-02-29 20:42:17,310|Level of parallelism: 216
+2020-02-29 20:42:26,106|GeoTesterRDD|2864|Data|Load|50419
+2020-02-29 20:42:26,107|Reading data                  |  8.79
+2020-02-29 20:42:28,648|GeoTesterRDD|2864|Partitions done|Load|69559
+2020-02-29 20:42:28,648|Partitions done               |  2.54
+2020-02-29 20:42:28,650|Updating level of parallelism: 216
+2020-02-29 20:42:30,642|GeoTesterRDD|2864|B.Pairs and centers found|Load|435134
+2020-02-29 20:42:30,642|GeoTesterRDD|2864|B.Pairs and centers found|Time|  1.99
+2020-02-29 20:42:31,515|IndexType: QUADTREE.
+2020-02-29 20:42:47,972|GeoTesterRDD|2864|C.Disks found|Load|435134
+2020-02-29 20:42:47,972|GeoTesterRDD|2864|C.Disks found|Time| 17.33
+2020-02-29 20:42:49,996|GeoTesterRDD|2864|D.Disks cleaned|Load|300851
+2020-02-29 20:42:49,996|GeoTesterRDD|2864|D.Disks cleaned|Time|  2.02
+2020-02-29 20:42:49,996|Closing session...
+2020-02-29 20:42:49,996|Number of partition on default quadtree: 820.
+2020-02-29 20:42:49,997|2864|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype quadtree --npartitions 820
+2020-02-29 20:42:50,171|Closing session... Done!
+2020-02-29 20:42:53,179|Starting session...
+2020-02-29 20:43:07,255|Starting session... Done!
+2020-02-29 20:43:07,255|Level of parallelism: 216
+2020-02-29 20:43:16,032|GeoTesterRDD|2865|Data|Load|50419
+2020-02-29 20:43:16,033|Reading data                  |  8.77
+2020-02-29 20:43:18,533|GeoTesterRDD|2865|Partitions done|Load|66201
+2020-02-29 20:43:18,533|Partitions done               |  2.50
+2020-02-29 20:43:18,535|Updating level of parallelism: 216
+2020-02-29 20:43:20,235|GeoTesterRDD|2865|B.Pairs and centers found|Load|435134
+2020-02-29 20:43:20,235|GeoTesterRDD|2865|B.Pairs and centers found|Time|  1.70
+2020-02-29 20:43:21,130|IndexType: None.
+2020-02-29 20:43:34,927|GeoTesterRDD|2865|C.Disks found|Load|435134
+2020-02-29 20:43:34,927|GeoTesterRDD|2865|C.Disks found|Time| 14.69
+2020-02-29 20:43:37,056|GeoTesterRDD|2865|D.Disks cleaned|Load|300851
+2020-02-29 20:43:37,056|GeoTesterRDD|2865|D.Disks cleaned|Time|  2.12
+2020-02-29 20:43:37,056|Closing session...
+2020-02-29 20:43:37,056|Number of partition on default quadtree: 727.
+2020-02-29 20:43:37,056|2865|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype none --npartitions 727
+2020-02-29 20:43:37,232|Closing session... Done!
+2020-02-29 20:43:40,254|Starting session...
+2020-02-29 20:43:54,097|Starting session... Done!
+2020-02-29 20:43:54,098|Level of parallelism: 216
+2020-02-29 20:44:02,868|GeoTesterRDD|2866|Data|Load|50419
+2020-02-29 20:44:02,869|Reading data                  |  8.77
+2020-02-29 20:44:05,372|GeoTesterRDD|2866|Partitions done|Load|69709
+2020-02-29 20:44:05,372|Partitions done               |  2.50
+2020-02-29 20:44:05,374|Updating level of parallelism: 216
+2020-02-29 20:44:07,482|GeoTesterRDD|2866|B.Pairs and centers found|Load|435134
+2020-02-29 20:44:07,483|GeoTesterRDD|2866|B.Pairs and centers found|Time|  2.11
+2020-02-29 20:44:08,351|IndexType: RTREE.
+2020-02-29 20:44:27,338|GeoTesterRDD|2866|C.Disks found|Load|435134
+2020-02-29 20:44:27,338|GeoTesterRDD|2866|C.Disks found|Time| 19.85
+2020-02-29 20:44:30,337|GeoTesterRDD|2866|D.Disks cleaned|Load|300851
+2020-02-29 20:44:30,337|GeoTesterRDD|2866|D.Disks cleaned|Time|  3.00
+2020-02-29 20:44:30,337|Closing session...
+2020-02-29 20:44:30,337|Number of partition on default quadtree: 787.
+2020-02-29 20:44:30,338|2866|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype rtree --npartitions 787
+2020-02-29 20:44:30,574|Closing session... Done!
+2020-02-29 20:44:33,612|Starting session...
+2020-02-29 20:44:47,622|Starting session... Done!
+2020-02-29 20:44:47,622|Level of parallelism: 216
+2020-02-29 20:44:56,507|GeoTesterRDD|2867|Data|Load|50419
+2020-02-29 20:44:56,508|Reading data                  |  8.88
+2020-02-29 20:44:59,084|GeoTesterRDD|2867|Partitions done|Load|68733
+2020-02-29 20:44:59,084|Partitions done               |  2.58
+2020-02-29 20:44:59,087|Updating level of parallelism: 216
+2020-02-29 20:45:01,014|GeoTesterRDD|2867|B.Pairs and centers found|Load|435134
+2020-02-29 20:45:01,014|GeoTesterRDD|2867|B.Pairs and centers found|Time|  1.92
+2020-02-29 20:45:01,772|IndexType: QUADTREE.
+2020-02-29 20:45:16,181|GeoTesterRDD|2867|C.Disks found|Load|435134
+2020-02-29 20:45:16,181|GeoTesterRDD|2867|C.Disks found|Time| 15.17
+2020-02-29 20:45:18,257|GeoTesterRDD|2867|D.Disks cleaned|Load|300851
+2020-02-29 20:45:18,257|GeoTesterRDD|2867|D.Disks cleaned|Time|  2.07
+2020-02-29 20:45:18,257|Closing session...
+2020-02-29 20:45:18,258|Number of partition on default quadtree: 733.
+2020-02-29 20:45:18,258|2867|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype quadtree --npartitions 733
+2020-02-29 20:45:18,425|Closing session... Done!
+2020-02-29 20:45:21,444|Starting session...
+2020-02-29 20:45:35,499|Starting session... Done!
+2020-02-29 20:45:35,500|Level of parallelism: 216
+2020-02-29 20:45:44,266|GeoTesterRDD|2868|Data|Load|50419
+2020-02-29 20:45:44,266|Reading data                  |  8.76
+2020-02-29 20:45:46,805|GeoTesterRDD|2868|Partitions done|Load|68379
+2020-02-29 20:45:46,805|Partitions done               |  2.54
+2020-02-29 20:45:46,806|Updating level of parallelism: 216
+2020-02-29 20:45:48,908|GeoTesterRDD|2868|B.Pairs and centers found|Load|435134
+2020-02-29 20:45:48,908|GeoTesterRDD|2868|B.Pairs and centers found|Time|  2.10
+2020-02-29 20:45:49,868|IndexType: None.
+2020-02-29 20:46:03,858|GeoTesterRDD|2868|C.Disks found|Load|435134
+2020-02-29 20:46:03,859|GeoTesterRDD|2868|C.Disks found|Time| 14.95
+2020-02-29 20:46:06,775|GeoTesterRDD|2868|D.Disks cleaned|Load|300851
+2020-02-29 20:46:06,775|GeoTesterRDD|2868|D.Disks cleaned|Time|  2.91
+2020-02-29 20:46:06,775|Closing session...
+2020-02-29 20:46:06,775|Number of partition on default quadtree: 763.
+2020-02-29 20:46:06,776|2868|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype none --npartitions 763
+2020-02-29 20:46:06,953|Closing session... Done!
+2020-02-29 20:46:09,923|Starting session...
+2020-02-29 20:46:23,773|Starting session... Done!
+2020-02-29 20:46:23,774|Level of parallelism: 216
+2020-02-29 20:46:32,632|GeoTesterRDD|2869|Data|Load|50419
+2020-02-29 20:46:32,633|Reading data                  |  8.85
+2020-02-29 20:46:35,267|GeoTesterRDD|2869|Partitions done|Load|63651
+2020-02-29 20:46:35,268|Partitions done               |  2.63
+2020-02-29 20:46:35,270|Updating level of parallelism: 216
+2020-02-29 20:46:36,964|GeoTesterRDD|2869|B.Pairs and centers found|Load|435134
+2020-02-29 20:46:36,964|GeoTesterRDD|2869|B.Pairs and centers found|Time|  1.69
+2020-02-29 20:46:37,695|IndexType: RTREE.
+2020-02-29 20:46:57,018|GeoTesterRDD|2869|C.Disks found|Load|435134
+2020-02-29 20:46:57,018|GeoTesterRDD|2869|C.Disks found|Time| 20.05
+2020-02-29 20:46:58,990|GeoTesterRDD|2869|D.Disks cleaned|Load|300851
+2020-02-29 20:46:58,990|GeoTesterRDD|2869|D.Disks cleaned|Time|  1.97
+2020-02-29 20:46:58,990|Closing session...
+2020-02-29 20:46:58,990|Number of partition on default quadtree: 574.
+2020-02-29 20:46:58,991|2869|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype rtree --npartitions 574
+2020-02-29 20:46:59,163|Closing session... Done!
+2020-02-29 20:47:02,136|Starting session...
+2020-02-29 20:47:16,427|Starting session... Done!
+2020-02-29 20:47:16,427|Level of parallelism: 216
+2020-02-29 20:47:25,238|GeoTesterRDD|2870|Data|Load|50419
+2020-02-29 20:47:25,238|Reading data                  |  8.81
+2020-02-29 20:47:27,812|GeoTesterRDD|2870|Partitions done|Load|65526
+2020-02-29 20:47:27,812|Partitions done               |  2.57
+2020-02-29 20:47:27,814|Updating level of parallelism: 216
+2020-02-29 20:47:29,602|GeoTesterRDD|2870|B.Pairs and centers found|Load|435134
+2020-02-29 20:47:29,603|GeoTesterRDD|2870|B.Pairs and centers found|Time|  1.79
+2020-02-29 20:47:30,607|IndexType: QUADTREE.
+2020-02-29 20:47:51,187|GeoTesterRDD|2870|C.Disks found|Load|435134
+2020-02-29 20:47:51,187|GeoTesterRDD|2870|C.Disks found|Time| 21.58
+2020-02-29 20:47:52,845|GeoTesterRDD|2870|D.Disks cleaned|Load|300851
+2020-02-29 20:47:52,845|GeoTesterRDD|2870|D.Disks cleaned|Time|  1.65
+2020-02-29 20:47:52,845|Closing session...
+2020-02-29 20:47:52,845|Number of partition on default quadtree: 796.
+2020-02-29 20:47:52,845|2870|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype quadtree --npartitions 796
+2020-02-29 20:47:53,015|Closing session... Done!
+2020-02-29 20:47:56,010|Starting session...
+2020-02-29 20:48:10,238|Starting session... Done!
+2020-02-29 20:48:10,239|Level of parallelism: 216
+2020-02-29 20:48:18,983|GeoTesterRDD|2871|Data|Load|50419
+2020-02-29 20:48:18,984|Reading data                  |  8.74
+2020-02-29 20:48:21,541|GeoTesterRDD|2871|Partitions done|Load|64635
+2020-02-29 20:48:21,541|Partitions done               |  2.56
+2020-02-29 20:48:21,544|Updating level of parallelism: 216
+2020-02-29 20:48:23,584|GeoTesterRDD|2871|B.Pairs and centers found|Load|435134
+2020-02-29 20:48:23,584|GeoTesterRDD|2871|B.Pairs and centers found|Time|  2.04
+2020-02-29 20:48:24,495|IndexType: None.
+2020-02-29 20:48:42,278|GeoTesterRDD|2871|C.Disks found|Load|435134
+2020-02-29 20:48:42,278|GeoTesterRDD|2871|C.Disks found|Time| 18.69
+2020-02-29 20:48:44,865|GeoTesterRDD|2871|D.Disks cleaned|Load|300851
+2020-02-29 20:48:44,865|GeoTesterRDD|2871|D.Disks cleaned|Time|  2.58
+2020-02-29 20:48:44,865|Closing session...
+2020-02-29 20:48:44,865|Number of partition on default quadtree: 727.
+2020-02-29 20:48:44,865|2871|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype none --npartitions 727
+2020-02-29 20:48:45,108|Closing session... Done!
+2020-02-29 20:48:48,113|Starting session...
+2020-02-29 20:49:02,454|Starting session... Done!
+2020-02-29 20:49:02,455|Level of parallelism: 216
+2020-02-29 20:49:11,317|GeoTesterRDD|2872|Data|Load|50419
+2020-02-29 20:49:11,318|Reading data                  |  8.86
+2020-02-29 20:49:13,822|GeoTesterRDD|2872|Partitions done|Load|67253
+2020-02-29 20:49:13,822|Partitions done               |  2.50
+2020-02-29 20:49:13,824|Updating level of parallelism: 216
+2020-02-29 20:49:15,537|GeoTesterRDD|2872|B.Pairs and centers found|Load|435134
+2020-02-29 20:49:15,537|GeoTesterRDD|2872|B.Pairs and centers found|Time|  1.71
+2020-02-29 20:49:16,431|IndexType: RTREE.
+2020-02-29 20:49:32,333|GeoTesterRDD|2872|C.Disks found|Load|435134
+2020-02-29 20:49:32,333|GeoTesterRDD|2872|C.Disks found|Time| 16.79
+2020-02-29 20:49:34,554|GeoTesterRDD|2872|D.Disks cleaned|Load|300851
+2020-02-29 20:49:34,554|GeoTesterRDD|2872|D.Disks cleaned|Time|  2.22
+2020-02-29 20:49:34,554|Closing session...
+2020-02-29 20:49:34,555|Number of partition on default quadtree: 781.
+2020-02-29 20:49:34,555|2872|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype rtree --npartitions 781
+2020-02-29 20:49:34,890|Closing session... Done!
+2020-02-29 20:49:37,873|Starting session...
+2020-02-29 20:49:51,859|Starting session... Done!
+2020-02-29 20:49:51,860|Level of parallelism: 216
+2020-02-29 20:50:00,978|GeoTesterRDD|2873|Data|Load|50419
+2020-02-29 20:50:00,979|Reading data                  |  9.11
+2020-02-29 20:50:03,417|GeoTesterRDD|2873|Partitions done|Load|69831
+2020-02-29 20:50:03,417|Partitions done               |  2.44
+2020-02-29 20:50:03,418|Updating level of parallelism: 216
+2020-02-29 20:50:05,340|GeoTesterRDD|2873|B.Pairs and centers found|Load|435134
+2020-02-29 20:50:05,340|GeoTesterRDD|2873|B.Pairs and centers found|Time|  1.92
+2020-02-29 20:50:06,266|IndexType: QUADTREE.
+2020-02-29 20:50:19,924|GeoTesterRDD|2873|C.Disks found|Load|435134
+2020-02-29 20:50:19,924|GeoTesterRDD|2873|C.Disks found|Time| 14.58
+2020-02-29 20:50:21,993|GeoTesterRDD|2873|D.Disks cleaned|Load|300851
+2020-02-29 20:50:21,993|GeoTesterRDD|2873|D.Disks cleaned|Time|  2.07
+2020-02-29 20:50:21,993|Closing session...
+2020-02-29 20:50:21,993|Number of partition on default quadtree: 769.
+2020-02-29 20:50:21,993|2873|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype quadtree --npartitions 769
+2020-02-29 20:50:22,170|Closing session... Done!
+2020-02-29 20:50:25,149|Starting session...
+2020-02-29 20:50:39,180|Starting session... Done!
+2020-02-29 20:50:39,181|Level of parallelism: 216
+2020-02-29 20:50:47,955|GeoTesterRDD|2874|Data|Load|50419
+2020-02-29 20:50:47,955|Reading data                  |  8.77
+2020-02-29 20:50:50,589|GeoTesterRDD|2874|Partitions done|Load|67840
+2020-02-29 20:50:50,590|Partitions done               |  2.63
+2020-02-29 20:50:50,591|Updating level of parallelism: 216
+2020-02-29 20:50:52,720|GeoTesterRDD|2874|B.Pairs and centers found|Load|435134
+2020-02-29 20:50:52,720|GeoTesterRDD|2874|B.Pairs and centers found|Time|  2.13
+2020-02-29 20:50:53,632|IndexType: None.
+2020-02-29 20:51:07,564|GeoTesterRDD|2874|C.Disks found|Load|435134
+2020-02-29 20:51:07,564|GeoTesterRDD|2874|C.Disks found|Time| 14.84
+2020-02-29 20:51:09,081|GeoTesterRDD|2874|D.Disks cleaned|Load|300851
+2020-02-29 20:51:09,081|GeoTesterRDD|2874|D.Disks cleaned|Time|  1.51
+2020-02-29 20:51:09,081|Closing session...
+2020-02-29 20:51:09,081|Number of partition on default quadtree: 775.
+2020-02-29 20:51:09,081|2874|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype none --npartitions 775
+2020-02-29 20:51:09,249|Closing session... Done!
+2020-02-29 20:51:12,252|Starting session...
+2020-02-29 20:51:26,451|Starting session... Done!
+2020-02-29 20:51:26,451|Level of parallelism: 216
+2020-02-29 20:51:35,211|GeoTesterRDD|2875|Data|Load|50419
+2020-02-29 20:51:35,211|Reading data                  |  8.76
+2020-02-29 20:51:37,791|GeoTesterRDD|2875|Partitions done|Load|69682
+2020-02-29 20:51:37,791|Partitions done               |  2.58
+2020-02-29 20:51:37,795|Updating level of parallelism: 216
+2020-02-29 20:51:39,724|GeoTesterRDD|2875|B.Pairs and centers found|Load|435134
+2020-02-29 20:51:39,725|GeoTesterRDD|2875|B.Pairs and centers found|Time|  1.93
+2020-02-29 20:51:40,690|IndexType: RTREE.
+2020-02-29 20:52:00,579|GeoTesterRDD|2875|C.Disks found|Load|435134
+2020-02-29 20:52:00,579|GeoTesterRDD|2875|C.Disks found|Time| 20.85
+2020-02-29 20:52:02,198|GeoTesterRDD|2875|D.Disks cleaned|Load|300851
+2020-02-29 20:52:02,198|GeoTesterRDD|2875|D.Disks cleaned|Time|  1.61
+2020-02-29 20:52:02,198|Closing session...
+2020-02-29 20:52:02,198|Number of partition on default quadtree: 802.
+2020-02-29 20:52:02,198|2875|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype rtree --npartitions 802
+2020-02-29 20:52:02,378|Closing session... Done!
+2020-02-29 20:52:05,411|Starting session...
+2020-02-29 20:52:19,510|Starting session... Done!
+2020-02-29 20:52:19,510|Level of parallelism: 216
+2020-02-29 20:52:28,344|GeoTesterRDD|2876|Data|Load|50419
+2020-02-29 20:52:28,344|Reading data                  |  8.83
+2020-02-29 20:52:30,855|GeoTesterRDD|2876|Partitions done|Load|66217
+2020-02-29 20:52:30,855|Partitions done               |  2.51
+2020-02-29 20:52:30,857|Updating level of parallelism: 216
+2020-02-29 20:52:32,835|GeoTesterRDD|2876|B.Pairs and centers found|Load|435134
+2020-02-29 20:52:32,835|GeoTesterRDD|2876|B.Pairs and centers found|Time|  1.98
+2020-02-29 20:52:33,839|IndexType: QUADTREE.
+2020-02-29 20:52:49,573|GeoTesterRDD|2876|C.Disks found|Load|435134
+2020-02-29 20:52:49,574|GeoTesterRDD|2876|C.Disks found|Time| 16.74
+2020-02-29 20:52:51,677|GeoTesterRDD|2876|D.Disks cleaned|Load|300851
+2020-02-29 20:52:51,677|GeoTesterRDD|2876|D.Disks cleaned|Time|  2.10
+2020-02-29 20:52:51,677|Closing session...
+2020-02-29 20:52:51,677|Number of partition on default quadtree: 709.
+2020-02-29 20:52:51,677|2876|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype quadtree --npartitions 709
+2020-02-29 20:52:51,842|Closing session... Done!
+2020-02-29 20:52:54,857|Starting session...
+2020-02-29 20:53:09,174|Starting session... Done!
+2020-02-29 20:53:09,175|Level of parallelism: 216
+2020-02-29 20:53:17,989|GeoTesterRDD|2877|Data|Load|50419
+2020-02-29 20:53:17,989|Reading data                  |  8.81
+2020-02-29 20:53:20,653|GeoTesterRDD|2877|Partitions done|Load|68648
+2020-02-29 20:53:20,654|Partitions done               |  2.66
+2020-02-29 20:53:20,655|Updating level of parallelism: 216
+2020-02-29 20:53:22,830|GeoTesterRDD|2877|B.Pairs and centers found|Load|435134
+2020-02-29 20:53:22,831|GeoTesterRDD|2877|B.Pairs and centers found|Time|  2.17
+2020-02-29 20:53:23,722|IndexType: None.
+2020-02-29 20:53:39,488|GeoTesterRDD|2877|C.Disks found|Load|435134
+2020-02-29 20:53:39,488|GeoTesterRDD|2877|C.Disks found|Time| 16.65
+2020-02-29 20:53:42,257|GeoTesterRDD|2877|D.Disks cleaned|Load|300851
+2020-02-29 20:53:42,258|GeoTesterRDD|2877|D.Disks cleaned|Time|  2.77
+2020-02-29 20:53:42,258|Closing session...
+2020-02-29 20:53:42,258|Number of partition on default quadtree: 772.
+2020-02-29 20:53:42,258|2877|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype none --npartitions 772
+2020-02-29 20:53:42,432|Closing session... Done!
+2020-02-29 20:53:45,440|Starting session...
+2020-02-29 20:53:59,764|Starting session... Done!
+2020-02-29 20:53:59,764|Level of parallelism: 216
+2020-02-29 20:54:08,750|GeoTesterRDD|2878|Data|Load|50419
+2020-02-29 20:54:08,751|Reading data                  |  8.98
+2020-02-29 20:54:11,310|GeoTesterRDD|2878|Partitions done|Load|69235
+2020-02-29 20:54:11,310|Partitions done               |  2.56
+2020-02-29 20:54:11,312|Updating level of parallelism: 216
+2020-02-29 20:54:13,331|GeoTesterRDD|2878|B.Pairs and centers found|Load|435134
+2020-02-29 20:54:13,332|GeoTesterRDD|2878|B.Pairs and centers found|Time|  2.02
+2020-02-29 20:54:14,191|IndexType: RTREE.
+2020-02-29 20:54:31,077|GeoTesterRDD|2878|C.Disks found|Load|435134
+2020-02-29 20:54:31,077|GeoTesterRDD|2878|C.Disks found|Time| 17.74
+2020-02-29 20:54:33,202|GeoTesterRDD|2878|D.Disks cleaned|Load|300851
+2020-02-29 20:54:33,203|GeoTesterRDD|2878|D.Disks cleaned|Time|  2.12
+2020-02-29 20:54:33,203|Closing session...
+2020-02-29 20:54:33,203|Number of partition on default quadtree: 796.
+2020-02-29 20:54:33,203|2878|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype rtree --npartitions 796
+2020-02-29 20:54:33,370|Closing session... Done!
+2020-02-29 20:54:36,409|Starting session...
+2020-02-29 20:54:50,131|Starting session... Done!
+2020-02-29 20:54:50,131|Level of parallelism: 216
+2020-02-29 20:54:58,993|GeoTesterRDD|2879|Data|Load|50419
+2020-02-29 20:54:58,993|Reading data                  |  8.86
+2020-02-29 20:55:01,524|GeoTesterRDD|2879|Partitions done|Load|68948
+2020-02-29 20:55:01,524|Partitions done               |  2.53
+2020-02-29 20:55:01,526|Updating level of parallelism: 216
+2020-02-29 20:55:03,555|GeoTesterRDD|2879|B.Pairs and centers found|Load|435134
+2020-02-29 20:55:03,556|GeoTesterRDD|2879|B.Pairs and centers found|Time|  2.03
+2020-02-29 20:55:04,396|IndexType: QUADTREE.
+2020-02-29 20:55:22,532|GeoTesterRDD|2879|C.Disks found|Load|435134
+2020-02-29 20:55:22,532|GeoTesterRDD|2879|C.Disks found|Time| 18.97
+2020-02-29 20:55:25,288|GeoTesterRDD|2879|D.Disks cleaned|Load|300851
+2020-02-29 20:55:25,288|GeoTesterRDD|2879|D.Disks cleaned|Time|  2.75
+2020-02-29 20:55:25,288|Closing session...
+2020-02-29 20:55:25,288|Number of partition on default quadtree: 784.
+2020-02-29 20:55:25,288|2879|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype quadtree --npartitions 784
+2020-02-29 20:55:25,467|Closing session... Done!
+2020-02-29 20:55:28,506|Starting session...
+2020-02-29 20:55:42,485|Starting session... Done!
+2020-02-29 20:55:42,486|Level of parallelism: 216
+2020-02-29 20:55:51,172|GeoTesterRDD|2880|Data|Load|50419
+2020-02-29 20:55:51,173|Reading data                  |  8.68
+2020-02-29 20:55:53,598|GeoTesterRDD|2880|Partitions done|Load|69740
+2020-02-29 20:55:53,598|Partitions done               |  2.42
+2020-02-29 20:55:53,600|Updating level of parallelism: 216
+2020-02-29 20:55:55,485|GeoTesterRDD|2880|B.Pairs and centers found|Load|435134
+2020-02-29 20:55:55,485|GeoTesterRDD|2880|B.Pairs and centers found|Time|  1.88
+2020-02-29 20:55:56,376|IndexType: None.
+2020-02-29 20:56:13,377|GeoTesterRDD|2880|C.Disks found|Load|435134
+2020-02-29 20:56:13,377|GeoTesterRDD|2880|C.Disks found|Time| 17.89
+2020-02-29 20:56:14,813|GeoTesterRDD|2880|D.Disks cleaned|Load|300851
+2020-02-29 20:56:14,813|GeoTesterRDD|2880|D.Disks cleaned|Time|  1.43
+2020-02-29 20:56:14,813|Closing session...
+2020-02-29 20:56:14,814|Number of partition on default quadtree: 727.
+2020-02-29 20:56:14,814|2880|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype none --npartitions 727
+2020-02-29 20:56:15,193|Closing session... Done!
+2020-02-29 20:56:18,213|Starting session...
+2020-02-29 20:56:32,461|Starting session... Done!
+2020-02-29 20:56:32,461|Level of parallelism: 216
+2020-02-29 20:56:41,176|GeoTesterRDD|2881|Data|Load|50419
+2020-02-29 20:56:41,177|Reading data                  |  8.71
+2020-02-29 20:56:43,837|GeoTesterRDD|2881|Partitions done|Load|68600
+2020-02-29 20:56:43,837|Partitions done               |  2.66
+2020-02-29 20:56:43,839|Updating level of parallelism: 216
+2020-02-29 20:56:45,747|GeoTesterRDD|2881|B.Pairs and centers found|Load|435134
+2020-02-29 20:56:45,748|GeoTesterRDD|2881|B.Pairs and centers found|Time|  1.91
+2020-02-29 20:56:46,585|IndexType: RTREE.
+2020-02-29 20:57:01,369|GeoTesterRDD|2881|C.Disks found|Load|435134
+2020-02-29 20:57:01,370|GeoTesterRDD|2881|C.Disks found|Time| 15.62
+2020-02-29 20:57:03,456|GeoTesterRDD|2881|D.Disks cleaned|Load|300851
+2020-02-29 20:57:03,456|GeoTesterRDD|2881|D.Disks cleaned|Time|  2.08
+2020-02-29 20:57:03,456|Closing session...
+2020-02-29 20:57:03,456|Number of partition on default quadtree: 799.
+2020-02-29 20:57:03,456|2881|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype rtree --npartitions 799
+2020-02-29 20:57:03,621|Closing session... Done!
+2020-02-29 20:57:06,631|Starting session...
+2020-02-29 20:57:20,897|Starting session... Done!
+2020-02-29 20:57:20,897|Level of parallelism: 216
+2020-02-29 20:57:29,656|GeoTesterRDD|2882|Data|Load|50419
+2020-02-29 20:57:29,656|Reading data                  |  8.75
+2020-02-29 20:57:32,227|GeoTesterRDD|2882|Partitions done|Load|71531
+2020-02-29 20:57:32,227|Partitions done               |  2.57
+2020-02-29 20:57:32,229|Updating level of parallelism: 216
+2020-02-29 20:57:34,264|GeoTesterRDD|2882|B.Pairs and centers found|Load|435134
+2020-02-29 20:57:34,265|GeoTesterRDD|2882|B.Pairs and centers found|Time|  2.03
+2020-02-29 20:57:35,256|IndexType: QUADTREE.
+2020-02-29 20:57:50,458|GeoTesterRDD|2882|C.Disks found|Load|435134
+2020-02-29 20:57:50,459|GeoTesterRDD|2882|C.Disks found|Time| 16.19
+2020-02-29 20:57:52,623|GeoTesterRDD|2882|D.Disks cleaned|Load|300851
+2020-02-29 20:57:52,623|GeoTesterRDD|2882|D.Disks cleaned|Time|  2.16
+2020-02-29 20:57:52,623|Closing session...
+2020-02-29 20:57:52,623|Number of partition on default quadtree: 829.
+2020-02-29 20:57:52,624|2882|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype quadtree --npartitions 829
+2020-02-29 20:57:52,800|Closing session... Done!
+2020-02-29 20:57:55,858|Starting session...
+2020-02-29 20:58:09,832|Starting session... Done!
+2020-02-29 20:58:09,833|Level of parallelism: 216
+2020-02-29 20:58:18,667|GeoTesterRDD|2883|Data|Load|50419
+2020-02-29 20:58:18,668|Reading data                  |  8.83
+2020-02-29 20:58:21,080|GeoTesterRDD|2883|Partitions done|Load|66815
+2020-02-29 20:58:21,081|Partitions done               |  2.41
+2020-02-29 20:58:21,084|Updating level of parallelism: 216
+2020-02-29 20:58:23,339|GeoTesterRDD|2883|B.Pairs and centers found|Load|435134
+2020-02-29 20:58:23,339|GeoTesterRDD|2883|B.Pairs and centers found|Time|  2.25
+2020-02-29 20:58:24,213|IndexType: None.
+2020-02-29 20:58:37,220|GeoTesterRDD|2883|C.Disks found|Load|435134
+2020-02-29 20:58:37,221|GeoTesterRDD|2883|C.Disks found|Time| 13.88
+2020-02-29 20:58:40,153|GeoTesterRDD|2883|D.Disks cleaned|Load|300851
+2020-02-29 20:58:40,153|GeoTesterRDD|2883|D.Disks cleaned|Time|  2.93
+2020-02-29 20:58:40,153|Closing session...
+2020-02-29 20:58:40,153|Number of partition on default quadtree: 703.
+2020-02-29 20:58:40,154|2883|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype none --npartitions 703
+2020-02-29 20:58:40,381|Closing session... Done!
+2020-02-29 20:58:43,352|Starting session...
+2020-02-29 20:58:57,529|Starting session... Done!
+2020-02-29 20:58:57,529|Level of parallelism: 216
+2020-02-29 20:59:06,288|GeoTesterRDD|2884|Data|Load|50419
+2020-02-29 20:59:06,289|Reading data                  |  8.75
+2020-02-29 20:59:08,946|GeoTesterRDD|2884|Partitions done|Load|68974
+2020-02-29 20:59:08,946|Partitions done               |  2.66
+2020-02-29 20:59:08,948|Updating level of parallelism: 216
+2020-02-29 20:59:10,851|GeoTesterRDD|2884|B.Pairs and centers found|Load|435134
+2020-02-29 20:59:10,852|GeoTesterRDD|2884|B.Pairs and centers found|Time|  1.90
+2020-02-29 20:59:11,703|IndexType: RTREE.
+2020-02-29 20:59:28,168|GeoTesterRDD|2884|C.Disks found|Load|435134
+2020-02-29 20:59:28,168|GeoTesterRDD|2884|C.Disks found|Time| 17.31
+2020-02-29 20:59:30,108|GeoTesterRDD|2884|D.Disks cleaned|Load|300851
+2020-02-29 20:59:30,108|GeoTesterRDD|2884|D.Disks cleaned|Time|  1.93
+2020-02-29 20:59:30,108|Closing session...
+2020-02-29 20:59:30,108|Number of partition on default quadtree: 799.
+2020-02-29 20:59:30,109|2884|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype rtree --npartitions 799
+2020-02-29 20:59:30,281|Closing session... Done!
+2020-02-29 20:59:33,282|Starting session...
+2020-02-29 20:59:47,582|Starting session... Done!
+2020-02-29 20:59:47,582|Level of parallelism: 216
+2020-02-29 20:59:56,403|GeoTesterRDD|2885|Data|Load|50419
+2020-02-29 20:59:56,403|Reading data                  |  8.82
+2020-02-29 20:59:59,021|GeoTesterRDD|2885|Partitions done|Load|72537
+2020-02-29 20:59:59,021|Partitions done               |  2.62
+2020-02-29 20:59:59,023|Updating level of parallelism: 216
+2020-02-29 21:00:00,892|GeoTesterRDD|2885|B.Pairs and centers found|Load|435134
+2020-02-29 21:00:00,892|GeoTesterRDD|2885|B.Pairs and centers found|Time|  1.87
+2020-02-29 21:00:01,886|IndexType: QUADTREE.
+2020-02-29 21:00:18,781|GeoTesterRDD|2885|C.Disks found|Load|435134
+2020-02-29 21:00:18,781|GeoTesterRDD|2885|C.Disks found|Time| 17.89
+2020-02-29 21:00:20,760|GeoTesterRDD|2885|D.Disks cleaned|Load|300851
+2020-02-29 21:00:20,760|GeoTesterRDD|2885|D.Disks cleaned|Time|  1.98
+2020-02-29 21:00:20,760|Closing session...
+2020-02-29 21:00:20,760|Number of partition on default quadtree: 841.
+2020-02-29 21:00:20,760|2885|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=10g --conf spark.driver.maxResultSize=4g --conf spark.default.parallelism=216 --conf spark.locality.wait=0s --conf spark.locality.wait.node=0s --conf spark.locality.wait.rack=3s --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.GeoTesterRDD --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar --input /user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv --epsilon 45 --mu 3 --partitions 216 --parallelism 216 --gridtype quadtree --indextype quadtree --npartitions 841
+2020-02-29 21:00:20,929|Closing session... Done!
