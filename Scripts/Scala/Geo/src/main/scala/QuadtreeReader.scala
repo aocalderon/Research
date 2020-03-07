@@ -1,4 +1,3 @@
-//**
 import scala.collection.JavaConverters._
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{SparkSession}
@@ -15,56 +14,50 @@ import com.vividsolutions.jts.geom.GeometryFactory
 import org.datasyslab.geospark.spatialPartitioning.quadtree._
 import org.datasyslab.geospark.spatialPartitioning.QuadtreePartitioning
 import scala.io.Source
-//**
+import edu.ucr.dblab.{StandardQuadTree, QuadRectangle}
+
 object QuadtreeReader {
   def main(args: Array[String]): Unit = {
-    //**
-    implicit val spark = SparkSession.builder().appName("QuadtreeReader").config("spark.serializer", classOf[KryoSerializer].getName).config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName).getOrCreate()
+    implicit val spark = SparkSession.builder()
+      .appName("QuadtreeReader")
+      .config("spark.serializer", classOf[KryoSerializer].getName)
+      .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
+      .getOrCreate()
     import spark.implicits._
-    //**
-    case class Grid(id: Int, lineage: String, envelope: Envelope)
+
     val envelopes = Source.fromFile("/tmp/envelopes.tsv")
-    val grids = envelopes.getLines.map{ line =>
+    .getLines.map{ line =>
       val arr = line.split("\t")
-      val id = arr(0).toInt
-      val lineage = arr(1)
-      val envelope = new Envelope(arr(2).toDouble, arr(4).toDouble, arr(3).toDouble, arr(5).toDouble)
-      Grid(id, lineage, envelope)
+      new Envelope(arr(2).toDouble, arr(4).toDouble, arr(3).toDouble, arr(5).toDouble)
     }.toList
-    //**
-    val samples = grids.sortBy(_.lineage.size).map(_.envelope)
-    val minX = grids.map(_.envelope.getMinX()).min
-    val minY = grids.map(_.envelope.getMinY()).min
-    val maxX = grids.map(_.envelope.getMaxX()).max
-    val maxY = grids.map(_.envelope.getMaxY()).max
-    //**
-    val boundary = new Envelope(minX, maxX, minY, maxY)
-    val partitions = grids.size
-    val maxLevel = grids.map(_.lineage.size).max
-    val quadtree = new StandardQuadTree[Int](new QuadRectangle(boundary), 0, 1, maxLevel)
-    //**
+    
+    val minX = envelopes.map(_.getMinX()).min
+    val minY = envelopes.map(_.getMinY()).min
+    val maxX = envelopes.map(_.getMaxX()).max
+    val maxY = envelopes.map(_.getMaxY()).max
+
     val geofactory = new GeometryFactory()
-    val wkt = grids.map{ g =>
-      val x1 = g.envelope.getMinX()
-      val x2 = g.envelope.getMaxX()
-      val y1 = g.envelope.getMinY()
-      val y2 = g.envelope.getMaxY()
-      val coords = Array(new Coordinate(x1,y1),new Coordinate(x2,y1),new Coordinate(x2,y2),new Coordinate(x1,y2),new Coordinate(x1,y1))
+    val wkt = envelopes.map{ g =>
+      val x1 = g.getMinX()
+      val x2 = g.getMaxX()
+      val y1 = g.getMinY()
+      val y2 = g.getMaxY()
+      val coords = Array(new Coordinate(x1,y1),
+        new Coordinate(x2,y1),
+        new Coordinate(x2,y2),
+        new Coordinate(x1,y2),
+        new Coordinate(x1,y1))
       val polygon = geofactory.createPolygon(coords)
-      polygon.setUserData(s"${g.id}\t${g.lineage}")
-      s"${polygon.toText()}\t${polygon.getUserData.toString()}\n"
+      s"${polygon.toText()}\n"
     }
     val f = new java.io.PrintWriter("edgesEnvelopes.wkt")
     f.write(wkt.mkString(""))
     f.close()
-    for(sample <- samples){
-      println(sample)
-      quadtree.insert(new QuadRectangle(sample), 1)
-      println(quadtree.getLeafZones.size())
-    }
-    //**
-    quadtree.assignPartitionLineage()
-    quadtree.assignPartitionIds()
+
+    val boundary = new Envelope(minX, maxX, minY, maxY)
+    val cells = Quadtree.readGrids("/tmp/envelopes.tsv", 1) 
+    val quadtree = Quadtree.create(boundary, 1, cells)
+
     val grids2 = quadtree.getLeafZones.asScala
     val wkt2 = grids2.map{ g =>
       val x1 = g.getEnvelope.getMinX()
@@ -79,9 +72,7 @@ object QuadtreeReader {
     val f2 = new java.io.PrintWriter("edgesEnvelopes2.wkt")
     f2.write(wkt2.mkString(""))
     f2.close()
-    //**
+
     spark.close
-    envelopes.close
-    //**
   }
 }

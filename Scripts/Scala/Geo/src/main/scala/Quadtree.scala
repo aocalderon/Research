@@ -1,87 +1,47 @@
-package edu.ucr.dblab
-
-import org.slf4j.{LoggerFactory, Logger}
-import org.rogach.scallop._
-import scala.collection.JavaConverters._
-import scala.collection.mutable.ListBuffer
-import org.datasyslab.geospark.spatialPartitioning.quadtree._
-import com.vividsolutions.jts.geom.{Envelope, Coordinate, Polygon}
+import org.apache.spark.sql.types.StructType
+import org.apache.spark.serializer.KryoSerializer
+import org.apache.spark.storage.StorageLevel
+import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
+import org.datasyslab.geospark.spatialRDD.{SpatialRDD, CircleRDD, PointRDD}
+import org.datasyslab.geospark.spatialOperator.JoinQuery
+import org.datasyslab.geospark.enums.{GridType, IndexType}
+import com.vividsolutions.jts.geom.{Geometry, Envelope, Coordinate, Point, Polygon}
 import com.vividsolutions.jts.geom.GeometryFactory
-import scala.annotation.tailrec
-import edu.ucr.dblab.Utils._
-
-class Quadtree(zone: QuadRectangle, level: Int, maxItemsPerZone: Int, maxLevel: Int, lineage: String){
-
-  var regions = List.empty[Quadtree]
-
-  def newQuadtree(zone: QuadRectangle, level: Int, lineage: String): Quadtree = {
-    new Quadtree(zone, level, this.maxItemsPerZone, this.maxLevel, lineage);
-  }
-
-  def split(): List[Quadtree] = {
-    val newWidth = zone.width / 2;
-    val newHeight = zone.height / 2;
-    val newLevel = level + 1;
-
-    val NW = newQuadtree(new QuadRectangle(
-      zone.x,
-      zone.y + zone.height / 2,
-      newWidth,
-      newHeight
-    ), newLevel, lineage + "0")
-
-    val NE = newQuadtree(new QuadRectangle(
-      zone.x + zone.width / 2,
-      zone.y + zone.height / 2,
-      newWidth,
-      newHeight
-    ), newLevel, lineage + "1")
-
-    val SW = newQuadtree(new QuadRectangle(
-      zone.x,
-      zone.y,
-      newWidth,
-      newHeight
-    ), newLevel, lineage + "2")
-
-    val SE = newQuadtree(new QuadRectangle(
-      zone.x + zone.width / 2,
-      zone.y,
-      newWidth,
-      newHeight
-    ), newLevel, lineage + "3")
-
-    List(NW, NE, SW, SE)
-  }
-
-  def setRegions(): Unit = {
-    this.regions = this.split()
-  }
-
-  override def toString(): String = lineage
-
-}
+import org.datasyslab.geospark.spatialPartitioning.quadtree._
+import org.datasyslab.geospark.spatialPartitioning.QuadtreePartitioning
+import scala.io.Source
+import edu.ucr.dblab.{StandardQuadTree, QuadRectangle}
 
 object Quadtree {
-  @tailrec
-  def walk(path: List[Int], node: Quadtree): Quadtree = {
-    path match {
-      case Nil => node
-      case x :: tail => {
-        if(node.regions.isEmpty) node.setRegions()
-        println(s"x: $x tail: ${tail.mkString(" ")} node: ${node.toString()}")
-        walk(tail, node.regions(x))
+
+  def readGrids(filename: String, offset: Int, delimiter: String = "\t"): Vector[String] = {
+    val envelopes = Source.fromFile("/tmp/envelopes.tsv")
+    val grids = envelopes.getLines.map{ line =>
+      val arr = line.split(delimiter)
+      arr(offset)
+    }.toVector
+    envelopes.close
+    grids
+  }
+  
+  def create[T](boundary: Envelope, maxItems: Int, grids: Vector[String]): StandardQuadTree[T] = {
+    val maxLevel = grids.map(_.size).max
+    val quadtree = new StandardQuadTree[T](new QuadRectangle(boundary), 0, maxItems, maxLevel)
+    quadtree.split()
+    for(grid <- grids.sorted){
+      val lineage = grid.map(_.toInt - 48)
+      var current = quadtree
+      for(position <- lineage.slice(0, lineage.size - 1)){
+        val regions = current.getRegions()
+        current = regions(position)
+        if(current.getRegions == null){
+          current.split()
+        }
       }
     }
-  }
+    quadtree.assignPartitionLineage()
+    quadtree.assignPartitionIds()
 
-  def main(args: Array[String]): Unit = {
-    val envelope = new Envelope(new Coordinate(0,0), new Coordinate(0,0))
-    val root = new Quadtree(new QuadRectangle(envelope), 0, 1, 3, "")
-    val path = List(0,1,3)
-
-    Quadtree.walk(path, root)
-
-    root.regions.foreach { println }
+    quadtree
   }
 }
