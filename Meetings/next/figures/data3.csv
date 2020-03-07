@@ -1,0 +1,10 @@
+Phase,Index,Time
+A.Pairs and centers found,none,1.934
+A.Pairs and centers found,quadtree,2.042
+A.Pairs and centers found,rtree,1.949
+B.Disks found,none,9.042
+B.Disks found,quadtree,9.539
+B.Disks found,rtree,8.872
+C.Disks cleaned,none,2.921
+C.Disks cleaned,quadtree,2.73
+C.Disks cleaned,rtree,2.853
