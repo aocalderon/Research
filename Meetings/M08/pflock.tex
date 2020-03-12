@@ -90,21 +90,48 @@
     \end{frame}
 }
 
-\begin{frame}{About indexing...}
+\begin{frame}{Experiment settings...}
     \begin{itemize}
-        \item Build local indexes (pg 49): To further speed up the query, the indexes in GEOSPARK are \textbf{clustered} indexes. In that
-case, spatial objects in each partition are stored directly in the spatial index of this partition.
-Given a query, the clustered indexes can directly return qualified spatial objects and skip the
-I/O of retrieving spatial index according to the qualified object pointers.
+        \item LA\_50K dataset, time instant 320, 50419 points.
+        \item $\mu=3$, $\varepsilon=45$.
+        \item 12 executors, 9 cores each (108 cores total).
+        \item Average time of 10 runs.
+        \item Partitions and Parallelism set at 216.
     \end{itemize}
 \end{frame}
 
-\begin{frame}{About Join...}
+\begin{frame}{Indexer performance...}
+    \begin{figure}
+        \includegraphics[width=0.75\textwidth]{figures/ByIndexer4}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Reading partitions before hand...}
+    \begin{figure}
+        \includegraphics[width=1\textwidth]{figures/Summary}
+    \end{figure}
+\end{frame}
+\begin{frame}{Reading partitions before hand...}
+    \centering
+    \begin{figure}
+        \includegraphics[trim=20cm 0 10cm 4cm, clip, width=1\textwidth]{figures/Summary}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Reading partitions before hand...}
+    \begin{figure}
+        \includegraphics[width=1\textwidth]{figures/Tasks}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Some current issues...}
     \begin{itemize}
-        \item spatialOperator / JoinQuery: spatialJoin method (line: 445)
-        \item line 466 just take into account local index in left OR right side...
-        \item LeftIndexLookupJudgement and RightIndexLookupJudgement classes in joinJudgement package...
+        \item The parallelism parameter cannot be updated in Runtime.
+        \item The previous figures extends the default GeoSpark partitioner to read a predefined set of cells (in this case a quadtree) but performance gain is lost.
+        \item Using a custom quadtree loses integration with the available GeoSpark operations.
+        \item Currently I have move the code of the GeoSpark's quadtree to Scala and hack it a bit to be able to read cells from disk (still working on it).
     \end{itemize}
+
 \end{frame}
 
 \end{document}
