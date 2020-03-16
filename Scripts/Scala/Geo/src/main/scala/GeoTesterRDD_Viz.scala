@@ -14,11 +14,12 @@ import org.datasyslab.geospark.spatialRDD.{SpatialRDD, CircleRDD, PointRDD}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.enums.{GridType, IndexType}
 import org.datasyslab.geosparksql.utils.{Adapter, GeoSparkSQLRegistrator}
-import com.vividsolutions.jts.geom.{Envelope, Coordinate, Point}
+import com.vividsolutions.jts.geom.{Geometry, Envelope, Coordinate, Point}
 import com.vividsolutions.jts.geom.GeometryFactory
+import com.vividsolutions.jts.index.SpatialIndex;
 import edu.ucr.dblab.Utils._
 
-object GeoTesterRDD{
+object GeoTesterRDD_Viz{
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   case class PointWKT(wkt: String, id: Int, t: Int)
@@ -86,12 +87,14 @@ object GeoTesterRDD{
       val nPointsRDD = pointsRDD.rawSpatialRDD.count()
       pointsRDD.analyze()
       n("Data", nPointsRDD)
-      (pointsRDD, nPointsRDD, pointsRDD.boundaryEnvelope)
+      val envelope = pointsRDD.boundaryEnvelope
+      envelope.expandBy( (params.epsilon() / 2.0) + params.precision() )
+      (pointsRDD, nPointsRDD, envelope)
     }
 
     val distance = params.epsilon() + params.precision()
-    val stageA = "Partitions done"
-    val (points, buffers, npartitions) = timer{stageA}{
+    val stage = "Partitions done"
+    val (points, buffers, npartitions) = timer{stage}{
       pointsRDD.spatialPartitioning(gridtype, params.partitions())
       pointsRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
       val npartitions = pointsRDD.getPartitioner.getGrids.size()
@@ -99,10 +102,23 @@ object GeoTesterRDD{
       buffersRDD.analyze(envelope, nPointsRDD.toInt)
       buffersRDD.spatialPartitioning(pointsRDD.getPartitioner)
       buffersRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
-      n(stageA, buffersRDD.spatialPartitionedRDD.count())
+      n(stage, buffersRDD.spatialPartitionedRDD.count())
       (pointsRDD, buffersRDD, npartitions)
     }
     logger.info(s"GridType: $gridtype.")
+    save{"/tmp/edgesCells.wkt"}{
+      pointsRDD.partitionTree.getLeafZones.asScala.map{ z =>
+        val id = z.partitionId
+        val e = z.getEnvelope
+        val (x1,x2,y1,y2) = (e.getMinX, e.getMaxX, e.getMinY, e.getMaxY)
+        val p1 = new Coordinate(x1, y1)
+        val p2 = new Coordinate(x2, y1)
+        val p3 = new Coordinate(x2, y2)
+        val p4 = new Coordinate(x1, y2)
+        val p = geofactory.createPolygon(Array(p1,p2,p3,p4,p1))
+        s"${p.toText()}\t${id}\n"
+      }
+    }
 
     // Finding pairs and centers...
     def calculateCenterCoordinates(p1: Point, p2: Point, r2: Double): (Point, Point) = {
@@ -124,8 +140,8 @@ object GeoTesterRDD{
     }
     val r2: Double = math.pow(params.epsilon() / 2.0, 2)
     val considerBoundary = true
-    val stageB = "A.Pairs and centers found"
-    val (centers, nCenters) = timer{header(stageB)}{
+    val stageA = "A.Pairs and centers found"
+    val (centers, nCenters) = timer{header(stageA)}{
       val usingIndex = false
       val centersPairs = JoinQuery.DistanceJoinQueryFlat(points, buffers, usingIndex, considerBoundary)
         .rdd.map{ pair =>
@@ -143,14 +159,14 @@ object GeoTesterRDD{
         .union(centersPairs.map(_._2))
         .persist(StorageLevel.MEMORY_ONLY)
       val nCenters = centers.count()
-      n(stageB, nCenters)
+      n(stageA, nCenters)
       (centers, nCenters)
     }
 
     // Finding disks...
     val r = params.epsilon() / 2.0
-    val stageC = "B.Disks found"
-    val disks = timer{header(stageC)}{
+    val stageB = "B.Disks found"
+    val disks = timer{header(stageB)}{
       val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
       centersRDD.analyze(envelope, nCenters.toInt)
       centersRDD.spatialPartitioning(points.getPartitioner)
@@ -172,30 +188,103 @@ object GeoTesterRDD{
         }
       }      
       val disks = JoinQuery.DistanceJoinQueryFlat(centersRDD, pointsBuffer, usingIndex, considerBoundary)
-      n(stageC, disks.count())
+      n(stageB, disks.count())
       disks
     }
-    //disks.take(10).foreach{println}
+    
+    // Finding disks...
+    import scala.collection.immutable.HashSet
+    val mu = params.mu()
+    val d = (params.epsilon() / 2.0) + params.precision()
+    val stageZ = "Z.Alternative disks found"
+    val disksZ = timer{header(stageZ)}{
+      val centersRDD = new CircleRDD(new PointRDD(centers, StorageLevel.MEMORY_ONLY), d)
+      centersRDD.analyze(envelope, nCenters.toInt)
+      centersRDD.spatialPartitioning(points.getPartitioner)
+      centersRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+
+      pointsRDD.buildIndex(IndexType.QUADTREE, true)
+      pointsRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
+
+      val resultWithDuplicates = pointsRDD.indexedRDD.rdd
+        .zipPartitions(centersRDD.spatialPartitionedRDD.rdd, true){ (indexIt, centersIt) =>
+          var results = new scala.collection.mutable.ListBuffer[(Point, HashSet[Point])]()
+          if(!indexIt.hasNext || !centersIt.hasNext){
+            results.toIterator
+          } else {
+            val index: SpatialIndex = indexIt.next()
+            while(centersIt.hasNext){
+              val center = centersIt.next()
+              val buffer = center.getEnvelopeInternal
+              //new Envelope(center.getX - d, center.getX + d, center.getY - d, center.getY + d)
+              //val buffer = center.getEnvelopeInternal
+              //buffer.expandBy(d)
+              val candidates = index.query(buffer)
+              for( candidate <- candidates.asScala) { //candidate =>
+                val point = candidate.asInstanceOf[Point]
+                val x = center.getCenterPoint.x - point.getX
+                val y = center.getCenterPoint.y - point.getY
+                val x2 = x * x
+                val y2 = y * y
+                val dist = math.sqrt(x2 + y2) 
+                if(dist <= d){
+                  results += ((geofactory.createPoint(center.getCenterPoint), HashSet(point)))
+                }
+              }
+            }
+            results.toIterator
+          }
+        }
+
+      val zero = HashSet.empty[Point]
+      val results = resultWithDuplicates
+        .reduceByKey( (pids1, pids2) => pids1 ++ pids2)
+        //.aggregateByKey(zero)(_ ++ _, _ ++ _)
+        .filter(_._2.size >= mu)
+      n(stageZ, results.count())
+      results
+    }
+
+    //
+    save("/tmp/edgesMyJoin.wkt"){
+      disksZ.map{ case(center, points) =>
+        val pids = points.map(_.getUserData.toString.split("\t")(0))
+          .map(_.toInt).toList.sorted.mkString(" ")
+        s"${center.toText()}\t${pids}\n"
+      }.collect().sorted
+    }
 
     // Cleaning disks...
-    val mu = params.mu()
-    val stageD = "C.Disks cleaned"
-    timer{header(stageD)}{
+    val stageC = "C.Disks cleaned"
+    val disksC = timer{header(stageC)}{
       val d = disks.rdd.map{ d =>
         val point  = d._1
         val center = d._2
-        (center, Array(point))
+        (center, HashSet(point))
       }.reduceByKey( (pids1, pids2) => pids1 ++ pids2)
-        .filter(_._2.length >= mu)
+        .filter(_._2.size >= mu)
+      /*
         .map{ d =>
           val points = d._2.toArray
           val centroid = geofactory.createMultiPoint(points.map(_.getCentroid)).getEnvelope().getCentroid
           val pids = points.map(_.getUserData.toString().split("\t").head.toInt).sorted.mkString(" ")
           centroid.setUserData(pids)
           centroid
-        }.distinct().cache()
-      n(stageD, d.count())
+        }.distinct()
+       */
+        .cache()
+
+      n(stageC, d.count())
       d
+    }
+
+    //
+    save("/tmp/edgesJoin.wkt"){
+      disksC.map{ case(center, points) =>
+        val pids = points.map(_.getUserData.toString.split("\t")(0))
+          .map(_.toInt).toList.sorted.mkString(" ")
+        s"${center.toText()}\t${pids}\n"
+      }.collect().sorted
     }
 
     logger.info("Closing session...")
@@ -206,15 +295,3 @@ object GeoTesterRDD{
   }
 }
 
-class GeoTesterConf(args: Seq[String]) extends ScallopConf(args) {
-  val input = opt[String](default = Some(""))
-  val epsilon = opt[Double](default = Some(10.0))
-  val mu = opt[Int](default = Some(2))
-  val precision = opt[Double](default = Some(0.001))
-  val partitions = opt[Int](default = Some(256))
-  val parallelism = opt[Int](default = Some(324))
-  val gridtype = opt[String](default = Some("quadtree"))
-  val indextype = opt[String](default = Some("none"))
-
-  verify()
-}
