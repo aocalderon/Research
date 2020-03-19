@@ -39,7 +39,7 @@ object Utils {
     }
 
     val v = timer{"Another test"}{
-      val v = Vector(1,2,3,4,5)
+      val v = Vector(1,2,3,4)
 
       val fold = v.foldLeft(1)(_ + _)
 

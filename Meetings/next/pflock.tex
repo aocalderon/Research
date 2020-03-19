@@ -92,18 +92,40 @@
 
 \begin{frame}{About indexing...}
     \begin{itemize}
-        \item Build local indexes (pg 49): To further speed up the query, the indexes in GEOSPARK are \textbf{clustered} indexes. In that
-case, spatial objects in each partition are stored directly in the spatial index of this partition.
-Given a query, the clustered indexes can directly return qualified spatial objects and skip the
-I/O of retrieving spatial index according to the qualified object pointers.
+        \item GeoSpark makes partitioning and indexing in a \textbf{SpatailRDD} in two diferent stages:
+        \begin{enumerate}
+            \item Once a partitioner (Quadtree, KDBtree, ...) is created, a \textbf{SpatialRDD} call \texttt{partition} method to move data to the corresponding partition (it use the \texttt{partitionBy} method of Apache Spark).
+            \item Given a \textbf{SpatialRDD} already partitioned you can call \texttt{buildIndex} method which make a call to the \texttt{IndexBuilder} class (it will create a Quadtree or Rtree in the data of each partition).
+        \end{enumerate}
+        \item Feeding the index at the moment the data is moved would demand modification of Apache Spark code...
     \end{itemize}
 \end{frame}
 
 \begin{frame}{About Join...}
     \begin{itemize}
-        \item spatialOperator / JoinQuery: spatialJoin method (line: 445)
-        \item line 466 just take into account local index in left OR right side...
-        \item LeftIndexLookupJudgement and RightIndexLookupJudgement classes in joinJudgement package...
+        \item GeoSpark provides two types of joins:
+    \end{itemize}
+    \centering
+    \includegraphics[trim=4.0cm 4.5cm 4.0cm 18.0cm, clip, width=1\textwidth]{figures/joins}
+\end{frame}
+
+\begin{frame}{About Join...}
+    \begin{itemize}
+        \item GSJoin is actually a combination of Index-based and Nested-loop joins:
+        \begin{enumerate}
+            \item If one of the SpatialRDDs is indexed, it will query that index to get a set of candidates and then refine the search.
+            \item If no index is present, it will run a nested loop join.
+        \end{enumerate}
+        \item By default, GSJoin uses left OR right index but not both...
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{About Join...}
+    \begin{itemize}
+        \item GSJoin performs some verifications which are not needed for distance joins involving Point datasets (CRS and partition matches, statistic collection ).
+        \item I have been able to port the code to Scala and remove unnecesary verifications.  
+        \item It saves $\approx1.5$s but still have to perform more robust tests.
+        \item Currently checking the merge operation to see if they are using just the data in the border of the partition...
     \end{itemize}
 \end{frame}
 
