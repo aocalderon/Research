@@ -1,18 +1,18 @@
 #!/bin/bash
 
-EPSILON=$1
-MU=$2
-INDEXTYPE=$3
-GRIDTYPE=$4
+EPSILON=10
+MU=3
+INDEXTYPE="quadtree"
+GRIDTYPE="quadtree"
 
 SPARK_JARS=/home/acald013/Spark/2.4/jars/
 CLASS_JAR=/home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar
-CLASS_NAME=edu.ucr.dblab.GeoTesterRDD_Viz
+CLASS_NAME=edu.ucr.dblab.GeoTesterRDD_Join
 LISTENER=spark.extraListeners=TaskSparkListener
 LOG_FILE=/home/acald013/Spark/2.4/conf/log4j.properties
 
-MASTER=local[10]
-EXECUTORS=12
+MASTER=yarn
+EXECUTORS=4
 CORES=9
 DMEMORY=10g
 EMEMORY=30g

@@ -163,6 +163,14 @@ object GeoTesterRDD_Viz{
       (centers, nCenters)
     }
 
+    //
+    val radius = (params.epsilon() / 2.0) + params.precision()
+    save("/tmp/edgesCenters.wkt"){
+      centers.map{ center =>
+        s"${center.buffer(radius, 10).toText()}\t${center.getX},${center.getY}\n"
+      }.collect()
+    }
+
     // Finding disks...
     val r = params.epsilon() / 2.0
     val stageB = "B.Disks found"
