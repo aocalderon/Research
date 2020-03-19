@@ -6,6 +6,7 @@ import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.datasyslab.geospark.spatialRDD.{SpatialRDD, CircleRDD, PointRDD}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.enums.{GridType, IndexType, FileDataSplitter}
+import com.vividsolutions.jts.geom.{GeometryFactory, Coordinate}
 
 object GeoTesterRDD_Join{
 
@@ -16,33 +17,31 @@ object GeoTesterRDD_Join{
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .getOrCreate()
     val pointRDDInputLocation = "/Datasets/Demo/data.tsv"
-    val pointRDDOffset = 0 
-    val pointRDDSplitter = FileDataSplitter.CSV
+    val pointRDDOffset = 1
+    val pointRDDSplitter = FileDataSplitter.TSV
     val carryOtherAttributes = true 
     val pointsRDD = new PointRDD(spark.sparkContext, pointRDDInputLocation, pointRDDOffset, pointRDDSplitter, carryOtherAttributes)
 
-    val distance = 10
+    val distance = 10.0
 
-    pointsRDD.spatialPartitioning(GridType.QUADTREE)
-    pointsRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+    pointsRDD.spatialPartitioning(GridType.QUADTREE, 10)
+    pointsRDD.spatialPartitionedRDD.cache
     val npartitions = pointsRDD.getPartitioner.getGrids.size()
     val buffersRDD = new CircleRDD(pointsRDD, distance)
-    buffersRDD.analyze(envelope, nPointsRDD.toInt)
+    buffersRDD.analyze()
     buffersRDD.spatialPartitioning(pointsRDD.getPartitioner)
-    buffersRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+    buffersRDD.spatialPartitionedRDD.cache
 
-    save{"/tmp/edgesCells.wkt"}{
-      points.partitionTree.getLeafZones.asScala.map{ z =>
-        val id = z.partitionId
-        val e = z.getEnvelope
-        val (x1,x2,y1,y2) = (e.getMinX, e.getMaxX, e.getMinY, e.getMaxY)
-        val p1 = new Coordinate(x1, y1)
-        val p2 = new Coordinate(x2, y1)
-        val p3 = new Coordinate(x2, y2)
-        val p4 = new Coordinate(x1, y2)
-        val p = geofactory.createPolygon(Array(p1,p2,p3,p4,p1))
-        s"${p.toText()}\t${id}\n"
-      }
+    pointsRDD.partitionTree.getLeafZones.asScala.map{ z =>
+      val id = z.partitionId
+      val e = z.getEnvelope
+      val (x1,x2,y1,y2) = (e.getMinX, e.getMaxX, e.getMinY, e.getMaxY)
+      val p1 = new Coordinate(x1, y1)
+      val p2 = new Coordinate(x2, y1)
+      val p3 = new Coordinate(x2, y2)
+      val p4 = new Coordinate(x1, y2)
+      val p = geofactory.createPolygon(Array(p1,p2,p3,p4,p1))
+      s"${p.toText()}\t${id}\n"
     }
 
     // Finding pairs and centers...
