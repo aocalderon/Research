@@ -21,6 +21,9 @@ object DJoin{
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .getOrCreate()
 
+    // Setting the distance...
+    val distance = 5.0
+
     // Reading points dataset...
     val pointsTSV = "/Datasets/Demo/points.tsv"
     val offset = 1
@@ -28,14 +31,14 @@ object DJoin{
     val carry = true 
     val pointsRDD = new PointRDD(spark.sparkContext, pointsTSV, offset, splitter, carry)
     pointsRDD.analyze()
+    val envelope = pointsRDD.boundary()
+    envelope.expandBy(distance)
+    pointsRDD.analyze(envelope, 100)
 
     // Reading centers dataset...
     val centersTSV = "/Datasets/Demo/centers.tsv"
     val centersRDD = new PointRDD(spark.sparkContext, centersTSV, offset, splitter, carry)
-    centersRDD.analyze()
-
-    // Setting the distance...
-    val distance = 5.0
+    centersRDD.analyze(envelope, 326)
 
     // Partitioning points...
     pointsRDD.spatialPartitioning(GridType.QUADTREE, 12)
@@ -71,9 +74,19 @@ object DJoin{
 
     // Creating buffers in centers and partitioning...
     val buffersRDD = new CircleRDD(centersRDD, distance)
-    buffersRDD.analyze()
+    buffersRDD.analyze(envelope, 326)
     buffersRDD.spatialPartitioning(pointsRDD.getPartitioner)
     buffersRDD.spatialPartitionedRDD.cache
+
+    // Saving centers with its partition id...
+    val centersWKT = buffersRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex( (index, centers) =>
+      centers.map{ center =>
+        //val id = center.getUserData().toString().split("\t")(0)
+        s"${center.getCenterGeometry.toText()}\t${index}\n"
+      }, preservesPartitioning = true).collect()
+    val f2 = new PrintWriter("/tmp/centers.wkt")
+    f2.write(centersWKT.mkString(""))
+    f2.close()
 
     // Performing the distance join ...
     val considerBoundary = true
@@ -93,9 +106,9 @@ object DJoin{
       wkts.map{ wkt =>
         s"${wkt}\t${index}\n"
       }, preservesPartitioning = true).collect()
-    val f2 = new PrintWriter("/tmp/results.wkt")
-    f2.write(resultsWKT.mkString(""))
-    f2.close()
+    val f3 = new PrintWriter("/tmp/results.wkt")
+    f3.write(resultsWKT.mkString(""))
+    f3.close()
 
     spark.close()
   }

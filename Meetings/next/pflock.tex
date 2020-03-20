@@ -90,42 +90,24 @@
     \end{frame}
 }
 
-\begin{frame}{About indexing...}
-    \begin{itemize}
-        \item GeoSpark makes partitioning and indexing in a \textbf{SpatailRDD} in two diferent stages:
-        \begin{enumerate}
-            \item Once a partitioner (Quadtree, KDBtree, ...) is created, a \textbf{SpatialRDD} call \texttt{partition} method to move data to the corresponding partition (it use the \texttt{partitionBy} method of Apache Spark).
-            \item Given a \textbf{SpatialRDD} already partitioned you can call \texttt{buildIndex} method which make a call to the \texttt{IndexBuilder} class (it will create a Quadtree or Rtree in the data of each partition).
-        \end{enumerate}
-        \item Feeding the index at the moment the data is moved would demand modification of Apache Spark code...
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{About Join...}
-    \begin{itemize}
-        \item GeoSpark provides two types of joins:
-    \end{itemize}
+\begin{frame}{The issue with spatial distance join in GeoSpark...}
     \centering
-    \includegraphics[trim=4.0cm 4.5cm 4.0cm 18.0cm, clip, width=1\textwidth]{figures/joins}
+    \includegraphics[width=0.8\textwidth]{figures/points}
+\end{frame}
+\begin{frame}{The issue with spatial distance join in GeoSpark...}
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/centers}
+\end{frame}
+\begin{frame}{The issue with spatial distance join in GeoSpark...}
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/results}
 \end{frame}
 
-\begin{frame}{About Join...}
+\begin{frame}{What's next?}
     \begin{itemize}
-        \item GSJoin is actually a combination of Index-based and Nested-loop joins:
-        \begin{enumerate}
-            \item If one of the SpatialRDDs is indexed, it will query that index to get a set of candidates and then refine the search.
-            \item If no index is present, it will run a nested loop join.
-        \end{enumerate}
-        \item By default, GSJoin uses left OR right index but not both...
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{About Join...}
-    \begin{itemize}
-        \item GSJoin performs some verifications which are not needed for distance joins involving Point datasets (CRS and partition matches, statistic collection ).
-        \item I have been able to port the code to Scala and remove unnecesary verifications.  
-        \item It saves $\approx1.5$s but still have to perform more robust tests.
-        \item Currently checking the merge operation to see if they are using just the data in the border of the partition...
+        \item I have prepared a demo to post in the GeoSpark forum.
+        \item I am exploring an option.  It seems the problem can be when I convert from a JavaPairRDD (the native response from GeoSpark) to the standard RDD I need in Scala.
+        \item Now that we can perform the join directly from Scala I think I can track directly how behave the partitions.  Currently working on that...
     \end{itemize}
 \end{frame}
 
