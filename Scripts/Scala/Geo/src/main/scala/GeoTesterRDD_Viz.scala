@@ -9,12 +9,14 @@ import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.storage.StorageLevel
+import org.apache.spark.TaskContext
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.datasyslab.geospark.spatialRDD.{SpatialRDD, CircleRDD, PointRDD}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.enums.{GridType, IndexType}
 import org.datasyslab.geosparksql.utils.{Adapter, GeoSparkSQLRegistrator}
-import com.vividsolutions.jts.geom.{Geometry, Envelope, Coordinate, Point}
+import org.datasyslab.geospark.utils.HalfOpenRectangle
+import com.vividsolutions.jts.geom.{Geometry, Envelope, Coordinate, Point, Polygon}
 import com.vividsolutions.jts.geom.GeometryFactory
 import com.vividsolutions.jts.index.SpatialIndex;
 import edu.ucr.dblab.Utils._
@@ -105,7 +107,19 @@ object GeoTesterRDD_Viz{
       n(stage, buffersRDD.spatialPartitionedRDD.count())
       (pointsRDD, buffersRDD, npartitions)
     }
+
+    //
+    save("/tmp/edgesPoints.wkt"){
+      pointsRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex({ case(index, iter) =>
+        iter.map{ point =>
+          s"${point.toText()}\t${index}\n"
+        }}, preservesPartitioning = true)
+        .collect().sorted
+    }
+
     logger.info(s"GridType: $gridtype.")
+    val grids = pointsRDD.partitionTree.getLeafZones.asScala.toVector
+      .sortBy(_.partitionId).map(_.getEnvelope)
     save{"/tmp/edgesCells.wkt"}{
       pointsRDD.partitionTree.getLeafZones.asScala.map{ z =>
         val id = z.partitionId
@@ -164,11 +178,17 @@ object GeoTesterRDD_Viz{
     }
 
     //
+    import scala.collection.immutable.HashSet
     val radius = (params.epsilon() / 2.0) + params.precision()
     save("/tmp/edgesCenters.wkt"){
-      centers.map{ center =>
-        s"${center.buffer(radius, 10).toText()}\t${center.getX},${center.getY}\n"
-      }.collect()
+      val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
+      centersRDD.analyze(envelope, nCenters.toInt)
+      centersRDD.spatialPartitioning(points.getPartitioner)
+      centersRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex({ case(index, iter) =>
+        iter.map{ point =>
+          s"${point.toText()}\t${index}\n"
+        }}, preservesPartitioning = true)
+      .collect().sorted
     }
 
     // Finding disks...
@@ -196,103 +216,74 @@ object GeoTesterRDD_Viz{
         }
       }      
       val disks = JoinQuery.DistanceJoinQueryFlat(centersRDD, pointsBuffer, usingIndex, considerBoundary)
-      n(stageB, disks.count())
-      disks
-    }
-    
-    // Finding disks...
-    import scala.collection.immutable.HashSet
-    val mu = params.mu()
-    val d = (params.epsilon() / 2.0) + params.precision()
-    val stageZ = "Z.Alternative disks found"
-    val disksZ = timer{header(stageZ)}{
-      val centersRDD = new CircleRDD(new PointRDD(centers, StorageLevel.MEMORY_ONLY), d)
-      centersRDD.analyze(envelope, nCenters.toInt)
-      centersRDD.spatialPartitioning(points.getPartitioner)
-      centersRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
-
-      pointsRDD.buildIndex(IndexType.QUADTREE, true)
-      pointsRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
-
-      val resultWithDuplicates = pointsRDD.indexedRDD.rdd
-        .zipPartitions(centersRDD.spatialPartitionedRDD.rdd, true){ (indexIt, centersIt) =>
-          var results = new scala.collection.mutable.ListBuffer[(Point, HashSet[Point])]()
-          if(!indexIt.hasNext || !centersIt.hasNext){
-            results.toIterator
-          } else {
-            val index: SpatialIndex = indexIt.next()
-            while(centersIt.hasNext){
-              val center = centersIt.next()
-              val buffer = center.getEnvelopeInternal
-              //new Envelope(center.getX - d, center.getX + d, center.getY - d, center.getY + d)
-              //val buffer = center.getEnvelopeInternal
-              //buffer.expandBy(d)
-              val candidates = index.query(buffer)
-              for( candidate <- candidates.asScala) { //candidate =>
-                val point = candidate.asInstanceOf[Point]
-                val x = center.getCenterPoint.x - point.getX
-                val y = center.getCenterPoint.y - point.getY
-                val x2 = x * x
-                val y2 = y * y
-                val dist = math.sqrt(x2 + y2) 
-                if(dist <= d){
-                  results += ((geofactory.createPoint(center.getCenterPoint), HashSet(point)))
-                }
-              }
-            }
-            results.toIterator
-          }
-        }
-
-      val zero = HashSet.empty[Point]
-      val results = resultWithDuplicates
-        .reduceByKey( (pids1, pids2) => pids1 ++ pids2)
-        //.aggregateByKey(zero)(_ ++ _, _ ++ _)
-        .filter(_._2.size >= mu)
-      n(stageZ, results.count())
-      results
-    }
-
-    //
-    save("/tmp/edgesMyJoin.wkt"){
-      disksZ.map{ case(center, points) =>
-        val pids = points.map(_.getUserData.toString.split("\t")(0))
-          .map(_.toInt).toList.sorted.mkString(" ")
-        s"${center.toText()}\t${pids}\n"
-      }.collect().sorted
-    }
-
-    // Cleaning disks...
-    val stageC = "C.Disks cleaned"
-    val disksC = timer{header(stageC)}{
-      val d = disks.rdd.map{ d =>
+      .rdd.map{ d =>
         val point  = d._1
         val center = d._2
         (center, HashSet(point))
       }.reduceByKey( (pids1, pids2) => pids1 ++ pids2)
-        .filter(_._2.size >= mu)
-      /*
-        .map{ d =>
-          val points = d._2.toArray
-          val centroid = geofactory.createMultiPoint(points.map(_.getCentroid)).getEnvelope().getCentroid
-          val pids = points.map(_.getUserData.toString().split("\t").head.toInt).sorted.mkString(" ")
-          centroid.setUserData(pids)
-          centroid
-        }.distinct()
-       */
-        .cache()
-
-      n(stageC, d.count())
-      d
+       
+      n(stageB, disks.count())
+      disks
     }
 
     //
+    logger.info(s"Number of partition on Join: ${disks.getNumPartitions}.")
     save("/tmp/edgesJoin.wkt"){
-      disksC.map{ case(center, points) =>
-        val pids = points.map(_.getUserData.toString.split("\t")(0))
-          .map(_.toInt).toList.sorted.mkString(" ")
-        s"${center.toText()}\t${pids}\n"
-      }.collect().sorted
+      disks.mapPartitionsWithIndex({ case(index, iter) =>
+        iter.map{ case(center, points) =>
+          val pids = points.map(_.getUserData.toString.split("\t")(0)).map(_.toInt).toList.sorted.mkString(" ")
+          s"${center.toText()}\t${pids}\t${index}\n"
+        }}, preservesPartitioning = true)
+      .collect().sorted
+    }
+    
+    // Alternative finding disks...
+    val mu = params.mu()
+    val d = (params.epsilon() / 2.0) + params.precision()
+    val results = timer("Distance join called"){
+      val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
+      centersRDD.analyze(envelope, nCenters.toInt)
+      centersRDD.spatialPartitioning(points.getPartitioner)
+      centersRDD.buildIndex(IndexType.QUADTREE, true)
+      centersRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
+
+      val bufferRDD = new PointRDD(pointsRDD.rawSpatialRDD.rdd, StorageLevel.MEMORY_ONLY)
+
+      val results = DistanceJoin.join(centersRDD, bufferRDD, d)
+      n("Distance join called", results.count())
+
+      results
+    }
+    save("/tmp/edgesMyJoin.wkt"){
+      results.mapPartitionsWithIndex({ case(index, iter) =>
+        iter.map{ case(center, points) =>
+          val pids = points.map(_.getUserData.toString.split("\t")(0)).map(_.toInt).sorted.mkString(" ")
+          s"${center.toText()}\t${pids}\t${index}\n"
+        }}, preservesPartitioning = true)
+      .collect().sorted
+    }
+    //
+
+    val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
+    centersRDD.analyze(envelope, nCenters.toInt)
+    centersRDD.spatialPartitioning(points.getPartitioner)
+    val buffersRDD = new PointRDD(pointsRDD.rawSpatialRDD.rdd, StorageLevel.MEMORY_ONLY)
+
+    val partitionBased = DistanceJoin.partitionBased(centersRDD, buffersRDD, d, 10.0, grids)
+    n("Partition Based", partitionBased.count())
+    save("/tmp/edgesPPoints.wkt"){
+      partitionBased.mapPartitionsWithIndex(
+        {case(index, iter) =>
+        iter.flatMap{ case(points, grids) =>
+          points.map{ case(id, point) => 
+            s"${point.toText()}\t${id}\t${index}\n"
+          }
+        }
+      }
+      , preservesPartitioning = true).collect().sorted
+    }
+    save("/tmp/edgesLGrids.wkt"){
+      partitionBased.flatMap(_._2).distinct().collect()
     }
 
     logger.info("Closing session...")

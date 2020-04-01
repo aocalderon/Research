@@ -1,9 +1,9 @@
 #!/bin/bash
 
 EPSILON=$1
-MU=$2
-INDEXTYPE=$3
-GRIDTYPE=$4
+MU=3
+INDEXTYPE="quadtree"
+GRIDTYPE="quadtree"
 
 SPARK_JARS=/home/acald013/Spark/2.4/jars/
 CLASS_JAR=/home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar
