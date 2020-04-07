@@ -32,7 +32,7 @@ object GeoTesterRDD_Viz{
 
   def main(args: Array[String]): Unit = {
     logger.info("Starting session...")
-    implicit val params = new GeoTesterConf(args)
+    implicit val params = new DistanceJoinConf(args)
     val appName = s"GeoTesterRDD: " +
     s"epslion=${params.epsilon()} " +
     s"grid=${params.gridtype()} " +
@@ -118,7 +118,7 @@ object GeoTesterRDD_Viz{
     }
 
     logger.info(s"GridType: $gridtype.")
-    val grids = pointsRDD.partitionTree.getLeafZones.asScala.toVector
+    implicit val grids = pointsRDD.partitionTree.getLeafZones.asScala.toVector
       .sortBy(_.partitionId).map(_.getEnvelope)
     save{"/tmp/edgesCells.wkt"}{
       pointsRDD.partitionTree.getLeafZones.asScala.map{ z =>
@@ -262,19 +262,37 @@ object GeoTesterRDD_Viz{
         }}, preservesPartitioning = true)
       .collect().sorted
     }
-    //
+    
+    // Partition based...
+    val width = params.width()
+    val partitionBased = timer("Partition based join"){
+      val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
+      centersRDD.analyze(envelope, nCenters.toInt)
+      centersRDD.spatialPartitioning(points.getPartitioner)
+      val buffersRDD = new PointRDD(pointsRDD.rawSpatialRDD.rdd, StorageLevel.MEMORY_ONLY)
 
-    val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
-    centersRDD.analyze(envelope, nCenters.toInt)
-    centersRDD.spatialPartitioning(points.getPartitioner)
-    val buffersRDD = new PointRDD(pointsRDD.rawSpatialRDD.rdd, StorageLevel.MEMORY_ONLY)
+      val partitionBased = DistanceJoin.partitionBased(centersRDD, buffersRDD, d, width)
+      n("Partition Based", partitionBased.count())
+      partitionBased
+    }.persist(StorageLevel.MEMORY_ONLY)
+    logger.info(s"Grid width: ${width}")
+    save("/tmp/edgesPPairs.wkt"){
+      partitionBased.mapPartitionsWithIndex(
+        {case(index, iter) =>
+          iter.map{ case(center, points) =>
+            val pids = points.map(_.getUserData.toString().split("\t")(0))
+              .map(_.toInt).sorted.mkString(" ")
+            s"${center.toText()}\t${pids}\t${index}\n"
+          }
+        }
+          , preservesPartitioning = true).collect().sorted
+    }
 
-    val partitionBased = DistanceJoin.partitionBased(centersRDD, buffersRDD, d, 10.0, grids)
-    n("Partition Based", partitionBased.count())
+    /*
     save("/tmp/edgesPPoints.wkt"){
       partitionBased.mapPartitionsWithIndex(
         {case(index, iter) =>
-        iter.flatMap{ case(points, grids) =>
+        iter.flatMap{ case(points, circles, pairs, grids) =>
           points.map{ case(id, point) => 
             s"${point.toText()}\t${id}\t${index}\n"
           }
@@ -282,9 +300,22 @@ object GeoTesterRDD_Viz{
       }
       , preservesPartitioning = true).collect().sorted
     }
-    save("/tmp/edgesLGrids.wkt"){
-      partitionBased.flatMap(_._2).distinct().collect()
+    save("/tmp/edgesPCircles.wkt"){
+      partitionBased.mapPartitionsWithIndex(
+        {case(index, iter) =>
+        iter.flatMap{ case(points, circles, pairs, grids) =>
+          circles.map{ case(id, circle) => 
+            s"${circle.toText()}\t${id}\t${index}\n"
+          }
+        }
+      }
+      , preservesPartitioning = true).collect().sorted
     }
+     
+    save("/tmp/edgesLGrids.wkt"){
+      partitionBased.flatMap(_._4).collect()
+    }
+     */
 
     logger.info("Closing session...")
     logger.info(s"Number of partition on default quadtree: $npartitions.")
@@ -294,3 +325,16 @@ object GeoTesterRDD_Viz{
   }
 }
 
+class DistanceJoinConf(args: Seq[String]) extends ScallopConf(args) {
+  val input = opt[String](default = Some(""))
+  val epsilon = opt[Double](default = Some(10.0))
+  val mu = opt[Int](default = Some(2))
+  val precision = opt[Double](default = Some(0.001))
+  val width = opt[Double](default = Some(10.0))
+  val partitions = opt[Int](default = Some(256))
+  val parallelism = opt[Int](default = Some(324))
+  val gridtype = opt[String](default = Some("quadtree"))
+  val indextype = opt[String](default = Some("none"))
+
+  verify()
+}

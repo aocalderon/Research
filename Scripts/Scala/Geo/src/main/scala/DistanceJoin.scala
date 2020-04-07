@@ -16,7 +16,7 @@ import org.datasyslab.geospark.spatialRDD.{SpatialRDD, CircleRDD, PointRDD}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.enums.{GridType, IndexType}
 import org.datasyslab.geosparksql.utils.GeoSparkSQLRegistrator
-import com.vividsolutions.jts.geom.{Geometry, Envelope, Coordinate, Point, Polygon}
+import com.vividsolutions.jts.geom.{Geometry, Envelope, Coordinate, Point, Polygon, MultiPolygon}
 import com.vividsolutions.jts.geom.GeometryFactory
 import com.vividsolutions.jts.index.SpatialIndex;
 import edu.ucr.dblab.Utils._
@@ -77,7 +77,8 @@ object DistanceJoin{
     results
   }
 
-  def partitionBased(leftRDD: PointRDD, rightRDD: PointRDD, distance: Double, width: Double, grids: Vector[Envelope]): RDD[(List[(Int, Point)], List[String])] = {
+  def partitionBasedViz(leftRDD: PointRDD, rightRDD: PointRDD, distance: Double, w: Double = 0.0)(implicit grids: Vector[Envelope]): RDD[(List[(Int, Point)], List[(Int, Point)], List[(Point, List[Point])], List[String])] = {
+    val width = if(w == 0.0) distance else w
     val circlesRDD = new CircleRDD(rightRDD, distance)
     circlesRDD.analyze(rightRDD.boundary(), rightRDD.countWithoutDuplicates().toInt)
     circlesRDD.spatialPartitioning(leftRDD.getPartitioner)
@@ -86,22 +87,24 @@ object DistanceJoin{
     val A = leftRDD.spatialPartitionedRDD.rdd
     val B = circlesRDD.spatialPartitionedRDD.rdd
     val results = A.zipPartitions(B, preservesPartitioning = true){ (pointsIt, circlesIt) =>
-      var results = new scala.collection.mutable.ListBuffer[(List[(Int, Point)], List[String])]()
+      var results = new scala.collection.mutable.ListBuffer[(List[(Int, Point)], List[(Int, Point)], List[(Point, List[Point])], List[String])]()
       if(!pointsIt.hasNext || !circlesIt.hasNext){
         results.toIterator
       } else {
         val partition_id = TaskContext.getPartitionId
         val grid = grids(partition_id)
+
+        // We will require to expand the boundary to include circles?
         //grid.expandBy(distance)
+
         val minX = grid.getMinX
         val minY = grid.getMinY
         val dX = grid.getMaxX - minX
-        println(s"dX=$dX")
         val cols = math.ceil(dX / width).toInt
-        println(s"cols=$cols")
         val dY = grid.getMaxY - minY
         val rows = math.ceil(dY / width).toInt
 
+        //  Collect envelopes just for visualization purposes...
         val lgrids = for{
           i <- 0 to cols - 1
           j <- 0 to rows - 1
@@ -110,13 +113,20 @@ object DistanceJoin{
           p.setUserData(s"${i + j * cols}")
           p
         }
-        val slgrids = lgrids.map{ grid => s"${grid.toText()}\t${grid.getUserData.toString}\t${partition_id}\n" }.toList
+        import org.geotools.geometry.jts.GeometryClipper
+        val clipper = new GeometryClipper(grid)
 
-        val tuples = pointsIt.toVector
+        val slgrids = lgrids.map{ g =>
+          val grid = clipper.clip(g, true)
+          s"${grid.toText()}\t${g.getUserData.toString}\t${partition_id}\n"
+        }.toList
+
+        // Partition points according to width...
+        val ptuples = pointsIt.toVector
           .map(p => (p.getX, p.getY, p))        
           .map{ case(x,y,p) => (x - minX, y - minY, p)} // just for testing...
 
-        val points = tuples.map{ case(x, y, point) =>
+        val points = ptuples.map{ case(x, y, point) =>
           val i = math.floor(x / width).toInt
           val j = math.floor(y / width).toInt
           val id = i + j * cols
@@ -124,10 +134,126 @@ object DistanceJoin{
           ((id, point))
         }.toList
 
-        results += ((points, slgrids))
+        // Partition circles according to width distributing replicates if needed...
+        val circles = circlesIt.toVector
+          .flatMap{c =>
+            val e = c.getEnvelopeInternal
+            val point = geofactory.createPoint(c.getCenterPoint)
+            point.setUserData(c.getUserData)
+
+            val points = List(
+              (e.getMinX, e.getMinY, point),
+              (e.getMaxX, e.getMinY, point),
+              (e.getMaxX, e.getMaxY, point),
+              (e.getMinX, e.getMaxY, point)
+            ).map{ case(x,y,c) => (x - minX, y - minY, c)} // just for testing...
+
+            points.map{ case(x, y, point) =>
+              val i = math.floor(x / width).toInt
+              val j = math.floor(y / width).toInt
+              val id = i + j * cols
+              if(i >= cols || i < 0 || j >= rows || j < 0)
+                None
+              else
+                Some((id, point))
+            }.flatten.distinct
+          }.toList
+
+        val candidates = for{
+          point <- points
+          circle <- circles if point._1 == circle._1 
+        } yield {
+          (point, circle, point._2.distance(circle._2))
+        }
+
+        val pairs = candidates.filter(_._3 <= distance).map{ case(p, c, d) => (p._2, c._2)}
+          .groupBy(_._1).toList.map{ case(p, pairs) => (p, pairs.map(_._2))}
+
+        // Report results...
+        results += ((points, circles, pairs, slgrids))
         results.toIterator
       }
     }
     results
   }
+
+  def partitionBased(leftRDD: PointRDD, rightRDD: PointRDD, distance: Double, w: Double = 0.0)(implicit grids: Vector[Envelope]): RDD[(Point, List[Point])] = {
+    val width = if(w == 0.0) distance else w
+    val circlesRDD = new CircleRDD(rightRDD, distance)
+    circlesRDD.analyze(rightRDD.boundary(), rightRDD.countWithoutDuplicates().toInt)
+    circlesRDD.spatialPartitioning(leftRDD.getPartitioner)
+    circlesRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+
+    val A = leftRDD.spatialPartitionedRDD.rdd
+    val B = circlesRDD.spatialPartitionedRDD.rdd
+    A.zipPartitions(B, preservesPartitioning = true){ (pointsIt, circlesIt) =>
+      if(!pointsIt.hasNext || !circlesIt.hasNext){
+        List.empty[(Point, List[Point])].toIterator
+      } else {
+        val partition_id = TaskContext.getPartitionId
+        val grid = grids(partition_id)
+
+        // We will require to expand the boundary to include circles?
+        //grid.expandBy(distance)
+
+        val minX = grid.getMinX
+        val minY = grid.getMinY
+        val dX = grid.getMaxX - minX
+        val cols = math.ceil(dX / width).toInt
+        val dY = grid.getMaxY - minY
+        val rows = math.ceil(dY / width).toInt
+
+        // Partition points according to width...
+        val ptuples = pointsIt.toVector
+          .map(p => (p.getX, p.getY, p))        
+          .map{ case(x,y,p) => (x - minX, y - minY, p)} // just for testing...
+
+        val points = ptuples.map{ case(x, y, point) =>
+          val i = math.floor(x / width).toInt
+          val j = math.floor(y / width).toInt
+          val id = i + j * cols
+
+          ((id, point))
+        }.toList
+
+        // Partition circles according to width distributing replicates if needed...
+        val circles = circlesIt.toVector
+          .flatMap{c =>
+            val e = c.getEnvelopeInternal
+            val point = geofactory.createPoint(c.getCenterPoint)
+            point.setUserData(c.getUserData)
+
+            val points = List(
+              (e.getMinX, e.getMinY, point),
+              (e.getMaxX, e.getMinY, point),
+              (e.getMaxX, e.getMaxY, point),
+              (e.getMinX, e.getMaxY, point)
+            ).map{ case(x,y,c) => (x - minX, y - minY, c)} // just for testing...
+
+            points.map{ case(x, y, point) =>
+              val i = math.floor(x / width).toInt
+              val j = math.floor(y / width).toInt
+              val id = i + j * cols
+              if(i >= cols || i < 0 || j >= rows || j < 0)
+                None
+              else
+                Some((id, point))
+            }.flatten.distinct
+          }.toList
+
+        val candidates = for{
+          point <- points
+          circle <- circles if point._1 == circle._1 
+        } yield {
+          (point, circle, point._2.distance(circle._2))
+        }
+
+        val pairs = candidates.filter(_._3 <= distance).map{ case(p, c, d) => (p._2, c._2)}
+          .groupBy(_._1).toList.map{ case(p, pairs) => (p, pairs.map(_._2))}
+
+        // Report results...
+        pairs.toIterator
+      }
+    }
+  }  
 }

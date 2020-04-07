@@ -1,6 +1,7 @@
 #!/bin/bash
 
 EPSILON=$1
+WIDTH=$2
 MU=3
 INDEXTYPE="quadtree"
 GRIDTYPE="quadtree"
@@ -11,16 +12,16 @@ CLASS_NAME=edu.ucr.dblab.GeoTesterRDD_Viz
 LISTENER=spark.extraListeners=TaskSparkListener
 LOG_FILE=/home/acald013/Spark/2.4/conf/log4j.properties
 
-MASTER=local[10]
+MASTER=yarn
 EXECUTORS=12
 CORES=9
 DMEMORY=10g
 EMEMORY=30g
-PARTITIONS=4
-PARALLELISM=4
+PARTITIONS=256
+PARALLELISM=256
 
-#DATASET=/user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv
-DATASET=/user/acald013/Datasets/Demo/data.tsv
+DATASET=/user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv
+#DATASET=/user/acald013/Datasets/Demo/data.tsv
 
 spark-submit --conf spark.default.parallelism=${PARALLELISM} \
     --conf spark.driver.maxResultSize=4g \
@@ -35,6 +36,6 @@ spark-submit --conf spark.default.parallelism=${PARALLELISM} \
     --class $CLASS_NAME $CLASS_JAR \
     --input $DATASET \
     --epsilon $EPSILON --mu $MU --partitions $PARTITIONS --parallelism $PARALLELISM \
-    --gridtype $GRIDTYPE --indextype $INDEXTYPE
+    --gridtype $GRIDTYPE --indextype $INDEXTYPE --width $WIDTH
 
 #    --conf $LISTENER \
