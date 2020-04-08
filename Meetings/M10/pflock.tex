@@ -90,42 +90,24 @@
     \end{frame}
 }
 
-
-\begin{frame}{Partition based join...}
-    \begin{enumerate}
-        \item Partition pointset A and B using the same set of grids (Quadtree grids).
-        \item For pointset A, compute the position of each point according to a local grid with a predefined width.
-        \item For pointset B, compute the position in the local grid AND manage replication.
-        \item At each local grid, filter points which do not fulfill the distance condition.
-        \item Merge back and remove possible duplicates.
-    \end{enumerate}
-\end{frame}
-
-\begin{frame}{Partition based join...}{Global grids}
+\begin{frame}{Spatial distance join issue in GeoSpark...}{Pointset A}
     \centering
-    \includegraphics[width=0.725\textwidth]{figures/GlobalGrids}
+    \includegraphics[width=0.8\textwidth]{figures/points}
 \end{frame}
-\begin{frame}{Partition based join...}{Local grids}
+\begin{frame}{Spatial distance join issue in GeoSpark...}{Pointset B}
     \centering
-    \includegraphics[width=0.725\textwidth]{figures/LocalGrids}
+    \includegraphics[width=0.8\textwidth]{figures/centers}
 \end{frame}
-\begin{frame}{Partition based join...}{Pointset A}
+\begin{frame}{Spatial distance join issue in GeoSpark......}{Results}
     \centering
-    \includegraphics[width=0.725\textwidth]{figures/PointsetA}
-\end{frame}
-\begin{frame}{Partition based join...}{Pointset B (replication)}
-    \centering
-    \includegraphics[trim={0 0 0 2mm},clip, width=0.8\textwidth]{figures/PointsetBa}
-\end{frame}
-\begin{frame}{Partition based join...}{Pointset B }
-    \centering
-    \includegraphics[trim={0 0 0 2mm},clip, width=0.8\textwidth]{figures/PointsetBb}
+    \includegraphics[width=0.8\textwidth]{figures/results}
 \end{frame}
 
 \begin{frame}{What's next?}
     \begin{itemize}
-        \item Currently working on the merge back and deduplication strategies...
-        \item Perform more robust tests...
+        \item I have prepared a demo to post in the GeoSpark forum.
+        \item I am exploring an option.  It seems the problem can be when I convert from a JavaPairRDD (the native response from GeoSpark) to the standard RDD I need in Scala.
+        \item Now that we can perform the join directly from Scala I think I can track directly how behave the partitions.  Currently working on that...
     \end{itemize}
 \end{frame}
 
