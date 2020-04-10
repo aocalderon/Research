@@ -1,5 +1,3 @@
-package edu.ucr.dblab
-
 import org.slf4j.{LoggerFactory, Logger}
 import org.rogach.scallop._
 import scala.collection.JavaConverters._
@@ -20,6 +18,7 @@ import com.vividsolutions.jts.geom.{Geometry, Envelope, Coordinate, Point, Polyg
 import com.vividsolutions.jts.geom.GeometryFactory
 import com.vividsolutions.jts.index.SpatialIndex;
 import edu.ucr.dblab.Utils._
+import edu.ucr.dblab.{StandardQuadTree, QuadRectangle}
 
 object DistanceJoin{
   implicit val geofactory = new GeometryFactory()
@@ -178,94 +177,65 @@ object DistanceJoin{
   }
 
   import scala.util.Random
-  def partitionBasedQuadtree(leftRDD: PointRDD, rightRDD: PointRDD, distance: Double, fraction: Double = 0.1, levels: Int = 5, capacity: Int = 200)(implicit grids: Vector[Envelope]): RDD[(List[(Int, Point)], List[(Int, Point)], List[(Point, List[Point])], List[String])] = {
-    val circlesRDD = new CircleRDD(rightRDD, distance)
-    circlesRDD.analyze(rightRDD.boundary(), rightRDD.countWithoutDuplicates().toInt)
-    circlesRDD.spatialPartitioning(leftRDD.getPartitioner)
-    circlesRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+  def partitionBasedQuadtree(leftRDD: PointRDD, rightRDD: CircleRDD, distance: Double, capacity: Int = 200, fraction: Double = 0.1, levels: Int = 5)(implicit grids: Vector[Envelope]): RDD[(Vector[(Int, Point)], Vector[(Int, Point)], Vector[(Point, Vector[Point])], List[String])] = {
 
     val A = leftRDD.spatialPartitionedRDD.rdd
-    val B = circlesRDD.spatialPartitionedRDD.rdd
+    val B = rightRDD.spatialPartitionedRDD.rdd
     val results = A.zipPartitions(B, preservesPartitioning = true){ (pointsIt, circlesIt) =>
-      var results = new scala.collection.mutable.ListBuffer[(List[(Int, Point)], List[(Int, Point)], List[(Point, List[Point])], List[String])]()
+      var results = new scala.collection.mutable.ListBuffer[(Vector[(Int, Point)], Vector[(Int, Point)], Vector[(Point, Vector[Point])], List[String])]()
       if(!pointsIt.hasNext || !circlesIt.hasNext){
         results.toIterator
       } else {
         val partition_id = TaskContext.getPartitionId
-        val grid = new QuadRectangle(grids(partition_id))
+        val gridEnvelope = grids(partition_id)
+        //gridEnvelope.expandBy(distance)
+        val grid = new QuadRectangle(gridEnvelope)
 
-        val points = pointsIt.toVector
-        val circles = circlesIt.toVector
-        val quadtree = new StandardQuadTree(grid, 0, capacity, levels)
-        val sampleSize = (fraction * circles.size()).toInt
-        val sample = Random.shuffle(circles).take()
+        val pointsA = pointsIt.toVector
+        val pointsB = circlesIt.toVector
+        val quadtree = new StandardQuadTree[Int](grid, 0, capacity, levels)
+        val sampleSize = (fraction * pointsB.length).toInt
+        val sample = Random.shuffle(pointsB).take(sampleSize)
+        sample.foreach { p =>
+          quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), 1)
+        }
+        quadtree.assignPartitionIds()
+
         //  Collect envelopes just for visualization purposes...
-        val lgrids = for{
-          i <- 0 to cols - 1
-          j <- 0 to rows - 1
-        } yield { 
-          val p = envelope2polygon(new Envelope(minX + width * i, minX + width * (i + 1), minY + width * j, minY + width * (j + 1)))
-          p.setUserData(s"${i + j * cols}")
-          p
+        val lgrids = quadtree.getLeafZones.asScala.map{ zone =>
+          (zone.partitionId, zone.getEnvelope)
         }
-        import org.geotools.geometry.jts.GeometryClipper
-        val clipper = new GeometryClipper(grid)
+        val slgrids = lgrids.map(g => s"${envelope2polygon(g._2).toText()}\t${g._1}\n").toList
 
-        val slgrids = lgrids.map{ g =>
-          val grid = clipper.clip(g, true)
-          s"${grid.toText()}\t${g.getUserData.toString}\t${partition_id}\n"
-        }.toList
+        // Locate pointsA...
+        val keyPointsA = pointsA.flatMap{ point =>
+          val query = new QuadRectangle(point.getEnvelopeInternal) 
+          val zones = quadtree.findZones(query)
+          zones.asScala.map{ zone => (zone.partitionId.toInt, point) }
+        }
 
-        // Partition points according to width...
-        val ptuples = pointsIt.toVector
-          .map(p => (p.getX, p.getY, p))        
-          .map{ case(x,y,p) => (x - minX, y - minY, p)} // just for testing...
+        // Locate pointsB...
+        val keyPointsB = pointsB.flatMap{ point =>
+          val query = new QuadRectangle(point.getEnvelopeInternal) 
+          val zones = quadtree.findZones(query)
+          val center = geofactory.createPoint(point.getCenterPoint)
+          center.setUserData(point.getUserData)
+          zones.asScala.map{ zone => (zone.partitionId.toInt, center) }
+        }
 
-        val points = ptuples.map{ case(x, y, point) =>
-          val i = math.floor(x / width).toInt
-          val j = math.floor(y / width).toInt
-          val id = i + j * cols
-
-          ((id, point))
-        }.toList
-
-        // Partition circles according to width distributing replicates if needed...
-        val circles = circlesIt.toVector
-          .flatMap{c =>
-            val e = c.getEnvelopeInternal
-            val point = geofactory.createPoint(c.getCenterPoint)
-            point.setUserData(c.getUserData)
-
-            val points = List(
-              (e.getMinX, e.getMinY, point),
-              (e.getMaxX, e.getMinY, point),
-              (e.getMaxX, e.getMaxY, point),
-              (e.getMinX, e.getMaxY, point)
-            ).map{ case(x,y,c) => (x - minX, y - minY, c)} // just for testing...
-
-            points.map{ case(x, y, point) =>
-              val i = math.floor(x / width).toInt
-              val j = math.floor(y / width).toInt
-              val id = i + j * cols
-              if(i >= cols || i < 0 || j >= rows || j < 0)
-                None
-              else
-                Some((id, point))
-            }.flatten.distinct
-          }.toList
-
+        // Find pairs
         val candidates = for{
-          point <- points
-          circle <- circles if point._1 == circle._1 
+          a <- keyPointsA
+          b <- keyPointsB if a._1 == b._1 
         } yield {
-          (point, circle, point._2.distance(circle._2))
+          (a, b, a._2.distance(b._2))
         }
 
-        val pairs = candidates.filter(_._3 <= distance).map{ case(p, c, d) => (p._2, c._2)}
-          .groupBy(_._1).toList.map{ case(p, pairs) => (p, pairs.map(_._2))}
+        val pairs = candidates.filter(_._3 <= distance).map{ case(a, b, d) => (a._2, b._2)}
+          .groupBy(_._1).toVector.map{ case(p, pairs) => (p, pairs.map(_._2))}
 
         // Report results...
-        results += ((points, circles, pairs, slgrids))
+        results += ((keyPointsA, keyPointsB, pairs, slgrids))
         results.toIterator
       }
     }

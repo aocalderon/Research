@@ -1,5 +1,3 @@
-package edu.ucr.dblab
-
 import org.slf4j.{LoggerFactory, Logger}
 import org.rogach.scallop._
 import scala.collection.JavaConverters._
@@ -120,7 +118,7 @@ object GeoTesterRDD_Viz{
     logger.info(s"GridType: $gridtype.")
     implicit val grids = pointsRDD.partitionTree.getLeafZones.asScala.toVector
       .sortBy(_.partitionId).map(_.getEnvelope)
-    save{"/tmp/edgesCells.wkt"}{
+    save{"/tmp/edgesGGrids.wkt"}{
       pointsRDD.partitionTree.getLeafZones.asScala.map{ z =>
         val id = z.partitionId
         val e = z.getEnvelope
@@ -263,7 +261,8 @@ object GeoTesterRDD_Viz{
       .collect().sorted
     }
     
-    // Partition based...
+    /*
+    // Partition based Grid ...
     val width = params.width()
     val partitionBased = timer("Partition based join"){
       val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
@@ -271,7 +270,7 @@ object GeoTesterRDD_Viz{
       centersRDD.spatialPartitioning(points.getPartitioner)
       val buffersRDD = new PointRDD(pointsRDD.rawSpatialRDD.rdd, StorageLevel.MEMORY_ONLY)
 
-      val partitionBased = DistanceJoin.partitionBased(centersRDD, buffersRDD, d, width)
+      val partitionBased = DistanceJoin.partitionBasedGrid(centersRDD, buffersRDD, d, width)
       n("Partition Based", partitionBased.count())
       partitionBased
     }.persist(StorageLevel.MEMORY_ONLY)
@@ -287,8 +286,41 @@ object GeoTesterRDD_Viz{
         }
           , preservesPartitioning = true).collect().sorted
     }
+     */
 
-    /*
+    // Partition based Quadtree ...
+    val fraction = params.fraction()
+    val levels   = params.levels()
+    val capacity = params.capacity()
+
+    val pointsRDD2 = new CircleRDD(new PointRDD(pointsRDD.rawSpatialRDD.rdd, StorageLevel.MEMORY_ONLY), d)
+    pointsRDD2.analyze(envelope, nPointsRDD.toInt)
+    pointsRDD2.spatialPartitioning(points.getPartitioner)
+    pointsRDD2.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+    val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
+    centersRDD.analyze(envelope, nCenters.toInt)
+    centersRDD.spatialPartitioning(pointsRDD2.getPartitioner)
+    centersRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+
+    val partitionBased = timer("Partition based join"){
+      val partitionBased = DistanceJoin.partitionBasedQuadtree(centersRDD, pointsRDD2, d, capacity, fraction, levels)
+      n("Partition Based Quadtree", partitionBased.count())
+      partitionBased
+    }.persist(StorageLevel.MEMORY_ONLY)
+    logger.info(s"Capacity: ${capacity}")
+    
+    save("/tmp/edgesPPairs.wkt"){
+      partitionBased.mapPartitionsWithIndex(
+        {case(index, iter) =>
+          iter.flatMap{ case(pointsA, pointsB, pairs, grids) =>
+            pairs.map{ case(point, points) =>
+              val pids = points.map(_.getUserData.toString().split("\t")(0))
+                .map(_.toInt).sorted.mkString(" ")
+              s"${point.toText()}\t${pids}\t${index}\n"
+            }
+          }
+        }, preservesPartitioning = true).collect().sorted
+    }
     save("/tmp/edgesPPoints.wkt"){
       partitionBased.mapPartitionsWithIndex(
         {case(index, iter) =>
@@ -297,8 +329,7 @@ object GeoTesterRDD_Viz{
             s"${point.toText()}\t${id}\t${index}\n"
           }
         }
-      }
-      , preservesPartitioning = true).collect().sorted
+      }, preservesPartitioning = true).collect().sorted
     }
     save("/tmp/edgesPCircles.wkt"){
       partitionBased.mapPartitionsWithIndex(
@@ -308,14 +339,13 @@ object GeoTesterRDD_Viz{
             s"${circle.toText()}\t${id}\t${index}\n"
           }
         }
-      }
-      , preservesPartitioning = true).collect().sorted
+      }, preservesPartitioning = true).collect().sorted
     }
      
     save("/tmp/edgesLGrids.wkt"){
       partitionBased.flatMap(_._4).collect()
     }
-     */
+    
 
     logger.info("Closing session...")
     logger.info(s"Number of partition on default quadtree: $npartitions.")
@@ -330,6 +360,9 @@ class DistanceJoinConf(args: Seq[String]) extends ScallopConf(args) {
   val epsilon = opt[Double](default = Some(10.0))
   val mu = opt[Int](default = Some(2))
   val precision = opt[Double](default = Some(0.001))
+  val fraction = opt[Double](default = Some(0.01))
+  val levels = opt[Int](default = Some(5))
+  val capacity = opt[Int](default = Some(20))
   val width = opt[Double](default = Some(10.0))
   val partitions = opt[Int](default = Some(256))
   val parallelism = opt[Int](default = Some(324))
