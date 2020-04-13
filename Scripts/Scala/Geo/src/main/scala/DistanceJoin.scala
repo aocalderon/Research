@@ -1,6 +1,7 @@
 import org.slf4j.{LoggerFactory, Logger}
 import org.rogach.scallop._
 import scala.collection.JavaConverters._
+import scala.util.Random
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{SparkSession}
 import org.apache.spark.sql.catalyst.ScalaReflection
@@ -76,108 +77,64 @@ object DistanceJoin{
     results
   }
 
-  def partitionBasedViz(leftRDD: PointRDD, rightRDD: PointRDD, distance: Double, w: Double = 0.0)(implicit grids: Vector[Envelope]): RDD[(List[(Int, Point)], List[(Int, Point)], List[(Point, List[Point])], List[String])] = {
-    val width = if(w == 0.0) distance else w
-    val circlesRDD = new CircleRDD(rightRDD, distance)
-    circlesRDD.analyze(rightRDD.boundary(), rightRDD.countWithoutDuplicates().toInt)
-    circlesRDD.spatialPartitioning(leftRDD.getPartitioner)
-    circlesRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+  def partitionBasedQuadtree(leftRDD: PointRDD, rightRDD: CircleRDD, distance: Double, capacity: Int = 200, fraction: Double = 0.1, levels: Int = 5)(implicit grids: Vector[Envelope]): RDD[(Point, Vector[Point])] = {
 
     val A = leftRDD.spatialPartitionedRDD.rdd
-    val B = circlesRDD.spatialPartitionedRDD.rdd
-    val results = A.zipPartitions(B, preservesPartitioning = true){ (pointsIt, circlesIt) =>
-      var results = new scala.collection.mutable.ListBuffer[(List[(Int, Point)], List[(Int, Point)], List[(Point, List[Point])], List[String])]()
+    val B = rightRDD.spatialPartitionedRDD.rdd
+    A.zipPartitions(B, preservesPartitioning = true){ (pointsIt, circlesIt) =>
       if(!pointsIt.hasNext || !circlesIt.hasNext){
-        results.toIterator
+        List.empty[(Point, Vector[Point])].toIterator
       } else {
+        // Getting the global grid...
         val partition_id = TaskContext.getPartitionId
-        val grid = grids(partition_id)
+        val gridEnvelope = grids(partition_id)
+        val grid = new QuadRectangle(gridEnvelope)
 
-        // We will require to expand the boundary to include circles?
-        //grid.expandBy(distance)
-
-        val minX = grid.getMinX
-        val minY = grid.getMinY
-        val dX = grid.getMaxX - minX
-        val cols = math.ceil(dX / width).toInt
-        val dY = grid.getMaxY - minY
-        val rows = math.ceil(dY / width).toInt
-
-        //  Collect envelopes just for visualization purposes...
-        val lgrids = for{
-          i <- 0 to cols - 1
-          j <- 0 to rows - 1
-        } yield { 
-          val p = envelope2polygon(new Envelope(minX + width * i, minX + width * (i + 1), minY + width * j, minY + width * (j + 1)))
-          p.setUserData(s"${i + j * cols}")
-          p
+        // Building the local quadtree...
+        val pointsA = pointsIt.toVector
+        val pointsB = circlesIt.toVector
+        val quadtree = new StandardQuadTree[Int](grid, 0, capacity, levels)
+        val sampleSize = (fraction * pointsB.length).toInt
+        val sample = Random.shuffle(pointsB).take(sampleSize)
+        sample.foreach { p =>
+          quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), 1)
         }
-        import org.geotools.geometry.jts.GeometryClipper
-        val clipper = new GeometryClipper(grid)
+        quadtree.assignPartitionIds()
 
-        val slgrids = lgrids.map{ g =>
-          val grid = clipper.clip(g, true)
-          s"${grid.toText()}\t${g.getUserData.toString}\t${partition_id}\n"
-        }.toList
+        // Locating pointsA...
+        val keyPointsA = pointsA.flatMap{ point =>
+          val query = new QuadRectangle(point.getEnvelopeInternal) 
+          val zones = quadtree.findZones(query)
+          zones.asScala.map{ zone => (zone.partitionId.toInt, point) }
+        }
 
-        // Partition points according to width...
-        val ptuples = pointsIt.toVector
-          .map(p => (p.getX, p.getY, p))        
-          .map{ case(x,y,p) => (x - minX, y - minY, p)} // just for testing...
+        // Locating pointsB...
+        val keyPointsB = pointsB.flatMap{ point =>
+          val query = new QuadRectangle(point.getEnvelopeInternal) 
+          val zones = quadtree.findZones(query)
+          val center = geofactory.createPoint(point.getCenterPoint)
+          center.setUserData(point.getUserData)
+          zones.asScala.map{ zone => (zone.partitionId.toInt, center) }
+        }
 
-        val points = ptuples.map{ case(x, y, point) =>
-          val i = math.floor(x / width).toInt
-          val j = math.floor(y / width).toInt
-          val id = i + j * cols
-
-          ((id, point))
-        }.toList
-
-        // Partition circles according to width distributing replicates if needed...
-        val circles = circlesIt.toVector
-          .flatMap{c =>
-            val e = c.getEnvelopeInternal
-            val point = geofactory.createPoint(c.getCenterPoint)
-            point.setUserData(c.getUserData)
-
-            val points = List(
-              (e.getMinX, e.getMinY, point),
-              (e.getMaxX, e.getMinY, point),
-              (e.getMaxX, e.getMaxY, point),
-              (e.getMinX, e.getMaxY, point)
-            ).map{ case(x,y,c) => (x - minX, y - minY, c)} // just for testing...
-
-            points.map{ case(x, y, point) =>
-              val i = math.floor(x / width).toInt
-              val j = math.floor(y / width).toInt
-              val id = i + j * cols
-              if(i >= cols || i < 0 || j >= rows || j < 0)
-                None
-              else
-                Some((id, point))
-            }.flatten.distinct
-          }.toList
-
+        // Finding pairs
         val candidates = for{
-          point <- points
-          circle <- circles if point._1 == circle._1 
+          a <- keyPointsA
+          b <- keyPointsB if a._1 == b._1 
         } yield {
-          (point, circle, point._2.distance(circle._2))
+          (a, b, a._2.distance(b._2))
         }
 
-        val pairs = candidates.filter(_._3 <= distance).map{ case(p, c, d) => (p._2, c._2)}
-          .groupBy(_._1).toList.map{ case(p, pairs) => (p, pairs.map(_._2))}
+        val pairs = candidates.filter(_._3 <= distance).map{ case(a, b, d) => (a._2, b._2)}
+          .groupBy(_._1).toVector.map{ case(p, pairs) => (p, pairs.map(_._2))}
 
         // Report results...
-        results += ((points, circles, pairs, slgrids))
-        results.toIterator
+        pairs.toIterator
       }
     }
-    results
-  }
+  }  
 
-  import scala.util.Random
-  def partitionBasedQuadtree(leftRDD: PointRDD, rightRDD: CircleRDD, distance: Double, capacity: Int = 200, fraction: Double = 0.1, levels: Int = 5)(implicit grids: Vector[Envelope]): RDD[(Vector[(Int, Point)], Vector[(Int, Point)], Vector[(Point, Vector[Point])], List[String])] = {
+  def partitionBasedQuadtreeViz(leftRDD: PointRDD, rightRDD: CircleRDD, distance: Double, capacity: Int = 200, fraction: Double = 0.1, levels: Int = 5)(implicit grids: Vector[Envelope]): RDD[(Vector[(Int, Point)], Vector[(Int, Point)], Vector[(Point, Vector[Point])], List[String])] = {
 
     val A = leftRDD.spatialPartitionedRDD.rdd
     val B = rightRDD.spatialPartitionedRDD.rdd
@@ -320,5 +277,105 @@ object DistanceJoin{
         pairs.toIterator
       }
     }
+  }
+
+  def partitionBasedViz(leftRDD: PointRDD, rightRDD: PointRDD, distance: Double, w: Double = 0.0)(implicit grids: Vector[Envelope]): RDD[(List[(Int, Point)], List[(Int, Point)], List[(Point, List[Point])], List[String])] = {
+    val width = if(w == 0.0) distance else w
+    val circlesRDD = new CircleRDD(rightRDD, distance)
+    circlesRDD.analyze(rightRDD.boundary(), rightRDD.countWithoutDuplicates().toInt)
+    circlesRDD.spatialPartitioning(leftRDD.getPartitioner)
+    circlesRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+
+    val A = leftRDD.spatialPartitionedRDD.rdd
+    val B = circlesRDD.spatialPartitionedRDD.rdd
+    val results = A.zipPartitions(B, preservesPartitioning = true){ (pointsIt, circlesIt) =>
+      var results = new scala.collection.mutable.ListBuffer[(List[(Int, Point)], List[(Int, Point)], List[(Point, List[Point])], List[String])]()
+      if(!pointsIt.hasNext || !circlesIt.hasNext){
+        results.toIterator
+      } else {
+        val partition_id = TaskContext.getPartitionId
+        val grid = grids(partition_id)
+
+        // We will require to expand the boundary to include circles?
+        //grid.expandBy(distance)
+
+        val minX = grid.getMinX
+        val minY = grid.getMinY
+        val dX = grid.getMaxX - minX
+        val cols = math.ceil(dX / width).toInt
+        val dY = grid.getMaxY - minY
+        val rows = math.ceil(dY / width).toInt
+
+        //  Collect envelopes just for visualization purposes...
+        val lgrids = for{
+          i <- 0 to cols - 1
+          j <- 0 to rows - 1
+        } yield { 
+          val p = envelope2polygon(new Envelope(minX + width * i, minX + width * (i + 1), minY + width * j, minY + width * (j + 1)))
+          p.setUserData(s"${i + j * cols}")
+          p
+        }
+        import org.geotools.geometry.jts.GeometryClipper
+        val clipper = new GeometryClipper(grid)
+
+        val slgrids = lgrids.map{ g =>
+          val grid = clipper.clip(g, true)
+          s"${grid.toText()}\t${g.getUserData.toString}\t${partition_id}\n"
+        }.toList
+
+        // Partition points according to width...
+        val ptuples = pointsIt.toVector
+          .map(p => (p.getX, p.getY, p))        
+          .map{ case(x,y,p) => (x - minX, y - minY, p)} // just for testing...
+
+        val points = ptuples.map{ case(x, y, point) =>
+          val i = math.floor(x / width).toInt
+          val j = math.floor(y / width).toInt
+          val id = i + j * cols
+
+          ((id, point))
+        }.toList
+
+        // Partition circles according to width distributing replicates if needed...
+        val circles = circlesIt.toVector
+          .flatMap{c =>
+            val e = c.getEnvelopeInternal
+            val point = geofactory.createPoint(c.getCenterPoint)
+            point.setUserData(c.getUserData)
+
+            val points = List(
+              (e.getMinX, e.getMinY, point),
+              (e.getMaxX, e.getMinY, point),
+              (e.getMaxX, e.getMaxY, point),
+              (e.getMinX, e.getMaxY, point)
+            ).map{ case(x,y,c) => (x - minX, y - minY, c)} // just for testing...
+
+            points.map{ case(x, y, point) =>
+              val i = math.floor(x / width).toInt
+              val j = math.floor(y / width).toInt
+              val id = i + j * cols
+              if(i >= cols || i < 0 || j >= rows || j < 0)
+                None
+              else
+                Some((id, point))
+            }.flatten.distinct
+          }.toList
+
+        val candidates = for{
+          point <- points
+          circle <- circles if point._1 == circle._1 
+        } yield {
+          (point, circle, point._2.distance(circle._2))
+        }
+
+        val pairs = candidates.filter(_._3 <= distance).map{ case(p, c, d) => (p._2, c._2)}
+          .groupBy(_._1).toList.map{ case(p, pairs) => (p, pairs.map(_._2))}
+
+        // Report results...
+        results += ((points, circles, pairs, slgrids))
+        results.toIterator
+      }
+    }
+    results
   }  
 }

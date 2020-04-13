@@ -1,6 +1,7 @@
 import org.slf4j.{LoggerFactory, Logger}
 import org.rogach.scallop._
 import scala.collection.JavaConverters._
+import scala.collection.immutable.HashSet
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{SparkSession}
 import org.apache.spark.sql.catalyst.ScalaReflection
@@ -33,9 +34,8 @@ object GeoTesterRDD_Viz{
     implicit val params = new DistanceJoinConf(args)
     val appName = s"GeoTesterRDD: " +
     s"epslion=${params.epsilon()} " +
-    s"grid=${params.gridtype()} " +
-    s"partitions=${params.partitions()} " +
-    s"parallelism=${params.parallelism()}"
+    s"grid=${params.capacity()}"
+    implicit val debugOn  = params.debug()
     implicit val geofactory = new GeometryFactory()
     implicit val spark = SparkSession.builder()
       .appName(appName)
@@ -107,28 +107,34 @@ object GeoTesterRDD_Viz{
     }
 
     //
-    save("/tmp/edgesPoints.wkt"){
-      pointsRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex({ case(index, iter) =>
-        iter.map{ point =>
-          s"${point.toText()}\t${index}\n"
-        }}, preservesPartitioning = true)
-        .collect().sorted
+    debug{
+      save("/tmp/edgesPoints.wkt"){
+        pointsRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex({ case(index, iter) =>
+          iter.map{ point =>
+            s"${point.toText()}\t${index}\n"
+          }}, preservesPartitioning = true)
+          .collect().sorted
+      }
     }
 
     logger.info(s"GridType: $gridtype.")
     implicit val grids = pointsRDD.partitionTree.getLeafZones.asScala.toVector
       .sortBy(_.partitionId).map(_.getEnvelope)
-    save{"/tmp/edgesGGrids.wkt"}{
-      pointsRDD.partitionTree.getLeafZones.asScala.map{ z =>
-        val id = z.partitionId
-        val e = z.getEnvelope
-        val (x1,x2,y1,y2) = (e.getMinX, e.getMaxX, e.getMinY, e.getMaxY)
-        val p1 = new Coordinate(x1, y1)
-        val p2 = new Coordinate(x2, y1)
-        val p3 = new Coordinate(x2, y2)
-        val p4 = new Coordinate(x1, y2)
-        val p = geofactory.createPolygon(Array(p1,p2,p3,p4,p1))
-        s"${p.toText()}\t${id}\n"
+
+    //
+    debug{
+      save{"/tmp/edgesGGrids.wkt"}{
+        pointsRDD.partitionTree.getLeafZones.asScala.map{ z =>
+          val id = z.partitionId
+          val e = z.getEnvelope
+          val (x1,x2,y1,y2) = (e.getMinX, e.getMaxX, e.getMinY, e.getMaxY)
+          val p1 = new Coordinate(x1, y1)
+          val p2 = new Coordinate(x2, y1)
+          val p3 = new Coordinate(x2, y2)
+          val p4 = new Coordinate(x1, y2)
+          val p = geofactory.createPolygon(Array(p1,p2,p3,p4,p1))
+          s"${p.toText()}\t${id}\n"
+        }
       }
     }
 
@@ -176,22 +182,22 @@ object GeoTesterRDD_Viz{
     }
 
     //
-    import scala.collection.immutable.HashSet
-    val radius = (params.epsilon() / 2.0) + params.precision()
-    save("/tmp/edgesCenters.wkt"){
-      val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
-      centersRDD.analyze(envelope, nCenters.toInt)
-      centersRDD.spatialPartitioning(points.getPartitioner)
-      centersRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex({ case(index, iter) =>
-        iter.map{ point =>
-          s"${point.toText()}\t${index}\n"
-        }}, preservesPartitioning = true)
-      .collect().sorted
+    debug{
+      save("/tmp/edgesCenters.wkt"){
+        val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
+        centersRDD.analyze(envelope, nCenters.toInt)
+        centersRDD.spatialPartitioning(points.getPartitioner)
+        centersRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex({ case(index, iter) =>
+          iter.map{ point =>
+            s"${point.toText()}\t${index}\n"
+          }}, preservesPartitioning = true)
+          .collect().sorted
+      }
     }
 
     // Finding disks...
     val r = params.epsilon() / 2.0
-    val stageB = "B.Disks found"
+    val stageB = "DJOIN|GeoSpark"
     val disks = timer{header(stageB)}{
       val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
       centersRDD.analyze(envelope, nCenters.toInt)
@@ -225,20 +231,23 @@ object GeoTesterRDD_Viz{
     }
 
     //
-    logger.info(s"Number of partition on Join: ${disks.getNumPartitions}.")
-    save("/tmp/edgesJoin.wkt"){
-      disks.mapPartitionsWithIndex({ case(index, iter) =>
-        iter.map{ case(center, points) =>
-          val pids = points.map(_.getUserData.toString.split("\t")(0)).map(_.toInt).toList.sorted.mkString(" ")
-          s"${center.toText()}\t${pids}\t${index}\n"
-        }}, preservesPartitioning = true)
-      .collect().sorted
+    debug{
+      logger.info(s"Number of partition on Join: ${disks.getNumPartitions}.")
+      save("/tmp/edgesJoin.wkt"){
+        disks.mapPartitionsWithIndex({ case(index, iter) =>
+          iter.map{ case(center, points) =>
+            val pids = points.map(_.getUserData.toString.split("\t")(0)).map(_.toInt).toList.sorted.mkString(" ")
+            s"${center.toText()}\t${pids}\t${index}\n"
+          }}, preservesPartitioning = true)
+          .collect().sorted
+      }
     }
-    
+
     // Alternative finding disks...
     val mu = params.mu()
     val d = (params.epsilon() / 2.0) + params.precision()
-    val results = timer("Distance join called"){
+    val stageIB = "DJOIN|Index based"
+    val results = timer(header(stageIB)){
       val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
       centersRDD.analyze(envelope, nCenters.toInt)
       centersRDD.spatialPartitioning(points.getPartitioner)
@@ -248,17 +257,21 @@ object GeoTesterRDD_Viz{
       val bufferRDD = new PointRDD(pointsRDD.rawSpatialRDD.rdd, StorageLevel.MEMORY_ONLY)
 
       val results = DistanceJoin.join(centersRDD, bufferRDD, d)
-      n("Distance join called", results.count())
+      n(stageIB, results.count())
 
       results
     }
-    save("/tmp/edgesMyJoin.wkt"){
-      results.mapPartitionsWithIndex({ case(index, iter) =>
-        iter.map{ case(center, points) =>
-          val pids = points.map(_.getUserData.toString.split("\t")(0)).map(_.toInt).sorted.mkString(" ")
-          s"${center.toText()}\t${pids}\t${index}\n"
-        }}, preservesPartitioning = true)
-      .collect().sorted
+
+    //
+    debug{
+      save("/tmp/edgesMyJoin.wkt"){
+        results.mapPartitionsWithIndex({ case(index, iter) =>
+          iter.map{ case(center, points) =>
+            val pids = points.map(_.getUserData.toString.split("\t")(0)).map(_.toInt).sorted.mkString(" ")
+            s"${center.toText()}\t${pids}\t${index}\n"
+          }}, preservesPartitioning = true)
+          .collect().sorted
+      }
     }
     
     /*
@@ -302,50 +315,54 @@ object GeoTesterRDD_Viz{
     centersRDD.spatialPartitioning(pointsRDD2.getPartitioner)
     centersRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
 
-    val partitionBased = timer("Partition based join"){
+    val stagePB = "DJOIN|Partition based"
+    val partitionBased = timer(header(stagePB)){
       val partitionBased = DistanceJoin.partitionBasedQuadtree(centersRDD, pointsRDD2, d, capacity, fraction, levels)
-      n("Partition Based Quadtree", partitionBased.count())
+      n(stagePB, partitionBased.count())
       partitionBased
     }.persist(StorageLevel.MEMORY_ONLY)
-    logger.info(s"Capacity: ${capacity}")
-    
-    save("/tmp/edgesPPairs.wkt"){
-      partitionBased.mapPartitionsWithIndex(
-        {case(index, iter) =>
-          iter.flatMap{ case(pointsA, pointsB, pairs, grids) =>
-            pairs.map{ case(point, points) =>
-              val pids = points.map(_.getUserData.toString().split("\t")(0))
-                .map(_.toInt).sorted.mkString(" ")
-              s"${point.toText()}\t${pids}\t${index}\n"
+
+    //
+    debug{
+      logger.info(s"Capacity: ${capacity}")
+      /*
+      save("/tmp/edgesPPairs.wkt"){
+        partitionBased.mapPartitionsWithIndex(
+          {case(index, iter) =>
+            iter.flatMap{ case(pointsA, pointsB, pairs, grids) =>
+              pairs.map{ case(point, points) =>
+                val pids = points.map(_.getUserData.toString().split("\t")(0))
+                  .map(_.toInt).sorted.mkString(" ")
+                s"${point.toText()}\t${pids}\t${index}\n"
+              }
             }
-          }
-        }, preservesPartitioning = true).collect().sorted
+          }, preservesPartitioning = true).collect().sorted
+      }
+      save("/tmp/edgesPPoints.wkt"){
+        partitionBased.mapPartitionsWithIndex(
+          {case(index, iter) =>
+            iter.flatMap{ case(points, circles, pairs, grids) =>
+              points.map{ case(id, point) =>
+                s"${point.toText()}\t${id}\t${index}\n"
+              }
+            }
+          }, preservesPartitioning = true).collect().sorted
+      }
+      save("/tmp/edgesPCircles.wkt"){
+        partitionBased.mapPartitionsWithIndex(
+          {case(index, iter) =>
+            iter.flatMap{ case(points, circles, pairs, grids) =>
+              circles.map{ case(id, circle) =>
+                s"${circle.toText()}\t${id}\t${index}\n"
+              }
+            }
+          }, preservesPartitioning = true).collect().sorted
+      }
+      save("/tmp/edgesLGrids.wkt"){
+        partitionBased.flatMap(_._4).collect()
+      }
+       */
     }
-    save("/tmp/edgesPPoints.wkt"){
-      partitionBased.mapPartitionsWithIndex(
-        {case(index, iter) =>
-        iter.flatMap{ case(points, circles, pairs, grids) =>
-          points.map{ case(id, point) => 
-            s"${point.toText()}\t${id}\t${index}\n"
-          }
-        }
-      }, preservesPartitioning = true).collect().sorted
-    }
-    save("/tmp/edgesPCircles.wkt"){
-      partitionBased.mapPartitionsWithIndex(
-        {case(index, iter) =>
-        iter.flatMap{ case(points, circles, pairs, grids) =>
-          circles.map{ case(id, circle) => 
-            s"${circle.toText()}\t${id}\t${index}\n"
-          }
-        }
-      }, preservesPartitioning = true).collect().sorted
-    }
-     
-    save("/tmp/edgesLGrids.wkt"){
-      partitionBased.flatMap(_._4).collect()
-    }
-    
 
     logger.info("Closing session...")
     logger.info(s"Number of partition on default quadtree: $npartitions.")
@@ -368,6 +385,7 @@ class DistanceJoinConf(args: Seq[String]) extends ScallopConf(args) {
   val parallelism = opt[Int](default = Some(324))
   val gridtype = opt[String](default = Some("quadtree"))
   val indextype = opt[String](default = Some("none"))
+  val debug = opt[Boolean](default = Some(false))
 
   verify()
 }
