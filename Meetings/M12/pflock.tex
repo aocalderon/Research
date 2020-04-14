@@ -93,50 +93,40 @@
 
 \begin{frame}{Partition based join...}
     \begin{enumerate}
-        \item Partition centers and points using the same set of global grids (Quadtree grids).
-        \item At each global grid, take a sample of centers and build a local quadtree.
-        \item For each point in a global grid:
-        \begin{enumerate}
-            \item compute the position of that point according to the grids defined by the local quadtree.
-        \end{enumerate}
-        \item For centers in the same global grid:
-        \begin{enumerate}
-            \item compute the position of each center according to local grids and manage possible replication.
-        \end{enumerate}
-        \item For each local grid, filter pairs which do not satisfy the distance condition.
+        \item Partition pointset A and B using the same set of grids (Quadtree grids).
+        \item For pointset A, compute the position of each point according to a local grid with a predefined width.
+        \item For pointset B, compute the position in the local grid AND manage replication.
+        \item At each local grid, filter points which do not fulfill the distance condition.
+        \item Merge back and remove possible duplicates.
     \end{enumerate}
 \end{frame}
 
-\begin{frame}{Experiment setup...}
-    \begin{itemize}
-        \item Dataset: LA\_50K (time interval 320).
-        \item $\varepsilon=45$ and $\mu=3$.
-        \item Global partitioning: Quadtree, number of partitions: 256 ($\approx 750$ grids).
-        \item Number of nodes: 12, cores per node: 9 (108 total cores).
-        \item Variying values of capacity (maximum items per grid) and fraction (size of the sample respect to \# of points in grid) for the local grids.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Results...}
+\begin{frame}{Partition based join...}{Global grids}
     \centering
-    \includegraphics[width=0.85\textwidth]{figures/ByCapacity}
+    \includegraphics[width=0.725\textwidth]{figures/GlobalGrids}
 \end{frame}
-
-\begin{frame}{Results...}
+\begin{frame}{Partition based join...}{Local grids}
     \centering
-    \includegraphics[width=0.85\textwidth]{figures/ByFraction}
+    \includegraphics[width=0.725\textwidth]{figures/LocalGrids}
+\end{frame}
+\begin{frame}{Partition based join...}{Pointset A}
+    \centering
+    \includegraphics[width=0.725\textwidth]{figures/PointsetA}
+\end{frame}
+\begin{frame}{Partition based join...}{Pointset B (replication)}
+    \centering
+    \includegraphics[trim={0 0 0 2mm},clip, width=0.8\textwidth]{figures/PointsetBa}
+\end{frame}
+\begin{frame}{Partition based join...}{Pointset B }
+    \centering
+    \includegraphics[trim={0 0 0 2mm},clip, width=0.8\textwidth]{figures/PointsetBb}
 \end{frame}
 
 \begin{frame}{What's next?}
     \begin{itemize}
-        \item Optional:
-        \begin{itemize}
-            \item Avoid the sampling during local quadtree creation and querying.  
-            \item Try KDB-Tree as local partitioner.
-        \end{itemize}
-        \item Continuing with index-based join and integrate with previous code.
+        \item Currently working on the merge back and deduplication strategies...
+        \item Perform more robust tests...
     \end{itemize}
 \end{frame}
-
 
 \end{document}
