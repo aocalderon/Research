@@ -49,6 +49,11 @@ public class StandardQuadTree<T>
     public static final int REGION_SW = 2;
     public static final int REGION_SE = 3;
 
+    public StandardQuadTree()
+    {
+        this(new QuadRectangle(0,0,0,0), 0, 5, 10);
+    }
+
     public StandardQuadTree(QuadRectangle definition, int level)
     {
         this(definition, level, 5, 10);
@@ -63,11 +68,21 @@ public class StandardQuadTree<T>
     }
 
     public StandardQuadTree<T>[] getRegions(){
+	if(this.regions == null){
+	    regions = new StandardQuadTree[4];
+	}
 	return regions;
     }
 
     public void setRegions(StandardQuadTree<T>[] regions){
 	this.regions = regions;
+    }
+
+    public Boolean isEmpty(){
+	if(this.regions == null)
+	    return true;
+	else
+	    return false;
     }
 
     public QuadRectangle getZone()

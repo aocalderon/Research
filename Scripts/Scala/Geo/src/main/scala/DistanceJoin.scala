@@ -134,6 +134,55 @@ object DistanceJoin{
     }
   }  
 
+  def partitionBasedQuadtree2(leftRDD: PointRDD, rightRDD: CircleRDD, distance: Double, capacity: Int = 200, fraction: Double = 0.1, levels: Int = 5)(implicit grids: Vector[Envelope]): RDD[(Point, Vector[Point])] = {
+
+    val A = leftRDD.spatialPartitionedRDD.rdd
+    val B = rightRDD.spatialPartitionedRDD.rdd
+    A.zipPartitions(B, preservesPartitioning = true){ (pointsIt, circlesIt) =>
+      if(!pointsIt.hasNext || !circlesIt.hasNext){
+        List.empty[(Point, Vector[Point])].toIterator
+      } else {
+        // Getting the global grid...
+        val partition_id = TaskContext.getPartitionId
+        val gridEnvelope = grids(partition_id)
+        val grid = new QuadRectangle(gridEnvelope)
+
+        // Building the local quadtree...
+        val pointsA = pointsIt.toVector
+        val pointsB = circlesIt.toVector
+
+        val quadtree = new StandardQuadTree[(Point, Boolean)](grid, 0, capacity, levels)
+        pointsA.foreach { p =>
+          quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), (p, true))
+        }
+        pointsB.foreach { p =>
+          val center = geofactory.createPoint(p.getCenterPoint)
+          center.setUserData(p.getUserData)
+          quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), (center, false))
+        }
+        quadtree.assignPartitionIds()
+
+        val regions = quadtree.getRegions().map{ r => Option(r) }.flatten
+        //regions.filter(_.isLeaf())
+
+        regions.flatMap{ leaf =>
+          val elements = leaf.getElements(leaf.getZone).asScala
+          val A = elements.filter(_._2).map(_._1)
+          val B = elements.filterNot(_._2).map(_._1)
+
+          val candidates = for{
+            a <- A
+            b <- B if a.distance(b) <= distance
+          } yield {
+            (a, b)
+          }
+
+          candidates.groupBy(_._1).toVector.map{ case(p, pairs) => (p, pairs.map(_._2).toVector)}
+        }.toIterator
+      }
+    }
+  }  
+
   def partitionBasedQuadtreeViz(leftRDD: PointRDD, rightRDD: CircleRDD, distance: Double, capacity: Int = 200, fraction: Double = 0.1, levels: Int = 5)(implicit grids: Vector[Envelope]): RDD[(Vector[(Int, Point)], Vector[(Int, Point)], Vector[(Point, Vector[Point])], List[String])] = {
 
     val A = leftRDD.spatialPartitionedRDD.rdd
