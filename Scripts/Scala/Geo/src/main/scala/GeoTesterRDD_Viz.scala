@@ -317,7 +317,7 @@ object GeoTesterRDD_Viz{
 
     val stagePB = "DJOIN|Partition based"
     val partitionBased = timer(header(stagePB)){
-      val partitionBased = DistanceJoin.partitionBasedQuadtree(centersRDD, pointsRDD2, d, capacity, fraction, levels)
+      val partitionBased = DistanceJoin.partitionBasedQuadtree2(centersRDD, pointsRDD2, d, capacity, fraction, levels)
       n(stagePB, partitionBased.count())
       partitionBased
     }.persist(StorageLevel.MEMORY_ONLY)
