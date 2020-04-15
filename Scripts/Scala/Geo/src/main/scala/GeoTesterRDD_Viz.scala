@@ -315,10 +315,10 @@ object GeoTesterRDD_Viz{
     centersRDD.spatialPartitioning(pointsRDD2.getPartitioner)
     centersRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
 
-    val stagePB = "DJOIN|Partition based"
-    val partitionBased = timer(header(stagePB)){
-      val partitionBased = DistanceJoin.partitionBasedQuadtree2(centersRDD, pointsRDD2, d, capacity, fraction, levels)
-      n(stagePB, partitionBased.count())
+    val stagePB1 = "DJOIN|Partition based 1"
+    val partitionBased1 = timer(header(stagePB1)){
+      val partitionBased = DistanceJoin.partitionBasedQuadtree(centersRDD, pointsRDD2, d, capacity, fraction, levels)
+      n(stagePB1, partitionBased.count())
       partitionBased
     }.persist(StorageLevel.MEMORY_ONLY)
 
@@ -326,8 +326,41 @@ object GeoTesterRDD_Viz{
     debug{
       logger.info(s"Capacity: ${capacity}")
       
-      save("/tmp/edgesPPairs.wkt"){
-        partitionBased.mapPartitionsWithIndex(
+      save("/tmp/edgesPPairs1.wkt"){
+        partitionBased1.mapPartitionsWithIndex(
+          {case(index, iter) =>
+            iter.flatMap{ case(pairs, stats) =>
+              pairs.map{case(point, points) =>
+                val pids = points.map(_.getUserData.toString().split("\t")(0))
+                  .map(_.toInt).sorted.mkString(" ")
+                s"${point.toText()}\t${pids}\t${index}\n"
+                
+              }
+            }
+          }, preservesPartitioning = true).collect().sorted
+      }
+
+      save("/tmp/edgesStats1.wkt"){
+        partitionBased1.mapPartitionsWithIndex(
+          {case(index, iter) =>
+            iter.map{ case(pairs, stats) => stats }
+          }, preservesPartitioning = true).collect().sorted
+      }
+    }
+
+    val stagePB2 = "DJOIN|Partition based 2"
+    val partitionBased2 = timer(header(stagePB2)){
+      val partitionBased = DistanceJoin.partitionBasedQuadtree2(centersRDD, pointsRDD2, d, capacity, fraction, levels)
+      n(stagePB2, partitionBased.count())
+      partitionBased
+    }.persist(StorageLevel.MEMORY_ONLY)
+
+    //
+    debug{
+      logger.info(s"Capacity: ${capacity}")
+      
+      save("/tmp/edgesPPairs2.wkt"){
+        partitionBased2.mapPartitionsWithIndex(
           {case(index, iter) =>
             iter.flatMap { case(pairs, lgrids) =>
               pairs.map{case(point, points) =>
@@ -340,8 +373,8 @@ object GeoTesterRDD_Viz{
           }, preservesPartitioning = true).collect().sorted
       }
 
-      save("/tmp/edgesLGrids.wkt"){
-        partitionBased.flatMap(_._2).collect()
+      save("/tmp/edgesLGrids2.wkt"){
+        partitionBased2.flatMap(_._2).collect()
       }
       
       /*
