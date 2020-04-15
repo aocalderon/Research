@@ -18,11 +18,11 @@ package edu.ucr.dblab;
 
 import java.io.Serializable;
 
-public class QuadNode<T>
-        implements Serializable
+public class QuadNode<T> implements Serializable
 {
     QuadRectangle r;
     T element;
+    int partitionId = -1;
 
     QuadNode(QuadRectangle r, T element)
     {
@@ -30,9 +30,25 @@ public class QuadNode<T>
         this.element = element;
     }
 
+    public QuadRectangle getQuadRectangle(){
+	return r;
+    }
+
+    public T getElement(){
+	return element;
+    }
+
+    public void setPartitionId(int id){
+	this.partitionId = id;
+    }
+
+    public int getPartitionID(){
+	return partitionId;
+    }
+
     @Override
     public String toString()
     {
-        return r.toString();
+        return r.toString() + " " + element.toString();
     }
 }

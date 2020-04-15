@@ -1,11 +1,10 @@
 #!/bin/bash
 
 EPSILON=$1
-CAPACITY=$2
-FRACTION=$3
 MU=3
 INDEXTYPE="quadtree"
 GRIDTYPE="quadtree"
+CAPACITY=$2
 
 SPARK_JARS=/home/and/Spark/2.4/jars/
 CLASS_JAR=/home/and/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar
@@ -37,7 +36,5 @@ spark-submit --conf spark.default.parallelism=${PARALLELISM} \
     --class $CLASS_NAME $CLASS_JAR \
     --input $DATASET \
     --epsilon $EPSILON --mu $MU --partitions $PARTITIONS --parallelism $PARALLELISM \
-    --gridtype $GRIDTYPE --indextype $INDEXTYPE \
-    --capacity $CAPACITY --fraction $FRACTION
-
+    --gridtype $GRIDTYPE --indextype $INDEXTYPE --capacity $CAPACITY --debug
 #    --conf $LISTENER \

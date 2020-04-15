@@ -325,19 +325,26 @@ object GeoTesterRDD_Viz{
     //
     debug{
       logger.info(s"Capacity: ${capacity}")
-      /*
+      
       save("/tmp/edgesPPairs.wkt"){
         partitionBased.mapPartitionsWithIndex(
           {case(index, iter) =>
-            iter.flatMap{ case(pointsA, pointsB, pairs, grids) =>
-              pairs.map{ case(point, points) =>
+            iter.flatMap { case(pairs, lgrids) =>
+              pairs.map{case(point, points) =>
                 val pids = points.map(_.getUserData.toString().split("\t")(0))
                   .map(_.toInt).sorted.mkString(" ")
                 s"${point.toText()}\t${pids}\t${index}\n"
+                
               }
             }
           }, preservesPartitioning = true).collect().sorted
       }
+
+      save("/tmp/edgesLGrids.wkt"){
+        partitionBased.flatMap(_._2).collect()
+      }
+      
+      /*
       save("/tmp/edgesPPoints.wkt"){
         partitionBased.mapPartitionsWithIndex(
           {case(index, iter) =>
@@ -357,9 +364,6 @@ object GeoTesterRDD_Viz{
               }
             }
           }, preservesPartitioning = true).collect().sorted
-      }
-      save("/tmp/edgesLGrids.wkt"){
-        partitionBased.flatMap(_._4).collect()
       }
        */
     }

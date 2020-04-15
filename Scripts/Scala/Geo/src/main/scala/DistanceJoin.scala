@@ -134,13 +134,15 @@ object DistanceJoin{
     }
   }  
 
-  def partitionBasedQuadtree2(leftRDD: PointRDD, rightRDD: CircleRDD, distance: Double, capacity: Int = 200, fraction: Double = 0.1, levels: Int = 5)(implicit grids: Vector[Envelope]): RDD[(Point, Vector[Point])] = {
+  def partitionBasedQuadtree2(leftRDD: PointRDD, rightRDD: CircleRDD, distance: Double, capacity: Int = 20, fraction: Double = 0.1, levels: Int = 5)(implicit grids: Vector[Envelope]): RDD[(Vector[(Point, Vector[Point])], Vector[String])] = {
 
     val A = leftRDD.spatialPartitionedRDD.rdd
     val B = rightRDD.spatialPartitionedRDD.rdd
     A.zipPartitions(B, preservesPartitioning = true){ (pointsIt, circlesIt) =>
+      var results = new scala.collection.mutable.ListBuffer[(Vector[(Point, Vector[Point])], Vector[String])]()
+
       if(!pointsIt.hasNext || !circlesIt.hasNext){
-        List.empty[(Point, Vector[Point])].toIterator
+        results.toIterator
       } else {
         // Getting the global grid...
         val partition_id = TaskContext.getPartitionId
@@ -162,13 +164,22 @@ object DistanceJoin{
         }
         quadtree.assignPartitionIds()
 
-        val regions = quadtree.getRegions().map{ r => Option(r) }.flatten
-        //regions.filter(_.isLeaf())
+        val lgrids = quadtree.getLeafZones.asScala.map{ r =>
+          val envelope = envelope2polygon(r.getEnvelope)
+          val id = r.partitionId
 
-        regions.flatMap{ leaf =>
-          val elements = leaf.getElements(leaf.getZone).asScala
-          val A = elements.filter(_._2).map(_._1)
-          val B = elements.filterNot(_._2).map(_._1)
+          s"${envelope.toText()}\t${id}\n"
+        }.toVector
+
+        val pairs = quadtree.getElementsByPartition().asScala.flatMap{ case(id, nodes) =>
+          val elements = nodes.asScala.map{ node =>
+            val (point, isA) = node.getElement()
+            val id = node.getPartitionID
+
+            (id, point, isA)
+          }
+          val A = elements.filter(_._3).map(_._2)
+          val B = elements.filterNot(_._3).map(_._2)
 
           val candidates = for{
             a <- A
@@ -178,7 +189,10 @@ object DistanceJoin{
           }
 
           candidates.groupBy(_._1).toVector.map{ case(p, pairs) => (p, pairs.map(_._2).toVector)}
-        }.toIterator
+        }.toVector
+
+        results += ((pairs, lgrids))
+        results.toIterator
       }
     }
   }  

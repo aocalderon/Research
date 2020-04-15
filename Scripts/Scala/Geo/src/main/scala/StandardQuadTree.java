@@ -22,10 +22,10 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public class StandardQuadTree<T>
-        implements Serializable
-{
+public class StandardQuadTree<T> implements Serializable {
     // Maximum number of items in any given zone. When reached, a zone is sub-divided.
     private final int maxItemsPerZone;
     private final int maxLevel;
@@ -48,11 +48,6 @@ public class StandardQuadTree<T>
     public static final int REGION_NE = 1;
     public static final int REGION_SW = 2;
     public static final int REGION_SE = 3;
-
-    public StandardQuadTree()
-    {
-        this(new QuadRectangle(0,0,0,0), 0, 5, 10);
-    }
 
     public StandardQuadTree(QuadRectangle definition, int level)
     {
@@ -78,11 +73,8 @@ public class StandardQuadTree<T>
 	this.regions = regions;
     }
 
-    public Boolean isEmpty(){
-	if(this.regions == null)
-	    return true;
-	else
-	    return false;
+    public List<QuadNode<T>> getNodes(){
+	return nodes;
     }
 
     public QuadRectangle getZone()
@@ -328,6 +320,59 @@ public class StandardQuadTree<T>
         return regions == null;
     }
 
+    public List<QuadNode<T>> getAllElements()
+    {
+ 	final List<QuadNode<T>> elements = new ArrayList<>();
+        traverse(new Visitor<T>()
+        {
+            @Override
+            public boolean visit(StandardQuadTree<T> tree)
+            {
+                if (tree.isLeaf()) {
+		    for (QuadNode<T> node: tree.nodes){
+			node.setPartitionId(tree.zone.partitionId);
+			elements.addAll(tree.nodes);
+		    }
+		}
+                return true;
+            }
+        });
+
+        return elements;
+    }
+
+    public void assignPartitionIds()
+    {
+        traverse(new Visitor<T>()
+        {
+            private int partitionId = 0;
+            @Override
+            public boolean visit(StandardQuadTree<T> tree)
+            {
+                if (tree.isLeaf()) {
+                    tree.getZone().partitionId = partitionId;
+                    partitionId++;
+                }
+                return true;
+            }
+        });
+    }
+
+    public void assignPartitionLineage()
+    {
+        traverseWithTrace(new VisitorWithLineage<T>()
+        {
+            @Override
+            public boolean visit(StandardQuadTree<T> tree, String lineage)
+            {
+                if (tree.isLeaf()) {
+                    tree.getZone().lineage = lineage;
+                }
+                return true;
+            }
+        }, "");
+    }    
+
     public List<QuadRectangle> getAllZones()
     {
         final List<QuadRectangle> zones = new ArrayList<>();
@@ -360,6 +405,25 @@ public class StandardQuadTree<T>
         });
 
         return leafZones;
+    }
+
+    public Map<Integer, List<QuadNode<T>>> getElementsByPartition(){
+ 	final Map<Integer, List<QuadNode<T>>> elements;
+	elements = new HashMap<Integer, List<QuadNode<T>>>();
+	
+        traverse(new Visitor<T>()
+        {
+            @Override
+            public boolean visit(StandardQuadTree<T> tree)
+            {
+                if (tree.isLeaf()) {
+		    elements.put(tree.getZone().partitionId, tree.nodes);
+		}
+                return true;
+            }
+        });
+
+        return elements;
     }
 
     public int getTotalNumLeafNode()
@@ -462,37 +526,5 @@ public class StandardQuadTree<T>
     private boolean disjoint(Envelope r1, Envelope r2)
     {
         return !r1.intersects(r2) && !r1.covers(r2) && !r2.covers(r1);
-    }
-
-    public void assignPartitionIds()
-    {
-        traverse(new Visitor<T>()
-        {
-            private int partitionId = 0;
-            @Override
-            public boolean visit(StandardQuadTree<T> tree)
-            {
-                if (tree.isLeaf()) {
-                    tree.getZone().partitionId = partitionId;
-                    partitionId++;
-                }
-                return true;
-            }
-        });
-    }
-
-    public void assignPartitionLineage()
-    {
-        traverseWithTrace(new VisitorWithLineage<T>()
-        {
-            @Override
-            public boolean visit(StandardQuadTree<T> tree, String lineage)
-            {
-                if (tree.isLeaf()) {
-                    tree.getZone().lineage = lineage;
-                }
-                return true;
-            }
-        }, "");
     }
 }
