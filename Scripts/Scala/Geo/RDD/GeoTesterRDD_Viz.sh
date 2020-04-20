@@ -38,6 +38,6 @@ spark-submit --conf spark.default.parallelism=${PARALLELISM} \
     --input $DATASET \
     --epsilon $EPSILON --mu $MU --partitions $PARTITIONS --parallelism $PARALLELISM \
     --gridtype $GRIDTYPE --indextype $INDEXTYPE \
-    --capacity $CAPACITY --fraction $FRACTION
+    --capacity $CAPACITY --fraction $FRACTION --debug
 
 #    --conf $LISTENER \

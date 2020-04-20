@@ -348,6 +348,7 @@ object GeoTesterRDD_Viz{
       }
     }
 
+    /*
     val stagePB2 = "DJOIN|Partition based 2"
     val partitionBased2 = timer(header(stagePB2)){
       val partitionBased = DistanceJoin.partitionBasedQuadtree2(centersRDD, pointsRDD2, d, capacity, fraction, levels)
@@ -400,6 +401,7 @@ object GeoTesterRDD_Viz{
       }
        */
     }
+     */
 
     logger.info("Closing session...")
     logger.info(s"Number of partition on default quadtree: $npartitions.")

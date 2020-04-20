@@ -77,7 +77,7 @@ object DistanceJoin{
     results
   }
 
-  def getTime(time: Long): Double = { (time - System.currentTimeMillis()) / 1e6 }
+  def getTime(time: Long): Long = { (System.currentTimeMillis() - time ) }
 
   def partitionBasedQuadtree(leftRDD: PointRDD,
     rightRDD: CircleRDD,
@@ -93,7 +93,11 @@ object DistanceJoin{
       var results = scala.collection.mutable.ListBuffer[ (Vector[ (Point, Vector[Point]) ], String) ]()
       if(!pointsIt.hasNext || !circlesIt.hasNext){
         val pairs = Vector.empty[ (Point, Vector[Point]) ]
-        val stats = ""
+        val partition_id = TaskContext.getPartitionId
+        val gridEnvelope = grids(partition_id)
+        val stats = f"${envelope2polygon(gridEnvelope).toText()}\t" +
+        f"${partition_id}\t${0}\t${0}\t" +
+        f"${0}\t${0}\t${0}\t${0}\n"
         results += ((pairs, stats))
         results.toIterator
       } else {
@@ -151,7 +155,7 @@ object DistanceJoin{
         // Report results...
         val stats = f"${envelope2polygon(gridEnvelope).toText()}\t" +
         f"${partition_id}\t${pointsA.size}\t${pointsB.size}\t" +
-        f"${timer1}%.2f\t${timer2}%.2f\t${timer3}%.2f\t${timer4}%.2f\n"
+        f"${timer1}\t${timer2}\t${timer3}\t${timer4}\n"
         results += ((pairs, stats))
         results.toIterator
       }
