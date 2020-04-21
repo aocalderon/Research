@@ -6,8 +6,8 @@ EPSILON=45
 CORES=108
 #PS=( $((1*CORES)) $((2*CORES)) $((3*CORES)) $((4*CORES)) )
 #QS=( $((1*CORES)) $((2*CORES)) $((3*CORES)) $((4*CORES)) )
-CS=( 100 250 500 750 1000 2000 3000 )
-FS=( 0.01 0.025 0.05 )
+CS=( 50 100 150 200 250 300 )
+FS=( 0.025 )
 
 for n in `seq 1 $N`; do
     for C in ${CS[@]}; do
