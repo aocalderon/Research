@@ -55,7 +55,7 @@ object GeoTesterRDD_Viz{
     }
     implicit val conf = spark.sparkContext.getConf
     def getConf(property: String)(implicit conf: SparkConf): String = conf.get(property)
-    def appId: String = if(getConf("spark.master").contains("local")){
+    val appId: String = if(getConf("spark.master").contains("local")){
       getConf("spark.app.id")
     } else {
       getConf("spark.app.id").takeRight(4)
@@ -340,10 +340,10 @@ object GeoTesterRDD_Viz{
           }, preservesPartitioning = true).collect().sorted
       }
 
-      save("/tmp/edgesStats1.wkt"){
+      save(s"/tmp/Stats_${appId}.wkt"){
         partitionBased1.mapPartitionsWithIndex(
           {case(index, iter) =>
-            iter.map{ case(pairs, stats) => stats }
+            iter.map{ case(pairs, stats) => s"$appId\t$stats" }
           }, preservesPartitioning = true).collect().sorted
       }
     }
