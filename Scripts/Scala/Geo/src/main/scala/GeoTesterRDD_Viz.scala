@@ -274,6 +274,118 @@ object GeoTesterRDD_Viz{
       }
     }
     
+    // Partition based Quadtree ...
+    val fraction = params.fraction()
+    val levels   = params.levels()
+    val capacity = params.capacity()
+
+    val pointsRDD2 = new CircleRDD(new PointRDD(pointsRDD.rawSpatialRDD.rdd, StorageLevel.MEMORY_ONLY), d)
+    pointsRDD2.analyze(envelope, nPointsRDD.toInt)
+    pointsRDD2.spatialPartitioning(points.getPartitioner)
+    pointsRDD2.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+    val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
+    centersRDD.analyze(envelope, nCenters.toInt)
+    centersRDD.spatialPartitioning(pointsRDD2.getPartitioner)
+    centersRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+
+    val stagePB1 = "DJOIN|Partition based 1"
+    val partitionBased1 = timer(header(stagePB1)){
+      val partitionBased = DistanceJoin.partitionBasedQuadtreeV1(centersRDD, pointsRDD2, d, capacity, fraction, levels)
+      partitionBased.cache()
+      n(stagePB1, partitionBased.count())
+      partitionBased
+    }
+
+    //
+    debug{
+      logger.info(s"Capacity: ${capacity}")
+      
+      save("/tmp/edgesPPairs1.wkt"){
+        partitionBased1.mapPartitionsWithIndex(
+          {case(index, iter) =>
+            iter.flatMap{ case(pairs, stats, lgrids, points) =>
+              pairs.map{case(point, points) =>
+                val pids = points.map(_.getUserData.toString().split("\t")(0))
+                  .map(_.toInt).sorted.mkString(" ")
+                s"${point.toText()}\t${pids}\t${index}\n"
+                
+              }
+            }
+          }, preservesPartitioning = true).collect().sorted
+      }
+
+      save(s"/tmp/edgesStats_${appId}.wkt"){
+        partitionBased1.mapPartitionsWithIndex(
+          {case(index, iter) =>
+            iter.map{ case(pairs, stats, lgrids, points) => s"$stats\t$appId\n" }
+          }, preservesPartitioning = true).collect().sorted
+      }
+
+      save(s"/tmp/edgesLGrids.wkt"){
+        partitionBased1.mapPartitionsWithIndex(
+          {case(index, iter) =>
+            iter.map{ case(pairs, stats, lgrids, points) => s"$lgrids" }
+          }, preservesPartitioning = true).collect()
+      }
+
+      save(s"/tmp/edgesQuads.wkt"){
+        partitionBased1.mapPartitionsWithIndex(
+          {case(index, iter) =>
+            iter.map{ case(pairs, stats, lgrids, points) => s"$points" }
+          }, preservesPartitioning = true).collect()
+      }
+      
+    }
+
+    val stagePB2 = "DJOIN|Partition based 2"
+    val partitionBased2 = timer(header(stagePB2)){
+      val partitionBased = DistanceJoin.partitionBasedQuadtreeV2(centersRDD, pointsRDD2, d, capacity, fraction, levels)
+      partitionBased.cache()
+      n(stagePB2, partitionBased.count())
+      partitionBased
+    }
+
+    //
+    debug{
+      logger.info(s"Capacity: ${capacity}")
+      
+      save("/tmp/edgesPPairs2.wkt"){
+        partitionBased2.mapPartitionsWithIndex(
+          {case(index, iter) =>
+            iter.flatMap{ case(pairs, stats, lgrids, points) =>
+              pairs.map{case(point, points) =>
+                val pids = points.map(_.getUserData.toString().split("\t")(0))
+                  .map(_.toInt).sorted.mkString(" ")
+                s"${point.toText()}\t${pids}\t${index}\n"
+                
+              }
+            }
+          }, preservesPartitioning = true).collect().sorted
+      }
+
+      save(s"/tmp/edgesStats2_${appId}.wkt"){
+        partitionBased1.mapPartitionsWithIndex(
+          {case(index, iter) =>
+            iter.map{ case(pairs, stats, lgrids, points) => s"$stats\t$appId\n" }
+          }, preservesPartitioning = true).collect().sorted
+      }
+
+      save(s"/tmp/edgesLGrids2.wkt"){
+        partitionBased1.mapPartitionsWithIndex(
+          {case(index, iter) =>
+            iter.map{ case(pairs, stats, lgrids, points) => s"$lgrids" }
+          }, preservesPartitioning = true).collect()
+      }
+
+      save(s"/tmp/edgesQuads2.wkt"){
+        partitionBased1.mapPartitionsWithIndex(
+          {case(index, iter) =>
+            iter.map{ case(pairs, stats, lgrids, points) => s"$points" }
+          }, preservesPartitioning = true).collect()
+      }
+      
+    }
+
     /*
     // Partition based Grid ...
     val width = params.width()
@@ -298,108 +410,6 @@ object GeoTesterRDD_Viz{
           }
         }
           , preservesPartitioning = true).collect().sorted
-    }
-     */
-
-    // Partition based Quadtree ...
-    val fraction = params.fraction()
-    val levels   = params.levels()
-    val capacity = params.capacity()
-
-    val pointsRDD2 = new CircleRDD(new PointRDD(pointsRDD.rawSpatialRDD.rdd, StorageLevel.MEMORY_ONLY), d)
-    pointsRDD2.analyze(envelope, nPointsRDD.toInt)
-    pointsRDD2.spatialPartitioning(points.getPartitioner)
-    pointsRDD2.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
-    val centersRDD = new PointRDD(centers, StorageLevel.MEMORY_ONLY)
-    centersRDD.analyze(envelope, nCenters.toInt)
-    centersRDD.spatialPartitioning(pointsRDD2.getPartitioner)
-    centersRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
-
-    val stagePB1 = "DJOIN|Partition based 1"
-    val partitionBased1 = timer(header(stagePB1)){
-      val partitionBased = DistanceJoin.partitionBasedQuadtree(centersRDD, pointsRDD2, d, capacity, fraction, levels)
-      n(stagePB1, partitionBased.count())
-      partitionBased
-    }.persist(StorageLevel.MEMORY_ONLY)
-
-    //
-    debug{
-      logger.info(s"Capacity: ${capacity}")
-      
-      save("/tmp/edgesPPairs1.wkt"){
-        partitionBased1.mapPartitionsWithIndex(
-          {case(index, iter) =>
-            iter.flatMap{ case(pairs, stats) =>
-              pairs.map{case(point, points) =>
-                val pids = points.map(_.getUserData.toString().split("\t")(0))
-                  .map(_.toInt).sorted.mkString(" ")
-                s"${point.toText()}\t${pids}\t${index}\n"
-                
-              }
-            }
-          }, preservesPartitioning = true).collect().sorted
-      }
-
-      save(s"/tmp/Stats_${appId}.wkt"){
-        partitionBased1.mapPartitionsWithIndex(
-          {case(index, iter) =>
-            iter.map{ case(pairs, stats) => s"$appId\t$stats" }
-          }, preservesPartitioning = true).collect().sorted
-      }
-    }
-
-    /*
-    val stagePB2 = "DJOIN|Partition based 2"
-    val partitionBased2 = timer(header(stagePB2)){
-      val partitionBased = DistanceJoin.partitionBasedQuadtree2(centersRDD, pointsRDD2, d, capacity, fraction, levels)
-      n(stagePB2, partitionBased.count())
-      partitionBased
-    }.persist(StorageLevel.MEMORY_ONLY)
-
-    //
-    debug{
-      logger.info(s"Capacity: ${capacity}")
-      
-      save("/tmp/edgesPPairs2.wkt"){
-        partitionBased2.mapPartitionsWithIndex(
-          {case(index, iter) =>
-            iter.flatMap { case(pairs, lgrids) =>
-              pairs.map{case(point, points) =>
-                val pids = points.map(_.getUserData.toString().split("\t")(0))
-                  .map(_.toInt).sorted.mkString(" ")
-                s"${point.toText()}\t${pids}\t${index}\n"
-                
-              }
-            }
-          }, preservesPartitioning = true).collect().sorted
-      }
-
-      save("/tmp/edgesLGrids2.wkt"){
-        partitionBased2.flatMap(_._2).collect()
-      }
-      
-      /*
-      save("/tmp/edgesPPoints.wkt"){
-        partitionBased.mapPartitionsWithIndex(
-          {case(index, iter) =>
-            iter.flatMap{ case(points, circles, pairs, grids) =>
-              points.map{ case(id, point) =>
-                s"${point.toText()}\t${id}\t${index}\n"
-              }
-            }
-          }, preservesPartitioning = true).collect().sorted
-      }
-      save("/tmp/edgesPCircles.wkt"){
-        partitionBased.mapPartitionsWithIndex(
-          {case(index, iter) =>
-            iter.flatMap{ case(points, circles, pairs, grids) =>
-              circles.map{ case(id, circle) =>
-                s"${circle.toText()}\t${id}\t${index}\n"
-              }
-            }
-          }, preservesPartitioning = true).collect().sorted
-      }
-       */
     }
      */
 

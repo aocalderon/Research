@@ -1,18 +1,19 @@
 #!/bin/bash
 
 EPSILON=$1
+CAPACITY=$2
+FRACTION=$3
 MU=3
 INDEXTYPE="quadtree"
 GRIDTYPE="quadtree"
-CAPACITY=$2
 
-SPARK_JARS=/home/and/Spark/2.4/jars/
-CLASS_JAR=/home/and/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar
+SPARK_JARS=$HOME/Spark/2.4/jars/
+CLASS_JAR=$HOME/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar
 CLASS_NAME=GeoTesterRDD_Viz
 LISTENER=spark.extraListeners=TaskSparkListener
-LOG_FILE=/home/and/Spark/2.4/conf/log4j.properties
+LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
 
-MASTER=local[4]
+MASTER=local[6]
 EXECUTORS=12
 CORES=9
 DMEMORY=10g
@@ -20,8 +21,8 @@ EMEMORY=30g
 PARTITIONS=4
 PARALLELISM=4
 
-#DATASET=/user/acald013/Datasets/LA/LA_50KTrajs/LA_50K_320.tsv
-DATASET=/home/and/Datasets/data.tsv
+#DATASET=$HOME/Research/Datasets/P10K.tsv
+DATASET=$HOME/Research/Datasets/P1K.tsv
 
 spark-submit --conf spark.default.parallelism=${PARALLELISM} \
     --conf spark.driver.maxResultSize=4g \
@@ -36,5 +37,6 @@ spark-submit --conf spark.default.parallelism=${PARALLELISM} \
     --class $CLASS_NAME $CLASS_JAR \
     --input $DATASET \
     --epsilon $EPSILON --mu $MU --partitions $PARTITIONS --parallelism $PARALLELISM \
-    --gridtype $GRIDTYPE --indextype $INDEXTYPE --capacity $CAPACITY --debug
+    --gridtype $GRIDTYPE --indextype $INDEXTYPE \
+    --capacity $CAPACITY --fraction $FRACTION --debug
 #    --conf $LISTENER \

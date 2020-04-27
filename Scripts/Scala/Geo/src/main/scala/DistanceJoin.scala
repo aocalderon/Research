@@ -14,10 +14,12 @@ import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.datasyslab.geospark.spatialRDD.{SpatialRDD, CircleRDD, PointRDD}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.enums.{GridType, IndexType}
+import org.datasyslab.geospark.geometryObjects.Circle
 import org.datasyslab.geosparksql.utils.GeoSparkSQLRegistrator
 import com.vividsolutions.jts.geom.{Geometry, Envelope, Coordinate, Point, Polygon, MultiPolygon}
 import com.vividsolutions.jts.geom.GeometryFactory
-import com.vividsolutions.jts.index.SpatialIndex;
+import com.vividsolutions.jts.index.SpatialIndex
+import com.vividsolutions.jts.index.quadtree._
 import edu.ucr.dblab.Utils._
 import edu.ucr.dblab.{StandardQuadTree, QuadRectangle}
 
@@ -110,11 +112,11 @@ object DistanceJoin{
         // Building the local quadtree...
         val pointsA = pointsIt.toVector
         val pointsB = circlesIt.toVector
-        val quadtree = new StandardQuadTree[Int](grid, 0, capacity, levels)
+        val quadtree = new StandardQuadTree[Geometry](grid, 0, capacity, levels)
         val sampleSize = (fraction * pointsB.length).toInt
         val sample = Random.shuffle(pointsB).take(sampleSize)
-        sample.foreach { p =>
-          quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), 1)
+        sample.foreach { p =>          
+          quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), p)
         }
         quadtree.assignPartitionIds()
         val timer1 = getTime(timer)
@@ -162,132 +164,199 @@ object DistanceJoin{
     }
   }  
 
-  def partitionBasedQuadtree2(leftRDD: PointRDD, rightRDD: CircleRDD, distance: Double, capacity: Int = 20, fraction: Double = 0.1, levels: Int = 5)(implicit grids: Vector[Envelope]): RDD[(Vector[(Point, Vector[Point])], Vector[String])] = {
+  def partitionBasedQuadtreeV1(leftRDD: PointRDD,
+    rightRDD: CircleRDD,
+    distance: Double,
+    capacity: Int = 200,
+    fraction: Double = 0.1,
+    levels: Int = 5)
+    (implicit grids: Vector[Envelope]): RDD[ (Vector[ (Point, Vector[Point]) ], String, String, String) ] = {
 
     val A = leftRDD.spatialPartitionedRDD.rdd
     val B = rightRDD.spatialPartitionedRDD.rdd
     A.zipPartitions(B, preservesPartitioning = true){ (pointsIt, circlesIt) =>
-      var results = new scala.collection.mutable.ListBuffer[(Vector[(Point, Vector[Point])], Vector[String])]()
-
+      var results = scala.collection.mutable.ListBuffer[ (Vector[ (Point, Vector[Point]) ], String, String, String) ]()
       if(!pointsIt.hasNext || !circlesIt.hasNext){
+        val pairs = Vector.empty[ (Point, Vector[Point]) ]
+        val global_pid = TaskContext.getPartitionId
+        val gridEnvelope = grids(global_pid)
+        val stats = f"${envelope2polygon(gridEnvelope).toText()}\t" +
+        f"${global_pid}\t${0}\t${0}\t" +
+        f"${0}\t${0}\t${0}\t${0}\n"
+        results += ((pairs, stats, "", ""))
         results.toIterator
       } else {
-        // Getting the global grid...
-        val partition_id = TaskContext.getPartitionId
-        val gridEnvelope = grids(partition_id)
-        val grid = new QuadRectangle(gridEnvelope)
-
         // Building the local quadtree...
-        val pointsA = pointsIt.toVector
-        val pointsB = circlesIt.toVector
+        var timer = System.currentTimeMillis()
+        val global_pid = TaskContext.getPartitionId
+        val gridEnvelope = grids(global_pid)
+        gridEnvelope.expandBy(distance)
+        val grid = new QuadRectangle(gridEnvelope)
+        
+        val pointsA = pointsIt.toVector.map{ a =>
+          a.setUserData("A")
+          a
+        }
+        val pointsB = circlesIt.toVector.map{ b =>
+          val point = geofactory.createPoint(b.getCenterPoint)
+          point.setUserData(b.getUserData.toString)
+          point
+        }
+        val nPointsA = pointsA.size
+        val nPointsB = pointsB.size
+        val points =  pointsA ++ pointsB
+        val nPoints = points.size
+        val quad = new StandardQuadTree[Point](grid, 0, capacity, 10)
+        val timer1 = getTime(timer)
 
-        val quadtree = new StandardQuadTree[(Point, Boolean)](grid, 0, capacity, levels)
+        // Feeding the quadtree A...
+        timer = System.currentTimeMillis()
         pointsA.foreach { p =>
-          quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), (p, true))
+          quad.insert(new QuadRectangle(p.getEnvelopeInternal), p)
         }
+        val timer2 = getTime(timer)
+
+        // Feeding the quadtree B...
+        timer = System.currentTimeMillis()
         pointsB.foreach { p =>
-          val center = geofactory.createPoint(p.getCenterPoint)
-          center.setUserData(p.getUserData)
-          quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), (center, false))
+          quad.insert(new QuadRectangle(p.getEnvelopeInternal), p)
         }
-        quadtree.assignPartitionIds()
+        val timer3 = getTime(timer)
 
-        val lgrids = quadtree.getLeafZones.asScala.map{ r =>
-          val envelope = envelope2polygon(r.getEnvelope)
-          val id = r.partitionId
-
-          s"${envelope.toText()}\t${id}\n"
-        }.toVector
-
-        val pairs = quadtree.getElementsByPartition().asScala.flatMap{ case(id, nodes) =>
-          val elements = nodes.asScala.map{ node =>
-            val (point, isA) = node.getElement()
-            val id = node.getPartitionID
-
-            (id, point, isA)
+        // Report results...
+        timer = System.currentTimeMillis()
+        quad.assignPartitionIds
+        val candidates = quad.getLeafZones.asScala.flatMap{ leaf =>
+          val local_pid = leaf.partitionId
+          val p = quad.getPointsByEnvelope(leaf.getEnvelope).size
+          val query = leaf.getEnvelope
+          query.expandBy(distance)
+          val points = quad.getPointsByEnvelope(query).asScala.map{ p =>
+            (p, p.getUserData.toString() == "A")
           }
-          val A = elements.filter(_._3).map(_._2)
-          val B = elements.filterNot(_._3).map(_._2)
+          val A = points.filter(_._2).map(_._1).distinct
+          val B = points.filterNot(_._2).map(_._1).filter(b =>
+            leaf.getEnvelope.contains(b.getEnvelopeInternal)
+          ).distinct
 
-          val candidates = for{
+          val pairs = for{
             a <- A
             b <- B if a.distance(b) <= distance
           } yield {
             (a, b)
           }
 
-          candidates.groupBy(_._1).toVector.map{ case(p, pairs) => (p, pairs.map(_._2).toVector)}
-        }.toVector
+          //
+          //logger.info(s"$global_pid\t$local_pid\t$p\t${points.size}\t${A.size}\t${B.size}\t${A.size * B.size}\t${pairs.size}")
 
-        results += ((pairs, lgrids))
+          pairs
+        }
+        val pairs = candidates.groupBy(_._1).toVector.map{ case(p, pairs) => (p, pairs.map(_._2).toVector)}
+        val timer4 = getTime(timer)
+        
+        val stats = f"${envelope2polygon(gridEnvelope).toText()}\t" +
+        f"${global_pid}\t${nPointsA}\t${nPointsB}\t" +
+        f"${timer1}\t${timer2}\t${timer3}\t${timer4}\n"
+        val lgridsWKT = quad.getLeafZones.asScala.map{ leaf =>
+          s"${envelope2polygon(leaf.getEnvelope).toText()}\t${leaf.partitionId}\n"
+        }.mkString("")
+        val pointsWKT = points.map{ point =>
+          s"${envelope2polygon(point.getEnvelopeInternal).getCentroid.toText()}\t${point.getUserData.toString == "A"}\t$global_pid\n"
+        }.mkString("")
+        results += ((pairs, stats, lgridsWKT, pointsWKT))
         results.toIterator
       }
     }
   }  
 
-  def partitionBasedQuadtreeViz(leftRDD: PointRDD, rightRDD: CircleRDD, distance: Double, capacity: Int = 200, fraction: Double = 0.1, levels: Int = 5)(implicit grids: Vector[Envelope]): RDD[(Vector[(Int, Point)], Vector[(Int, Point)], Vector[(Point, Vector[Point])], List[String])] = {
+  def partitionBasedQuadtreeV2(leftRDD: PointRDD,
+    rightRDD: CircleRDD,
+    distance: Double,
+    capacity: Int = 200,
+    fraction: Double = 0.1,
+    levels: Int = 5)
+    (implicit grids: Vector[Envelope]): RDD[ (Vector[ (Point, Vector[Point]) ], String, String, String) ] = {
 
     val A = leftRDD.spatialPartitionedRDD.rdd
     val B = rightRDD.spatialPartitionedRDD.rdd
-    val results = A.zipPartitions(B, preservesPartitioning = true){ (pointsIt, circlesIt) =>
-      var results = new scala.collection.mutable.ListBuffer[(Vector[(Int, Point)], Vector[(Int, Point)], Vector[(Point, Vector[Point])], List[String])]()
+    A.zipPartitions(B, preservesPartitioning = true){ (pointsIt, circlesIt) =>
+      var results = scala.collection.mutable.ListBuffer[ (Vector[ (Point, Vector[Point]) ], String, String, String) ]()
       if(!pointsIt.hasNext || !circlesIt.hasNext){
+        val pairs = Vector.empty[ (Point, Vector[Point]) ]
+        val global_pid = TaskContext.getPartitionId
+        val gridEnvelope = grids(global_pid)
+        val stats = f"${envelope2polygon(gridEnvelope).toText()}\t" +
+        f"${global_pid}\t${0}\t${0}\t" +
+        f"${0}\t${0}\t${0}\t${0}\n"
+        results += ((pairs, stats, "", ""))
         results.toIterator
       } else {
-        val partition_id = TaskContext.getPartitionId
-        val gridEnvelope = grids(partition_id)
+        // Building the local quadtree...
+        var timer = System.currentTimeMillis()
+        val global_pid = TaskContext.getPartitionId
+        val gridEnvelope = grids(global_pid)
         //gridEnvelope.expandBy(distance)
         val grid = new QuadRectangle(gridEnvelope)
 
         val pointsA = pointsIt.toVector
         val pointsB = circlesIt.toVector
+        val nPointsA = pointsA.size
+        val nPointsB = pointsB.size
+
         val quadtree = new StandardQuadTree[Int](grid, 0, capacity, levels)
-        val sampleSize = (fraction * pointsB.length).toInt
-        val sample = Random.shuffle(pointsB).take(sampleSize)
+        val sampleSize = (fraction * nPointsA).toInt
+        val sample = Random.shuffle(pointsA).take(sampleSize)
         sample.foreach { p =>
           quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), 1)
         }
         quadtree.assignPartitionIds()
+        val timer1 = getTime(timer)
 
-        //  Collect envelopes just for visualization purposes...
-        val lgrids = quadtree.getLeafZones.asScala.map{ zone =>
-          (zone.partitionId, zone.getEnvelope)
-        }
-        val slgrids = lgrids.map(g => s"${envelope2polygon(g._2).toText()}\t${g._1}\n").toList
-
-        // Locate pointsA...
-        val keyPointsA = pointsA.flatMap{ point =>
+        // Feeding A...
+        timer = System.currentTimeMillis()
+        val A = pointsA.flatMap{ point =>
           val query = new QuadRectangle(point.getEnvelopeInternal) 
           val zones = quadtree.findZones(query)
-          zones.asScala.map{ zone => (zone.partitionId.toInt, point) }
+          zones.asScala.map{ zone => (zone.partitionId.toInt, point, zone.getEnvelope) }
         }
+        val timer2 = getTime(timer)
 
-        // Locate pointsB...
-        val keyPointsB = pointsB.flatMap{ point =>
+        // Feeding B...
+        timer = System.currentTimeMillis()
+        val B = pointsB.flatMap{ point =>
           val query = new QuadRectangle(point.getEnvelopeInternal) 
           val zones = quadtree.findZones(query)
-          val center = geofactory.createPoint(point.getCenterPoint)
-          center.setUserData(point.getUserData)
-          zones.asScala.map{ zone => (zone.partitionId.toInt, center) }
+          val b = geofactory.createPoint(point.getCenterPoint)
+          b.setUserData(point.getUserData)
+          zones.asScala.map{ zone => (zone.partitionId.toInt, b) }
         }
+        val timer3 = getTime(timer)
 
         // Find pairs
+        timer = System.currentTimeMillis()
         val candidates = for{
-          a <- keyPointsA
-          b <- keyPointsB if a._1 == b._1 
+          a <- A
+          b <- B if a._1 == b._1 && a._2.distance(b._2) <= distance 
         } yield {
-          (a, b, a._2.distance(b._2))
+          (a._2, b._2, a._3.contains(a._2.getEnvelopeInternal))
         }
-
-        val pairs = candidates.filter(_._3 <= distance).map{ case(a, b, d) => (a._2, b._2)}
-          .groupBy(_._1).toVector.map{ case(p, pairs) => (p, pairs.map(_._2))}
+        val pairs = candidates.filter(_._3).groupBy(_._1).toVector.map{ case(p, pairs) => (p, pairs.map(_._2))}
+        val timer4 = getTime(timer)
 
         // Report results...
-        results += ((keyPointsA, keyPointsB, pairs, slgrids))
+        val stats = f"${envelope2polygon(gridEnvelope).toText()}\t" +
+        f"${global_pid}\t${nPointsA}\t${nPointsB}\t" +
+        f"${timer1}\t${timer2}\t${timer3}\t${timer4}\n"
+        val lgridsWKT = quadtree.getLeafZones.asScala.map{ leaf =>
+          s"${envelope2polygon(leaf.getEnvelope).toText()}\t${leaf.partitionId}\n"
+        }.mkString("")
+        val pointsWKT = (pointsA ++ pointsB).map{ point =>
+          s"${envelope2polygon(point.getEnvelopeInternal).getCentroid.toText()}\t${point.getUserData.toString == "A"}\t$global_pid\n"
+        }.mkString("")
+        results += ((pairs, stats, lgridsWKT, pointsWKT))
         results.toIterator
       }
     }
-    results
   }  
 
   def partitionBasedGrid(leftRDD: PointRDD, rightRDD: PointRDD, distance: Double, w: Double = 0.0)(implicit grids: Vector[Envelope]): RDD[(Point, List[Point])] = {

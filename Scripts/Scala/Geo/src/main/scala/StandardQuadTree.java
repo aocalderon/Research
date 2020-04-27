@@ -17,7 +17,14 @@
 package edu.ucr.dblab;
 
 import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.MultiPoint;
+import com.vividsolutions.jts.geom.Geometry;
+
 import org.apache.commons.lang3.mutable.MutableInt;
+import org.geotools.geometry.jts.GeometryClipper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -75,6 +82,10 @@ public class StandardQuadTree<T> implements Serializable {
 
     public List<QuadNode<T>> getNodes(){
 	return nodes;
+    }
+
+    public int getSize() {
+	return nodeNum;
     }
 
     public QuadRectangle getZone()
@@ -341,6 +352,32 @@ public class StandardQuadTree<T> implements Serializable {
         return elements;
     }
 
+    public List<Point> getPointsByEnvelope(Envelope e){
+	QuadRectangle r = new QuadRectangle(e);
+	List<T> candidates = new ArrayList<T>();
+	for(QuadRectangle zone: this.findZones(r)){
+	    candidates.addAll( this.getElements(zone) );
+	}
+	Point[] points = new Point[candidates.size()];
+	int n = 0;
+	for(T candidate: candidates){
+	    Point p = (Point) candidate;
+	    points[n++] = p;
+	}
+	GeometryClipper clipper = new GeometryClipper(e);
+	GeometryFactory geofactory = new GeometryFactory();
+	MultiPoint pointset  = geofactory.createMultiPoint(points);
+	Geometry clipped = clipper.clip(pointset, true);
+	List<Point> results = new ArrayList<>();
+	if(clipped != null){
+	    for(int i = 0; i < clipped.getNumGeometries(); i++){
+		results.add( (Point) clipped.getGeometryN(i) );
+	    }
+	}
+	return results;
+    }
+
+
     public void assignPartitionIds()
     {
         traverse(new Visitor<T>()
@@ -405,25 +442,6 @@ public class StandardQuadTree<T> implements Serializable {
         });
 
         return leafZones;
-    }
-
-    public Map<Integer, List<QuadNode<T>>> getElementsByPartition(){
- 	final Map<Integer, List<QuadNode<T>>> elements;
-	elements = new HashMap<Integer, List<QuadNode<T>>>();
-	
-        traverse(new Visitor<T>()
-        {
-            @Override
-            public boolean visit(StandardQuadTree<T> tree)
-            {
-                if (tree.isLeaf()) {
-		    elements.put(tree.getZone().partitionId, tree.nodes);
-		}
-                return true;
-            }
-        });
-
-        return elements;
     }
 
     public int getTotalNumLeafNode()
