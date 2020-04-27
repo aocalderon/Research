@@ -7,11 +7,11 @@ MU=3
 INDEXTYPE="quadtree"
 GRIDTYPE="quadtree"
 
-SPARK_JARS=/home/acald013/Spark/2.4/jars/
-CLASS_JAR=/home/acald013/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar
+SPARK_JARS=$HOME/Spark/2.4/jars/
+CLASS_JAR=$HOME/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar
 CLASS_NAME=GeoTesterRDD_Viz
 LISTENER=spark.extraListeners=TaskSparkListener
-LOG_FILE=/home/acald013/Spark/2.4/conf/log4j.properties
+LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
 
 MASTER=yarn
 EXECUTORS=12
@@ -39,5 +39,4 @@ spark-submit --conf spark.default.parallelism=${PARALLELISM} \
     --epsilon $EPSILON --mu $MU --partitions $PARTITIONS --parallelism $PARALLELISM \
     --gridtype $GRIDTYPE --indextype $INDEXTYPE \
     --capacity $CAPACITY --fraction $FRACTION --debug
-
 #    --conf $LISTENER \

@@ -288,7 +288,8 @@ object GeoTesterRDD_Viz{
     centersRDD.spatialPartitioning(pointsRDD2.getPartitioner)
     centersRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
 
-    val stagePB1 = "DJOIN|Partition based 1"
+    
+    val stagePB1 = "Partition based 1"
     val partitionBased1 = timer(header(stagePB1)){
       val partitionBased = DistanceJoin.partitionBasedQuadtreeV1(centersRDD, pointsRDD2, d, capacity, fraction, levels)
       partitionBased.cache()
@@ -336,8 +337,9 @@ object GeoTesterRDD_Viz{
       }
       
     }
+    
 
-    val stagePB2 = "DJOIN|Partition based 2"
+    val stagePB2 = "DJOIN|Partition based"
     val partitionBased2 = timer(header(stagePB2)){
       val partitionBased = DistanceJoin.partitionBasedQuadtreeV2(centersRDD, pointsRDD2, d, capacity, fraction, levels)
       partitionBased.cache()
@@ -364,21 +366,21 @@ object GeoTesterRDD_Viz{
       }
 
       save(s"/tmp/edgesStats2_${appId}.wkt"){
-        partitionBased1.mapPartitionsWithIndex(
+        partitionBased2.mapPartitionsWithIndex(
           {case(index, iter) =>
             iter.map{ case(pairs, stats, lgrids, points) => s"$stats\t$appId\n" }
           }, preservesPartitioning = true).collect().sorted
       }
 
       save(s"/tmp/edgesLGrids2.wkt"){
-        partitionBased1.mapPartitionsWithIndex(
+        partitionBased2.mapPartitionsWithIndex(
           {case(index, iter) =>
             iter.map{ case(pairs, stats, lgrids, points) => s"$lgrids" }
           }, preservesPartitioning = true).collect()
       }
 
       save(s"/tmp/edgesQuads2.wkt"){
-        partitionBased1.mapPartitionsWithIndex(
+        partitionBased2.mapPartitionsWithIndex(
           {case(index, iter) =>
             iter.map{ case(pairs, stats, lgrids, points) => s"$points" }
           }, preservesPartitioning = true).collect()
