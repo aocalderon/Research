@@ -71,7 +71,7 @@
 \begin{document}
 \title[PFLOCK report]{PFLOCK Report}
 \author[AC]{Andres Calderon}
-\institute[Spring'20]{University of California, Riverside}
+\institute[Winter'20]{University of California, Riverside}
 \makebeamertitle
 \newif\iflattersubsect
 
@@ -90,27 +90,53 @@
     \end{frame}
 }
 
+
+\begin{frame}{Partition based join...}
+    \begin{enumerate}
+        \item Partition centers and points using the same set of global grids (Quadtree grids).
+        \item At each global grid, take a sample of centers and build a local quadtree.
+        \item For each point in a global grid:
+        \begin{enumerate}
+            \item compute the position of that point according to the grids defined by the local quadtree.
+        \end{enumerate}
+        \item For centers in the same global grid:
+        \begin{enumerate}
+            \item compute the position of each center according to local grids and manage possible replication.
+        \end{enumerate}
+        \item For each local grid, filter pairs which do not satisfy the distance condition.
+    \end{enumerate}
+\end{frame}
+
 \begin{frame}{Experiment setup...}
     \begin{itemize}
         \item Dataset: LA\_50K (time interval 320).
-        \item $\mu=3$, varying values for $\varepsilon$ (from 10m to 40m).
+        \item $\varepsilon=45$ and $\mu=3$.
         \item Global partitioning: Quadtree, number of partitions: 256 ($\approx 750$ grids).
-        \item Local partitioning: Quadtree, min number of elements per node: 200, size of sample: 2\%.
         \item Number of nodes: 12, cores per node: 9 (108 total cores).
-        \item Average of 15 runs.
+        \item Variying values of capacity (maximum items per grid) and fraction (size of the sample respect to \# of points in grid) for the local grids.
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Results...}
     \centering
-    \includegraphics[width=0.85\textwidth]{figures/ByEpsilon}
+    \includegraphics[width=0.85\textwidth]{figures/ByCapacity}
 \end{frame}
 
-\begin{frame}{What's next...}
+\begin{frame}{Results...}
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/ByFraction}
+\end{frame}
+
+\begin{frame}{What's next?}
     \begin{itemize}
-        \item Integrate the partition-base code in our algorithm...
-        \item Validate and re-run previous benchmarks...
+        \item Optional:
+        \begin{itemize}
+            \item Avoid the sampling during local quadtree creation and querying.  
+            \item Try KDB-Tree as local partitioner.
+        \end{itemize}
+        \item Continuing with index-based join and integrate with previous code.
     \end{itemize}
 \end{frame}
+
 
 \end{document}
