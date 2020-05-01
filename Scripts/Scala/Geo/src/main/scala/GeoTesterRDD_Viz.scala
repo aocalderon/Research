@@ -115,6 +115,14 @@ object GeoTesterRDD_Viz{
           }}, preservesPartitioning = true)
           .collect().sorted
       }
+      save("/tmp/Points.tsv"){
+        pointsRDD.spatialPartitionedRDD.rdd.map{ point =>
+          val arr = point.getUserData.toString.split("\t")
+          val id = arr(0)
+          val t = arr(1)
+          s"$id\t${point.getX}\t${point.getY}\t$t\n"
+        }.collect().sorted
+      }
     }
 
     logger.info(s"GridType: $gridtype.")
@@ -192,6 +200,11 @@ object GeoTesterRDD_Viz{
             s"${point.toText()}\t${index}\n"
           }}, preservesPartitioning = true)
           .collect().sorted
+      }
+      save("/tmp/Centers.tsv"){
+        centers.map{ point =>
+          s"${point.getX}\t${point.getY}\n"
+        }.collect().sorted
       }
     }
 

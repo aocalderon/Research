@@ -3,6 +3,7 @@
 EPSILON=$1
 CAPACITY=$2
 FRACTION=$3
+LEVELS=$4
 MU=3
 INDEXTYPE="quadtree"
 GRIDTYPE="quadtree"
@@ -13,7 +14,7 @@ CLASS_NAME=GeoTesterRDD_Viz
 LISTENER=spark.extraListeners=TaskSparkListener
 LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
 
-MASTER=local[6]
+MASTER=local[1]
 EXECUTORS=12
 CORES=9
 DMEMORY=10g
@@ -22,7 +23,8 @@ PARTITIONS=4
 PARALLELISM=4
 
 #DATASET=$HOME/Research/Datasets/P10K.tsv
-DATASET=$HOME/Research/Datasets/P1K.tsv
+#DATASET=$HOME/Research/Datasets/P1K.tsv
+DATASET=$HOME/Research/Datasets/P20.tsv
 
 spark-submit --conf spark.default.parallelism=${PARALLELISM} \
     --conf spark.driver.maxResultSize=4g \
@@ -38,5 +40,5 @@ spark-submit --conf spark.default.parallelism=${PARALLELISM} \
     --input $DATASET \
     --epsilon $EPSILON --mu $MU --partitions $PARTITIONS --parallelism $PARALLELISM \
     --gridtype $GRIDTYPE --indextype $INDEXTYPE \
-    --capacity $CAPACITY --fraction $FRACTION --debug
+    --capacity $CAPACITY --fraction $FRACTION --levels $LEVELS --debug
 #    --conf $LISTENER \
