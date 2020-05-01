@@ -14,17 +14,17 @@ CLASS_NAME=GeoTesterRDD_Viz
 LISTENER=spark.extraListeners=TaskSparkListener
 LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
 
-MASTER=local[1]
+MASTER=local[6]
 EXECUTORS=12
 CORES=9
 DMEMORY=10g
 EMEMORY=30g
-PARTITIONS=4
-PARALLELISM=4
+PARTITIONS=16
+PARALLELISM=16
 
-#DATASET=$HOME/Research/Datasets/P10K.tsv
+DATASET=$HOME/Research/Datasets/P10K.tsv
 #DATASET=$HOME/Research/Datasets/P1K.tsv
-DATASET=$HOME/Research/Datasets/P20.tsv
+#DATASET=$HOME/Research/Datasets/P20.tsv
 
 spark-submit --conf spark.default.parallelism=${PARALLELISM} \
     --conf spark.driver.maxResultSize=4g \

@@ -217,7 +217,7 @@ object DistanceJoinV2 {
         }
         val timer2 = getTime(timer)
 
-        A.map(a => s"${a._2.toText()}\t$global_gid\t${a._1}\t${a._2.getUserData}").foreach { println }
+        //A.map(a => s"${a._2.toText()}\t$global_gid\t${a._1}\t${a._2.getUserData}").foreach { println }
 
         // Feeding B...
         timer = System.currentTimeMillis()
@@ -230,7 +230,7 @@ object DistanceJoinV2 {
         }
         val timer3 = getTime(timer)
 
-        B.map(b => s"${b._2.toText()}\t$global_gid\t${b._1}").foreach { println }
+        //B.map(b => s"${b._2.toText()}\t$global_gid\t${b._1}").foreach { println }
 
         // Report results...
         timer = System.currentTimeMillis()
