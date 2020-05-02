@@ -217,26 +217,24 @@ object DistanceJoinV2 {
         }
         val timer2 = getTime(timer)
 
-        //A.map(a => s"${a._2.toText()}\t$global_gid\t${a._1}\t${a._2.getUserData}").foreach { println }
-
         // Feeding B...
         timer = System.currentTimeMillis()
         val B = circlesB.flatMap{ circle =>
           val query = new QuadRectangle(circle.getEnvelopeInternal) 
           quadtree.findZones(query).asScala
             .map{ zone =>
-              (zone.partitionId.toInt, envelope2polygon(circle.getEnvelopeInternal).getCentroid)
+              val center = envelope2polygon(circle.getEnvelopeInternal).getCentroid
+              val isInside = zone.getEnvelope.contains(center.getEnvelopeInternal)
+              (zone.partitionId.toInt, center, isInside)
             }
-        }
+        }.filter(_._3)
         val timer3 = getTime(timer)
-
-        //B.map(b => s"${b._2.toText()}\t$global_gid\t${b._1}").foreach { println }
 
         // Report results...
         timer = System.currentTimeMillis()
         val candidates = for{
           a <- A
-          b <- B if a._1 == b._1 && a._2.distance(b._2) <= distance
+          b <- B if a._1 == b._1 && a._2.distance(b._2) <= distance 
         } yield {
           (b._2, Set(a._2))
         }
@@ -255,6 +253,9 @@ object DistanceJoinV2 {
         results.toIterator
       }
     }
+
+    //results.map(_._2).foreach{println}
+
     val pairs = results.flatMap(_._1).reduceByKey(_ ++ _)
 
     pairs

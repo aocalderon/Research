@@ -3,6 +3,7 @@
 EPSILON=$1
 CAPACITY=$2
 FRACTION=$3
+LEVELS=$4
 MU=3
 INDEXTYPE="quadtree"
 GRIDTYPE="quadtree"
@@ -38,5 +39,5 @@ spark-submit --conf spark.default.parallelism=${PARALLELISM} \
     --input $DATASET \
     --epsilon $EPSILON --mu $MU --partitions $PARTITIONS --parallelism $PARALLELISM \
     --gridtype $GRIDTYPE --indextype $INDEXTYPE \
-    --capacity $CAPACITY --fraction $FRACTION --debug
-#    --conf $LISTENER \
+    --capacity $CAPACITY --fraction $FRACTION --levels $LEVELS \
+    --debug

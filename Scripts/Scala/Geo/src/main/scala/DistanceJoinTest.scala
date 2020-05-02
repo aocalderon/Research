@@ -154,11 +154,11 @@ object DistanceJoinTest{
     val fraction = params.fraction()
     val levels   = params.levels()
     val capacity = params.capacity()
+    val circlesRDD = new CircleRDD(centersRDD, distance / 2.0)
+    circlesRDD.spatialPartitioning(pointsRDD.getPartitioner)
     
     val stagePB1 = "DJOIN|Partition based"
     val partitionBased1 = timer(header(stagePB1)){
-      val circlesRDD = new CircleRDD(centersRDD, distance / 2.0)
-      circlesRDD.spatialPartitioning(pointsRDD.getPartitioner)
       val partitionBased = DistanceJoinV2.partitionBasedQuadtreeV2(pointsRDD, circlesRDD, capacity, fraction, levels)
       partitionBased.cache()
       n(stagePB1, partitionBased.count())
