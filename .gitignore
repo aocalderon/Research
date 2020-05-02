@@ -103,6 +103,18 @@ Scripts/Scala/ICPE/.metals/
 #/.bloop/
 #/.metals/
 
+Scripts/Scala/DistanceJoin/target/*
+Scripts/Scala/DistanceJoin/project/*
+Scripts/Scala/DistanceJoin/.idea/*
+Scripts/Scala/DistanceJoin/.idea/workspace.xml
+Scripts/Scala/DistanceJoin/.ensime
+Scripts/Scala/DistanceJoin/.ensime_cache/*
+Scripts/Scala/DistanceJoin/.classpath
+Scripts/Scala/DistanceJoin/.project
+Scripts/Scala/DistanceJoin/.settings/*
+Scripts/Scala/DistanceJoin/.bloop/
+Scripts/Scala/DistanceJoin/.metals/
+
 Scripts/Scala/Join/target/*
 Scripts/Scala/Join/project/*
 Scripts/Scala/Join/.idea/*
