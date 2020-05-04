@@ -146,35 +146,38 @@ object DistanceJoinTest{
       }
     }
 
-    // GeoSpark distance join...
-    val fraction = params.fraction()
-    val levels   = params.levels()
-    val capacity = params.capacity()
-
-    val stageB = "DJOIN|GeoSpark"
-    val geospark = timer{header(stageB)}{
-      val geospark = DistanceJoin.join(leftRDD, rightRDD)
-      geospark.cache()
-      n(stageB, geospark.count())
-      geospark
-    }
-    
-    // Partition based Quadtree ...
-    val stageIB = "DJOIN|Index based"
-    val indexBased = timer(header(stageIB)){
-      val indexBased = DistanceJoin.indexBased(leftRDD, rightRDD)
-      indexBased.cache()
-      n(stageIB, indexBased.count())
-      indexBased
-    }
-
-    // Partition based Quadtree ...
-    val stagePB = "DJOIN|Partition based"
-    val partitionBased = timer(header(stagePB)){
-      val partitionBased = DistanceJoin.partitionBased(leftRDD, rightRDD, capacity, fraction, levels)
-      partitionBased.cache()
-      n(stagePB, partitionBased.count())
-      partitionBased
+    val pairs = params.method() match {
+      case "None" => { // GeoSpark distance join...
+        val stageB = "DJOIN|GeoSpark"
+        timer{header(stageB)}{
+          val geospark = DistanceJoin.join(leftRDD, rightRDD)
+          geospark.cache()
+          n(stageB, geospark.count())
+          geospark
+        }
+      }
+      case "Index" => { // Index based Quadtree ...
+        val stageIB = "DJOIN|Index based"
+        timer(header(stageIB)){
+          val indexBased = DistanceJoin.indexBased(leftRDD, rightRDD)
+          indexBased.cache()
+          n(stageIB, indexBased.count())
+          indexBased
+        }
+      }
+      case "Partition" => { // Partition based Quadtree ...
+        val fraction = params.fraction()
+        val levels   = params.levels()
+        val capacity = params.capacity()
+        val stagePB = "DJOIN|Partition based"
+        timer(header(stagePB)){
+          val partitionBased = DistanceJoin.partitionBased(leftRDD, rightRDD,
+            capacity, fraction, levels)
+          partitionBased.cache()
+          n(stagePB, partitionBased.count())
+          partitionBased
+        }
+      }
     }
 
     //
@@ -200,9 +203,7 @@ object DistanceJoinTest{
         }
       }
 
-      saveJoin(geospark, "/tmp/edgesGJoin.wkt")
-      saveJoin(indexBased, "/tmp/edgesIBJoin.wkt")
-      saveJoin(partitionBased, "/tmp/edgesPBJoin.wkt")
+      saveJoin(pairs, s"/tmp/edges${params.method()}.wkt")
     }
     
     logger.info("Closing session...")
@@ -223,6 +224,7 @@ class DistanceJoinTestConf(args: Seq[String]) extends ScallopConf(args) {
   val fraction   = opt[Double](default = Some(0.01))
   val levels     = opt[Int](default = Some(5))
   val partitions = opt[Int](default = Some(256))
+  val method     = opt[String](default = Some("None"))
   val debug      = opt[Boolean](default = Some(false))
 
   verify()
