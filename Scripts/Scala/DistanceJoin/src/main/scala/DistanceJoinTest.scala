@@ -171,8 +171,7 @@ object DistanceJoinTest{
         val capacity = params.capacity()
         val stagePB = "DJOIN|Partition based"
         timer(header(stagePB)){
-          val partitionBased = DistanceJoin.partitionBased(leftRDD, rightRDD,
-            capacity, fraction, levels)
+          val partitionBased = DistanceJoin.partitionBased(leftRDD, rightRDD, distance)
           partitionBased.cache()
           n(stagePB, partitionBased.count())
           partitionBased
@@ -194,9 +193,16 @@ object DistanceJoinTest{
         }
 
         save{filename}{
-          DistanceJoin.groupByRightPoint(rdd).map{ case(point, points) =>
+          val toSave = timer{"Grouping"}{
+            val toSave =  DistanceJoin.groupByRightPoint(rdd)
+            toSave.cache()
+            n("Grouping", toSave.count())
+            toSave
+          }
+         toSave.map{ case(point, points) =>
             val pointWKT  = s"${point.toText}\t${point.getUserData.toString}"
-            val pids = points.map(_.getUserData.toString.split("\t").head.toInt).sorted.mkString(" ")
+            val pids = points.map(_.getUserData.toString.split("\t").head.toInt)
+              .toList.sorted.mkString(" ")
 
             s"$pointWKT\t$pids\n"
           }.collect.sorted

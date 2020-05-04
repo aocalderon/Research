@@ -1,13 +1,15 @@
 #!/bin/bash
 
-EPSILON=$1
-CAPACITY=$2
-FRACTION=$3
-LEVELS=$4
+METHOD=$1
+EPSILON=$2
+PARTITIONS=$3
+CAPACITY=$4
+FRACTION=$5
+LEVELS=$6
 MU=3
 
 SPARK_JARS=$HOME/Spark/2.4/jars/
-CLASS_JAR=$HOME/Research/Scripts/Scala/Geo/target/scala-2.11/geotester_2.11-0.1.jar
+CLASS_JAR=$HOME/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar
 CLASS_NAME=edu.ucr.dblab.djoin.DistanceJoinTest
 LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
 
@@ -16,8 +18,7 @@ EXECUTORS=12
 CORES=9
 DMEMORY=10g
 EMEMORY=30g
-PARTITIONS=256
-PARALLELISM=256
+PARALLELISM=$PARTITIONS
 
 POINTS=/user/acald013/Datasets/Test/Points_N50K_E40.tsv
 CENTERS=/user/acald013/Datasets/Test/Centers_N50K_E40.tsv
@@ -40,5 +41,4 @@ spark-submit \
     --partitions $PARTITIONS \
     --epsilon $EPSILON --mu $MU \
     --capacity $CAPACITY --fraction $FRACTION --levels $LEVELS \
-    --debug
-
+    --method $METHOD --debug

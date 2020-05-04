@@ -6,6 +6,7 @@ import org.apache.spark.storage.StorageLevel
 import org.datasyslab.geospark.spatialRDD.{SpatialRDD, CircleRDD}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.enums.IndexType
+import org.datasyslab.geospark.geometryObjects.Circle
 import com.vividsolutions.jts.geom.{Geometry, Envelope, Coordinate, Point, Polygon, MultiPolygon}
 import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel}
 import com.vividsolutions.jts.index.SpatialIndex
@@ -23,7 +24,7 @@ object DistanceJoin {
 
   def join(leftRDD: SpatialRDD[Point],
     rightRDD: CircleRDD,
-    usingIndex: Boolean = false,
+    usingIndex: Boolean = true,
     considerBoundary: Boolean = true): RDD[(Point, Point)] = {
 
     JoinQuery.DistanceJoinQueryFlat(leftRDD, rightRDD, usingIndex, considerBoundary).rdd
@@ -74,8 +75,71 @@ object DistanceJoin {
 
   def partitionBased(leftRDD: SpatialRDD[Point],
     rightRDD: CircleRDD,
+    distance: Double,
     capacity: Int = 200,
-    fraction: Double = 0.1,
+    fraction: Double = 0.025,
+    levels: Int = 5,
+    buildOnSpatialPartitionedRDD: Boolean = true)
+    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
+
+    var timer = System.currentTimeMillis()
+    leftRDD.buildIndex(IndexType.QUADTREE, buildOnSpatialPartitionedRDD)
+    leftRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
+    rightRDD.spatialPartitioning(leftRDD.getPartitioner)
+    rightRDD.buildIndex(IndexType.QUADTREE, buildOnSpatialPartitionedRDD)
+    rightRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
+    logger.info(s"Indexing time: ${getTime(timer)}")
+
+    val left = leftRDD.indexedRDD.rdd
+    val right = rightRDD.indexedRDD.rdd
+
+    left.zipPartitions(right, preservesPartitioning = true){ (leftIt, rightIt) =>
+      if(!leftIt.hasNext || !rightIt.hasNext){
+        List.empty[(Point, Point)].toIterator
+      } else {
+        // Building the local quadtree...
+        val leftIndex = leftIt.next()
+        val rightIndex = rightIt.next()
+        val global_gid = TaskContext.getPartitionId
+        val gridEnvelope = global_grids(global_gid)
+        val grid = new QuadRectangle(gridEnvelope)
+        val quadtree = new StandardQuadTree[Int](grid, 0, capacity, levels)
+        val rightPoints = rightIndex.query(gridEnvelope).asScala.map(_.asInstanceOf[Circle])
+        val sampleSize = (fraction * rightPoints.length).toInt
+        val sample = Random.shuffle(rightPoints).take(sampleSize)
+        sample.foreach { p =>
+          quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), 1)
+        }
+        quadtree.assignPartitionIds()
+        val local_grids = quadtree.getLeafZones.asScala.map{ _.getEnvelope }
+
+        val pairs = local_grids.flatMap{ local_grid =>
+          val A = leftIndex.query(local_grid).asScala.map(_.asInstanceOf[Point])
+          val B = rightIndex.query(local_grid).asScala.map(_.asInstanceOf[Circle]).distinct
+
+          for{
+            a <- A
+            b <- B if {
+              val x = a.getX - b.getCenterPoint.x
+              val y = a.getY - b.getCenterPoint.y
+              val x2 = x * x
+              val y2 = y * y
+              val dist = math.sqrt(x2 + y2)
+              dist <= distance
+            }
+          } yield {
+            (circle2point(b), a)
+          }
+        }
+        pairs.toIterator
+      }
+    }
+  }
+
+  def partitionBasedLegacy(leftRDD: SpatialRDD[Point],
+    rightRDD: CircleRDD,
+    capacity: Int = 200,
+    fraction: Double = 0.025,
     levels: Int = 5)
     (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
 
@@ -138,11 +202,6 @@ object DistanceJoin {
         }
         val timer3 = getTime(timer)
 
-        //
-        //A.map(b => s"${b._2.toText()}\t${b._2.getUserData.toString}\t${b._1}")
-        //  .foreach{ println }
-        //B.map(b => s"${b._2.toText()}\t${b._2.getUserData.toString}\t${b._1}")
-        //  .foreach{ println }
 
         // Report results...
         timer = System.currentTimeMillis()
@@ -154,11 +213,6 @@ object DistanceJoin {
           (b._2, a._2)
         }
         val timer4 = getTime(timer)
-
-        //
-        //pairs
-        // .map{ case(b, a) => s"${b.toText()}\t${b.getUserData}\t${a.toText()}\t${a.getUserData}" }
-        // .foreach{ println }
         
         val stats = f"${envelope2polygon(gridEnvelope).toText()}\t" +
         f"${global_gid}\t${nPointsA}\t${nCirclesB}\t" +
@@ -190,15 +244,15 @@ object DistanceJoin {
 
   def round(number: Double): Double = Math.round(number * scale) / scale;
 
-  def groupByLeftPoint(pairs: RDD[(Point, Point)]): RDD[(Point, Vector[Point])] = {
+  def groupByLeftPoint(pairs: RDD[(Point, Point)]): RDD[(Point, Set[Point])] = {
     pairs.map{ case(l, r) =>
-      (l, Vector(r))
+      (l, Set(r))
     }.reduceByKey {_ ++ _}
   }
 
-  def groupByRightPoint(pairs: RDD[(Point, Point)]): RDD[(Point, Vector[Point])] = {
+  def groupByRightPoint(pairs: RDD[(Point, Point)]): RDD[(Point, Set[Point])] = {
     pairs.map{ case(l, r) =>
-      (r, Vector(l))
+      (r, Set(l))
     }.reduceByKey {_ ++ _}
   }
 
