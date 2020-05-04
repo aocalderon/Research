@@ -22,7 +22,7 @@ import com.vividsolutions.jts.geom.GeometryFactory
 import com.vividsolutions.jts.index.SpatialIndex
 import com.vividsolutions.jts.index.quadtree._
 import edu.ucr.dblab.Utils._
-import edu.ucr.dblab.djoin.DistanceJoin.{geofactory, round}
+import edu.ucr.dblab.djoin.DistanceJoin.{geofactory, round, circle2point}
 
 object DistanceJoinTest{
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -85,10 +85,12 @@ object DistanceJoinTest{
       val centersRaw = spark.read.schema(centersSchema)
         .option("delimiter", "\t").option("header", false)
         .csv(params.centers()).as[ST_Center]
-        .rdd
+        .rdd.zipWithIndex()
       val centersRDD = new SpatialRDD[Point]
-      val centers = centersRaw.map{ center =>
-        geofactory.createPoint(new Coordinate(center.x, center.y))
+      val centers = centersRaw.map{ case(center, id) =>
+        val c = geofactory.createPoint(new Coordinate(center.x, center.y))
+        c.setUserData(s"$id")
+        c
       }
       centersRDD.setRawSpatialRDD(centers)
       centersRDD.analyze()
@@ -99,35 +101,43 @@ object DistanceJoinTest{
     }
 
     val stage = "Partitions done"
-    val npartitions = timer{stage}{
-      pointsRDD.spatialPartitioning(GridType.QUADTREE, params.partitions())
-      pointsRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
-      val npartitions = pointsRDD.getPartitioner.getGrids.size()
-      n(stage, pointsRDD.spatialPartitionedRDD.count())
-      npartitions
+    val distance = (params.epsilon() / 2.0) + params.precision()
+    val (leftRDD, rightRDD) = timer{stage}{
+      val leftRDD  = centersRDD
+      val rightRDD = new CircleRDD(pointsRDD, distance)
+
+      leftRDD.spatialPartitioning(GridType.QUADTREE, params.partitions())
+      leftRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+      n(stage, leftRDD.spatialPartitionedRDD.count())
+
+      rightRDD.spatialPartitioning(leftRDD.getPartitioner)
+      rightRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
+      n(stage, rightRDD.spatialPartitionedRDD.count())
+      (leftRDD, rightRDD)
     }
-    implicit val grids = pointsRDD.partitionTree.getLeafZones.asScala.toVector
+    implicit val grids = leftRDD.partitionTree.getLeafZones.asScala.toVector
       .sortBy(_.partitionId).map(_.getEnvelope)
+    val npartitions = grids.size
 
     //
     debug{
-      save("/tmp/edgesPoints.wkt"){
-        pointsRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex({ case(index, iter) =>
+      save("/tmp/edgesLeft.wkt"){
+        leftRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex({ case(index, iter) =>
           iter.map{ point =>
             s"${point.toText()}\t${point.getUserData.toString}\t${index}\n"
           }}, preservesPartitioning = true)
           .collect().sorted
       }
-      save("/tmp/edgesCenters.wkt"){
-        //centersRDD.spatialPartitioning(pointsRDD.getPartitioner)
-        centersRDD.rawSpatialRDD.rdd.mapPartitionsWithIndex({ case(index, iter) =>
-          iter.map{ point =>
-            s"${point.toText()}\t${index}\n"
+      save("/tmp/edgesRight.wkt"){
+        rightRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex({ case(index, iter) =>
+          iter.map{ circle =>
+            val center = circle2point(circle)
+            s"${center.toText()}\t${center.getUserData.toString()}\t${index}\n"
           }}, preservesPartitioning = true)
           .collect().sorted
       }
       save{"/tmp/edgesGGrids.wkt"}{
-        pointsRDD.partitionTree.getLeafZones.asScala.map{ z =>
+        leftRDD.partitionTree.getLeafZones.asScala.map{ z =>
           val id = z.partitionId
           val e = z.getEnvelope
           val p = DistanceJoin.envelope2polygon(e)
@@ -137,27 +147,31 @@ object DistanceJoinTest{
     }
 
     // GeoSpark distance join...
-    val distance = params.epsilon() + params.precision()
+    val fraction = params.fraction()
+    val levels   = params.levels()
+    val capacity = params.capacity()
+
     val stageB = "DJOIN|GeoSpark"
     val geospark = timer{header(stageB)}{
-      val circlesRDD = new CircleRDD(centersRDD, distance / 2.0)
-      circlesRDD.spatialPartitioning(pointsRDD.getPartitioner)
-      val geospark = DistanceJoin.join(pointsRDD, circlesRDD)
+      val geospark = DistanceJoin.join(leftRDD, rightRDD)
       geospark.cache()
       n(stageB, geospark.count())
       geospark
     }
     
     // Partition based Quadtree ...
-    val fraction = params.fraction()
-    val levels   = params.levels()
-    val capacity = params.capacity()
-    val circlesRDD = new CircleRDD(centersRDD, distance / 2.0)
-    circlesRDD.spatialPartitioning(pointsRDD.getPartitioner)
-    
+    val stageIB = "DJOIN|Index based"
+    val indexBased = timer(header(stageIB)){
+      val indexBased = DistanceJoin.indexBased(leftRDD, rightRDD)
+      indexBased.cache()
+      n(stageIB, indexBased.count())
+      indexBased
+    }
+
+    // Partition based Quadtree ...
     val stagePB = "DJOIN|Partition based"
     val partitionBased = timer(header(stagePB)){
-      val partitionBased = DistanceJoin.partitionBased(pointsRDD, circlesRDD, capacity, fraction, levels)
+      val partitionBased = DistanceJoin.partitionBased(leftRDD, rightRDD, capacity, fraction, levels)
       partitionBased.cache()
       n(stagePB, partitionBased.count())
       partitionBased
@@ -166,8 +180,18 @@ object DistanceJoinTest{
     //
     debug{
       def saveJoin(rdd: RDD[(Point, Point)], filename: String): Unit = {
+        val rdd2 = rdd.map{ case(l, r) =>
+          val l2 = geofactory.createPoint(new Coordinate(round(l.getX), round(l.getY)))
+          l2.setUserData(l.getUserData)
+
+          val r2 = geofactory.createPoint(new Coordinate(round(r.getX), round(r.getY)))
+          r2.setUserData(r.getUserData)
+
+          (l2, r2)
+        }
+
         save{filename}{
-          DistanceJoin.groupByLeftPoint(rdd).map{ case(point, points) =>
+          DistanceJoin.groupByRightPoint(rdd).map{ case(point, points) =>
             val pointWKT  = s"${point.toText}\t${point.getUserData.toString}"
             val pids = points.map(_.getUserData.toString.split("\t").head.toInt).sorted.mkString(" ")
 
@@ -176,16 +200,8 @@ object DistanceJoinTest{
         }
       }
 
-      val geospark2 = geospark.map{ case(l, r) =>
-        val l2 = geofactory.createPoint(new Coordinate(round(l.getX), round(l.getY)))
-        l2.setUserData(l.getUserData)
-
-        val r2 = geofactory.createPoint(new Coordinate(round(r.getX), round(r.getY)))
-        r2.setUserData(r.getUserData)
-
-        (l2, r2)
-      }
-      saveJoin(geospark2, "/tmp/edgesGJoin.wkt")
+      saveJoin(geospark, "/tmp/edgesGJoin.wkt")
+      saveJoin(indexBased, "/tmp/edgesIBJoin.wkt")
       saveJoin(partitionBased, "/tmp/edgesPBJoin.wkt")
     }
     
