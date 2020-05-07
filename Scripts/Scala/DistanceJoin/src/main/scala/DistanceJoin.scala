@@ -33,6 +33,31 @@ object DistanceJoin {
       }
   }
 
+  def baseline(leftRDD: SpatialRDD[Point],
+    rightRDD: CircleRDD)
+    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
+
+    val left = leftRDD.spatialPartitionedRDD.rdd
+    val right = rightRDD.spatialPartitionedRDD.rdd
+    val distance = right.take(1).head.getRadius
+
+    left.zipPartitions(right, preservesPartitioning = true){ (pointsIt, circlesIt) =>
+      if(!pointsIt.hasNext || !circlesIt.hasNext){
+        List.empty[(Point, Point)].toIterator
+      } else {
+        val A = pointsIt.toVector
+        val B = circlesIt.toVector.map(circle2point)
+        val pairs = for{
+          a <- A
+          b <- B if a.distance(b) <= distance
+        } yield {
+          (b, a)
+        }
+        pairs.toIterator
+      }
+    }
+  }
+
   def indexBased(leftRDD: SpatialRDD[Point],
     rightRDD: CircleRDD,
     buildOnSpatialPartitionedRDD: Boolean = true)

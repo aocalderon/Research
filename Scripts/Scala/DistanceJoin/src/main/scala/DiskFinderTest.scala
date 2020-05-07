@@ -129,7 +129,6 @@ object DiskFinderTest{
       (centersRaw, nCenters)
     }
     
-
     //
     debug{
       save("/tmp/edgesPoints.wkt"){
@@ -162,13 +161,13 @@ object DiskFinderTest{
     rightRDD.spatialPartitioning(leftRDD.getPartitioner)
 
     val pairs = params.method() match {
-      case "None" => { // GeoSpark distance join...
-        val stageB = "DJOIN|GeoSpark"
+      case "Baseline" => { // Baseline distance join...
+        val stageB = "DJOIN|Baseline"
         timer{header(stageB)}{
-          val geospark = DistanceJoin.join(leftRDD, rightRDD)
-          geospark.cache()
-          n(stageB, geospark.count())
-          geospark
+          val baseline = DistanceJoin.baseline(leftRDD, rightRDD)
+          baseline.cache()
+          n(stageB, baseline.count())
+          baseline
         }
       }
       case "Index" => { // Index based Quadtree ...
@@ -214,7 +213,7 @@ object DiskFinderTest{
             n("Grouping", toSave.count())
             toSave
           }
-         toSave.map{ case(point, points) =>
+          toSave.map{ case(point, points) =>
             val pointWKT  = s"${point.toText}\t${point.getUserData.toString}"
             val pids = points.map(_.getUserData.toString.split("\t").head.toInt)
               .toList.sorted.mkString(" ")
