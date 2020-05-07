@@ -20,8 +20,8 @@ DMEMORY=10g
 EMEMORY=30g
 PARALLELISM=$PARTITIONS
 
-POINTS=/user/acald013/Datasets/Test/Points_N50K_E40.tsv
-#POINTS=/user/acald013/Datasets/Test/Points_N10K_E10.tsv
+#POINTS=/user/acald013/Datasets/Test/Points_N50K_E40.tsv
+POINTS=/user/acald013/Datasets/Test/Points_N10K_E10.tsv
 #POINTS=$HOME/Research/Datasets/Test/Points_N20_E1.tsv
 #POINTS=$HOME/Research/Datasets/Test/Points_N1K_E20.tsv
 
@@ -37,4 +37,4 @@ spark-submit \
     --partitions $PARTITIONS \
     --epsilon $EPSILON --mu $MU \
     --capacity $CAPACITY --fraction $FRACTION --levels $LEVELS \
-    --method $METHOD 
+    --method $METHOD --debug
