@@ -46,10 +46,6 @@ object DiskFinderTestDebug{
       .getOrCreate()
     GeoSparkSQLRegistrator.registerAll(spark)
     import spark.implicits._
-    def header(msg: String): String = s"GeoTesterRDD|$msg|Time"
-    def n(msg:String, count: Long): Unit = {
-      logger.info(s"GeoTesterRDD|$msg|Load|$count")
-    }
     implicit val conf = spark.sparkContext.getConf
     def getConf(property: String)(implicit conf: SparkConf): String = conf.get(property)
     val appId: String = if(getConf("spark.master").contains("local")){
@@ -58,6 +54,10 @@ object DiskFinderTestDebug{
       getConf("spark.app.id").takeRight(4)
     }
     logger.info("Starting session... Done!")
+    def header(msg: String): String = s"DiskFinderTestDebug|$appId|$msg|Time"
+    def n(msg:String, count: Long): Unit = {
+      logger.info(s"DiskFinderTestDebug|$appId|$msg|Load|$count")
+    }
 
     val (pointsRaw, nPoints) = timer{"Reading points"}{
       val pointsSchema = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
