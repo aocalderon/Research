@@ -3,7 +3,7 @@
 N=$1
 MS=( 'Geospark' 'Baseline' 'Index' 'Partition' )
 ES=( 10 20 30 40 )
-PS=( 4 8 16 32 )
+PS=( 4 8 16 32)
 
 for i in $(seq 1 $N); do
     for m in "${MS[@]}"; do

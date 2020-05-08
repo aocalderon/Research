@@ -13,7 +13,7 @@ CLASS_JAR=$HOME/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_
 CLASS_NAME=edu.ucr.dblab.djoin.DiskFinderTestDebug
 LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
 
-MASTER=local[7]
+MASTER=local[8]
 PARALLELISM=$PARTITIONS
 
 #POINTS=file://$HOME/Datasets/Test/Points_N50K_E40.tsv
