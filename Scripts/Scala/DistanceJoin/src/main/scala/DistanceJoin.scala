@@ -1,5 +1,6 @@
 package edu.ucr.dblab.djoin
 
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.rdd.RDD
 import org.apache.spark.TaskContext
 import org.apache.spark.storage.StorageLevel
@@ -24,7 +25,7 @@ object DistanceJoin {
 
   def join(leftRDD: SpatialRDD[Point],
     rightRDD: CircleRDD,
-    usingIndex: Boolean = true,
+    usingIndex: Boolean = false,
     considerBoundary: Boolean = true): RDD[(Point, Point)] = {
 
     JoinQuery.DistanceJoinQueryFlat(leftRDD, rightRDD, usingIndex, considerBoundary).rdd
@@ -35,7 +36,7 @@ object DistanceJoin {
 
   def baseline(leftRDD: SpatialRDD[Point],
     rightRDD: CircleRDD)
-    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
+    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point) ] = {
 
     val left = leftRDD.spatialPartitionedRDD.rdd
     val right = rightRDD.spatialPartitionedRDD.rdd
@@ -58,10 +59,47 @@ object DistanceJoin {
     }
   }
 
+  def baselineDebug(leftRDD: SpatialRDD[Point],
+    rightRDD: CircleRDD)
+    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point) ] = {
+
+    val left = leftRDD.spatialPartitionedRDD.rdd
+    val right = rightRDD.spatialPartitionedRDD.rdd
+    val distance = right.take(1).head.getRadius
+
+    //
+    val appId = SparkSession.builder().getOrCreate().sparkContext.applicationId
+
+    left.zipPartitions(right, preservesPartitioning = true){ (pointsIt, circlesIt) =>
+      if(!pointsIt.hasNext || !circlesIt.hasNext){
+        List.empty[(Point, Point)].toIterator
+      } else {
+        val A = pointsIt.toVector
+        val B = circlesIt.toVector.map(circle2point)
+        val pairs = for{
+          a <- A
+          b <- B if a.distance(b) <= distance
+        } yield {
+          (b, a)
+        }
+
+        //
+        val global_gid = TaskContext.getPartitionId
+        val local_gid = 0
+        val nA = A.size
+        val nB = B.size
+        val ops = nA * nB
+        println(s"DEBUG|Baseline|$global_gid|$local_gid|$nA|$nB|$ops|$appId")
+
+        pairs.toIterator
+      }
+    }
+  }
+
   def indexBased(leftRDD: SpatialRDD[Point],
     rightRDD: CircleRDD,
     buildOnSpatialPartitionedRDD: Boolean = true)
-    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
+    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point) ] = {
 
     leftRDD.buildIndex(IndexType.QUADTREE, buildOnSpatialPartitionedRDD)
     leftRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
@@ -98,6 +136,63 @@ object DistanceJoin {
     results
   }
 
+  def indexBasedDebug(leftRDD: SpatialRDD[Point],
+    rightRDD: CircleRDD,
+    buildOnSpatialPartitionedRDD: Boolean = true)
+    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point) ] = {
+    
+    //
+    val appId = SparkSession.builder().getOrCreate().sparkContext.applicationId
+
+    var timer = System.currentTimeMillis()
+    leftRDD.buildIndex(IndexType.QUADTREE, buildOnSpatialPartitionedRDD)
+    leftRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
+    val left = leftRDD.indexedRDD.rdd
+    left.count
+    val right = rightRDD.spatialPartitionedRDD.rdd
+    right.count
+    val distance = right.take(1).head.getRadius
+    println(s"TIMER|Index|Indexing|$appId|${getTime(timer)}")
+
+    left.zipPartitions(right, preservesPartitioning = true){ (indexIt, circlesIt) =>
+      if(!indexIt.hasNext || !circlesIt.hasNext){
+        List.empty[(Point, Point)].toIterator
+      } else {
+        val index: SpatialIndex = indexIt.next()
+        val B = circlesIt.toVector.zipWithIndex
+        var results = new scala.collection.mutable.ListBuffer[(Point, Point)]()
+
+        var timer = System.currentTimeMillis()
+        for{ circle <- B }{
+          val A = index.query(circle._1.getEnvelopeInternal).asScala.map(_.asInstanceOf[Point])
+
+          //
+          val global_gid = TaskContext.getPartitionId
+          val local_gid = circle._2
+          val nA = A.size
+          val nB = 1
+          val ops = nA * nB
+          println(s"DEBUG|Index|$global_gid|$local_gid|$nA|$nB|$ops|$appId")
+
+          for{ center <- A }{
+            val x = circle._1.getCenterPoint.x - center.getX
+            val y = circle._1.getCenterPoint.y - center.getY
+            val x2 = x * x
+            val y2 = y * y
+            val dist = math.sqrt(x2 + y2)
+            if(dist <= distance){
+              val point = circle2point(circle._1)
+              results += ((point, center))
+            }
+          }
+        }
+        println(s"TIMER|Index|Joining|$appId|${getTime(timer)}")
+
+        results.toIterator
+      }
+    }
+  }
+
   def partitionBased(leftRDD: SpatialRDD[Point],
     rightRDD: CircleRDD,
     distance: Double,
@@ -107,13 +202,11 @@ object DistanceJoin {
     buildOnSpatialPartitionedRDD: Boolean = true)
     (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
 
-    var timer = System.currentTimeMillis()
     leftRDD.buildIndex(IndexType.QUADTREE, buildOnSpatialPartitionedRDD)
     leftRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
     rightRDD.spatialPartitioning(leftRDD.getPartitioner)
     rightRDD.buildIndex(IndexType.QUADTREE, buildOnSpatialPartitionedRDD)
     rightRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
-    logger.info(s"Indexing time: ${getTime(timer)}")
 
     val left = leftRDD.indexedRDD.rdd
     val right = rightRDD.indexedRDD.rdd
@@ -156,6 +249,89 @@ object DistanceJoin {
             (circle2point(b), a)
           }
         }
+        pairs.toIterator
+      }
+    }
+  }
+
+  def partitionBasedDebug(leftRDD: SpatialRDD[Point],
+    rightRDD: CircleRDD,
+    distance: Double,
+    capacity: Int = 200,
+    fraction: Double = 0.025,
+    levels: Int = 5,
+    buildOnSpatialPartitionedRDD: Boolean = true)
+    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
+
+    //
+    val appId = SparkSession.builder().getOrCreate().sparkContext.applicationId
+
+    var timer = System.currentTimeMillis()
+    leftRDD.buildIndex(IndexType.QUADTREE, buildOnSpatialPartitionedRDD)
+    leftRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
+    val left = leftRDD.indexedRDD.rdd
+    left.count
+    println(s"TIMER|Partition|Indexing Centers|$appId|${getTime(timer)}")
+
+    timer = System.currentTimeMillis()
+    rightRDD.spatialPartitioning(leftRDD.getPartitioner)
+    rightRDD.buildIndex(IndexType.QUADTREE, buildOnSpatialPartitionedRDD)
+    rightRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
+    val right = rightRDD.indexedRDD.rdd
+    right.count
+    println(s"TIMER|Partition|Indexing Points|$appId|${getTime(timer)}")
+
+    left.zipPartitions(right, preservesPartitioning = true){ (leftIt, rightIt) =>
+      if(!leftIt.hasNext || !rightIt.hasNext){
+        List.empty[(Point, Point)].toIterator
+      } else {
+        // Building the local quadtree...
+        timer = System.currentTimeMillis()
+        val leftIndex = leftIt.next()
+        val rightIndex = rightIt.next()
+        val global_gid = TaskContext.getPartitionId
+        val gridEnvelope = global_grids(global_gid)
+        val grid = new QuadRectangle(gridEnvelope)
+        val quadtree = new StandardQuadTree[Int](grid, 0, capacity, levels)
+        val data = leftIndex.query(gridEnvelope).asScala.map(_.asInstanceOf[Point])
+        val sampleSize = (fraction * data.length).toInt
+        val sample = Random.shuffle(data).take(sampleSize)
+        sample.foreach { p =>
+          quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), 1)
+        }
+        quadtree.assignPartitionIds()
+        val local_grids = quadtree.getLeafZones.asScala
+        println(s"TIMER|Partition|Creating Quadtree|$appId|${getTime(timer)}")
+
+        timer = System.currentTimeMillis()
+        val pairs = local_grids.flatMap{ local_grid =>
+          val A = leftIndex.query(local_grid.getEnvelope).asScala.map(_.asInstanceOf[Point])
+          val B = rightIndex.query(local_grid.getEnvelope).asScala.map(_.asInstanceOf[Circle]).distinct
+
+          //
+          val global_gid = TaskContext.getPartitionId
+          val local_gid = local_grid.partitionId
+          val nA = A.size
+          val nB = B.size
+          val ops = nA * nB
+          println(s"DEBUG|Partition|$global_gid|$local_gid|$nA|$nB|$ops|$appId")
+
+          for{
+            a <- A
+            b <- B if {
+              val x = a.getX - b.getCenterPoint.x
+              val y = a.getY - b.getCenterPoint.y
+              val x2 = x * x
+              val y2 = y * y
+              val dist = math.sqrt(x2 + y2)
+              dist <= distance
+            }
+          } yield {
+            (circle2point(b), a)
+          }
+        }
+        println(s"TIMER|Partition|Joining|$appId|${getTime(timer)}")
+
         pairs.toIterator
       }
     }
