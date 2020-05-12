@@ -36,7 +36,7 @@ object DiskFinderTest{
 
   def main(args: Array[String]): Unit = {
     logger.info("Starting session...")
-    implicit val params = new DistanceJoinTestConf(args)
+    implicit val params = new DiskFinderTestConf(args)
     val appName = s"DistanceJoinTest"
     implicit val debugOn  = params.debug()
     implicit val spark = SparkSession.builder()
@@ -46,10 +46,6 @@ object DiskFinderTest{
       .getOrCreate()
     GeoSparkSQLRegistrator.registerAll(spark)
     import spark.implicits._
-    def header(msg: String): String = s"GeoTesterRDD|$msg|Time"
-    def n(msg:String, count: Long): Unit = {
-      logger.info(s"GeoTesterRDD|$msg|Load|$count")
-    }
     implicit val conf = spark.sparkContext.getConf
     def getConf(property: String)(implicit conf: SparkConf): String = conf.get(property)
     val appId: String = if(getConf("spark.master").contains("local")){
@@ -57,6 +53,8 @@ object DiskFinderTest{
     } else {
       getConf("spark.app.id").takeRight(4)
     }
+    def header(msg: String): String = s"$appName|$appId|$msg|Time"
+    def n(msg:String, count: Long): Unit = logger.info(s"$appId|$msg|Load|$count")
     logger.info("Starting session... Done!")
 
     val (pointsRaw, nPoints) = timer{"Reading points"}{
@@ -159,38 +157,28 @@ object DiskFinderTest{
     val rightRDD = new CircleRDD(pointsRDD, distance)
     rightRDD.analyze()
     rightRDD.spatialPartitioning(leftRDD.getPartitioner)
+    val method = params.method() 
 
-    val pairs = params.method() match {
-      case "Baseline" => { // Baseline distance join...
-        val stageB = "DJOIN|Baseline"
-        timer{header(stageB)}{
-          val baseline = DistanceJoin.baseline(leftRDD, rightRDD)
-          baseline.cache()
-          n(stageB, baseline.count())
-          baseline
+    val stageJoin = s"DJOIN|$method"
+    val pairs = timer{ header(stageJoin) }{
+      val joined = method match {
+        case "Geospark" => { // GeoSpark distance join...
+          DistanceJoin.join(leftRDD, rightRDD)
+        }
+        case "Baseline" => { // Baseline distance join...
+          DistanceJoin.baseline(leftRDD, rightRDD)
+        }
+        case "Index" => { // Index based Quadtree ...
+          DistanceJoin.indexBased(leftRDD, rightRDD)
+        }
+        case "Partition" => { // Partition based Quadtree ...
+          val threshold = params.threshold()
+          DistanceJoin.partitionBased(leftRDD, rightRDD, threshold)
         }
       }
-      case "Index" => { // Index based Quadtree ...
-        val stageIB = "DJOIN|Index based"
-        timer(header(stageIB)){
-          val indexBased = DistanceJoin.indexBased(leftRDD, rightRDD)
-          indexBased.cache()
-          n(stageIB, indexBased.count())
-          indexBased
-        }
-      }
-      case "Partition" => { // Partition based Quadtree ...
-        val fraction = params.fraction()
-        val levels   = params.levels()
-        val capacity = params.capacity()
-        val stagePB = "DJOIN|Partition based"
-        timer(header(stagePB)){
-          val partitionBased = DistanceJoin.partitionBased(leftRDD, rightRDD, distance)
-          partitionBased.cache()
-          n(stagePB, partitionBased.count())
-          partitionBased
-        }
-      }
+      joined.cache()
+      n(stageJoin, joined.count())
+      joined
     }
 
     //
@@ -257,6 +245,7 @@ class DiskFinderTestConf(args: Seq[String]) extends ScallopConf(args) {
   val epsilon    = opt[Double](default = Some(10.0))
   val mu         = opt[Int](default = Some(2))
   val precision  = opt[Double](default = Some(0.001))
+  val threshold  = opt[Int](default = Some(10000))
   val capacity   = opt[Int](default = Some(20))
   val fraction   = opt[Double](default = Some(0.01))
   val levels     = opt[Int](default = Some(5))

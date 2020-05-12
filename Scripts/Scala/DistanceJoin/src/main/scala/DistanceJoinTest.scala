@@ -166,12 +166,9 @@ object DistanceJoinTest{
         }
       }
       case "Partition" => { // Partition based Quadtree ...
-        val fraction = params.fraction()
-        val levels   = params.levels()
-        val capacity = params.capacity()
         val stagePB = "DJOIN|Partition based"
         timer(header(stagePB)){
-          val partitionBased = DistanceJoin.partitionBased(leftRDD, rightRDD, distance)
+          val partitionBased = DistanceJoin.partitionBased(leftRDD, rightRDD)
           partitionBased.cache()
           n(stagePB, partitionBased.count())
           partitionBased
