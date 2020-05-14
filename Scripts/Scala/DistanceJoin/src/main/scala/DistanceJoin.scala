@@ -150,22 +150,22 @@ object DistanceJoin {
         List.empty[(Point, Point)].toIterator
       } else {
         val index: SpatialIndex = indexIt.next()
-        val B = circlesIt
+        val B = circlesIt.toVector
+
+        //
+        for(b <- B){
+          val nA = index.query(b.getEnvelopeInternal).size
+          val global_gid = TaskContext.getPartitionId
+          val local_gid = b.getUserData.toString().split("\t")(0)
+          val nB = 1
+          val ops = nA * nB
+          logger.info(s"DEBUG|Index|$global_gid|$local_gid|$nA|$nB|$ops|$appId")
+        }
+
         val pairs = for{
           b <- B
           a <- index.query(b.getEnvelopeInternal).asScala.map(_.asInstanceOf[Point])
-          if {
-
-            //
-            val global_gid = TaskContext.getPartitionId
-            val local_gid = b.getUserData.toString().split("\t")(0)
-            val nA = index.query(b.getEnvelopeInternal).size
-            val nB = 1
-            val ops = nA * nB
-            logger.info(s"DEBUG|Index|$global_gid|$local_gid|$nA|$nB|$ops|$appId")
-
-            isWithin(a, b)
-          }
+          if { isWithin(a, b) }
         } yield{
           (circle2point(b), a)
         }
@@ -293,21 +293,21 @@ object DistanceJoin {
         if(n < threshold){
           // If there are not enoguh points, let's use the index-base strategy...
           timer = System.currentTimeMillis()
+
+          //
+          for(b <- B){
+            val nA = leftIndex.query(b.getEnvelopeInternal).size
+            val global_gid = TaskContext.getPartitionId
+            val local_gid = b.getUserData.toString().split("\t")(0)
+            val nB = 1
+            val ops = nA * nB
+            logger.info(s"DEBUG|PartitionI|$global_gid|$local_gid|$nA|$nB|$ops|$appId")
+          }
+
           val pairs = for{
             b <- B
             a <- leftIndex.query(b.getEnvelopeInternal).asScala.map(_.asInstanceOf[Point])
-            if {
-
-              //
-              val global_gid = TaskContext.getPartitionId
-              val local_gid = b.getUserData.toString().split("\t")(0)
-              val nA = leftIndex.query(b.getEnvelopeInternal).size
-              val nB = 1
-              val ops = nA * nB
-              logger.info(s"DEBUG|Partition|$global_gid|$local_gid|$nA|$nB|$ops|$appId")
-
-              isWithin(a, b)
-            }
+            if { isWithin(a, b) }
           } yield{
             (circle2point(b), a)
           }
@@ -335,7 +335,7 @@ object DistanceJoin {
             val nA = A.size
             val nB = B.size
             val ops = nA * nB
-            logger.info(s"DEBUG|Partition|$global_gid|$local_gid|$nA|$nB|$ops|$appId")
+            logger.info(s"DEBUG|PartitionP|$global_gid|$local_gid|$nA|$nB|$ops|$appId")
 
             for{
               a <- A
