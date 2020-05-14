@@ -168,7 +168,7 @@ object DiskFinderTestDebug{
           DistanceJoin.join(leftRDD, rightRDD)
         }
         case "Baseline" => { // Baseline distance join...
-          DistanceJoin.baseline(leftRDD, rightRDD)
+          DistanceJoin.baselineDebug(leftRDD, rightRDD)
         }
         case "Index" => { // Index based Quadtree ...
           DistanceJoin.indexBasedDebug(leftRDD, rightRDD)
