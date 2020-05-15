@@ -28,4 +28,4 @@ spark-submit \
     --partitions "$PARTITIONS" \
     --epsilon "$EPSILON" --mu "$MU" \
     --threshold "$THRESHOLD" \
-    --method "$METHOD"
+    --method "$METHOD" --capacity 1
