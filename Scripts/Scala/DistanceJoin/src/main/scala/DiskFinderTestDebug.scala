@@ -37,7 +37,7 @@ object DiskFinderTestDebug{
   def main(args: Array[String]): Unit = {
     logger.info("Starting session...")
     implicit val params = new DiskFinderTestDebugConf(args)
-    val appName = s"DistanceJoinTest"
+    val appName = s"DiskFinderTestDebug"
     implicit val debugOn  = params.debug()
     implicit val spark = SparkSession.builder()
       .appName(appName)
@@ -53,11 +53,9 @@ object DiskFinderTestDebug{
     } else {
       getConf("spark.app.id").takeRight(4)
     }
+    def header(msg: String): String = s"$appName|$appId|$msg|Time"
+    def n(msg:String, count: Long): Unit = logger.info(s"$appName|$appId|$msg|Load|$count") 
     logger.info("Starting session... Done!")
-    def header(msg: String): String = s"DiskFinderTestDebug|$appId|$msg|Time"
-    def n(msg:String, count: Long): Unit = {
-      logger.info(s"DiskFinderTestDebug|$appId|$msg|Load|$count")
-    }
 
     val (pointsRaw, nPoints) = timer{"Reading points"}{
       val pointsSchema = ScalaReflection.schemaFor[ST_Point].dataType.asInstanceOf[StructType]
@@ -250,10 +248,10 @@ class DiskFinderTestDebugConf(args: Seq[String]) extends ScallopConf(args) {
   val mu         = opt[Int](default = Some(2))
   val precision  = opt[Double](default = Some(0.001))
   val threshold  = opt[Int](default = Some(10000))
+  val lgrids     = opt[Int](default = Some(4))
   val capacity   = opt[Int](default = Some(20))
   val fraction   = opt[Double](default = Some(0.01))
   val levels     = opt[Int](default = Some(5))
-  val lgrids     = opt[Int](default = Some(4))
   val partitions = opt[Int](default = Some(256))
   val method     = opt[String](default = Some("None"))
   val debug      = opt[Boolean](default = Some(false))

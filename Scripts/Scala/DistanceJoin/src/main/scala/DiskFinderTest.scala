@@ -37,7 +37,7 @@ object DiskFinderTest{
   def main(args: Array[String]): Unit = {
     logger.info("Starting session...")
     implicit val params = new DiskFinderTestConf(args)
-    val appName = s"DistanceJoinTest"
+    val appName = s"DiskFinderTest"
     implicit val debugOn  = params.debug()
     implicit val spark = SparkSession.builder()
       .appName(appName)
@@ -54,7 +54,7 @@ object DiskFinderTest{
       getConf("spark.app.id").takeRight(4)
     }
     def header(msg: String): String = s"$appName|$appId|$msg|Time"
-    def n(msg:String, count: Long): Unit = logger.info(s"$appId|$msg|Load|$count")
+    def n(msg:String, count: Long): Unit = logger.info(s"$appName|$appId|$msg|Load|$count")
     logger.info("Starting session... Done!")
 
     val (pointsRaw, nPoints) = timer{"Reading points"}{
