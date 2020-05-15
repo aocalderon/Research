@@ -175,7 +175,9 @@ object DiskFinderTestDebug{
         }
         case "Partition" => { // Partition based Quadtree ...
           val threshold = params.threshold()
-          DistanceJoin.partitionBasedDebug(leftRDD, rightRDD, threshold)
+          val lgrids = params.lgrids()
+          val fraction = params.fraction()
+          DistanceJoin.partitionBasedDebug(leftRDD, rightRDD, threshold, lgrids)
         }
       }
       joined.cache()
@@ -251,6 +253,7 @@ class DiskFinderTestDebugConf(args: Seq[String]) extends ScallopConf(args) {
   val capacity   = opt[Int](default = Some(20))
   val fraction   = opt[Double](default = Some(0.01))
   val levels     = opt[Int](default = Some(5))
+  val lgrids     = opt[Int](default = Some(4))
   val partitions = opt[Int](default = Some(256))
   val method     = opt[String](default = Some("None"))
   val debug      = opt[Boolean](default = Some(false))
