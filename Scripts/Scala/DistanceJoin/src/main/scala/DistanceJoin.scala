@@ -179,9 +179,10 @@ object DistanceJoin {
   def partitionBased(leftRDD: SpatialRDD[Point],
     rightRDD: CircleRDD,
     threshold: Int = 100000,
-    capacity: Int = 100,
+    lgrids: Int = 4,
+    capacity: Int = 10,
     fraction: Double = 0.025,
-    levels: Int = 5,
+    levels: Int = 8,
     buildOnSpatialPartitionedRDD: Boolean = true)
     (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
 
@@ -220,18 +221,23 @@ object DistanceJoin {
           pairs.toIterator
         } else {
           // If there are enough points, let's use the partition-based strategy...
-          val sampleSize = (fraction * n).toInt
-          val sample = Random.shuffle(A.union(B)).take(sampleSize)
-          val quadtree = new StandardQuadTree[Int](grid, 0, capacity, levels)
+          /*
+          val data = A.union(B)
+          val sampleSize = (0.01 * data.length).toInt
+          val sample = Random.shuffle(data).take(sampleSize)
+          val quadtree = new StandardQuadTree[Int](grid, 0, data.length / 4, levels)
           sample.foreach { p =>
             quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), 1)
           }
           quadtree.assignPartitionIds()
-          val local_grids = quadtree.getLeafZones.asScala.map{ _.getEnvelope }
+          val local_grids = quadtree.getLeafZones.asScala
+           */
+
+          val local_grids = getLocalGrids(gridEnvelope, lgrids)
 
           val pairs = local_grids.flatMap{ local_grid =>
-            val A = leftIndex.query(local_grid).asScala.map(_.asInstanceOf[Point])
-            val B = rightIndex.query(local_grid).asScala.map(_.asInstanceOf[Circle]).toSet
+            val A = leftIndex.query(local_grid.envelope).asScala.map(_.asInstanceOf[Point])
+            val B = rightIndex.query(local_grid.envelope).asScala.map(_.asInstanceOf[Circle]).toSet
 
             for{
               a <- A
@@ -249,9 +255,10 @@ object DistanceJoin {
   def partitionBasedDebug(leftRDD: SpatialRDD[Point],
     rightRDD: CircleRDD,
     threshold: Int = 100000,
+    lgrids: Int = 4,
     capacity: Int = 10,
     fraction: Double = 0.025,
-    levels: Int = 5,
+    levels: Int = 8,
     buildOnSpatialPartitionedRDD: Boolean = true)
     (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
 
@@ -316,22 +323,27 @@ object DistanceJoin {
         } else {
           // If there are enough points, let's use the partition-based strategy...
           timer = System.currentTimeMillis()
-          val sampleSize = (fraction * n).toInt
-          val sample = Random.shuffle(A.union(B)).take(sampleSize)
-          val quadtree = new StandardQuadTree[Int](grid, 0, capacity, levels)
+          /*
+          val data = A.union(B)
+          val sampleSize = (0.01 * data.length).toInt
+          val sample = Random.shuffle(data).take(sampleSize)
+          val quadtree = new StandardQuadTree[Int](grid, 0, data.length / 4, levels)
           sample.foreach { p =>
             quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), 1)
           }
           quadtree.assignPartitionIds()
           val local_grids = quadtree.getLeafZones.asScala
+           */
+
+          val local_grids = getLocalGrids(gridEnvelope, lgrids)
 
           val pairs = local_grids.flatMap{ local_grid =>
-            val A = leftIndex.query(local_grid.getEnvelope).asScala.map(_.asInstanceOf[Point])
-            val B = rightIndex.query(local_grid.getEnvelope).asScala.map(_.asInstanceOf[Circle]).toSet
+            val A = leftIndex.query(local_grid.envelope).asScala.map(_.asInstanceOf[Point])
+            val B = rightIndex.query(local_grid.envelope).asScala.map(_.asInstanceOf[Circle]).toSet
 
             //
             val global_gid = TaskContext.getPartitionId
-            val local_gid = local_grid.partitionId
+            val local_gid = local_grid.id
             val nA = A.size
             val nB = B.size
             val ops = nA * nB
@@ -349,6 +361,26 @@ object DistanceJoin {
         }
       }
     }
+  }
+
+  case class LocalGrid(envelope: Envelope, id: Int)
+  def getLocalGrids(boundary: Envelope, n: Int = 4): Seq[LocalGrid] = {
+    val intervalX = (boundary.getMaxX() - boundary.getMinX()) / n;
+    val intervalY = (boundary.getMaxY() - boundary.getMinY()) / n;
+
+    val lgrids = for{
+      i <- 0 to n
+      j <- 0 to n
+    } yield {
+      new Envelope(
+        boundary.getMinX() + intervalX * i,
+        boundary.getMinX() + intervalX * (i + 1),
+        boundary.getMinY() + intervalY * j,
+        boundary.getMinY() + intervalY * (j + 1)
+      )
+    }
+
+    lgrids.zipWithIndex.map(l => LocalGrid(l._1, l._2))
   }
 
   def partitionBasedLegacy(leftRDD: SpatialRDD[Point],
