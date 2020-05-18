@@ -18,8 +18,8 @@ LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
 MASTER="local[$CORES]"
 
 #POINTS=file://$HOME/Datasets/Test/Points_N50K_E40.tsv
-POINTS=file://$HOME/Research/Datasets/Test/Points_N10K_E10.tsv
-#POINTS=file://$HOME/Research/Datasets/Test/Points_N1K_E20.tsv
+#POINTS=file://$HOME/Research/Datasets/Test/Points_N10K_E10.tsv
+POINTS=file://$HOME/Research/Datasets/Test/Points_N1K_E20.tsv
 #POINTS=file://$HOME/Research/Datasets/Test/Points_N20_E1.tsv
 
 spark-submit \
@@ -33,4 +33,4 @@ spark-submit \
     --threshold "$THRESHOLD" \
     --method "$METHOD" \
     --capacity "$CAPACITY" --fraction "$FRACTION" \
-    --lgrids "$LGRIDS"
+    --lgrids "$LGRIDS" --debug

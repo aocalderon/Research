@@ -90,27 +90,31 @@
     \end{frame}
 }
 
-\begin{frame}{Experiment setup...}
-    \begin{itemize}
-        \item Dataset: LA\_50K (time interval 320).
-        \item $\mu=3$, varying values for $\varepsilon$ (from 10m to 40m).
-        \item Global partitioning: Quadtree, number of partitions: 256 ($\approx 750$ grids).
-        \item Local partitioning: Quadtree, min number of elements per node: 200, size of sample: 2\%.
-        \item Number of nodes: 12, cores per node: 9 (108 total cores).
-        \item Average of 15 runs.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Results...}
+\begin{frame}{Points...}
     \centering
-    \includegraphics[width=0.85\textwidth]{figures/ByEpsilon}
+    \includegraphics[width=0.65\textwidth]{figures/01-Points}
+\end{frame}
+\begin{frame}{Global Partitions...}
+    \centering
+    \includegraphics[width=0.65\textwidth]{figures/02-GPartitions}
+\end{frame}
+\begin{frame}{Centers...}
+    \centering
+    \includegraphics[width=0.65\textwidth]{figures/03-Centers}
 \end{frame}
 
-\begin{frame}{What's next...}
-    \begin{itemize}
-        \item Integrate the partition-base code in our algorithm...
-        \item Validate and re-run previous benchmarks...
-    \end{itemize}
+\begin{frame}{Global Parititons...}
+    \centering
+    \includegraphics[width=0.65\textwidth]{figures/04-GPartitions}
+\end{frame}
+
+\begin{frame}{Partition 0...}
+    \centering
+    \includegraphics[width=0.65\textwidth]{figures/05-Partition0}
+\end{frame}
+\begin{frame}{Local Quadtree...}
+    \centering
+    \includegraphics[width=0.65\textwidth]{figures/06-LQuadtree}
 \end{frame}
 
 \end{document}

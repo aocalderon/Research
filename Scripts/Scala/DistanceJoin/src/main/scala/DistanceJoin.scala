@@ -323,19 +323,28 @@ object DistanceJoin {
         } else {
           // If there are enough points, let's use the partition-based strategy...
           timer = System.currentTimeMillis()
-          /*
-          val data = A.union(B)
-          val sampleSize = (0.01 * data.length).toInt
-          val sample = Random.shuffle(data).take(sampleSize)
-          val quadtree = new StandardQuadTree[Int](grid, 0, data.length / 4, levels)
-          sample.foreach { p =>
-            quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), 1)
+          
+          val local_grids = if(true){
+            val data = A.union(B)
+            val sampleSize = (fraction * data.length).toInt
+            val sample = Random.shuffle(data).take(sampleSize)
+            val quadtree = new StandardQuadTree[Int](grid, 0, capacity, levels)
+            sample.foreach { p =>
+              quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), 1)
+            }
+            quadtree.assignPartitionIds()
+            quadtree.getLeafZones.asScala.map(leaf => LocalGrid(leaf.getEnvelope, leaf.partitionId))
+          } else {
+            getLocalGrids(gridEnvelope, lgrids)
           }
-          quadtree.assignPartitionIds()
-          val local_grids = quadtree.getLeafZones.asScala
-           */
 
-          val local_grids = getLocalGrids(gridEnvelope, lgrids)
+          //
+          val ggid = TaskContext.getPartitionId
+          save{s"/tmp/edgesLGrids_${ggid}.wkt"}{
+            local_grids.map{ l =>
+              s"${envelope2polygon(l.envelope).toText()}\t${ggid}\t${l.id}\n"
+            }
+          }
 
           val pairs = local_grids.flatMap{ local_grid =>
             val A = leftIndex.query(local_grid.envelope).asScala.map(_.asInstanceOf[Point])
@@ -369,8 +378,8 @@ object DistanceJoin {
     val intervalY = (boundary.getMaxY() - boundary.getMinY()) / n;
 
     val lgrids = for{
-      i <- 0 to n
-      j <- 0 to n
+      i <- 0 until  n
+      j <- 0 until  n
     } yield {
       new Envelope(
         boundary.getMinX() + intervalX * i,
