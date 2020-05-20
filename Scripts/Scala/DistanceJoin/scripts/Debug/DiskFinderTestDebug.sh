@@ -4,9 +4,9 @@ METHOD=$1
 EPSILON=$2
 PARTITIONS=${3:-1}
 CORES=${4:-1}
-LGRIDS=${5:-5}
-CAPACITY=${6:-10}
-FRACTION=${7:-0.025}
+CAPACITY=${5:-10}
+FRACTION=${6:-0.025}
+LEVELS=${7:-5}
 MU=${8:-3}
 THRESHOLD=${9:-100000}
 
@@ -31,6 +31,4 @@ spark-submit \
     --partitions "$PARTITIONS" \
     --epsilon "$EPSILON" --mu "$MU" \
     --threshold "$THRESHOLD" \
-    --method "$METHOD" \
-    --capacity "$CAPACITY" --fraction "$FRACTION" \
-    --lgrids "$LGRIDS" --debug
+    --capacity "$CAPACITY" --fraction "$FRACTION" --levels "$LEVELS" --method "$METHOD" --debug
