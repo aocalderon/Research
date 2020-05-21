@@ -176,7 +176,8 @@ object DiskFinderTestDebug{
           val capacity = params.capacity()
           val fraction = params.fraction()
           val levels = params.levels()
-          DistanceJoin.partitionBasedDebug(leftRDD, rightRDD, threshold, capacity, fraction, levels)
+          val lparts = params.lparts()
+          DistanceJoin.partitionBasedDebug(leftRDD, rightRDD, threshold, lparts, capacity, fraction, levels)
         }
       }
       joined.cache()
@@ -253,7 +254,7 @@ class DiskFinderTestDebugConf(args: Seq[String]) extends ScallopConf(args) {
   val fraction   = opt[Double](default = Some(0.01))
   val levels     = opt[Int](default = Some(5))
   val partitions = opt[Int](default = Some(256))
-  val lparts     = opt[Int](default = Some(16))
+  val lparts     = opt[Int](default = Some(0))
   val method     = opt[String](default = Some("None"))
   val debug      = opt[Boolean](default = Some(false))
 

@@ -17,6 +17,7 @@ import scala.util.Random
 import edu.ucr.dblab.Utils._
 
 case class LocalGrid(envelope: Envelope, id: Int)
+case class PointLGrid(point: Point, lgrid: Int)
 
 object DistanceJoin {
   val scale = 1000.0
@@ -180,74 +181,87 @@ object DistanceJoin {
 
   def partitionBased(leftRDD: SpatialRDD[Point],
     rightRDD: CircleRDD,
-    threshold: Int = 100000,
-    lgrids: Int = 4,
+    threshold: Int = 1000,
+    lparts: Int = 0,
     capacity: Int = 10,
     fraction: Double = 0.025,
-    levels: Int = 8,
+    levels: Int = 5,
     buildOnSpatialPartitionedRDD: Boolean = true)
     (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
 
-    leftRDD.buildIndex(IndexType.QUADTREE, buildOnSpatialPartitionedRDD)
-    leftRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
     rightRDD.spatialPartitioning(leftRDD.getPartitioner)
-    rightRDD.buildIndex(IndexType.QUADTREE, buildOnSpatialPartitionedRDD)
-    rightRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
 
-    val left = leftRDD.indexedRDD.rdd
-    val right = rightRDD.indexedRDD.rdd
+    val left = leftRDD.spatialPartitionedRDD.rdd
+    val right = rightRDD.spatialPartitionedRDD.rdd
 
     left.zipPartitions(right, preservesPartitioning = true){ (leftIt, rightIt) =>
       if(!leftIt.hasNext || !rightIt.hasNext){
         List.empty[(Point, Point)].toIterator
       } else {
         // Building the local quadtree...
-        val leftIndex = leftIt.next()
-        val rightIndex = rightIt.next()
         val global_gid = TaskContext.getPartitionId
         val gridEnvelope = global_grids(global_gid)
         val grid = new QuadRectangle(gridEnvelope)
-        val A = leftIndex.query(gridEnvelope).asScala.map(_.asInstanceOf[Point])
-        val B = rightIndex.query(gridEnvelope).asScala.map(_.asInstanceOf[Circle])
-        val n = A.size + B.size
+        val A = leftIt.toVector
+        val B = rightIt.toVector
+        val p = A.size * B.size
 
-        if(n < threshold){
-          // If there are not enoguh points, let's use the index-base strategy...
+        if(p < threshold){
+          // If there are not enoguh points, let's use the baseline strategy...
           val pairs = for{
-            b <- B
-            a <- leftIndex.query(b.getEnvelopeInternal).asScala.map(_.asInstanceOf[Point])
-                 if isWithin(a, b)
+            a <- A
+            b <- B if isWithin(a, b)
           } yield{
             (circle2point(b), a)
           }
           pairs.toIterator
         } else {
-          // If there are enough points, let's use the partition-based strategy...
-          /*
-          val data = A.union(B)
-          val sampleSize = (0.01 * data.length).toInt
-          val sample = Random.shuffle(data).take(sampleSize)
-          val quadtree = new StandardQuadTree[Int](grid, 0, data.length / 4, levels)
-          sample.foreach { p =>
-            quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), 1)
-          }
-          quadtree.assignPartitionIds()
-          val local_grids = quadtree.getLeafZones.asScala
-           */
-
-          val local_grids = getLocalGrids(gridEnvelope, lgrids)
-
-          val pairs = local_grids.flatMap{ local_grid =>
-            val A = leftIndex.query(local_grid.envelope).asScala.map(_.asInstanceOf[Point])
-            val B = rightIndex.query(local_grid.envelope).asScala.map(_.asInstanceOf[Circle]).toSet
-
-            for{
-              a <- A
-              b <- B if isWithin(a, b)
-            } yield {
-              (circle2point(b), a)
+          val quadtree = if(lparts == 0){ // Create a quadtree by capacity, fraction and levels...
+            val data = A.union(B)
+            val sampleSize = (fraction * data.length).toInt
+            val sample = Random.shuffle(data).take(sampleSize)
+            val quadtree = new StandardQuadTree[Int](grid, 0, capacity, levels)
+            sample.foreach { p =>
+              quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), 1)
             }
+            quadtree.assignPartitionIds()
+            quadtree
+          } else { // Create a quadtre by number of partitions...
+            val data = A.union(B)
+            val n = data.length
+            val levels = lparts
+            val fraction = 1 - computeFraction(n.toDouble)
+            val sampleSize = fraction * n
+            val sample = Random.shuffle(data).take(sampleSize.toInt)
+            val capacity = if(sample.size <= 2 * lparts){
+              lparts
+            } else {
+              sample.size / lparts
+            }
+            val quadtree = new StandardQuadTree[Int](grid, 0, capacity, levels)
+            sample.foreach { p =>
+              quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), 1)
+            }
+            quadtree.assignPartitionIds()
+            quadtree
           }
+
+          val L = A.flatMap{ a =>
+            val r = new QuadRectangle(a.getEnvelopeInternal)
+            quadtree.findZones(r).asScala.map(z => (a, z.partitionId))
+          }
+
+          val R = B.flatMap{ b =>
+            val r = new QuadRectangle(b.getEnvelopeInternal)
+            quadtree.findZones(r).asScala.map(z => (b, z.partitionId))
+          }
+
+          val pairs = for{
+              a <- L
+              b <- R if a._2 == b._2 & isWithin(a._1, b._1)
+            } yield {
+              (circle2point(b._1), a._1)
+            }
           pairs.toIterator
         }
       }

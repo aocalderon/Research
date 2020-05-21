@@ -4,11 +4,13 @@ METHOD=$1
 EPSILON=$2
 PARTITIONS=${3:-1}
 CORES=${4:-1}
-LGRIDS=${5:-5}
-CAPACITY=${6:-10}
-FRACTION=${7:-0.025}
-MU=${8:-3}
+CAPACITY=${5:-10}
+FRACTION=${6:-0.025}
+LEVELS=${7:-5}
+LPARTS=${8:-10}
 THRESHOLD=${9:-100000}
+
+MU=3
 
 SPARK_JARS=$HOME/Spark/2.4/jars/
 CLASS_JAR=$HOME/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar
@@ -31,6 +33,5 @@ spark-submit \
     --partitions "$PARTITIONS" \
     --epsilon "$EPSILON" --mu "$MU" \
     --threshold "$THRESHOLD" \
-    --method "$METHOD" \
-    --capacity "$CAPACITY" --fraction "$FRACTION" \
-    --lgrids "$LGRIDS" --debug
+    --method "$METHOD" --lparts "$LPARTS" \
+    --capacity "$CAPACITY" --fraction "$FRACTION" --levels "$LEVELS" --debug
