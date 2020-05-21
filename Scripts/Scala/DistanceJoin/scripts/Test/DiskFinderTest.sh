@@ -34,4 +34,4 @@ spark-submit \
     --epsilon "$EPSILON" --mu "$MU" \
     --threshold "$THRESHOLD" \
     --method "$METHOD" --lparts "$LPARTS" \
-    --capacity "$CAPACITY" --fraction "$FRACTION" --levels "$LEVELS" --debug
+    --capacity "$CAPACITY" --fraction "$FRACTION" --levels "$LEVELS"
