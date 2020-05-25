@@ -16,7 +16,6 @@ import scala.collection.JavaConverters._
 import scala.util.Random
 import edu.ucr.dblab.Utils._
 
-case class LocalGrid(envelope: Envelope, id: Int)
 case class PointLGrid(point: Point, lgrid: Int)
 
 object DistanceJoin {
@@ -185,11 +184,9 @@ object DistanceJoin {
     lparts: Int = 0,
     capacity: Int = 10,
     fraction: Double = 0.025,
-    levels: Int = 5,
+    levels: Int = 6,
     buildOnSpatialPartitionedRDD: Boolean = true)
     (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
-
-    rightRDD.spatialPartitioning(leftRDD.getPartitioner)
 
     val left = leftRDD.spatialPartitionedRDD.rdd
     val right = rightRDD.spatialPartitionedRDD.rdd
@@ -217,9 +214,12 @@ object DistanceJoin {
           pairs.toIterator
         } else {
           val quadtree = if(lparts == 0){ // Create a quadtree by capacity, fraction and levels...
+            logger.info("DEBUG|By Capacity")
             val data = A.union(B)
-            val sampleSize = (fraction * data.length).toInt
-            val sample = Random.shuffle(data).take(sampleSize)
+            val n = data.length
+            val fraction = 1 - computeFraction(n.toDouble)
+            val sampleSize = fraction * n
+            val sample = Random.shuffle(data).take(sampleSize.toInt)
             val quadtree = new StandardQuadTree[Int](grid, 0, capacity, levels)
             sample.foreach { p =>
               quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), 1)
@@ -227,9 +227,9 @@ object DistanceJoin {
             quadtree.assignPartitionIds()
             quadtree
           } else { // Create a quadtre by number of partitions...
+            logger.info("DEBUG|By N Partitions")
             val data = A.union(B)
             val n = data.length
-            val levels = lparts
             val fraction = 1 - computeFraction(n.toDouble)
             val sampleSize = fraction * n
             val sample = Random.shuffle(data).take(sampleSize.toInt)
@@ -270,96 +270,65 @@ object DistanceJoin {
 
   def partitionBasedDebug(leftRDD: SpatialRDD[Point],
     rightRDD: CircleRDD,
-    threshold: Int = 5000,
+    threshold: Int = 1000,
     lparts: Int = 0,
     capacity: Int = 10,
     fraction: Double = 0.025,
-    levels: Int = 5,
+    levels: Int = 6,
     buildOnSpatialPartitionedRDD: Boolean = true)
     (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
 
     //
     val appId = SparkSession.builder().getOrCreate().sparkContext.applicationId
-
     var timer = System.currentTimeMillis()
-    leftRDD.buildIndex(IndexType.QUADTREE, buildOnSpatialPartitionedRDD)
-    leftRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
-    val left = leftRDD.indexedRDD.rdd
-    left.count
-    logger.info(s"TIMER|Partition|Indexing Centers|$appId|${getTime(timer)}")
-
-    timer = System.currentTimeMillis()
-    rightRDD.spatialPartitioning(leftRDD.getPartitioner)
-    rightRDD.buildIndex(IndexType.QUADTREE, buildOnSpatialPartitionedRDD)
-    rightRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
-    val right = rightRDD.indexedRDD.rdd
-    right.count
-    logger.info(s"TIMER|Partition|Indexing Points|$appId|${getTime(timer)}")
+    val left = leftRDD.spatialPartitionedRDD.rdd
+    val right = rightRDD.spatialPartitionedRDD.rdd
+    logger.info(s"TIMER|Partition|Getting points and centers|$appId|-1|${getTime(timer)}")
 
     left.zipPartitions(right, preservesPartitioning = true){ (leftIt, rightIt) =>
       if(!leftIt.hasNext || !rightIt.hasNext){
         List.empty[(Point, Point)].toIterator
       } else {
         // Building the local quadtree...
-        timer = System.currentTimeMillis()
-        val leftIndex = leftIt.next()
-        val rightIndex = rightIt.next()
+
+        // Setting local variables...
         val global_gid = TaskContext.getPartitionId
         val gridEnvelope = global_grids(global_gid)
         val grid = new QuadRectangle(gridEnvelope)
-        val A = leftIndex.query(gridEnvelope).asScala.map(_.asInstanceOf[Point])
-        val B = rightIndex.query(gridEnvelope).asScala.map(_.asInstanceOf[Circle])
-        val n = A.size * B.size
-        logger.info(s"TIMER|Partition|Setting variables|$appId|${getTime(timer)}")
+        val A = leftIt.toVector
+        val B = rightIt.toVector
+        val p = A.size * B.size
 
-        logger.info(s"THRESHOLD|Partition|$global_gid|$n|$threshold|$appId")
-        if(n < threshold){
-          // If there are not enoguh points, let's use the index-base strategy...
-          timer = System.currentTimeMillis()
-
-          //
-          for(b <- B){
-            val nA = leftIndex.query(b.getEnvelopeInternal).size
-            val global_gid = TaskContext.getPartitionId
-            val local_gid = b.getUserData.toString().split("\t")(0)
-            val nB = 1
-            val ops = nA * nB
-            logger.info(s"DEBUG|PartitionI|$global_gid|$local_gid|$nA|$nB|$ops|$appId")
-          }
-
+        if(p < threshold){
+          // If there are not enoguh points, let's use the baseline strategy...
+          val timer = System.currentTimeMillis()
           val pairs = for{
-            b <- B
-            a <- leftIndex.query(b.getEnvelopeInternal).asScala.map(_.asInstanceOf[Point])
-            if { isWithin(a, b) }
+            a <- A
+            b <- B if isWithin(a, b)
           } yield{
             (circle2point(b), a)
           }
-          logger.info(s"TIMER|Partition|Joining by index|$appId|${getTime(timer)}")
+          logger.info(s"OPS|Partition|Join by baseline|$global_gid|0|${A.size}|${B.size}|$appId")
+          logger.info(s"TIMER|Partition|Join by baseline|$appId|$global_gid|${getTime(timer)}")
+          
           pairs.toIterator
         } else {
-          // If there are enough points, let's use the partition-based strategy...
-          timer = System.currentTimeMillis()
-
-          val local_grids = if(lparts == 0){
-            logger.info(s"QUADTREE|Partition|$global_gid|$capacity|$fraction|$levels|$appId")
+          var timer = System.currentTimeMillis
+          val quadtree = if(lparts == 0){ // Create a quadtree by capacity, fraction and levels...
             val data = A.union(B)
-            val sampleSize = (fraction * data.length).toInt
-            val sample = Random.shuffle(data).take(sampleSize)
+            val n = data.length
+            val sampleSize = fraction * n
+            val sample = Random.shuffle(data).take(sampleSize.toInt)
             val quadtree = new StandardQuadTree[Int](grid, 0, capacity, levels)
             sample.foreach { p =>
               quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), 1)
             }
             quadtree.assignPartitionIds()
-            val local_grids = quadtree.getLeafZones.asScala.map{ leaf =>
-              LocalGrid(leaf.getEnvelope, leaf.partitionId)
-            }
-
-            local_grids
-          } else {
-            logger.info(s"QUADTREE|Partition|$global_gid|$lparts|$appId")
+            logger.info(f"QUADTREE|By C|$appId|$global_gid|$capacity|$fraction%1.2f|$levels|${A.size}|${B.size}|$n|${sample.size}|${quadtree.getLeafZones.size}")
+            quadtree
+          } else { // Create a quadtre by number of partitions...
             val data = A.union(B)
             val n = data.length
-            val levels = lparts
             val fraction = 1 - computeFraction(n.toDouble)
             val sampleSize = fraction * n
             val sample = Random.shuffle(data).take(sampleSize.toInt)
@@ -373,64 +342,61 @@ object DistanceJoin {
               quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), 1)
             }
             quadtree.assignPartitionIds()
-            val local_grids = quadtree.getLeafZones.asScala.map{ leaf =>
-              LocalGrid(leaf.getEnvelope, leaf.partitionId)
-            }
-
-            local_grids
+            logger.info(f"QUADTREE|By P|$appId|$global_gid|$capacity|$fraction%1.2f|$levels|$n|${sample.size}|${quadtree.getLeafZones.size}")
+            quadtree
           }
+          logger.info(s"TIMER|Partition|Getting quadtree|$appId|$global_gid|${getTime(timer)}")
 
           //
-          val ggid = TaskContext.getPartitionId
-          save{s"/tmp/edgesLGrids_${ggid}.wkt"}{
-            local_grids.map{ l =>
-              s"${envelope2polygon(l.envelope).toText()}\t${ggid}\t${l.id}\n"
+          save{s"/tmp/edgesLGrids_${global_gid}.wkt"}{
+            quadtree.getLeafZones.asScala.map{ l =>
+              s"${envelope2polygon(l.getEnvelope).toText()}\t${global_gid}\t${l.partitionId}\n"
             }
           }
 
-          val pairs = local_grids.flatMap{ local_grid =>
-            val A = leftIndex.query(local_grid.envelope).asScala.map(_.asInstanceOf[Point])
-            val B = rightIndex.query(local_grid.envelope).asScala.map(_.asInstanceOf[Circle]).toSet
+          timer = System.currentTimeMillis
+          val L = A.flatMap{ a =>
+            val r = new QuadRectangle(a.getEnvelopeInternal)
+            quadtree.findZones(r).asScala.map(z => (a, z.partitionId))
+          }
+          logger.info(s"TIMER|Partition|Feeding points|$appId|$global_gid|${getTime(timer)}")
 
-            //
-            val global_gid = TaskContext.getPartitionId
-            val local_gid = local_grid.id
-            val nA = A.size
-            val nB = B.size
-            val ops = nA * nB
-            logger.info(s"DEBUG|PartitionP|$global_gid|$local_gid|$nA|$nB|$ops|$appId")
+          timer = System.currentTimeMillis
+          val R = B.flatMap{ b =>
+            val r = new QuadRectangle(b.getEnvelopeInternal)
+            quadtree.findZones(r).asScala.map(z => (b, z.partitionId))
+          }
+          logger.info(s"TIMER|Partition|Feeding centers|$appId|$global_gid|${getTime(timer)}")
 
-            for{
-              a <- A
-              b <- B if isWithin(a, b)
+          timer = System.currentTimeMillis
+          val pairs = for{
+              a <- L
+              b <- R if a._2 == b._2 & isWithin(a._1, b._1)
             } yield {
-              (circle2point(b), a)
+              (circle2point(b._1), a._1)
             }
+          logger.info(s"TIMER|Partition|Join by partitions|$appId|${getTime(timer)}")
+          val data = L.groupBy(_._2).map(l => (l._1.toInt, ("A", l._2.size))).toList ++
+          R.groupBy(_._2).map(r => (r._1.toInt, ("B", r._2.size))).toList
+          data.groupBy(_._1).foreach{ case(k, v) =>
+            val arr = v.map(_._2)
+            val value = arr.size match {
+              case 2 => arr.sortBy(_._1).map(_._2).mkString("|")
+              case 1 => {
+                val h = arr.head
+                if(h._1 == "A"){
+                  s"${h._2}|0"
+                } else {
+                  s"0|${h._2}"
+                }
+              }
+            }
+            logger.info(s"OPS|Partition|Join by partitions|$global_gid|$k|$value|$appId")
           }
-          logger.info(s"TIMER|Partition|Joining by partition|$appId|${getTime(timer)}")
           pairs.toIterator
         }
       }
     }
-  }
-
-  def getLocalGrids(boundary: Envelope, n: Int = 4): Seq[LocalGrid] = {
-    val intervalX = (boundary.getMaxX() - boundary.getMinX()) / n;
-    val intervalY = (boundary.getMaxY() - boundary.getMinY()) / n;
-
-    val lgrids = for{
-      i <- 0 until  n
-      j <- 0 until  n
-    } yield {
-      new Envelope(
-        boundary.getMinX() + intervalX * i,
-        boundary.getMinX() + intervalX * (i + 1),
-        boundary.getMinY() + intervalY * j,
-        boundary.getMinY() + intervalY * (j + 1)
-      )
-    }
-
-    lgrids.zipWithIndex.map(l => LocalGrid(l._1, l._2))
   }
 
   def getTime(time: Long): Long = { (System.currentTimeMillis() - time ) }
@@ -483,8 +449,8 @@ object DistanceJoin {
     math.sqrt(x2 + y2) <= b.getRadius
   }
 
-  def computeFraction(x: Double, min: Double = 100, max: Double = 10000,
-    a: Double = 0, b: Double = 0.99): Double = {
+  def computeFraction(x: Double, min: Double = 1000, max: Double = 30000,
+    a: Double = 0, b: Double = 0.9): Double = {
     val v = x match {
       case x if x < min => min
       case x if x > max => max

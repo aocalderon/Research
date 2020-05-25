@@ -24,7 +24,7 @@ import com.vividsolutions.jts.index.quadtree._
 import edu.ucr.dblab.Utils._
 import edu.ucr.dblab.djoin.DistanceJoin.{geofactory, round, circle2point}
 
-object DiskFinderTestDebug{
+object DiskFinderTest{
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   case class ST_Point(id: Int, x: Double, y: Double, t: Int){
@@ -36,8 +36,8 @@ object DiskFinderTestDebug{
 
   def main(args: Array[String]): Unit = {
     logger.info("Starting session...")
-    implicit val params = new DiskFinderTestDebugConf(args)
-    val appName = s"DiskFinderTestDebug"
+    implicit val params = new DiskFinderTestConf(args)
+    val appName = s"DiskFinderTest"
     implicit val debugOn  = params.debug()
     implicit val spark = SparkSession.builder()
       .appName(appName)
@@ -54,7 +54,7 @@ object DiskFinderTestDebug{
       getConf("spark.app.id").takeRight(4)
     }
     def header(msg: String): String = s"$appName|$appId|$msg|Time"
-    def n(msg:String, count: Long): Unit = logger.info(s"$appName|$appId|$msg|Load|$count") 
+    def n(msg:String, count: Long): Unit = logger.info(s"$appName|$appId|$msg|Load|$count")
     logger.info("Starting session... Done!")
 
     val (pointsRaw, nPoints) = timer{"Reading points"}{
@@ -166,10 +166,10 @@ object DiskFinderTestDebug{
           DistanceJoin.join(leftRDD, rightRDD)
         }
         case "Baseline" => { // Baseline distance join...
-          DistanceJoin.baselineDebug(leftRDD, rightRDD)
+          DistanceJoin.baseline(leftRDD, rightRDD)
         }
         case "Index" => { // Index based Quadtree ...
-          DistanceJoin.indexBasedDebug(leftRDD, rightRDD)
+          DistanceJoin.indexBased(leftRDD, rightRDD)
         }
         case "Partition" => { // Partition based Quadtree ...
           val threshold = params.threshold()
@@ -177,12 +177,45 @@ object DiskFinderTestDebug{
           val fraction = params.fraction()
           val levels = params.levels()
           val lparts = params.lparts()
-          DistanceJoin.partitionBasedDebug(leftRDD, rightRDD, threshold, lparts, capacity, fraction, levels)
+          DistanceJoin.partitionBased(leftRDD, rightRDD, threshold, lparts, capacity, fraction, levels)
         }
       }
       joined.cache()
       n(stageJoin, joined.count())
       joined
+    }
+
+    //
+    debug{
+      def saveJoin(rdd: RDD[(Point, Point)], filename: String): Unit = {
+        val rdd2 = rdd.map{ case(l, r) =>
+          val l2 = geofactory.createPoint(new Coordinate(round(l.getX), round(l.getY)))
+          l2.setUserData(l.getUserData)
+
+          val r2 = geofactory.createPoint(new Coordinate(round(r.getX), round(r.getY)))
+          r2.setUserData(r.getUserData)
+
+          (l2, r2)
+        }
+
+        save{filename}{
+          val toSave = timer{"Grouping"}{
+            val toSave =  DistanceJoin.groupByRightPoint(rdd)
+            toSave.cache()
+            n("Grouping", toSave.count())
+            toSave
+          }
+          toSave.map{ case(point, points) =>
+            val pointWKT  = s"${point.toText}\t${point.getUserData.toString}"
+            val pids = points.map(_.getUserData.toString.split("\t").head.toInt)
+              .toList.sorted.mkString(" ")
+
+            s"$pointWKT\t$pids\n"
+          }.collect.sorted
+        }
+      }
+
+      saveJoin(pairs, s"/tmp/edges${params.method()}.wkt")
     }
     
     logger.info("Closing session...")
@@ -211,7 +244,7 @@ object DiskFinderTestDebug{
   }
 }
 
-class DiskFinderTestDebugConf(args: Seq[String]) extends ScallopConf(args) {
+class DiskFinderTestConf(args: Seq[String]) extends ScallopConf(args) {
   val points     = opt[String](default = Some(""))
   val epsilon    = opt[Double](default = Some(10.0))
   val mu         = opt[Int](default = Some(2))

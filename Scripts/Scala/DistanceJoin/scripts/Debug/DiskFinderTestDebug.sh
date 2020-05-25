@@ -1,16 +1,58 @@
 #!/bin/bash
 
-METHOD=$1
-EPSILON=$2
-PARTITIONS=${3:-1}
-CORES=${4:-1}
-CAPACITY=${5:-10}
-FRACTION=${6:-0.025}
-LEVELS=${7:-5}
-LPARTS=${8:-10}
-THRESHOLD=${9:-100000}
-
+METHOD="Partition"
+EPSILON=10
+PARTITIONS=1
+CORES=1
+CAPACITY=100
+FRACTION=0.025
+LEVELS=6
+LPARTS=0
+THRESHOLD=1000
 MU=3
+DEBUG=""
+
+while getopts "m:e:p:c:a:f:l:n:t:u:d" OPTION; do
+    case $OPTION in
+    m)
+        METHOD=$OPTARG
+        ;;
+    e)
+        EPSILON=$OPTARG
+        ;;
+    p)
+        PARTITIONS=$OPTARG
+        ;;
+    c)
+	CORES=$OPTARG
+	;;
+    a)
+	CAPACITY=$OPTARG
+	;;
+    f)
+	FRACTION=$OPTARG
+	;;
+    l)
+	LEVELS=$OPTARG
+	;;
+    n)
+	LPARTS=$OPTARG
+	;;
+    t)
+	THRESHOLD=$OPTARG
+	;;
+    u)
+	MU=$OPTARG
+	;;
+    d)
+	DEBUG=" --debug"
+	;;
+    *)
+        echo "Incorrect options provided"
+        exit 1
+        ;;
+    esac
+done
 
 SPARK_JARS=$HOME/Spark/2.4/jars/
 CLASS_JAR=$HOME/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar
@@ -19,10 +61,12 @@ LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
 
 MASTER="local[$CORES]"
 
-POINTS=file://$HOME/Datasets/Test/Points_N50K_E40.tsv
-#POINTS=file://$HOME/Research/Datasets/Test/Points_N10K_E10.tsv
+#POINTS=file://$HOME/Datasets/Test/Points_N50K_E40.tsv
+POINTS=file://$HOME/Research/Datasets/Test/Points_N10K_E10.tsv
 #POINTS=file://$HOME/Research/Datasets/Test/Points_N1K_E20.tsv
 #POINTS=file://$HOME/Research/Datasets/Test/Points_N20_E1.tsv
+
+echo "Parameters: $PARTITIONS"
 
 spark-submit \
     --files "$LOG_FILE" --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:"$LOG_FILE" \
