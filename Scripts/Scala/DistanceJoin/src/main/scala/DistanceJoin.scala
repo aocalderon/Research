@@ -399,87 +399,23 @@ object DistanceJoin {
     }
   }
 
-  def partitionBasedByQuadtree(leftRDD: RDD[Point],
-    rightRDD: RDD[Point],
-    distance: Double,
+  def partitionBasedByQuadtree(leftRDD: SpatialRDD[Point],
+    rightRDD: CircleRDD,
     capacity: Int,
-    onLeft: Boolean = true,
     levels: Int = 5)
     (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
 
-    leftRDD.zipPartitions(rightRDD, preservesPartitioning = true){ (leftIt, rightIt) =>
+    val left = leftRDD.spatialPartitionedRDD.rdd
+    val right = rightRDD.spatialPartitionedRDD.rdd
+
+    left.zipPartitions(right, preservesPartitioning = true){ (leftIt, rightIt) =>
       val pairs = if(!leftIt.hasNext || !rightIt.hasNext){
         List.empty[(Point, Point)]
       } else {
         // Building the local quadtree...
-        logger.info("DEBUG|partition-based join by Quadtree...")
+        //logger.info("DEBUG|partition-based join by Quadtree...")
 
-        var timer = currentTime
-        val global_gid = TaskContext.getPartitionId
-        val grid = global_grids(global_gid)
-
-        val tree = new StandardQuadTree[Int](new QuadRectangle(grid), 0, capacity, levels)
-        val left  = leftIt.toVector
-        val right = rightIt.toVector
-
-        for {l <- left}{
-          tree.insert(new QuadRectangle(l.getEnvelopeInternal), 1)
-        }
-        tree.assignPartitionIds()
-        logger.info(s"Info|${tree.getLeafZones.size}")
-        logger.info(s"Quadtree|${getTime(timer)}")
-
-        timer = currentTime
-        val A = left.flatMap{ l =>
-          val a = l.getEnvelopeInternal
-          a.expandBy(distance)
-          tree.findZones(new QuadRectangle(a)).asScala.map{ zone =>
-            val id = zone.partitionId
-            (id, l)
-          }
-        }
-        logger.info(s"Quadtree|${getTime(timer)}")
-
-        timer = currentTime
-        val B = right.flatMap{ r =>
-          tree.findZones(new QuadRectangle(r.getEnvelopeInternal)).asScala.map{ zone =>
-            val id = zone.partitionId
-            (id, r)
-          }
-        }
-        logger.info(s"Quadtree|${getTime(timer)}")
-
-        timer = currentTime
-        val pairs = for{
-          a <- A
-          b <- B if a._1 == b._1 & isWithin(a._2, b._2, distance) & a._2 != b._2
-        } yield {
-          (a._2, b._2)
-        }
-        logger.info(s"Quadtree|${getTime(timer)}")
-
-        pairs
-      }
-      pairs.toIterator
-    }
-  }
-
-  def partitionBasedByJTSQuadtree(leftRDD: RDD[Point],
-    rightRDD: RDD[Point],
-    distance: Double,
-    capacity: Int,
-    onLeft: Boolean = true,
-    levels: Int = 5)
-    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
-
-    leftRDD.zipPartitions(rightRDD, preservesPartitioning = true){ (leftIt, rightIt) =>
-      val pairs = if(!leftIt.hasNext || !rightIt.hasNext){
-        List.empty[(Point, Point)]
-      } else {
-        // Building the local quadtree...
-        logger.info("DEBUG|partition-based join by Quadtree...")
-
-        var timer = currentTime
+        //var timer = currentTime
         val global_gid = TaskContext.getPartitionId
         val grid = global_grids(global_gid)
 
@@ -494,54 +430,52 @@ object DistanceJoin {
         val n = tree.getTotalNumLeafNode
 
         //
-        logger.info(s"Info|${tree.getLeafZones.size}")
-        logger.info(s"Quadtree|${getTime(timer)}")
+        //logger.info(s"PB|${tree.getLeafZones.size}")
+        //logger.info(s"PB|${getTime(timer)}")
         //
 
-        timer = currentTime
+        //timer = currentTime
         val bucketsA = new scala.collection.mutable.ListBuffer[List[Point]]()
         bucketsA.appendAll( List.fill(n)( List.empty[Point]))
         val A = left.flatMap{ l =>
           val a = l.getEnvelopeInternal
-          a.expandBy(distance)
           tree.findZones(new QuadRectangle(a)).asScala.map{ zone =>
             val id = zone.partitionId
             bucketsA.update(id, bucketsA(id) :+ l)
           }
         }
-        logger.info(s"Quadtree|${getTime(timer)}")
 
         //
-        logger.info("Buckets A")
-        //bucketsA.foreach{ println }
+        //logger.info(s"PB|${getTime(timer)}")
         //
 
-        timer = currentTime
-        val bucketsB = new scala.collection.mutable.ListBuffer[List[Point]]()
-        bucketsB.appendAll( List.fill(n)( List.empty[Point]))
+        //timer = currentTime
+        val bucketsB = new scala.collection.mutable.ListBuffer[List[Circle]]()
+        bucketsB.appendAll( List.fill(n)( List.empty[Circle]))
         val B = right.flatMap{ r =>
           tree.findZones(new QuadRectangle(r.getEnvelopeInternal)).asScala.map{ zone =>
             val id = zone.partitionId
             bucketsB.update(id, bucketsB(id) :+ r)
           }
         }
-        logger.info(s"Quadtree|${getTime(timer)}")
 
         //
-        logger.info("Buckets B ")
-        //bucketsB.foreach{ println }
+        //logger.info(s"PB|${getTime(timer)}")
         //
 
-        timer = currentTime
+        //timer = currentTime
         val pairs = bucketsA.zip(bucketsB).flatMap{ bucket =>
           for{
             a <- bucket._1
-            b <- bucket._2 if isWithin(a, b, distance)
+            b <- bucket._2 if isWithin(a, b)
           } yield {
-            (a, b)
+            (a, circle2point(b))
           }
         }
-        logger.info(s"Quadtree|${getTime(timer)}")
+
+        //
+        //logger.info(s"PB|${getTime(timer)}")
+        //
 
         pairs
       }

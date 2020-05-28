@@ -95,39 +95,30 @@ object PairsFinderTest{
     val capacity = params.capacity()
     val joinStage = "Join done"
 
-    val (joinRDD, nJoinRDD) = if(method == "Partition"){
-      timer{ header(joinStage) }{
-        val leftRDD  = pointsRDD.spatialPartitionedRDD.rdd
-        val rightRDD = pointsRDD.spatialPartitionedRDD.rdd
-        val join = DistanceJoin.partitionBasedByJTSQuadtree(leftRDD, rightRDD, epsilon, capacity)
-        join.cache()
-        val nJoin = join.count()
-        n(joinStage, nJoin)
-        (join, nJoin)
-      }
-    } else {
-      timer{ header(joinStage) }{
-        val leftRDD = pointsRDD
-        val rightRDD = new CircleRDD(pointsRDD, epsilon)
-        rightRDD.analyze()
-        rightRDD.spatialPartitioning(leftRDD.getPartitioner)
+    val (joinRDD, nJoinRDD) = timer{ header(joinStage) }{
+      val leftRDD = pointsRDD
+      val rightRDD = new CircleRDD(pointsRDD, epsilon)
+      rightRDD.analyze()
+      rightRDD.spatialPartitioning(leftRDD.getPartitioner)
 
-        val join = method match {
-          case "Geospark" => { // GeoSpark distance join...
-            DistanceJoin.join(leftRDD, rightRDD)
-          }
-          case "Baseline" => { // Baseline distance join...
-            DistanceJoin.baseline(leftRDD, rightRDD)
-          }
-          case "Index" => { // Index based Quadtree ...
-            DistanceJoin.indexBased(leftRDD, rightRDD)
-          }
+      val join = method match {
+        case "Geospark" => { // GeoSpark distance join...
+          DistanceJoin.join(leftRDD, rightRDD)
         }
-        join.cache()
-        val nJoin = join.count()
-        n(joinStage, nJoin)
-        (join, nJoin)
+        case "Baseline" => { // Baseline distance join...
+          DistanceJoin.baseline(leftRDD, rightRDD)
+        }
+        case "Index" => { // Index based Quadtree ...
+          DistanceJoin.indexBased(leftRDD, rightRDD)
+        }
+        case "Partition" => { // Partition based Quadtree ...
+          DistanceJoin.partitionBasedByQuadtree(leftRDD, rightRDD, capacity)
+        }
       }
+      join.cache()
+      val nJoin = join.count()
+      n(joinStage, nJoin)
+      (join, nJoin)
     }
 
     //
