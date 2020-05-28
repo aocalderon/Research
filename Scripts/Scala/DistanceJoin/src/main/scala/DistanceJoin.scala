@@ -23,7 +23,7 @@ object DistanceJoin {
   val model = new PrecisionModel(scale)
   val geofactory = new GeometryFactory(model)
 
-  case class UserData(data: String, isLeaf: Boolean)
+  case class UserData(data: String, isLeft: Boolean)
 
   def join(leftRDD: SpatialRDD[Point],
     rightRDD: CircleRDD,
@@ -399,6 +399,158 @@ object DistanceJoin {
     }
   }
 
+  def partitionBasedByQuadtree(leftRDD: RDD[Point],
+    rightRDD: RDD[Point],
+    distance: Double,
+    capacity: Int,
+    onLeft: Boolean = true,
+    levels: Int = 5)
+    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
+
+    leftRDD.zipPartitions(rightRDD, preservesPartitioning = true){ (leftIt, rightIt) =>
+      val pairs = if(!leftIt.hasNext || !rightIt.hasNext){
+        List.empty[(Point, Point)]
+      } else {
+        // Building the local quadtree...
+        logger.info("DEBUG|partition-based join by Quadtree...")
+
+        var timer = currentTime
+        val global_gid = TaskContext.getPartitionId
+        val grid = global_grids(global_gid)
+
+        val tree = new StandardQuadTree[Int](new QuadRectangle(grid), 0, capacity, levels)
+        val left  = leftIt.toVector
+        val right = rightIt.toVector
+
+        for {l <- left}{
+          tree.insert(new QuadRectangle(l.getEnvelopeInternal), 1)
+        }
+        tree.assignPartitionIds()
+        logger.info(s"Info|${tree.getLeafZones.size}")
+        logger.info(s"Quadtree|${getTime(timer)}")
+
+        timer = currentTime
+        val A = left.flatMap{ l =>
+          val a = l.getEnvelopeInternal
+          a.expandBy(distance)
+          tree.findZones(new QuadRectangle(a)).asScala.map{ zone =>
+            val id = zone.partitionId
+            (id, l)
+          }
+        }
+        logger.info(s"Quadtree|${getTime(timer)}")
+
+        timer = currentTime
+        val B = right.flatMap{ r =>
+          tree.findZones(new QuadRectangle(r.getEnvelopeInternal)).asScala.map{ zone =>
+            val id = zone.partitionId
+            (id, r)
+          }
+        }
+        logger.info(s"Quadtree|${getTime(timer)}")
+
+        timer = currentTime
+        val pairs = for{
+          a <- A
+          b <- B if a._1 == b._1 & isWithin(a._2, b._2, distance) & a._2 != b._2
+        } yield {
+          (a._2, b._2)
+        }
+        logger.info(s"Quadtree|${getTime(timer)}")
+
+        pairs
+      }
+      pairs.toIterator
+    }
+  }
+
+  def partitionBasedByJTSQuadtree(leftRDD: RDD[Point],
+    rightRDD: RDD[Point],
+    distance: Double,
+    capacity: Int,
+    onLeft: Boolean = true,
+    levels: Int = 5)
+    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
+
+    leftRDD.zipPartitions(rightRDD, preservesPartitioning = true){ (leftIt, rightIt) =>
+      val pairs = if(!leftIt.hasNext || !rightIt.hasNext){
+        List.empty[(Point, Point)]
+      } else {
+        // Building the local quadtree...
+        logger.info("DEBUG|partition-based join by Quadtree...")
+
+        var timer = currentTime
+        val global_gid = TaskContext.getPartitionId
+        val grid = global_grids(global_gid)
+
+        val tree = new StandardQuadTree[Int](new QuadRectangle(grid), 0, capacity, levels)
+        val left  = leftIt.toVector
+        val right = rightIt.toVector
+
+        for {l <- left}{
+          tree.insert(new QuadRectangle(l.getEnvelopeInternal), 1)
+        }
+        tree.assignPartitionIds()
+        val n = tree.getTotalNumLeafNode
+
+        //
+        logger.info(s"Info|${tree.getLeafZones.size}")
+        logger.info(s"Quadtree|${getTime(timer)}")
+        //
+
+        timer = currentTime
+        val bucketsA = new scala.collection.mutable.ListBuffer[List[Point]]()
+        bucketsA.appendAll( List.fill(n)( List.empty[Point]))
+        val A = left.flatMap{ l =>
+          val a = l.getEnvelopeInternal
+          a.expandBy(distance)
+          tree.findZones(new QuadRectangle(a)).asScala.map{ zone =>
+            val id = zone.partitionId
+            bucketsA.update(id, bucketsA(id) :+ l)
+          }
+        }
+        logger.info(s"Quadtree|${getTime(timer)}")
+
+        //
+        logger.info("Buckets A")
+        //bucketsA.foreach{ println }
+        //
+
+        timer = currentTime
+        val bucketsB = new scala.collection.mutable.ListBuffer[List[Point]]()
+        bucketsB.appendAll( List.fill(n)( List.empty[Point]))
+        val B = right.flatMap{ r =>
+          tree.findZones(new QuadRectangle(r.getEnvelopeInternal)).asScala.map{ zone =>
+            val id = zone.partitionId
+            bucketsB.update(id, bucketsB(id) :+ r)
+          }
+        }
+        logger.info(s"Quadtree|${getTime(timer)}")
+
+        //
+        logger.info("Buckets B ")
+        //bucketsB.foreach{ println }
+        //
+
+        timer = currentTime
+        val pairs = bucketsA.zip(bucketsB).flatMap{ bucket =>
+          for{
+            a <- bucket._1
+            b <- bucket._2 if isWithin(a, b, distance)
+          } yield {
+            (a, b)
+          }
+        }
+        logger.info(s"Quadtree|${getTime(timer)}")
+
+        pairs
+      }
+      pairs.toIterator
+    }
+  }
+
+  def currentTime: Long = System.currentTimeMillis()
+
   def getTime(time: Long): Long = { (System.currentTimeMillis() - time ) }
 
   def envelope2polygon(e: Envelope): Polygon = {
@@ -411,6 +563,13 @@ object DistanceJoin {
     val p3 = new Coordinate(maxX, maxY)
     val p4 = new Coordinate(maxX, minY)
     geofactory.createPolygon( Array(p1,p2,p3,p4,p1))
+  }
+
+  def envelope2point(e: Envelope): Point = {
+    val p = geofactory.createPoint(e.centre())
+    val data = e.getUserData.asInstanceOf[UserData].data
+    p.setUserData(data)
+    p
   }
 
   def round(number: Double): Double = Math.round(number * scale) / scale;
@@ -433,20 +592,28 @@ object DistanceJoin {
     point
   }
 
-  def isWithin(a: Point, b: Circle, distance: Double): Boolean = {
-    val x = a.getX - b.getCenterPoint.x
-    val y = a.getY - b.getCenterPoint.y
-    val x2 = x * x
-    val y2 = y * y
-    math.sqrt(x2 + y2) <= distance
-  }
-
   def isWithin(a: Point, b: Circle): Boolean = {
     val x = a.getX - b.getCenterPoint.x
     val y = a.getY - b.getCenterPoint.y
     val x2 = x * x
     val y2 = y * y
     math.sqrt(x2 + y2) <= b.getRadius
+  }
+
+  def isWithin(a: Point, b: Point, d: Double): Boolean = {
+    val x = a.getX - b.getX
+    val y = a.getY - b.getY
+    val x2 = x * x
+    val y2 = y * y
+    math.sqrt(x2 + y2) <= d
+  }
+
+  def isWithin(a: Envelope, b: Envelope, distance: Double): Boolean = {
+    val x = a.centre().x - b.centre().x
+    val y = a.centre().y - b.centre().y
+    val x2 = x * x
+    val y2 = y * y
+    math.sqrt(x2 + y2) <= distance
   }
 
   def computeFraction(x: Double, min: Double = 1000, max: Double = 30000,

@@ -24,20 +24,17 @@ import com.vividsolutions.jts.index.quadtree._
 import edu.ucr.dblab.Utils._
 import edu.ucr.dblab.djoin.DistanceJoin.{geofactory, round, circle2point}
 
-object DiskFinderTest{
+object PairsFinderTest{
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   case class ST_Point(id: Int, x: Double, y: Double, t: Int){
     def asWKT: String = s"POINT($x $y)\t$id\t$t\n"
   }
-  case class ST_Center(x: Double, y: Double){
-    def asWKT: String = s"POINT($x $y)\n"
-  }
 
   def main(args: Array[String]): Unit = {
     logger.info("Starting session...")
-    implicit val params = new DiskFinderTestConf(args)
-    val appName = s"DiskFinderTest"
+    implicit val params = new PairsFinderConf(args)
+    val appName = s"PairFinderTest"
     implicit val debugOn  = params.debug()
     implicit val spark = SparkSession.builder()
       .appName(appName)
@@ -78,11 +75,11 @@ object DiskFinderTest{
       (pointsRaw, nPointsRaw)
     }
 
-    val stage = "Partitions done"
-    val pointsRDD = timer{stage}{
+    val partitionStage = "Partitions done"
+    val pointsRDD = timer{partitionStage}{
       pointsRaw.spatialPartitioning(GridType.QUADTREE, params.partitions())
       pointsRaw.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
-      n(stage, pointsRaw.spatialPartitionedRDD.count())
+      n(partitionStage, pointsRaw.spatialPartitionedRDD.count())
       pointsRaw
     }
     implicit val grids = pointsRDD.partitionTree.getLeafZones.asScala.toVector
@@ -90,41 +87,67 @@ object DiskFinderTest{
     val npartitions = grids.size
     val distance = (params.epsilon() / 2.0) + params.precision()
 
-    // Finding pairs and centers...
-    val r2: Double = math.pow(params.epsilon() / 2.0, 2)
+    // Joining points...
     val considerBoundary = true
     val usingIndex = false
-    val stageA = "Pairs and centers found"
+    val epsilon = params.epsilon() + params.precision()
+    val method = params.method()
+    val capacity = params.capacity()
+    val joinStage = "Join done"
 
-    val (centersRDD, nCenters) = timer{header(stageA)}{
-      val epsilon = params.epsilon() + params.precision()
-      val buffersRDD = new CircleRDD(pointsRDD, epsilon)
-      buffersRDD.analyze()
-      buffersRDD.spatialPartitioning(pointsRDD.getPartitioner)
-      val pairs = JoinQuery.DistanceJoinQueryFlat(pointsRDD, buffersRDD, usingIndex, considerBoundary)
-        .rdd.map{ pair =>
-          val id1 = pair._1.getUserData().toString().split("\t").head.trim().toInt
-          val p1  = pair._1.getCentroid
-          val id2 = pair._2.getUserData().toString().split("\t").head.trim().toInt
-          val p2  = pair._2
-          ( (id1, p1) , (id2, p2) )
-        }.filter(p => p._1._1 < p._2._1).map{ p =>
-        val p1 = p._1._2
-        val p2 = p._2._2
-        calculateCenterCoordinates(p1, p2, r2)
-      }.persist(StorageLevel.MEMORY_ONLY)
-      val centersJTS = pairs.map(_._1)
-        .union(pairs.map(_._2))
-        .persist(StorageLevel.MEMORY_ONLY)
+    val (joinRDD, nJoinRDD) = if(method == "Partition"){
+      timer{ header(joinStage) }{
+        val leftRDD  = pointsRDD.spatialPartitionedRDD.rdd
+        val rightRDD = pointsRDD.spatialPartitionedRDD.rdd
+        val join = DistanceJoin.partitionBasedByJTSQuadtree(leftRDD, rightRDD, epsilon, capacity)
+        join.cache()
+        val nJoin = join.count()
+        n(joinStage, nJoin)
+        (join, nJoin)
+      }
+    } else {
+      timer{ header(joinStage) }{
+        val leftRDD = pointsRDD
+        val rightRDD = new CircleRDD(pointsRDD, epsilon)
+        rightRDD.analyze()
+        rightRDD.spatialPartitioning(leftRDD.getPartitioner)
 
-      val centersRaw = new SpatialRDD[Point]()
-      centersRaw.setRawSpatialRDD(centersJTS)
-      centersRaw.analyze()
-      centersRaw.spatialPartitioning(pointsRDD.getPartitioner)
-      centersRaw.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
-      val nCenters = centersRaw.spatialPartitionedRDD.count
-      n(stageA, nCenters)
-      (centersRaw, nCenters)
+        val join = method match {
+          case "Geospark" => { // GeoSpark distance join...
+            DistanceJoin.join(leftRDD, rightRDD)
+          }
+          case "Baseline" => { // Baseline distance join...
+            DistanceJoin.baseline(leftRDD, rightRDD)
+          }
+          case "Index" => { // Index based Quadtree ...
+            DistanceJoin.indexBased(leftRDD, rightRDD)
+          }
+        }
+        join.cache()
+        val nJoin = join.count()
+        n(joinStage, nJoin)
+        (join, nJoin)
+      }
+    }
+
+    //
+    //joinRDD.foreach { println }
+    //
+
+    // Finding pairs...
+    val pairsStage = "Pairs found"
+    val (pairsRDD, nPairsRDD) = timer{ header(pairsStage) }{
+      val pairs = joinRDD.map{ pair =>
+        val id1 = pair._1.getUserData().toString().split("\t").head.trim().toInt
+        val p1  = pair._1.getCentroid
+        val id2 = pair._2.getUserData().toString().split("\t").head.trim().toInt
+        val p2  = pair._2
+        ( (id1, p1) , (id2, p2) )
+      }.filter(p => p._1._1 < p._2._1).map(p => (p._1._2, p._2._2))
+      pairs.cache()
+      val nPairs = pairs.count()
+      n(pairsStage, nPairs)
+      (pairs, nPairs)
     }
     
     //
@@ -133,13 +156,6 @@ object DiskFinderTest{
         pointsRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex({ case(index, iter) =>
           iter.map{ point =>
             s"${point.toText()}\t${point.getUserData.toString}\t${index}\n"
-          }}, preservesPartitioning = true)
-          .collect().sorted
-      }
-      save("/tmp/edgesCenters.wkt"){
-        centersRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex({ case(index, iter) =>
-          iter.map{ center =>
-            s"${center.toText()}\t${center.getUserData.toString()}\t${index}\n"
           }}, preservesPartitioning = true)
           .collect().sorted
       }
@@ -153,69 +169,20 @@ object DiskFinderTest{
       }
     }
 
-    val leftRDD = centersRDD
-    val rightRDD = new CircleRDD(pointsRDD, distance)
-    rightRDD.analyze()
-    rightRDD.spatialPartitioning(leftRDD.getPartitioner)
-    val method = params.method() 
-
-    val stageJoin = s"DJOIN|$method"
-    val pairs = timer{ header(stageJoin) }{
-      val joined = method match {
-        case "Geospark" => { // GeoSpark distance join...
-          DistanceJoin.join(leftRDD, rightRDD)
-        }
-        case "Baseline" => { // Baseline distance join...
-          DistanceJoin.baseline(leftRDD, rightRDD)
-        }
-        case "Index" => { // Index based Quadtree ...
-          DistanceJoin.indexBased(leftRDD, rightRDD)
-        }
-        case "Partition" => { // Partition based Quadtree ...
-          val threshold = params.threshold()
-          val capacity = params.capacity()
-          val fraction = params.fraction()
-          val levels = params.levels()
-          val lparts = params.lparts()
-          DistanceJoin.partitionBased(leftRDD, rightRDD, threshold, lparts, capacity, fraction, levels)
-        }
-      }
-      joined.cache()
-      n(stageJoin, joined.count())
-      joined
-    }
-
     //
     debug{
       def saveJoin(rdd: RDD[(Point, Point)], filename: String): Unit = {
-        val rdd2 = rdd.map{ case(l, r) =>
-          val l2 = geofactory.createPoint(new Coordinate(round(l.getX), round(l.getY)))
-          l2.setUserData(l.getUserData)
-
-          val r2 = geofactory.createPoint(new Coordinate(round(r.getX), round(r.getY)))
-          r2.setUserData(r.getUserData)
-
-          (l2, r2)
-        }
-
         save{filename}{
-          val toSave = timer{"Grouping"}{
-            val toSave =  DistanceJoin.groupByRightPoint(rdd)
-            toSave.cache()
-            n("Grouping", toSave.count())
-            toSave
-          }
-          toSave.map{ case(point, points) =>
-            val pointWKT  = s"${point.toText}\t${point.getUserData.toString}"
-            val pids = points.map(_.getUserData.toString.split("\t").head.toInt)
-              .toList.sorted.mkString(" ")
-
-            s"$pointWKT\t$pids\n"
+          rdd.map{ case(source, target) =>
+            val coords = Array(new Coordinate(source.getX, source.getY),
+              new Coordinate(target.getX, target.getY))
+            val line = geofactory.createLineString(coords)
+            s"${line.toText}\t${source.getUserData}\t${target.getUserData}\n"
           }.collect.sorted
         }
       }
 
-      saveJoin(pairs, s"/tmp/edges${params.method()}.wkt")
+      saveJoin(pairsRDD, s"/tmp/edges${params.method()}.wkt")
     }
     
     logger.info("Closing session...")
@@ -224,39 +191,5 @@ object DiskFinderTest{
     spark.close()
     logger.info("Closing session... Done!")
   }
-
-  def calculateCenterCoordinates(p1: Point, p2: Point, r2: Double): (Point, Point) = {
-    var h = geofactory.createPoint(new Coordinate(-1.0,-1.0))
-    var k = geofactory.createPoint(new Coordinate(-1.0,-1.0))
-    val X: Double = p1.getX - p2.getX
-    val Y: Double = p1.getY - p2.getY
-    val D2: Double = math.pow(X, 2) + math.pow(Y, 2)
-    if (D2 != 0.0){
-      val root: Double = math.sqrt(math.abs(4.0 * (r2 / D2) - 1.0))
-      val h1: Double = ((X + Y * root) / 2) + p2.getX
-      val k1: Double = ((Y - X * root) / 2) + p2.getY
-      val h2: Double = ((X - Y * root) / 2) + p2.getX
-      val k2: Double = ((Y + X * root) / 2) + p2.getY
-      h = geofactory.createPoint(new Coordinate(h1,k1))
-      k = geofactory.createPoint(new Coordinate(h2,k2))
-    }
-    (h, k)
-  }
 }
 
-class DiskFinderTestConf(args: Seq[String]) extends ScallopConf(args) {
-  val points     = opt[String](default = Some(""))
-  val epsilon    = opt[Double](default = Some(10.0))
-  val mu         = opt[Int](default = Some(2))
-  val precision  = opt[Double](default = Some(0.001))
-  val threshold  = opt[Int](default = Some(5000))
-  val capacity   = opt[Int](default = Some(20))
-  val fraction   = opt[Double](default = Some(0.01))
-  val levels     = opt[Int](default = Some(5))
-  val partitions = opt[Int](default = Some(256))
-  val lparts     = opt[Int](default = Some(0))
-  val method     = opt[String](default = Some("None"))
-  val debug      = opt[Boolean](default = Some(false))
-
-  verify()
-}
