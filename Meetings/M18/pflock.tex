@@ -90,50 +90,49 @@
     \end{frame}
 }
 
-\begin{frame}{Re-visiting self-distance join for pair finding}
+\begin{frame}{Solving issues in local quadtree creation}
     \begin{itemize}
-        \item The goal is to obtaing good local partitioning from the very beginning.
-        \item To find the centers and the points they contain first I have to find the set of pairs of points.
-        \item Applying a partition-based approach we expect to keep those local partitions for subsequents steps. 
+        \item The GeoSpark Quadtree library receives three parameters: maximum items per node (capacity), a fraction of the total size of the input to extract a sample (fraction), and a number of levels to limit the depth of the tree (levels). 
+        \item I fixed a bug which set incorrectly the value of levels.  It keeps a default value of 8 which allows up to $4^8=64563$ possible leaves.
+        \item As we expect relatively small partitions, I have set this value to 5 (no more than 1024 leaves per partition).
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Solving issues with partition-based Join}
+\begin{frame}{Solving issues in local quadtree creation}
     \begin{itemize}
-        \item Using GeoSpark Quatree.  Keeping fixed number of levels (levels = 5) and size of samples (fraction = 1).
-        \item Variying maximum number of items per node (capacity).
-        \item Finally solving the performance issue in my approach (a really fool mistake).
-        \item Results were validated comparing with the baseline and index-based approach (outputs were identical).
+        \item Follows a similar strategy on GeoSpark repository\footnote{\url{https://tinyurl.com/y8fy4ys7}}$^,$\footnote{\url{https://tinyurl.com/ycsb29gz}} to create global quadtrees.
+        \item Given a number of desired subgrids (x) and a input size (n):
+        \begin{itemize}
+            \item capacity = n / x
+            \item fraction = a scaled value between 1 (for n < 1000) and 0.01 (for n > 10000)
+        \end{itemize}
+        \item It works but with a fixed number of subgrids balancing can be a problem...
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Experiments}{Setup}
-    \begin{itemize}
-        \item Assuming a global partion with 10000 points.
-        \item Finding pairs of points which are $\varepsilon=10m$ each other.
-        \item Runing locally.
-        \item Average of 10 runs.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Experiments}{Results}
+\begin{frame}{Example}
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/ByCapacity}
+    \includegraphics[width=\textwidth]{figures/ByP_Globals}
 \end{frame}
-\begin{frame}{Experiments}{Results}
+\begin{frame}{Example}
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/ByMethod1}
-\end{frame}
-\begin{frame}{Experiments}{Results}
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/ByMethod2}
+    \includegraphics[width=\textwidth]{figures/ByP_Locals}
 \end{frame}
 
-\begin{frame}{What's next}
+\begin{frame}{Solving issues in local quadtree creation}
     \begin{itemize}
-        \item Integrating the aproach to perform points vs centers join (taking advantage of the current local partitioning).
-        \item Validate and test performance.
+        \item Currently working on optimal values for capacity and fraction.
+        \item Tradeoff between balance and cost.
     \end{itemize}
+\end{frame}
+
+\begin{frame}{Example}{capacity=50, fraction=1}
+    \centering
+    \includegraphics[width=\textwidth]{figures/ByC_Globals}
+\end{frame}
+\begin{frame}{Example}
+    \centering
+    \includegraphics[width=\textwidth]{figures/ByC_Locals}
 \end{frame}
 
 \end{document}
