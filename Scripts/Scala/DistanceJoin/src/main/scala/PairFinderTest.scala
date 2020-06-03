@@ -1,7 +1,6 @@
 package edu.ucr.dblab.djoin
 
 import org.slf4j.{LoggerFactory, Logger}
-import org.rogach.scallop._
 import scala.collection.JavaConverters._
 import scala.util.Random
 import org.apache.spark.SparkConf
@@ -82,9 +81,10 @@ object PairsFinderTest{
       n(partitionStage, pointsRaw.spatialPartitionedRDD.count())
       pointsRaw
     }
-    implicit val grids = pointsRDD.partitionTree.getLeafZones.asScala.toVector
+    val global_grids = pointsRDD.partitionTree.getLeafZones.asScala.toVector
       .sortBy(_.partitionId).map(_.getEnvelope)
-    val npartitions = grids.size
+    implicit val settings = Settings(spark, logger, global_grids, debugOn)
+    val npartitions = global_grids.size
     val distance = (params.epsilon() / 2.0) + params.precision()
 
     // Joining points...
@@ -120,10 +120,6 @@ object PairsFinderTest{
       n(joinStage, nJoin)
       (join, nJoin)
     }
-
-    //
-    //joinRDD.foreach { println }
-    //
 
     // Finding pairs...
     val pairsStage = "Pairs found"

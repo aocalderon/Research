@@ -1,5 +1,7 @@
 package edu.ucr.dblab.djoin
 
+import org.slf4j.{LoggerFactory, Logger}
+import org.rogach.scallop.ScallopConf
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.rdd.RDD
 import org.apache.spark.TaskContext
@@ -16,7 +18,11 @@ import scala.collection.JavaConverters._
 import scala.util.Random
 import edu.ucr.dblab.Utils._
 
-case class PointLGrid(point: Point, lgrid: Int)
+case class Settings(spark: SparkSession,
+  logger: Logger,
+  global_grids: Vector[Envelope] = Vector.empty[Envelope],
+  debug: Boolean = false
+)
 
 object DistanceJoin {
   val scale = 1000.0
@@ -38,7 +44,7 @@ object DistanceJoin {
 
   def baseline(leftRDD: SpatialRDD[Point],
     rightRDD: CircleRDD)
-    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point) ] = {
+    (implicit settings: Settings): RDD[ (Point, Point) ] = {
 
     val left = leftRDD.spatialPartitionedRDD.rdd
     val right = rightRDD.spatialPartitionedRDD.rdd
@@ -63,14 +69,14 @@ object DistanceJoin {
 
   def baselineDebug(leftRDD: SpatialRDD[Point],
     rightRDD: CircleRDD)
-    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point) ] = {
+    (implicit settings: Settings): RDD[ (Point, Point) ] = {
 
     val left = leftRDD.spatialPartitionedRDD.rdd
     val right = rightRDD.spatialPartitionedRDD.rdd
     val distance = right.take(1).head.getRadius
 
     //
-    val appId = SparkSession.builder().getOrCreate().sparkContext.applicationId
+    val appId = settings.spark.sparkContext.applicationId
 
     left.zipPartitions(right, preservesPartitioning = true){ (pointsIt, circlesIt) =>
       if(!pointsIt.hasNext || !circlesIt.hasNext){
@@ -101,7 +107,7 @@ object DistanceJoin {
   def indexBased(leftRDD: SpatialRDD[Point],
     rightRDD: CircleRDD,
     buildOnSpatialPartitionedRDD: Boolean = true)
-    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point) ] = {
+    (implicit settings: Settings): RDD[ (Point, Point) ] = {
 
     leftRDD.buildIndex(IndexType.QUADTREE, buildOnSpatialPartitionedRDD)
     leftRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY)
@@ -130,10 +136,8 @@ object DistanceJoin {
   def indexBasedDebug(leftRDD: SpatialRDD[Point],
     rightRDD: CircleRDD,
     buildOnSpatialPartitionedRDD: Boolean = true)
-    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point) ] = {
-    
-    //
-    val appId = SparkSession.builder().getOrCreate().sparkContext.applicationId
+    (implicit settings: Settings): RDD[ (Point, Point) ] = {
+    val appId = settings.spark.sparkContext.applicationId
 
     var timer = System.currentTimeMillis()
     leftRDD.buildIndex(IndexType.QUADTREE, buildOnSpatialPartitionedRDD)
@@ -403,7 +407,7 @@ object DistanceJoin {
     rightRDD: CircleRDD,
     capacity: Int,
     levels: Int = 5)
-    (implicit global_grids: Vector[Envelope]): RDD[ (Point, Point)] = {
+    (implicit settings: Settings): RDD[ (Point, Point)] = {
 
     val left = leftRDD.spatialPartitionedRDD.rdd
     val right = rightRDD.spatialPartitionedRDD.rdd
@@ -413,11 +417,10 @@ object DistanceJoin {
         List.empty[(Point, Point)]
       } else {
         // Building the local quadtree...
-        //logger.info("DEBUG|partition-based join by Quadtree...")
 
         //var timer = currentTime
         val global_gid = TaskContext.getPartitionId
-        val grid = global_grids(global_gid)
+        val grid = settings.global_grids(global_gid)
 
         val tree = new StandardQuadTree[Int](new QuadRectangle(grid), 0, capacity, levels)
         val left  = leftIt.toVector
@@ -429,10 +432,11 @@ object DistanceJoin {
         tree.assignPartitionIds()
         val n = tree.getTotalNumLeafNode
 
-        //
-        //logger.info(s"PB|${tree.getLeafZones.size}")
-        //logger.info(s"PB|${getTime(timer)}")
-        //
+        if(settings.debug){
+          save{s"/tmp/edgesLGrids_${global_gid}.wkt"}{
+            getLocalGrids(tree, global_gid)
+          }
+        }
 
         //timer = currentTime
         val bucketsA = new scala.collection.mutable.ListBuffer[List[Point]]()
@@ -444,10 +448,7 @@ object DistanceJoin {
             bucketsA.update(id, bucketsA(id) :+ l)
           }
         }
-
-        //
         //logger.info(s"PB|${getTime(timer)}")
-        //
 
         //timer = currentTime
         val bucketsB = new scala.collection.mutable.ListBuffer[List[Circle]]()
@@ -458,10 +459,7 @@ object DistanceJoin {
             bucketsB.update(id, bucketsB(id) :+ r)
           }
         }
-
-        //
         //logger.info(s"PB|${getTime(timer)}")
-        //
 
         //timer = currentTime
         val pairs = bucketsA.zip(bucketsB).flatMap{ bucket =>
@@ -472,15 +470,21 @@ object DistanceJoin {
             (a, circle2point(b))
           }
         }
-
-        //
         //logger.info(s"PB|${getTime(timer)}")
-        //
 
         pairs
       }
       pairs.toIterator
     }
+  }
+
+  def getLocalGrids(tree: StandardQuadTree[Int], global_gid: Int): List[String] = {
+    tree.getLeafZones.asScala.map{ leaf =>
+      val wkt = envelope2polygon(leaf.getEnvelope).toText
+      val local_gid = leaf.partitionId
+
+      s"$wkt\t$global_gid\t$local_gid\n"
+    }.toList
   }
 
   def currentTime: Long = System.currentTimeMillis()

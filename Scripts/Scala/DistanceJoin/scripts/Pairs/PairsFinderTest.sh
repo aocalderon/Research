@@ -8,8 +8,9 @@ CAPACITY=100
 FRACTION=0.01
 LEVELS=6
 THRESHOLD=1000
+DEBUG=" "
 
-while getopts "m:e:p:c:a:f:l:n:t:u:" OPTION; do
+while getopts "m:e:p:c:a:f:l:n:t:u:d" OPTION; do
     case $OPTION in
     m)
         METHOD=$OPTARG
@@ -35,6 +36,9 @@ while getopts "m:e:p:c:a:f:l:n:t:u:" OPTION; do
     t)
 	THRESHOLD=$OPTARG
 	;;
+    d)
+	DEBUG=" --debug"
+	;;
     *)
         echo "Incorrect options provided"
         exit 1
@@ -58,8 +62,8 @@ spark-submit \
     --files "$LOG_FILE" --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:"$LOG_FILE" \
     --jars "${SPARK_JARS}"geospark-1.2.0.jar,"${SPARK_JARS}"geospark-sql_2.3-1.2.0.jar,"${SPARK_JARS}"scallop_2.11-3.1.5.jar,"${SPARK_JARS}"utils_2.11.jar \
     --master "$MASTER" \
-    --class "$CLASS_NAME" "$CLASS_JAR" \
+    --class "$CLASS_NAME" "$CLASS_JAR" $DEBUG \
     --points "$POINTS"  --method "$METHOD" --epsilon "$EPSILON" \
     --partitions "$PARTITIONS" --cores "$CORES" \
     --capacity "$CAPACITY" --fraction "$FRACTION" --levels "$LEVELS" \
-    --threshold "$THRESHOLD" --debug
+    --threshold "$THRESHOLD" 
