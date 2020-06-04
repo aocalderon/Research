@@ -8,7 +8,7 @@ FRACTION=1
 LEVELS=1
 THRESHOLD=1
 PARTITIONS=1
-SCRIPT="PairsFinderTest.sh"
+SCRIPT="PairsFinder.sh"
 
 MS=( 'Baseline' 'Index' )
 

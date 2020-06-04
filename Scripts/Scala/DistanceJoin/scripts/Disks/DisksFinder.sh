@@ -4,11 +4,9 @@ METHOD="Partition"
 EPSILON=10
 PARTITIONS=1
 CORES=1
-CAPACITY=100
-FRACTION=0.01
-LEVELS=6
-THRESHOLD=1000
-DEBUG=" "
+CAPACITY=250
+LEVELS=5
+DEBUG=""
 
 while getopts "m:e:p:c:a:f:l:n:t:u:d" OPTION; do
     case $OPTION in
@@ -27,17 +25,8 @@ while getopts "m:e:p:c:a:f:l:n:t:u:d" OPTION; do
     a)
 	CAPACITY=$OPTARG
 	;;
-    f)
-	FRACTION=$OPTARG
-	;;
-    l)
-	LEVELS=$OPTARG
-	;;
-    t)
-	THRESHOLD=$OPTARG
-	;;
     d)
-	DEBUG=" --debug"
+	DEBUG="--debug"
 	;;
     *)
         echo "Incorrect options provided"
@@ -48,7 +37,7 @@ done
 
 SPARK_JARS=$HOME/Spark/2.4/jars/
 CLASS_JAR=$HOME/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar
-CLASS_NAME=edu.ucr.dblab.djoin.PairsFinderTest
+CLASS_NAME=edu.ucr.dblab.djoin.DisksFinder
 LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
 
 MASTER="local[$CORES]"
@@ -64,6 +53,4 @@ spark-submit \
     --master "$MASTER" \
     --class "$CLASS_NAME" "$CLASS_JAR" $DEBUG \
     --points "$POINTS"  --method "$METHOD" --epsilon "$EPSILON" \
-    --partitions "$PARTITIONS" --cores "$CORES" \
-    --capacity "$CAPACITY" --fraction "$FRACTION" --levels "$LEVELS" \
-    --threshold "$THRESHOLD" 
+    --partitions "$PARTITIONS" --capacity "$CAPACITY"  

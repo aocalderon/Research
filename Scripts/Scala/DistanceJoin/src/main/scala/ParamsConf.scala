@@ -18,7 +18,7 @@ class PairsFinderConf(args: Seq[String]) extends ScallopConf(args) {
   verify()
 }
 
-class DiskFinderTestConf(args: Seq[String]) extends ScallopConf(args) {
+class DiskFinderConf(args: Seq[String]) extends ScallopConf(args) {
   val points     = opt[String](default = Some(""))
   val epsilon    = opt[Double](default = Some(10.0))
   val mu         = opt[Int](default = Some(2))
