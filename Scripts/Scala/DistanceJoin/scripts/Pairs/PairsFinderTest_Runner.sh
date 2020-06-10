@@ -21,7 +21,7 @@ done
 ###
 
 MS=( 'Partition' )
-AS=( 100 250 500 750 100 )
+AS=( 10 50 100 250 500 750 1000 )
 
 for i in $(seq 1 $N); do
     for m in "${MS[@]}"; do
