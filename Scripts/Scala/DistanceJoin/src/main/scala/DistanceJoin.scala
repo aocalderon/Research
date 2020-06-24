@@ -464,8 +464,8 @@ object DistanceJoin {
         //timer = currentTime
         val pairs = bucketsA.zip(bucketsB).flatMap{ bucket =>
           for{
-            a <- bucket._1
-            b <- bucket._2 if isWithin(a, b)
+            b <- bucket._2
+            a <- bucket._1 if isWithin(a, b)
           } yield {
             (a, circle2point(b))
           }
@@ -476,6 +476,114 @@ object DistanceJoin {
       }
       pairs.toIterator
     }
+  }
+
+  def partitionBasedIterator(
+    leftIt: Iterator[Point],
+    rightIt: Iterator[Point],
+    distance: Double,
+    capacity: Int = 200,
+    levels: Int = 5)
+    (implicit settings: Settings): Iterator[(Point, Point)] = {
+
+    val global_gid = TaskContext.getPartitionId
+    val grid = settings.global_grids(global_gid)
+
+    val tree = new StandardQuadTree[Int](new QuadRectangle(grid), 0, capacity, levels)
+    val left  = leftIt.toVector
+    val right = rightIt.toVector
+
+    for {r <- right}{
+      tree.insert(new QuadRectangle(r.getEnvelopeInternal), 1)
+    }
+    tree.assignPartitionIds()
+    val n = tree.getTotalNumLeafNode
+
+    val bucketsA = new scala.collection.mutable.ListBuffer[List[Point]]()
+    bucketsA.appendAll( List.fill(n)( List.empty[Point]))
+    val A = left.flatMap{ l =>
+      val a = l.getEnvelopeInternal
+      tree.findZones(new QuadRectangle(a)).asScala.map{ zone =>
+        val id = zone.partitionId
+        bucketsA.update(id, bucketsA(id) :+ l)
+      }
+    }
+
+    val bucketsB = new scala.collection.mutable.ListBuffer[List[Point]]()
+    bucketsB.appendAll( List.fill(n)( List.empty[Point]))
+    val B = right.flatMap{ r =>
+      val b = r.getEnvelopeInternal
+      b.expandBy(distance)
+      tree.findZones(new QuadRectangle(b)).asScala.map{ zone =>
+        val id = zone.partitionId
+        bucketsB.update(id, bucketsB(id) :+ r)
+      }
+    }
+
+    val pairs = bucketsA.zip(bucketsB).flatMap{ bucket =>
+      for{
+        a <- bucket._1
+        b <- bucket._2 if a.distance(b) <= distance
+      } yield {
+        (a, b)
+      }
+    }
+    pairs.toIterator
+  }
+
+  def partitionBasedAggregate(
+    leftIt: Iterator[Point],
+    rightIt: Iterator[Point],
+    distance: Double,
+    capacity: Int = 200,
+    levels: Int = 5)
+    (implicit settings: Settings): Iterator[(Point, Set[Point])] = {
+
+    val global_gid = TaskContext.getPartitionId
+    val grid = settings.global_grids(global_gid)
+
+    val tree = new StandardQuadTree[Int](new QuadRectangle(grid), 0, capacity, levels)
+    val left  = leftIt.toVector
+    val right = rightIt.toVector
+
+    for {r <- right}{
+      tree.insert(new QuadRectangle(r.getEnvelopeInternal), 1)
+    }
+    tree.assignPartitionIds()
+    val n = tree.getTotalNumLeafNode
+
+    val bucketsA = new scala.collection.mutable.ListBuffer[List[Point]]()
+    bucketsA.appendAll( List.fill(n)( List.empty[Point]))
+    val A = left.flatMap{ l =>
+      val a = l.getEnvelopeInternal
+      tree.findZones(new QuadRectangle(a)).asScala.map{ zone =>
+        val id = zone.partitionId
+        bucketsA.update(id, bucketsA(id) :+ l)
+      }
+    }
+
+    val bucketsB = new scala.collection.mutable.ListBuffer[List[Point]]()
+    bucketsB.appendAll( List.fill(n)( List.empty[Point]))
+    val B = right.flatMap{ r =>
+      val b = r.getEnvelopeInternal
+      b.expandBy(distance)
+      tree.findZones(new QuadRectangle(b)).asScala.map{ zone =>
+        val id = zone.partitionId
+        bucketsB.update(id, bucketsB(id) :+ r)
+      }
+    }
+
+    val pairs = bucketsA.zip(bucketsB).flatMap{ bucket =>
+      for{
+        a <- bucket._1
+        b <- bucket._2 if a.distance(b) <= distance + 0.0001
+      } yield {
+        (a, b)
+      }
+    }
+    pairs.groupBy(_._1)
+      .map{ case(point, points) => (point, points.map(_._2).toSet) }
+      .toIterator
   }
 
   def getLocalGrids(tree: StandardQuadTree[Int], global_gid: Int): List[String] = {

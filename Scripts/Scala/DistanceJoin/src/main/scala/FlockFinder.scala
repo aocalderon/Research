@@ -22,9 +22,8 @@ import com.vividsolutions.jts.index.SpatialIndex
 import com.vividsolutions.jts.index.quadtree._
 import edu.ucr.dblab.Utils._
 import edu.ucr.dblab.djoin.DistanceJoin.{geofactory, round, circle2point, envelope2polygon}
-import edu.ucr.dblab.djoin.SPMF.{AlgoLCM2, Transactions, Transaction}
 
-object DisksFinder{
+object FlockFinder{
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   case class ST_Point(id: Int, x: Double, y: Double, t: Int){
@@ -33,7 +32,7 @@ object DisksFinder{
 
   def main(args: Array[String]): Unit = {
     logger.info("Starting session...")
-    implicit val params = new DiskFinderConf(args)
+    implicit val params = new FlockFinderConf(args)
     val appName = s"DiskFinder"
     implicit val debugOn = params.debug()
     implicit val spark = SparkSession.builder()
@@ -105,7 +104,7 @@ object DisksFinder{
     val capacity = params.capacity()
     val stage = "Disk stage"
 
-    val (candidatesRaw, nCandidatesRaw) = timer{ header(stage) }{
+    val (resultsRDD, nResultsRDD) = timer{ header(stage) }{
       //val leftRDD = pointsRDD
       val circlesRDD = new CircleRDD(pointsRDD, epsilon)
       circlesRDD.analyze()
@@ -133,42 +132,9 @@ object DisksFinder{
             }.filter(center => grid.contains(center.getCoordinate))
             
             val points = pairs.flatMap{ case(p1, p2) => List(p1, p2)}.distinct
-            val candidates = DistanceJoin
+            val disks = DistanceJoin
               .partitionBasedAggregate(centers.toIterator, points.toIterator, r)
               .toVector
-
-            // LCM Pruning...
-            val transactions = candidates.map{ disk =>
-              val pids = disk._2.map(_.getUserData.toString.split("\t").head.toInt)
-                .toList.sorted.mkString(" ")
-              val x = disk._1.getX
-              val y = disk._1.getY
-
-              (pids, (x, y))
-            }.groupBy(_._1).values.map{ p =>
-              val (pids, coords) = p.head
-              val x = coords._1
-              val y = coords._2
-
-              new Transaction(x, y, pids)
-            }.toList.distinct
-
-            val data = new Transactions(transactions.asJava, 0)
-            val lcm = new AlgoLCM2()
-            lcm.run(data)
-
-            val disks = lcm.getPointsAndPids.asScala.map{ m =>
-              val pids = m.getItems.map(_.toInt).toList
-              val x = m.getX
-              val y = m.getY
-              val disk = geofactory.createPoint(new Coordinate(x, y))
-              disk.setUserData(pids)
-
-              // Compute the safe zone...
-              grid.expandBy(-1 * r)
-              // Mark if the disk is in the safe zone...
-              (disk, grid.contains(disk.getEnvelopeInternal))
-            }
 
             disks.toIterator
           }
@@ -179,57 +145,6 @@ object DisksFinder{
       n(stage, N)
       (results, N)
     }
-
-    val disksInSafeZone  = candidatesRaw.filter(_._2).map(_._1)
-    val candidatesOutSafeZone = candidatesRaw.filter(!_._2).map(_._1)
-    val candidatesOutRDD = new SpatialRDD[Point]()
-    candidatesOutRDD.setRawSpatialRDD(candidatesOutSafeZone)
-    val disksOutRDD = new CircleRDD(candidatesOutRDD, r)
-    disksOutRDD.analyze(candidatesOutRDD.boundary(), nCandidatesRaw.toInt)
-    disksOutRDD.spatialPartitioning(pointsRDD.getPartitioner)
-
-    val disksOutSafeZone = disksOutRDD.spatialPartitionedRDD.rdd
-      .mapPartitionsWithIndex{ (global_gid, disksIt) =>
-        val grid = broadcastGrids.value(global_gid)
-        grid.expandBy(r)
-        // LCM Pruning...
-        val transactions = disksIt.map{ disk =>
-          val center = circle2point(disk)
-          val pids = center.getUserData.asInstanceOf[List[Int]].mkString(" ")
-          val x = center.getX
-          val y = center.getY
-
-          (pids, (x, y))
-        }.toList.groupBy(_._1).values.map{ p =>
-          val (pids, coords) = p.head
-          val x = coords._1
-          val y = coords._2
-
-          new Transaction(x, y, pids)
-        }.toList
-
-        val data = new Transactions(transactions.asJava, 0)
-        val lcm = new AlgoLCM2()
-        lcm.run(data)
-
-        val disks = lcm.getPointsAndPids.asScala.map{ m =>
-          val pids = m.getItems.map(_.toInt).toList
-          val x = m.getX
-          val y = m.getY
-          val disk = geofactory.createPoint(new Coordinate(x, y))
-          disk.setUserData(pids)
-          disk
-        }.filter{ disk =>
-          grid.contains(disk.getEnvelopeInternal)
-        }
-
-        disks.toIterator
-      }
-
-    val maximalsRDD = disksInSafeZone
-      .zipPartitions(disksOutSafeZone, preservesPartitioning = true) { (itIn, itOut) =>
-        itIn ++ itOut
-      }
 
     //
     debug{
@@ -248,16 +163,34 @@ object DisksFinder{
           s"${p.toText()}\t${id}\n"
         }
       }
+    }
+
+    //
+    debug{
+      /*
+      save{"/tmp/edgesPairs.wkt"}{
+        pairsRDD.map{ case(source, target) =>
+          val coords = Array(source.getCoordinate, target.getCoordinate)
+          val line = geofactory.createLineString(coords)
+          s"${line.toText}\n"
+        }.collect.sorted
+      }
+      save{"/tmp/edgesCenters.wkt"}{
+        centersRDD.map{ center =>
+          s"${center.toText}\n"
+        }.collect.sorted
+      }
+       */
       save{"/tmp/edgesDisks.wkt"}{
-        maximalsRDD.map{ center =>
+        resultsRDD.map{ disk =>
+          val center = disk._1
           val circle = center.buffer(epsilon / 2.0, 10)
-          val pids = center.getUserData.asInstanceOf[List[Int]]
+          val pids = disk._2.map(_.getUserData.toString.split("\t")(0)).mkString(" ")  
           s"${circle.toText}\t${pids}\n"
         }.collect.sorted
       }
       
     }
-    //
     
     logger.info("Closing session...")
     logger.info(s"${appId}|${System.getProperty("sun.java.command")} --npartitions ${global_grids.size}")

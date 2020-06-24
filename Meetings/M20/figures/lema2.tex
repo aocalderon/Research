@@ -1,4 +1,4 @@
-\documentclass[multi=page, svgnames, border=0.1cm]{standalone}
+\documentclass[multi=page, svgnames, border=0.5cm]{standalone}
 \usepackage[svgnames]{xcolor}
 \usepackage{tikz}
 
@@ -22,7 +22,7 @@
 \def\opacity{0.25}
 \begin{page}
   \begin{tikzpicture}
-    \draw[step=1, very thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \gap + \epsilon);
+    \draw[step=1, very thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \gap + \width + \epsilon);
 
     \draw (\x, \y) rectangle (\x + \width, \y + \width);
     \node[point] at (\x + 2, \y + 5) {};
@@ -35,6 +35,17 @@
     \node[point, Green] at (\ax + 1.75, \y + 6.8) {};
     \node[point, Green] at (\ax + 0.7, \y + 5) {};
     
+    \def\by{\y + \width + \gap};
+    \draw (\x, \by) rectangle (\x + \width, \by + \width);
+    \node[point] at (\x + 5, \by + 3) {};
+    \node[point] at (\x + 7, \by + 8) {};
+    \node[point] at (\x + 3, \by + 3) {};
+
+    \draw (\ax, \by) rectangle (\ax + \width, \by + \width);
+    \node[point] at (\ax + 2, \by + 4) {};
+    \node[point] at (\ax + 4, \by + 7) {};
+    \node[point] at (\ax + 8.5, \by + 3) {};
+
     \node[point, Cyan] at (12, 8 + \delta) {};
     \node[point, Cyan] at (12, 8 - \delta) {};
     \node[point, Orange] at (11, 6 + \delta) {};
@@ -46,7 +57,7 @@
 
 \begin{page}
   \begin{tikzpicture}
-    \draw[step=1, very thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \gap + \epsilon);
+    \draw[step=1, very thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \gap + \width + \epsilon);
 
     \draw (\x, \y) rectangle (\x + \width, \y + \width);
     \draw[dashed, blue, opacity=\opacity] (\x + \epsilon, \y + \epsilon) rectangle (\x + \width - \epsilon, \y + \width - \epsilon);
@@ -61,6 +72,19 @@
     \node[point, Green] at (\ax + 1.75, \y + 6.8) {};
     \node[point, Green] at (\ax + 0.7, \y + 5) {};
     
+    \def\by{\y + \width + \gap};
+    \draw (\x, \by) rectangle (\x + \width, \by + \width);
+    \draw[dashed, blue, opacity=\opacity] (\x + \epsilon, \by + \epsilon) rectangle (\x + \width - \epsilon, \by + \width - \epsilon);
+    \node[point] at (\x + 5, \by + 3) {};
+    \node[point] at (\x + 7, \by + 8) {};
+    \node[point] at (\x + 3, \by + 3) {};
+
+    \draw (\ax, \by) rectangle (\ax + \width, \by + \width);
+    \draw[dashed, blue, opacity=\opacity] (\ax + \epsilon, \by + \epsilon) rectangle (\ax + \width - \epsilon, \by + \width - \epsilon);
+    \node[point] at (\ax + 2, \by + 4) {};
+    \node[point] at (\ax + 4, \by + 7) {};
+    \node[point] at (\ax + 8.5, \by + 3) {};
+
     \node[point, Cyan] at (12, 8 + \delta) {};
     \node[point, Cyan] at (12, 8 - \delta) {};
     \node[point, Orange] at (11, 6 + \delta) {};
@@ -73,7 +97,7 @@
 
 \begin{page}
   \begin{tikzpicture}
-    \draw[step=1, very thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \gap + \epsilon);
+    \draw[step=1, very thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \gap + \width + \epsilon);
 
     \draw[dashed, red]  (\x - \epsilon, \y - \epsilon) rectangle (\x + \width + \epsilon, \y + \width + \epsilon);
     \draw (\x, \y) rectangle (\x + \width, \y + \width);
@@ -88,6 +112,19 @@
     \node[point, Green] at (\ax + 1.75, \y + 6.8) {};
     \node[point, Green] at (\ax + 0.7, \y + 5) {};
     
+    \def\by{\y + \width + \gap};
+    \draw[dashed, red]  (\x - \epsilon, \by - \epsilon) rectangle (\x + \width + \epsilon, \by + \width + \epsilon);
+    \draw (\x, \by) rectangle (\x + \width, \by + \width);
+    \node[point] at (\x + 5, \by + 3) {};
+    \node[point] at (\x + 7, \by + 8) {};
+    \node[point] at (\x + 3, \by + 3) {};
+
+    \draw[dashed, red]  (\ax - \epsilon, \by - \epsilon) rectangle (\ax + \width + \epsilon, \by + \width + \epsilon);
+    \draw (\ax, \by) rectangle (\ax + \width, \by + \width);
+    \node[point] at (\ax + 2, \by + 4) {};
+    \node[point] at (\ax + 4, \by + 7) {};
+    \node[point] at (\ax + 8.5, \by + 3) {};
+
     \node[point, Cyan] at (12, 8 + \delta) {};
     \node[point, Cyan] at (12, 8 - \delta) {};
     \node[point, Orange] at (11, 6 + \delta) {};
@@ -99,7 +136,7 @@
 
 \begin{page}
   \begin{tikzpicture}
-    \draw[step=1, very thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \gap + \epsilon);
+    \draw[step=1, very thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \gap + \width + \epsilon);
 
     \draw[dashed, red]  (\x - \epsilon, \y - \epsilon) rectangle (\x + \width + \epsilon, \y + \width + \epsilon);
     \draw (\x, \y) rectangle (\x + \width, \y + \width);
@@ -116,6 +153,21 @@
     \node[point, Green] at (\ax + 1.75, \y + 6.8) {};
     \node[point, Green] at (\ax + 0.7, \y + 5) {};
     
+    \def\by{\y + \width + \gap};
+    \draw[dashed, red]  (\x - \epsilon, \by - \epsilon) rectangle (\x + \width + \epsilon, \by + \width + \epsilon);
+    \draw (\x, \by) rectangle (\x + \width, \by + \width);
+    \draw[dashed, blue, opacity=\opacity] (\x + \epsilon, \by + \epsilon) rectangle (\x + \width - \epsilon, \by + \width - \epsilon);
+    \node[point] at (\x + 5, \by + 3) {};
+    \node[point] at (\x + 7, \by + 8) {};
+    \node[point] at (\x + 3, \by + 3) {};
+
+    \draw[dashed, red]  (\ax - \epsilon, \by - \epsilon) rectangle (\ax + \width + \epsilon, \by + \width + \epsilon);
+    \draw (\ax, \by) rectangle (\ax + \width, \by + \width);
+    \draw[dashed, blue, opacity=\opacity] (\ax + \epsilon, \by + \epsilon) rectangle (\ax + \width - \epsilon, \by + \width - \epsilon);
+    \node[point] at (\ax + 2, \by + 4) {};
+    \node[point] at (\ax + 4, \by + 7) {};
+    \node[point] at (\ax + 8.5, \by + 3) {};
+
     \node[point, Cyan] at (12, 8 + \delta) {};
     \node[point, Cyan] at (12, 8 - \delta) {};
     \node[point, Orange] at (11, 6 + \delta) {};
@@ -125,13 +177,15 @@
 
     \node[label] at (\x  + \width / 2, \y  + \width / 2) {1};
     \node[label] at (\ax + \width / 2, \y  + \width / 2) {2};
+    \node[label] at (\x  + \width / 2, \by + \width / 2) {3};
+    \node[label] at (\ax + \width / 2, \by + \width / 2) {4};
   \end{tikzpicture}
 \end{page}
 
 \def\gap{3.1}
 \begin{page}
   \begin{tikzpicture}
-    \draw[step=1, very thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \epsilon);
+    \draw[step=1, very thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \gap + \width + \epsilon);
 
     \draw[dashed, red]  (\x - \epsilon, \y - \epsilon) rectangle (\x + \width + \epsilon, \y + \width + \epsilon);
     \draw (\x, \y) rectangle (\x + \width, \y + \width);
@@ -150,6 +204,21 @@
     \node[point, Green] at (\ax + 1.75, \y + 6.8) {};
     \node[point, Green] at (\ax + 0.7, \y + 5) {};
     
+    \def\by{\y + \width + \gap};
+    \draw[dashed, red]  (\x - \epsilon, \by - \epsilon) rectangle (\x + \width + \epsilon, \by + \width + \epsilon);
+    \draw (\x, \by) rectangle (\x + \width, \by + \width);
+    \draw[dashed, blue] (\x + \epsilon, \by + \epsilon) rectangle (\x + \width - \epsilon, \by + \width - \epsilon);
+    \node[point] at (\x + 5, \by + 3) {};
+    \node[point] at (\x + 7, \by + 8) {};
+    \node[point] at (\x + 3, \by + 3) {};
+
+    \draw[dashed, red]  (\ax - \epsilon, \by - \epsilon) rectangle (\ax + \width + \epsilon, \by + \width + \epsilon);
+    \draw (\ax, \by) rectangle (\ax + \width, \by + \width);
+    \draw[dashed, blue] (\ax + \epsilon, \by + \epsilon) rectangle (\ax + \width - \epsilon, \by + \width - \epsilon);
+    \node[point] at (\ax + 2, \by + 4) {};
+    \node[point] at (\ax + 4, \by + 7) {};
+    \node[point] at (\ax + 8.5, \by + 3) {};
+
     \node[point, Cyan] at (\x + \width + \epsilon, \y + 7 + \delta) {};
     \node[point, Cyan] at (\x + \width + \epsilon, \y + 7 - \delta) {};
     \node[point, Orange] at (\x + \width, \y + 5 + \delta) {};
@@ -166,12 +235,14 @@
     
     \node[label] at (\x  + \width / 2, \y  + \width / 2) {1};
     \node[label] at (\ax + \width / 2, \y  + \width / 2) {2};
+    \node[label] at (\x  + \width / 2, \by + \width / 2) {3};
+    \node[label] at (\ax + \width / 2, \by + \width / 2) {4};
   \end{tikzpicture}
 \end{page}
 
 \begin{page}
   \begin{tikzpicture}
-    \draw[step=1, very thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \epsilon);
+    \draw[step=1, very thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \gap + \width + \epsilon);
 
     \draw[dashed, red]  (\x - \epsilon, \y - \epsilon) rectangle (\x + \width + \epsilon, \y + \width + \epsilon);
     \draw (\x, \y) rectangle (\x + \width, \y + \width);
@@ -190,6 +261,21 @@
     \node[point, Green] at (\ax + 1.75, \y + 6.8) {};
     \node[point, Green] at (\ax + 0.7, \y + 5) {};
     
+    \def\by{\y + \width + \gap};
+    \draw[dashed, red]  (\x - \epsilon, \by - \epsilon) rectangle (\x + \width + \epsilon, \by + \width + \epsilon);
+    \draw (\x, \by) rectangle (\x + \width, \by + \width);
+    \draw[dashed, blue] (\x + \epsilon, \by + \epsilon) rectangle (\x + \width - \epsilon, \by + \width - \epsilon);
+    \node[point] at (\x + 5, \by + 3) {};
+    \node[point] at (\x + 7, \by + 8) {};
+    \node[point] at (\x + 3, \by + 3) {};
+
+    \draw[dashed, red]  (\ax - \epsilon, \by - \epsilon) rectangle (\ax + \width + \epsilon, \by + \width + \epsilon);
+    \draw (\ax, \by) rectangle (\ax + \width, \by + \width);
+    \draw[dashed, blue] (\ax + \epsilon, \by + \epsilon) rectangle (\ax + \width - \epsilon, \by + \width - \epsilon);
+    \node[point] at (\ax + 2, \by + 4) {};
+    \node[point] at (\ax + 4, \by + 7) {};
+    \node[point] at (\ax + 8.5, \by + 3) {};
+
     \node[point, Cyan] at (12, 8 + \delta) {};
     \node[point, Cyan] at (12, 8 - \delta) {};
     \node[point, Orange] at (11, 6 + \delta) {};
@@ -220,12 +306,14 @@
 
     \node[label] at (\x  + \width / 2, \y  + \width / 2) {1};
     \node[label] at (\ax + \width / 2, \y  + \width / 2) {2};
+    \node[label] at (\x  + \width / 2, \by + \width / 2) {3};
+    \node[label] at (\ax + \width / 2, \by + \width / 2) {4};
   \end{tikzpicture}
 \end{page}
 
 \begin{page}
   \begin{tikzpicture}
-    \draw[step=1, very thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \epsilon);
+    \draw[step=1, very thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \gap + \width + \epsilon);
 
     \draw[dashed, red]  (\x - \epsilon, \y - \epsilon) rectangle (\x + \width + \epsilon, \y + \width + \epsilon);
     \draw (\x, \y) rectangle (\x + \width, \y + \width);
@@ -244,6 +332,21 @@
     \node[point, Green] at (\ax + 1.75, \y + 6.8) {};
     \node[point, Green] at (\ax + 0.7, \y + 5) {};
     
+    \def\by{\y + \width + \gap};
+    \draw[dashed, red]  (\x - \epsilon, \by - \epsilon) rectangle (\x + \width + \epsilon, \by + \width + \epsilon);
+    \draw (\x, \by) rectangle (\x + \width, \by + \width);
+    \draw[dashed, blue] (\x + \epsilon, \by + \epsilon) rectangle (\x + \width - \epsilon, \by + \width - \epsilon);
+    \node[point] at (\x + 5, \by + 3) {};
+    \node[point] at (\x + 7, \by + 8) {};
+    \node[point] at (\x + 3, \by + 3) {};
+
+    \draw[dashed, red]  (\ax - \epsilon, \by - \epsilon) rectangle (\ax + \width + \epsilon, \by + \width + \epsilon);
+    \draw (\ax, \by) rectangle (\ax + \width, \by + \width);
+    \draw[dashed, blue] (\ax + \epsilon, \by + \epsilon) rectangle (\ax + \width - \epsilon, \by + \width - \epsilon);
+    \node[point] at (\ax + 2, \by + 4) {};
+    \node[point] at (\ax + 4, \by + 7) {};
+    \node[point] at (\ax + 8.5, \by + 3) {};
+
     \node[point, Cyan] at (12, 8 + \delta) {};
     \node[point, Cyan] at (12, 8 - \delta) {};
     \node[point, Orange] at (11, 6 + \delta) {};
@@ -274,12 +377,14 @@
 
     \node[label] at (\x  + \width / 2, \y  + \width / 2) {1};
     \node[label] at (\ax + \width / 2, \y  + \width / 2) {2};
+    \node[label] at (\x  + \width / 2, \by + \width / 2) {3};
+    \node[label] at (\ax + \width / 2, \by + \width / 2) {4};
   \end{tikzpicture}
 \end{page}
 
 \begin{page}
   \begin{tikzpicture}
-    \draw[step=1, very thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \epsilon);
+    \draw[step=1, very thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \gap + \width + \epsilon);
 
     \draw[dashed, red]  (\x - \epsilon, \y - \epsilon) rectangle (\x + \width + \epsilon, \y + \width + \epsilon);
     \draw (\x, \y) rectangle (\x + \width, \y + \width);
@@ -298,6 +403,21 @@
     \node[point, Green] at (\ax + 1.75, \y + 6.8) {};
     \node[point, Green] at (\ax + 0.7, \y + 5) {};
     
+    \def\by{\y + \width + \gap};
+    \draw[dashed, red]  (\x - \epsilon, \by - \epsilon) rectangle (\x + \width + \epsilon, \by + \width + \epsilon);
+    \draw (\x, \by) rectangle (\x + \width, \by + \width);
+    \draw[dashed, blue] (\x + \epsilon, \by + \epsilon) rectangle (\x + \width - \epsilon, \by + \width - \epsilon);
+    \node[point] at (\x + 5, \by + 3) {};
+    \node[point] at (\x + 7, \by + 8) {};
+    \node[point] at (\x + 3, \by + 3) {};
+
+    \draw[dashed, red]  (\ax - \epsilon, \by - \epsilon) rectangle (\ax + \width + \epsilon, \by + \width + \epsilon);
+    \draw (\ax, \by) rectangle (\ax + \width, \by + \width);
+    \draw[dashed, blue] (\ax + \epsilon, \by + \epsilon) rectangle (\ax + \width - \epsilon, \by + \width - \epsilon);
+    \node[point] at (\ax + 2, \by + 4) {};
+    \node[point] at (\ax + 4, \by + 7) {};
+    \node[point] at (\ax + 8.5, \by + 3) {};
+
     \node[point, Cyan] at (12, 8 + \delta) {};
     \node[point, Cyan] at (12, 8 - \delta) {};
     \node[point, Orange] at (11, 6 + \delta) {};
@@ -322,6 +442,8 @@
 
     \node[label] at (\x  + \width / 2, \y  + \width / 2) {1};
     \node[label] at (\ax + \width / 2, \y  + \width / 2) {2};
+    \node[label] at (\x  + \width / 2, \by + \width / 2) {3};
+    \node[label] at (\ax + \width / 2, \by + \width / 2) {4};
   \end{tikzpicture}
 \end{page}
 
