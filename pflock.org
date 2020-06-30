@@ -1,0 +1,14 @@
+* Implementation
+** TODO Extend expansion zone epsilon/2 more to include disks around
+   SCHEDULED: <2020-06-29 Mon>
+** TODO Prepare plots to show performance per task and executor
+   SCHEDULED: <2020-06-30 Tue>
+*** TODO Explore Apache Spark logs
+*** TODO Explore Apache Spark History Server
+*** TODO Code script extracting data
+*** TODO Code script plotting histogram
+** TODO Writing
+   SCHEDULED: <2020-07-02 Thu>
+*** TODO Complete the proofs with LCM stage
+*** TODO Work on Problem Definition
+
