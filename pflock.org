@@ -1,14 +1,20 @@
 * Implementation
-** TODO Extend expansion zone epsilon/2 more to include disks around
+** TODO Extend expansion zone epsilon/2 more to include disks around [1/3]
    SCHEDULED: <2020-06-29 Mon>
-** TODO Prepare plots to show performance per task and executor
+*** DONE Code the improvement...
+    CLOSED: [2020-06-29 Mon 19:48]
+*** TODO Test implementation to BFE...
+*** TODO Run experiments on server...
+
+** TODO Prepare plots to show performance per task and executor [0/4]
    SCHEDULED: <2020-06-30 Tue>
-*** TODO Explore Apache Spark logs
-*** TODO Explore Apache Spark History Server
-*** TODO Code script extracting data
-*** TODO Code script plotting histogram
-** TODO Writing
+*** TODO Explore Apache Spark logs...
+*** TODO Explore Apache Spark History Server...
+*** TODO Code script extracting data...
+*** TODO Code script plotting histogram...
+
+** TODO Writing [0/2]
    SCHEDULED: <2020-07-02 Thu>
-*** TODO Complete the proofs with LCM stage
-*** TODO Work on Problem Definition
+*** TODO Complete/update the proofs with LCM stage...
+*** TODO Work on Problem Definition...
 

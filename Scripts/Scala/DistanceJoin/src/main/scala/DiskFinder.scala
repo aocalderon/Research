@@ -66,6 +66,9 @@ object DisksFinder{
       case 2 => StorageLevel.MEMORY_ONLY_SER
     }
     val metrics = TaskMetrics(spark)
+    val epsilon = params.epsilon() + params.precision()
+    val r = (epsilon / 2.0) 
+    val r2 = math.pow(r, 2)
     logger.info("Starting session... Done!")
 
     val (pointsRaw, nPoints) = timer{"Reading points"}{
@@ -82,15 +85,30 @@ object DisksFinder{
         p
       }
       pointsRaw.setRawSpatialRDD(pointsJTS)
-      pointsRaw.analyze()
-      pointsRaw.rawSpatialRDD.persist(persistanceLevel)
       val nPointsRaw = pointsRaw.rawSpatialRDD.count()
+      val grid = pointsRaw.boundary()
+      grid.expandBy(epsilon)
+      pointsRaw.analyze(grid, nPointsRaw.toInt)
+      pointsRaw.rawSpatialRDD.persist(persistanceLevel)
       n("Points", nPointsRaw)
       (pointsRaw, nPointsRaw)
     }
 
     val partitionStage = "Partitions done"
     val (pointsRDD, nPartitionRaw) = timer{partitionStage}{
+      /*
+      val levels = 5
+      val capacity = params.partitions()
+      val grid = pointsRaw.boundary()
+      grid.expandBy(epsilon)
+      val global_grid = new QuadRectangle(grid)
+      val quadtree = new StandardQuadTree[Point](global_grid, 0, capacity, levels)
+      pointsRaw.getRawSpatialRDD.rdd.sample(false, 0.1, 42).foreach { p =>
+        quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), p)
+      }
+      quadtree.assignPartitionIds()
+       */
+      //val partitioner = new QuadTreePartitioner(quadtree)
       pointsRaw.spatialPartitioning(GridType.QUADTREE, params.partitions())
       pointsRaw.spatialPartitionedRDD.persist(persistanceLevel)
       val N = pointsRaw.spatialPartitionedRDD.count()
@@ -98,8 +116,8 @@ object DisksFinder{
       (pointsRaw, N)
     }
     // Collecting the global settings...
-    val epsilon = params.epsilon()
-    val expanded_grids = pointsRDD.partitionTree.getLeafZones.asScala.toVector
+    val quadtree = pointsRDD.partitionTree
+    val expanded_grids = quadtree.getLeafZones.asScala.toVector
       .sortBy(_.partitionId)
       .map{ partition =>
         val grid = partition.getEnvelope
@@ -107,15 +125,13 @@ object DisksFinder{
         grid
       }
     implicit val settings = Settings(spark, logger, expanded_grids, debugOn)
-    val grids = pointsRDD.partitionTree.getLeafZones.asScala.toVector
+    val grids = quadtree.getLeafZones.asScala.toVector
       .sortBy(_.partitionId).map(_.getEnvelope)
     val broadcastGrids = spark.sparkContext.broadcast(grids)
 
     // Joining points...
     val considerBoundary = true
     val usingIndex = false
-    val r = epsilon / 2.0
-    val r2 = math.pow(r, 2)
     val method = params.method()
     val capacity = params.capacity()
     val disksPhase = "Disks phase"
@@ -283,7 +299,7 @@ object DisksFinder{
           .collect().sorted
       }
       save{"/tmp/edgesGGrids.wkt"}{
-        pointsRDD.partitionTree.getLeafZones.asScala.map{ z =>
+        quadtree.getLeafZones.asScala.map{ z =>
           val id = z.partitionId
           val e = z.getEnvelope
           val p = DistanceJoin.envelope2polygon(e)
@@ -295,6 +311,12 @@ object DisksFinder{
           val circle = center.buffer(epsilon / 2.0, 10)
           val pids = center.getUserData.asInstanceOf[List[Int]]
           s"${circle.toText}\t${pids}\n"
+        }.collect.sorted
+      }
+      save{f"/tmp/PFLOCK_E${epsilon}%.0f_M1_D1.txt"}{
+        candidatesRaw.map{ center =>
+          val pids = center.getUserData.asInstanceOf[List[Int]].sorted.mkString(" ")
+          s"0, 0, ${pids}\n"
         }.collect.sorted
       }
       
