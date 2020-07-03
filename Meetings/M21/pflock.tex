@@ -69,43 +69,72 @@
     \end{frame}
 }
 
-\begin{frame}{Implementation done}
-  \begin{itemize}
-  \item The workflow was divided in two big jobs:
-    \begin{enumerate}
-    \item Finding pairs, centers and disks.
-    \item Pruning redundant and duplicate disks (it required repartition).
-    \end{enumerate}
-  \item Run validations using LA\_50K and $\epsilon = 5m$.
-    \item Average time = 2.96s
-  \end{itemize}
-  
+\begin{frame}
+  \begin{lemma}
+    Centers lying in the expansion zone of a partition should not be evaluated.  The corresponding partition in its neighbourhood will deal with them.
+  \end{lemma}
+\end{frame}
+\begin{frame}
+  \centering
+  \vspace{-7pt}
+  \includegraphics[page=1, scale=0.4]{figures/lema2}
+\end{frame}
+\begin{frame}
+  \centering
+  \vspace{-7pt}
+  \includegraphics[page=2, scale=0.4]{figures/lema2}
+\end{frame}
+\begin{frame}
+  \centering
+  \vspace{-7pt}
+  \includegraphics[page=3, scale=0.4]{figures/lema2}
+\end{frame}
+\begin{frame}
+  \centering
+  \vspace{-7pt}
+  \includegraphics[page=4, scale=0.4]{figures/lema2}
+\end{frame}
+\begin{frame}
+  \centering
+  \vspace{-6pt}
+  \includegraphics[page=5, scale=0.35]{figures/lema2}
+\end{frame}
+\begin{frame}
+  \centering
+  \vspace{-6pt}
+  \includegraphics[page=6, scale=0.35]{figures/lema2}
+\end{frame}
+\begin{frame}
+  \centering
+  \vspace{-6pt}
+  \includegraphics[page=7, scale=0.35]{figures/lema2}
+\end{frame}
+\begin{frame}
+  \centering
+  \vspace{-6pt}
+  \includegraphics[page=8, scale=0.35]{figures/lema2}
 \end{frame}
 
-\begin{frame}{Candidate disks finding}{Task duration distribution}
-  \centering
-  \includegraphics[width=\textwidth]{figures/Stage4Summary}
+\begin{frame}
+  \begin{lemma}
+    Points which are not part of the pairs set will not be involved during the disk finding procedure.
+  \end{lemma}
 \end{frame}
-
-\begin{frame}{Candidate disks finding}{Node load distribution}
+\begin{frame}
   \centering
-  \includegraphics[width=\textwidth]{figures/Stage4ByExecutor}
+  \vspace{-7pt}
+  \includegraphics[page=1, scale=0.415]{figures/lema1}
 \end{frame}
-
-\begin{frame}{LCM pruning}{Task duration distribution}
+\begin{frame}
   \centering
-  \includegraphics[width=\textwidth]{figures/Stage7Summary}
-\end{frame}
-
-\begin{frame}{LCM pruning}{Node load distribution}
-  \centering
-  \includegraphics[width=\textwidth]{figures/Stage7ByExecutor}
+  \vspace{-7pt}
+  \includegraphics[page=2, scale=0.415]{figures/lema1}
 \end{frame}
 
 \begin{frame}{What's next}
     \begin{itemize}
-      \item Dealing with some minor bugs.
-      \item Completing experiments and plot the results.
+    \item Almost done with the implementation.  Dealing with some minor bugs.
+      \item Implementing the duplicate/redundant prune technique using LCM.
     \end{itemize}
 \end{frame}
 

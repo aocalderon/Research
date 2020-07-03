@@ -1,0 +1,5 @@
+#/bin/bash
+
+sort $1 -o /tmp/A.txt
+sort $2 -o /tmp/B.txt
+diff -s /tmp/A.txt /tmp/B.txt 

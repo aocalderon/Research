@@ -4,13 +4,14 @@ import org.slf4j.{LoggerFactory, Logger}
 import scala.collection.JavaConverters._
 import org.apache.spark.TaskContext
 import org.apache.spark.SparkConf
-import org.apache.spark.sql.{SparkSession}
+import org.apache.spark.sql.{SparkSession, Dataset, Row}
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.rdd.RDD
 import org.apache.spark.TaskContext
+import org.apache.spark.sql.functions
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.datasyslab.geospark.spatialRDD.{SpatialRDD, CircleRDD, PointRDD}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
@@ -23,6 +24,7 @@ import com.vividsolutions.jts.index.quadtree._
 import edu.ucr.dblab.Utils._
 import edu.ucr.dblab.djoin.DistanceJoin.{geofactory, round, circle2point, envelope2polygon}
 import edu.ucr.dblab.djoin.SPMF.{AlgoLCM2, Transactions, Transaction}
+import ch.cern.sparkmeasure.TaskMetrics
 
 object DisksFinder{
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -52,6 +54,21 @@ object DisksFinder{
     }
     def header(msg: String): String = s"$appName|$appId|$msg|Time"
     def n(msg:String, count: Long): Unit = logger.info(s"$appName|$appId|$msg|Load|$count")
+    def getPhaseMetrics(metrics: TaskMetrics, phaseName: String): Dataset[Row] = {
+      metrics.createTaskMetricsDF("PhaseX")
+        .withColumn("appId", functions.lit(appId))
+        .withColumn("phaseName", functions.lit(phaseName))
+        .orderBy("launchTime")
+    }
+    val persistanceLevel = params.persistance() match {
+      case 0 => StorageLevel.NONE
+      case 1 => StorageLevel.MEMORY_ONLY
+      case 2 => StorageLevel.MEMORY_ONLY_SER
+    }
+    val metrics = TaskMetrics(spark)
+    val epsilon = params.epsilon() + params.precision()
+    val r = (epsilon / 2.0) 
+    val r2 = math.pow(r, 2)
     logger.info("Starting session... Done!")
 
     val (pointsRaw, nPoints) = timer{"Reading points"}{
@@ -68,46 +85,60 @@ object DisksFinder{
         p
       }
       pointsRaw.setRawSpatialRDD(pointsJTS)
-      pointsRaw.analyze()
-      pointsRaw.rawSpatialRDD.persist(StorageLevel.MEMORY_ONLY)
       val nPointsRaw = pointsRaw.rawSpatialRDD.count()
+      val grid = pointsRaw.boundary()
+      grid.expandBy(epsilon)
+      pointsRaw.analyze(grid, nPointsRaw.toInt)
+      pointsRaw.rawSpatialRDD.persist(persistanceLevel)
       n("Points", nPointsRaw)
       (pointsRaw, nPointsRaw)
     }
 
     val partitionStage = "Partitions done"
-    val pointsRDD = timer{partitionStage}{
+    val (pointsRDD, nPartitionRaw) = timer{partitionStage}{
+      /*
+      val levels = 5
+      val capacity = params.partitions()
+      val grid = pointsRaw.boundary()
+      grid.expandBy(epsilon)
+      val global_grid = new QuadRectangle(grid)
+      val quadtree = new StandardQuadTree[Point](global_grid, 0, capacity, levels)
+      pointsRaw.getRawSpatialRDD.rdd.sample(false, 0.1, 42).foreach { p =>
+        quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), p)
+      }
+      quadtree.assignPartitionIds()
+       */
+      //val partitioner = new QuadTreePartitioner(quadtree)
       pointsRaw.spatialPartitioning(GridType.QUADTREE, params.partitions())
-      pointsRaw.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY)
-      n(partitionStage, pointsRaw.spatialPartitionedRDD.count())
-      pointsRaw
+      pointsRaw.spatialPartitionedRDD.persist(persistanceLevel)
+      val N = pointsRaw.spatialPartitionedRDD.count()
+      n(partitionStage, N)
+      (pointsRaw, N)
     }
     // Collecting the global settings...
-    val epsilon = params.epsilon()
-    val global_grids = pointsRDD.partitionTree.getLeafZones.asScala.toVector
+    val quadtree = pointsRDD.partitionTree
+    val expanded_grids = quadtree.getLeafZones.asScala.toVector
       .sortBy(_.partitionId)
       .map{ partition =>
         val grid = partition.getEnvelope
-        grid.expandBy(epsilon)
+        grid.expandBy(2 * epsilon)
         grid
       }
-    implicit val settings = Settings(spark, logger, global_grids, debugOn)
-    val grids = pointsRDD.partitionTree.getLeafZones.asScala.toVector
+    implicit val settings = Settings(spark, logger, expanded_grids, debugOn)
+    val grids = quadtree.getLeafZones.asScala.toVector
       .sortBy(_.partitionId).map(_.getEnvelope)
     val broadcastGrids = spark.sparkContext.broadcast(grids)
 
     // Joining points...
     val considerBoundary = true
     val usingIndex = false
-    val r = epsilon / 2.0
-    val r2 = math.pow(r, 2)
     val method = params.method()
     val capacity = params.capacity()
-    val stage = "Disk stage"
+    val disksPhase = "Disks phase"
 
-    val (candidatesRaw, nCandidatesRaw) = timer{ header(stage) }{
-      //val leftRDD = pointsRDD
-      val circlesRDD = new CircleRDD(pointsRDD, epsilon)
+    metrics.begin()
+    val (candidatesRaw, nCandidatesRaw) = timer{ header(disksPhase) }{
+      val circlesRDD = new CircleRDD(pointsRDD, 2 * epsilon)
       circlesRDD.analyze()
       circlesRDD.spatialPartitioning(pointsRDD.getPartitioner)
 
@@ -119,7 +150,8 @@ object DisksFinder{
             val global_gid = TaskContext.getPartitionId
 
             // Finding pairs...
-            val pairs = DistanceJoin.partitionBasedIterator(leftIt, rightIt, epsilon)
+            val points = leftIt.toVector
+            val pairs = DistanceJoin.partitionBasedIterator(points.toIterator, rightIt, epsilon)
               .filter{ case(l,r) =>
                 val i = l.getUserData.toString.split("\t")(0)
                 val j = r.getUserData.toString.split("\t")(0)
@@ -127,12 +159,14 @@ object DisksFinder{
               }
               .toVector
 
-            val grid = broadcastGrids.value(global_gid)
+            //val grid = broadcastGrids.value(global_gid)
+            val grid = expanded_grids(global_gid)
+
             val centers = pairs.flatMap{ case (p1, p2) =>
               calculateCenterCoordinates(p1, p2, r2)
-            }.filter(center => grid.contains(center.getCoordinate))
+            }//.filter(center => grid.contains(center.getCoordinate))
             
-            val points = pairs.flatMap{ case(p1, p2) => List(p1, p2)}.distinct
+            //val points = pairs.flatMap{ case(p1, p2) => List(p1, p2)}.distinct
             val candidates = DistanceJoin
               .partitionBasedAggregate(centers.toIterator, points.toIterator, r)
               .toVector
@@ -157,6 +191,8 @@ object DisksFinder{
             val lcm = new AlgoLCM2()
             lcm.run(data)
 
+            // Compute the safe zone...
+            grid.expandBy(-2 * epsilon)
             val disks = lcm.getPointsAndPids.asScala.map{ m =>
               val pids = m.getItems.map(_.toInt).toList
               val x = m.getX
@@ -164,11 +200,10 @@ object DisksFinder{
               val disk = geofactory.createPoint(new Coordinate(x, y))
               disk.setUserData(pids)
 
-              // Compute the safe zone...
-              grid.expandBy(-1 * r)
               // Mark if the disk is in the safe zone...
-              (disk, grid.contains(disk.getEnvelopeInternal))
-            }
+              //(disk, grid.contains(disk.getEnvelopeInternal))
+              disk
+            }.filter(disk => grid.contains(disk.getEnvelopeInternal))
 
             disks.toIterator
           }
@@ -176,60 +211,83 @@ object DisksFinder{
       }
       results.cache()
       val N = results.count()
-      n(stage, N)
+      n(disksPhase, N)
       (results, N)
     }
+    metrics.end()
+    val phase1 = getPhaseMetrics(metrics, disksPhase)
 
-    val disksInSafeZone  = candidatesRaw.filter(_._2).map(_._1)
-    val candidatesOutSafeZone = candidatesRaw.filter(!_._2).map(_._1)
-    val candidatesOutRDD = new SpatialRDD[Point]()
-    candidatesOutRDD.setRawSpatialRDD(candidatesOutSafeZone)
-    val disksOutRDD = new CircleRDD(candidatesOutRDD, r)
-    disksOutRDD.analyze(candidatesOutRDD.boundary(), nCandidatesRaw.toInt)
-    disksOutRDD.spatialPartitioning(pointsRDD.getPartitioner)
+    //candidatesRaw.foreach { println }
 
-    val disksOutSafeZone = disksOutRDD.spatialPartitionedRDD.rdd
-      .mapPartitionsWithIndex{ (global_gid, disksIt) =>
-        val grid = broadcastGrids.value(global_gid)
-        grid.expandBy(r)
-        // LCM Pruning...
-        val transactions = disksIt.map{ disk =>
-          val center = circle2point(disk)
-          val pids = center.getUserData.asInstanceOf[List[Int]].mkString(" ")
-          val x = center.getX
-          val y = center.getY
+    /*
+    val lcmPhase = "LCM phase"
+    metrics.begin()
+    val (maximalsRDD, nMaximalsRDD) = timer( header(lcmPhase)){
+      val disksInSafeZone  = candidatesRaw.filter(_._2).map(_._1)
+      val candidatesOutSafeZone = candidatesRaw.filter(!_._2).map(_._1)
+      val candidatesOutRDD = new SpatialRDD[Point]()
+      candidatesOutRDD.setRawSpatialRDD(candidatesOutSafeZone)
+      val disksOutRDD = new CircleRDD(candidatesOutRDD, r)
+      disksOutRDD.analyze(candidatesOutRDD.boundary(), nCandidatesRaw.toInt)
+      disksOutRDD.spatialPartitioning(pointsRDD.getPartitioner)
 
-          (pids, (x, y))
-        }.toList.groupBy(_._1).values.map{ p =>
-          val (pids, coords) = p.head
-          val x = coords._1
-          val y = coords._2
+      val disksOutSafeZone = disksOutRDD.spatialPartitionedRDD.rdd
+        .mapPartitionsWithIndex{ (global_gid, disksIt) =>
+          val grid = broadcastGrids.value(global_gid)
+          grid.expandBy(r)
+          // LCM Pruning...
+          val transactions = disksIt.map{ disk =>
+            val center = circle2point(disk)
+            val pids = center.getUserData.asInstanceOf[List[Int]].mkString(" ")
+            val x = center.getX
+            val y = center.getY
 
-          new Transaction(x, y, pids)
-        }.toList
+            (pids, (x, y))
+          }.toList.groupBy(_._1).values.map{ p =>
+            val (pids, coords) = p.head
+            val x = coords._1
+            val y = coords._2
 
-        val data = new Transactions(transactions.asJava, 0)
-        val lcm = new AlgoLCM2()
-        lcm.run(data)
+            new Transaction(x, y, pids)
+          }.toList
 
-        val disks = lcm.getPointsAndPids.asScala.map{ m =>
-          val pids = m.getItems.map(_.toInt).toList
-          val x = m.getX
-          val y = m.getY
-          val disk = geofactory.createPoint(new Coordinate(x, y))
-          disk.setUserData(pids)
-          disk
-        }.filter{ disk =>
-          grid.contains(disk.getEnvelopeInternal)
+          val data = new Transactions(transactions.asJava, 0)
+          val lcm = new AlgoLCM2()
+          lcm.run(data)
+
+          val disks = lcm.getPointsAndPids.asScala.map{ m =>
+            val pids = m.getItems.map(_.toInt).toList
+            val x = m.getX
+            val y = m.getY
+            val disk = geofactory.createPoint(new Coordinate(x, y))
+            disk.setUserData(pids)
+            disk
+          }.filter{ disk =>
+            grid.contains(disk.getEnvelopeInternal)
+          }
+
+          disks.toIterator
         }
 
-        disks.toIterator
-      }
+      val results = disksInSafeZone
+        .zipPartitions(disksOutSafeZone, preservesPartitioning = true) { (itIn, itOut) =>
+          itIn ++ itOut
+        }
 
-    val maximalsRDD = disksInSafeZone
-      .zipPartitions(disksOutSafeZone, preservesPartitioning = true) { (itIn, itOut) =>
-        itIn ++ itOut
-      }
+      results.cache()
+      val N = results.count()
+      n(lcmPhase, N)
+      (results, N)
+    }
+    metrics.end()
+    val phase2 = getPhaseMetrics(metrics, lcmPhase)
+     */
+
+    val phases = phase1//.union(phase2)
+    phases.repartition(1).write
+      .mode(org.apache.spark.sql.SaveMode.Overwrite)
+      .option("header", "true").option("delimiter", "\t")
+      .csv("/tmp/logs")
 
     //
     debug{
@@ -241,7 +299,7 @@ object DisksFinder{
           .collect().sorted
       }
       save{"/tmp/edgesGGrids.wkt"}{
-        pointsRDD.partitionTree.getLeafZones.asScala.map{ z =>
+        quadtree.getLeafZones.asScala.map{ z =>
           val id = z.partitionId
           val e = z.getEnvelope
           val p = DistanceJoin.envelope2polygon(e)
@@ -249,10 +307,16 @@ object DisksFinder{
         }
       }
       save{"/tmp/edgesDisks.wkt"}{
-        maximalsRDD.map{ center =>
+        candidatesRaw.map{ center =>
           val circle = center.buffer(epsilon / 2.0, 10)
           val pids = center.getUserData.asInstanceOf[List[Int]]
           s"${circle.toText}\t${pids}\n"
+        }.collect.sorted
+      }
+      save{f"/tmp/PFLOCK_E${epsilon}%.0f_M1_D1.txt"}{
+        candidatesRaw.map{ center =>
+          val pids = center.getUserData.asInstanceOf[List[Int]].sorted.mkString(" ")
+          s"0, 0, ${pids}\n"
         }.collect.sorted
       }
       
@@ -260,11 +324,11 @@ object DisksFinder{
     //
     
     logger.info("Closing session...")
-    logger.info(s"${appId}|${System.getProperty("sun.java.command")} --npartitions ${global_grids.size}")
+    logger.info(s"${appId}|${System.getProperty("sun.java.command")} --npartitions ${grids.size}")
     spark.close()
     debug{
       save{"/tmp/edgesLGrids.wkt"}{
-        (0 until global_grids.size).flatMap{ n =>
+        (0 until grids.size).flatMap{ n =>
           try{
             scala.io.Source
               .fromFile(s"/tmp/edgesLGrids_${n}.wkt")
@@ -279,6 +343,7 @@ object DisksFinder{
     }
     logger.info("Closing session... Done!")
   }
+
 
   def calculateCenterCoordinates(p1: Point, p2: Point, r2: Double,
     delta: Double = 0.001): List[Point] = {
