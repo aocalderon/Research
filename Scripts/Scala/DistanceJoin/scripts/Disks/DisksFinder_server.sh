@@ -54,7 +54,8 @@ POINTS=hdfs://$HUSER/Datasets/LA/LA_50KTrajs
 #POINTS=file://$HOME/Research/Datasets/Test/Points_N1K_E20.tsv
 #POINTS=file://$HOME/Research/Datasets/Test/Points_N20_E1.tsv
 
-#     --conf spark.default.parallelism=${PARTITIONS} \
+#       --conf spark.default.parallelism=${PARTITIONS} \
+#	--conf spark.locality.wait=0s \
     spark-submit \
 	--conf spark.locality.wait=0s \
 	--files "$LOG_FILE" --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:"$LOG_FILE" \
