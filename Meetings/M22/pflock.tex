@@ -69,26 +69,43 @@
     \end{frame}
 }
 
-\begin{frame}{Implementation update}
+\begin{frame}{Implementation done}
   \begin{itemize}
-  \item Extension zone goes up to $2 * \varepsilon$:
+  \item The workflow was divided in two big jobs:
     \begin{enumerate}
-    \item Finding pairs, centers, disks and pruning in the same partition.
-    \item No repartition is required.
+    \item Finding pairs, centers and disks.
+    \item Pruning redundant and duplicate disks (it required repartition).
     \end{enumerate}
-  \item Test and validate the changes vs sequential BFE.
+  \item Run validations using LA\_50K and $\epsilon = 5m$.
+    \item Average time = 2.96s
   \end{itemize}
+  
 \end{frame}
 
-\begin{frame}{Task histogram}{Top 100 tasks by duration\footnote{\tiny{click to enlarge}}...}
+\begin{frame}{Candidate disks finding}{Task duration distribution}
   \centering
-  \href{https://www.cs.ucr.edu/~acald013/public/Research/Figures/TopTaskHist.pdf}{\includegraphics[scale=0.18]{figures/TopTaskHist}}
+  \includegraphics[width=\textwidth]{figures/Stage4Summary}
+\end{frame}
+
+\begin{frame}{Candidate disks finding}{Node load distribution}
+  \centering
+  \includegraphics[width=\textwidth]{figures/Stage4ByExecutor}
+\end{frame}
+
+\begin{frame}{LCM pruning}{Task duration distribution}
+  \centering
+  \includegraphics[width=\textwidth]{figures/Stage7Summary}
+\end{frame}
+
+\begin{frame}{LCM pruning}{Node load distribution}
+  \centering
+  \includegraphics[width=\textwidth]{figures/Stage7ByExecutor}
 \end{frame}
 
 \begin{frame}{What's next}
     \begin{itemize}
-      \item Understand why the high shuffle cost.
-      \item Update proofs.
+      \item Dealing with some minor bugs.
+      \item Completing experiments and plot the results.
     \end{itemize}
 \end{frame}
 
