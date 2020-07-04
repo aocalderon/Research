@@ -59,7 +59,7 @@ POINTS=hdfs://$HUSER/Datasets/LA/LA_50KTrajs
     spark-submit \
 	--conf spark.locality.wait=0s \
 	--files "$LOG_FILE" --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:"$LOG_FILE" \
-	--jars "${SPARK_JARS}"geospark-1.2.0.jar,"${SPARK_JARS}"geospark-sql_2.3-1.2.0.jar,"${SPARK_JARS}"scallop_2.11-3.1.5.jar,"${SPARK_JARS}"utils_2.11.jar \
+	--jars "${SPARK_JARS}"geospark-1.2.0.jar,"${SPARK_JARS}"geospark-sql_2.3-1.2.0.jar,"${SPARK_JARS}"scallop_2.11-3.1.5.jar,"${SPARK_JARS}"spark-measure_2.11-0.16.jar,"${SPARK_JARS}"utils_2.11.jar \
 	--num-executors $EXECUTORS --executor-cores $CORES --executor-memory $EMEMORY --driver-memory $DMEMORY \
 	--master "$MASTER" --deploy-mode client \
 	--class "$CLASS_NAME" "$CLASS_JAR" $DEBUG \
