@@ -2,6 +2,7 @@ name := "GeoTester"
 organization := "edu.ucr.dblab"
 version := "0.1"
 
+parallelExecution in ThisBuild := false
 scalaVersion in ThisBuild := "2.11.8"
 
 libraryDependencies += "org.apache.spark" %% "spark-core" % "2.3.0"

@@ -53,3 +53,11 @@ class FlockFinderConf(args: Seq[String]) extends ScallopConf(args) {
 
   verify()
 }
+
+class TaskCoreMapperConf(args: Seq[String]) extends ScallopConf(args) {
+  val filename = opt[String](default = Some(""))
+  val cores    = opt[Int](default = Some(8))
+  val maxt     = opt[Int](default = Some(500))
+
+  verify()
+}
