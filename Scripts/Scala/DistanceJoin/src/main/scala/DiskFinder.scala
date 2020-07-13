@@ -83,7 +83,7 @@ object DisksFinder{
         val p = geofactory.createPoint(new Coordinate(point.x, point.y))
         p.setUserData(userData)
         p
-      }
+      }.repartition(1024)
       pointsRaw.setRawSpatialRDD(pointsJTS)
       val nPointsRaw = pointsRaw.rawSpatialRDD.count()
       val grid = pointsRaw.boundary()
@@ -96,25 +96,14 @@ object DisksFinder{
 
     val partitionStage = "Partitions done"
     val (pointsRDD, nPartitionRaw) = timer{partitionStage}{
-      /*
-      val levels = 5
-      val capacity = params.partitions()
-      val grid = pointsRaw.boundary()
-      grid.expandBy(epsilon)
-      val global_grid = new QuadRectangle(grid)
-      val quadtree = new StandardQuadTree[Point](global_grid, 0, capacity, levels)
-      pointsRaw.getRawSpatialRDD.rdd.sample(false, 0.1, 42).foreach { p =>
-        quadtree.insert(new QuadRectangle(p.getEnvelopeInternal), p)
-      }
-      quadtree.assignPartitionIds()
-       */
-      //val partitioner = new QuadTreePartitioner(quadtree)
       pointsRaw.spatialPartitioning(GridType.QUADTREE, params.partitions())
       pointsRaw.spatialPartitionedRDD.persist(persistanceLevel)
       val N = pointsRaw.spatialPartitionedRDD.count()
       n(partitionStage, N)
       (pointsRaw, N)
     }
+    pointsRDD.spatialPartitionedRDD.rdd.persist(StorageLevel.MEMORY_ONLY)
+    pointsRDD.spatialPartitionedRDD.rdd.count()
     // Collecting the global settings...
     val quadtree = pointsRDD.partitionTree
     val expanded_grids = quadtree.getLeafZones.asScala.toVector
@@ -128,6 +117,38 @@ object DisksFinder{
     val grids = quadtree.getLeafZones.asScala.toVector
       .sortBy(_.partitionId).map(_.getEnvelope)
     val broadcastGrids = spark.sparkContext.broadcast(grids)
+    val broadcastExpandedGrids = spark.sparkContext.broadcast(expanded_grids)
+
+    logger.info("Printing partition location:")
+    import java.net.{NetworkInterface, InetAddress}
+    val P = pointsRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (index, it) =>
+      val hostNames = scala.collection.mutable.ListBuffer[(Int, String)]()
+      
+      val e = NetworkInterface.getNetworkInterfaces
+      while(e.hasMoreElements)
+      {
+        val n = e.nextElement match {
+          case e: NetworkInterface => e
+          case _ => ???
+        }
+        val ee = n.getInetAddresses
+        while (ee.hasMoreElements) {
+          val h = ee.nextElement match {
+            case e: InetAddress => {
+                (index, e.getHostName)
+            } 
+            case _ => ???
+          }
+          hostNames += h
+        }
+      }
+      
+      hostNames.toIterator
+    }.filter(_._2 != "localhost").toDF("pid", "host")
+      .groupBy("host").agg(functions.count("pid").alias("n"))
+    logger.info(s"${P.count}")
+    P.show()
+    logger.info("Printing partition location: Done!")
 
     // Joining points...
     val considerBoundary = true
@@ -147,7 +168,10 @@ object DisksFinder{
           val points = circlesRDD.spatialPartitionedRDD.rdd.map(circle2point)
           
           points.zipPartitions(points, preservesPartitioning = true){ (leftIt, rightIt) =>
-            val global_gid = TaskContext.getPartitionId
+            val tc = TaskContext.get
+            val global_gid = tc.partitionId
+            val taskId = tc.taskAttemptId()
+            logger.info(s"PartitionId=${global_gid}\tTaskId=${taskId}")
 
             // Finding pairs...
             val points = leftIt.toVector
@@ -159,19 +183,18 @@ object DisksFinder{
               }
               .toVector
 
-            //val grid = broadcastGrids.value(global_gid)
-            val grid = expanded_grids(global_gid)
-
+            // Finding centers...
+            val grid = broadcastExpandedGrids.value(global_gid)
             val centers = pairs.flatMap{ case (p1, p2) =>
               calculateCenterCoordinates(p1, p2, r2)
-            }//.filter(center => grid.contains(center.getCoordinate))
-            
-            //val points = pairs.flatMap{ case(p1, p2) => List(p1, p2)}.distinct
+            }
+
+            // Finding disks...
             val candidates = DistanceJoin
               .partitionBasedAggregate(centers.toIterator, points.toIterator, r)
               .toVector
 
-            // LCM Pruning...
+            // Pruning duplicates/redundants...
             val transactions = candidates.map{ disk =>
               val pids = disk._2.map(_.getUserData.toString.split("\t").head.toInt)
                 .toList.sorted.mkString(" ")
@@ -186,22 +209,17 @@ object DisksFinder{
 
               new Transaction(x, y, pids)
             }.toList.distinct
-
             val data = new Transactions(transactions.asJava, 0)
             val lcm = new AlgoLCM2()
             lcm.run(data)
-
-            // Compute the safe zone...
             grid.expandBy(-2 * epsilon)
             val disks = lcm.getPointsAndPids.asScala.map{ m =>
-              val pids = m.getItems.map(_.toInt).toList
+              val pids = m.getItems.map(_.toInt).toList.sorted
               val x = m.getX
               val y = m.getY
               val disk = geofactory.createPoint(new Coordinate(x, y))
-              disk.setUserData(pids)
-
-              // Mark if the disk is in the safe zone...
-              //(disk, grid.contains(disk.getEnvelopeInternal))
+              val userData = s"${pids.mkString(" ")}\t${global_gid}\t${taskId}"
+              disk.setUserData(userData)
               disk
             }.filter(disk => grid.contains(disk.getEnvelopeInternal))
 
@@ -245,13 +263,13 @@ object DisksFinder{
       save{"/tmp/edgesDisks.wkt"}{
         candidatesRaw.map{ center =>
           val circle = center.buffer(epsilon / 2.0, 10)
-          val pids = center.getUserData.asInstanceOf[List[Int]]
+          val pids = center.getUserData.toString
           s"${circle.toText}\t${pids}\n"
         }.collect.sorted
       }
       save{f"/tmp/PFLOCK_E${epsilon}%.0f_M1_D1.txt"}{
         candidatesRaw.map{ center =>
-          val pids = center.getUserData.asInstanceOf[List[Int]].sorted.mkString(" ")
+          val pids = center.getUserData.toString
           s"0, 0, ${pids}\n"
         }.collect.sorted
       }
