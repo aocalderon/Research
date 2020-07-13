@@ -18,16 +18,17 @@ class Task:
     def toString(self):
         return("{}\t{}\t{}\t{}\t{}\n".format(host, taskId, launch, finish, duration))
 
-
-filename = "/home/and/Research/Meetings/next/figures/pflock.tsv"
+id = 17
+filename = "/home/and/Research/Meetings/next/figures/pflock{}.tsv".format(id)
 cores = 8
 
-def getAvailableCore(T, time):
+def getAvailableCore(T, time, taskId):
     try:
         core = [T[i][time] for i in range(cores)].index(0)
         return(core)
     except ValueError:
-        return(getAvailableCore(T, time + 1))
+        #print("Not available core at {} for task {}".format(time, taskId))
+        return(getAvailableCore(T, time + 1, taskId))
 
 tasks_prime = []
 with open(filename) as f:
@@ -48,7 +49,7 @@ for t in tasks_prime:
     tasks.append(task)
 length = max(tasks, key = lambda  task: task.finish).finish
 
-f = open("/tmp/mapper.tsv", "w")
+f = open("/home/and/Research/Meetings/next/figures/mapper{}.tsv".format(id), "w")
 f.write("coreId\thost\ttaskId\tlaunchTime\tfinishTime\tduration\n")
 
 hosts = ["mr-01","mr-02","mr-03","mr-04","mr-05","mr-06","mr-07","mr-08","mr-09","mr-10","mr-11","mr-12"]
@@ -59,12 +60,15 @@ for host in hosts:
     sample = [task for task in tasks if task.host == host]
     sample.sort(key = lambda task: task.launch)
     for t in sample:
-        core = getAvailableCore(T, t.launch)
-        line = "{}\t{}\t{}\t{}\t{}\t{}\n".format(core, t.host, t.taskId, t.launch, t.finish, t.duration)
+        core = getAvailableCore(T, t.launch, taskId = t.taskId)
+        line = "{}\t{}\t{}\t{}\t{}\t{}\n".format(core, 
+                                                 t.host, 
+                                                 t.taskId, 
+                                                 t.launch+start, 
+                                                 t.finish+start, 
+                                                 t.duration)
         f.write(line)
-        #print(line)
         interval = [x for x in range(t.launch, t.finish)]
         for time in interval:
             T[core][time] = t.taskId
-        
 f.close()
