@@ -43,7 +43,7 @@ done
 
 SPARK_JARS=$HOME/Spark/2.4/jars/
 CLASS_JAR=$HOME/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar
-CLASS_NAME=edu.ucr.dblab.djoin.DisksFinder
+CLASS_NAME=edu.ucr.dblab.djoin.DisksFinderTest
 LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
 
 MASTER="yarn"
