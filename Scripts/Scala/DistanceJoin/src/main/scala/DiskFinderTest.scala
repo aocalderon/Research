@@ -239,8 +239,11 @@ object DisksFinderTest{
     // Collecting Tasks and RDD stats...
     val gridsDF = quadtree.getLeafZones.asScala.toVector
       .sortBy(_.partitionId)
-      .map(grid => (grid.partitionId, envelope2polygon(grid.getEnvelope).toText))
-      .toDF("grid_id", "wkt")
+      .map{ grid =>
+        val mbr = envelope2polygon(grid.getEnvelope)
+        (grid.partitionId, mbr.toText, mbr.getArea, mbr.getLength)
+      }
+      .toDF("grid_id", "wkt", "area", "perimeter")
     val mapTaskPartition = candidatesRaw.map{ disk =>
       val userData = disk.getUserData.toString.split("\t")
       (userData(1).toInt, userData(2).toInt)
