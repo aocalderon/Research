@@ -3,7 +3,7 @@ library(ggplot2)
 library(sf)
 library(ssh)
 
-id = "0626"
+id = "0627"
 filename = paste0("pflock",id,".tsv")
 session <- ssh_connect("acald013@hn")
 scp_download(session, paste0("/home/acald013/tmp/",filename), to = getwd())

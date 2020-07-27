@@ -1,7 +1,7 @@
 require(tidyverse)
 require(ssh)
 
-id = "0626"
+id = "0627"
 filename = paste0("pflock",id,".tsv")
 session <- ssh_connect("acald013@hn")
 scp_download(session, paste0("/home/acald013/tmp/",filename), to = getwd())
@@ -22,7 +22,8 @@ getTimeArray <- function(log){
 
 top = log %>%
   mutate(duration = as.numeric(duration), index = as.factor(index)) %>% 
-  slice_max(duration, n = 20)
+  #slice_max(duration, n = 20)
+  filter(duration >= 1000)
 
 log = getTimeArray(top)
 data = log %>% separate_rows(Time, Task, sep = " ", convert = TRUE) %>%

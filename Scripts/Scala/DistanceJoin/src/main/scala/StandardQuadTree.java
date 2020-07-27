@@ -24,6 +24,9 @@ import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Geometry;
 
 import org.apache.commons.lang3.mutable.MutableInt;
+import org.apache.spark.util.random.SamplingUtils;
+import org.datasyslab.geospark.utils.RDDSampleUtils;
+
 import org.geotools.geometry.jts.GeometryClipper;
 
 import java.io.Serializable;
@@ -36,8 +39,8 @@ public class StandardQuadTree<T> implements Serializable {
     // Maximum number of items in any given zone. When reached, a zone is sub-divided.
     private final int maxItemsPerZone;
     private final int maxLevel;
-
     private final int level;
+    private final double epsilon;
     private int nodeNum = 0;
 
     // the four sub regions,
@@ -58,15 +61,33 @@ public class StandardQuadTree<T> implements Serializable {
 
     public StandardQuadTree(QuadRectangle definition, int level)
     {
-        this(definition, level, 5, 10);
+        this(definition, level, 5, 10, 10.0);
     }
 
+    
     public StandardQuadTree(QuadRectangle definition, int level, int maxItemsPerZone, int maxLevel)
     {
         this.maxItemsPerZone = maxItemsPerZone;
         this.maxLevel = maxLevel;
         this.zone = definition;
         this.level = level;
+	this.epsilon = 0.0;
+    }
+    
+
+    public StandardQuadTree(QuadRectangle definition, int level, int maxItemsPerZone, int maxLevel, double epsilon)
+    {
+        this.maxItemsPerZone = maxItemsPerZone;
+        this.maxLevel = maxLevel;
+        this.zone = definition;
+        this.level = level;
+	this.epsilon = epsilon;
+    }
+
+    public double getFraction(int numPartitions, long totalNumberOfRecords){
+	int sampleNumberOfRecords = RDDSampleUtils.getSampleNumbers(numPartitions, totalNumberOfRecords, -1);
+	final double fraction = SamplingUtils.computeFractionForSampleSize(sampleNumberOfRecords, totalNumberOfRecords, false);
+	return fraction;
     }
 
     public StandardQuadTree<T>[] getRegions(){
@@ -135,7 +156,7 @@ public class StandardQuadTree<T> implements Serializable {
 
     private StandardQuadTree<T> newQuadTree(QuadRectangle zone, int level)
     {
-        return new StandardQuadTree<T>(zone, level, this.maxItemsPerZone, this.maxLevel);
+        return new StandardQuadTree<T>(zone, level, this.maxItemsPerZone, this.maxLevel, this.epsilon);
     }
 
     public void split()
