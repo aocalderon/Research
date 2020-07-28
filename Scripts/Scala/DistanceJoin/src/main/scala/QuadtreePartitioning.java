@@ -30,7 +30,7 @@ public class QuadtreePartitioning implements Serializable
     /**
      * The Quad-Tree.
      */
-    private final StandardQuadTree<Point> partitionTree;
+    private final StandardQuadTree<? extends Geometry> partitionTree;
 
     /**
      * Instantiates a new Quad-Tree partitioning.
@@ -49,7 +49,6 @@ public class QuadtreePartitioning implements Serializable
             throws Exception
     {
         // Make sure the tree doesn't get too deep in case of data skew
-	GeometryFactory geofactory = new GeometryFactory(new PrecisionModel(1000));
         int maxLevel = partitions;
         int maxItemsPerNode = samples.size() / partitions;
         partitionTree = new StandardQuadTree(new QuadRectangle(boundary), 0,
@@ -59,14 +58,13 @@ public class QuadtreePartitioning implements Serializable
         }
 
         for (final Envelope sample : samples) {
-	    Point geom = geofactory.createPoint(sample.centre());
-            partitionTree.insert(new QuadRectangle(sample), geom);
+            partitionTree.insert(new QuadRectangle(sample), null);
         }
 
         partitionTree.assignPartitionIds();
     }
 
-    public StandardQuadTree<Point> getPartitionTree()
+    public StandardQuadTree<? extends Geometry> getPartitionTree()
     {
         return this.partitionTree;
     }

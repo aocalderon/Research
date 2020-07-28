@@ -41,6 +41,7 @@ public class StandardQuadTree<T> implements Serializable {
     private final int maxLevel;
     private final int level;
     private final double epsilon;
+    private final int factor;
     private int nodeNum = 0;
 
     // the four sub regions,
@@ -72,6 +73,7 @@ public class StandardQuadTree<T> implements Serializable {
         this.zone = definition;
         this.level = level;
 	this.epsilon = 0.0;
+	this.factor = 4;
     }
     
 
@@ -82,12 +84,7 @@ public class StandardQuadTree<T> implements Serializable {
         this.zone = definition;
         this.level = level;
 	this.epsilon = epsilon;
-    }
-
-    public double getFraction(int numPartitions, long totalNumberOfRecords){
-	int sampleNumberOfRecords = RDDSampleUtils.getSampleNumbers(numPartitions, totalNumberOfRecords, -1);
-	final double fraction = SamplingUtils.computeFractionForSampleSize(sampleNumberOfRecords, totalNumberOfRecords, false);
-	return fraction;
+	this.factor = 4;
     }
 
     public StandardQuadTree<T>[] getRegions(){
@@ -117,7 +114,11 @@ public class StandardQuadTree<T> implements Serializable {
     private int findRegion(QuadRectangle r, boolean split)
     {
         int region = REGION_SELF;
-        if (nodeNum >= maxItemsPerZone && this.level < maxLevel) {
+	double w = this.getZone().width;
+	double h = this.getZone().height;
+	double e = this.factor * this.epsilon;
+	boolean too_small = w <= e || h <= e;
+        if (!too_small && nodeNum >= maxItemsPerZone && this.level < maxLevel) {
             // we don't want to split if we just need to retrieve
             // the region, not inserting an element
             if (regions == null && split) {
@@ -565,5 +566,14 @@ public class StandardQuadTree<T> implements Serializable {
     private boolean disjoint(Envelope r1, Envelope r2)
     {
         return !r1.intersects(r2) && !r1.covers(r2) && !r2.covers(r1);
+    }    
+}
+
+final class FractionCalculator {
+    public static double getFraction(int numPartitions, long totalNumberOfRecords){
+	int sampleNumberOfRecords = RDDSampleUtils.getSampleNumbers(numPartitions, totalNumberOfRecords, -1);
+	final double fraction = SamplingUtils.computeFractionForSampleSize(sampleNumberOfRecords, totalNumberOfRecords, false);
+	return fraction;
     }
 }
+

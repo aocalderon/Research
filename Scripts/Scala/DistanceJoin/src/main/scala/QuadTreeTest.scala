@@ -72,22 +72,17 @@ object QuadTreeTest {
 
     logger.info("Partitioning...")
     pointsRDD.analyze()
-    val definition = new QuadRectangle(pointsRDD.boundary())
-    
-    val quadtree = new StandardQuadTree[Point](
-      definition,
-      0,
-      params.capacity(),
-      params.levels(),
-      params.epsilon()
-    )
-    
-    val fraction = quadtree.getFraction(params.partitions(), nPointsRDD)
+    val fraction = FractionCalculator.getFraction(params.partitions(), nPointsRDD)
     logger.info(s"Fraction: ${fraction}")
     val samples = pointsJTS.sample(false, fraction, 42)
       .map(_.getEnvelopeInternal).collect().toList.asJava
-    val partitioning = new QuadtreePartitioning(samples, pointsRDD.boundary(), params.partitions(), params.epsilon())
-    val partitioner = new QuadTreePartitioner(partitioning.getPartitionTree())
+    val partitioning = new QuadtreePartitioning(
+      samples,
+      pointsRDD.boundary(),
+      params.partitions(),
+      params.epsilon())
+    val quadtree = partitioning.getPartitionTree()
+    val partitioner = new QuadTreePartitioner(quadtree)
     pointsRDD.spatialPartitioning(partitioner)
     val points = pointsRDD.spatialPartitionedRDD.rdd
     points.cache()
@@ -96,7 +91,7 @@ object QuadTreeTest {
     
     logger.info(s"Saving...")
     save{"/tmp/edgesGrids.wkt"}{
-      partitioning.getPartitionTree.getLeafZones.asScala.map{ leaf =>
+      quadtree.getLeafZones.asScala.map{ leaf =>
         val id = leaf.partitionId
         val mbr = leaf.getEnvelope()
         val polygon = envelope2polygon(mbr)
