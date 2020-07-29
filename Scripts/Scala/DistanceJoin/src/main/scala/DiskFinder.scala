@@ -2,6 +2,8 @@ package edu.ucr.dblab.djoin
 
 import org.slf4j.{LoggerFactory, Logger}
 import scala.collection.JavaConverters._
+import ch.cern.sparkmeasure.TaskMetrics
+
 import org.apache.spark.TaskContext
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{SparkSession, Dataset, Row}
@@ -12,19 +14,24 @@ import org.apache.spark.storage.StorageLevel
 import org.apache.spark.rdd.RDD
 import org.apache.spark.TaskContext
 import org.apache.spark.sql.functions
-import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
+
 import org.datasyslab.geospark.spatialRDD.{SpatialRDD, CircleRDD, PointRDD}
 import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.enums.{GridType, IndexType}
+import org.datasyslab.geosparkviz.core.Serde.GeoSparkVizKryoRegistrator
 import org.datasyslab.geosparksql.utils.GeoSparkSQLRegistrator
-import com.vividsolutions.jts.geom.{Geometry, Envelope, Coordinate, Point, Polygon, MultiPolygon}
-import com.vividsolutions.jts.geom.GeometryFactory
+import org.datasyslab.geosparkviz.sql.utils.GeoSparkVizRegistrator
+import org.datasyslab.geosparksql.utils.Adapter
+
 import com.vividsolutions.jts.index.SpatialIndex
 import com.vividsolutions.jts.index.quadtree._
+import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel}
+import com.vividsolutions.jts.geom.{Geometry, Envelope, Coordinate}
+import com.vividsolutions.jts.geom.{Point, Polygon, MultiPolygon}
+
 import edu.ucr.dblab.Utils._
 import edu.ucr.dblab.djoin.DistanceJoin.{geofactory, round, circle2point, envelope2polygon}
 import edu.ucr.dblab.djoin.SPMF.{AlgoLCM2, Transactions, Transaction}
-import ch.cern.sparkmeasure.TaskMetrics
 
 object DisksFinder{
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -41,10 +48,12 @@ object DisksFinder{
     implicit val spark = SparkSession.builder()
       .appName(appName)
       .config("spark.serializer", classOf[KryoSerializer].getName)
-      .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
+      .config("spark.kryo.registrator", classOf[GeoSparkVizKryoRegistrator].getName)
       .getOrCreate()
     GeoSparkSQLRegistrator.registerAll(spark)
+    GeoSparkVizRegistrator.registerAll(spark)
     import spark.implicits._
+
     implicit val conf = spark.sparkContext.getConf
     def getConf(property: String)(implicit conf: SparkConf): String = conf.get(property)
     val appId: String = if(getConf("spark.master").contains("local")){
@@ -83,7 +92,7 @@ object DisksFinder{
         val p = geofactory.createPoint(new Coordinate(point.x, point.y))
         p.setUserData(userData)
         p
-      }.repartition(1024)
+      }
       pointsRaw.setRawSpatialRDD(pointsJTS)
       val nPointsRaw = pointsRaw.rawSpatialRDD.count()
       val grid = pointsRaw.boundary()
@@ -95,17 +104,28 @@ object DisksFinder{
     }
 
     val partitionStage = "Partitions done"
-    val (pointsRDD, nPartitionRaw) = timer{partitionStage}{
-      pointsRaw.spatialPartitioning(GridType.QUADTREE, params.partitions())
+    val (pointsRDD, nPointsRDD, quadtree) = timer{partitionStage}{
+      val fraction = FractionCalculator.getFraction(params.partitions(), nPoints)
+      logger.info(s"Fraction: ${fraction}")
+      val samples = pointsRaw.getRawSpatialRDD.rdd.sample(false, fraction, 42)
+        .map(_.getEnvelopeInternal).collect().toList.asJava
+      val partitioning = new QuadtreePartitioning(samples,
+        pointsRaw.boundary(),
+        params.partitions(),
+        params.epsilon(),
+        params.factor())
+      val quadtree = partitioning.getPartitionTree()
+      val partitioner = new QuadTreePartitioner(quadtree)
+      pointsRaw.spatialPartitioning(partitioner)
+      //pointsRaw.spatialPartitioning(GridType.QUADTREE, params.partitions())
+
       pointsRaw.spatialPartitionedRDD.persist(persistanceLevel)
       val N = pointsRaw.spatialPartitionedRDD.count()
       n(partitionStage, N)
-      (pointsRaw, N)
+      (pointsRaw, N, quadtree)
     }
-    pointsRDD.spatialPartitionedRDD.rdd.persist(StorageLevel.MEMORY_ONLY)
-    pointsRDD.spatialPartitionedRDD.rdd.count()
+    
     // Collecting the global settings...
-    val quadtree = pointsRDD.partitionTree
     val expanded_grids = quadtree.getLeafZones.asScala.toVector
       .sortBy(_.partitionId)
       .map{ partition =>
@@ -235,13 +255,16 @@ object DisksFinder{
     metrics.end()
     val phase1 = getPhaseMetrics(metrics, disksPhase)
 
+    val metrics_output = s"hdfs:///user/acald013/logs/pflock-${appId}"
+    logger.info(s"Saving metrics at ${metrics_output}...")
     val phases = phase1
     phases.repartition(1).write
       .mode("overwrite")
       .format("csv")
       .option("delimiter", "\t")
       .option("header", true)
-      .save("hdfs:///user/acald013/logs/pflock")
+      .save(metrics_output)
+    logger.info(s"Saving metrics at ${metrics_output}... Done!")
 
     //
     debug{

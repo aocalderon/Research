@@ -1,13 +1,20 @@
 #!/bin/bash
 
-ES=(6 8 10 12)
-PS=(1000 1200 1400 1600 1800 2000)
+CORES=108
+FS=( 1 2 3 4 5 )
+PS=( 8 9 10 11 12 )
 
-for E in "${ES[@]}"
+for n in $(seq 1 $1)
 do
-    for P in "${PS[@]}"
+    echo "$n"
+    for F in "${FS[@]}"
     do
-	echo "./DisksFinder_server.sh -e $E -p $P -a 50"
+	for P in "${PS[@]}"
+	do
+	    echo "./DisksFinder_server.sh -p $((P * CORES)) -f $F"
+	    ./DisksFinder_server.sh -p $((P * CORES)) -f $F
+	done
     done
 done
+
 

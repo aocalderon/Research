@@ -39,20 +39,29 @@ public class QuadtreePartitioning implements Serializable
      * @param boundary the boundary
      * @param partitions the partitions
      */
-    public QuadtreePartitioning(List<Envelope> samples, Envelope boundary, int partitions, double epsilon)
-            throws Exception
-    {
-        this(samples, boundary, partitions, -1, epsilon);
+    public QuadtreePartitioning(List<Envelope> samples,
+				Envelope boundary,
+				int partitions,
+				double epsilon,
+				int factor) throws Exception {
+        this(samples, boundary, partitions, -1, epsilon, factor);
     }
 
-    public QuadtreePartitioning(List<Envelope> samples, Envelope boundary, final int partitions, int minTreeLevel, double epsilon)
-            throws Exception
-    {
+    public QuadtreePartitioning(List<Envelope> samples,
+				Envelope boundary,
+				final int partitions,
+				int minTreeLevel,
+				double epsilon,
+				int factor) throws Exception {
         // Make sure the tree doesn't get too deep in case of data skew
         int maxLevel = partitions;
         int maxItemsPerNode = samples.size() / partitions;
-        partitionTree = new StandardQuadTree(new QuadRectangle(boundary), 0,
-					     maxItemsPerNode, maxLevel, epsilon);
+        partitionTree = new StandardQuadTree(new QuadRectangle(boundary),
+					     0,
+					     maxItemsPerNode,
+					     maxLevel,
+					     epsilon,
+					     factor);
         if (minTreeLevel > 0) {
             partitionTree.forceGrowUp(minTreeLevel);
         }

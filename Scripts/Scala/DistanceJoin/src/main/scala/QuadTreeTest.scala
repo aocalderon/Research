@@ -80,7 +80,8 @@ object QuadTreeTest {
       samples,
       pointsRDD.boundary(),
       params.partitions(),
-      params.epsilon())
+      params.epsilon(),
+      params.factor())
     val quadtree = partitioning.getPartitionTree()
     val partitioner = new QuadTreePartitioner(quadtree)
     pointsRDD.spatialPartitioning(partitioner)
@@ -119,6 +120,7 @@ class QuadTreeTestConf(args: Seq[String]) extends ScallopConf(args) {
   val input      = opt[String](default = Some(""))
   val epsilon    = opt[Double](default = Some(10.0))
   val partitions = opt[Int](default = Some(256))
+  val factor     = opt[Int](default = Some(4))
   val capacity   = opt[Int](default = Some(20))
   val fraction   = opt[Double](default = Some(0.01))
   val levels     = opt[Int](default = Some(5))

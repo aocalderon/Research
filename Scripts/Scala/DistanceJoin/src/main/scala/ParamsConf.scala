@@ -28,8 +28,8 @@ class DiskFinderConf(args: Seq[String]) extends ScallopConf(args) {
   val fraction    = opt[Double](default = Some(0.01))
   val levels      = opt[Int](default = Some(5))
   val partitions  = opt[Int](default = Some(256))
-  val lparts      = opt[Int](default = Some(0))
-  val method      = opt[String](default = Some("None"))
+  val factor      = opt[Int](default = Some(4))
+  val method      = opt[String](default = Some("Partition"))
   val persistance = opt[Int](default = Some(1))
   val debug       = opt[Boolean](default = Some(false))
 
