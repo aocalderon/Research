@@ -1,0 +1,1930 @@
+1
+./DisksFinder_server.sh -p 540 -f 4
+2020-07-31 11:36:40,680|Starting session...
+2020-07-31 11:36:55,199|Starting session... Done!
+2020-07-31 11:37:03,065|DiskFinder|0863|Points|Load|50418
+2020-07-31 11:37:03,066|Reading points                |  7.86
+2020-07-31 11:37:03,071|Fraction: 0.024407116835129132
+2020-07-31 11:37:06,493|DiskFinder|0863|Partitions done|Load|50417
+2020-07-31 11:37:06,494|Partitions done               |  3.43
+2020-07-31 11:37:06,539|Printing partition location:
+2020-07-31 11:37:09,006|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|142|
+|mr-08|155|
+|mr-01|137|
+|mr-07|145|
+|mr-03|138|
+|mr-09|138|
+|mr-02|137|
+|mr-04|141|
+|mr-05|144|
+|mr-12|148|
+|mr-10|145|
+|mr-11|135|
++-----+---+
+
+2020-07-31 11:37:11,425|Printing partition location: Done!
+2020-07-31 11:37:24,865|DiskFinder|0863|Disks phase|Load|7392
+2020-07-31 11:37:24,865|DiskFinder|0863|Disks phase|Time| 13.44
+2020-07-31 11:37:25,667|Saving metrics at hdfs:///user/acald013/logs/pflock-0863...
+2020-07-31 11:37:28,201|Saving metrics at hdfs:///user/acald013/logs/pflock-0863... Done!
+2020-07-31 11:37:28,203|Closing session...
+2020-07-31 11:37:28,203|0863|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 540 --factor 4 --capacity 200 --npartitions 1705
+2020-07-31 11:37:28,382|Closing session... Done!
+./DisksFinder_server.sh -p 648 -f 4
+2020-07-31 11:37:31,433|Starting session...
+2020-07-31 11:37:46,409|Starting session... Done!
+2020-07-31 11:37:54,225|DiskFinder|0864|Points|Load|50418
+2020-07-31 11:37:54,225|Reading points                |  7.81
+2020-07-31 11:37:54,230|Fraction: 0.028957796140254354
+2020-07-31 11:37:57,762|DiskFinder|0864|Partitions done|Load|50417
+2020-07-31 11:37:57,763|Partitions done               |  3.54
+2020-07-31 11:37:57,813|Printing partition location:
+2020-07-31 11:38:00,423|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|148|
+|mr-08|166|
+|mr-01|158|
+|mr-07|143|
+|mr-03|153|
+|mr-09|147|
+|mr-02|158|
+|mr-04|160|
+|mr-05|164|
+|mr-12|158|
+|mr-10|158|
+|mr-11|154|
++-----+---+
+
+2020-07-31 11:38:02,672|Printing partition location: Done!
+2020-07-31 11:38:15,972|DiskFinder|0864|Disks phase|Load|7394
+2020-07-31 11:38:15,972|DiskFinder|0864|Disks phase|Time| 13.30
+2020-07-31 11:38:16,719|Saving metrics at hdfs:///user/acald013/logs/pflock-0864...
+2020-07-31 11:38:19,153|Saving metrics at hdfs:///user/acald013/logs/pflock-0864... Done!
+2020-07-31 11:38:19,154|Closing session...
+2020-07-31 11:38:19,154|0864|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 648 --factor 4 --capacity 200 --npartitions 1867
+2020-07-31 11:38:19,349|Closing session... Done!
+./DisksFinder_server.sh -p 756 -f 4
+2020-07-31 11:38:22,417|Starting session...
+2020-07-31 11:38:36,757|Starting session... Done!
+2020-07-31 11:38:44,551|DiskFinder|0865|Points|Load|50418
+2020-07-31 11:38:44,552|Reading points                |  7.79
+2020-07-31 11:38:44,556|Fraction: 0.03348712148412119
+2020-07-31 11:38:48,389|DiskFinder|0865|Partitions done|Load|50418
+2020-07-31 11:38:48,389|Partitions done               |  3.84
+2020-07-31 11:38:48,444|Printing partition location:
+2020-07-31 11:38:51,479|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|189|
+|mr-08|179|
+|mr-01|177|
+|mr-07|194|
+|mr-03|178|
+|mr-09|195|
+|mr-02|181|
+|mr-04|195|
+|mr-05|183|
+|mr-12|183|
+|mr-10|192|
+|mr-11|196|
++-----+---+
+
+2020-07-31 11:38:54,119|Printing partition location: Done!
+2020-07-31 11:39:07,678|DiskFinder|0865|Disks phase|Load|7389
+2020-07-31 11:39:07,679|DiskFinder|0865|Disks phase|Time| 13.56
+2020-07-31 11:39:08,490|Saving metrics at hdfs:///user/acald013/logs/pflock-0865...
+2020-07-31 11:39:11,266|Saving metrics at hdfs:///user/acald013/logs/pflock-0865... Done!
+2020-07-31 11:39:11,267|Closing session...
+2020-07-31 11:39:11,267|0865|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 756 --factor 4 --capacity 200 --npartitions 2242
+2020-07-31 11:39:11,424|Closing session... Done!
+./DisksFinder_server.sh -p 864 -f 4
+2020-07-31 11:39:14,495|Starting session...
+2020-07-31 11:39:28,893|Starting session... Done!
+2020-07-31 11:39:36,696|DiskFinder|0866|Points|Load|50418
+2020-07-31 11:39:36,696|Reading points                |  7.80
+2020-07-31 11:39:36,701|Fraction: 0.03799952763274064
+2020-07-31 11:39:40,982|DiskFinder|0866|Partitions done|Load|50418
+2020-07-31 11:39:40,982|Partitions done               |  4.28
+2020-07-31 11:39:41,050|Printing partition location:
+2020-07-31 11:39:44,401|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|223|
+|mr-08|220|
+|mr-01|214|
+|mr-07|208|
+|mr-03|202|
+|mr-09|222|
+|mr-02|211|
+|mr-04|212|
+|mr-05|215|
+|mr-12|209|
+|mr-10|206|
+|mr-11|218|
++-----+---+
+
+2020-07-31 11:39:47,154|Printing partition location: Done!
+2020-07-31 11:39:55,973|DiskFinder|0866|Disks phase|Load|7391
+2020-07-31 11:39:55,974|DiskFinder|0866|Disks phase|Time|  8.82
+2020-07-31 11:39:56,727|Saving metrics at hdfs:///user/acald013/logs/pflock-0866...
+2020-07-31 11:39:59,225|Saving metrics at hdfs:///user/acald013/logs/pflock-0866... Done!
+2020-07-31 11:39:59,228|Closing session...
+2020-07-31 11:39:59,228|0866|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 864 --factor 4 --capacity 200 --npartitions 2560
+2020-07-31 11:39:59,392|Closing session... Done!
+./DisksFinder_server.sh -p 972 -f 4
+2020-07-31 11:40:02,468|Starting session...
+2020-07-31 11:40:17,401|Starting session... Done!
+2020-07-31 11:40:25,151|DiskFinder|0867|Points|Load|50418
+2020-07-31 11:40:25,151|Reading points                |  7.75
+2020-07-31 11:40:25,156|Fraction: 0.04249809853680552
+2020-07-31 11:40:29,424|DiskFinder|0867|Partitions done|Load|50418
+2020-07-31 11:40:29,424|Partitions done               |  4.27
+2020-07-31 11:40:29,489|Printing partition location:
+2020-07-31 11:40:32,584|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|230|
+|mr-08|221|
+|mr-01|235|
+|mr-07|253|
+|mr-03|239|
+|mr-09|241|
+|mr-02|223|
+|mr-04|245|
+|mr-05|239|
+|mr-12|240|
+|mr-10|235|
+|mr-11|229|
++-----+---+
+
+2020-07-31 11:40:35,621|Printing partition location: Done!
+2020-07-31 11:40:49,669|DiskFinder|0867|Disks phase|Load|7391
+2020-07-31 11:40:49,670|DiskFinder|0867|Disks phase|Time| 14.05
+2020-07-31 11:40:50,480|Saving metrics at hdfs:///user/acald013/logs/pflock-0867...
+2020-07-31 11:40:52,674|Saving metrics at hdfs:///user/acald013/logs/pflock-0867... Done!
+2020-07-31 11:40:52,676|Closing session...
+2020-07-31 11:40:52,676|0867|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 972 --factor 4 --capacity 200 --npartitions 2830
+2020-07-31 11:40:52,843|Closing session... Done!
+./DisksFinder_server.sh -p 1080 -f 4
+2020-07-31 11:40:55,922|Starting session...
+2020-07-31 11:41:10,051|Starting session... Done!
+2020-07-31 11:41:17,884|DiskFinder|0868|Points|Load|50418
+2020-07-31 11:41:17,884|Reading points                |  7.83
+2020-07-31 11:41:17,890|Fraction: 0.04698508155590282
+2020-07-31 11:41:22,553|DiskFinder|0868|Partitions done|Load|50417
+2020-07-31 11:41:22,553|Partitions done               |  4.67
+2020-07-31 11:41:22,618|Printing partition location:
+2020-07-31 11:41:26,070|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|257|
+|mr-08|269|
+|mr-01|250|
+|mr-07|271|
+|mr-03|282|
+|mr-09|259|
+|mr-02|264|
+|mr-04|262|
+|mr-05|264|
+|mr-12|268|
+|mr-10|268|
+|mr-11|267|
++-----+---+
+
+2020-07-31 11:41:29,310|Printing partition location: Done!
+2020-07-31 11:41:44,394|DiskFinder|0868|Disks phase|Load|7394
+2020-07-31 11:41:44,395|DiskFinder|0868|Disks phase|Time| 15.08
+2020-07-31 11:41:45,151|Saving metrics at hdfs:///user/acald013/logs/pflock-0868...
+2020-07-31 11:41:47,469|Saving metrics at hdfs:///user/acald013/logs/pflock-0868... Done!
+2020-07-31 11:41:47,472|Closing session...
+2020-07-31 11:41:47,472|0868|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1080 --factor 4 --capacity 200 --npartitions 3181
+2020-07-31 11:41:47,633|Closing session... Done!
+./DisksFinder_server.sh -p 1188 -f 4
+2020-07-31 11:41:50,748|Starting session...
+2020-07-31 11:42:05,166|Starting session... Done!
+2020-07-31 11:42:12,917|DiskFinder|0869|Points|Load|50418
+2020-07-31 11:42:12,918|Reading points                |  7.75
+2020-07-31 11:42:12,925|Fraction: 0.051462174420204586
+2020-07-31 11:42:17,599|DiskFinder|0869|Partitions done|Load|50418
+2020-07-31 11:42:17,600|Partitions done               |  4.68
+2020-07-31 11:42:17,672|Printing partition location:
+2020-07-31 11:42:21,533|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|282|
+|mr-08|286|
+|mr-01|270|
+|mr-07|285|
+|mr-03|293|
+|mr-09|278|
+|mr-02|308|
+|mr-04|287|
+|mr-05|286|
+|mr-12|279|
+|mr-10|313|
+|mr-11|281|
++-----+---+
+
+2020-07-31 11:42:24,994|Printing partition location: Done!
+2020-07-31 11:42:33,248|DiskFinder|0869|Disks phase|Load|7388
+2020-07-31 11:42:33,249|DiskFinder|0869|Disks phase|Time|  8.25
+2020-07-31 11:42:34,025|Saving metrics at hdfs:///user/acald013/logs/pflock-0869...
+2020-07-31 11:42:36,547|Saving metrics at hdfs:///user/acald013/logs/pflock-0869... Done!
+2020-07-31 11:42:36,549|Closing session...
+2020-07-31 11:42:36,549|0869|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1188 --factor 4 --capacity 200 --npartitions 3448
+2020-07-31 11:42:36,694|Closing session... Done!
+./DisksFinder_server.sh -p 1296 -f 4
+2020-07-31 11:42:39,794|Starting session...
+2020-07-31 11:42:54,196|Starting session... Done!
+2020-07-31 11:43:01,912|DiskFinder|0870|Points|Load|50418
+2020-07-31 11:43:01,913|Reading points                |  7.71
+2020-07-31 11:43:01,919|Fraction: 0.05593069681968666
+2020-07-31 11:43:06,500|DiskFinder|0870|Partitions done|Load|50418
+2020-07-31 11:43:06,501|Partitions done               |  4.59
+2020-07-31 11:43:06,572|Printing partition location:
+2020-07-31 11:43:10,614|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|296|
+|mr-08|297|
+|mr-01|318|
+|mr-07|317|
+|mr-03|312|
+|mr-09|295|
+|mr-02|307|
+|mr-04|296|
+|mr-05|333|
+|mr-12|295|
+|mr-10|309|
+|mr-11|313|
++-----+---+
+
+2020-07-31 11:43:13,997|Printing partition location: Done!
+2020-07-31 11:43:28,743|DiskFinder|0870|Disks phase|Load|7391
+2020-07-31 11:43:28,743|DiskFinder|0870|Disks phase|Time| 14.74
+2020-07-31 11:43:29,530|Saving metrics at hdfs:///user/acald013/logs/pflock-0870...
+2020-07-31 11:43:31,951|Saving metrics at hdfs:///user/acald013/logs/pflock-0870... Done!
+2020-07-31 11:43:31,952|Closing session...
+2020-07-31 11:43:31,952|0870|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1296 --factor 4 --capacity 200 --npartitions 3688
+2020-07-31 11:43:32,104|Closing session... Done!
+./DisksFinder_server.sh -p 1404 -f 4
+2020-07-31 11:43:35,210|Starting session...
+2020-07-31 11:43:49,517|Starting session... Done!
+2020-07-31 11:43:57,263|DiskFinder|0871|Points|Load|50418
+2020-07-31 11:43:57,263|Reading points                |  7.74
+2020-07-31 11:43:57,269|Fraction: 0.06039169870725646
+2020-07-31 11:44:02,140|DiskFinder|0871|Partitions done|Load|50418
+2020-07-31 11:44:02,141|Partitions done               |  4.88
+2020-07-31 11:44:02,193|Printing partition location:
+2020-07-31 11:44:05,983|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|323|
+|mr-08|326|
+|mr-01|322|
+|mr-07|353|
+|mr-03|342|
+|mr-09|322|
+|mr-02|333|
+|mr-04|336|
+|mr-05|321|
+|mr-12|315|
+|mr-10|319|
+|mr-11|334|
++-----+---+
+
+2020-07-31 11:44:09,384|Printing partition location: Done!
+2020-07-31 11:44:19,104|DiskFinder|0871|Disks phase|Load|7392
+2020-07-31 11:44:19,104|DiskFinder|0871|Disks phase|Time|  9.72
+2020-07-31 11:44:19,921|Saving metrics at hdfs:///user/acald013/logs/pflock-0871...
+2020-07-31 11:44:22,613|Saving metrics at hdfs:///user/acald013/logs/pflock-0871... Done!
+2020-07-31 11:44:22,615|Closing session...
+2020-07-31 11:44:22,615|0871|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1404 --factor 4 --capacity 200 --npartitions 3946
+2020-07-31 11:44:22,782|Closing session... Done!
+./DisksFinder_server.sh -p 1512 -f 4
+2020-07-31 11:44:25,950|Starting session...
+2020-07-31 11:44:40,451|Starting session... Done!
+2020-07-31 11:44:48,276|DiskFinder|0872|Points|Load|50418
+2020-07-31 11:44:48,276|Reading points                |  7.82
+2020-07-31 11:44:48,281|Fraction: 0.06484603170170969
+2020-07-31 11:44:53,233|DiskFinder|0872|Partitions done|Load|50418
+2020-07-31 11:44:53,234|Partitions done               |  4.96
+2020-07-31 11:44:53,311|Printing partition location:
+2020-07-31 11:44:57,222|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|348|
+|mr-08|338|
+|mr-01|353|
+|mr-07|344|
+|mr-03|358|
+|mr-09|363|
+|mr-02|333|
+|mr-04|336|
+|mr-05|359|
+|mr-12|376|
+|mr-10|357|
+|mr-11|351|
++-----+---+
+
+2020-07-31 11:45:01,020|Printing partition location: Done!
+2020-07-31 11:45:10,120|DiskFinder|0872|Disks phase|Load|7386
+2020-07-31 11:45:10,121|DiskFinder|0872|Disks phase|Time|  9.10
+2020-07-31 11:45:10,912|Saving metrics at hdfs:///user/acald013/logs/pflock-0872...
+2020-07-31 11:45:13,446|Saving metrics at hdfs:///user/acald013/logs/pflock-0872... Done!
+2020-07-31 11:45:13,447|Closing session...
+2020-07-31 11:45:13,447|0872|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1512 --factor 4 --capacity 200 --npartitions 4216
+2020-07-31 11:45:13,689|Closing session... Done!
+./DisksFinder_server.sh -p 1620 -f 4
+2020-07-31 11:45:16,811|Starting session...
+2020-07-31 11:45:31,173|Starting session... Done!
+2020-07-31 11:45:38,811|DiskFinder|0873|Points|Load|50418
+2020-07-31 11:45:38,812|Reading points                |  7.63
+2020-07-31 11:45:38,817|Fraction: 0.06929439788389619
+2020-07-31 11:45:44,518|DiskFinder|0873|Partitions done|Load|50418
+2020-07-31 11:45:44,518|Partitions done               |  5.70
+2020-07-31 11:45:44,597|Printing partition location:
+2020-07-31 11:45:49,503|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|379|
+|mr-08|376|
+|mr-01|382|
+|mr-07|381|
+|mr-03|383|
+|mr-09|398|
+|mr-02|359|
+|mr-04|388|
+|mr-05|380|
+|mr-12|396|
+|mr-10|372|
+|mr-11|388|
++-----+---+
+
+2020-07-31 11:45:54,086|Printing partition location: Done!
+2020-07-31 11:46:03,378|DiskFinder|0873|Disks phase|Load|7388
+2020-07-31 11:46:03,379|DiskFinder|0873|Disks phase|Time|  9.29
+2020-07-31 11:46:04,183|Saving metrics at hdfs:///user/acald013/logs/pflock-0873...
+2020-07-31 11:46:06,593|Saving metrics at hdfs:///user/acald013/logs/pflock-0873... Done!
+2020-07-31 11:46:06,595|Closing session...
+2020-07-31 11:46:06,595|0873|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1620 --factor 4 --capacity 200 --npartitions 4582
+2020-07-31 11:46:06,813|Closing session... Done!
+1
+./DisksFinder_server.sh -p 540 -f 4
+2020-07-31 11:50:18,936|Starting session...
+2020-07-31 11:50:33,373|Starting session... Done!
+2020-07-31 11:50:41,173|DiskFinder|0874|Points|Load|50418
+2020-07-31 11:50:41,173|Reading points                |  7.80
+2020-07-31 11:50:41,178|Fraction: 0.024407116835129132
+2020-07-31 11:50:44,782|DiskFinder|0874|Partitions done|Load|50417
+2020-07-31 11:50:44,782|Partitions done               |  3.61
+2020-07-31 11:50:44,830|Printing partition location:
+2020-07-31 11:50:47,671|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|138|
+|mr-08|144|
+|mr-01|142|
+|mr-07|143|
+|mr-03|153|
+|mr-09|142|
+|mr-02|143|
+|mr-04|142|
+|mr-05|142|
+|mr-12|144|
+|mr-10|128|
+|mr-11|144|
++-----+---+
+
+2020-07-31 11:50:49,829|Printing partition location: Done!
+2020-07-31 11:51:03,236|DiskFinder|0874|Disks phase|Load|7392
+2020-07-31 11:51:03,236|DiskFinder|0874|Disks phase|Time| 13.41
+2020-07-31 11:51:03,988|Saving metrics at hdfs:///user/acald013/logs/pflock-0874...
+2020-07-31 11:51:06,410|Saving metrics at hdfs:///user/acald013/logs/pflock-0874... Done!
+2020-07-31 11:51:06,412|Closing session...
+2020-07-31 11:51:06,413|0874|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 540 --factor 4 --capacity 200 --npartitions 1705
+2020-07-31 11:51:06,567|Closing session... Done!
+./DisksFinder_server.sh -p 648 -f 4
+2020-07-31 11:51:09,603|Starting session...
+2020-07-31 11:51:23,825|Starting session... Done!
+2020-07-31 11:51:31,605|DiskFinder|0875|Points|Load|50418
+2020-07-31 11:51:31,606|Reading points                |  7.78
+2020-07-31 11:51:31,611|Fraction: 0.028957796140254354
+2020-07-31 11:51:35,220|DiskFinder|0875|Partitions done|Load|50417
+2020-07-31 11:51:35,220|Partitions done               |  3.61
+2020-07-31 11:51:35,272|Printing partition location:
+2020-07-31 11:51:37,926|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|161|
+|mr-08|155|
+|mr-01|157|
+|mr-07|155|
+|mr-03|157|
+|mr-09|174|
+|mr-02|143|
+|mr-04|151|
+|mr-05|156|
+|mr-12|152|
+|mr-10|145|
+|mr-11|161|
++-----+---+
+
+2020-07-31 11:51:40,207|Printing partition location: Done!
+2020-07-31 11:51:55,924|DiskFinder|0875|Disks phase|Load|7394
+2020-07-31 11:51:55,924|DiskFinder|0875|Disks phase|Time| 15.72
+2020-07-31 11:51:56,670|Saving metrics at hdfs:///user/acald013/logs/pflock-0875...
+2020-07-31 11:51:59,343|Saving metrics at hdfs:///user/acald013/logs/pflock-0875... Done!
+2020-07-31 11:51:59,345|Closing session...
+2020-07-31 11:51:59,345|0875|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 648 --factor 4 --capacity 200 --npartitions 1867
+2020-07-31 11:51:59,522|Closing session... Done!
+./DisksFinder_server.sh -p 756 -f 4
+2020-07-31 11:52:02,531|Starting session...
+2020-07-31 11:52:17,175|Starting session... Done!
+2020-07-31 11:52:25,103|DiskFinder|0876|Points|Load|50418
+2020-07-31 11:52:25,104|Reading points                |  7.92
+2020-07-31 11:52:25,111|Fraction: 0.03348712148412119
+2020-07-31 11:52:29,048|DiskFinder|0876|Partitions done|Load|50418
+2020-07-31 11:52:29,048|Partitions done               |  3.94
+2020-07-31 11:52:29,103|Printing partition location:
+2020-07-31 11:52:32,188|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|186|
+|mr-08|192|
+|mr-01|190|
+|mr-07|177|
+|mr-03|187|
+|mr-09|181|
+|mr-02|187|
+|mr-04|186|
+|mr-05|191|
+|mr-12|193|
+|mr-10|182|
+|mr-11|190|
++-----+---+
+
+2020-07-31 11:52:34,861|Printing partition location: Done!
+2020-07-31 11:52:49,197|DiskFinder|0876|Disks phase|Load|7389
+2020-07-31 11:52:49,197|DiskFinder|0876|Disks phase|Time| 14.33
+2020-07-31 11:52:49,960|Saving metrics at hdfs:///user/acald013/logs/pflock-0876...
+2020-07-31 11:52:52,732|Saving metrics at hdfs:///user/acald013/logs/pflock-0876... Done!
+2020-07-31 11:52:52,733|Closing session...
+2020-07-31 11:52:52,734|0876|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 756 --factor 4 --capacity 200 --npartitions 2242
+2020-07-31 11:52:52,900|Closing session... Done!
+./DisksFinder_server.sh -p 864 -f 4
+2020-07-31 11:52:55,940|Starting session...
+2020-07-31 11:53:10,342|Starting session... Done!
+2020-07-31 11:53:18,180|DiskFinder|0877|Points|Load|50418
+2020-07-31 11:53:18,181|Reading points                |  7.84
+2020-07-31 11:53:18,186|Fraction: 0.03799952763274064
+2020-07-31 11:53:22,303|DiskFinder|0877|Partitions done|Load|50418
+2020-07-31 11:53:22,304|Partitions done               |  4.12
+2020-07-31 11:53:22,363|Printing partition location:
+2020-07-31 11:53:25,301|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|227|
+|mr-08|217|
+|mr-01|227|
+|mr-07|223|
+|mr-03|204|
+|mr-09|196|
+|mr-02|206|
+|mr-04|200|
+|mr-05|224|
+|mr-12|210|
+|mr-10|221|
+|mr-11|205|
++-----+---+
+
+2020-07-31 11:53:28,013|Printing partition location: Done!
+2020-07-31 11:53:36,704|DiskFinder|0877|Disks phase|Load|7391
+2020-07-31 11:53:36,704|DiskFinder|0877|Disks phase|Time|  8.69
+2020-07-31 11:53:37,474|Saving metrics at hdfs:///user/acald013/logs/pflock-0877...
+2020-07-31 11:53:39,792|Saving metrics at hdfs:///user/acald013/logs/pflock-0877... Done!
+2020-07-31 11:53:39,794|Closing session...
+2020-07-31 11:53:39,795|0877|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 864 --factor 4 --capacity 200 --npartitions 2560
+2020-07-31 11:53:39,958|Closing session... Done!
+./DisksFinder_server.sh -p 972 -f 4
+2020-07-31 11:53:43,043|Starting session...
+2020-07-31 11:53:57,613|Starting session... Done!
+2020-07-31 11:54:05,417|DiskFinder|0878|Points|Load|50418
+2020-07-31 11:54:05,418|Reading points                |  7.80
+2020-07-31 11:54:05,423|Fraction: 0.04249809853680552
+2020-07-31 11:54:09,703|DiskFinder|0878|Partitions done|Load|50418
+2020-07-31 11:54:09,703|Partitions done               |  4.28
+2020-07-31 11:54:09,757|Printing partition location:
+2020-07-31 11:54:13,253|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|230|
+|mr-08|245|
+|mr-01|237|
+|mr-07|231|
+|mr-03|237|
+|mr-09|217|
+|mr-02|234|
+|mr-04|237|
+|mr-05|236|
+|mr-12|223|
+|mr-10|239|
+|mr-11|264|
++-----+---+
+
+2020-07-31 11:54:16,226|Printing partition location: Done!
+2020-07-31 11:54:30,436|DiskFinder|0878|Disks phase|Load|7391
+2020-07-31 11:54:30,437|DiskFinder|0878|Disks phase|Time| 14.21
+2020-07-31 11:54:31,236|Saving metrics at hdfs:///user/acald013/logs/pflock-0878...
+2020-07-31 11:54:33,665|Saving metrics at hdfs:///user/acald013/logs/pflock-0878... Done!
+2020-07-31 11:54:33,667|Closing session...
+2020-07-31 11:54:33,667|0878|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 972 --factor 4 --capacity 200 --npartitions 2830
+2020-07-31 11:54:33,827|Closing session... Done!
+./DisksFinder_server.sh -p 1080 -f 4
+2020-07-31 11:54:36,884|Starting session...
+2020-07-31 11:54:51,193|Starting session... Done!
+2020-07-31 11:54:59,040|DiskFinder|0879|Points|Load|50418
+2020-07-31 11:54:59,040|Reading points                |  7.84
+2020-07-31 11:54:59,046|Fraction: 0.04698508155590282
+2020-07-31 11:55:03,442|DiskFinder|0879|Partitions done|Load|50417
+2020-07-31 11:55:03,443|Partitions done               |  4.40
+2020-07-31 11:55:03,515|Printing partition location:
+2020-07-31 11:55:07,053|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|274|
+|mr-08|269|
+|mr-01|262|
+|mr-07|269|
+|mr-03|263|
+|mr-09|264|
+|mr-02|257|
+|mr-04|252|
+|mr-05|266|
+|mr-12|265|
+|mr-10|271|
+|mr-11|269|
++-----+---+
+
+2020-07-31 11:55:09,971|Printing partition location: Done!
+2020-07-31 11:55:25,184|DiskFinder|0879|Disks phase|Load|7394
+2020-07-31 11:55:25,185|DiskFinder|0879|Disks phase|Time| 15.21
+2020-07-31 11:55:25,967|Saving metrics at hdfs:///user/acald013/logs/pflock-0879...
+2020-07-31 11:55:28,477|Saving metrics at hdfs:///user/acald013/logs/pflock-0879... Done!
+2020-07-31 11:55:28,478|Closing session...
+2020-07-31 11:55:28,479|0879|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1080 --factor 4 --capacity 200 --npartitions 3181
+2020-07-31 11:55:28,656|Closing session... Done!
+./DisksFinder_server.sh -p 1188 -f 4
+2020-07-31 11:55:31,735|Starting session...
+2020-07-31 11:55:45,892|Starting session... Done!
+2020-07-31 11:55:53,603|DiskFinder|0880|Points|Load|50418
+2020-07-31 11:55:53,604|Reading points                |  7.71
+2020-07-31 11:55:53,609|Fraction: 0.051462174420204586
+2020-07-31 11:55:58,190|DiskFinder|0880|Partitions done|Load|50418
+2020-07-31 11:55:58,190|Partitions done               |  4.58
+2020-07-31 11:55:58,257|Printing partition location:
+2020-07-31 11:56:01,789|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|266|
+|mr-08|294|
+|mr-01|280|
+|mr-07|296|
+|mr-03|276|
+|mr-09|280|
+|mr-02|298|
+|mr-04|300|
+|mr-05|284|
+|mr-12|288|
+|mr-10|289|
+|mr-11|297|
++-----+---+
+
+2020-07-31 11:56:04,806|Printing partition location: Done!
+2020-07-31 11:56:13,671|DiskFinder|0880|Disks phase|Load|7388
+2020-07-31 11:56:13,671|DiskFinder|0880|Disks phase|Time|  8.86
+2020-07-31 11:56:14,444|Saving metrics at hdfs:///user/acald013/logs/pflock-0880...
+2020-07-31 11:56:17,183|Saving metrics at hdfs:///user/acald013/logs/pflock-0880... Done!
+2020-07-31 11:56:17,185|Closing session...
+2020-07-31 11:56:17,186|0880|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1188 --factor 4 --capacity 200 --npartitions 3448
+2020-07-31 11:56:17,338|Closing session... Done!
+./DisksFinder_server.sh -p 1296 -f 4
+2020-07-31 11:56:20,473|Starting session...
+2020-07-31 11:56:35,028|Starting session... Done!
+2020-07-31 11:56:42,923|DiskFinder|0881|Points|Load|50418
+2020-07-31 11:56:42,924|Reading points                |  7.89
+2020-07-31 11:56:42,929|Fraction: 0.05593069681968666
+2020-07-31 11:56:47,813|DiskFinder|0881|Partitions done|Load|50418
+2020-07-31 11:56:47,814|Partitions done               |  4.89
+2020-07-31 11:56:47,888|Printing partition location:
+2020-07-31 11:56:51,951|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|297|
+|mr-08|317|
+|mr-01|316|
+|mr-07|331|
+|mr-03|309|
+|mr-09|331|
+|mr-02|316|
+|mr-04|303|
+|mr-05|285|
+|mr-12|292|
+|mr-10|296|
+|mr-11|295|
++-----+---+
+
+2020-07-31 11:56:55,190|Printing partition location: Done!
+2020-07-31 11:57:08,963|DiskFinder|0881|Disks phase|Load|7391
+2020-07-31 11:57:08,964|DiskFinder|0881|Disks phase|Time| 13.77
+2020-07-31 11:57:09,778|Saving metrics at hdfs:///user/acald013/logs/pflock-0881...
+2020-07-31 11:57:12,218|Saving metrics at hdfs:///user/acald013/logs/pflock-0881... Done!
+2020-07-31 11:57:12,220|Closing session...
+2020-07-31 11:57:12,220|0881|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1296 --factor 4 --capacity 200 --npartitions 3688
+2020-07-31 11:57:12,383|Closing session... Done!
+./DisksFinder_server.sh -p 1404 -f 4
+2020-07-31 11:57:15,474|Starting session...
+2020-07-31 11:57:30,001|Starting session... Done!
+2020-07-31 11:57:37,819|DiskFinder|0882|Points|Load|50418
+2020-07-31 11:57:37,820|Reading points                |  7.82
+2020-07-31 11:57:37,825|Fraction: 0.06039169870725646
+2020-07-31 11:57:42,638|DiskFinder|0882|Partitions done|Load|50418
+2020-07-31 11:57:42,639|Partitions done               |  4.82
+2020-07-31 11:57:42,711|Printing partition location:
+2020-07-31 11:57:46,515|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|351|
+|mr-08|318|
+|mr-01|321|
+|mr-07|338|
+|mr-03|321|
+|mr-09|335|
+|mr-02|309|
+|mr-04|331|
+|mr-05|344|
+|mr-12|314|
+|mr-10|323|
+|mr-11|341|
++-----+---+
+
+2020-07-31 11:57:49,947|Printing partition location: Done!
+2020-07-31 11:57:59,528|DiskFinder|0882|Disks phase|Load|7392
+2020-07-31 11:57:59,529|DiskFinder|0882|Disks phase|Time|  9.58
+2020-07-31 11:58:00,342|Saving metrics at hdfs:///user/acald013/logs/pflock-0882...
+2020-07-31 11:58:02,705|Saving metrics at hdfs:///user/acald013/logs/pflock-0882... Done!
+2020-07-31 11:58:02,708|Closing session...
+2020-07-31 11:58:02,709|0882|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1404 --factor 4 --capacity 200 --npartitions 3946
+2020-07-31 11:58:02,861|Closing session... Done!
+./DisksFinder_server.sh -p 1512 -f 4
+2020-07-31 11:58:05,994|Starting session...
+2020-07-31 11:58:20,791|Starting session... Done!
+2020-07-31 11:58:28,716|DiskFinder|0883|Points|Load|50418
+2020-07-31 11:58:28,716|Reading points                |  7.92
+2020-07-31 11:58:28,722|Fraction: 0.06484603170170969
+2020-07-31 11:58:33,736|DiskFinder|0883|Partitions done|Load|50418
+2020-07-31 11:58:33,736|Partitions done               |  5.02
+2020-07-31 11:58:33,808|Printing partition location:
+2020-07-31 11:58:37,961|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|347|
+|mr-08|345|
+|mr-01|386|
+|mr-07|368|
+|mr-03|352|
+|mr-09|336|
+|mr-02|346|
+|mr-04|371|
+|mr-05|344|
+|mr-12|346|
+|mr-10|326|
+|mr-11|349|
++-----+---+
+
+2020-07-31 11:58:41,527|Printing partition location: Done!
+2020-07-31 11:58:50,694|DiskFinder|0883|Disks phase|Load|7386
+2020-07-31 11:58:50,694|DiskFinder|0883|Disks phase|Time|  9.17
+2020-07-31 11:58:51,463|Saving metrics at hdfs:///user/acald013/logs/pflock-0883...
+2020-07-31 11:58:53,811|Saving metrics at hdfs:///user/acald013/logs/pflock-0883... Done!
+2020-07-31 11:58:53,814|Closing session...
+2020-07-31 11:58:53,815|0883|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1512 --factor 4 --capacity 200 --npartitions 4216
+2020-07-31 11:58:53,954|Closing session... Done!
+./DisksFinder_server.sh -p 1620 -f 4
+2020-07-31 11:58:57,133|Starting session...
+2020-07-31 11:59:11,545|Starting session... Done!
+2020-07-31 11:59:19,502|DiskFinder|0884|Points|Load|50418
+2020-07-31 11:59:19,503|Reading points                |  7.95
+2020-07-31 11:59:19,508|Fraction: 0.06929439788389619
+2020-07-31 11:59:24,768|DiskFinder|0884|Partitions done|Load|50418
+2020-07-31 11:59:24,768|Partitions done               |  5.26
+2020-07-31 11:59:24,865|Printing partition location:
+2020-07-31 11:59:28,999|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|381|
+|mr-08|388|
+|mr-01|367|
+|mr-07|376|
+|mr-03|398|
+|mr-09|380|
+|mr-02|385|
+|mr-04|389|
+|mr-05|370|
+|mr-12|389|
+|mr-10|368|
+|mr-11|391|
++-----+---+
+
+2020-07-31 11:59:33,031|Printing partition location: Done!
+2020-07-31 11:59:41,891|DiskFinder|0884|Disks phase|Load|7388
+2020-07-31 11:59:41,892|DiskFinder|0884|Disks phase|Time|  8.86
+2020-07-31 11:59:42,726|Saving metrics at hdfs:///user/acald013/logs/pflock-0884...
+2020-07-31 11:59:45,289|Saving metrics at hdfs:///user/acald013/logs/pflock-0884... Done!
+2020-07-31 11:59:45,292|Closing session...
+2020-07-31 11:59:45,292|0884|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1620 --factor 4 --capacity 200 --npartitions 4582
+2020-07-31 11:59:45,451|Closing session... Done!
+2
+./DisksFinder_server.sh -p 540 -f 4
+2020-07-31 11:59:48,614|Starting session...
+2020-07-31 12:00:03,211|Starting session... Done!
+2020-07-31 12:00:10,918|DiskFinder|0885|Points|Load|50418
+2020-07-31 12:00:10,918|Reading points                |  7.70
+2020-07-31 12:00:10,924|Fraction: 0.024407116835129132
+2020-07-31 12:00:14,490|DiskFinder|0885|Partitions done|Load|50417
+2020-07-31 12:00:14,490|Partitions done               |  3.57
+2020-07-31 12:00:14,542|Printing partition location:
+2020-07-31 12:00:16,894|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|152|
+|mr-08|138|
+|mr-01|146|
+|mr-07|141|
+|mr-03|144|
+|mr-09|147|
+|mr-02|140|
+|mr-04|143|
+|mr-05|140|
+|mr-12|147|
+|mr-10|132|
+|mr-11|135|
++-----+---+
+
+2020-07-31 12:00:19,165|Printing partition location: Done!
+2020-07-31 12:00:31,793|DiskFinder|0885|Disks phase|Load|7392
+2020-07-31 12:00:31,793|DiskFinder|0885|Disks phase|Time| 12.63
+2020-07-31 12:00:32,526|Saving metrics at hdfs:///user/acald013/logs/pflock-0885...
+2020-07-31 12:00:34,975|Saving metrics at hdfs:///user/acald013/logs/pflock-0885... Done!
+2020-07-31 12:00:34,976|Closing session...
+2020-07-31 12:00:34,977|0885|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 540 --factor 4 --capacity 200 --npartitions 1705
+2020-07-31 12:00:35,139|Closing session... Done!
+./DisksFinder_server.sh -p 648 -f 4
+2020-07-31 12:00:38,184|Starting session...
+2020-07-31 12:00:52,689|Starting session... Done!
+2020-07-31 12:01:00,447|DiskFinder|0886|Points|Load|50418
+2020-07-31 12:01:00,447|Reading points                |  7.75
+2020-07-31 12:01:00,452|Fraction: 0.028957796140254354
+2020-07-31 12:01:04,078|DiskFinder|0886|Partitions done|Load|50417
+2020-07-31 12:01:04,078|Partitions done               |  3.63
+2020-07-31 12:01:04,128|Printing partition location:
+2020-07-31 12:01:06,666|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|163|
+|mr-08|143|
+|mr-01|155|
+|mr-07|154|
+|mr-03|159|
+|mr-09|157|
+|mr-02|156|
+|mr-04|147|
+|mr-05|155|
+|mr-12|159|
+|mr-10|166|
+|mr-11|153|
++-----+---+
+
+2020-07-31 12:01:08,956|Printing partition location: Done!
+2020-07-31 12:01:22,911|DiskFinder|0886|Disks phase|Load|7394
+2020-07-31 12:01:22,912|DiskFinder|0886|Disks phase|Time| 13.95
+2020-07-31 12:01:23,664|Saving metrics at hdfs:///user/acald013/logs/pflock-0886...
+2020-07-31 12:01:26,074|Saving metrics at hdfs:///user/acald013/logs/pflock-0886... Done!
+2020-07-31 12:01:26,079|Closing session...
+2020-07-31 12:01:26,079|0886|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 648 --factor 4 --capacity 200 --npartitions 1867
+2020-07-31 12:01:26,248|Closing session... Done!
+./DisksFinder_server.sh -p 756 -f 4
+2020-07-31 12:01:29,324|Starting session...
+2020-07-31 12:01:43,712|Starting session... Done!
+2020-07-31 12:01:51,702|DiskFinder|0887|Points|Load|50418
+2020-07-31 12:01:51,703|Reading points                |  7.99
+2020-07-31 12:01:51,717|Fraction: 0.03348712148412119
+2020-07-31 12:01:55,768|DiskFinder|0887|Partitions done|Load|50418
+2020-07-31 12:01:55,769|Partitions done               |  4.06
+2020-07-31 12:01:55,826|Printing partition location:
+2020-07-31 12:01:59,193|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|191|
+|mr-08|182|
+|mr-01|188|
+|mr-07|189|
+|mr-03|191|
+|mr-09|178|
+|mr-02|197|
+|mr-04|169|
+|mr-05|186|
+|mr-12|190|
+|mr-10|193|
+|mr-11|188|
++-----+---+
+
+2020-07-31 12:02:02,064|Printing partition location: Done!
+2020-07-31 12:02:15,417|DiskFinder|0887|Disks phase|Load|7389
+2020-07-31 12:02:15,417|DiskFinder|0887|Disks phase|Time| 13.35
+2020-07-31 12:02:16,190|Saving metrics at hdfs:///user/acald013/logs/pflock-0887...
+2020-07-31 12:02:18,709|Saving metrics at hdfs:///user/acald013/logs/pflock-0887... Done!
+2020-07-31 12:02:18,713|Closing session...
+2020-07-31 12:02:18,714|0887|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 756 --factor 4 --capacity 200 --npartitions 2242
+2020-07-31 12:02:18,855|Closing session... Done!
+./DisksFinder_server.sh -p 864 -f 4
+2020-07-31 12:02:21,996|Starting session...
+2020-07-31 12:02:36,332|Starting session... Done!
+2020-07-31 12:02:44,337|DiskFinder|0888|Points|Load|50418
+2020-07-31 12:02:44,337|Reading points                |  8.00
+2020-07-31 12:02:44,343|Fraction: 0.03799952763274064
+2020-07-31 12:02:48,368|DiskFinder|0888|Partitions done|Load|50418
+2020-07-31 12:02:48,369|Partitions done               |  4.03
+2020-07-31 12:02:48,425|Printing partition location:
+2020-07-31 12:02:51,547|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|212|
+|mr-08|211|
+|mr-01|198|
+|mr-07|214|
+|mr-03|219|
+|mr-09|217|
+|mr-02|217|
+|mr-04|221|
+|mr-05|198|
+|mr-12|217|
+|mr-10|224|
+|mr-11|212|
++-----+---+
+
+2020-07-31 12:02:54,604|Printing partition location: Done!
+2020-07-31 12:03:03,660|DiskFinder|0888|Disks phase|Load|7391
+2020-07-31 12:03:03,661|DiskFinder|0888|Disks phase|Time|  9.05
+2020-07-31 12:03:04,395|Saving metrics at hdfs:///user/acald013/logs/pflock-0888...
+2020-07-31 12:03:06,634|Saving metrics at hdfs:///user/acald013/logs/pflock-0888... Done!
+2020-07-31 12:03:06,636|Closing session...
+2020-07-31 12:03:06,637|0888|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 864 --factor 4 --capacity 200 --npartitions 2560
+2020-07-31 12:03:06,792|Closing session... Done!
+./DisksFinder_server.sh -p 972 -f 4
+2020-07-31 12:03:09,818|Starting session...
+2020-07-31 12:03:24,175|Starting session... Done!
+2020-07-31 12:03:31,908|DiskFinder|0889|Points|Load|50418
+2020-07-31 12:03:31,909|Reading points                |  7.73
+2020-07-31 12:03:31,914|Fraction: 0.04249809853680552
+2020-07-31 12:03:36,176|DiskFinder|0889|Partitions done|Load|50418
+2020-07-31 12:03:36,176|Partitions done               |  4.26
+2020-07-31 12:03:36,235|Printing partition location:
+2020-07-31 12:03:39,640|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|234|
+|mr-08|225|
+|mr-01|234|
+|mr-07|236|
+|mr-03|234|
+|mr-09|243|
+|mr-02|236|
+|mr-04|239|
+|mr-05|245|
+|mr-12|224|
+|mr-10|237|
+|mr-11|243|
++-----+---+
+
+2020-07-31 12:03:42,546|Printing partition location: Done!
+2020-07-31 12:03:56,594|DiskFinder|0889|Disks phase|Load|7391
+2020-07-31 12:03:56,594|DiskFinder|0889|Disks phase|Time| 14.05
+2020-07-31 12:03:57,347|Saving metrics at hdfs:///user/acald013/logs/pflock-0889...
+2020-07-31 12:03:59,657|Saving metrics at hdfs:///user/acald013/logs/pflock-0889... Done!
+2020-07-31 12:03:59,658|Closing session...
+2020-07-31 12:03:59,659|0889|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 972 --factor 4 --capacity 200 --npartitions 2830
+2020-07-31 12:03:59,825|Closing session... Done!
+./DisksFinder_server.sh -p 1080 -f 4
+2020-07-31 12:04:02,914|Starting session...
+2020-07-31 12:04:17,219|Starting session... Done!
+2020-07-31 12:04:25,096|DiskFinder|0890|Points|Load|50418
+2020-07-31 12:04:25,096|Reading points                |  7.87
+2020-07-31 12:04:25,101|Fraction: 0.04698508155590282
+2020-07-31 12:04:29,621|DiskFinder|0890|Partitions done|Load|50417
+2020-07-31 12:04:29,621|Partitions done               |  4.52
+2020-07-31 12:04:29,692|Printing partition location:
+2020-07-31 12:04:33,066|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|269|
+|mr-08|266|
+|mr-01|266|
+|mr-07|265|
+|mr-03|263|
+|mr-09|263|
+|mr-02|257|
+|mr-04|272|
+|mr-05|265|
+|mr-12|258|
+|mr-10|266|
+|mr-11|271|
++-----+---+
+
+2020-07-31 12:04:36,324|Printing partition location: Done!
+2020-07-31 12:04:50,398|DiskFinder|0890|Disks phase|Load|7394
+2020-07-31 12:04:50,399|DiskFinder|0890|Disks phase|Time| 14.07
+2020-07-31 12:04:51,205|Saving metrics at hdfs:///user/acald013/logs/pflock-0890...
+2020-07-31 12:04:53,680|Saving metrics at hdfs:///user/acald013/logs/pflock-0890... Done!
+2020-07-31 12:04:53,682|Closing session...
+2020-07-31 12:04:53,682|0890|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1080 --factor 4 --capacity 200 --npartitions 3181
+2020-07-31 12:04:53,839|Closing session... Done!
+./DisksFinder_server.sh -p 1188 -f 4
+2020-07-31 12:04:56,954|Starting session...
+2020-07-31 12:05:11,595|Starting session... Done!
+2020-07-31 12:05:19,461|DiskFinder|0891|Points|Load|50418
+2020-07-31 12:05:19,462|Reading points                |  7.86
+2020-07-31 12:05:19,470|Fraction: 0.051462174420204586
+2020-07-31 12:05:23,837|DiskFinder|0891|Partitions done|Load|50418
+2020-07-31 12:05:23,837|Partitions done               |  4.37
+2020-07-31 12:05:23,899|Printing partition location:
+2020-07-31 12:05:27,480|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|285|
+|mr-08|291|
+|mr-01|281|
+|mr-07|276|
+|mr-03|301|
+|mr-09|269|
+|mr-02|297|
+|mr-04|279|
+|mr-05|293|
+|mr-12|283|
+|mr-10|305|
+|mr-11|288|
++-----+---+
+
+2020-07-31 12:05:30,811|Printing partition location: Done!
+2020-07-31 12:05:39,597|DiskFinder|0891|Disks phase|Load|7388
+2020-07-31 12:05:39,597|DiskFinder|0891|Disks phase|Time|  8.78
+2020-07-31 12:05:40,369|Saving metrics at hdfs:///user/acald013/logs/pflock-0891...
+2020-07-31 12:05:42,678|Saving metrics at hdfs:///user/acald013/logs/pflock-0891... Done!
+2020-07-31 12:05:42,680|Closing session...
+2020-07-31 12:05:42,680|0891|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1188 --factor 4 --capacity 200 --npartitions 3448
+2020-07-31 12:05:42,837|Closing session... Done!
+./DisksFinder_server.sh -p 1296 -f 4
+2020-07-31 12:05:45,941|Starting session...
+2020-07-31 12:06:00,628|Starting session... Done!
+2020-07-31 12:06:08,202|DiskFinder|0892|Points|Load|50418
+2020-07-31 12:06:08,202|Reading points                |  7.57
+2020-07-31 12:06:08,207|Fraction: 0.05593069681968666
+2020-07-31 12:06:12,979|DiskFinder|0892|Partitions done|Load|50418
+2020-07-31 12:06:12,979|Partitions done               |  4.77
+2020-07-31 12:06:13,045|Printing partition location:
+2020-07-31 12:06:16,764|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|304|
+|mr-08|322|
+|mr-01|306|
+|mr-07|314|
+|mr-03|315|
+|mr-09|301|
+|mr-02|325|
+|mr-04|296|
+|mr-05|309|
+|mr-12|289|
+|mr-10|307|
+|mr-11|300|
++-----+---+
+
+2020-07-31 12:06:20,323|Printing partition location: Done!
+2020-07-31 12:06:35,501|DiskFinder|0892|Disks phase|Load|7391
+2020-07-31 12:06:35,502|DiskFinder|0892|Disks phase|Time| 15.18
+2020-07-31 12:06:36,272|Saving metrics at hdfs:///user/acald013/logs/pflock-0892...
+2020-07-31 12:06:38,624|Saving metrics at hdfs:///user/acald013/logs/pflock-0892... Done!
+2020-07-31 12:06:38,626|Closing session...
+2020-07-31 12:06:38,626|0892|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1296 --factor 4 --capacity 200 --npartitions 3688
+2020-07-31 12:06:38,804|Closing session... Done!
+./DisksFinder_server.sh -p 1404 -f 4
+2020-07-31 12:06:41,953|Starting session...
+2020-07-31 12:06:56,727|Starting session... Done!
+2020-07-31 12:07:04,454|DiskFinder|0893|Points|Load|50418
+2020-07-31 12:07:04,455|Reading points                |  7.72
+2020-07-31 12:07:04,460|Fraction: 0.06039169870725646
+2020-07-31 12:07:09,208|DiskFinder|0893|Partitions done|Load|50418
+2020-07-31 12:07:09,208|Partitions done               |  4.75
+2020-07-31 12:07:09,305|Printing partition location:
+2020-07-31 12:07:13,031|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|334|
+|mr-08|323|
+|mr-01|314|
+|mr-07|320|
+|mr-03|339|
+|mr-09|344|
+|mr-02|331|
+|mr-04|322|
+|mr-05|329|
+|mr-12|326|
+|mr-10|337|
+|mr-11|327|
++-----+---+
+
+2020-07-31 12:07:16,670|Printing partition location: Done!
+2020-07-31 12:07:25,644|DiskFinder|0893|Disks phase|Load|7392
+2020-07-31 12:07:25,644|DiskFinder|0893|Disks phase|Time|  8.97
+2020-07-31 12:07:26,489|Saving metrics at hdfs:///user/acald013/logs/pflock-0893...
+2020-07-31 12:07:28,857|Saving metrics at hdfs:///user/acald013/logs/pflock-0893... Done!
+2020-07-31 12:07:28,859|Closing session...
+2020-07-31 12:07:28,859|0893|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1404 --factor 4 --capacity 200 --npartitions 3946
+2020-07-31 12:07:29,069|Closing session... Done!
+./DisksFinder_server.sh -p 1512 -f 4
+2020-07-31 12:07:32,253|Starting session...
+2020-07-31 12:07:46,778|Starting session... Done!
+2020-07-31 12:07:54,463|DiskFinder|0894|Points|Load|50418
+2020-07-31 12:07:54,463|Reading points                |  7.68
+2020-07-31 12:07:54,469|Fraction: 0.06484603170170969
+2020-07-31 12:07:59,337|DiskFinder|0894|Partitions done|Load|50418
+2020-07-31 12:07:59,338|Partitions done               |  4.87
+2020-07-31 12:07:59,441|Printing partition location:
+2020-07-31 12:08:03,572|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|332|
+|mr-08|332|
+|mr-01|370|
+|mr-07|335|
+|mr-03|351|
+|mr-09|362|
+|mr-02|364|
+|mr-04|352|
+|mr-05|349|
+|mr-12|349|
+|mr-10|361|
+|mr-11|359|
++-----+---+
+
+2020-07-31 12:08:07,063|Printing partition location: Done!
+2020-07-31 12:08:16,563|DiskFinder|0894|Disks phase|Load|7386
+2020-07-31 12:08:16,563|DiskFinder|0894|Disks phase|Time|  9.50
+2020-07-31 12:08:17,355|Saving metrics at hdfs:///user/acald013/logs/pflock-0894...
+2020-07-31 12:08:19,977|Saving metrics at hdfs:///user/acald013/logs/pflock-0894... Done!
+2020-07-31 12:08:19,980|Closing session...
+2020-07-31 12:08:19,980|0894|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1512 --factor 4 --capacity 200 --npartitions 4216
+2020-07-31 12:08:20,146|Closing session... Done!
+./DisksFinder_server.sh -p 1620 -f 4
+2020-07-31 12:08:23,348|Starting session...
+2020-07-31 12:08:38,147|Starting session... Done!
+2020-07-31 12:08:45,796|DiskFinder|0895|Points|Load|50418
+2020-07-31 12:08:45,797|Reading points                |  7.65
+2020-07-31 12:08:45,802|Fraction: 0.06929439788389619
+2020-07-31 12:08:51,407|DiskFinder|0895|Partitions done|Load|50418
+2020-07-31 12:08:51,408|Partitions done               |  5.61
+2020-07-31 12:08:51,479|Printing partition location:
+2020-07-31 12:08:56,137|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|397|
+|mr-08|376|
+|mr-01|374|
+|mr-07|385|
+|mr-03|387|
+|mr-09|388|
+|mr-02|377|
+|mr-04|379|
+|mr-05|395|
+|mr-12|364|
+|mr-10|385|
+|mr-11|375|
++-----+---+
+
+2020-07-31 12:09:00,332|Printing partition location: Done!
+2020-07-31 12:09:09,131|DiskFinder|0895|Disks phase|Load|7388
+2020-07-31 12:09:09,131|DiskFinder|0895|Disks phase|Time|  8.80
+2020-07-31 12:09:09,971|Saving metrics at hdfs:///user/acald013/logs/pflock-0895...
+2020-07-31 12:09:12,603|Saving metrics at hdfs:///user/acald013/logs/pflock-0895... Done!
+2020-07-31 12:09:12,604|Closing session...
+2020-07-31 12:09:12,604|0895|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1620 --factor 4 --capacity 200 --npartitions 4582
+2020-07-31 12:09:12,770|Closing session... Done!
+3
+./DisksFinder_server.sh -p 540 -f 4
+2020-07-31 12:09:15,893|Starting session...
+2020-07-31 12:09:30,178|Starting session... Done!
+2020-07-31 12:09:37,954|DiskFinder|0896|Points|Load|50418
+2020-07-31 12:09:37,955|Reading points                |  7.77
+2020-07-31 12:09:37,960|Fraction: 0.024407116835129132
+2020-07-31 12:09:41,543|DiskFinder|0896|Partitions done|Load|50417
+2020-07-31 12:09:41,543|Partitions done               |  3.59
+2020-07-31 12:09:41,592|Printing partition location:
+2020-07-31 12:09:44,656|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|150|
+|mr-08|142|
+|mr-01|148|
+|mr-07|137|
+|mr-03|149|
+|mr-09|141|
+|mr-02|139|
+|mr-04|132|
+|mr-05|142|
+|mr-12|143|
+|mr-10|133|
+|mr-11|149|
++-----+---+
+
+2020-07-31 12:09:47,272|Printing partition location: Done!
+2020-07-31 12:10:01,565|DiskFinder|0896|Disks phase|Load|7392
+2020-07-31 12:10:01,566|DiskFinder|0896|Disks phase|Time| 14.29
+2020-07-31 12:10:02,316|Saving metrics at hdfs:///user/acald013/logs/pflock-0896...
+2020-07-31 12:10:04,832|Saving metrics at hdfs:///user/acald013/logs/pflock-0896... Done!
+2020-07-31 12:10:04,833|Closing session...
+2020-07-31 12:10:04,834|0896|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 540 --factor 4 --capacity 200 --npartitions 1705
+2020-07-31 12:10:04,984|Closing session... Done!
+./DisksFinder_server.sh -p 648 -f 4
+2020-07-31 12:10:07,988|Starting session...
+2020-07-31 12:10:22,844|Starting session... Done!
+2020-07-31 12:10:30,671|DiskFinder|0897|Points|Load|50418
+2020-07-31 12:10:30,672|Reading points                |  7.82
+2020-07-31 12:10:30,677|Fraction: 0.028957796140254354
+2020-07-31 12:10:34,499|DiskFinder|0897|Partitions done|Load|50417
+2020-07-31 12:10:34,500|Partitions done               |  3.83
+2020-07-31 12:10:34,549|Printing partition location:
+2020-07-31 12:10:37,245|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|151|
+|mr-08|142|
+|mr-01|152|
+|mr-07|157|
+|mr-03|161|
+|mr-09|159|
+|mr-02|159|
+|mr-04|158|
+|mr-05|156|
+|mr-12|158|
+|mr-10|160|
+|mr-11|154|
++-----+---+
+
+2020-07-31 12:10:39,591|Printing partition location: Done!
+2020-07-31 12:10:54,145|DiskFinder|0897|Disks phase|Load|7394
+2020-07-31 12:10:54,146|DiskFinder|0897|Disks phase|Time| 14.55
+2020-07-31 12:10:54,891|Saving metrics at hdfs:///user/acald013/logs/pflock-0897...
+2020-07-31 12:10:57,280|Saving metrics at hdfs:///user/acald013/logs/pflock-0897... Done!
+2020-07-31 12:10:57,282|Closing session...
+2020-07-31 12:10:57,283|0897|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 648 --factor 4 --capacity 200 --npartitions 1867
+2020-07-31 12:10:57,445|Closing session... Done!
+./DisksFinder_server.sh -p 756 -f 4
+2020-07-31 12:11:00,533|Starting session...
+2020-07-31 12:11:15,021|Starting session... Done!
+2020-07-31 12:11:22,737|DiskFinder|0898|Points|Load|50418
+2020-07-31 12:11:22,737|Reading points                |  7.71
+2020-07-31 12:11:22,742|Fraction: 0.03348712148412119
+2020-07-31 12:11:26,844|DiskFinder|0898|Partitions done|Load|50418
+2020-07-31 12:11:26,845|Partitions done               |  4.11
+2020-07-31 12:11:26,898|Printing partition location:
+2020-07-31 12:11:29,913|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|189|
+|mr-08|180|
+|mr-01|182|
+|mr-07|193|
+|mr-03|194|
+|mr-09|186|
+|mr-02|189|
+|mr-04|194|
+|mr-05|186|
+|mr-12|191|
+|mr-10|183|
+|mr-11|175|
++-----+---+
+
+2020-07-31 12:11:32,615|Printing partition location: Done!
+2020-07-31 12:11:46,617|DiskFinder|0898|Disks phase|Load|7389
+2020-07-31 12:11:46,618|DiskFinder|0898|Disks phase|Time| 14.00
+2020-07-31 12:11:47,398|Saving metrics at hdfs:///user/acald013/logs/pflock-0898...
+2020-07-31 12:11:49,956|Saving metrics at hdfs:///user/acald013/logs/pflock-0898... Done!
+2020-07-31 12:11:49,958|Closing session...
+2020-07-31 12:11:49,958|0898|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 756 --factor 4 --capacity 200 --npartitions 2242
+2020-07-31 12:11:50,133|Closing session... Done!
+./DisksFinder_server.sh -p 864 -f 4
+2020-07-31 12:11:53,174|Starting session...
+2020-07-31 12:12:07,586|Starting session... Done!
+2020-07-31 12:12:15,490|DiskFinder|0899|Points|Load|50418
+2020-07-31 12:12:15,490|Reading points                |  7.90
+2020-07-31 12:12:15,496|Fraction: 0.03799952763274064
+2020-07-31 12:12:19,625|DiskFinder|0899|Partitions done|Load|50418
+2020-07-31 12:12:19,625|Partitions done               |  4.13
+2020-07-31 12:12:19,682|Printing partition location:
+2020-07-31 12:12:23,432|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|225|
+|mr-08|214|
+|mr-01|218|
+|mr-07|209|
+|mr-03|196|
+|mr-09|201|
+|mr-02|213|
+|mr-04|222|
+|mr-05|203|
+|mr-12|220|
+|mr-10|215|
+|mr-11|224|
++-----+---+
+
+2020-07-31 12:12:26,352|Printing partition location: Done!
+2020-07-31 12:12:35,480|DiskFinder|0899|Disks phase|Load|7391
+2020-07-31 12:12:35,480|DiskFinder|0899|Disks phase|Time|  9.13
+2020-07-31 12:12:36,244|Saving metrics at hdfs:///user/acald013/logs/pflock-0899...
+2020-07-31 12:12:38,744|Saving metrics at hdfs:///user/acald013/logs/pflock-0899... Done!
+2020-07-31 12:12:38,745|Closing session...
+2020-07-31 12:12:38,746|0899|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 864 --factor 4 --capacity 200 --npartitions 2560
+2020-07-31 12:12:39,277|Closing session... Done!
+./DisksFinder_server.sh -p 972 -f 4
+2020-07-31 12:12:42,401|Starting session...
+2020-07-31 12:12:57,364|Starting session... Done!
+2020-07-31 12:13:05,190|DiskFinder|0900|Points|Load|50418
+2020-07-31 12:13:05,190|Reading points                |  7.82
+2020-07-31 12:13:05,196|Fraction: 0.04249809853680552
+2020-07-31 12:13:09,486|DiskFinder|0900|Partitions done|Load|50418
+2020-07-31 12:13:09,486|Partitions done               |  4.29
+2020-07-31 12:13:09,536|Printing partition location:
+2020-07-31 12:13:13,046|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|233|
+|mr-08|243|
+|mr-01|226|
+|mr-07|250|
+|mr-03|218|
+|mr-09|231|
+|mr-02|242|
+|mr-04|235|
+|mr-05|250|
+|mr-12|245|
+|mr-10|230|
+|mr-11|227|
++-----+---+
+
+2020-07-31 12:13:15,895|Printing partition location: Done!
+2020-07-31 12:13:30,379|DiskFinder|0900|Disks phase|Load|7391
+2020-07-31 12:13:30,380|DiskFinder|0900|Disks phase|Time| 14.48
+2020-07-31 12:13:31,156|Saving metrics at hdfs:///user/acald013/logs/pflock-0900...
+2020-07-31 12:13:33,664|Saving metrics at hdfs:///user/acald013/logs/pflock-0900... Done!
+2020-07-31 12:13:33,665|Closing session...
+2020-07-31 12:13:33,665|0900|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 972 --factor 4 --capacity 200 --npartitions 2830
+2020-07-31 12:13:33,831|Closing session... Done!
+./DisksFinder_server.sh -p 1080 -f 4
+2020-07-31 12:13:36,892|Starting session...
+2020-07-31 12:13:52,050|Starting session... Done!
+2020-07-31 12:13:59,808|DiskFinder|0901|Points|Load|50418
+2020-07-31 12:13:59,809|Reading points                |  7.76
+2020-07-31 12:13:59,814|Fraction: 0.04698508155590282
+2020-07-31 12:14:04,478|DiskFinder|0901|Partitions done|Load|50417
+2020-07-31 12:14:04,478|Partitions done               |  4.67
+2020-07-31 12:14:04,539|Printing partition location:
+2020-07-31 12:14:07,827|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|271|
+|mr-08|272|
+|mr-01|271|
+|mr-07|275|
+|mr-03|282|
+|mr-09|261|
+|mr-02|264|
+|mr-04|245|
+|mr-05|250|
+|mr-12|256|
+|mr-10|258|
+|mr-11|276|
++-----+---+
+
+2020-07-31 12:14:11,318|Printing partition location: Done!
+2020-07-31 12:14:25,430|DiskFinder|0901|Disks phase|Load|7394
+2020-07-31 12:14:25,430|DiskFinder|0901|Disks phase|Time| 14.11
+2020-07-31 12:14:26,213|Saving metrics at hdfs:///user/acald013/logs/pflock-0901...
+2020-07-31 12:14:28,550|Saving metrics at hdfs:///user/acald013/logs/pflock-0901... Done!
+2020-07-31 12:14:28,552|Closing session...
+2020-07-31 12:14:28,552|0901|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1080 --factor 4 --capacity 200 --npartitions 3181
+2020-07-31 12:14:28,705|Closing session... Done!
+./DisksFinder_server.sh -p 1188 -f 4
+2020-07-31 12:14:31,781|Starting session...
+2020-07-31 12:14:46,200|Starting session... Done!
+2020-07-31 12:14:53,887|DiskFinder|0902|Points|Load|50418
+2020-07-31 12:14:53,887|Reading points                |  7.68
+2020-07-31 12:14:53,892|Fraction: 0.051462174420204586
+2020-07-31 12:14:58,741|DiskFinder|0902|Partitions done|Load|50418
+2020-07-31 12:14:58,741|Partitions done               |  4.85
+2020-07-31 12:14:58,889|Printing partition location:
+2020-07-31 12:15:02,504|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|290|
+|mr-08|285|
+|mr-01|293|
+|mr-07|296|
+|mr-03|292|
+|mr-09|287|
+|mr-02|283|
+|mr-04|284|
+|mr-05|281|
+|mr-12|289|
+|mr-10|287|
+|mr-11|281|
++-----+---+
+
+2020-07-31 12:15:05,757|Printing partition location: Done!
+2020-07-31 12:15:14,694|DiskFinder|0902|Disks phase|Load|7388
+2020-07-31 12:15:14,694|DiskFinder|0902|Disks phase|Time|  8.94
+2020-07-31 12:15:15,478|Saving metrics at hdfs:///user/acald013/logs/pflock-0902...
+2020-07-31 12:15:17,957|Saving metrics at hdfs:///user/acald013/logs/pflock-0902... Done!
+2020-07-31 12:15:17,958|Closing session...
+2020-07-31 12:15:17,959|0902|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1188 --factor 4 --capacity 200 --npartitions 3448
+2020-07-31 12:15:18,120|Closing session... Done!
+./DisksFinder_server.sh -p 1296 -f 4
+2020-07-31 12:15:21,230|Starting session...
+2020-07-31 12:15:35,824|Starting session... Done!
+2020-07-31 12:15:43,492|DiskFinder|0903|Points|Load|50418
+2020-07-31 12:15:43,493|Reading points                |  7.67
+2020-07-31 12:15:43,499|Fraction: 0.05593069681968666
+2020-07-31 12:15:48,485|DiskFinder|0903|Partitions done|Load|50418
+2020-07-31 12:15:48,485|Partitions done               |  4.99
+2020-07-31 12:15:48,563|Printing partition location:
+2020-07-31 12:15:52,404|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|311|
+|mr-08|319|
+|mr-01|308|
+|mr-07|318|
+|mr-03|304|
+|mr-09|310|
+|mr-02|286|
+|mr-04|320|
+|mr-05|295|
+|mr-12|306|
+|mr-10|306|
+|mr-11|305|
++-----+---+
+
+2020-07-31 12:15:55,782|Printing partition location: Done!
+2020-07-31 12:16:10,182|DiskFinder|0903|Disks phase|Load|7391
+2020-07-31 12:16:10,182|DiskFinder|0903|Disks phase|Time| 14.40
+2020-07-31 12:16:10,957|Saving metrics at hdfs:///user/acald013/logs/pflock-0903...
+2020-07-31 12:16:13,298|Saving metrics at hdfs:///user/acald013/logs/pflock-0903... Done!
+2020-07-31 12:16:13,300|Closing session...
+2020-07-31 12:16:13,301|0903|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1296 --factor 4 --capacity 200 --npartitions 3688
+2020-07-31 12:16:13,442|Closing session... Done!
+./DisksFinder_server.sh -p 1404 -f 4
+2020-07-31 12:16:16,537|Starting session...
+2020-07-31 12:16:30,897|Starting session... Done!
+2020-07-31 12:16:38,726|DiskFinder|0904|Points|Load|50418
+2020-07-31 12:16:38,727|Reading points                |  7.83
+2020-07-31 12:16:38,732|Fraction: 0.06039169870725646
+2020-07-31 12:16:43,644|DiskFinder|0904|Partitions done|Load|50418
+2020-07-31 12:16:43,645|Partitions done               |  4.92
+2020-07-31 12:16:43,711|Printing partition location:
+2020-07-31 12:16:47,593|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|326|
+|mr-08|349|
+|mr-01|335|
+|mr-07|347|
+|mr-03|332|
+|mr-09|317|
+|mr-02|317|
+|mr-04|315|
+|mr-05|317|
+|mr-12|328|
+|mr-10|332|
+|mr-11|331|
++-----+---+
+
+2020-07-31 12:16:51,122|Printing partition location: Done!
+2020-07-31 12:17:00,104|DiskFinder|0904|Disks phase|Load|7392
+2020-07-31 12:17:00,104|DiskFinder|0904|Disks phase|Time|  8.98
+2020-07-31 12:17:00,890|Saving metrics at hdfs:///user/acald013/logs/pflock-0904...
+2020-07-31 12:17:03,531|Saving metrics at hdfs:///user/acald013/logs/pflock-0904... Done!
+2020-07-31 12:17:03,533|Closing session...
+2020-07-31 12:17:03,534|0904|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1404 --factor 4 --capacity 200 --npartitions 3946
+2020-07-31 12:17:03,691|Closing session... Done!
+./DisksFinder_server.sh -p 1512 -f 4
+2020-07-31 12:17:06,828|Starting session...
+2020-07-31 12:17:21,271|Starting session... Done!
+2020-07-31 12:17:29,147|DiskFinder|0905|Points|Load|50418
+2020-07-31 12:17:29,147|Reading points                |  7.87
+2020-07-31 12:17:29,152|Fraction: 0.06484603170170969
+2020-07-31 12:17:34,457|DiskFinder|0905|Partitions done|Load|50418
+2020-07-31 12:17:34,457|Partitions done               |  5.31
+2020-07-31 12:17:34,533|Printing partition location:
+2020-07-31 12:17:38,894|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|349|
+|mr-08|352|
+|mr-01|337|
+|mr-07|362|
+|mr-03|347|
+|mr-09|342|
+|mr-02|337|
+|mr-04|348|
+|mr-05|369|
+|mr-12|371|
+|mr-10|349|
+|mr-11|353|
++-----+---+
+
+2020-07-31 12:17:42,571|Printing partition location: Done!
+2020-07-31 12:17:51,532|DiskFinder|0905|Disks phase|Load|7386
+2020-07-31 12:17:51,532|DiskFinder|0905|Disks phase|Time|  8.96
+2020-07-31 12:17:52,307|Saving metrics at hdfs:///user/acald013/logs/pflock-0905...
+2020-07-31 12:17:54,695|Saving metrics at hdfs:///user/acald013/logs/pflock-0905... Done!
+2020-07-31 12:17:54,697|Closing session...
+2020-07-31 12:17:54,697|0905|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1512 --factor 4 --capacity 200 --npartitions 4216
+2020-07-31 12:17:54,858|Closing session... Done!
+./DisksFinder_server.sh -p 1620 -f 4
+2020-07-31 12:17:58,015|Starting session...
+2020-07-31 12:18:12,962|Starting session... Done!
+2020-07-31 12:18:20,602|DiskFinder|0906|Points|Load|50418
+2020-07-31 12:18:20,602|Reading points                |  7.64
+2020-07-31 12:18:20,607|Fraction: 0.06929439788389619
+2020-07-31 12:18:26,176|DiskFinder|0906|Partitions done|Load|50418
+2020-07-31 12:18:26,177|Partitions done               |  5.57
+2020-07-31 12:18:26,240|Printing partition location:
+2020-07-31 12:18:30,516|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|378|
+|mr-08|390|
+|mr-01|392|
+|mr-07|389|
+|mr-03|380|
+|mr-09|375|
+|mr-02|392|
+|mr-04|386|
+|mr-05|391|
+|mr-12|359|
+|mr-10|364|
+|mr-11|386|
++-----+---+
+
+2020-07-31 12:18:34,154|Printing partition location: Done!
+2020-07-31 12:18:43,398|DiskFinder|0906|Disks phase|Load|7388
+2020-07-31 12:18:43,399|DiskFinder|0906|Disks phase|Time|  9.24
+2020-07-31 12:18:44,249|Saving metrics at hdfs:///user/acald013/logs/pflock-0906...
+2020-07-31 12:18:46,819|Saving metrics at hdfs:///user/acald013/logs/pflock-0906... Done!
+2020-07-31 12:18:46,820|Closing session...
+2020-07-31 12:18:46,820|0906|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1620 --factor 4 --capacity 200 --npartitions 4582
+2020-07-31 12:18:46,995|Closing session... Done!
+4
+./DisksFinder_server.sh -p 540 -f 4
+2020-07-31 12:18:50,154|Starting session...
+2020-07-31 12:19:04,558|Starting session... Done!
+2020-07-31 12:19:12,349|DiskFinder|0907|Points|Load|50418
+2020-07-31 12:19:12,349|Reading points                |  7.79
+2020-07-31 12:19:12,354|Fraction: 0.024407116835129132
+2020-07-31 12:19:15,739|DiskFinder|0907|Partitions done|Load|50417
+2020-07-31 12:19:15,739|Partitions done               |  3.39
+2020-07-31 12:19:15,784|Printing partition location:
+2020-07-31 12:19:18,842|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|149|
+|mr-08|131|
+|mr-01|140|
+|mr-07|151|
+|mr-03|149|
+|mr-09|137|
+|mr-02|151|
+|mr-04|136|
+|mr-05|146|
+|mr-12|146|
+|mr-10|143|
+|mr-11|126|
++-----+---+
+
+2020-07-31 12:19:20,863|Printing partition location: Done!
+2020-07-31 12:19:34,061|DiskFinder|0907|Disks phase|Load|7392
+2020-07-31 12:19:34,061|DiskFinder|0907|Disks phase|Time| 13.20
+2020-07-31 12:19:34,798|Saving metrics at hdfs:///user/acald013/logs/pflock-0907...
+2020-07-31 12:19:37,328|Saving metrics at hdfs:///user/acald013/logs/pflock-0907... Done!
+2020-07-31 12:19:37,330|Closing session...
+2020-07-31 12:19:37,331|0907|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 540 --factor 4 --capacity 200 --npartitions 1705
+2020-07-31 12:19:37,494|Closing session... Done!
+./DisksFinder_server.sh -p 648 -f 4
+2020-07-31 12:19:40,528|Starting session...
+2020-07-31 12:19:54,850|Starting session... Done!
+2020-07-31 12:20:02,628|DiskFinder|0908|Points|Load|50418
+2020-07-31 12:20:02,629|Reading points                |  7.77
+2020-07-31 12:20:02,634|Fraction: 0.028957796140254354
+2020-07-31 12:20:05,969|DiskFinder|0908|Partitions done|Load|50417
+2020-07-31 12:20:05,969|Partitions done               |  3.34
+2020-07-31 12:20:06,023|Printing partition location:
+2020-07-31 12:20:08,877|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|159|
+|mr-08|155|
+|mr-01|156|
+|mr-07|164|
+|mr-03|148|
+|mr-09|156|
+|mr-02|148|
+|mr-04|150|
+|mr-05|152|
+|mr-12|155|
+|mr-10|167|
+|mr-11|157|
++-----+---+
+
+2020-07-31 12:20:11,361|Printing partition location: Done!
+2020-07-31 12:20:26,104|DiskFinder|0908|Disks phase|Load|7394
+2020-07-31 12:20:26,104|DiskFinder|0908|Disks phase|Time| 14.74
+2020-07-31 12:20:26,898|Saving metrics at hdfs:///user/acald013/logs/pflock-0908...
+2020-07-31 12:20:29,332|Saving metrics at hdfs:///user/acald013/logs/pflock-0908... Done!
+2020-07-31 12:20:29,334|Closing session...
+2020-07-31 12:20:29,334|0908|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 648 --factor 4 --capacity 200 --npartitions 1867
+2020-07-31 12:20:29,553|Closing session... Done!
+./DisksFinder_server.sh -p 756 -f 4
+2020-07-31 12:20:32,635|Starting session...
+2020-07-31 12:20:48,021|Starting session... Done!
+2020-07-31 12:20:55,909|DiskFinder|0909|Points|Load|50418
+2020-07-31 12:20:55,910|Reading points                |  7.89
+2020-07-31 12:20:55,915|Fraction: 0.03348712148412119
+2020-07-31 12:20:59,879|DiskFinder|0909|Partitions done|Load|50418
+2020-07-31 12:20:59,879|Partitions done               |  3.97
+2020-07-31 12:20:59,927|Printing partition location:
+2020-07-31 12:21:03,018|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|194|
+|mr-08|188|
+|mr-01|185|
+|mr-07|177|
+|mr-03|202|
+|mr-09|185|
+|mr-02|179|
+|mr-04|191|
+|mr-05|189|
+|mr-12|184|
+|mr-10|181|
+|mr-11|187|
++-----+---+
+
+2020-07-31 12:21:06,046|Printing partition location: Done!
+2020-07-31 12:21:19,335|DiskFinder|0909|Disks phase|Load|7389
+2020-07-31 12:21:19,335|DiskFinder|0909|Disks phase|Time| 13.29
+2020-07-31 12:21:20,124|Saving metrics at hdfs:///user/acald013/logs/pflock-0909...
+2020-07-31 12:21:22,497|Saving metrics at hdfs:///user/acald013/logs/pflock-0909... Done!
+2020-07-31 12:21:22,498|Closing session...
+2020-07-31 12:21:22,499|0909|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 756 --factor 4 --capacity 200 --npartitions 2242
+2020-07-31 12:21:22,666|Closing session... Done!
+./DisksFinder_server.sh -p 864 -f 4
+2020-07-31 12:21:25,711|Starting session...
+2020-07-31 12:21:40,446|Starting session... Done!
+2020-07-31 12:21:48,225|DiskFinder|0910|Points|Load|50418
+2020-07-31 12:21:48,226|Reading points                |  7.78
+2020-07-31 12:21:48,231|Fraction: 0.03799952763274064
+2020-07-31 12:21:52,330|DiskFinder|0910|Partitions done|Load|50418
+2020-07-31 12:21:52,330|Partitions done               |  4.10
+2020-07-31 12:21:52,382|Printing partition location:
+2020-07-31 12:21:55,377|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|219|
+|mr-08|220|
+|mr-01|205|
+|mr-07|210|
+|mr-03|203|
+|mr-09|196|
+|mr-02|210|
+|mr-04|214|
+|mr-05|212|
+|mr-12|218|
+|mr-10|228|
+|mr-11|225|
++-----+---+
+
+2020-07-31 12:21:58,369|Printing partition location: Done!
+2020-07-31 12:22:07,010|DiskFinder|0910|Disks phase|Load|7391
+2020-07-31 12:22:07,010|DiskFinder|0910|Disks phase|Time|  8.64
+2020-07-31 12:22:07,807|Saving metrics at hdfs:///user/acald013/logs/pflock-0910...
+2020-07-31 12:22:10,353|Saving metrics at hdfs:///user/acald013/logs/pflock-0910... Done!
+2020-07-31 12:22:10,355|Closing session...
+2020-07-31 12:22:10,355|0910|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 864 --factor 4 --capacity 200 --npartitions 2560
+2020-07-31 12:22:10,516|Closing session... Done!
+./DisksFinder_server.sh -p 972 -f 4
+2020-07-31 12:22:13,609|Starting session...
+2020-07-31 12:22:28,584|Starting session... Done!
+2020-07-31 12:22:36,283|DiskFinder|0911|Points|Load|50418
+2020-07-31 12:22:36,283|Reading points                |  7.70
+2020-07-31 12:22:36,289|Fraction: 0.04249809853680552
+2020-07-31 12:22:40,431|DiskFinder|0911|Partitions done|Load|50418
+2020-07-31 12:22:40,431|Partitions done               |  4.15
+2020-07-31 12:22:40,497|Printing partition location:
+2020-07-31 12:22:43,710|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|244|
+|mr-08|246|
+|mr-01|230|
+|mr-07|234|
+|mr-03|222|
+|mr-09|235|
+|mr-02|236|
+|mr-04|249|
+|mr-05|234|
+|mr-12|218|
+|mr-10|244|
+|mr-11|238|
++-----+---+
+
+2020-07-31 12:22:47,046|Printing partition location: Done!
+2020-07-31 12:23:01,785|DiskFinder|0911|Disks phase|Load|7391
+2020-07-31 12:23:01,785|DiskFinder|0911|Disks phase|Time| 14.74
+2020-07-31 12:23:02,556|Saving metrics at hdfs:///user/acald013/logs/pflock-0911...
+2020-07-31 12:23:05,053|Saving metrics at hdfs:///user/acald013/logs/pflock-0911... Done!
+2020-07-31 12:23:05,056|Closing session...
+2020-07-31 12:23:05,057|0911|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 972 --factor 4 --capacity 200 --npartitions 2830
+2020-07-31 12:23:05,219|Closing session... Done!
+./DisksFinder_server.sh -p 1080 -f 4
+2020-07-31 12:23:08,274|Starting session...
+2020-07-31 12:23:23,044|Starting session... Done!
+2020-07-31 12:23:30,895|DiskFinder|0912|Points|Load|50418
+2020-07-31 12:23:30,895|Reading points                |  7.85
+2020-07-31 12:23:30,900|Fraction: 0.04698508155590282
+2020-07-31 12:23:35,470|DiskFinder|0912|Partitions done|Load|50417
+2020-07-31 12:23:35,471|Partitions done               |  4.57
+2020-07-31 12:23:35,538|Printing partition location:
+2020-07-31 12:23:39,408|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|258|
+|mr-08|259|
+|mr-01|266|
+|mr-07|258|
+|mr-03|274|
+|mr-09|264|
+|mr-02|271|
+|mr-04|271|
+|mr-05|269|
+|mr-12|269|
+|mr-10|255|
+|mr-11|267|
++-----+---+
+
+2020-07-31 12:23:42,744|Printing partition location: Done!
+2020-07-31 12:23:56,968|DiskFinder|0912|Disks phase|Load|7394
+2020-07-31 12:23:56,969|DiskFinder|0912|Disks phase|Time| 14.22
+2020-07-31 12:23:57,753|Saving metrics at hdfs:///user/acald013/logs/pflock-0912...
+2020-07-31 12:24:00,317|Saving metrics at hdfs:///user/acald013/logs/pflock-0912... Done!
+2020-07-31 12:24:00,319|Closing session...
+2020-07-31 12:24:00,320|0912|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1080 --factor 4 --capacity 200 --npartitions 3181
+2020-07-31 12:24:00,479|Closing session... Done!
+./DisksFinder_server.sh -p 1188 -f 4
+2020-07-31 12:24:03,539|Starting session...
+2020-07-31 12:24:18,546|Starting session... Done!
+2020-07-31 12:24:26,490|DiskFinder|0913|Points|Load|50418
+2020-07-31 12:24:26,490|Reading points                |  7.94
+2020-07-31 12:24:26,496|Fraction: 0.051462174420204586
+2020-07-31 12:24:30,992|DiskFinder|0913|Partitions done|Load|50418
+2020-07-31 12:24:30,992|Partitions done               |  4.50
+2020-07-31 12:24:31,055|Printing partition location:
+2020-07-31 12:24:34,714|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|274|
+|mr-08|303|
+|mr-01|305|
+|mr-07|284|
+|mr-03|296|
+|mr-09|278|
+|mr-02|274|
+|mr-04|294|
+|mr-05|275|
+|mr-12|288|
+|mr-10|277|
+|mr-11|300|
++-----+---+
+
+2020-07-31 12:24:38,408|Printing partition location: Done!
+2020-07-31 12:24:46,877|DiskFinder|0913|Disks phase|Load|7388
+2020-07-31 12:24:46,877|DiskFinder|0913|Disks phase|Time|  8.47
+2020-07-31 12:24:47,700|Saving metrics at hdfs:///user/acald013/logs/pflock-0913...
+2020-07-31 12:24:50,332|Saving metrics at hdfs:///user/acald013/logs/pflock-0913... Done!
+2020-07-31 12:24:50,333|Closing session...
+2020-07-31 12:24:50,333|0913|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1188 --factor 4 --capacity 200 --npartitions 3448
+2020-07-31 12:24:50,497|Closing session... Done!
+./DisksFinder_server.sh -p 1296 -f 4
+2020-07-31 12:24:53,578|Starting session...
+2020-07-31 12:25:08,188|Starting session... Done!
+2020-07-31 12:25:16,039|DiskFinder|0914|Points|Load|50418
+2020-07-31 12:25:16,039|Reading points                |  7.85
+2020-07-31 12:25:16,045|Fraction: 0.05593069681968666
+2020-07-31 12:25:21,018|DiskFinder|0914|Partitions done|Load|50418
+2020-07-31 12:25:21,019|Partitions done               |  4.98
+2020-07-31 12:25:21,079|Printing partition location:
+2020-07-31 12:25:25,101|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|328|
+|mr-08|298|
+|mr-01|286|
+|mr-07|301|
+|mr-03|319|
+|mr-09|306|
+|mr-02|300|
+|mr-04|306|
+|mr-05|296|
+|mr-12|310|
+|mr-10|309|
+|mr-11|329|
++-----+---+
+
+2020-07-31 12:25:28,796|Printing partition location: Done!
+2020-07-31 12:25:43,434|DiskFinder|0914|Disks phase|Load|7391
+2020-07-31 12:25:43,435|DiskFinder|0914|Disks phase|Time| 14.64
+2020-07-31 12:25:44,197|Saving metrics at hdfs:///user/acald013/logs/pflock-0914...
+2020-07-31 12:25:46,691|Saving metrics at hdfs:///user/acald013/logs/pflock-0914... Done!
+2020-07-31 12:25:46,693|Closing session...
+2020-07-31 12:25:46,693|0914|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1296 --factor 4 --capacity 200 --npartitions 3688
+2020-07-31 12:25:46,873|Closing session... Done!
+./DisksFinder_server.sh -p 1404 -f 4
+2020-07-31 12:25:50,013|Starting session...
+2020-07-31 12:26:04,477|Starting session... Done!
+2020-07-31 12:26:12,111|DiskFinder|0915|Points|Load|50418
+2020-07-31 12:26:12,112|Reading points                |  7.63
+2020-07-31 12:26:12,117|Fraction: 0.06039169870725646
+2020-07-31 12:26:17,032|DiskFinder|0915|Partitions done|Load|50418
+2020-07-31 12:26:17,033|Partitions done               |  4.92
+2020-07-31 12:26:17,103|Printing partition location:
+2020-07-31 12:26:21,594|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|343|
+|mr-08|323|
+|mr-01|308|
+|mr-07|329|
+|mr-03|348|
+|mr-09|328|
+|mr-02|323|
+|mr-04|334|
+|mr-05|321|
+|mr-12|340|
+|mr-10|322|
+|mr-11|327|
++-----+---+
+
+2020-07-31 12:26:24,833|Printing partition location: Done!
+2020-07-31 12:26:33,960|DiskFinder|0915|Disks phase|Load|7392
+2020-07-31 12:26:33,960|DiskFinder|0915|Disks phase|Time|  9.13
+2020-07-31 12:26:34,755|Saving metrics at hdfs:///user/acald013/logs/pflock-0915...
+2020-07-31 12:26:37,365|Saving metrics at hdfs:///user/acald013/logs/pflock-0915... Done!
+2020-07-31 12:26:37,367|Closing session...
+2020-07-31 12:26:37,367|0915|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1404 --factor 4 --capacity 200 --npartitions 3946
+2020-07-31 12:26:37,573|Closing session... Done!
+./DisksFinder_server.sh -p 1512 -f 4
+2020-07-31 12:26:40,716|Starting session...
+2020-07-31 12:26:55,388|Starting session... Done!
+2020-07-31 12:27:03,083|DiskFinder|0916|Points|Load|50418
+2020-07-31 12:27:03,084|Reading points                |  7.69
+2020-07-31 12:27:03,089|Fraction: 0.06484603170170969
+2020-07-31 12:27:07,879|DiskFinder|0916|Partitions done|Load|50418
+2020-07-31 12:27:07,879|Partitions done               |  4.79
+2020-07-31 12:27:07,943|Printing partition location:
+2020-07-31 12:27:12,290|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|352|
+|mr-08|337|
+|mr-01|361|
+|mr-07|359|
+|mr-03|364|
+|mr-09|357|
+|mr-02|339|
+|mr-04|345|
+|mr-05|368|
+|mr-12|343|
+|mr-10|350|
+|mr-11|341|
++-----+---+
+
+2020-07-31 12:27:15,751|Printing partition location: Done!
+2020-07-31 12:27:24,647|DiskFinder|0916|Disks phase|Load|7386
+2020-07-31 12:27:24,647|DiskFinder|0916|Disks phase|Time|  8.89
+2020-07-31 12:27:25,465|Saving metrics at hdfs:///user/acald013/logs/pflock-0916...
+2020-07-31 12:27:27,946|Saving metrics at hdfs:///user/acald013/logs/pflock-0916... Done!
+2020-07-31 12:27:27,949|Closing session...
+2020-07-31 12:27:27,949|0916|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1512 --factor 4 --capacity 200 --npartitions 4216
+2020-07-31 12:27:28,116|Closing session... Done!
+./DisksFinder_server.sh -p 1620 -f 4
+2020-07-31 12:27:31,282|Starting session...
+2020-07-31 12:27:45,724|Starting session... Done!
+2020-07-31 12:27:53,470|DiskFinder|0917|Points|Load|50418
+2020-07-31 12:27:53,470|Reading points                |  7.74
+2020-07-31 12:27:53,475|Fraction: 0.06929439788389619
+2020-07-31 12:27:59,128|DiskFinder|0917|Partitions done|Load|50418
+2020-07-31 12:27:59,128|Partitions done               |  5.66
+2020-07-31 12:27:59,201|Printing partition location:
+2020-07-31 12:28:03,152|12
++-----+---+
+| host|  n|
++-----+---+
+|mr-06|378|
+|mr-08|381|
+|mr-01|388|
+|mr-07|404|
+|mr-03|369|
+|mr-09|388|
+|mr-02|394|
+|mr-04|375|
+|mr-05|393|
+|mr-12|373|
+|mr-10|368|
+|mr-11|371|
++-----+---+
+
+2020-07-31 12:28:06,777|Printing partition location: Done!
+2020-07-31 12:28:16,063|DiskFinder|0917|Disks phase|Load|7388
+2020-07-31 12:28:16,064|DiskFinder|0917|Disks phase|Time|  9.28
+2020-07-31 12:28:16,845|Saving metrics at hdfs:///user/acald013/logs/pflock-0917...
+2020-07-31 12:28:19,355|Saving metrics at hdfs:///user/acald013/logs/pflock-0917... Done!
+2020-07-31 12:28:19,357|Closing session...
+2020-07-31 12:28:19,357|0917|org.apache.spark.deploy.SparkSubmit --master yarn --deploy-mode client --conf spark.driver.memory=12g --conf spark.default.parallelism=108 --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --class edu.ucr.dblab.djoin.DisksFinder --files /home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-sql_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/geospark-viz_2.3-1.2.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-3.1.5.jar,/home/acald013/Spark/2.4/jars/spark-measure_2.11-0.16.jar,/home/acald013/Spark/2.4/jars/utils_2.11.jar --num-executors 12 --executor-cores 9 --executor-memory 30g /home/acald013/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar --points hdfs:///user/acald013//Trajs/LA/LA50K --epsilon 10 --partitions 1620 --factor 4 --capacity 200 --npartitions 4582
+2020-07-31 12:28:19,525|Closing session... Done!
