@@ -13,8 +13,10 @@ THE_MASTER="yarn"
 THE_INPUT="hdfs:///user/acald013/tmp/LA50K.tsv"
 THE_OUTPUT="hdfs:///user/acald013/tmp/trajs"
 THE_PARTITIONS=1080
+THE_HEADER=""
+THE_DELIMITER="\t"
 
-while getopts "i:o:p:" OPTION; do
+while getopts "i:o:p:d:h" OPTION; do
     case $OPTION in
     i)
         THE_INPUT=$OPTARG
@@ -25,6 +27,12 @@ while getopts "i:o:p:" OPTION; do
     p)
         THE_PARTITIONS=$OPTARG
         ;;
+    d)
+	THE_DELIMITER=$OPTARG
+	;;
+    h)
+	THE_HEADER="--header"
+	;;
     *)
         echo "Incorrect options provided"
         exit 1
@@ -38,4 +46,4 @@ spark-submit \
     --jars ${SPARK_JARS}geospark-1.2.0.jar,${SPARK_JARS}geospark-sql_2.3-1.2.0.jar,${SPARK_JARS}geospark-viz_2.3-1.2.0.jar,${SPARK_JARS}scallop_2.11-3.1.5.jar \
     --master $THE_MASTER --deploy-mode client \
     --num-executors $EXECUTORS --executor-cores $CORES --executor-memory $EMEMORY --driver-memory $DMEMORY \
-    --class $CLASS_NAME $CLASS_JAR --input $THE_INPUT --partitions $THE_PARTITIONS --output $THE_OUTPUT
+    --class $CLASS_NAME $CLASS_JAR --input $THE_INPUT --partitions $THE_PARTITIONS --output $THE_OUTPUT --delimiter $THE_DELIMITER --header $THE_HEADER

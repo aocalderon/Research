@@ -1,5 +1,7 @@
 #/bin/bash
 
-sort $1 -o /tmp/A.txt
-sort $2 -o /tmp/B.txt
-diff -s /tmp/A.txt /tmp/B.txt 
+cut -d "," -f 3 $1 > /tmp/A.txt
+cut -d "," -f 3 $2 > /tmp/B.txt
+sort /tmp/A.txt -o /tmp/A_sorted.txt
+sort /tmp/B.txt -o /tmp/B_sorted.txt
+diff -s /tmp/A_sorted.txt /tmp/B_sorted.txt 

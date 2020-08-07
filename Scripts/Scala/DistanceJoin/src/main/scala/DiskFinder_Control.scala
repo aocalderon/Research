@@ -32,7 +32,7 @@ import edu.ucr.dblab.Utils._
 import edu.ucr.dblab.djoin.DistanceJoin.{geofactory, round, circle2point, envelope2polygon}
 import edu.ucr.dblab.djoin.SPMF.{AlgoLCM2, Transactions, Transaction}
 
-object DisksFinder{
+object DisksFinder_Control {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   case class ST_Point(id: Int, x: Double, y: Double, t: Int){
@@ -104,23 +104,11 @@ object DisksFinder{
 
     val partitionStage = "Partitions done"
     val (pointsRDD, nPointsRDD, quadtree) = timer{partitionStage}{
-      val fraction = FractionCalculator.getFraction(params.partitions(), nPoints)
-      logger.info(s"Fraction: ${fraction}")
-      val samples = pointsRaw.getRawSpatialRDD.rdd.sample(false, fraction, 42)
-        .map(_.getEnvelopeInternal).collect().toList.asJava
-      val partitioning = new QuadtreePartitioning(samples,
-        pointsRaw.boundary(),
-        params.partitions(),
-        params.epsilon(),
-        params.factor())
-      val quadtree = partitioning.getPartitionTree()
-      val partitioner = new QuadTreePartitioner(quadtree)
-      pointsRaw.spatialPartitioning(partitioner)
-      //pointsRaw.spatialPartitioning(GridType.QUADTREE, params.partitions())
-
+      pointsRaw.spatialPartitioning(GridType.QUADTREE, params.partitions())
       pointsRaw.spatialPartitionedRDD.persist(persistanceLevel)
       val N = pointsRaw.spatialPartitionedRDD.count()
       n(partitionStage, N)
+      val quadtree = pointsRaw.partitionTree
       (pointsRaw, N, quadtree)
     }
     
@@ -208,6 +196,14 @@ object DisksFinder{
               calculateCenterCoordinates(p1, p2, r2)
             }
 
+            debug{
+              save{s"/tmp/edgesCenters_${global_gid}.wkt"}{
+                centers.map{ center =>
+                  s"${center.toText}\n"
+                }
+              }
+            }
+
             // Finding disks...
             val candidates = DistanceJoin
               .partitionBasedAggregate(centers.toIterator, points.toIterator, r)
@@ -291,7 +287,7 @@ object DisksFinder{
       }
       save{f"/tmp/PFLOCK_E${epsilon}%.0f_M1_D1.txt"}{
         candidatesRaw.map{ center =>
-          val pids = center.getUserData.toString
+          val pids = center.getUserData.toString.split("\t")(0)
           s"0, 0, ${pids}\n"
         }.collect.sorted
       }
