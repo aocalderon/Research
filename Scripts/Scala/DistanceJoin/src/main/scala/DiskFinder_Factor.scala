@@ -106,7 +106,7 @@ object DisksFinder_Factor {
     val (pointsRDD, nPointsRDD, quadtree) = timer{partitionStage}{
       val fraction = FractionCalculator.getFraction(params.partitions(), nPoints)
       logger.info(s"Fraction: ${fraction}")
-      val samples = pointsRaw.getRawSpatialRDD.rdd.sample(false, fraction, 42)
+      val samples = pointsRaw.getRawSpatialRDD.rdd.sample(false, fraction)
         .map(_.getEnvelopeInternal).collect().toList.asJava
       val boundary = pointsRaw.boundary()
       boundary.expandBy(r)
