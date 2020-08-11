@@ -32,9 +32,9 @@ getTimeArray <- function(log){
 # Parameters...
 ################
 
-GETTING_DATA = T
-ID1=1052
-ID2=1221
+GETTING_DATA = F
+ID1=744
+ID2=862
   
 ids = str_pad(seq(ID1, ID2), 4, pad = "0")
 
@@ -48,7 +48,7 @@ for (id in ids){
   
   top = log %>%
     mutate(duration = as.numeric(duration), index = as.factor(index)) %>% 
-    slice_max(duration, n = 100)
+    slice_max(duration, n = 20)
     #filter(duration >= 1000)
   
   log = getTimeArray(top)
@@ -69,5 +69,5 @@ for (id in ids){
     ylab("Time [ms]") + xlab("Task Id") + labs(fill = "Time to")
   
   plot(p)
-  ggsave(paste0("hist/TopTasksHist_",id,".pdf"), width = 15, height = 20, device = "pdf")
+  ggsave(paste0("hist/TopTasksHist_",id,".pdf"), width = 10, height = 12, device = "pdf")
 }
