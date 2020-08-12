@@ -31,6 +31,7 @@ import com.vividsolutions.jts.geom.{Point, Polygon, MultiPolygon}
 import edu.ucr.dblab.Utils._
 import edu.ucr.dblab.djoin.DistanceJoin.{geofactory, round, circle2point, envelope2polygon}
 import edu.ucr.dblab.djoin.SPMF.{AlgoLCM2, Transactions, Transaction}
+import Stats._
 
 object DisksFinder{
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -123,7 +124,41 @@ object DisksFinder{
       n(partitionStage, N)
       (pointsRaw, N, quadtree)
     }
-    
+
+    debug{
+      case class Cell(id: Int, count: Int = -1, wkt: String = ""){
+        override def toString = s"$wkt\t$id\t$count\n"
+      }
+
+      val partitions = pointsRDD.spatialPartitionedRDD.rdd
+        .mapPartitionsWithIndex{ (index, it) =>
+        Iterator(Cell(index, count = it.length))
+      }.collect
+      val counts = partitions.map(_.count)
+      val avg = mean(counts)
+      val max = counts.max
+      val min = counts.min
+      val sd  = stdDev(counts)
+      logger.info(s"STATS|$appId|$max|$min|$avg|$sd")
+
+      val cells = quadtree.getLeafZones.asScala.map{ leaf =>
+        val id = leaf.partitionId
+        val wkt = envelope2polygon(leaf.getEnvelope).toText
+        Cell(id, wkt = wkt)
+      }
+
+      val data = for{
+        p <- partitions
+        c <- cells if p.id == c.id
+      } yield {
+        Cell(p.id, p.count, c.wkt)
+      }
+
+      save{s"/tmp/edgesCells$appId.tsv"}{
+        data.map(_.toString())
+      }
+    }
+
     // Collecting the global settings...
     val expanded_grids = quadtree.getLeafZones.asScala.toVector
       .sortBy(_.partitionId)
@@ -176,6 +211,15 @@ object DisksFinder{
     val capacity = params.capacity()
     val disksPhase = "Disks phase"
 
+    ////
+    case class CellStats(partitionId: Int, taskId: Long,
+      pointsIn: Int, pointsOut: Int,
+      centersIn: Int, centersOut: Int,
+      disks: Vector[Point]){
+      override def toString = s"$partitionId\t$taskId\t$pointsIn\t$pointsOut\t$centersIn\t$centersOut\n"
+    }
+    ////
+
     metrics.begin()
     val (candidatesRaw, nCandidatesRaw) = timer{ header(disksPhase) }{
       val circlesRDD = new CircleRDD(pointsRDD, 2 * epsilon)
@@ -190,12 +234,14 @@ object DisksFinder{
             val tc = TaskContext.get
             val global_gid = tc.partitionId
             val taskId = tc.taskAttemptId()
-            logger.info(s"PartitionId=${global_gid}\tTaskId=${taskId}")
 
             // Finding pairs...
-            val points = leftIt.toVector
-            val pairs = DistanceJoin.partitionBasedIterator(points.toIterator, rightIt, epsilon)
-              .filter{ case(l,r) =>
+            val points  = leftIt.toVector
+            val pairs = DistanceJoin.partitionBasedIterator(
+              points.toIterator,
+              rightIt,
+              epsilon
+            ).filter{ case(l,r) =>
                 val i = l.getUserData.toString.split("\t")(0)
                 val j = r.getUserData.toString.split("\t")(0)
                 i < j
@@ -232,6 +278,7 @@ object DisksFinder{
             val lcm = new AlgoLCM2()
             lcm.run(data)
             grid.expandBy(-2 * epsilon)
+
             val disks = lcm.getPointsAndPids.asScala.map{ m =>
               val pids = m.getItems.map(_.toInt).toList.sorted
               val x = m.getX
@@ -242,14 +289,29 @@ object DisksFinder{
               disk
             }.filter(disk => grid.contains(disk.getEnvelopeInternal))
 
-            disks.toIterator
+            ////
+            val pIn  = points.filter(p => grid.contains(p.getEnvelopeInternal)).length
+            val pOut = points.filter(p => !grid.contains(p.getEnvelopeInternal)).length
+            val cIn  = centers.filter(c => grid.contains(c.getEnvelopeInternal)).length
+            val cOut = centers.filter(c => !grid.contains(c.getEnvelopeInternal)).length
+
+            val cell = CellStats(global_gid, taskId, pIn, pOut, cIn, cOut, disks.toVector)
+            Iterator(cell)
+            ////
+
+            //disks.toIterator // Keep it to return just the disks...
           }
         }
       }
       results.cache()
-      val N = results.count()
+      logger.info("\n" + results.map{c =>
+        s"CELLSTATS\t$appId\t${c.toString}"
+      }.collect.mkString("")
+      )
+      val disks = results.flatMap(_.disks)
+      val N = disks.count()
       n(disksPhase, N)
-      (results, N)
+      (disks, N)
     }
     metrics.end()
     val phase1 = getPhaseMetrics(metrics, disksPhase)
