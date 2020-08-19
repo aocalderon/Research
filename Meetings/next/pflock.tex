@@ -69,24 +69,47 @@
     \end{frame}
 }
 
-\begin{frame}{Experiment settings}
-  \begin{itemize}
-    \item Working with the new Quadtree implementation.
-    \item Varying a factor to limit the size of the cell. It was between 1 and 20 times the $\varepsilon$ value\footnote{0 denotes the use of the normal Quadtree implementation (without cell size restriction)}.
-    \item Finding disks for LA50K dataset using $\varepsilon$ 10m.
-    \item Using 12 nodes with 9 cores each.
-    \item Collecting duration at each node. Average of 10 runs.
-  \end{itemize}
+\begin{frame}{Point distribution per cell}
+  \centering
+  \begin{tabular}{c c c c c c}
+  \hline
+  Partitions  & Partitions     & avg    &                sd &                 min &   max \\
+  requested & created       &           &                       &                       &           \\ 
+  \hline
+36 &         94 &          536.35 & 342.43 &  3 &     1524 \\
+48 &        118 &         427.26 & 274.22 & 3 &     1208 \\
+60 &         160 &         315.1 &  215.96 & 3 &     1057 \\
+72 &         193 &         261.22 & 196.39 &  3 &     1057 \\
+84 &         235 &         214.53 & 165.38 & 3 &     948  \\
+96 &         274 &         184.0 & 130.47 & 3 &     842  \\
+108 &        322 &         156.57 & 113.45 & 3 &     842 \\ 
+120 &        322 &         156.57 & 113.45 & 3 &     842  \\
+\hline
+  \end{tabular}
+
 \end{frame}
 
-\begin{frame}{Results}
+\begin{frame}{Duration per cell}
   \centering
-  \includegraphics[width=\textwidth]{figures/TimePerNode}
+  \includegraphics[width=0.9\textwidth]{figures/LA2}
 \end{frame}
 
-\begin{frame}{Results}
+\begin{frame}{Point/Centers distribution per partition}{Partitions requested=36}
   \centering
-  \includegraphics[width=\textwidth]{figures/TimePerNodeAvg}
+    \input{figures/table036.tex}
+\end{frame}
+\begin{frame}{Point/Centers distribution per partition}
+  \centering
+  \includegraphics[width=0.9\textwidth]{figures/TP036}
+\end{frame}
+
+\begin{frame}{Point/Centers distribution per partition}{Partitions requested=108}
+  \centering
+    \input{figures/table108.tex}
+\end{frame}
+\begin{frame}{Point/Centers distribution per partition}
+  \centering
+  \includegraphics[width=0.9\textwidth]{figures/TP108}
 \end{frame}
 
 \end{document}
