@@ -41,6 +41,12 @@ public class QuadtreePartitioning implements Serializable
      */
     public QuadtreePartitioning(List<Envelope> samples,
 				Envelope boundary,
+				int partitions) throws Exception {
+        this(samples, boundary, partitions, -1, 0.0, 1);
+    }
+
+    public QuadtreePartitioning(List<Envelope> samples,
+				Envelope boundary,
 				int partitions,
 				double epsilon,
 				int factor) throws Exception {

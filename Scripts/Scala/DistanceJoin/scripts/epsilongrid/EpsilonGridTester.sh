@@ -7,8 +7,9 @@ DMEMORY=12g
 EMEMORY=30g
 
 EPSILON=10
+FACTOR=3
+PARALLELISM=$((EXECUTORS * CORES * FACTOR))
 PARTITIONS=108
-FACTOR=4
 CAPACITY=200
 DEBUG=""
 
@@ -44,23 +45,19 @@ done
 
 SPARK_JARS=$HOME/Spark/2.4/jars/
 CLASS_JAR=$HOME/Research/Scripts/Scala/DistanceJoin/target/scala-2.11/geotester_2.11-0.1.jar
-CLASS_NAME=edu.ucr.dblab.djoin.DisksFinder
+CLASS_NAME=edu.ucr.dblab.djoin.EpsilonGridTester
 LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
 
 HUSER=/user/acald013/
 #POINTS=hdfs://$HUSER/Trajs/LA/LA50K
 POINTS=hdfs://$HUSER/Trajs/Test/dense
 
-#    --conf spark.locality.wait=15s \
-#    --conf spark.locality.wait.node=1s \
-#    --conf spark.locality.wait.process=1s \
-#    --conf spark.locality.wait.rack=1s \
 spark-submit \
-    --conf spark.default.parallelism=108 \
+    --conf spark.default.parallelism=$PARALLELISM \
     --files "$LOG_FILE" --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:"$LOG_FILE" \
     --jars "${SPARK_JARS}"geospark-1.2.0.jar,"${SPARK_JARS}"geospark-sql_2.3-1.2.0.jar,"${SPARK_JARS}"geospark-viz_2.3-1.2.0.jar,"${SPARK_JARS}"scallop_2.11-3.1.5.jar,"${SPARK_JARS}"spark-measure_2.11-0.16.jar,"${SPARK_JARS}"utils_2.11.jar \
     --num-executors $EXECUTORS --executor-cores $CORES --executor-memory $EMEMORY --driver-memory $DMEMORY \
     --master "$MASTER" --deploy-mode client \
     --class "$CLASS_NAME" "$CLASS_JAR" $DEBUG \
     --points "$POINTS" --epsilon "$EPSILON" \
-    --partitions "$PARTITIONS" --factor "$FACTOR" --capacity "$CAPACITY"  
+    --partitions "$PARTITIONS" 
