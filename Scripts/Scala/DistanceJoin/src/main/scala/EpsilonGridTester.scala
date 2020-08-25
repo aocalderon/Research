@@ -83,8 +83,8 @@ object EpsilonGridTester {
     }
     val metrics = TaskMetrics(spark)
     val epsilon = params.epsilon() + params.precision()
-    val r = (epsilon / 2.0) 
-    val r2 = math.pow(r, 2)
+    val r = (params.epsilon() / 2.0) + params.precision()
+    val r2 = math.pow(params.epsilon() / 2.0, 2) + params.precision()
     logger.info("Starting session... Done!")
 
     val readingStage = "Reading points"
@@ -216,16 +216,18 @@ object EpsilonGridTester {
         }
         val pairs = for{
           a <- st_points
-          b <- st_points if a._1 < b._1 && a._2.distance(b._2) <= epsilon + precision 
+          b <- st_points if a._1 < b._1 && a._2.distance(b._2) <= epsilon + precision
         } yield {
           (a._2, b._2)
         }
 
         val innerArea = grid.getEnvelopeInternal
         innerArea.expandBy(-1 * epsilon)
+        val area = envelope2polygon(innerArea)
+
         val centers = pairs.flatMap{ case(a, b) =>
           calculateCenterCoordinates(a, b, r2)
-        }.filter(center => innerArea.intersects(center.getEnvelopeInternal))
+        }.filter(_.coveredBy(area))
 
         val disksFlat = for{
           c <- centers
@@ -239,7 +241,32 @@ object EpsilonGridTester {
             (center, pids)
           }
 
-        (grid, pairs, centers, points.size, disks)
+        val transactions = disks.map{ disk =>
+          val x = disk._1.getX
+          val y = disk._1.getY
+
+          (disk._2, (x, y))
+        }.groupBy(_._1).values.map{ p =>
+          val (pids, coords) = p.head
+          val x = coords._1
+          val y = coords._2
+
+          new Transaction(x, y, pids.mkString(" "))
+        }.toList.distinct
+        val data = new Transactions(transactions.asJava, 0)
+        val lcm = new AlgoLCM2()
+        lcm.run(data)
+
+        val maximals = lcm.getPointsAndPids.asScala.map{ m =>
+          val pids = m.getItems.map(_.toInt).toList.sorted
+          val x = m.getX
+          val y = m.getY
+          val disk = geofactory.createPoint(new Coordinate(x, y))
+
+          (disk, pids.mkString(" "))
+        }
+
+        (grid, pairs, centers, disks, maximals)
       }
 
       disks.persist(persistanceLevel)
@@ -263,28 +290,43 @@ object EpsilonGridTester {
       }
       save{"/tmp/edgesPairs.wkt"}{
         disksRDD.flatMap{ disk =>
-          val grid = disk._1
-          val innerArea = grid.getEnvelopeInternal
-          innerArea.expandBy(-1 * epsilon)
-          val area = envelope2polygon(innerArea)
-
           val pairs = disk._2
           pairs.map{ pair =>
             val p1 = pair._1.getCoordinate
             val p2 = pair._2.getCoordinate
-            geofactory.createLineString(Array(p1, p2))
-          }.filter(pair => area.intersects(pair))
-          .map{ pair =>
-             s"${pair.toText}\n"
+            val wkt = geofactory.createLineString(Array(p1, p2)).toText
+
+            s"$wkt\n"
+          }
+        }.distinct.collect
+      }
+      save{"/tmp/edgesCenters.wkt"}{
+        disksRDD.flatMap{disk =>
+          val centers = disk._3
+          centers.map{ c =>
+            val wkt  = c.toText
+
+            s"$wkt\n"
           }
         }.distinct.collect
       }
       save{"/tmp/edgesDisks.wkt"}{
         disksRDD.flatMap{disk =>
-          val disks = disk._5
+          val disks = disk._4
           disks.map{ d =>
             val wkt  = d._1.toText
             val pids = d._2.mkString(" ")
+
+            s"$wkt\t$pids\n"
+          }
+        }.collect
+      }
+      save{"/tmp/edgesMaximals.wkt"}{
+        disksRDD.flatMap{disk =>
+          val disks = disk._5
+          disks.map{ d =>
+            val wkt  = d._1.toText
+            val pids = d._2
 
             s"$wkt\t$pids\n"
           }

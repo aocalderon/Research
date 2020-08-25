@@ -2,7 +2,7 @@
 
 MASTER="yarn"
 EXECUTORS=12
-CORES=1
+CORES=9
 DMEMORY=12g
 EMEMORY=30g
 
@@ -50,7 +50,8 @@ LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
 
 HUSER=/user/acald013/
 #POINTS=hdfs://$HUSER/Trajs/LA/LA50K
-POINTS=hdfs://$HUSER/Trajs/Test/dense
+#POINTS=hdfs://$HUSER/Trajs/Test/dense
+POINTS=hdfs://$HUSER/Trajs/Test/demo
 
 spark-submit \
     --conf spark.default.parallelism=$PARALLELISM \
