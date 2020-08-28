@@ -34,13 +34,12 @@ import edu.ucr.dblab.djoin.SPMF.{AlgoLCM2, Transactions, Transaction}
 import Stats._
 
 object DisksFinder{
-  implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
-
   case class ST_Point(id: Int, x: Double, y: Double, t: Int){
     def asWKT: String = s"POINT($x $y)\t$id\t$t\n"
   }
 
   def main(args: Array[String]): Unit = {
+    implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
     logger.info("Starting session...")
     implicit val params = new DiskFinderConf(args)
     val appName = s"DiskFinder"

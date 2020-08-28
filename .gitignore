@@ -115,6 +115,18 @@ Scripts/Scala/DistanceJoin/.settings/*
 Scripts/Scala/DistanceJoin/.bloop/
 Scripts/Scala/DistanceJoin/.metals/
 
+Scripts/Scala/GraphViewer/target/*
+Scripts/Scala/GraphViewer/project/*
+Scripts/Scala/GraphViewer/.idea/*
+Scripts/Scala/GraphViewer/.idea/workspace.xml
+Scripts/Scala/GraphViewer/.ensime
+Scripts/Scala/GraphViewer/.ensime_cache/*
+Scripts/Scala/GraphViewer/.classpath
+Scripts/Scala/GraphViewer/.project
+Scripts/Scala/GraphViewer/.settings/*
+Scripts/Scala/GraphViewer/.bloop/
+Scripts/Scala/GraphViewer/.metals/
+
 Scripts/Scala/Join/target/*
 Scripts/Scala/Join/project/*
 Scripts/Scala/Join/.idea/*

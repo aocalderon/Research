@@ -69,48 +69,79 @@
     \end{frame}
 }
 
-\begin{frame}{Point distribution per cell}
-  \centering
-  \begin{tabular}{c c c c c c}
-  \hline
-  Partitions  & Partitions     & avg    &                sd &                 min &   max \\
-  requested & created       &           &                       &                       &           \\ 
-  \hline
-36 &         94 &          536.35 & 342.43 &  3 &     1524 \\
-48 &        118 &         427.26 & 274.22 & 3 &     1208 \\
-60 &         160 &         315.1 &  215.96 & 3 &     1057 \\
-72 &         193 &         261.22 & 196.39 &  3 &     1057 \\
-84 &         235 &         214.53 & 165.38 & 3 &     948  \\
-96 &         274 &         184.0 & 130.47 & 3 &     842  \\
-108 &        322 &         156.57 & 113.45 & 3 &     842 \\ 
-120 &        322 &         156.57 & 113.45 & 3 &     842  \\
-\hline
-  \end{tabular}
+\begin{frame}{Reducing number of candidate centers}{Overall approach}
+    \begin{enumerate}
+        \item Identify dense partitions:
+        \begin{itemize}
+            \item by number of connection at each point.
+        \end{itemize}
+        \item At each partition built local partitions:
+        \begin{itemize}
+            \item it can be done using DBScan or uniform grids.
+        \end{itemize}
+    \end{enumerate}
 
 \end{frame}
 
-\begin{frame}{Duration per cell}
+\begin{frame}{Local - partitioning}{DBScan}
   \centering
-  \includegraphics[width=0.9\textwidth]{figures/LA2}
+  \includegraphics[width=0.9\textwidth]{figures/dbscan}
+\end{frame}
+\begin{frame}{Local - partitioning}{Uniform grids}
+  \centering
+  \includegraphics[width=0.9\textwidth]{figures/grids}
 \end{frame}
 
-\begin{frame}{Point/Centers distribution per partition}{Partitions requested=36}
-  \centering
-    \input{figures/table036.tex}
-\end{frame}
-\begin{frame}{Point/Centers distribution per partition}
-  \centering
-  \includegraphics[width=0.9\textwidth]{figures/TP036}
+\begin{frame}{Reducing number of candidate centers}{Overall approach}
+    \begin{enumerate}
+        \item Identify dense partitions:
+        \begin{itemize}
+            \item by number of connection at each point.
+        \end{itemize}
+        \item At each partition built local partitions:
+        \begin{itemize}
+            \item it can be done using DBScan or uniform grids.
+        \end{itemize}
+        \item For each local partition:
+        \begin{enumerate}
+            \item  If the farthest points distance $< epsilon$:
+            \begin{itemize}
+                \item retrieve centroid as unique center
+            \end{itemize}
+            \item  Find full set of triangles for the graph:
+            \begin{itemize}
+                \item retrieve the centroids of each triangle.
+            \end{itemize}
+        \end{enumerate}
+
+    \end{enumerate}
 \end{frame}
 
-\begin{frame}{Point/Centers distribution per partition}{Partitions requested=108}
+\begin{frame}{Centers by tringles}
   \centering
-    \input{figures/table108.tex}
+  \includegraphics[width=0.9\textwidth]{figures/triangle1}
 \end{frame}
-\begin{frame}{Point/Centers distribution per partition}
+\begin{frame}{Centers by tringles}
   \centering
-  \includegraphics[width=0.9\textwidth]{figures/TP108}
+  \includegraphics[width=0.9\textwidth]{figures/triangle2}
 \end{frame}
+\begin{frame}{Centers by tringles}
+  \centering
+  \includegraphics[width=0.9\textwidth]{figures/triangle3}
+\end{frame}
+\begin{frame}{Centers by tringles}
+  \centering
+  \includegraphics[width=0.9\textwidth]{figures/triangle4}
+\end{frame}
+
+\begin{frame}{Notes}
+    \begin{itemize}
+        \item We can use farthest point distance or smallest enclosing circle which can be done in linear-time.
+        \item Find all the triangles on a graph is quite costly ($O(n^{1.5})$ in the number of edges), we will depends on a fine-grain partitions.
+    \end{itemize}
+
+\end{frame}
+
 
 \end{document}
 
