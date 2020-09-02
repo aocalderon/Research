@@ -1,0 +1,20 @@
+wkt = "POLYGON((0 0, 2 3.46410161514, 4 0, 0 0))"
+f = QgsFeature()
+f.setGeometry(QgsGeometry.fromWkt(wkt))
+layer = QgsVectorLayer("Polygon", "Triangle", "memory")
+crs = layer.crs()
+crs.createFromId(3857)
+layer.setCrs(crs)
+provider = layer.dataProvider()
+provider.addFeature(f)
+layer.updateExtents()
+layer.reload()
+QgsProject.instance().addMapLayer(layer)
+
+for i in range(0, 360):
+	geom = f.geometry()
+	geom.rotate(1, geom.centroid().asPoint())
+	f.setGeometry(geom)
+	provider.addFeature(f)
+	layer.updateExtents()
+	layer.reload()
