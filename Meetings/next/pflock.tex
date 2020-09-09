@@ -50,7 +50,7 @@
 \begin{document}
 \title[PFLOCK report]{PFLOCK Report}
 \author[AC]{Andres Calderon}
-\institute[Spring'20]{University of California, Riverside}
+\institute[Fall'20]{University of California, Riverside}
 \makebeamertitle
 \newif\iflattersubsect
 
@@ -69,53 +69,61 @@
     \end{frame}
 }
 
-\begin{frame}{I was wrong...}
-    \centering
-    \includegraphics[width=0.6\textwidth]{figures/wrong} \\
-    However, finding triangles, or much better cliques, could be very useful...
-\end{frame}
-
-\begin{frame}{Maximal cliques instead of just triangles}
+\begin{frame}{Testing new approach}
     \begin{itemize}
-        \item A \textbf{clique}, $C$, in an undirected graph $G = (V, E)$ is a subset of the vertices, $C \subseteq V$, such that every two distinct vertices are adjacent.
-        \item A \textbf{maximal clique} is a clique that cannot be extended by including one more adjacent vertex, that is, a clique which does not exist exclusively within the vertex set of a larger clique.
+        \item Compare with BFE.  Working with a 10K points dataset (BFE outputs errors with the current dense dataset [Killed]).
+        \item Using different  values for epsilon from 2 to 10m.
+        \item Results are the same.  Dealing with just minor issues about precision.
+        \item Could we do better to handle maximal cliques when MBC is greater than $\epsilon$?
+        \item What is the shape of those cliques?
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Maximal cliques instead of just triangles}
+\begin{frame}{The `widest' shape of a clique}
     \centering
-    \includegraphics[width=0.75\textwidth]{figures/cliques}
-\end{frame}
-
-\begin{frame}{A maximal cliques based approach}{Set of points}
-    \centering
-    \includegraphics[width=0.85\textwidth]{figures/demo1}
-\end{frame}
-\begin{frame}{A maximal cliques based approach}{Finding pairs}
-    \centering
-    \includegraphics[width=0.85\textwidth]{figures/demo2}
-\end{frame}
-\begin{frame}{A maximal cliques based approach}{Finding maximal cliques}
-    \centering
-    \includegraphics[width=0.85\textwidth]{figures/demo3}
-\end{frame}
-\begin{frame}{A maximal cliques based approach}{Getting minimum bounding circles}
-    \centering
-    \includegraphics[width=0.85\textwidth]{figures/demo4}
-\end{frame}
-
-\begin{frame}{Important notes}
+    \includegraphics[width=0.85\textwidth]{figures/shape}
     \begin{itemize}
-        \item It is required to perform additional processing if the radius of the minimum bounding circle is greater than $\frac{\varepsilon}{2}$.  
-        \item The cost of finding maximal cliques could be high (worst case $O(3^{\frac{n}{3}})$) but many algorithms reports to be practical in real-life graphs.
-        \item The reduction on the number of candidate circles is significant (i.e. from 37272 to $\approx$1139 in just 0.804s). 
+     \item The challenge will be the position and orientation of the shape...
     \end{itemize}
+
 \end{frame}
 
-\begin{frame}{A maximal cliques based approach}{A large demo}
+\begin{frame}{A first attempt...}{Given a maximal clique}
     \centering
-    \includegraphics[width=0.85\textwidth]{figures/demo5}
+    \includegraphics[width=0.85\textwidth]{figures/clique_69}
 \end{frame}
+\begin{frame}{A first attempt...}{Find the longest segment}
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/segment_69}
+\end{frame}
+\begin{frame}{A first attempt...}{Trace an equilateral triangle of size $\epsilon$}
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/triangle_69}
+\end{frame}
+\begin{frame}{A first attempt...}{Locate the centroids of each size}
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/centroids_69}
+\end{frame}
+\begin{frame}{A first attempt...}{Draw circles of radius $\epsilon$}
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/circles_69}
+\end{frame}
+
+\begin{frame}{A first (and wrong) attempt...}{Draw circles of radius $\epsilon$}
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/output_90}
+\end{frame}
+
+\begin{frame}{Work in progress...}
+    \begin{itemize}
+     \item Position: locate the shape's centroid at the MBC's center...
+     \item Orientation: align one of the sides of the equilateral triangle parallel to the longest segment in the clique...
+    \end{itemize}
+
+    \centering
+    \includegraphics[width=0.65\textwidth]{figures/output2_90}
+\end{frame}
+
 
 \end{document}
 

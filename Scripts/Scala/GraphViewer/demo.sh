@@ -5,4 +5,4 @@ LIBSPATH="$HOME/Spark/2.4/jars"
 LIBS="${LIBSPATH}/jgrapht-core-1.4.0.jar:${LIBSPATH}/JTSplus-0.1.4.jar"
 CLASS="edu.ucr.dblab.CliqueFinder"
 
-scala -cp $LIBS:$JAR $CLASS 
+scala -cp $LIBS:$JAR $CLASS $1 $2 $3
