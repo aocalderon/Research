@@ -13,7 +13,8 @@ import scala.io.Source
 import edu.ucr.dblab.djoin.SPMF._
 
 object CliqueFinder {
-  case class Disk(x: Double, y: Double, pids: List[Int])
+  case class Clique(id: Int, points: List[Point])
+  case class Disk(x: Double, y: Double, pids: List[Int], clique_id: Int = -1)
 
   def findCenters(points: List[Point], epsilon: Double, r2: Double)
       (implicit geofactory: GeometryFactory): List[Point] = {
@@ -87,18 +88,21 @@ object CliqueFinder {
       val graph = new SimpleGraph[Geometry, DefaultEdge](classOf[DefaultEdge])
       points.foreach{ vertex =>  graph.addVertex(vertex) }
       pairs.foreach{ case(a, b) => graph.addEdge(a, b) }
-      val cliques= {
+      val cliques = {
         val finder = new BronKerboschCliqueFinder(graph)
-        finder.iterator.asScala.toList
+        finder.iterator.asScala.toList.map{
+          _.asScala.toList.map(_.asInstanceOf[Point])
+        }
       }
-      cliques.filter(_.size >= mu)
-    }
+      cliques.zipWithIndex
+    }.map{ case(points, id) => Clique(id, points)}
+    .filter(_.points.size >= mu)
 
     val disks = timer{"Getting disks"}{
       // Finding cliques which minimum bounding clircle (mbc) is less than epsilon...
       val mbcs = cliques.map{ clique =>
         val vertices = geofactory.createMultiPoint(
-          clique.asScala.toArray.map(_.getCoordinate)
+          clique.points.toArray.map(_.getCoordinate)
         )
         val mbc = new MinimumBoundingCircle(vertices)
         (mbc, clique)
@@ -110,7 +114,7 @@ object CliqueFinder {
           val center = mbc.getCentre
           val x = center.x
           val y = center.y
-          val pids = clique.iterator.asScala.map{ point =>
+          val pids = clique.points.map{ point =>
             point.getUserData.asInstanceOf[Int]
           }.toList.sorted
           Disk(x, y, pids)
@@ -119,9 +123,7 @@ object CliqueFinder {
       val disksB = mbcs.filter{ case(mbc, clique) =>
         mbc.getRadius > r
       }.map{ case(mbc, clique) =>
-          val points = clique.asScala.toList.map{ geom =>
-            geom.asInstanceOf[Point]
-          }
+          val points = clique.points
 
           val centers = findCenters(points, epsilon, r2).distinct
 
@@ -138,7 +140,7 @@ object CliqueFinder {
               Disk(x, y, pids)
           }.toList
 
-          pruneDisks(disks, mu)
+          pruneDisks(disks, mu).map(disk => disk.copy(clique_id = clique.id))
       }.flatten
 
       val disks = pruneDisks(disksA union disksB, mu)
@@ -197,6 +199,23 @@ object CliqueFinder {
       val disks = pruneDisks(disksA union disksB_prime, mu)
        */
 
+      save{"/tmp/edgesDisksB.wkt"}{
+        val d = disksB.map{ disk => (disk.clique_id, disk)}.groupBy(_._1)
+          .filter{ case(id, disks) =>
+            disks.length > 3
+          }
+        d.mapValues(_.map(_._2)).values.flatten.map{ disk =>
+          val id = disk.clique_id
+          val coord = new Coordinate(disk.x, disk.y)
+          val centroid = geofactory.createPoint(coord)
+          val radius = epsilon / 2.0
+          val wkt = centroid.buffer(radius, 15).toText
+          val pids = disk.pids.mkString(" ")
+          
+          s"$wkt\t$id\t$pids\n"
+        }.toList
+      }
+
       disks
     }
 
@@ -238,72 +257,83 @@ object CliqueFinder {
         }
       }
 
-      val C = cliques.filter(_.size() > 2).filter{ clique =>
+      val C = cliques.filter{ clique =>
         val vertices = geofactory.createMultiPoint(
-          clique.asScala.toArray.map(_.getCoordinate)
+          clique.points.toArray.map(_.getCoordinate)
         )
         val convex = vertices.convexHull
         val mbc = new MinimumBoundingCircle(convex)
 
         mbc.getRadius > r
-      }.zipWithIndex
+      }
       save{"/tmp/edgesCliques.wkt"}{
-        C.map{ case(clique, id) =>
+        C.map{ clique =>
+          val id = clique.id
           val vertices = geofactory.createMultiPoint(
-            clique.asScala.toArray.map(_.getCoordinate)
+            clique.points.toArray.map(_.getCoordinate)
           )
           val convex = vertices.convexHull
           val wkt = convex.toText
-          val mbc = new MinimumBoundingCircle(convex)
-          val radius = mbc.getRadius
           
-          s"$wkt\t$id\t$radius\n"
+          s"$wkt\t$id\n"
+        }
+      }
+      save{"/tmp/edgesPCliques.wkt"}{
+        C.map{ clique =>
+          val id = clique.id
+          val vertices = geofactory.createMultiPoint(
+            clique.points.toArray.map(_.getCoordinate)
+          )
+          val wkt = vertices.toText()
+          
+          s"$wkt\t$id\n"
         }
       }
       save{"/tmp/edgesCentres.wkt"}{
-        C.map{ case(clique, id) =>
+        C.map{ clique =>
+          val id = clique.id
           val vertices = geofactory.createMultiPoint(
-            clique.asScala.toArray.map(_.getCoordinate)
+            clique.points.toArray.map(_.getCoordinate)
           )
-          val convex = vertices.convexHull
-          val mbc = new MinimumBoundingCircle(convex)
+          val mbc = new MinimumBoundingCircle(vertices)
           val wkt = geofactory.createPoint(mbc.getCentre).toText
           
           s"$wkt\t$id\n"
         }
       }
       save{"/tmp/edgesCircles.wkt"}{
-        C.map{ case(clique, id) =>
+        C.map{ clique =>
+          val id = clique.id
           val vertices = geofactory.createMultiPoint(
-            clique.asScala.toArray.map(_.getCoordinate)
+            clique.points.toArray.map(_.getCoordinate)
           )
-          val convex = vertices.convexHull
-          val mbc = new MinimumBoundingCircle(convex)
+          val mbc = new MinimumBoundingCircle(vertices)
           val wkt = mbc.getCircle.toText
           
           s"$wkt\t$id\n"
         }
       }
       save{"/tmp/edgesExtremes.wkt"}{
-        C.map{ case(clique, id) =>
+        C.map{ clique =>
+          val id = clique.id
           val vertices = geofactory.createMultiPoint(
-            clique.asScala.toArray.map(_.getCoordinate)
+            clique.points.toArray.map(_.getCoordinate)
           )
-          val convex = vertices.convexHull
-          val mbc = new MinimumBoundingCircle(convex)
+          val mbc = new MinimumBoundingCircle(vertices)
           val wkt = geofactory.createMultiPoint(mbc.getExtremalPoints).toText()
           
           s"$wkt\t$id\n"
         }
       }
       save{"/tmp/edgesDiameters.wkt"}{
-        C.map{ case(clique, id) =>
+        C.map{ clique =>
+          val id = clique.id
           val vertices = geofactory.createMultiPoint(
-            clique.asScala.toArray.map(_.getCoordinate)
+            clique.points.toArray.map(_.getCoordinate)
           )
-          val convex = vertices.convexHull
-          val mbc = new MinimumBoundingCircle(convex)
-          val wkt = mbc.getDiameter.toText()
+          val mbc = new MinimumBoundingCircle(vertices)
+          val pts = closestPoints(mbc.getExtremalPoints)
+          val wkt = geofactory.createLineString(pts).toText()
           
           s"$wkt\t$id\n"
         }
@@ -377,5 +407,33 @@ object CliqueFinder {
         val y = m.getY
         Disk(x, y, pids)
       }.toList
+  }
+
+  def farthestPoints(pts: Array[Coordinate]): Array[Coordinate] = {
+    val dist01 = pts(0).distance(pts(1))
+    val dist12 = pts(1).distance(pts(2))
+    val dist20 = pts(2).distance(pts(0))
+
+    if (dist01 >= dist12 && dist01 >= dist20){
+      Array(pts(0), pts(1))
+    } else if (dist12 >= dist01 && dist12 >= dist20){
+      Array(pts(1), pts(2))
+    } else {
+      Array(pts(2), pts(0))
+    }
+  }
+
+  def closestPoints(pts: Array[Coordinate]): Array[Coordinate] = {
+    val dist01 = pts(0).distance(pts(1))
+    val dist12 = pts(1).distance(pts(2))
+    val dist20 = pts(2).distance(pts(0))
+
+    if (dist01 <= dist12 && dist01 <= dist20){
+      Array(pts(0), pts(1))
+    } else if (dist12 <= dist01 && dist12 <= dist20){
+      Array(pts(1), pts(2))
+    } else {
+      Array(pts(2), pts(0))
+    }
   }
 }

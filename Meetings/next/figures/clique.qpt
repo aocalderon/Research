@@ -1,60 +1,60 @@
-<Layout units="mm" worldFileMap="{fd6d2b6b-b284-428a-b6bd-51c3bf4b1d8c}" name="Layout 1" printResolution="300">
- <Snapper snapToGrid="0" snapToItems="1" tolerance="50" snapToGuides="1"/>
- <Grid resolution="50" offsetUnits="mm" offsetY="0" offsetX="0" resUnits="mm"/>
+<Layout name="Layout 1" units="mm" worldFileMap="{40faf909-6704-48e9-9892-3824e28c5b83}" printResolution="300">
+ <Snapper snapToGuides="1" snapToItems="1" snapToGrid="0" tolerance="50"/>
+ <Grid offsetUnits="mm" offsetY="0" offsetX="0" resUnits="mm" resolution="50"/>
  <PageCollection>
   <symbol type="fill" name="" clip_to_extent="1" force_rhr="0" alpha="1">
-   <layer enabled="1" pass="0" class="SimpleFill" locked="0">
-    <prop k="border_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-    <prop k="color" v="255,255,255,255"/>
-    <prop k="joinstyle" v="miter"/>
-    <prop k="offset" v="0,0"/>
-    <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-    <prop k="offset_unit" v="MM"/>
-    <prop k="outline_color" v="35,35,35,255"/>
-    <prop k="outline_style" v="no"/>
-    <prop k="outline_width" v="0.26"/>
-    <prop k="outline_width_unit" v="MM"/>
-    <prop k="style" v="solid"/>
+   <layer class="SimpleFill" locked="0" enabled="1" pass="0">
+    <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
+    <prop v="255,255,255,255" k="color"/>
+    <prop v="miter" k="joinstyle"/>
+    <prop v="0,0" k="offset"/>
+    <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+    <prop v="MM" k="offset_unit"/>
+    <prop v="35,35,35,255" k="outline_color"/>
+    <prop v="no" k="outline_style"/>
+    <prop v="0.26" k="outline_width"/>
+    <prop v="MM" k="outline_width_unit"/>
+    <prop v="solid" k="style"/>
     <data_defined_properties>
      <Option type="Map">
-      <Option type="QString" value="" name="name"/>
+      <Option type="QString" name="name" value=""/>
       <Option name="properties"/>
-      <Option type="QString" value="collection" name="type"/>
+      <Option type="QString" name="type" value="collection"/>
      </Option>
     </data_defined_properties>
    </layer>
   </symbol>
-  <LayoutItem positionLock="false" groupUuid="" frameJoinStyle="miter" templateUuid="{1b8f3da5-2ec9-4339-9f8d-6b238b681364}" referencePoint="0" zValue="0" visibility="1" blendMode="0" frame="false" outlineWidthM="0.3,mm" id="" position="0,0,mm" positionOnPage="0,0,mm" opacity="1" uuid="{1b8f3da5-2ec9-4339-9f8d-6b238b681364}" excludeFromExports="0" itemRotation="0" size="297,210,mm" background="true" type="65638">
-   <FrameColor green="0" blue="0" red="0" alpha="255"/>
-   <BackgroundColor green="255" blue="255" red="255" alpha="255"/>
+  <LayoutItem positionLock="false" positionOnPage="0,0,mm" zValue="0" uuid="{550adcb8-9901-487b-9eb9-c36be3bb89cc}" itemRotation="0" templateUuid="{550adcb8-9901-487b-9eb9-c36be3bb89cc}" type="65638" frame="false" size="297,210,mm" visibility="1" blendMode="0" groupUuid="" referencePoint="0" position="0,0,mm" id="" outlineWidthM="0.3,mm" background="true" opacity="1" frameJoinStyle="miter" excludeFromExports="0">
+   <FrameColor red="0" blue="0" alpha="255" green="0"/>
+   <BackgroundColor red="255" blue="255" alpha="255" green="255"/>
    <LayoutObject>
     <dataDefinedProperties>
      <Option type="Map">
-      <Option type="QString" value="" name="name"/>
+      <Option type="QString" name="name" value=""/>
       <Option name="properties"/>
-      <Option type="QString" value="collection" name="type"/>
+      <Option type="QString" name="type" value="collection"/>
      </Option>
     </dataDefinedProperties>
     <customproperties/>
    </LayoutObject>
    <symbol type="fill" name="" clip_to_extent="1" force_rhr="0" alpha="1">
-    <layer enabled="1" pass="0" class="SimpleFill" locked="0">
-     <prop k="border_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-     <prop k="color" v="255,255,255,255"/>
-     <prop k="joinstyle" v="miter"/>
-     <prop k="offset" v="0,0"/>
-     <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-     <prop k="offset_unit" v="MM"/>
-     <prop k="outline_color" v="35,35,35,255"/>
-     <prop k="outline_style" v="no"/>
-     <prop k="outline_width" v="0.26"/>
-     <prop k="outline_width_unit" v="MM"/>
-     <prop k="style" v="solid"/>
+    <layer class="SimpleFill" locked="0" enabled="1" pass="0">
+     <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
+     <prop v="255,255,255,255" k="color"/>
+     <prop v="miter" k="joinstyle"/>
+     <prop v="0,0" k="offset"/>
+     <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+     <prop v="MM" k="offset_unit"/>
+     <prop v="35,35,35,255" k="outline_color"/>
+     <prop v="no" k="outline_style"/>
+     <prop v="0.26" k="outline_width"/>
+     <prop v="MM" k="outline_width_unit"/>
+     <prop v="solid" k="style"/>
      <data_defined_properties>
       <Option type="Map">
-       <Option type="QString" value="" name="name"/>
+       <Option type="QString" name="name" value=""/>
        <Option name="properties"/>
-       <Option type="QString" value="collection" name="type"/>
+       <Option type="QString" name="type" value="collection"/>
       </Option>
      </data_defined_properties>
     </layer>
@@ -62,26 +62,26 @@
   </LayoutItem>
   <GuideCollection visible="1"/>
  </PageCollection>
- <LayoutItem positionLock="false" groupUuid="" frameJoinStyle="miter" templateUuid="{fd6d2b6b-b284-428a-b6bd-51c3bf4b1d8c}" referencePoint="0" zValue="1" visibility="1" blendMode="0" frame="false" outlineWidthM="0.3,mm" id="" position="0,0,mm" mapFlags="0" drawCanvasItems="true" positionOnPage="0,0,mm" opacity="1" labelMargin="0,mm" uuid="{fd6d2b6b-b284-428a-b6bd-51c3bf4b1d8c}" followPreset="false" isTemporal="0" excludeFromExports="0" keepLayerSet="false" itemRotation="0" size="297,210,mm" followPresetName="" background="true" mapRotation="0" type="65639">
-  <FrameColor green="0" blue="0" red="0" alpha="255"/>
-  <BackgroundColor green="255" blue="255" red="255" alpha="255"/>
+ <LayoutItem positionLock="false" mapFlags="0" positionOnPage="0,0,mm" zValue="1" labelMargin="0,mm" uuid="{40faf909-6704-48e9-9892-3824e28c5b83}" drawCanvasItems="true" itemRotation="0" followPresetName="" keepLayerSet="false" templateUuid="{40faf909-6704-48e9-9892-3824e28c5b83}" type="65639" frame="false" size="297,210,mm" visibility="1" isTemporal="0" blendMode="0" groupUuid="" referencePoint="0" followPreset="false" position="0,0,mm" id="" outlineWidthM="0.3,mm" background="true" opacity="1" frameJoinStyle="miter" excludeFromExports="0" mapRotation="0">
+  <FrameColor red="0" blue="0" alpha="255" green="0"/>
+  <BackgroundColor red="255" blue="255" alpha="255" green="255"/>
   <LayoutObject>
    <dataDefinedProperties>
     <Option type="Map">
-     <Option type="QString" value="" name="name"/>
+     <Option type="QString" name="name" value=""/>
      <Option name="properties"/>
-     <Option type="QString" value="collection" name="type"/>
+     <Option type="QString" name="type" value="collection"/>
     </Option>
    </dataDefinedProperties>
    <customproperties/>
   </LayoutObject>
-  <Extent ymin="561809.80018564756028354" xmax="1982100.55564953968860209" xmin="1982072.64519330835901201" ymax="561829.53485167399048805"/>
+  <Extent ymax="561748.23950000002514571" xmin="1981924.70483571384102106" ymin="561736.72250000003259629" xmax="1981940.99316428601741791"/>
   <LayerSet/>
-  <AtlasMap atlasDriven="1" margin="1.25" scalingMode="2"/>
+  <AtlasMap margin="0.10000000000000001" atlasDriven="1" scalingMode="2"/>
   <labelBlockingItems/>
  </LayoutItem>
  <customproperties>
-  <property key="atlasRasterFormat" value="png"/>
+  <property value="png" key="atlasRasterFormat"/>
  </customproperties>
- <Atlas sortAscending="1" enabled="1" sortFeatures="1" coverageLayerName="Triangles" pageNameExpression="&quot;fid&quot;" filenamePattern="'output_'||@atlas_featurenumber" coverageLayer="Triangles_63641d94_26c1_4809_af06_f53c9143815f" coverageLayerSource="/home/and/Research/Meetings/next/figures/demo.gpkg|layername=triangles" coverageLayerProvider="ogr" sortKey="cfid" filterFeatures="0" hideCoverage="0"/>
+ <Atlas coverageLayerSource="file:///tmp/edgesCircles.wkt?delimiter=\t&amp;useHeader=no&amp;crs=epsg:6423&amp;wktField=field_1" coverageLayerProvider="delimitedtext" pageNameExpression="&quot;field_2&quot;" sortKey="field_2" sortFeatures="1" sortAscending="1" coverageLayerName="Circles" hideCoverage="0" enabled="1" filterFeatures="0" coverageLayer="Circles_37aa9d4a_f5f0_4a9f_a1bb_9ba121abf98d" filenamePattern="'output_'||@atlas_featurenumber"/>
 </Layout>

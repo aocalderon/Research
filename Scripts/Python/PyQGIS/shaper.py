@@ -1,6 +1,9 @@
-epsilon = 10
+epsilon = 10.0
 layer = QgsProject.instance().mapLayersByName('biggest')
 layer = layer[0]
+
+def isLeft(a: QgsPoint, b: QgsPoint, c: QgsPoint) -> bool:
+	return ((b.x() - a.x()) * (c.y() - a.y()) - (b.y() - a.y()) * (c.x() - a.x())) > 0
 
 segments = QgsVectorLayer("LineString", "Segments", "memory")
 crs = segments.crs()
@@ -46,6 +49,20 @@ centroids.renderer().setSymbol(symbolC)
 centroids.triggerRepaint()
 QgsProject.instance().addMapLayer(centroids)
 
+mbc = QgsVectorLayer("Point", "MBC", "memory")
+crs = mbc.crs()
+crs.createFromId(6423)
+mbc.setCrs(crs)
+providerM = mbc.dataProvider()
+providerM.addAttributes([
+	QgsField("fid", QVariant.Int)
+])
+mbc.updateFields() 
+symbolM = QgsMarkerSymbol.createSimple({'color': 'green', 'border_color': 'green', 'size': '1.2'})
+mbc.renderer().setSymbol(symbolM)
+mbc.triggerRepaint()
+QgsProject.instance().addMapLayer(mbc)
+
 circles = QgsVectorLayer("Polygon", "Circles", "memory")
 crs = circles.crs()
 crs.createFromId(6423)
@@ -67,31 +84,51 @@ for feature in layer.getFeatures():
 		vertices = []
 		for vertex in geom.vertices():
 			vertices.append(vertex)
-		dmax = 0
+		dists = []
 		for i in range(0, len(vertices) - 1):
-			a = vertices[i]
-			b = vertices[i+1]
-			d = a.distance(b)
-			if d > dmax:
-				dmax = d
-				p = (a, b)
+			for j in range(i + 1, len(vertices)):
+				pi = vertices[i]
+				pj = vertices[j]
+				k = (pi, pj, pi.distance(pj))
+				dists.append(k)
+		d = max(dists, key=lambda dists: dists[2])
+		mec = geom.minimalEnclosingCircle()
+		c = QgsPoint(mec[1]) 
+		m = QgsFeature()
+		m.setGeometry(c)
+		m.setAttributes([fid])
+		providerM.addFeature(m)
+		mbc.updateExtents()
+		mbc.reload()
+		a = d[0]
+		b = d[1]
+		if isLeft(a, b, c):
+			p = (a, b)
+		else:
+			p = (b, a)
+		dmax = d[2]
 		segment = QgsLineString(iter(p))
-		angle = segment.vertexAngle(QgsVertexId(0,0,1))
+		angle = segment.vertexAngle(QgsVertexId(0,0,1)) - math.pi / 2.0
 		f = QgsFeature()
 		f.setGeometry(segment)
 		f.setAttributes([fid, dmax, angle])
 		providerS.addFeature(f)
 		segments.updateExtents()
 		segments.reload()
-		t1 = p[0]
-		dx = math.sin(angle) * epsilon
-		dy = math.cos(angle) * epsilon
+		dx = math.sin(angle) * (epsilon / math.sqrt(3))
+		dy = math.cos(angle) * (epsilon / math.sqrt(3)) 
+		x = c.x() + dx
+		y = c.y() + dy
+		t1 = QgsPoint(x, y)
+		angle2 = angle + 5.0 * math.pi / 6.0
+		dx = math.sin(angle2) * epsilon
+		dy = math.cos(angle2) * epsilon
 		x = t1.x() + dx
 		y = t1.y() + dy
 		t2 = QgsPoint(x, y)
-		angle = angle + math.pi/3
-		dx = math.sin(angle) * epsilon
-		dy = math.cos(angle) * epsilon
+		angle2 = angle - 5.0 * math.pi / 6.0
+		dx = math.sin(angle2) * epsilon
+		dy = math.cos(angle2) * epsilon
 		x = t1.x() + dx
 		y = t1.y() + dy
 		t3 = QgsPoint(x, y)
