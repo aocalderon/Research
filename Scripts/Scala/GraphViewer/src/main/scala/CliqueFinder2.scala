@@ -13,7 +13,7 @@ import scala.io.Source
 import scala.annotation.tailrec
 import edu.ucr.dblab.djoin.SPMF._
 
-object CliqueFinder {
+object CliqueFinder2 {
   case class Clique(id: Int, points: List[Point])
   case class Disk(x: Double, y: Double, pids: List[Int], clique_id: Int = -1)
   case class MBC(circle: MinimumBoundingCircle, inner: List[Int], outer: List[Int])
@@ -122,31 +122,6 @@ object CliqueFinder {
           Disk(x, y, pids)
       }
 
-      val disksB = mbcs.filter{ case(mbc, clique) =>
-        mbc.getRadius > r
-      }.map{ case(mbc, clique) =>
-          val points = clique.points
-
-          val centers = findCenters(points, epsilon, r2).distinct
-
-          val disks = {
-            for {
-              p <- points
-              c <- centers if c.distance(p) <= r
-            } yield (c, p)
-          }.groupBy(_._1).map{ case(center, pairs) =>
-              val x = center.getX
-              val y = center.getY
-              val points = pairs.map(_._2)
-              val pids = points.map(_.getUserData.asInstanceOf[Int]).sorted
-              Disk(x, y, pids)
-          }.toList
-
-          pruneDisks(disks, mu).map(disk => disk.copy(clique_id = clique.id))
-      }.flatten
-
-      val disks = pruneDisks(disksA union disksB, mu)
-
 
       /**********************************************************************/
       def getMBCs(points: List[Point]): List[MBC] = {
@@ -172,6 +147,57 @@ object CliqueFinder {
         }
         getMBCsTailrec(points, List.empty[MBC])
       }
+
+      def getSample(points: List[Point]): List[Point] = {
+        val mbcs = getMBCs(points)
+
+        val mapIdPoint = points.map{ point =>
+          val id = point.getUserData.asInstanceOf[Int]
+          id -> point
+        }.toMap
+        val extremals = mbcs.reverse.tail.flatMap(_.outer).map{ id => mapIdPoint(id) }
+
+        val mapCoordPoint = points.map{ point =>
+          val coord = point.getCoordinate
+          coord-> point
+        }.toMap
+        val convex = {
+          val pts = mbcs.map(_.inner).last.map{ id => mapIdPoint(id) }
+          geofactory.createMultiPoint(pts.toArray).convexHull().getCoordinates
+            .map{ coord => mapCoordPoint(coord) }
+        }
+
+        extremals union convex
+      }
+      /**********************************************************************/
+
+      val disksB = mbcs.filter{ case(mbc, clique) =>
+        mbc.getRadius > r
+      }.map{ case(mbc, clique) =>
+          val points = clique.points
+
+          val sample = getSample(points) //******//
+
+          val centers = findCenters(sample, epsilon, r2).distinct
+
+          val disks = {
+            for {
+              p <- points
+              c <- centers if c.distance(p) <= r
+            } yield (c, p)
+          }.groupBy(_._1).map{ case(center, pairs) =>
+              val x = center.getX
+              val y = center.getY
+              val points = pairs.map(_._2)
+              val pids = points.map(_.getUserData.asInstanceOf[Int]).sorted
+              Disk(x, y, pids)
+          }.toList
+
+          pruneDisks(disks, mu).map(disk => disk.copy(clique_id = clique.id))
+      }.flatten
+
+      val disks = pruneDisks(disksA union disksB, mu)
+
       val mbcs2 = cliques.flatMap{ clique =>
         getMBCs(clique.points).zipWithIndex.map{ case(mbc, order) =>
           (clique.id, order, mbc)

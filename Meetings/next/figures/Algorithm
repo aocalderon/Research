@@ -1,0 +1,24 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+
+\begin{document}
+    \begin{itemize}
+        \item Input: Maximal cliques which MBC is greater than $\epsilon$
+    \end{itemize}
+    For each clique:
+    \begin{enumerate}[label*=\arabic*.]
+        \item $P \leftarrow $ Set of points in clique
+        \item $S \leftarrow \emptyset$
+        \item Find $MBC$ in $P$
+        \item While $MBC.radius <= \frac{\epsilon}{2}$:
+        \begin{enumerate}[label*=\arabic*.]
+            \item $E \leftarrow ExtremalPoints(MBC)$ 
+            \item $S \leftarrow S \cup E$
+            \item $P \leftarrow P - E$
+            \item Find $MBC$ in $P$
+        \end{enumerate}
+        \item $S \leftarrow S \cup ConvexHull(P)$
+        \item return $S$
+    \end{enumerate}
+\end{document}
