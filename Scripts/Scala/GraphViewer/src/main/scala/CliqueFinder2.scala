@@ -16,7 +16,7 @@ import edu.ucr.dblab.djoin.SPMF._
 object CliqueFinder2 {
   case class Clique(id: Int, points: List[Point])
   case class Disk(x: Double, y: Double, pids: List[Int], clique_id: Int = -1)
-  case class MBC(circle: MinimumBoundingCircle, inner: List[Int], outer: List[Int])
+  case class MBC(circle: MinimumBoundingCircle, inners: Set[Point], outers: List[Point])
 
   def findCenters(points: List[Point], epsilon: Double, r2: Double)
       (implicit geofactory: GeometryFactory): List[Point] = {
@@ -122,63 +122,14 @@ object CliqueFinder2 {
           Disk(x, y, pids)
       }
 
-
-      /**********************************************************************/
-      def getMBCs(points: List[Point]): List[MBC] = {
-        @tailrec
-        def getMBCsTailrec(points: List[Point], MBCs: List[MBC]): List[MBC] = {
-
-          val coords = points.map(_.getCoordinate).toArray
-          val circle = new MinimumBoundingCircle(geofactory.createMultiPoint(coords))
-          val extremals = circle.getExtremalPoints
-          val inner = points.map(_.getUserData.asInstanceOf[Int])
-          val outer = points.filter{ point =>
-            extremals.contains(point.getCoordinate)
-          }.map(_.getUserData.asInstanceOf[Int])
-          val mbc = MBC(circle, inner, outer)
-          if(circle.getRadius <= r){
-            MBCs :+ mbc
-          } else {
-            val new_points = points.filter{ point =>
-              !extremals.contains(point.getCoordinate)
-            }
-            getMBCsTailrec(new_points, MBCs :+ mbc)
-          }
-        }
-        getMBCsTailrec(points, List.empty[MBC])
-      }
-
-      def getSample(points: List[Point]): List[Point] = {
-        val mbcs = getMBCs(points)
-
-        val mapIdPoint = points.map{ point =>
-          val id = point.getUserData.asInstanceOf[Int]
-          id -> point
-        }.toMap
-        val extremals = mbcs.reverse.tail.flatMap(_.outer).map{ id => mapIdPoint(id) }
-
-        val mapCoordPoint = points.map{ point =>
-          val coord = point.getCoordinate
-          coord-> point
-        }.toMap
-        val convex = {
-          val pts = mbcs.map(_.inner).last.map{ id => mapIdPoint(id) }
-          geofactory.createMultiPoint(pts.toArray).convexHull().getCoordinates
-            .map{ coord => mapCoordPoint(coord) }
-        }
-
-        extremals union convex
-      }
-      /**********************************************************************/
-
       val disksB = mbcs.filter{ case(mbc, clique) =>
         mbc.getRadius > r
       }.map{ case(mbc, clique) =>
           val points = clique.points
 
-          val sample = getSample(points) //******//
+          val sample = getSample(points.toSet, r)
 
-          val centers = findCenters(sample, epsilon, r2).distinct
+          val centers = findCenters(sample.toList, epsilon, r2).distinct
 
           val disks = {
             for {
@@ -197,69 +148,6 @@ object CliqueFinder2 {
       }.flatten
 
       val disks = pruneDisks(disksA union disksB, mu)
-
-      val mbcs2 = cliques.flatMap{ clique =>
-        getMBCs(clique.points).zipWithIndex.map{ case(mbc, order) =>
-          (clique.id, order, mbc)
-        }
-      }
-      val pointsMap = points.map{ point =>
-        val id = point.getUserData.asInstanceOf[Int]
-        id -> point
-      }.toMap
-      save{"/tmp/sampleInners.tsv"}{
-        val convex = cliques.flatMap{ clique =>
-          val pts = getMBCs(clique.points).map(_.inner).last
-            .map{ id => pointsMap(id) }
-          geofactory.createMultiPoint(pts.toArray)
-            .convexHull().getCoordinates
-        }
-        val pMap = points.map{ p => p.getCoordinate -> p}.toMap
-        convex.map{ coord =>
-          val point = pMap(coord)
-          val id = point.getUserData.asInstanceOf[Int]
-          val x = point.getX
-          val y = point.getY
-          s"$id\t$x\t$y\t0\n"
-        }
-      }
-      save{"/tmp/sampleOuters.tsv"}{
-        cliques.flatMap{ clique =>
-          getMBCs(clique.points).reverse.tail.flatMap(_.outer)
-            .map{ id =>
-              val point = pointsMap(id)
-              val x = point.getX
-              val y = point.getY
-              s"$id\t$x\t$y\t0\n"
-            }
-        }
-      }
-      save{"/tmp/edgesMBCs.wkt"}{
-        mbcs2.map{ case(id, order, mbc) =>
-            val wkt = mbc.circle.getCircle.toText()
-            val inner = mbc.inner.mkString(" ")
-            val outer = mbc.outer.mkString(" ")
-            s"$wkt\t$id\t$order\t$outer\t$inner\n"
-        }
-      }
-
-      save{"/tmp/edgesDisksB.wkt"}{
-        val d = disksB.map{ disk => (disk.clique_id, disk)}.groupBy(_._1)
-          .filter{ case(id, disks) =>
-            disks.length > 3
-          }
-        d.mapValues(_.map(_._2)).values.flatten.map{ disk =>
-          val id = disk.clique_id
-          val coord = new Coordinate(disk.x, disk.y)
-          val centroid = geofactory.createPoint(coord)
-          val radius = epsilon / 2.0
-          val wkt = centroid.buffer(radius, 15).toText
-          val pids = disk.pids.mkString(" ")
-          
-          s"$wkt\t$id\t$pids\n"
-        }.toList
-      }
-      /**********************************************************************/
 
       disks
     }
@@ -294,11 +182,11 @@ object CliqueFinder2 {
           s"$wkt\t$pids\n"
         }
       }
-      save{"/tmp/pflock.txt"}{
+      save{s"/tmp/PFLOCK_E${epsilon.toInt}_M${mu}_D${1}.txt"}{
         disks.map{ disk =>
           val pids = disk.pids.sorted.mkString(" ")
           
-          s" $pids\n"
+          s"0, 0, $pids\n"
         }
       }
 
@@ -428,6 +316,43 @@ object CliqueFinder2 {
       val p2_prime = geofactory.createPoint(new Coordinate(p2.getX + delta, p2.getY))
       calculateCenterCoordinates(p1, p2_prime, r2)
     }
+  }
+
+  def getSample(points: Set[Point], r: Double)
+    (implicit geofactory: GeometryFactory): List[Point] = {
+    val mbcs = getMBCs(points, r)
+
+    mbcs.map{ mbc =>
+      val o = mbc.outers.map(_.getUserData.asInstanceOf[Int]).mkString(" ")
+      val i = mbc.inners.map(_.getUserData.asInstanceOf[Int]).toList.sorted.mkString(" ")
+      s"Out : $o In: $i"
+    }.foreach(println)
+
+    mbcs.last.outers ++ mbcs.last.inners.toList
+  }
+
+  private def getMBCs(points: Set[Point], r: Double)
+    (implicit geofactory: GeometryFactory): List[MBC] = {
+    @tailrec
+    def getMBCsTailrec(points: Set[Point], MBCs: List[MBC], out: List[Point]): List[MBC] = {
+
+      val coords = points.map(_.getCoordinate).toArray
+      val circle = new MinimumBoundingCircle(geofactory.createMultiPoint(coords))
+      if(circle.getExtremalPoints.length == 2){
+        MBCs
+      } else {
+        val extremals = circle.getExtremalPoints
+        val closest = farthestPoints(extremals)
+        val e = extremals.toSet -- closest.toSet
+        
+        val (outer, inner) = points.partition{ point =>
+          e.contains(point.getCoordinate)
+        }
+        val mbc = MBC(circle, inner, out ++ outer)
+        getMBCsTailrec(inner, MBCs :+ mbc, mbc.outers)
+      }
+    }
+    getMBCsTailrec(points, List.empty[MBC], List.empty[Point])
   }
 
   def pruneDisks(disks: List[Disk], mu: Int): List[Disk] = {

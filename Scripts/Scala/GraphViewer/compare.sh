@@ -1,10 +1,8 @@
 #!/bin/bash
-E=$1
-M=$2
 
-cat /tmp/BFE_E${E}_M${M}_D1.txt | cut -d"," -f3 > /tmp/bfe.txt
+JAR="$HOME/Research/Scripts/Scala/GraphViewer/target/scala-2.11/graphviewer_2.11-0.1.jar"
+LIBSPATH="$HOME/Spark/2.4/jars"
+LIBS="${LIBSPATH}/JTSplus-0.1.4.jar"
+CLASS="edu.ucr.dblab.FlockCompare"
 
-sort /tmp/bfe.txt -o /tmp/a.txt
-sort /tmp/pflock.txt -o /tmp/b.txt
-
-diff -s /tmp/a.txt /tmp/b.txt
+scala -cp $LIBS:$JAR $CLASS $1 $2 

@@ -147,7 +147,6 @@ object CliqueFinder {
 
       val disks = pruneDisks(disksA union disksB, mu)
 
-
       /**********************************************************************/
       def getMBCs(points: List[Point]): List[MBC] = {
         @tailrec
