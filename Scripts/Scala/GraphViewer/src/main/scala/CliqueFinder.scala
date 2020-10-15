@@ -91,7 +91,7 @@ object CliqueFinder {
       points.foreach{ vertex =>  graph.addVertex(vertex) }
       pairs.foreach{ case(a, b) => graph.addEdge(a, b) }
       val cliques = {
-        val finder = new BronKerboschCliqueFinder(graph)
+        val finder = new DBKCliqueFinder(graph)
         finder.iterator.asScala.toList.map{
           _.asScala.toList.map(_.asInstanceOf[Point])
         }
@@ -106,6 +106,18 @@ object CliqueFinder {
         val vertices = geofactory.createMultiPoint(
           clique.points.toArray.map(_.getCoordinate)
         )
+
+        /*****/
+        import org.apache.commons.math3.geometry.euclidean.twod.DiskGenerator
+        import org.apache.commons.math3.geometry.euclidean.twod.Vector2D
+        import org.apache.commons.math3.geometry.enclosing.SupportBallGenerator
+        val diskGenerator = new DiskGenerator
+        val welzl = new Welzl(1.0 / model.getScale, diskGenerator)
+        val pIt = clique.points.map{ p => new Vector2D(p.getX, p.getY)}.toIterable
+        val sec = welzl.enclose(pIt.asJava)
+        println(s"The SEC support: ${sec.getSupport.map(_.toString).mkString(" ")}")
+        /*****/
+
         val mbc = new MinimumBoundingCircle(vertices)
         (mbc, clique)
       }
