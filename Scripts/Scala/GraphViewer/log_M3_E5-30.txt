@@ -1,0 +1,180 @@
+Base      |5|1576|  0.48
+Pivot     |5|1576|  0.40
+Degeneracy|5|1576|  0.38
+Base      |10|1617|  0.87
+Pivot     |10|1617|  0.63
+Degeneracy|10|1617|  0.64
+Base      |15|1667|  1.34
+Pivot     |15|1667|  0.97
+Degeneracy|15|1667|  1.51
+Base      |20|1916|  5.26
+Pivot     |20|1916|  3.87
+Degeneracy|20|1916|  2.75
+Base      |25|2616| 23.75
+Pivot     |25|2616|  4.14
+Degeneracy|25|2616|  4.76
+Base      |5|1576|  0.71
+Pivot     |5|1576|  0.80
+Degeneracy|5|1576|  0.66
+Base      |10|1617|  1.60
+Pivot     |10|1617|  1.35
+Degeneracy|10|1617|  1.51
+Base      |15|1667|  2.22
+Pivot     |15|1667|  1.78
+Degeneracy|15|1667|  1.81
+Base      |20|1916|  6.03
+Pivot     |20|1916|  2.41
+Degeneracy|20|1916|  2.93
+Base      |25|2616| 21.81
+Pivot     |25|2616|  4.70
+Degeneracy|25|2616|  4.33
+Base      |5|1576|  1.26
+Pivot     |5|1576|  0.71
+Degeneracy|5|1576|  0.75
+Base      |10|1617|  1.74
+Pivot     |10|1617|  1.80
+Degeneracy|10|1617|  1.06
+Base      |15|1667|  3.19
+Pivot     |15|1667|  2.04
+Degeneracy|15|1667|  2.44
+Base      |20|1916|  7.03
+Pivot     |20|1916|  3.52
+Degeneracy|20|1916|  2.60
+Base      |25|2616| 19.41
+Pivot     |25|2616|  3.68
+Degeneracy|25|2616|  4.47
+Base      |5|1576|  0.83
+Pivot     |5|1576|  0.78
+Degeneracy|5|1576|  0.57
+Base      |10|1617|  1.42
+Pivot     |10|1617|  1.71
+Degeneracy|10|1617|  1.65
+Base      |15|1667|  3.51
+Pivot     |15|1667|  2.59
+Degeneracy|15|1667|  1.99
+Base      |20|1916|  6.79
+Pivot     |20|1916|  2.36
+Degeneracy|20|1916|  2.74
+Base      |25|2616| 22.41
+Pivot     |25|2616|  4.29
+Degeneracy|25|2616|  5.88
+Base      |5|1576|  1.14
+Pivot     |5|1576|  1.09
+Degeneracy|5|1576|  0.83
+Base      |10|1617|  1.64
+Pivot     |10|1617|  1.18
+Degeneracy|10|1617|  1.04
+Base      |15|1667|  2.02
+Pivot     |15|1667|  1.90
+Degeneracy|15|1667|  1.48
+Base      |20|1916|  5.98
+Pivot     |20|1916|  1.97
+Degeneracy|20|1916|  2.34
+Base      |25|2616| 17.13
+Pivot     |25|2616|  3.63
+Degeneracy|25|2616|  4.56
+Base      |5|1576|  1.11
+Pivot     |5|1576|  0.86
+Degeneracy|5|1576|  0.68
+Base      |10|1617|  1.40
+Pivot     |10|1617|  1.33
+Degeneracy|10|1617|  1.86
+Base      |15|1667|  2.56
+Pivot     |15|1667|  1.82
+Degeneracy|15|1667|  1.35
+Base      |20|1916|  4.22
+Pivot     |20|1916|  1.72
+Degeneracy|20|1916|  1.75
+Base      |25|2616| 12.15
+Pivot     |25|2616|  3.04
+Degeneracy|25|2616|  3.85
+Base      |5|1576|  0.52
+Pivot     |5|1576|  0.50
+Degeneracy|5|1576|  0.52
+Base      |10|1617|  1.18
+Pivot     |10|1617|  0.99
+Degeneracy|10|1617|  0.77
+Base      |15|1667|  1.68
+Pivot     |15|1667|  1.29
+Degeneracy|15|1667|  1.26
+Base      |20|1916|  4.78
+Pivot     |20|1916|  1.84
+Degeneracy|20|1916|  1.97
+Base      |25|2616| 12.31
+Pivot     |25|2616|  3.09
+Degeneracy|25|2616|  3.43
+Base      |5|1576|  0.61
+Pivot     |5|1576|  0.60
+Degeneracy|5|1576|  0.58
+Base      |10|1617|  0.79
+Pivot     |10|1617|  0.90
+Degeneracy|10|1617|  1.08
+Base      |15|1667|  2.20
+Pivot     |15|1667|  2.77
+Degeneracy|15|1667|  1.46
+Base      |20|1916|  8.15
+Pivot     |20|1916|  3.38
+Degeneracy|20|1916|  4.04
+Base      |25|2616| 29.20
+Pivot     |25|2616|  7.16
+Degeneracy|25|2616|  9.40
+Base      |5|1576|  1.52
+Pivot     |5|1576|  1.44
+Degeneracy|5|1576|  1.36
+Base      |10|1617|  1.75
+Pivot     |10|1617|  2.22
+Degeneracy|10|1617|  2.30
+Base      |15|1667|  4.02
+Pivot     |15|1667|  2.94
+Degeneracy|15|1667|  2.22
+Base      |20|1916|  8.03
+Pivot     |20|1916|  3.80
+Degeneracy|20|1916|  3.69
+Base      |25|2616| 20.96
+Pivot     |25|2616|  7.00
+Degeneracy|25|2616|  6.96
+Base      |5|1576|  0.94
+Pivot     |5|1576|  1.24
+Degeneracy|5|1576|  1.06
+Base      |10|1617|  2.45
+Pivot     |10|1617|  2.73
+Degeneracy|10|1617|  3.11
+Base      |15|1667|  2.29
+Pivot     |15|1667|  1.69
+Degeneracy|15|1667|  1.54
+Base      |20|1916|  7.34
+Pivot     |20|1916|  3.34
+Degeneracy|20|1916|  3.42
+Base      |25|2616| 24.03
+Pivot     |25|2616|  5.61
+Degeneracy|25|2616|  6.60
+Base      |30|3920|154.69
+Pivot     |30|3920| 19.12
+Degeneracy|30|3920| 21.94
+Base      |30|3920|139.74
+Pivot     |30|3920| 20.19
+Degeneracy|30|3920| 16.17
+Base      |30|3920|128.97
+Pivot     |30|3920| 19.49
+Degeneracy|30|3920| 24.65
+Base      |30|3920|150.27
+Pivot     |30|3920| 19.00
+Degeneracy|30|3920| 25.57
+Base      |30|3920|144.17
+Pivot     |30|3920| 19.35
+Degeneracy|30|3920| 24.72
+Base      |30|3920|144.17
+Pivot     |30|3920| 21.23
+Degeneracy|30|3920| 20.63
+Base      |30|3920|139.50
+Pivot     |30|3920| 21.31
+Degeneracy|30|3920| 23.38
+Base      |30|3920| 90.53
+Pivot     |30|3920|  7.36
+Degeneracy|30|3920|  9.30
+Base      |30|3920| 48.41
+Pivot     |30|3920|  7.47
+Degeneracy|30|3920|  9.04
+Base      |30|3920| 50.76
+Pivot     |30|3920|  6.84
+Degeneracy|30|3920|  9.02

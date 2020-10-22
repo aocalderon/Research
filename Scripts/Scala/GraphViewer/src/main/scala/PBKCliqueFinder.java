@@ -142,10 +142,16 @@ public class PBKCliqueFinder<V, E>
      */
     protected void findCliques(Set<V> P, Set<V> R, Set<V> X, final long nanosTimeLimit)
     {
+	System.out.println("New iteration...");
+	System.out.println(P);
+	System.out.println(R);
+	System.out.println(X);
         /*
          * Check if maximal clique
          */
         if (P.isEmpty() && X.isEmpty()) {
+	    //System.out.print("clique,");
+	    System.out.println("Clique! " + R);
             Set<V> maximalClique = new HashSet<>(R);
             allMaximalCliques.add(maximalClique);
             maxSize = Math.max(maxSize, maximalClique.size());
@@ -164,8 +170,7 @@ public class PBKCliqueFinder<V, E>
          * Choose pivot
          */	
         V u = choosePivot(P, X);
-	System.out.println();
-	System.out.println("The pivot is: " + u);
+	System.out.println("pivot: " + u);
 
         /*
          * Find candidates for addition
@@ -174,12 +179,15 @@ public class PBKCliqueFinder<V, E>
         for (E e : graph.edgesOf(u)) {
             uNeighbors.add(Graphs.getOppositeVertex(graph, e, u));
         }
+	System.out.println("N_pivot: " + uNeighbors);
+	
         Set<V> candidates = new HashSet<>();
         for (V v : P) {
             if (!uNeighbors.contains(v)) {
                 candidates.add(v);
             }
         }
+	System.out.println("Candidates: " + candidates);
 
         /*
          * Main loop
@@ -187,20 +195,26 @@ public class PBKCliqueFinder<V, E>
         for (V v : candidates) {
             Set<V> vNeighbors = new HashSet<>();
             for (E e : graph.edgesOf(v)) {
-                vNeighbors.add(Graphs.getOppositeVertex(graph, e, v));
+		V q = Graphs.getOppositeVertex(graph, e, v);
+	        vNeighbors.add(q);
             }
+	    System.out.println("v: " + v + " N_v: " + vNeighbors);
 
             Set<V> newP = P.stream().filter(vNeighbors::contains).collect(Collectors.toSet());
             Set<V> newX = X.stream().filter(vNeighbors::contains).collect(Collectors.toSet());
             Set<V> newR = new HashSet<>(R);
+	    // HERE IS WHEN THE POSSIBLE CLIQUE GROWTH...
+	    // I SHOULD VERIFY IF THE NEW VERTEX IS STILL IN A mbc OF EPSILON DIAMETER...
             newR.add(v);
-	    System.out.println("R: " + R);
-
 
             findCliques(newP, newR, newX, nanosTimeLimit);
 
+	    System.out.println("back!");
             P.remove(v);
             X.add(v);
+	    System.out.println("P" + P);
+	    System.out.println("X" + X);
+	    
         }
 
     }

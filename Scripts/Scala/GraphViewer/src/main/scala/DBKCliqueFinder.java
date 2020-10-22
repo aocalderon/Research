@@ -88,7 +88,7 @@ public class DBKCliqueFinder<V, E>
     @Override
     protected void lazyRun()
     {
-	System.out.println("I am in lazy run...");
+	//System.out.println("I am in lazy run...");
         if (allMaximalCliques == null) {
             if (!GraphTests.isSimple(graph)) {
                 throw new IllegalArgumentException("Graph must be simple");
@@ -105,7 +105,7 @@ public class DBKCliqueFinder<V, E>
             List<V> ordering = new ArrayList<>();
             new DegeneracyOrderingIterator<V, E>(graph).forEachRemaining(ordering::add);
 
-	    System.out.println(ordering);
+	    //System.out.println(ordering);
 
             int n = ordering.size();
             for (int i = 0; i < n; i++) {

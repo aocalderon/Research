@@ -90,7 +90,6 @@ public class Welzl<S extends Space, P extends Point<S>> implements Encloser<S, P
 	    
             // select the point farthest to current ball
             final P farthest = selectFarthest(points, ball);
-	    System.out.println("The farthest point: " + farthest);
 
             if (ball.contains(farthest, tolerance)) {
                 // we have found a ball containing all points
@@ -114,8 +113,6 @@ public class Welzl<S extends Space, P extends Point<S>> implements Encloser<S, P
 
             // prune the least interesting points
             extreme.subList(ball.getSupportSize(), extreme.size()).clear();
-
-
         }
     }
 
@@ -130,7 +127,6 @@ public class Welzl<S extends Space, P extends Point<S>> implements Encloser<S, P
 
         // create a new ball on the prescribed support	    
         EnclosingBall<S, P> ball = generator.ballOnSupport(support);
-	System.out.println("Radius = " + ball.getRadius());
 	if(ball.getRadius() > 5.0){
 	    System.out.println("Need compute disks...");
 	}
@@ -143,7 +139,6 @@ public class Welzl<S extends Space, P extends Point<S>> implements Encloser<S, P
 
                     // we have found an outside point,
                     // enlarge the ball by adding it to the support
-		    System.out.println("P_i = " + pi);
                     support.add(pi);
                     ball = moveToFrontBall(extreme, i, support);
                     support.remove(support.size() - 1);
@@ -154,10 +149,8 @@ public class Welzl<S extends Space, P extends Point<S>> implements Encloser<S, P
                         extreme.set(j, extreme.get(j - 1));
                     }
                     extreme.set(0, pi);
-
                 }
             }
-
         }
 
         return ball;
@@ -170,7 +163,6 @@ public class Welzl<S extends Space, P extends Point<S>> implements Encloser<S, P
      * @return farthest point
      */
     public P selectFarthest(final Iterable<P> points, final EnclosingBall<S, P> ball) {
-
         final P center = ball.getCenter();
         P farthest   = null;
         double dMax  = -1.0;
