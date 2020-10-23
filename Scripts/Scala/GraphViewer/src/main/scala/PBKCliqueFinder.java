@@ -52,10 +52,77 @@ import java.util.stream.*;
  *
  * @author Dimitrios Michail
  */
+
+import com.vividsolutions.jts.geom.PrecisionModel;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
+
+class P{
+    double x;
+    double y;
+    int id;
+    Point point;
+    
+    public P(int id, double x, double y){
+	PrecisionModel model = new PrecisionModel(1000);
+	GeometryFactory geofactory = new GeometryFactory(model);
+	this.point = geofactory.createPoint(new Coordinate(x, y));
+	this.id = id;
+	this.x = x;
+	this.y = y;
+    }
+    public String wkt(){
+	String wkt = point.toText();
+	return wkt + "\t" + id;
+    }
+    public String toString(){
+	return "" + id;
+    }
+}
+
+class Clique<V>{
+    Geometry geom;
+    ArrayList<Integer> ids;
+    
+    public Clique(Set<V> points){
+	PrecisionModel model = new PrecisionModel(1000);
+	GeometryFactory geofactory = new GeometryFactory(model);
+	int n = points.size();
+	Coordinate[] coords = new Coordinate[n];
+	ArrayList ids = new ArrayList<Integer>();
+	int i = 0;
+	for(V v: points){
+	    P p = (P) v;
+	    coords[i] = new Coordinate(p.x,p.y);
+	    ids.add(p.id);
+	    i = i + 1;
+	}
+	this.geom = geofactory.createMultiPoint(coords).convexHull();
+	this.ids = ids;
+    }
+    public String wkt(){
+	String wkt = geom.toText();
+	StringBuffer sb = new StringBuffer();
+      
+	for (Integer id : ids) {
+	    sb.append(id.toString());
+	    sb.append(" ");
+	}
+	
+	return wkt + sb.toString();
+    }
+}
+
 public class PBKCliqueFinder<V, E>
     extends
     PivotBronKerboschCliqueFinder<V, E>
 {
+
+    StringBuffer logger = new StringBuffer();
+    
     /**
      * Constructs a new clique finder.
      *
@@ -98,7 +165,7 @@ public class PBKCliqueFinder<V, E>
             }
 
             findCliques(
-                new HashSet<>(graph.vertexSet()), new HashSet<>(), new HashSet<>(), nanosTimeLimit);
+			new HashSet<>(graph.vertexSet()), new HashSet<>(), new HashSet<>(), nanosTimeLimit, 0);
         }
     }
 
@@ -140,18 +207,19 @@ public class PBKCliqueFinder<V, E>
      * @param X vertices which must be excluded from the clique
      * @param nanosTimeLimit time limit
      */
-    protected void findCliques(Set<V> P, Set<V> R, Set<V> X, final long nanosTimeLimit)
+    protected void findCliques(Set<V> P, Set<V> R, Set<V> X, final long nanosTimeLimit, final int iter)
     {
-	System.out.println("New iteration...");
-	System.out.println(P);
-	System.out.println(R);
-	System.out.println(X);
+	print(iter, 0, "P", mkString(P, " "));
+	print(iter, 0, "R", mkString(R, " "));
+	print(iter, 0, "X", mkString(X, " "));
+
         /*
          * Check if maximal clique
          */
         if (P.isEmpty() && X.isEmpty()) {
-	    //System.out.print("clique,");
-	    System.out.println("Clique! " + R);
+	    Clique c = new Clique(R);
+	    print(iter, 6, "Clique", mkString(R, " "));
+	    
             Set<V> maximalClique = new HashSet<>(R);
             allMaximalCliques.add(maximalClique);
             maxSize = Math.max(maxSize, maximalClique.size());
@@ -170,7 +238,7 @@ public class PBKCliqueFinder<V, E>
          * Choose pivot
          */	
         V u = choosePivot(P, X);
-	System.out.println("pivot: " + u);
+	print(iter, 1, "Pivot", u.toString());
 
         /*
          * Find candidates for addition
@@ -179,7 +247,7 @@ public class PBKCliqueFinder<V, E>
         for (E e : graph.edgesOf(u)) {
             uNeighbors.add(Graphs.getOppositeVertex(graph, e, u));
         }
-	System.out.println("N_pivot: " + uNeighbors);
+	print(iter, 2, "N_pivot", mkString(uNeighbors, " "));
 	
         Set<V> candidates = new HashSet<>();
         for (V v : P) {
@@ -187,7 +255,8 @@ public class PBKCliqueFinder<V, E>
                 candidates.add(v);
             }
         }
-	System.out.println("Candidates: " + candidates);
+
+	print(iter, 3, "Candidates", mkString(candidates, " "));
 
         /*
          * Main loop
@@ -198,25 +267,47 @@ public class PBKCliqueFinder<V, E>
 		V q = Graphs.getOppositeVertex(graph, e, v);
 	        vNeighbors.add(q);
             }
-	    System.out.println("v: " + v + " N_v: " + vNeighbors);
+	    
+	    print(iter, 4, "v", v.toString());
+	    print(iter, 4, "N_v", mkString(vNeighbors, " "));
 
-            Set<V> newP = P.stream().filter(vNeighbors::contains).collect(Collectors.toSet());
-            Set<V> newX = X.stream().filter(vNeighbors::contains).collect(Collectors.toSet());
+            Set<V> newP = P.stream().filter(vNeighbors::contains)
+		.collect(Collectors.toSet());
+            Set<V> newX = X.stream().filter(vNeighbors::contains)
+		.collect(Collectors.toSet());
             Set<V> newR = new HashSet<>(R);
 	    // HERE IS WHEN THE POSSIBLE CLIQUE GROWTH...
-	    // I SHOULD VERIFY IF THE NEW VERTEX IS STILL IN A mbc OF EPSILON DIAMETER...
+	    // I SHOULD VERIFY IF THE NEW VERTEX IS STILL IN A mbc WITH EPSILON DIAMETER...
             newR.add(v);
 
-            findCliques(newP, newR, newX, nanosTimeLimit);
+            findCliques(newP, newR, newX, nanosTimeLimit, iter + 1);
 
-	    System.out.println("back!");
-            P.remove(v);
+	    print(iter, 6, "back", "{}");
+
+	    P.remove(v);
             X.add(v);
-	    System.out.println("P" + P);
-	    System.out.println("X" + X);
-	    
         }
-
     }
 
+    public String mkString(Set<V> A, String sep){
+	StringBuffer sb = new StringBuffer();
+
+	if(A.isEmpty()) return "{}";
+	for (V v : A) {
+	    sb.append(v);
+	    sb.append(sep);
+	}
+	
+	return sb.toString();
+    }
+
+    public void print(int iter, int step, String tag, String value){
+	String log = iter + "|" + step + "|" + tag + "|" + value + "\n";
+	logger.append(log);
+	//System.out.print(log);
+    }
+
+    public String getLogger(){
+	return logger.toString();
+    }
 }
