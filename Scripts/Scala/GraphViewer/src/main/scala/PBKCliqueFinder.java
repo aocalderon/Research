@@ -218,7 +218,7 @@ public class PBKCliqueFinder<V, E>
          */
         if (P.isEmpty() && X.isEmpty()) {
 	    Clique c = new Clique(R);
-	    print(iter, 6, "Clique", mkString(R, " "));
+	    print(iter, 8, "Clique", mkString(R, " "));
 	    
             Set<V> maximalClique = new HashSet<>(R);
             allMaximalCliques.add(maximalClique);
@@ -286,6 +286,11 @@ public class PBKCliqueFinder<V, E>
 
 	    P.remove(v);
             X.add(v);
+
+	    print(iter, 7, "P", mkString(P, " "));
+	    print(iter, 7, "R", mkString(R, " "));
+	    print(iter, 7, "X", mkString(X, " "));
+	    
         }
     }
 

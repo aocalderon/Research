@@ -93,7 +93,7 @@ object TestPBK {
       List(polygon.toText + "\t" + log.toString)
     }
 
-    logs
+    val wkts = logs
       //.filter(_.iter == 0)
       .flatMap{ log =>
         log.tag match {
@@ -101,6 +101,21 @@ object TestPBK {
           case _ => getPointWKT(log)
         }
       }
-      .foreach{println}
+
+    def save(name: String, c: Seq[String]): Unit = {
+      val f = new java.io.PrintWriter(name)
+      f.write(c.mkString("\n"))
+      f.close
+      println(s"Saved $name [${c.size} records].")
+    }
+    val (wkt1, wkt2) = wkts.partition(_.contains("POLYGON"))
+    save("/tmp/edgesP1.wkt", wkt1)
+    save("/tmp/edgesP2.wkt", wkt2)
+    save("/tmp/edgesV.wkt", vertices.map(v => v.wkt + "\t" + v.id))
+    save("/tmp/edgesE.wkt", edges.map{ case(a, b) =>
+      val coords = Array(a.point.getCoordinate, b.point.getCoordinate)
+      val edge = geofactory.createLineString(coords)
+      s"${edge.toText}\t(${a.id}, ${b.id})"
+    })
   }
 }
