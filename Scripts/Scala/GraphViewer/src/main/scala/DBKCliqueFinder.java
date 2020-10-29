@@ -67,19 +67,7 @@ public class DBKCliqueFinder<V, E>
      */
     public DBKCliqueFinder(Graph<V, E> graph)
     {
-        this(graph, 0L, TimeUnit.SECONDS);
-    }
-
-    /**
-     * Constructs a new clique finder.
-     *
-     * @param graph the input graph; must be simple
-     * @param timeout the maximum time to wait, if zero no timeout
-     * @param unit the time unit of the timeout argument
-     */
-    public DBKCliqueFinder(Graph<V, E> graph, long timeout, TimeUnit unit)
-    {
-        super(graph, timeout, unit);
+        super(graph);
     }
 
     /**
@@ -137,7 +125,7 @@ public class DBKCliqueFinder<V, E>
                 /*
                  * Call the pivot version
                  */
-                findCliques(P, R, X, nanosTimeLimit);
+                findCliques(P, R, X);
             }
         }
     }

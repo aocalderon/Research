@@ -127,6 +127,18 @@ Scripts/Scala/GraphViewer/.settings/*
 Scripts/Scala/GraphViewer/.bloop/
 Scripts/Scala/GraphViewer/.metals/
 
+Scripts/Scala/FlockFinderByCliques/target/*
+Scripts/Scala/FlockFinderByCliques/project/*
+Scripts/Scala/FlockFinderByCliques/.idea/*
+Scripts/Scala/FlockFinderByCliques/.idea/workspace.xml
+Scripts/Scala/FlockFinderByCliques/.ensime
+Scripts/Scala/FlockFinderByCliques/.ensime_cache/*
+Scripts/Scala/FlockFinderByCliques/.classpath
+Scripts/Scala/FlockFinderByCliques/.project
+Scripts/Scala/FlockFinderByCliques/.settings/*
+Scripts/Scala/FlockFinderByCliques/.bloop/
+Scripts/Scala/FlockFinderByCliques/.metals/
+
 Scripts/Scala/Join/target/*
 Scripts/Scala/Join/project/*
 Scripts/Scala/Join/.idea/*

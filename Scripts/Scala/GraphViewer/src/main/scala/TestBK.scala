@@ -37,7 +37,7 @@ object TestPBK {
     vertices.foreach{ vertex =>  graph.addVertex(vertex) }
     edges.foreach{ case(a, b) => graph.addEdge(a, b) }
 
-    val finder = new PBKCliqueFinder(graph)
+    val finder = new PBKCliqueFinderTest(graph)
 
     val r = finder.iterator.asScala.toList.zipWithIndex.map{ case(points, id) =>
       val clique = new Clique(points)

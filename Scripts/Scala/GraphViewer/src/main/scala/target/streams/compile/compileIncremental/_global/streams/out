@@ -1,0 +1,73 @@
+[0m[[0m[0mdebug[0m] [0m[0m[zinc] IncrementalCompile -----------[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0mIncrementalCompile.incrementalCompile[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0mprevious = Stamps for: 0 products, 0 sources, 0 libraries[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0mcurrent source = Set(${BASE}/FlockCompare.scala, ${BASE}/TestWelzl.scala, ${BASE}/DBKCliqueFinder.java, ${BASE}/MBC.java, ${BASE}/PBKCliqueFinder.java, ${BASE}/PBKCliqueFinderTest.java, ${BASE}/CliqueFinderUtils.scala, ${BASE}/Welzl.java, ${BASE}/GraphViewer.scala, ${BASE}/BKBenchmark.scala, ${BASE}/FlockFinder.scala, ${BASE}/TestBK.scala, ${BASE}/TSV2DOT.scala, ${BASE}/BKCliqueFinder.java)[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0m> initialChanges = InitialChanges(Changes(added = Set(${BASE}/FlockCompare.scala, ${BASE}/BKBenchmark.scala, ${BASE}/Welzl.java, ${BASE}/GraphViewer.scala, ${BASE}/FlockFinder.scala, ${BASE}/PBKCliqueFinderTest.java, ${BASE}/CliqueFinderUtils.scala, ${BASE}/DBKCliqueFinder.java, ${BASE}/TestBK.scala, ${BASE}/BKCliqueFinder.java, ${BASE}/TSV2DOT.scala, ${BASE}/TestWelzl.scala, ${BASE}/PBKCliqueFinder.java, ${BASE}/MBC.java), removed = Set(), changed = Set(), unmodified = ...),Set(),Set(),API Changes: Set())[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0mFull compilation, no sources in previous analysis.[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0mall 14 sources are invalidated[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: [0m[0J
+[0m[[0m[0mdebug[0m] [0m[0mRecompiling all sources: number of invalidated sources > 50.0% of all sources[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0mcompilation cycle 1[0m[0J
+[0m[[0m[0minfo[0m] [0m[0mcompiling 8 Scala sources and 6 Java sources to /home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/target/scala-2.12/classes ...[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0mGetting org.scala-sbt:compiler-bridge_2.12:1.4.1:compile for Scala 2.12.12[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0m[zinc] Running cached compiler 165260ad for Scala compiler version 2.12.12[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0m[zinc] The Scala compiler is invoked with:[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0m	-bootclasspath[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0m	/opt/Java/jdk1.8.0_261/jre/lib/resources.jar:/opt/Java/jdk1.8.0_261/jre/lib/rt.jar:/opt/Java/jdk1.8.0_261/jre/lib/sunrsasign.jar:/opt/Java/jdk1.8.0_261/jre/lib/jsse.jar:/opt/Java/jdk1.8.0_261/jre/lib/jce.jar:/opt/Java/jdk1.8.0_261/jre/lib/charsets.jar:/opt/Java/jdk1.8.0_261/jre/lib/jfr.jar:/opt/Java/jdk1.8.0_261/jre/classes:/home/and/.sbt/boot/scala-2.12.12/lib/scala-library.jar[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0m	-classpath[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0m	/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/target/scala-2.12/classes[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0mCompilation failed (CompilerInterface)[0m[0J
+[0m[[0m[31merror[0m] [0m[0mCompilation failed[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at xsbt.CachedCompiler0.handleErrors(CompilerBridge.scala:183)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at xsbt.CachedCompiler0.run(CompilerBridge.scala:172)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at xsbt.CachedCompiler0.run(CompilerBridge.scala:134)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at xsbt.CompilerBridge.run(CompilerBridge.scala:39)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.AnalyzingCompiler.compile(AnalyzingCompiler.scala:92)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.MixedAnalyzingCompiler.$anonfun$compile$7(MixedAnalyzingCompiler.scala:186)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.MixedAnalyzingCompiler.timed(MixedAnalyzingCompiler.scala:241)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.MixedAnalyzingCompiler.$anonfun$compile$4(MixedAnalyzingCompiler.scala:176)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.MixedAnalyzingCompiler.$anonfun$compile$4$adapted(MixedAnalyzingCompiler.scala:157)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.JarUtils$.withPreviousJar(JarUtils.scala:232)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.MixedAnalyzingCompiler.compileScala$1(MixedAnalyzingCompiler.scala:157)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.MixedAnalyzingCompiler.compile(MixedAnalyzingCompiler.scala:204)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.IncrementalCompilerImpl.$anonfun$compileInternal$1(IncrementalCompilerImpl.scala:571)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.IncrementalCompilerImpl.$anonfun$compileInternal$1$adapted(IncrementalCompilerImpl.scala:571)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.Incremental$.$anonfun$apply$5(Incremental.scala:174)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.Incremental$.$anonfun$apply$5$adapted(Incremental.scala:172)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.Incremental$$anon$2.run(Incremental.scala:459)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.IncrementalCommon$CycleState.next(IncrementalCommon.scala:116)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.IncrementalCommon$$anon$1.next(IncrementalCommon.scala:56)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.IncrementalCommon$$anon$1.next(IncrementalCommon.scala:52)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.IncrementalCommon.cycle(IncrementalCommon.scala:261)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.Incremental$.$anonfun$incrementalCompile$8(Incremental.scala:414)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.Incremental$.withClassfileManager(Incremental.scala:499)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.Incremental$.incrementalCompile(Incremental.scala:401)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.Incremental$.apply(Incremental.scala:166)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.IncrementalCompilerImpl.compileInternal(IncrementalCompilerImpl.scala:571)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.IncrementalCompilerImpl.$anonfun$compileIncrementally$1(IncrementalCompilerImpl.scala:489)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.IncrementalCompilerImpl.handleCompilationError(IncrementalCompilerImpl.scala:332)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.IncrementalCompilerImpl.compileIncrementally(IncrementalCompilerImpl.scala:419)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.inc.IncrementalCompilerImpl.compile(IncrementalCompilerImpl.scala:137)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.Defaults$.compileIncrementalTaskImpl(Defaults.scala:2143)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.Defaults$.$anonfun$compileIncrementalTask$2(Defaults.scala:2100)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.io.Retry$.apply(Retry.scala:40)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.io.Retry$.apply(Retry.scala:23)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.server.BspCompileTask$.compute(BspCompileTask.scala:31)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.Defaults$.$anonfun$compileIncrementalTask$1(Defaults.scala:2096)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at scala.Function1.$anonfun$compose$1(Function1.scala:49)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.util.$tilde$greater.$anonfun$$u2219$1(TypeFunctions.scala:62)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.std.Transform$$anon$4.work(Transform.scala:68)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.Execute.$anonfun$submit$2(Execute.scala:282)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.internal.util.ErrorHandling$.wideConvert(ErrorHandling.scala:23)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.Execute.work(Execute.scala:291)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.Execute.$anonfun$submit$1(Execute.scala:282)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.ConcurrentRestrictions$$anon$4.$anonfun$submitValid$1(ConcurrentRestrictions.scala:265)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at sbt.CompletionService$$anon$2.call(CompletionService.scala:64)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at java.util.concurrent.FutureTask.run(FutureTask.java:266)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at java.util.concurrent.FutureTask.run(FutureTask.java:266)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	at java.lang.Thread.run(Thread.java:748)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m(Compile / [31mcompileIncremental[0m) Compilation failed[0m[0J
