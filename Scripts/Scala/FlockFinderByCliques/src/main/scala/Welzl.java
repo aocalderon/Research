@@ -42,6 +42,29 @@ import org.apache.commons.math3.geometry.Space;
  * @param <P> Point type.
  * @since 3.3
  */
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+
+class Point2D extends Vector2D {
+    int id;
+    com.vividsolutions.jts.geom.Point point;
+    
+    public Point2D(com.vividsolutions.jts.geom.Point point){
+	super(point.getX(), point.getY());
+	this.point = point;
+	this.id = (int)point.getUserData();
+    }
+    public String wkt(){
+	String wkt = point.toText();
+	return wkt + "\t" + id;
+    }
+    public String toString(){
+	return "" + id;
+    }
+    public double getX(){return point.getX();}
+    public double getY(){return point.getY();}
+    public int getId(){return id;}
+}
+
 public class Welzl<S extends Space, P extends Point<S>> implements Encloser<S, P> {
 
     /** Tolerance below which points are consider to be identical. */
@@ -49,7 +72,8 @@ public class Welzl<S extends Space, P extends Point<S>> implements Encloser<S, P
 
     /** Generator for balls on support. */
     private final SupportBallGenerator<S, P> generator;
-
+    public List<P> outs;
+    
     /** Simple constructor.
      * @param tolerance below which points are consider to be identical
      * @param generator generator for balls on support
@@ -57,6 +81,7 @@ public class Welzl<S extends Space, P extends Point<S>> implements Encloser<S, P
     public Welzl(final double tolerance, final SupportBallGenerator<S, P> generator) {
         this.tolerance = tolerance;
         this.generator = generator;
+	this.outs = new ArrayList<P>();
     }
 
     /** {@inheritDoc} */
@@ -101,6 +126,54 @@ public class Welzl<S extends Space, P extends Point<S>> implements Encloser<S, P
             support.clear();
             support.add(farthest);
             EnclosingBall<S, P> savedBall = ball;
+            ball = moveToFrontBall(extreme, extreme.size(), support);
+            if (ball.getRadius() < savedBall.getRadius()) {
+                // this should never happen
+                throw new MathInternalError();
+            }
+
+            // it was an interesting point, move it to the front
+            // according to Gärtner's heuristic
+            extreme.add(0, farthest);
+
+            // prune the least interesting points
+            extreme.subList(ball.getSupportSize(), extreme.size()).clear();
+        }
+    }
+
+    public EnclosingBall<S, P> getMBCByRadius(final Iterable<P> points,
+					     final Double radius) {
+
+        final P first = points.iterator().next();	    
+        final List<P> extreme = new ArrayList<P>(first.getSpace().getDimension() + 1);
+        final List<P> support = new ArrayList<P>(first.getSpace().getDimension() + 1);
+        //List<P> outs = new ArrayList<P>();
+
+        // start with only first point selected as a candidate support
+        extreme.add(first);
+        EnclosingBall<S, P> ball = moveToFrontBall(extreme, extreme.size(), support);
+	EnclosingBall<S, P> savedBall = ball;
+
+        while (true) {
+	    
+            // select the point farthest to current ball
+            final P farthest = selectFarthest2(points, ball);
+	    //System.out.println(farthest);
+
+            if (ball.contains(farthest, tolerance)) {
+                // we have found a ball containing all points
+                return ball;
+            }
+	    if (ball.getRadius() >= radius) {
+		outs.add(farthest);
+		continue;
+	    }
+
+            // recurse search,
+	    // restricted to the small subset containing support and farthest point
+            support.clear();
+            support.add(farthest);
+            savedBall = ball;
             ball = moveToFrontBall(extreme, extreme.size(), support);
             if (ball.getRadius() < savedBall.getRadius()) {
                 // this should never happen
@@ -164,6 +237,26 @@ public class Welzl<S extends Space, P extends Point<S>> implements Encloser<S, P
         double dMax  = -1.0;
 
         for (final P point : points) {
+            final double d = point.distance(center);
+            if (d > dMax) {
+                farthest = point;
+                dMax     = d;
+            }
+        }
+
+        return farthest;
+
+    }
+
+    public P selectFarthest2(final Iterable<P> points, final EnclosingBall<S, P> ball) {
+        final P center = ball.getCenter();
+        P farthest   = null;
+        double dMax  = -1.0;
+
+	
+	//System.out.println(outs);
+        for (final P point : points) {
+	    if(outs.contains(point)) continue;
             final double d = point.distance(center);
             if (d > dMax) {
                 farthest = point;

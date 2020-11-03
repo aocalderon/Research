@@ -10,7 +10,7 @@
 [0m[[0m[0mdebug[0m] [0m[0mcompilation cycle 1[0m[0J
 [0m[[0m[0minfo[0m] [0m[0mcompiling 8 Scala sources and 6 Java sources to /home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/target/scala-2.12/classes ...[0m[0J
 [0m[[0m[0mdebug[0m] [0m[0mGetting org.scala-sbt:compiler-bridge_2.12:1.4.1:compile for Scala 2.12.12[0m[0J
-[0m[[0m[0mdebug[0m] [0m[0m[zinc] Running cached compiler 165260ad for Scala compiler version 2.12.12[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0m[zinc] Running cached compiler 2df7e1d7 for Scala compiler version 2.12.12[0m[0J
 [0m[[0m[0mdebug[0m] [0m[0m[zinc] The Scala compiler is invoked with:[0m[0J
 [0m[[0m[0mdebug[0m] [0m[0m	-bootclasspath[0m[0J
 [0m[[0m[0mdebug[0m] [0m[0m	/opt/Java/jdk1.8.0_261/jre/lib/resources.jar:/opt/Java/jdk1.8.0_261/jre/lib/rt.jar:/opt/Java/jdk1.8.0_261/jre/lib/sunrsasign.jar:/opt/Java/jdk1.8.0_261/jre/lib/jsse.jar:/opt/Java/jdk1.8.0_261/jre/lib/jce.jar:/opt/Java/jdk1.8.0_261/jre/lib/charsets.jar:/opt/Java/jdk1.8.0_261/jre/lib/jfr.jar:/opt/Java/jdk1.8.0_261/jre/classes:/home/and/.sbt/boot/scala-2.12.12/lib/scala-library.jar[0m[0J

@@ -1,4 +1,4 @@
-package ucr.edu.dblab
+package edu.ucr.dblab
 
 import com.vividsolutions.jts.algorithm.MinimumBoundingCircle
 import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Geometry}
@@ -13,7 +13,7 @@ import scala.io.Source
 import scala.annotation.tailrec
 import edu.ucr.dblab.djoin.SPMF._
 
-import ucr.edu.dblab.CliqueFinderUtils
+import edu.ucr.dblab.CliqueFinderUtils._
 
 object FlockFinder {
   def main(args: Array[String]): Unit = {

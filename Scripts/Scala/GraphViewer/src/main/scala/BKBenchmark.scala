@@ -8,7 +8,7 @@ import scala.collection.JavaConverters._
 import org.jgrapht.graph.{SimpleGraph, DefaultEdge}
 import java.io.PrintWriter
 import scala.io.Source
-import CliqueFinder.clocktime
+import CliqueFinderUtils.clocktime
 
 object BKBenchmark {
   case class Clique(id: Int, points: List[Point])

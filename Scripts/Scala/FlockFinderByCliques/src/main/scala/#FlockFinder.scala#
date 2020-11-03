@@ -102,7 +102,7 @@ object FlockFinder {
           val centers = findCenters(points, epsilon, r2).distinct
 
           println(s"Centers: ${centers.size}")
-          
+
           val disks = centers.map{ center =>
             val pids = points.filter(_.distance(center) <= r)
               .map(_.getUserData.asInstanceOf[Int]).sorted
