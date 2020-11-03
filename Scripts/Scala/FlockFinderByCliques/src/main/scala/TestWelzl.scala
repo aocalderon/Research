@@ -148,5 +148,19 @@ object TestWelzl {
       }
     }
 
+    val test = (
+      for{
+        d1 <- disks1
+        d2 <- disks2 if d1._1.id == d2._1.id
+      } yield {
+        val p1 = d2._2.pids.toSet
+        d1._2.map{ d =>
+          val p2 = d.pids.toSet
+          val p = p2 -- p1
+          (p.size, p1, p2)
+        }
+      }
+    ).flatten.filter(_._1 > 0).foreach{println}
+
   }
 }
