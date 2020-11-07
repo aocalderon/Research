@@ -1,3 +1,4 @@
+
 package edu.ucr.dblab
 
 import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Geometry}
@@ -21,6 +22,9 @@ object TestWelzl {
       val ins  = in.map(_.getUserData.asInstanceOf[Int]).mkString(" ")
       val outs = out.map(_.getUserData.asInstanceOf[Int]).mkString(" ")
       s"$wkt\t|$ins\t|$outs"
+    }
+    def getCircle(r: Double): String = {
+      mbc.center.buffer(r, 25).toText
     }
   }
 
@@ -123,6 +127,48 @@ object TestWelzl {
     }
     println(s"Cliques2: ${cliques2.size}")
 
+    val data = cliques2.map{ clique =>
+      val mbcr = getMBCByRadius(clique.points, r)
+      (clique.id, mbcr, clique.points)
+    }
+
+    save("/tmp/edgesSample.wkt"){
+      data.map{ case(cid, mbcr, points) =>
+        points.map{ p =>
+          val wkt = p.toText
+          val pid = p.getUserData.asInstanceOf[Int]
+          val x = p.getX
+          val y = p.getY
+          s"$wkt\t$pid\t$x\t$y\t0\n"
+        }.mkString("")
+      }
+    }
+    save("/tmp/edgesCliques.wkt"){
+      data.map{ case(id, mbcr, points) =>
+        val wkt = geofactory.createMultiPoint(points.toArray).convexHull.toText
+        s"$wkt\t$id\n"
+      }
+    }
+    save("/tmp/edgesMBC.wkt"){
+      data.map{ case(id, mbcr, points) =>
+        val wkt = mbcr.getCircle(r)
+        s"$wkt\t$id\n"
+      }
+    }
+    save("/tmp/edgesIns.wkt"){
+      data.map{ case(id, mbcr, points) =>
+        val wkt = geofactory.createMultiPoint(mbcr.in.toArray).toText
+        s"$wkt\t$id\n"
+      }
+    }
+    save("/tmp/edgesOuts.wkt"){
+      data.map{ case(id, mbcr, points) =>
+        val wkt = geofactory.createMultiPoint(mbcr.out.toArray).toText
+        s"$wkt\t$id\n"
+      }
+    }
+
+    /*
     val disks2 = timer{"Disks alternative 2"}{
       cliques2.map{ clique =>
         val mbcr = getMBCByRadius(clique.points, r)
@@ -134,7 +180,9 @@ object TestWelzl {
         (clique, disk)
       }
     }
+     */
 
+    /*
     val disks1 = timer{"Disks alternative 1"}{
       cliques2.map{ clique =>
         val centers = findCenters(clique.points, epsilon, r2)
@@ -147,7 +195,9 @@ object TestWelzl {
         (clique, disks)
       }
     }
+     */
 
+    /*
     val test = (
       for{
         d1 <- disks1
@@ -161,6 +211,8 @@ object TestWelzl {
         }
       }
     ).flatten.filter(_._1 > 0).foreach{println}
+     */
+
 
   }
 }
