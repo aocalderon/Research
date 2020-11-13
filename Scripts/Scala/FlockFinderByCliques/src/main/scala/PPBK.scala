@@ -13,11 +13,11 @@ import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Point, Coor
 import scala.collection.mutable.{ListBuffer, HashSet}
 import scala.collection.JavaConverters._
 
-object PBK {
+object PPBK {
 
-  def IK_*(R: HashSet[Int], P: HashSet[Int], X: HashSet[Int], level: Int = 0)
-    (implicit graph: SimpleGraph[Int, DefaultEdge],
-      cliques: FPTree[Int], sortMode: SortMode): Unit = {
+  def IK_*(R: HashSet[Point], P: HashSet[Point], X: HashSet[Point], level: Int = 0)
+    (implicit graph: SimpleGraph[Point, DefaultEdge],
+      cliques: FPTree[Point], sortMode: SortMode): Unit = {
     if(P.isEmpty && X.isEmpty){
       val r = sortMode.mode match {
         case 1 => R.toList
@@ -25,9 +25,9 @@ object PBK {
         case _ => sortById(R)
       }
       cliques.add(r)
-      println(r.mkString(" "))
+      //println(r.mkString(" "))
     } else {
-      val u_p = pivot2(P, X)
+      val u_p = pivot(P, X)
 
       for( u_i <- P -- N(u_p)){
         val P_new = P.intersect(N(u_i))
@@ -45,41 +45,36 @@ object PBK {
   case class SortMode(mode: Int)
   def main(args: Array[String]): Unit = {
     implicit val geofactory = new GeometryFactory(new PrecisionModel(1000))
-    implicit val graph = new SimpleGraph[Int, DefaultEdge](classOf[DefaultEdge])
-    implicit val sortMode = if(args.size == 2) SortMode(args(1).toInt) else SortMode(1)
+    implicit val graph = new SimpleGraph[Point, DefaultEdge](classOf[DefaultEdge])
+    implicit val sortMode = if(args.size == 3) SortMode(args(2).toInt) else SortMode(1)
 
-    val filename = args(0).split("\\.")
-    val (vertices, edges) = filename(1) match {
-      case "tgf" => readTGF(filename(0) + ".tgf")
-      case "tsv" => readTrajs(filename(0) + ".tsv", 10)
-    }
+    val (vertices, edges) = readTrajs(args(0), args(1).toDouble)
 
     vertices.foreach(graph.addVertex)
     edges.foreach{ case(a, b) => graph.addEdge(a, b) }
 
-    implicit val cliques = new FPTree[Int]
-    var R = HashSet[Int]()
-    var P = HashSet[Int]()
-    var X = HashSet[Int]()
+    implicit val cliques = new FPTree[Point]
+    var R = HashSet[Point]()
+    var P = HashSet[Point]()
+    var X = HashSet[Point]()
 
     graph.vertexSet.asScala.foreach{ v => P.add(v)}
 
     IK_*(R, P, X)
 
-    cliques.transactions.foreach{println}
-    cliques.root.children(4).children.foreach{println}
+    cliques.transactions.map(_._1.map(_.getUserData)).foreach{println}
   }
 
-  def N(vertex: Int)
-    (implicit graph: SimpleGraph[Int, DefaultEdge]): Set[Int] = {
+  def N(vertex: Point)
+    (implicit graph: SimpleGraph[Point, DefaultEdge]): Set[Point] = {
     
     graph.edgesOf(vertex).asScala.map{ edge =>
       Graphs.getOppositeVertex(graph, edge, vertex)
     }.toSet
   }
 
-  def pivot2(P: HashSet[Int], X: HashSet[Int])
-    (implicit graph: SimpleGraph[Int, DefaultEdge]): Int = {
+  def pivot(P: HashSet[Point], X: HashSet[Point])
+    (implicit graph: SimpleGraph[Point, DefaultEdge]): Point = {
 
     val px = P union X 
 
@@ -98,63 +93,36 @@ object PBK {
     }
   }
 
-  def pivot(P: HashSet[Int], X: HashSet[Int])
-    (implicit graph: SimpleGraph[Int, DefaultEdge]): Int = {
+  def sortByDegree(R: HashSet[Point])
+    (implicit graph: SimpleGraph[Point, DefaultEdge]): List[Point] = {
 
-    var max = -1
-    var pivot = -1
-
-    for(u <- P.union(X)){
-      var count = 0
-      for(e <- graph.edgesOf(u).asScala){
-        if(P.contains(Graphs.getOppositeVertex(graph, e, u))){
-          count = count + 1
-        }
-      }
-      if(count >= max){
-        max = count
-        pivot = u
-      }
-    }
-
-    pivot
-  }
-
-  def sortByDegree(R: HashSet[Int])
-    (implicit graph: SimpleGraph[Int, DefaultEdge]): List[Int] = {
-
-    case class Count(vertex: Int, count: Int)
+    case class Count(vertex: Point, count: Int)
     R.toList.map{ vertex =>
       Count(vertex, graph.edgesOf(vertex).size())
     }.sortBy(- _.count).map(_.vertex)
   }
 
-  def sortByAngle(R: HashSet[Int])
-    (implicit graph: SimpleGraph[Int, DefaultEdge]): List[Int] = {
+  def sortByAngle(R: HashSet[Point]): List[Point] = {
 
+    case class Count(p: Point, count: Int)
+    R.toList.map{ vertex =>
+      val spread = 1
 
-    ???
+      Count(vertex, spread)
+    }.sortBy(- _.count).map(_.p)
   }
 
-  def sortById(R: HashSet[Int]): List[Int] = R.toList.sorted
+  def sortById(R: HashSet[Point]): List[Point] = {
+    R.toList.map{ p =>
+      val id = p.getUserData.asInstanceOf[Int]
+      (id, p)
+    }.sortBy(_._1).map(_._2)
+  }
 
   import scala.io.Source
-  def readTGF(filename: String): (Set[Int], Set[(Int, Int)]) = {
-    val buffer = Source.fromFile(filename)
-    val lines = buffer.getLines.span(_ != "#")
-    val vertices = lines._1.map(_.trim.toInt).toSet
-    val edges = lines._2.filter(_ != "#").map{ line =>
-      val arr = line.split("\t")
-      (arr(0).trim.toInt, arr(1).trim.toInt)
-    }.toSet
-    buffer.close
-
-    (vertices, edges)
-  }
-
   def readTrajs(filename: String, epsilon: Double)
-    (implicit geofactory: GeometryFactory): (Set[Int], Set[(Int, Int)]) = {
-    case class Vertex(point: Point, id: Int)
+    (implicit geofactory: GeometryFactory): (Set[Point], Set[(Point, Point)]) = {
+
     val buffer = Source.fromFile(filename)
     val points = buffer.getLines.map{ line =>
       val arr = line.split("\t")
@@ -162,22 +130,21 @@ object PBK {
       val x  = arr(1).toDouble
       val y  = arr(2).toDouble
       val point = geofactory.createPoint(new Coordinate(x, y))
-      Vertex(point, id)
-    }.toList.distinct
+      point.setUserData(id)
+      point
+    }.toSet
 
     val pairs = for{
       p1 <- points
       p2 <- points
-      if p1.point.distance(p2.point) <= epsilon && p1.id < p2.id 
+      if p1.distance(p2) <= epsilon &&
+      p1.getUserData.asInstanceOf[Int] < p2.getUserData.asInstanceOf[Int]
     } yield {
       (p1, p2)
     }
-
     buffer.close
-    val vertices = points.map(_.id).toSet
-    val edges = pairs.map{ case(a, b) => (a.id, b.id) }.toSet
 
-    (vertices, edges)
+    (points, pairs)
   }
 
   import java.io.PrintWriter
@@ -185,6 +152,6 @@ object PBK {
     val f = new PrintWriter(filename)
     f.write(content.mkString(""))
     f.close
-    //println(s"Saved $filename [${content.size} records].")
+    println(s"Saved $filename [${content.size} records].")
   }
 }
