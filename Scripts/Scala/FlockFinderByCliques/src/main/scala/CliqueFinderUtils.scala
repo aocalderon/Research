@@ -16,7 +16,9 @@ object CliqueFinderUtils {
   case class VPoint(p: Point) extends Vector2D(p.getX, p.getY)
   case class Tolerance(value: Double)
   case class Clique(id: Int, points: List[Point])
-  case class Disk(x: Double, y: Double, pids: List[Int], clique_id: Int = -1)
+  case class Disk(x: Double, y: Double, pids: List[Int], clique_id: Int = -1) {
+    val wkt = s"POINT($x, $y)\t${pids.mkString(" ")}\t$clique_id"
+  }
   case class MBC(center: Point, radius: Double, extremes: Array[Point])
 
   def getMBC(points: List[Point])

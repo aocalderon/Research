@@ -13,7 +13,11 @@ import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Point, Coor
 import scala.collection.mutable.{ListBuffer, HashSet}
 import scala.collection.JavaConverters._
 
+import java.io.PrintWriter
+import scala.io.Source
+
 object PPBK {
+  case class SortMode(mode: Int)
 
   def IK_*(R: HashSet[Point], P: HashSet[Point], X: HashSet[Point], level: Int = 0)
     (implicit graph: SimpleGraph[Point, DefaultEdge],
@@ -25,7 +29,6 @@ object PPBK {
         case _ => sortById(R)
       }
       cliques.add(r)
-      //println(r.mkString(" "))
     } else {
       val u_p = pivot(P, X)
 
@@ -40,29 +43,6 @@ object PPBK {
         IK_*(R_new, P_new, X_new, level + 1)
       }
     }
-  }
-
-  case class SortMode(mode: Int)
-  def main(args: Array[String]): Unit = {
-    implicit val geofactory = new GeometryFactory(new PrecisionModel(1000))
-    implicit val graph = new SimpleGraph[Point, DefaultEdge](classOf[DefaultEdge])
-    implicit val sortMode = if(args.size == 3) SortMode(args(2).toInt) else SortMode(1)
-
-    val (vertices, edges) = readTrajs(args(0), args(1).toDouble)
-
-    vertices.foreach(graph.addVertex)
-    edges.foreach{ case(a, b) => graph.addEdge(a, b) }
-
-    implicit val cliques = new FPTree[Point]
-    var R = HashSet[Point]()
-    var P = HashSet[Point]()
-    var X = HashSet[Point]()
-
-    graph.vertexSet.asScala.foreach{ v => P.add(v)}
-
-    IK_*(R, P, X)
-
-    cliques.transactions.map(_._1.map(_.getUserData)).foreach{println}
   }
 
   def N(vertex: Point)
@@ -119,7 +99,6 @@ object PPBK {
     }.sortBy(_._1).map(_._2)
   }
 
-  import scala.io.Source
   def readTrajs(filename: String, epsilon: Double)
     (implicit geofactory: GeometryFactory): (Set[Point], Set[(Point, Point)]) = {
 
@@ -147,11 +126,25 @@ object PPBK {
     (points, pairs)
   }
 
-  import java.io.PrintWriter
-  def save(filename: String)(content: Seq[String]): Unit = {
-    val f = new PrintWriter(filename)
-    f.write(content.mkString(""))
-    f.close
-    println(s"Saved $filename [${content.size} records].")
+  def main(args: Array[String]): Unit = {
+    implicit val geofactory = new GeometryFactory(new PrecisionModel(1000))
+    implicit val graph = new SimpleGraph[Point, DefaultEdge](classOf[DefaultEdge])
+    implicit val sortMode = if(args.size == 3) SortMode(args(2).toInt) else SortMode(1)
+
+    val (vertices, edges) = readTrajs(args(0), args(1).toDouble)
+
+    vertices.foreach(graph.addVertex)
+    edges.foreach{ case(a, b) => graph.addEdge(a, b) }
+
+    implicit val cliques = new FPTree[Point]
+    var R = HashSet[Point]()
+    var P = HashSet[Point]()
+    var X = HashSet[Point]()
+
+    graph.vertexSet.asScala.foreach{ v => P.add(v)}
+
+    IK_*(R, P, X)
+
+    cliques.transactions.map(_._1.map(_.getUserData)).foreach{println}
   }
 }
