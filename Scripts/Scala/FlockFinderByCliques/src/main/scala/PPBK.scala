@@ -21,7 +21,7 @@ object PPBK {
 
   def IK_*(R: HashSet[Point], P: HashSet[Point], X: HashSet[Point], level: Int = 0)
     (implicit graph: SimpleGraph[Point, DefaultEdge],
-      cliques: FPTree[Point], sortMode: SortMode): Unit = {
+      cliques: PointPrefixTree, sortMode: SortMode): Unit = {
     if(P.isEmpty && X.isEmpty){
       val r = sortMode.mode match {
         case 1 => R.toList
@@ -136,7 +136,7 @@ object PPBK {
     vertices.foreach(graph.addVertex)
     edges.foreach{ case(a, b) => graph.addEdge(a, b) }
 
-    implicit val cliques = new FPTree[Point]
+    implicit val cliques = new PointPrefixTree
     var R = HashSet[Point]()
     var P = HashSet[Point]()
     var X = HashSet[Point]()

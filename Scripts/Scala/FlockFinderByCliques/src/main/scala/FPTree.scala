@@ -124,6 +124,64 @@ object FPTree {
     val children: mutable.Map[T, Node[T]] = mutable.Map.empty
 
     def isRoot: Boolean = parent == null
+
+    /** **/
+    import scala.collection.mutable.ListBuffer
+    import com.vividsolutions.jts.geom.Point
+    def printTree(): String = {
+      var buffer = ListBuffer[String]()
+      printT(buffer, "", "").mkString("")
+    }
+    private def printT(buffer: ListBuffer[String], prefix: String, childrenPrefix: String):
+        ListBuffer[String] = {
+
+      if(!this.isRoot){
+
+        val toPrint = s"${item.asInstanceOf[Point].getUserData} ($count)"
+        buffer.append(prefix)
+        buffer.append(toPrint)
+        buffer.append("\n")
+      }
+      val it = children.iterator
+      while (it.hasNext) {
+        val next = it.next
+        
+        if (it.hasNext) {
+          next._2.printT(buffer, childrenPrefix + "├─ ", childrenPrefix + "│  ");
+        } else {
+          next._2.printT(buffer, childrenPrefix + "└─ ", childrenPrefix + "   ");
+        }
+      }
+      buffer
+    }
+
+    def toDot(): ListBuffer[String] = {
+      var nodesT = ListBuffer[String]()
+      var edgesT = ListBuffer[String]()
+      toDot(nodesT, edgesT, 0)
+      nodesT ++ edgesT
+    }
+    private def toDot(nodes: ListBuffer[String], edges: ListBuffer[String], nId: Int):
+        Int = {
+
+      if(!this.isRoot){
+        val iId = item.asInstanceOf[Point].getUserData.toString
+        val iLabel = s"${iId} ($count)"
+        nodes.append(s"""$nId [label="$iLabel"];\n""")
+      } else {
+        nodes.append(s"""$nId [label="*"];\n""")
+      }
+
+      val it = children.iterator
+      var newId = nId
+      while (it.hasNext) {
+        val next = it.next
+        edges.append(s"$nId -> ${newId + 1};\n")
+        newId = next._2.toDot(nodes, edges, newId + 1);
+      }
+      newId
+    }
+    
   }
 
   /** Summary of an item in an FP-Tree. */

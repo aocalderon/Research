@@ -120,6 +120,21 @@ object CliqueFinderUtils {
       }.toList
   }
 
+  def convexHull(coords: List[Point]): List[Point] = {
+    def goesLeft(p0: Point, p1: Point, p2: Point): Boolean = {
+      (p1.getX-p0.getX)*(p2.getY-p0.getY)-(p2.getX-p0.getX)*(p1.getY-p0.getY) > 0
+    }
+    def addToHull(hull: List[Point], new_point: Point): List[Point] =
+      new_point :: hull.foldRight(List.empty[Point]) {
+        case (p1, currentHull@(p0 :: _)) =>
+          if (goesLeft(p0, p1, new_point)) p1 :: currentHull else currentHull
+        case (p, currentHull) => p :: currentHull
+    }
+    val min = coords.minBy(_.getY)
+    min :: coords.sortBy(point => math.atan2(point.getY - min.getY, point.getX - min.getX))
+      .foldLeft(List.empty[Point])(addToHull)
+  }
+
   def farthestPoints(pts: Array[Coordinate]): Array[Coordinate] = {
     val dist01 = pts(0).distance(pts(1))
     val dist12 = pts(1).distance(pts(2))
