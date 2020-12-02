@@ -20,7 +20,9 @@ package edu.ucr.dblab
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 import scala.annotation.tailrec
-import com.vividsolutions.jts.geom.Point
+import com.vividsolutions.jts.geom.{GeometryFactory, Point}
+
+import CliqueFinderUtils.findCenters
 
 /**
  * Based on FP-Tree data structure used in Apache Spark FP-Growth.
@@ -77,9 +79,13 @@ class PointPrefixTree extends Serializable {
 
 object PointPrefixTree {
 
+  import CliqueFinderUtils._
+
   /** Representing a node in an FP-Tree. */
   class Node(val parent: Node) extends Serializable {
     var point: Point = _
+    var candidates: List[Disk] = List.empty
+    var flocks: List[Disk] = List.empty
     var count: Long = 0L
     val children: mutable.Map[Point, Node] = mutable.Map.empty
 
@@ -95,6 +101,47 @@ object PointPrefixTree {
       }
 
       getBranch(this, List.empty[Point])
+    }
+
+    def updateCenters(epsilon: Double, r2: Double, mu: Int)
+        (implicit geofactory: GeometryFactory): Unit = {
+      def update(current: Node): Unit = {
+        val it = current.children.iterator
+        while(it.hasNext){
+          val next = it.next._2
+          if(current.count == next.count){
+            update(next)
+          } else {
+            val points = next.getBranch
+            val centers = findCenters(points, epsilon, r2)
+            val join = for{
+              p <- points
+              c <- centers if c.distance(p) <= (epsilon / 2) + 0.001
+            } yield {
+              (c, p.getUserData.asInstanceOf[Int])
+            }
+            current.candidates = join.groupBy(_._1).mapValues(_.map(_._2).sorted)
+              .map(d => Disk(d._1.getX, d._1.getY, d._2)).toList
+            current.flocks = pruneDisks(current.candidates, mu)
+            
+            update(next)
+          }
+        }
+      }
+      update(this)
+    }
+
+    def printNodes: Unit = {
+      val it = children.iterator
+      while(it.hasNext){
+        val next = it.next._2
+        val point = next.point
+        val candidates = next.candidates
+        val flocks = next.flocks
+        println(s"${point.getUserData}: ${next.count}\t# Candidates: ${candidates.size}\t#Flocks: ${flocks.size}")
+        flocks.foreach(println)
+        next.printNodes
+      }
     }
 
     def printTree: String = {

@@ -42,11 +42,9 @@ object PPBK_Tester {
     IK_*(R, P, X)
 
     println(Rs.root.printTree)
-    Rs.summaries.map{ case(p, s) =>
-      println(s"The branch(es) of ${p.getUserData} is/are: (count: ${s.count})")
-      
-      s.nodes.map(_.getBranch.map(_.getUserData).mkString(" ")).foreach(println)
-    }
+    Rs.root.updateCenters(epsilon, r2, mu)
+    Rs.root.printNodes
+
     save("test.dot"){
       "digraph G {\n" +: Rs.root.toDot :+ "}"
     }
@@ -76,6 +74,16 @@ object PPBK_Tester {
 
     //
     save("/tmp/edgesPoints.wkt"){ points }
+
+    save("/tmp/edgesCliques.wkt"){
+      cliques.zipWithIndex.map{ case(clique, id) =>
+        val pts = clique.points
+        val coords = convexHull(pts).map(_.getCoordinate).toArray
+        val wkt = geofactory.createPolygon(coords).toText
+
+        s"$wkt\t$id\n"
+      }
+    }
 
     val disks = cliques.map{ clique =>
       val points  = clique.points
