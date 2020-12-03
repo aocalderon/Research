@@ -22,7 +22,7 @@ object PPBK_Tester {
     val filename = args(0)
     val distance = args(1).toDouble
     val epsilon = distance + tolerance.value
-    val r = (distance / 2.0) + tolerance.value
+    val r  = (distance / 2.0) + tolerance.value
     val r2 = math.pow(distance / 2.0, 2) + tolerance.value
     val mu = args(2).toInt
     implicit val sortMode = SortMode(args(3).toInt)
@@ -41,27 +41,26 @@ object PPBK_Tester {
 
     IK_*(R, P, X)
 
-    println(Rs.root.printTree)
-    Rs.root.updateCenters(epsilon, r2, mu)
-    Rs.root.printNodes
+    println(Rs.root.printTree)    
+    println("getNextWithBranches:")
+    val first = Rs.root.getNextWithBranches
+    println(s"${first.toText}")
+    first.updateDisks(epsilon, r2, mu)
+    first.parent.printNodes
+    first.updateDisksFromParent(epsilon, mu)
+    println(s"${first.toText}")
+    first.printLeaves
 
-    save("test.dot"){
-      "digraph G {\n" +: Rs.root.toDot :+ "}"
-    }
 
     //
-    println("Points per clique:")
-    Rs.transactions.map{t=> t._1.map(_.getUserData).mkString(" ")}.foreach{println}
-
     val cliques = Rs.transactions.zipWithIndex.map{ case(r, id) =>
       Clique(id, r._1)
     }.toList
 
-    println("Convex hull per clique:")
     cliques.map{ clique =>
       val pts = clique.points
       convexHull(pts).map(_.getUserData.asInstanceOf[Int]).mkString(" ")
-    }.foreach(println)
+    }
 
     val points = cliques.map{ clique =>
       clique.points.map{ point =>
@@ -71,8 +70,6 @@ object PPBK_Tester {
         s"$wkt\t$pid\t$cid\n"
       }
     }.flatten.toList
-
-    //
     save("/tmp/edgesPoints.wkt"){ points }
 
     save("/tmp/edgesCliques.wkt"){
@@ -100,6 +97,14 @@ object PPBK_Tester {
     }
 
     //
+    save("test.dot"){
+      "digraph G {\n" +: Rs.root.toDot :+ "}"
+    }
+
+    //
+    //println("Points per clique:")
+    //Rs.transactions.map{t=> t._1.map(_.getUserData).mkString(" ")}.foreach{println}
+
     save("/tmp/edgesCenters.wkt"){
       disks.map{ disks =>
         disks.map{ disk =>
@@ -139,8 +144,9 @@ object PPBK_Tester {
       }.flatten
     }
 
-    println("Flocks: ")
-    maximals.map(_.map(_.pids.mkString(" ")).mkString("\n")).foreach{println}
+    save("/tmp/flocks.txt"){
+      maximals.map(_.map(_.pids.mkString(" ")).mkString("\n"))
+    }
 
   }
 }
