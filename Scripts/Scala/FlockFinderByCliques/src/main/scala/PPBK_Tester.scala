@@ -41,6 +41,7 @@ object PPBK_Tester {
 
     IK_*(R, P, X)
 
+    
     println(Rs.root.printTree)    
     println("getNextWithBranches:")
     val first = Rs.root.getNextWithBranches
@@ -50,7 +51,7 @@ object PPBK_Tester {
     first.updateDisksFromParent(epsilon, mu)
     println(s"${first.toText}")
     first.printLeaves
-
+    
 
     //
     val cliques = Rs.transactions.zipWithIndex.map{ case(r, id) =>
@@ -145,7 +146,7 @@ object PPBK_Tester {
     }
 
     save("/tmp/flocks.txt"){
-      maximals.map(_.map(_.pids.mkString(" ")).mkString("\n"))
+      maximals.map(_.map(_.pids.mkString(" ")).mkString("\n") + "\n")
     }
 
   }

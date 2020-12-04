@@ -137,27 +137,30 @@ object PointPrefixTree {
     def updateDisksFromParent(epsilon: Double, mu: Int)
         (implicit geofactory: GeometryFactory, tolerance: Tolerance): Unit = {
       def update(current: Node): Unit = {
-        println(s"C: ${current.candidates.size}\tF: ${current.flocks.size}")
+        val p = current.point.getUserData.asInstanceOf[Int]
+        println(s"P: ${p}\tC: ${current.candidates.size}\tF: ${current.flocks.size}")
+        current.flocks.filter(_.pids.contains(p)).foreach{println}
+        save(s"/tmp/disks$p.txt"){
+          current.candidates.map(_.wkt + "\n").sorted
+        }
         val it = current.children.iterator
         while(it.hasNext){
           val next = it.next._2
 
           val r = epsilon / 2.0 + tolerance.value
-          val newCandidates = current.candidates.map{ candidate =>
-            if(candidate.getDisk.distance(next.point) <= r){
-              val prevPids = candidate.pids
-              val pid = next.point.getUserData.asInstanceOf[Int]
-              candidate.copy(pids = prevPids :+ pid)
-            } else {
-              candidate
-            }
+          val (updateCands, prevCands) = current.candidates
+            .partition(_.getCenter.distance(next.point) <= r)
+          println(s"${next.point} intersects ${updateCands.size} candidates...")
+          val updatedCands = updateCands.map{ cand =>
+            val pid = next.point.getUserData.asInstanceOf[Int]
+            val newPids = cand.pids :+ pid
+            cand.copy(pids = newPids)
           }
-
-          println(s"${next.point} intersects ${newCandidates.size} candidates...")
-
-          next.candidates = newCandidates.filter(_.pids.size < mu)
-          val newFlocks = current.flocks ++ newCandidates.filter(_.pids.size >= mu)
-          next.flocks = pruneDisks(newFlocks, mu)
+          
+          val (newCands, newFlocks) = updatedCands.partition(_.pids.size < mu)
+          
+          next.candidates = prevCands ++ updatedCands
+          next.flocks = pruneDisks(current.flocks ++ newFlocks, mu)
 
           update(next)
         }

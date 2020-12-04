@@ -17,9 +17,9 @@ object CliqueFinderUtils {
   case class Tolerance(value: Double)
   case class Clique(id: Int, points: List[Point])
   case class Disk(x: Double, y: Double, pids: List[Int], clique_id: Int = -1) {
-    val wkt = s"POINT($x, $y)\t${pids.mkString(" ")}\t$clique_id"
+    val wkt = s"POINT($x $y)\t${pids.mkString(" ")}\t$clique_id"
 
-    def getDisk(implicit geofactory: GeometryFactory): Point = {
+    def getCenter(implicit geofactory: GeometryFactory): Point = {
       val center = geofactory.createPoint(new Coordinate(x, y))
       center.setUserData(pids.mkString(" "))
       center
@@ -104,7 +104,7 @@ object CliqueFinderUtils {
 
   def pruneDisks(disks: List[Disk], mu: Int): List[Disk] = {
     val transactions = disks.map{ disk =>
-      ((disk.x, disk.y), disk.pids.mkString(" "))
+      ((disk.x, disk.y), disk.pids.sorted.mkString(" "))
     }.groupBy(_._2).map{ disk =>
       val pids = disk._1
       val (x, y) = disk._2.head._1
