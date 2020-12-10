@@ -139,7 +139,9 @@ object PointPrefixTree {
       def update(current: Node): Unit = {
         val p = current.point.getUserData.asInstanceOf[Int]
         println(s"P: ${p}\tC: ${current.candidates.size}\tF: ${current.flocks.size}")
-        current.flocks.filter(_.pids.contains(p)).foreach{println}
+        current.flocks.filter(_.pids.contains(p))
+          .map(disk => s"${disk.pids.mkString(" ")} ${disk.wkt}")
+          .foreach{println}
         save(s"/tmp/disks$p.txt"){
           current.candidates.map(_.wkt + "\n").sorted
         }

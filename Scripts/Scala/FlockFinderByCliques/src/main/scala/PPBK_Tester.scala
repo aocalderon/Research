@@ -41,19 +41,24 @@ object PPBK_Tester {
 
     IK_*(R, P, X)
 
-    
+
+    /*******************************************/
+    // Testing new implementation...
     println(Rs.root.printTree)    
     println("getNextWithBranches:")
     val first = Rs.root.getNextWithBranches
     println(s"${first.toText}")
     first.updateDisks(epsilon, r2, mu)
     first.parent.printNodes
+
+    println("Printing Nodes...")
     first.updateDisksFromParent(epsilon, mu)
-    println(s"${first.toText}")
+    println("Printing Leves...")
     first.printLeaves
+    /*******************************************/
     
 
-    //
+    // Printing and saving...
     val cliques = Rs.transactions.zipWithIndex.map{ case(r, id) =>
       Clique(id, r._1)
     }.toList

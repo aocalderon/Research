@@ -21,8 +21,6 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 
-\usepackage[absolute,overlay]{textpos}
-
 \colorlet{lightred}{red!25}
 \colorlet{lightgreen}{green!25}
 \beamertemplatenavigationsymbolsempty
@@ -76,41 +74,35 @@
     \end{frame}
 }
 
-\begin{frame}{Sample points and prefixtree...}
-    \begin{minipage}{0.48\textwidth}
-        \includegraphics[width=0.5\textwidth]{figures/prefixtree}
+\begin{frame}{Sample cliques...}
+    \begin{minipage}[t]{0.48\textwidth}
+        3 15 11 13 6 1 5 7 12 4 14 9 8 10 2 \\
+        3 15 11 13 6 1 5 7 12 4 14 9 16 17 \\
+        3 15 11 13 6 1 5 7 12 4 14 9 16 8 \\
+        3 15 11 13 6 1 5 7 12 4 14 16 17 18 \\
     \end{minipage}
-    \begin{minipage}{0.48\textwidth}
-        \includegraphics[trim=220 0 250 0,clip,width=\textwidth]{figures/01_Points}
+    \begin{minipage}[t]{0.48\textwidth}
+        \includegraphics[trim=220 0 250 0,clip,width=\textwidth]{figures/cliques}
     \end{minipage}
 \end{frame}
 
-\begin{frame}{Sample points and prefixtree...}
-    \begin{minipage}{0.48\textwidth}
-        \includegraphics[width=0.5\textwidth]{figures/prefixtree}
-    \end{minipage}
-    \begin{minipage}{0.48\textwidth}
-        \includegraphics[trim=220 0 250 0,clip,width=\textwidth]{figures/02_CommonCircle}
-    \end{minipage}
-    \setlength{\TPHorizModule}{\textwidth}
-    \setlength{\TPVertModule}{\textwidth}
-    \begin{textblock}{0.5}(0.25,0.575)
-        $\leftarrow$
-    \end{textblock}
+\begin{frame}{Prefixtree...}
+    \centering
+    \includegraphics[width=0.245\textwidth]{figures/prefixtree}
 \end{frame}
 
-\begin{frame}{Sample points and prefixtree...}
-    \begin{minipage}{0.48\textwidth}
-        \includegraphics[width=0.5\textwidth]{figures/prefixtree}
-    \end{minipage}
-    \begin{minipage}{0.48\textwidth}
-        \includegraphics[trim=220 0 250 0,clip,width=\textwidth]{figures/03_NextNode}
-    \end{minipage}
-    \setlength{\TPHorizModule}{\textwidth}
-    \setlength{\TPVertModule}{\textwidth}
-    \begin{textblock}{0.5}(0.05,0.615)
-        $\rightarrow$
-    \end{textblock}
+\begin{frame}{Algorithm...}
+        0. Find first node with more than one branch. \\
+        1. Compute initial set of Candidates and Flocks for that node. \\
+        2. For each subsequent node: \\
+            \hspace{1cm} 2.1 If $point \bigcap Flocks$: \\
+            \hspace{2cm} add point to those flocks. \\
+            \hspace{1cm} 2.2 If $point \bigcap Candidates$: \\
+            \hspace{2cm} add point to those candidates. \\
+            \hspace{2cm} if $candidate.size >= \mu$: \\
+            \hspace{3cm} move candidate to flocks. \\
+        3. Collect flocks at each leaf. \\
+        4. Prune duplicates. \\
 \end{frame}
 \end{document}
 
