@@ -42,11 +42,12 @@ import org.apache.commons.math3.geometry.Space;
  * @param <P> Point type.
  * @since 3.3
  */
+
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 class Point2D extends Vector2D {
-    int id;
-    com.vividsolutions.jts.geom.Point point;
+    private int id;
+    private com.vividsolutions.jts.geom.Point point;
     
     public Point2D(com.vividsolutions.jts.geom.Point point){
 	super(point.getX(), point.getY());
@@ -60,6 +61,7 @@ class Point2D extends Vector2D {
     public String toString(){
 	return "" + id;
     }
+    public com.vividsolutions.jts.geom.Point getPoint(){return point;}
     public double getX(){return point.getX();}
     public double getY(){return point.getY();}
     public int getId(){return id;}

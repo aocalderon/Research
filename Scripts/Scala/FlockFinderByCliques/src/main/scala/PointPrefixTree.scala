@@ -118,6 +118,36 @@ object PointPrefixTree {
       getBranch(this, List.empty[Point])
     }
 
+    def computeDisks(epsilon: Double, mu: Int)
+        (implicit geofactory: GeometryFactory, tolerance: Tolerance): Unit = {
+
+      //case class Params(e: Double, m: Int, r: Double, r2: Double)
+      val r  = (epsilon / 2.0) + tolerance.value
+      val r2 = math.pow(epsilon / 2.0, 2) + tolerance.value
+      //val params = Params(epsilon, mu, r, r2)
+
+      def compute(current: Node): Unit = {
+        val it = current.children.iterator
+        while(it.hasNext){
+          val next = it.next._2
+          val points = next.getBranch
+          val centers = findCenters(points, epsilon, r2)
+          val join = for{
+            p <- points
+            c <- centers if c.distance(p) <= r
+          } yield {
+            (c, p.getUserData.asInstanceOf[Int])
+          }
+          val candidates = join.groupBy(_._1).mapValues(_.map(_._2).sorted)
+            .map(d => Disk(d._1.getX, d._1.getY, d._2)).toList
+          next.flocks = pruneDisks(candidates, mu)
+          compute(next)
+        }
+      }
+
+      compute(this)
+    }
+
     def updateDisks(epsilon: Double, r2: Double, mu: Int)
         (implicit geofactory: GeometryFactory, tolerance: Tolerance): Unit = {
 
@@ -182,7 +212,7 @@ object PointPrefixTree {
         s"#Flocks: ${flocks.size}" +
         s"\tisLeaf? ${next.isLeaf}"
         println(msg)
-        flocks.foreach(println)
+        flocks.map(_.pids.mkString(" ")).foreach(println)
         next.printNodes
       }
     }
@@ -199,7 +229,7 @@ object PointPrefixTree {
           s"# Candidates: ${candidates.size}\t" +
           s"#Flocks: ${flocks.size}"
           println(msg)
-          flocks.foreach(println)
+          flocks.map(_.pids.mkString(" ")).foreach(println)
         } else {
           next.printLeaves
         }

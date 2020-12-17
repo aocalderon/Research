@@ -14,6 +14,7 @@ import edu.ucr.dblab.djoin.SPMF.{Transactions, Transaction, AlgoLCM2}
 object CliqueFinderUtils {
   
   case class VPoint(p: Point) extends Vector2D(p.getX, p.getY)
+  
   case class Tolerance(value: Double)
   case class Clique(id: Int, points: List[Point])
   case class Disk(x: Double, y: Double, pids: List[Int], clique_id: Int = -1) {

@@ -48,13 +48,14 @@ object PPBK_Tester {
     println("getNextWithBranches:")
     val first = Rs.root.getNextWithBranches
     println(s"${first.toText}")
-    first.updateDisks(epsilon, r2, mu)
-    first.parent.printNodes
+    first.parent.computeDisks(epsilon, mu)
 
-    println("Printing Nodes...")
-    first.updateDisksFromParent(epsilon, mu)
-    println("Printing Leves...")
-    first.printLeaves
+    println("Printing nodes...")
+    first.parent.printNodes
+    println("")
+    println("Printing leaves...")
+    first.parent.printLeaves
+
     /*******************************************/
     
 
