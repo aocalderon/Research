@@ -71,7 +71,7 @@
 \begin{document}
 \title[PFLOCK report]{PFLOCK Report}
 \author[AC]{Andres Calderon}
-\institute[Fall'19]{University of California, Riverside}
+\institute[Winter'20]{University of California, Riverside}
 \makebeamertitle
 \newif\iflattersubsect
 
@@ -90,129 +90,46 @@
     \end{frame}
 }
 
-\begin{frame}{A problem with the time to time approach...}
-    \centering
-    \begin{tikzpicture}
-    \node [anchor=west, scale=0.5] (note) at (2,-1) {Bug!};
-    \begin{scope}[xshift=1.5cm]
-        \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=\linewidth]{Figures/FF_flowchart}};
-        \begin{scope}[x={(image.south east)},y={(image.north west)}]
-            \draw[red,thick,rounded corners] (0.15,0.2) rectangle (0.95,0.29);
-            \draw [-latex,thick, red] (note) to[out=0, in=-120] (0.3,0.2);
-        \end{scope}
-    \end{scope}
-    \end{tikzpicture}%
+\begin{frame}{Experiment settings...}
+    \begin{itemize}
+        \item LA\_50K dataset, time instant 320, 50419 points.
+        \item $\mu=3$, $\varepsilon$ between 15 and 45.
+        \item 12 executors, 9 cores each (108 cores total).
+        \item Average time of 3 runs.
+        \item Varying values for partitions in quadtree (1 to 4 times number of available cores).
+        \item Varying values for paralleism (1 to 4 times number of available cores).
+    \end{itemize}
 \end{frame}
 
-\begin{frame}{What should ``Prune redundant flocks'' do...}
-    \begin{minipage}{.32\textwidth}
-        \centering
-        \scalebox{0.75}{
-            \begin{tabular}{ c c c}
-                \multicolumn{3}{c}{\textbf{Current flocks}} \\ \hline
-                Start & End & Trajectories \\ \hline
-                \rowcolor{lightgreen}
-                0 & 1 & A B C D \\
-                0 & 1 & A C F \\
-                0 & 1 & B F G H \\
-                \rowcolor{lightgreen}
-                0 & 1 & B H I J \\
-                0 & 1 & C E H \\
-                & $\vdots$ & \\ \hline
-            \end{tabular}
-        }
-    \end{minipage}%
-    \begin{minipage}{0.32\textwidth}
-        \centering
-        \scalebox{0.75}{
-            \begin{tabular}{ c c c}
-                \multicolumn{3}{c}{\textbf{New flocks}} \\ \hline
-                Start & End & Trajectories \\ \hline
-                \rowcolor{lightred}
-                1 & 1 & A B C \\
-                1 & 1 & A C F I\\
-                \rowcolor{lightred}
-                1 & 1 & B H I \\
-                1 & 1 & D F K \\
-                & $\vdots$ & \\ \hline
-            \end{tabular}
-        }
-    \end{minipage}%
-    \begin{minipage}{0.32\textwidth}
-        \centering
-        \scalebox{0.75}{
-            \begin{tabular}{ c c c}
-                \multicolumn{3}{c}{\textbf{Resulting flocks}} \\ \hline
-                Start & End & Trajectories \\ \hline
-                0 & 1 & A B C D \\
-                0 & 1 & A C F \\
-                0 & 1 & B F G H \\
-                0 & 1 & B H I J \\
-                0 & 1 & C E H \\
-                1 & 1 & A C F I\\
-                1 & 1 & D F K \\
-                & $\vdots$ & \\ \hline
-            \end{tabular}
-        }
-    \end{minipage}
+\begin{frame}{Partitions in quadtre and epsilon...}
+    \begin{figure}
+        \includegraphics[width=0.75\textwidth]{figures/PartitionTimeEpsilonPhase}
+    \end{figure}
 \end{frame}
 
-\begin{frame}{What I did wrong...}
-    \begin{minipage}{.32\textwidth}
-        \centering
-        \scalebox{0.75}{
-            \begin{tabular}{ c c c}
-                \multicolumn{3}{c}{\textbf{Current flocks}} \\ \hline
-                Start & End & Trajectories \\ \hline
-                0 & 1 & A B C D \\
-                0 & 1 & A C F \\
-                0 & 1 & B F G H \\
-                0 & 1 & B H I J \\
-                0 & 1 & C E H \\
-                & $\vdots$ & \\ \hline
-            \end{tabular}
-        }
-    \end{minipage}%
-    \begin{minipage}{0.32\textwidth}
-        \centering
-        \scalebox{0.75}{
-            \begin{tabular}{ c c c}
-                \multicolumn{3}{c}{\textbf{New flocks}} \\ \hline
-                Start & End & Trajectories \\ \hline
-                1 & 1 & A B C \\
-                1 & 1 & A C F I\\
-                1 & 1 & B H I \\
-                1 & 1 & D F K \\
-                & $\vdots$ & \\ \hline
-            \end{tabular}
-        }
-    \end{minipage}%
-    \begin{minipage}{0.32\textwidth}
-        \centering
-        \scalebox{0.75}{
-            \begin{tabular}{ c c c}
-                \multicolumn{3}{c}{\textbf{Resulting flocks}} \\ \hline
-                Start & End & Trajectories \\ \hline
-                0 & 1 & A B C D \\
-                \rowcolor{lightred}
-                0 & 1 & A C F \\
-                0 & 1 & B F G H \\
-                0 & 1 & B H I J \\
-                0 & 1 & C E H \\
-                1 & 1 & A B C \\
-                \rowcolor{lightgreen}
-                1 & 1 & A C F I\\
-                1 & 1 & B H I \\
-                1 & 1 & D F K \\
-                & $\vdots$ & \\ \hline
-            \end{tabular}
-        }
-    \end{minipage}
+\begin{frame}{Partitions in quadtre and epsilon...}
+    \begin{figure}
+        \includegraphics[width=0.75\textwidth]{figures/PartitionTimeEpsilonPhaseTotal}
+    \end{figure}
 \end{frame}
 
-\begin{frame}{A possible solution...}
-    \centering
-    \includegraphics[trim={2cm 10 2cm 2},clip,width=1\linewidth]{Figures/algorithm}
+\begin{frame}{Parallelism...}
+    \begin{figure}
+        \includegraphics[width=0.75\textwidth]{figures/Parallelism}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{An issue with repartition between Spark stages...}
+    \begin{figure}
+        \includegraphics[width=\textwidth]{figures/SparkStages}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Task summary...}
+    \begin{figure}
+        \includegraphics[width=\textwidth]{figures/TaskSummary}
+    \end{figure}
+    \blfootnote{\tiny Full task info at \url{http://www.cs.ucr.edu/~acald013/public/tmp/geotester1.html}}
 \end{frame}
 
 \end{document}

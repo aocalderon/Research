@@ -13,6 +13,11 @@
 \usepackage{amssymb}
 \usepackage{enumerate}
 \usepackage{arydshln}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\colorlet{lightred}{red!25}
+\colorlet{lightgreen}{green!25}
 
 
 \newcommand\blfootnote[1]{%
@@ -66,7 +71,7 @@
 \begin{document}
 \title[PFLOCK report]{PFLOCK Report}
 \author[AC]{Andres Calderon}
-\institute[Fall'19]{University of California, Riverside}
+\institute[Winter'20]{University of California, Riverside}
 \makebeamertitle
 \newif\iflattersubsect
 
@@ -85,122 +90,81 @@
     \end{frame}
 }
 
-\begin{frame}{Alternative 1}
+\begin{frame}{The problems...}
     \begin{itemize}
-        \item For each partition:
-        \begin{itemize}
-            \item Group by Trajectory ID (\textit{tid}).
-            \item Find Trajectories ID (\textit{tids}) of the neighbors of \textit{tid} in disks through timestamps (ICPE approach).
-            \item Find maximal frequent patterns from \textit{tids} with $minsup=\delta$. 
-        \end{itemize}
+        \item A few very large tasks.
+        \item Unbalance distributions of tasks.
+    \end{itemize}
 
+    \begin{figure}
+        \includegraphics[width=0.9\textwidth]{figures/Problem}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Solution 1...}
+    \begin{itemize}
+        \item Most of the time is for deserialization (time sending task closure to executor: i.e. code, libraries and data).
+        \item It has to be done once per executor.
+        \item Solution: force repartition at the very beggining to initialize all the executors.
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Alternative 1}
-    \centering
-    \includegraphics[height=0.95\textheight]{Figures/A1/T4}
-\end{frame}
-
-\begin{frame}{Demo 1}
-    \centering
-    \begin{tabular}{ l l }
-        \hline
-        Flock & Items \\
-        \hline
-        \includegraphics[scale=0.15]{Figures/lime} a	& 1 2 3	\\
-        \includegraphics[scale=0.15]{Figures/magenta} b	& 4 5	\\
-        \includegraphics[scale=0.15]{Figures/teal} c	& 6 7 8	\\
-        \arrayrulecolor{black}\hline
-    \end{tabular}
-    \vspace{0.5cm}
-    
-    \scalebox{0.7}{
-    \begin{tabular}{ c c l l l l l l }
-        \hline
-        Partition & Trajectory ID  & Neigbours & & & & & Pattern \\
-        \hline
-        1	& 6	& $\{7, 8\}_{t_0}$ & $\{7, 8\}_{t_1}$ & $\{7, 8\}_{t_2}$ & $\{7, 8\}_{t_3}$ & $\{7, 8\}_{t_4}$    & [7 8: 5]  \\
-        \arrayrulecolor{lightgray} \hdashline
-        	& 7	& $\{8\}_{t_0}$    & $\{8\}_{t_1}$    & $\{8\}_{t_2}$    & $\{8\}_{t_3}$    & $\{8\}_{t_4} $      & [8: 5]    \\
-        \hdashline
-        	& 8	& $\{\}_{t_0}$     &                  &                  &                  &                     &           \\
-        \hline
-        4	& 1	& $\{2, 3\}_{t_0}$ & $\{2, 3\}_{t_1}$ & $\{2, 3\}_{t_2}$ & $\{2, 3\}_{t_3}$ & $\{2, 3\}_{t_4} $   & [2 3: 5]  \\
-        \hdashline
-        	& 2	& $\{3\}_{t_0}$    & $\{3\}_{t_1}$    & $\{3\}_{t_2}$    & $\{3\}_{t_3}$    & $\{3\}_{t_4} $      & [3: 5]    \\
-        \hdashline
-        	& 3	& $\{\}_{t_0}$     &                  &                  &                  &                     &           \\
-        \hdashline
-        	& 4	& $\{5\}_{t_0}$    & $\{5\}_{t_1}$    & $\{5\}_{t_2}$    & $\{5\}_{t_3}$    & $\{5\}_{t_4} $      & [5: 5]    \\
-        \hdashline
-        	& 5	& $\{\}_{t_0}$     &                  &                  &                  &                     &           \\
-        \arrayrulecolor{black}\hline
-    \end{tabular}
-    }
-\end{frame}
-
-\begin{frame}{Demo 2}
-    \centering
-    \includegraphics[height=0.8\textheight]{Figures/Trajs02}
-\end{frame}
-
-\begin{frame}{Demo 2}
-    \centering
-    \scalebox{0.75}{
-    \begin{tabular}{ c c l l l l }
-        \hline
-        Partition & Trajectory ID  & Neigbours & & & Pattern \\
-        \hline
-        0	& 1	& $\{5, 6\}_{t_0}$ & $\{2, 3, 4\}_{t_1}$ & $\{2, 3, 4\}_{t_2}$ & [5 6: 3] \\ 
-        	& 	& $\{3, 4\}_{t_0}$ & $\{3, 5, 6\}_{t_1}$ & $\{5, 6\}_{t_2}$	   & [3 4: 3] \\ 
-        	& 	& $\{2, 3\}_{t_0}$ &                     &                     & [2 3: 3] \\
-        \arrayrulecolor{lightgray} \hdashline
-        	& 2	& $\{3\}_{t_0}$    & $\{3, 4\}_{t_1}$    & $\{3, 4\}_{t_2}$	   & [3: 3]   \\
-        \hdashline
-        	& 3	& $\{4\}_{t_0}$    & $\{4\}_{t_1}$       & $\{4\}_{t_2}$       & [4: 3]   \\ 
-        	& 	&                  & $\{5, 6\}_{t_1}$    &                     &          \\
-        \hdashline
-        	& 4	& $\{\}_{t_0}$     &                     &                     &          \\
-        \hdashline
-        	& 5	& $\{6\}_{t_0}$    & $\{6\}_{t_1}$       & $\{6\}_{t_2}$       & [6: 3]   \\
-        \hdashline
-        	& 6	& $\{\}_{t_0}$     &                     &                     &          \\
-        \arrayrulecolor{black}\hline
-    \end{tabular}
-    }
-\end{frame}
-
-\begin{frame}{What is next?}
+\begin{frame}{Solution 2...}
     \begin{itemize}
-        \item Check if patterns are found per row or per partition.
-        \item Deal with possible redundant among partitions.
-        \item Test Alternative 1 with more data.
-        \item Explore Alternative 2.
+        \item Spark does not distribute tasks correctly for RDD with less than 1000 partitions.
     \end{itemize}
+
+    \begin{figure}
+        \includegraphics[width=0.8\textwidth]{figures/P999S3}
+        \caption{999 partitons}
+    \end{figure}
+\end{frame}
+\begin{frame}{Solution 2...}
+    \begin{itemize}
+        \item Spark does not distribute tasks correctly for RDD with less than 1000 partitions.
+    \end{itemize}
+
+    \begin{figure}
+        \includegraphics[width=0.8\textwidth]{figures/P1000S3}
+        \caption{1000 partitons}
+    \end{figure}
 \end{frame}
 
-\begin{frame}{Alternative 2}
-    \begin{minipage}{0.5\textwidth}
-        \centering
-        \includegraphics[width=1.25\textwidth]{Figures/A2/T4}
-    \end{minipage}%
-    \begin{minipage}{0.5\textwidth}
-        %\centering
-        \scalebox{0.7}{
-        \begin{tabular}{ c c c }
-            \hline
-            Partition (1,1) & Partition (1, 0)  & Concat \\
-            \hline
-            $a_{t_0-t_2}$   & $a_{t_3-t_4}$     & $a_{t_0-t_4}\surd$    \\
-            \arrayrulecolor{lightgray}\hline
-            $c_{t_2-t_2}$   & $c_{t_0-t_1}$     & $c_{t_0-t_4}\surd$    \\
-                            & $c_{t_3-t_4}$     &                       \\
-            \hline
-            $d_{t_3-t_4}$   & $a_{t_0-t_1}$     & $\times$              \\
-            \arrayrulecolor{black}\hline
-        \end{tabular}
-        }
-    \end{minipage}
+\begin{frame}{General performance...}
+    \begin{figure}
+        \includegraphics[width=\textwidth]{figures/P999}
+        \caption{999 partitons}
+    \end{figure}
+\end{frame}
+\begin{frame}{General performance...}
+    \begin{figure}
+        \includegraphics[width=\textwidth]{figures/P1000}
+        \caption{1000 partitons}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Distance self-join stage...}
+    \begin{figure}
+        \includegraphics[width=\textwidth]{figures/P999S13}
+        \caption{999 partitons}
+    \end{figure}
+\end{frame}
+\begin{frame}{Distance self-join stage...}
+    \begin{figure}
+        \includegraphics[width=\textwidth]{figures/P1000S13}
+        \caption{1000 partitons}
+    \end{figure}
+\end{frame}
+\begin{frame}{Distance self-join task summary...}
+    \begin{figure}
+        \includegraphics[width=\textwidth]{figures/Summary1000}
+        \caption{1000 partitons}
+    \end{figure}
+\end{frame}
+\begin{frame}{Distance self-join task details...}
+    \begin{figure}
+        \includegraphics[width=\textwidth]{figures/Tasks1000}
+        \caption{1000 partitons}
+    \end{figure}
 \end{frame}
 \end{document}

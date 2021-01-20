@@ -8,10 +8,16 @@
 \usepackage{animate}
 \usepackage{graphicx}
 \def\Put(#1,#2)#3{\leavevmode\makebox(0,0){\put(#1,#2){#3}}}
-\usepackage{color}
+\usepackage{colortbl}
 \usepackage{tikz}
 \usepackage{amssymb}
 \usepackage{enumerate}
+\usepackage{arydshln}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\colorlet{lightred}{red!25}
+\colorlet{lightgreen}{green!25}
 
 
 \newcommand\blfootnote[1]{%
@@ -65,7 +71,7 @@
 \begin{document}
 \title[PFLOCK report]{PFLOCK Report}
 \author[AC]{Andres Calderon}
-\institute[Fall'19]{University of California, Riverside}
+\institute[Winter'20]{University of California, Riverside}
 \makebeamertitle
 \newif\iflattersubsect
 
@@ -84,59 +90,42 @@
     \end{frame}
 }
 
-\begin{frame}{Pattern enumerator}
-    {\small Example 1 ($\delta=3, \mu=2$)}
-    \centering
-    \includegraphics[width=0.9\textwidth]{Figures/Trajs01}
-\end{frame}
-\begin{frame}{Pattern enumerator}
-    {\small Example 1 ($\delta=3, \mu=2$)}
-    \centering
-    \includegraphics[width=\textwidth]{Figures/Trajs01t1}
-\end{frame}
-\begin{frame}{Pattern enumerator}
-    {\small Example 1 ($\delta=3, \mu=2$)}
-    \centering
-    \includegraphics[width=\textwidth]{Figures/Trajs01t2}
-\end{frame}
-\begin{frame}{Pattern enumerator}
-    {\small Example 1 ($\delta=3, \mu=2$)}
-    \centering
-    \includegraphics[width=\textwidth]{Figures/Trajs01t3}
-\end{frame}
-\begin{frame}{Pattern enumerator}
-    {\small Example 1 ($\delta=3, \mu=2$): Redundant flocks}
-    \centering
-    \includegraphics[width=\textwidth]{Figures/Trajs01t3Bits}
-\end{frame}
-
-\begin{frame}{Pattern enumerator}
-    {\small Example 2 ($\delta=3, \mu=3$)}
-    \centering
-    \includegraphics[width=\textwidth]{Figures/Trajs02}
-\end{frame}
-\begin{frame}{Pattern enumerator}
-    {\small Example 2 ($\delta=3, \mu=3$): Overlapping}
-    \centering
-    \includegraphics[width=\textwidth]{Figures/Trajs02Partitions}
-\end{frame}
-\begin{frame}{Pattern enumerator}
-    {\small Combinations}
-    \centering
-    \includegraphics[width=\textwidth]{Figures/Trajs02Combinations}
-\end{frame}
-\begin{frame}{Pattern enumerator}
-    {\small Maximal patterns}
-    \centering
-    \includegraphics[width=\textwidth]{Figures/Trajs02MaxPatterns}
-\end{frame}
-
-\begin{frame}{What is next?}
+\begin{frame}{Finding optimal values...}
     \begin{itemize}
-        \item Explore volumes.
-        \item Extent pattern enumeration with one of the alternatives.
-        \item Perform tests.
+        \item For flock finding (Time-by-time alternative) run experiments for:
+        \begin{itemize}
+            \item LA\_25K dataset, $\epsilon=20$, $\mu=3$ and $\delta=3$.
+            \item Evaluating first 30 time instants.
+            \item Using the full cluster (12 executor, 12 cores).
+        \end{itemize}
+        \item Coarse grid number of partitions varying from 100 to 180...
+        \item Finer grid number of partitions varying from 800 to 1200...
     \end{itemize}
+\end{frame}
+
+\begin{frame}{Finding optimal values...}
+    \begin{figure}
+        \includegraphics[width=0.7\textwidth]{FF-data}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Finding optimal values...}
+    \begin{itemize}
+        \item Focus on maximal disk finding run experiments for:
+        \begin{itemize}
+            \item LA\_25K dataset. time instant 19, 3 runs...
+            \item $\epsilon=20$ and $\mu=3$ 
+            \item Using the full cluster (12 executor, 12 cores).
+        \end{itemize}
+        \item Coarse grid number of partitions varying from 144 to 720 (up to 5 times the number of available cores)...
+        \item Finer grid number of partitions varying from 1000 to 4000 (up to half the size of the number of disk in the time instant)...
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Finding optimal values...}
+    \begin{figure}
+        \includegraphics[width=0.7\textwidth]{MF-data}
+    \end{figure}
 \end{frame}
 
 \end{document}

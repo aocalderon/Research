@@ -103,6 +103,18 @@ Scripts/Scala/ICPE/.metals/
 #/.bloop/
 #/.metals/
 
+Scripts/Scala/FF/target/*
+Scripts/Scala/FF/project/*
+Scripts/Scala/FF/.idea/*
+Scripts/Scala/FF/.idea/workspace.xml
+Scripts/Scala/FF/.ensime
+Scripts/Scala/FF/.ensime_cache/*
+Scripts/Scala/FF/.classpath
+Scripts/Scala/FF/.project
+Scripts/Scala/FF/.settings/*
+Scripts/Scala/FF/.bloop/
+Scripts/Scala/FF/.metals/
+
 Scripts/Scala/DistanceJoin/target/*
 Scripts/Scala/DistanceJoin/project/*
 Scripts/Scala/DistanceJoin/.idea/*

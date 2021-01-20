@@ -12,6 +12,12 @@
 \usepackage{tikz}
 \usepackage{amssymb}
 \usepackage{enumerate}
+\usepackage{arydshln}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\colorlet{lightred}{red!25}
+\colorlet{lightgreen}{green!25}
 
 
 \newcommand\blfootnote[1]{%
@@ -65,7 +71,7 @@
 \begin{document}
 \title[PFLOCK report]{PFLOCK Report}
 \author[AC]{Andres Calderon}
-\institute[Fall'19]{University of California, Riverside}
+\institute[Winter'20]{University of California, Riverside}
 \makebeamertitle
 \newif\iflattersubsect
 
@@ -84,83 +90,38 @@
     \end{frame}
 }
 
-\begin{frame}{Alternative 1}
-    \centering
-    \includegraphics[height=0.95\textheight]{Figures/A1/T0}
-\end{frame}
-\begin{frame}{Alternative 1}
-    \centering
-    \includegraphics[height=0.95\textheight]{Figures/A1/T1}
-\end{frame}
-\begin{frame}{Alternative 1}
-    \centering
-    \includegraphics[height=0.95\textheight]{Figures/A1/T2}
-\end{frame}
-\begin{frame}{Alternative 1}
-    \centering
-    \includegraphics[height=0.95\textheight]{Figures/A1/T3}
-\end{frame}
-\begin{frame}{Alternative 1}
-    \centering
-    \includegraphics[height=0.95\textheight]{Figures/A1/T4}
+\begin{frame}{Experiment setup...}
+    \begin{enumerate}
+        \item Running a distance self-join to find the pairs of points far each other less than $\varepsilon$.
+        \item Using LA\_25K dataset (time instant 19), quadtree partitioner and quadtree local indexing.
+        \item $\varepsilon=20$,  $partitions \approx 150$ (3x number of available cores).
+        \item 18 executors, 3 cores each.
+    \end{enumerate}
 \end{frame}
 
-\begin{frame}{Alternative 1}
-    \begin{itemize}
-        \item Each partition expands according to the \texttt{speed} parameter, so it will have the information of all the trajectories which start on it.
-        \item Flocks $a$ and $b$ start in the partition $(1,1)$.  Flock $a$ starts and ends inside of the partition. Flock $b$ leaves the partition but remains inside the expansion area.  Both will be reported.
-        \item Flock $c$ starts in the partition $(1,1)$ but leaves the expansion area at time 3.  It will not be reported.
-        \item Even flock $d$ starts and end in partition $(1,1)$, it will not be reported because it did not begin at the start of the window (it does not meet the $\delta$ parameter).
-    \end{itemize}
+\begin{frame}{Partitions performace...}
+    \begin{figure}
+        \includegraphics[width=0.725\textwidth]{figures/Tasks}
+    \end{figure}
 \end{frame}
 
 
-\begin{frame}{Alternative 2}
-    \centering
-    \includegraphics[height=0.95\textheight]{Figures/A2/T0}
-\end{frame}
-\begin{frame}{Alternative 2}
-    \centering
-    \includegraphics[height=0.95\textheight]{Figures/A2/T1}
-\end{frame}
-\begin{frame}{Alternative 2}
-    \centering
-    \includegraphics[height=0.95\textheight]{Figures/A2/T2}
-\end{frame}
-\begin{frame}{Alternative 2}
-    \centering
-    \includegraphics[height=0.95\textheight]{Figures/A2/T3}
-\end{frame}
-\begin{frame}{Alternative 2}
-    \centering
-    \includegraphics[height=0.95\textheight]{Figures/A2/T4}
+\begin{frame}{Finding pairs algorithm...}
+    \begin{figure}
+        \includegraphics[trim=1cm 15cm 1cm 3cm, clip, width=1\textwidth]{figures/pseudocode}
+    \end{figure}
 \end{frame}
 
-\begin{frame}{Alternative 2}
-    \begin{itemize}
-        \item Each partition is divided into ``watch out'' and ``safe'' area according to the \texttt{speed} parameter.
-        \item Each partition remains fixed and it will report flocks which start and end inside of it if they meet the $\delta$ parameter (i.e. partition $(1,1)$ will report flock $b$ but not flock $e$).
-        \item Each partition has to report flocks if they start or end on its ``watch out'' area. They must be post-processed to check it they can be concatenated.  
-    \end{itemize}
+\begin{frame}{GeoSpark Partitioning algorithm...}
+    \begin{figure}
+        \includegraphics[trim=3cm 12cm 3cm 8cm, clip, width=1\textwidth]{figures/Partitioning}
+    \end{figure}
 \end{frame}
 
-\begin{frame}{Alternative 2}
-    \begin{itemize}
-        \item For example, for flocks $a$, $c$ and $d$ we have:  
-    \end{itemize}
-    \centering
-    \begin{tabular}{ c c c }
-        \hline
-        Partition (1,1) & Partition (1,0)  & Concat \\
-        \hline
-        $a_{t_0-t_2}$   & $a_{t_3-t_4}$     & $a_{t_0-t_4}\surd$    \\
-        \arrayrulecolor{lightgray}\hline
-        $c_{t_2-t_2}$   & $c_{t_0-t_1}$     & $c_{t_0-t_4}\surd$    \\
-                        & $c_{t_3-t_4}$     &                       \\
-        \hline
-        $d_{t_3-t_4}$   & $d_{t_0-t_1}$     & $\times$              \\
-        \arrayrulecolor{black}\hline
-    \end{tabular}
+\begin{frame}{GeoSpark GSJoin algorithm...}
+    \begin{figure}
+        \includegraphics[trim=3cm 11.5cm 3cm 8cm, clip, width=1\textwidth]{figures/GSJoin}
+    \end{figure}
 \end{frame}
 
 \end{document}
