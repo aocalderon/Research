@@ -12,6 +12,7 @@ import java.io.PrintWriter
 import edu.ucr.dblab.pflock.Utils._
 
 object FF {
+
   def computePairs(points: List[Point], epsilon: Double): List[(Point, Point)] = {
       for {
         a <- points
