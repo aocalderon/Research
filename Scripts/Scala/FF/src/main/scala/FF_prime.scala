@@ -1,8 +1,8 @@
 package edu.ucr.dblab.pflock
 
-import org.locationtech.jts.geom.{GeometryFactory, PrecisionModel, Geometry}
-import org.locationtech.jts.geom.{Coordinate, Point}
-import org.locationtech.jts.io.WKTReader
+import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Geometry}
+import com.vividsolutions.jts.geom.{Coordinate, Point}
+import com.vividsolutions.jts.io.WKTReader
 import org.jgrapht.graph.{SimpleGraph, DefaultEdge}
 import org.jgrapht.Graphs
 import scala.collection.JavaConverters._

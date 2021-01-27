@@ -1,9 +1,9 @@
 package edu.ucr.dblab.pflock
 
-import org.locationtech.jts.algorithm.MinimumBoundingCircle
-import org.locationtech.jts.geom.{GeometryFactory, PrecisionModel, Geometry}
-import org.locationtech.jts.geom.{Coordinate, Point, Polygon}
-import org.locationtech.jts.io.WKTReader
+import com.vividsolutions.jts.algorithm.MinimumBoundingCircle
+import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Geometry}
+import com.vividsolutions.jts.geom.{Coordinate, Point, Polygon}
+import com.vividsolutions.jts.io.WKTReader
 import org.apache.commons.math3.geometry.euclidean.twod.DiskGenerator
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D
 import org.apache.commons.math3.geometry.enclosing.SupportBallGenerator

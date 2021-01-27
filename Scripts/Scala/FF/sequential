@@ -6,7 +6,7 @@ MU=$3
 
 JAR="$HOME/Research/Scripts/Scala/FF/target/scala-2.11/ff_2.11-0.1.jar"
 LIBSPATH="$HOME/Spark/2.4/jars"
-LIBS="$LIBSPATH/jts-core-1.18.0.jar:$LIBSPATH/scallop_2.11-4.0.1.jar"
+LIBS="$LIBSPATH/geospark-1.2.0.jar:$LIBSPATH/scallop_2.11-4.0.1.jar"
 CLASS="edu.ucr.dblab.pflock.FF"
 
 scala -cp "$LIBS:$JAR" $CLASS --input $INPUT --epsilon $EPSILON --mu $MU --debug

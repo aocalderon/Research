@@ -1,6 +1,6 @@
 package edu.ucr.dblab.pflock.test
 
-import org.locationtech.jts.geom.{GeometryFactory, PrecisionModel, Coordinate, Point}
+import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Coordinate, Point}
 import scala.io.Source
 import scala.collection.mutable.ListBuffer
 

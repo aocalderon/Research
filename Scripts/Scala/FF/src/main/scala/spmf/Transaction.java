@@ -18,7 +18,7 @@ package edu.ucr.dblab.pflock.spmf;
 
 import java.util.Arrays;
 import java.util.List;
-import org.locationtech.jts.geom.Point;
+import com.vividsolutions.jts.geom.Point;
 
 public class Transaction implements Comparable<Transaction>{
     private static Integer[] temp = new Integer[500];

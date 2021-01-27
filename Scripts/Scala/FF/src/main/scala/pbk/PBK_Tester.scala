@@ -2,7 +2,7 @@ package edu.ucr.dblab.pflock.pbk
 
 import org.jgrapht.graph.{SimpleGraph, DefaultEdge}
 import org.jgrapht.Graphs
-import org.locationtech.jts.geom.{GeometryFactory, PrecisionModel, Point, Coordinate}
+import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Point, Coordinate}
 import scala.collection.mutable.{ListBuffer, HashSet}
 import scala.collection.JavaConverters._
 

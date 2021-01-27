@@ -20,7 +20,7 @@ package edu.ucr.dblab.pflock.pbk
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.ListBuffer
-import org.locationtech.jts.geom.Point
+import com.vividsolutions.jts.geom.Point
 
 /**
  * FP-Tree data structure used in FP-Growth.
