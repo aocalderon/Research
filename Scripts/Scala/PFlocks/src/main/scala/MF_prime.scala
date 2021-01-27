@@ -22,8 +22,7 @@ import scala.collection.mutable.ListBuffer
 
 import Utils._
 
-object MF {
-
+object MF_prime {
   def main(args: Array[String]) = {
     implicit val params = new Params(args)
     implicit val spark = SparkSession.builder()
@@ -42,19 +41,24 @@ object MF {
     val input = params.input()
     val partitions = params.partitions()
 
-    val pointsRDD  = readPoints(input, partitions)
-    val pairsRDD   = pairPoints(pointsRDD)
-    val centersRDD = computeCenters(pairsRDD)
-    val disksRDD   = getDisks(pointsRDD, centersRDD)
+    val (pointsRDD, cells)  = readAndReplicatePoints(input, partitions)
+    
+    val disksRDD = pointsRDD.mapPartitions{ it =>
+      val points  = it.toList
+      val pairs   = computePairs(points, settings.epsilon)
+      val centers = computeCenters(pairs) 
+      val disks   = getDisks(points, centers)
+
+      disks.toIterator
+    }
 
     if(settings.debug){
+      saveCells(cells.values.toList)
       log(s"E\t${settings.epsilon}")
       log(s"M\t${settings.mu}")
-      log(s"P\t${pointsRDD.partitionTree.getLeafZones.size}")
+      log(s"P\t${pointsRDD.getNumPartitions}")
 
-      log(s"Points \t${pointsRDD.spatialPartitionedRDD.count}")
-      log(s"Pairs  \t${pairsRDD.count}")
-      log(s"Centers\t${centersRDD.rawSpatialRDD.count}")
+      log(s"Points \t${pointsRDD.count}")
       log(s"Disks  \t${disksRDD.count}")
     }
 
