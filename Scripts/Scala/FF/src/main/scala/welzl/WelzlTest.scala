@@ -10,16 +10,19 @@ import org.apache.commons.geometry.euclidean.twod.Vector2D
 import collection.JavaConverters._
 import scala.io.Source
 
-object Welzl2 {
-  def encloser(implicit geofactory: GeometryFactory): WelzlEncloser2D = {
-    val TEST_EPS = 1.0 / geofactory.getPrecisionModel.getScale 
-    val TEST_PRECISION =  new EpsilonDoublePrecisionContext(TEST_EPS)
+import edu.ucr.dblab.pflock.Utils.Settings
 
-    new WelzlEncloser2D(TEST_PRECISION: DoublePrecisionContext)
+object Welzl2 {
+  def encloser(implicit geofactory: GeometryFactory, settings: Settings):
+      WelzlEncloser2D = {
+
+    val precision = new EpsilonDoublePrecisionContext(settings.tolerance)
+
+    new WelzlEncloser2D(precision: DoublePrecisionContext)
   }
 
   def mbc(points: List[Point])
-    (implicit geofactory: GeometryFactory): EnclosingBall[Vector2D] = {
+    (implicit geofactory: GeometryFactory, settings: Settings): EnclosingBall[Vector2D] = {
 
     encloser.enclose(asVectors(points))
   }
@@ -29,7 +32,8 @@ object Welzl2 {
   private def point2vector(point: Point): Vector2D = Vector2D.of(point.getX, point.getY)
 
   def main(args: Array[String]): Unit = {
-    val model = new PrecisionModel(1e3)
+    implicit val settings = Settings(tolerance = 1e-3)
+    val model = new PrecisionModel(settings.scale)
     implicit val geofactory: GeometryFactory = new GeometryFactory(model)
 
     val bufferPoints = Source.fromFile("/home/and/Research/Datasets/Test/welzl.txt")

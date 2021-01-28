@@ -14,16 +14,18 @@ import edu.ucr.dblab.pflock.spmf.{Transactions, Transaction, AlgoLCM2}
 import edu.ucr.dblab.pflock.pbk.FPTree
 
 object Utils {
-  def toWKT(cliques: FPTree[Point])(implicit geofactory: GeometryFactory):
+  def toPolygons(cliques: FPTree[Point], mu: Int)(implicit geofactory: GeometryFactory):
       Iterator[Polygon] = {
 
-    cliques.iterator.map{ points =>
-      geofactory.createMultiPoint(points.toArray).convexHull()
+    cliques.iterator.filter(_.size >= mu).map{ points =>
+      val hulls = geofactory.createMultiPoint(points.toArray).convexHull()
+      hulls.setUserData(points.map(_.getUserData.asInstanceOf[Int]))
+      hulls
     }.filter(_.getGeometryType == "Polygon").map(_.asInstanceOf[Polygon])
   }
   
   def findCenters(points: List[Point], epsilon: Double, r2: Double)
-      (implicit geofactory: GeometryFactory, tolerance: Tolerance): List[Point] = {
+      (implicit geofactory: GeometryFactory, settings: Settings): List[Point] = {
     val centers = for {
       a <- points
       b <- points if {
@@ -83,16 +85,14 @@ object Utils {
     lcm.run(data)
 
     lcm.getPointsAndPids.asScala
-      //.filter(_.getItems.size >= mu)
       .map{ m =>
         val pids = m.getItems.toList.map(_.toInt).sorted
         val center = m.getCenter
-        Disk(center, pids, center.getUserData.asInstanceOf[List[Int]]) // FIXME: update support list...
+        Disk(center, pids, center.getUserData.asInstanceOf[List[Int]])
       }.toList
   }
-
   def calculateCenterCoordinates(p1: Point, p2: Point, r2: Double)
-    (implicit geofactory: GeometryFactory, tolerance: Tolerance): List[Point] = {
+    (implicit geofactory: GeometryFactory, settings: Settings): List[Point] = {
 
     val X: Double = p1.getX - p2.getX
     val Y: Double = p1.getY - p2.getY
@@ -110,7 +110,7 @@ object Utils {
       k.setUserData(ids)
       List(h, k)
     } else {
-      val p2_prime = geofactory.createPoint(new Coordinate(p2.getX + tolerance.value,
+      val p2_prime = geofactory.createPoint(new Coordinate(p2.getX + settings.tolerance,
         p2.getY))
       calculateCenterCoordinates(p1, p2_prime, r2)
     }
@@ -144,9 +144,19 @@ object Utils {
     points
   }
 
-  case class Tolerance(value: Double)
+  case class Settings(
+    epsilon_prime: Double = 10.0,
+    mu: Int = 3,
+    tolerance: Double = 1e-3,
+    debug: Boolean = false
+  ){
+    val scale = 1 / tolerance
+    val epsilon = epsilon_prime + tolerance
+    val r = (epsilon_prime / 2.0) + tolerance
+    val r2 = math.pow(epsilon_prime / 2.0, 2) + tolerance
+  }
   case class Disk(center: Point, pids: List[Int], support: List[Int])
-  case class Data(
+  case class DataFiles(
     points:   List[Point],
     pairs:    List[(Point, Point)],
     centers:  List[Point],
@@ -154,7 +164,7 @@ object Utils {
     maximals: List[Disk]
   )
 
-  def saveData(implicit data: Data, geofactory: GeometryFactory): Unit = {
+  def saveData(implicit data: DataFiles, geofactory: GeometryFactory): Unit = {
     save("/tmp/edgesPoints.wkt"){
       data.points.map{ point =>
         val wkt = point.toText
@@ -201,7 +211,7 @@ object Utils {
     }
   }
 
-  def checkPoints(x: String)(implicit data: Data): Unit = {
+  def checkPoints(x: String)(implicit data: DataFiles): Unit = {
     val l = x.split(" ").map(_.toInt).toSet
     val s = data.points.filter(x => l.contains(x.getUserData.asInstanceOf[Int]))
     save("/tmp/edgesSample.wkt"){

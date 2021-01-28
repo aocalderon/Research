@@ -11,4 +11,4 @@ LIBS="${LIBSPATH}/jgrapht-core-1.4.0.jar:$LIBSPATH/geospark-1.2.0.jar:$LIBSPATH/
 CLASS="edu.ucr.dblab.pflock.FF_prime"
 
 export JAVA_OPTS="-Xmx2g" 
-scala -cp "$LIBS:$JAR" $CLASS --input $INPUT --epsilon $EPSILON --mu $MU --scale 1e5 --debug
+scala -cp "$LIBS:$JAR" $CLASS --input $INPUT --epsilon $EPSILON --mu $MU --tolerance 1e-3 --debug

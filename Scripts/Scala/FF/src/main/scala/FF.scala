@@ -27,7 +27,7 @@ object FF {
   }
 
   def computeCenters(pairs: List[(Point, Point)], r2: Double)
-    (implicit geofactory: GeometryFactory, tolerance: Tolerance): List[Point] = {
+    (implicit geofactory: GeometryFactory, settings: Settings): List[Point] = {
 
     pairs.map{ case(p1, p2) =>
       calculateCenterCoordinates(p1, p2, r2)
@@ -54,39 +54,41 @@ object FF {
 
   def main(args: Array[String]): Unit = {
     implicit val params = new Params(args)
-    implicit val geofactory = new GeometryFactory(new PrecisionModel(params.scale()))
-    implicit val tolerance = Tolerance(1.0 / geofactory.getPrecisionModel.getScale)
-    implicit val degugOn = params.debug()
+    implicit val settings = Settings(params.epsilon(), params.mu(),
+      tolerance = params.tolerance(),
+      debug = params.debug()
+    )
+    implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
     val input = params.input()
-    val epsilon_prime = params.epsilon()
-    val epsilon = epsilon_prime + tolerance.value
-    val r = (epsilon_prime / 2.0) + tolerance.value
-    val r2 = math.pow(epsilon_prime / 2.0, 2) + tolerance.value
-    val mu = params.mu()
+    println(s"Scale:    \t${settings.scale}")
+    println(s"Tolerance:\t${settings.tolerance}")
+    println(s"Epsilon:  \t${settings.epsilon}")
+    println(s"r:        \t${settings.r}")
+    println(s"Mu:       \t${settings.mu}")
 
     val points = timer{"Reading points"}{
       readPoints(input)
     }
 
     val pairs = timer{"Getting pairs"}{
-      computePairs(points, epsilon)
+      computePairs(points, settings.epsilon)
     }
 
     val centers = timer{"Getting centers"}{
-      computeCenters(pairs, r2)
+      computeCenters(pairs, settings.r2)
     }
 
     val disks = timer{"Getting disks"}{
-      getDisks(points, centers, r, mu)
+      getDisks(points, centers, settings.r, settings.mu)
     }
 
     val maximals = timer{"Getting maximals"}{
       pruneDisks2(disks)
     }
 
-    debug{
-      implicit val data = Data(
+    if(settings.debug){
+      implicit val data = DataFiles(
         points   = points,
         pairs    = pairs,
         centers  = centers,
