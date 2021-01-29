@@ -29,37 +29,88 @@ object MF_prime {
       .config("spark.serializer", classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .config("spark.kryoserializer.buffer.max", "256m")
-      .appName("MF").getOrCreate()
-    implicit val settings = Settings(params.epsilon(), params.mu(),
+      .appName("MF_prime").getOrCreate()
+    implicit val settings = Settings(
+      epsilon_prime = params.epsilon(),
+      mu = params.mu(),
       tolerance = params.tolerance(),
+      seed = params.seed(),
       debug = params.debug(),
-      appId = spark.sparkContext.applicationId,
-      storageLevel = StorageLevel.MEMORY_ONLY_2
+      appId = spark.sparkContext.applicationId
     )
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
     val input = params.input()
     val partitions = params.partitions()
 
-    val (pointsRDD, cells)  = readAndReplicatePoints(input, partitions)
+    val (pointsRDD, cells)  = readAndReplicatePoints(input)
     
-    val disksRDD = pointsRDD.mapPartitions{ it =>
-      val points  = it.toList
-      val pairs   = computePairs(points, settings.epsilon)
-      val centers = computeCenters(pairs) 
-      val disks   = getDisks(points, centers)
+    val disksRDD = pointsRDD.mapPartitionsWithIndex{ (i, it) =>
+      val points   = it.toList
+      val pairs    = computePairs(points, settings.epsilon)
+      val centers  = computeCenters(pairs) 
+      val disks    = getDisks(points, centers)
 
-      disks.toIterator
+      val cell = cells(i).envelope  
+      val maximals = pruneDisks(
+        disks
+          .filter(point => cell.contains(point.getCoordinate))
+          .map{ point =>
+            val pids = point.getUserData.asInstanceOf[List[Int]]
+            Disk(point, pids, List.empty[Int])
+          }
+      )
+
+      maximals.toIterator
     }
 
+    val maximals = pruneDisks(disksRDD.collect.toList)
+
     if(settings.debug){
-      saveCells(cells.values.toList)
       log(s"E\t${settings.epsilon}")
       log(s"M\t${settings.mu}")
       log(s"P\t${pointsRDD.getNumPartitions}")
 
-      log(s"Points \t${pointsRDD.count}")
-      log(s"Disks  \t${disksRDD.count}")
+      log(s"Points   \t${pointsRDD.count}")
+      log(s"Disks    \t${disksRDD.count}")
+      log(s"Maximals \t${maximals.size}")
+
+      save("/tmp/edgesGrids.wkt"){
+        pointsRDD.mapPartitionsWithIndex{ (i, it) =>
+          val wkt = cells(i).mbr.toText 
+          val n   = it.size
+
+          Iterator(s"$wkt\t$n\t$i\n")
+        }.collect 
+      }
+      save("/tmp/edgesPoints.wkt"){
+        pointsRDD.mapPartitionsWithIndex{ (i, it) =>
+          it.map{ point =>
+            val wkt = point.toText
+            val data = point.getUserData.asInstanceOf[Data]
+            s"$wkt\t$data\t$i\n"
+          }
+        }.collect 
+      }
+    }
+    /*
+    save("/tmp/edgesDisks.wkt"){
+      disksRDD.mapPartitionsWithIndex{ (i, it) =>
+        it.map{ disk =>
+          val wkt = disk.center.buffer(settings.r, 25).toText
+          val pids = disk.pids
+          s"$wkt\t$pids\n"
+        }
+      }.collect
+    }
+     */
+    save("/tmp/edgesMaximals.wkt"){
+      maximals.map{ maximal =>
+        val wkt  = maximal.center.toText
+        val pids = maximal.pids.sorted.mkString(" ")
+
+        s"$wkt\t$pids\n"
+      }
     }
 
     spark.close

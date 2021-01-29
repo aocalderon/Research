@@ -42,20 +42,36 @@ object MF {
     val input = params.input()
     val partitions = params.partitions()
 
-    val pointsRDD  = readPoints(input, partitions)
+    val (pointsRDD, cells)  = readPoints(input)
     val pairsRDD   = pairPoints(pointsRDD)
     val centersRDD = computeCenters(pairsRDD)
     val disksRDD   = getDisks(pointsRDD, centersRDD)
+    val maximalsRDD= pruneDisks(disksRDD).mapPartitionsWithIndex{ (i, it) =>
+      val cell = cells(i).envelope
+      it.filter(point => cell.contains(point.center.getCoordinate))
+    }
 
     if(settings.debug){
       log(s"E\t${settings.epsilon}")
       log(s"M\t${settings.mu}")
-      log(s"P\t${pointsRDD.partitionTree.getLeafZones.size}")
+      log(s"P\t${cells.size}")
 
-      log(s"Points \t${pointsRDD.spatialPartitionedRDD.count}")
-      log(s"Pairs  \t${pairsRDD.count}")
-      log(s"Centers\t${centersRDD.rawSpatialRDD.count}")
-      log(s"Disks  \t${disksRDD.count}")
+      log(s"Points  \t${pointsRDD.spatialPartitionedRDD.count}")
+      log(s"Pairs   \t${pairsRDD.count}")
+      log(s"Centers \t${centersRDD.rawSpatialRDD.count}")
+      log(s"Disks   \t${disksRDD.count}")
+      log(s"Maximals\t${maximalsRDD.count}")
+
+      save("/tmp/edgesDisks.wkt"){
+        maximalsRDD.map(_.center).mapPartitionsWithIndex{ (i, it) =>
+          it.map{ disk =>
+            val wkt = disk.buffer(settings.r, 25).toText
+            val pids = disk.getUserData.asInstanceOf[List[Int]].sorted.mkString(" ")
+            s"$wkt\t$pids\n"
+          }
+        }.collect
+      }
+      
     }
 
     spark.close

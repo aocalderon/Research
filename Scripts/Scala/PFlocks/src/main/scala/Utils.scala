@@ -20,6 +20,9 @@ import org.slf4j.{Logger, LoggerFactory}
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 
+import edu.ucr.dblab.pflock.quadtree._
+import edu.ucr.dblab.pflock.spmf.{AlgoLCM2, Transactions, Transaction}
+
 object Utils {
 
   //** Implicits
@@ -28,12 +31,26 @@ object Utils {
 
   //** Case classes
 
-  case class Data(id: Int, t: Int)
+  case class Disk(center: Point, pids: List[Int], support: List[Int])
 
-  case class Cell(id: Int, lineage: String, envelope: Envelope)
+  case class Data(id: Int, t: Int){
+    override def toString = s"$id\t$t"
+  }
 
-  case class Settings(epsilon_prime: Double, mu: Int, tolerance: Double,
-    debug: Boolean, appId: String, storageLevel: StorageLevel){
+  case class Cell(id: Int, lineage: String, envelope: Envelope){
+    private val geofactory = new GeometryFactory(new PrecisionModel(1e3))
+    val mbr = geofactory.toGeometry(envelope).asInstanceOf[Polygon]
+  }
+
+  case class Settings(
+    epsilon_prime: Double = 10.0,
+    mu: Int = 3,
+    tolerance: Double = 1e-3,
+    debug: Boolean = false,
+    seed: Long = 42L,
+    appId: String = "0",
+    storageLevel: StorageLevel = StorageLevel.MEMORY_ONLY_2
+  ){
     val scale = 1 / tolerance
     val epsilon = epsilon_prime + tolerance
     val r = (epsilon_prime / 2.0) + tolerance
@@ -41,6 +58,15 @@ object Utils {
   }
 
   //** Parallel functions
+
+  def pruneDisks(disks: RDD[Point])(implicit settings: Settings): RDD[Disk] = {
+    disks.mapPartitions{ it =>
+      val ds = it.toList.map{ center =>
+        Disk(center, center.getUserData.asInstanceOf[List[Int]], List.empty[Int])
+      }
+      pruneDisks(ds).toIterator
+    }
+  }
 
   def getDisks(points: SpatialRDD[Point], centers: CircleRDD)
     (implicit settings: Settings, logger: Logger):  RDD[Point] = {
@@ -117,9 +143,9 @@ object Utils {
     }.map{ case(circle, point) => (circle.asInstanceOf[Point], point)}
   }
 
-  def readPoints(input: String, partitions: Int)
+  def readPoints(input: String)
     (implicit spark: SparkSession, geofactory: GeometryFactory,
-      settings: Settings): SpatialRDD[Point] = {
+      settings: Settings, params: Params): (SpatialRDD[Point], Map[Int, Cell]) = {
 
     val raw = spark.read.option("delimiter", "\t").csv(input).rdd.mapPartitions{ rowIt =>
       rowIt.map{ row =>
@@ -137,49 +163,140 @@ object Utils {
     pointsRDD.setRawSpatialRDD(raw)
     pointsRDD.analyze()
 
-    pointsRDD.spatialPartitioning(GridType.QUADTREE, partitions)
-    pointsRDD.spatialPartitionedRDD.rdd.persist(settings.storageLevel)
+    if(params.bycapacity()){
+      val boundary = new QuadRectangle(pointsRDD.boundary())
+      val maxentries = params.maxentries()
+      val maxlevel = params.maxlevel()
+      val fraction = params.fraction()
+      val seed = params.seed()
+      val quadtree = new StandardQuadTree[Point](boundary, 0, maxentries, maxlevel)
+      val samples = pointsRDD.getRawSpatialRDD.rdd.sample(false, fraction, seed).collect
 
-    pointsRDD
+      samples.foreach{ sample =>
+        quadtree.insert(new QuadRectangle(sample.getEnvelopeInternal), sample)
+      }
+      quadtree.assignPartitionIds()
+      quadtree.assignPartitionLineage()
+
+      val partitioner = new QuadTreePartitioner(quadtree)
+      pointsRDD.spatialPartitioning(partitioner)
+
+      val cells = quadtree.getLeafZones.asScala
+        .map{ leaf =>
+          val id = leaf.partitionId.toInt
+          val lineage = leaf.lineage
+          val envelope = leaf.getEnvelope
+          (id -> Cell(id, lineage, envelope))
+        }.toMap
+
+      (pointsRDD, cells)
+    } else {
+      pointsRDD.spatialPartitioning(GridType.QUADTREE, params.partitions())
+      pointsRDD.spatialPartitionedRDD.rdd.persist(settings.storageLevel)
+
+      val cells = pointsRDD.partitionTree.getLeafZones.asScala
+        .map{ leaf =>
+          val id = leaf.partitionId.toInt
+          val lineage = leaf.lineage
+          val envelope = leaf.getEnvelope
+          (id -> Cell(id, lineage, envelope))
+        }.toMap
+
+      (pointsRDD, cells)
+    }
   }
 
-  def readAndReplicatePoints(input: String, partitions: Int)
+  def readAndReplicatePoints(input: String)
     (implicit spark: SparkSession, geofactory: GeometryFactory,
-      settings: Settings): (RDD[Point], Map[Int, Cell]) = {
+      settings: Settings, params: Params): (RDD[Point], Map[Int, Cell]) = {
 
     val epsilon = settings.epsilon
-    val raw = spark.read.option("delimiter", "\t").csv(input).rdd.mapPartitions{ rowIt =>
-      rowIt.map{ row =>
-        val id = row.getString(0).toInt
-        val x =  row.getString(1).toDouble
-        val y =  row.getString(2).toDouble
-        val t =  row.getString(3).toInt
-        val point = geofactory.createPoint(new Coordinate(x, y))
-        val data = Data(id, t)
-        point.setUserData(data)
-        new Circle(point, epsilon)
+    val raw = spark.read.option("delimiter", "\t").csv(input).rdd
+      .mapPartitions{ rowIt =>
+        rowIt.map{ row =>
+          val id = row.getString(0).toInt
+          val x =  row.getString(1).toDouble
+          val y =  row.getString(2).toDouble
+          val t =  row.getString(3).toInt
+          val point = geofactory.createPoint(new Coordinate(x, y))
+          val data = Data(id, t)
+          point.setUserData(data)
+          new Circle(point, epsilon)
+        }
       }
-    }
 
     val circlesRDD = new CircleRDD(raw)
     circlesRDD.analyze()
 
-    circlesRDD.spatialPartitioning(GridType.QUADTREE, partitions)
+    if(params.bycapacity()){
+      val boundary = new QuadRectangle(circlesRDD.boundary())
+      val maxentries = params.maxentries()
+      val maxlevel = params.maxlevel()
+      val fraction = params.fraction()
+      val seed = params.seed()
+      val quadtree = new StandardQuadTree[Circle](boundary, 0, maxentries, maxlevel)
+      val samples = circlesRDD.getRawSpatialRDD.rdd.sample(false, fraction, seed).collect
 
-    val points = circlesRDD.spatialPartitionedRDD.rdd
-      .map(_.getCenterGeometry.asInstanceOf[Point])
-    val cells = circlesRDD.partitionTree.getLeafZones.asScala
-      .map{ leaf =>
-        val id = leaf.partitionId.toInt
-        val lineage = leaf.lineage
-        val envelope = leaf.getEnvelope
-        (id -> Cell(id, lineage, envelope))
-      }.toMap
+      samples.foreach{ sample =>
+        quadtree.insert(new QuadRectangle(sample.getEnvelopeInternal), sample)
+      }
+      quadtree.assignPartitionIds()
+      quadtree.assignPartitionLineage()
 
-    (points, cells)
+      val partitioner = new QuadTreePartitioner(quadtree)
+      circlesRDD.spatialPartitioning(partitioner)
+
+      val points = circlesRDD.spatialPartitionedRDD.rdd
+        .map(_.getCenterGeometry.asInstanceOf[Point])
+      val cells = quadtree.getLeafZones.asScala
+        .map{ leaf =>
+          val id = leaf.partitionId.toInt
+          val lineage = leaf.lineage
+          val envelope = leaf.getEnvelope
+          (id -> Cell(id, lineage, envelope))
+        }.toMap
+
+      (points, cells)
+    } else {
+      circlesRDD.spatialPartitioning(GridType.QUADTREE, params.partitions())
+
+      val points = circlesRDD.spatialPartitionedRDD.rdd
+        .map(_.getCenterGeometry.asInstanceOf[Point])
+      val cells = circlesRDD.partitionTree.getLeafZones.asScala
+        .map{ leaf =>
+          val id = leaf.partitionId.toInt
+          val lineage = leaf.lineage
+          val envelope = leaf.getEnvelope
+          (id -> Cell(id, lineage, envelope))
+        }.toMap
+
+      (points, cells)
+    }
   }
 
   //** Sequential functions
+
+  def pruneDisks(disks: List[Disk]): List[Disk] = {
+    val transactions = disks.map{ disk =>
+      (disk.pids.sorted.mkString(" "), disk)
+    }.groupBy(_._1).map{ case(pids, disks) =>
+        val disk = disks.head._2
+        val center = disk.center
+
+        new Transaction(center, pids)
+    }.toList
+
+    val data = new Transactions(transactions.asJava, 0)
+    val lcm = new AlgoLCM2()
+    lcm.run(data)
+
+    lcm.getPointsAndPids.asScala
+      .map{ m =>
+        val pids = m.getItems.toList.map(_.toInt).sorted
+        val center = m.getCenter
+        Disk(center, pids, List.empty[Int])
+      }.toList
+  }
 
   def getDisks(points: List[Point], centers: List[Point])
     (implicit settings: Settings): List[Point] = {
