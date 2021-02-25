@@ -11,7 +11,8 @@ object Checker {
   def main(args: Array[String]): Unit = {
     implicit val geofactory = new GeometryFactory(new PrecisionModel(1e3))
 
-    val bufferPoints = Source.fromFile("/home/and/Research/Datasets/dense2.tsv")
+    val pointsFile = args(1)
+    val bufferPoints = Source.fromFile(pointsFile)
     val points = bufferPoints.getLines.map{ line =>
       val arr = line.split("\t")
       val id = arr(0).toInt
@@ -36,28 +37,9 @@ object Checker {
 
       println(line)
       println(mbc.radius)
-      //println
       
       (mbc, line, pts)
     }.toList
     bufferMaximals.close
-
-    //maximals foreach println
-    save("/tmp/edgesSample.wkt"){
-      val l = List(269487, 350899, 567374, 697234, 823311, 1029111, 2045212, 2493948, 2562635, 3183122, 3736569, 3830016, 3851136, 4130738)
-      l.map(p => points(p)).map{ p =>
-        val i = p.getUserData
-        val x = p.getX
-        val y = p.getY
-        s"$i\t$x\t$y\n"
-      }
-    }
-    save("/tmp/edgesCheck.wkt"){
-      maximals.map{ case(mbc, line, pts) =>
-        val r = mbc.radius
-        val wkt = mbc.center.buffer(r, 15).toText
-        s"$wkt\t$r\t$line\n"
-      }
-    }
   }
 }

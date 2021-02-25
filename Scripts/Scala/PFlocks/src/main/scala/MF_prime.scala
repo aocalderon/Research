@@ -36,7 +36,12 @@ object MF_prime {
       tolerance = params.tolerance(),
       seed = params.seed(),
       debug = params.debug(),
-      appId = spark.sparkContext.applicationId
+      appId = spark.sparkContext.applicationId,
+      storageLevel = params.storage() match {
+        case 1 => StorageLevel.MEMORY_ONLY_SER_2
+        case 2 => StorageLevel.NONE
+        case _ => StorageLevel.MEMORY_ONLY_2  // 0 is the default...
+      }
     )
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 

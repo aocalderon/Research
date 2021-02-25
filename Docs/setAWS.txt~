@@ -1,7 +1,0 @@
-ssh-keygen
-sudo adduser acald013
-sudo usermod -aG sudo acald013
-su - acald013
-wget http://www.cs.ucr.edu/~acald013/public/tmp/spark.tar.gz
-wget http://www.cs.ucr.edu/~acald013/public/tmp/jdk.tar.gz
-git clone https://github.com/aocalderon/Research.git

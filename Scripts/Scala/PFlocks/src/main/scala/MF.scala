@@ -22,7 +22,7 @@ import scala.collection.mutable.ListBuffer
 
 import Utils._
 
-object MF {
+object MF{
 
   def main(args: Array[String]) = {
     implicit val params = new Params(args)
@@ -35,7 +35,11 @@ object MF {
       tolerance = params.tolerance(),
       debug = params.debug(),
       appId = spark.sparkContext.applicationId,
-      storageLevel = StorageLevel.MEMORY_ONLY_2
+      storageLevel = params.storage() match {
+        case 1 => StorageLevel.MEMORY_ONLY_SER_2
+        case 2 => StorageLevel.NONE
+        case _ => StorageLevel.MEMORY_ONLY_2  // 0 is the default...
+      }
     )
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
