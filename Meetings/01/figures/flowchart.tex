@@ -29,7 +29,7 @@
     \node [io, below of=traditional] (disks2) {disks2};
     \node [io, below of=decide, node distance=4cm] (disks) {disks1 + disks2};
     \node [block, below of=disks] (prune) {Prune disks};
-    \node [cloud, right of=prune, node distance=4cm] (maximals) {maximals disks};
+    \node [cloud, right of=prune, node distance=4cm] (maximals) {maximal disks};
     % Draw edges
     \path [line] (graph) -- (cliques);
     \path [line] (cliques) -- (filter);
