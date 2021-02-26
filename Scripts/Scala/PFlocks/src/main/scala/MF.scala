@@ -14,8 +14,6 @@ import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.datasyslab.geospark.enums.GridType
 
 import org.slf4j.{Logger, LoggerFactory}
-//import org.jgrapht.graph.{SimpleGraph, DefaultEdge}
-//import org.jgrapht.Graphs
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
@@ -47,10 +45,10 @@ object MF{
     val partitions = params.partitions()
 
     val (pointsRDD, cells)  = readPoints(input)
-    val pairsRDD   = pairPoints(pointsRDD)
-    val centersRDD = computeCenters(pairsRDD)
-    val disksRDD   = getDisks(pointsRDD, centersRDD)
-    val maximalsRDD= pruneDisks(disksRDD).mapPartitionsWithIndex{ (i, it) =>
+    val pairsRDD    = pairPoints(pointsRDD)
+    val centersRDD  = computeCentersRDD(pairsRDD)
+    val disksRDD    = getDisksRDD(pointsRDD, centersRDD)
+    val maximalsRDD = pruneDisksRDD(disksRDD).mapPartitionsWithIndex{ (i, it) =>
       val cell = cells(i).envelope
       it.filter(point => cell.contains(point.center.getCoordinate))
     }

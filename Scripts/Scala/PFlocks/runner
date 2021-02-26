@@ -1,0 +1,21 @@
+#!/bin/bash
+
+DATASET="file:///home/acald013/Research/Datasets/dense2.tsv"
+METHODS=(MF_prime MF_CMBC)
+CS=(100 200 300 400 500)
+ES=(1 3 6 9 12 15)
+MS=(4 8 12 16)
+
+for n in $(seq 1 $1); do
+    for C in ${CS[@]}; do
+    	for E in ${ES[@]}; do
+	    for M in ${MS[@]}; do
+	    	for METHOD in ${METHODS[@]}; do
+		    echo "./run $METHOD $DATASET $E $M $C 1"
+		    ./run $METHOD $DATASET $E $M $C 1
+		done
+	    done
+	done
+    done
+done
+

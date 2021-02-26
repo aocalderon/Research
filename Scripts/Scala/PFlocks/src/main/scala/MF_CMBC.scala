@@ -22,6 +22,7 @@ import scala.collection.mutable.ListBuffer
 
 import edu.ucr.dblab.pflock.pbk.PBK.bk
 import edu.ucr.dblab.pflock.pbk.PBK_Utils.getEdges
+import edu.ucr.dblab.pflock.welzl.Welzl
 
 import Utils._
 
@@ -55,18 +56,80 @@ object MF_CMBC {
 
     val (pointsRDD, cells)  = readAndReplicatePoints(input)
 
-    log(s"Points after replication: ${pointsRDD.count}")
-    log(s"Number of partitions: ${cells.size}")
-
-    val rdd = pointsRDD.mapPartitionsWithIndex{ (i, it) =>
+    val disksRDD = pointsRDD.mapPartitionsWithIndex{ (i, it) =>
       val vertices = it.toList
       val edges = getEdges(vertices, settings.epsilon)
-      val cliques = bk(vertices, edges)
+      val cliques = bk(vertices, edges).iterator
+        .filter(_.size >= settings.mu) // Filter cliques with no enough points...
 
-      cliques.iterator.filter(_.size >= settings.mu)
+      val (maximals_prime, disks_prime) = cliques.map{ points =>
+        val mbc = Welzl.mbc(points)
+
+        (mbc, points)
+      }.partition{ case (mbc, points) => // Split cliques enclosed by a single disk...
+          round(mbc.getRadius) < settings.r
+      }
+
+      val maximals1 = maximals_prime.map{ case(mbc, points) =>
+        val pids = points.map(_.getUserData.asInstanceOf[Data].id)
+        val center = geofactory.createPoint(new Coordinate(mbc.getCenter.getX,
+          mbc.getCenter.getY))
+
+        Disk(center, pids, List.empty)
+      }.toList
+
+      val maximals2 = disks_prime.map{ case(mbc, points) =>
+        val centers = computeCenters(computePairs(points, settings.epsilon))
+        val disks = getDisks(points, centers).map{ p =>
+          val pids = p.getUserData.asInstanceOf[List[Int]]
+          Disk(p, pids, List.empty[Int])
+        }
+        pruneDisks(disks)
+      }.toList.flatten
+
+      val maximals = pruneDisks(maximals1 ++ maximals2)
+
+      maximals.toIterator
     }
-    log(s"Number of cliques: ${rdd.count}")
 
+    val maximals = pruneDisks(disksRDD.collect.toList)
+
+    if(settings.debug){
+      log(s"E\t${settings.epsilon}")
+      log(s"M\t${settings.mu}")
+      log(s"P\t${pointsRDD.getNumPartitions}")
+
+      log(s"Points   \t${pointsRDD.count}")
+      log(s"Disks    \t${disksRDD.count}")
+      log(s"Maximals \t${maximals.size}")
+
+      save("/tmp/edgesGrids.wkt"){
+        pointsRDD.mapPartitionsWithIndex{ (i, it) =>
+          val wkt = cells(i).mbr.toText 
+          val n   = it.size
+
+          Iterator(s"$wkt\t$n\t$i\n")
+        }.collect 
+      }
+      save("/tmp/edgesPoints.wkt"){
+        pointsRDD.mapPartitionsWithIndex{ (i, it) =>
+          it.map{ point =>
+            val wkt = point.toText
+            val data = point.getUserData.asInstanceOf[Data]
+            s"$wkt\t$data\t$i\n"
+          }
+        }.collect 
+      }
+    }
+    save("/tmp/edgesCMBC.wkt"){
+      maximals.map{ maximal =>
+        val wkt  = maximal.center.toText
+        val pids = maximal.pids.sorted.mkString(" ")
+
+        s"$wkt\t$pids\n"
+      }
+    }
+    
     spark.close
   }
 }

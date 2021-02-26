@@ -5,11 +5,12 @@ import scala.io.Source
 import scala.collection.mutable.ListBuffer
 
 import edu.ucr.dblab.pflock.welzl.Welzl
-import edu.ucr.dblab.pflock.Utils.save
+import edu.ucr.dblab.pflock.Utils.{Settings, save}
 
 object Checker {
   def main(args: Array[String]): Unit = {
     implicit val geofactory = new GeometryFactory(new PrecisionModel(1e3))
+    implicit val settings = Settings(tolerance = 1e-3)
 
     val pointsFile = args(1)
     val bufferPoints = Source.fromFile(pointsFile)
@@ -33,10 +34,10 @@ object Checker {
       }
       val pts = new ListBuffer[Point]()
       pts.appendAll(pts_prime)
-      val mbc = Welzl.mtfdisk(pts)
+      val mbc = Welzl.mbc(pts.toList)
 
       println(line)
-      println(mbc.radius)
+      println(mbc.getRadius)
       
       (mbc, line, pts)
     }.toList

@@ -98,18 +98,7 @@ object MF_prime {
         }.collect 
       }
     }
-    /*
-    save("/tmp/edgesDisks.wkt"){
-      disksRDD.mapPartitionsWithIndex{ (i, it) =>
-        it.map{ disk =>
-          val wkt = disk.center.buffer(settings.r, 25).toText
-          val pids = disk.pids
-          s"$wkt\t$pids\n"
-        }
-      }.collect
-    }
-     */
-    save("/tmp/edgesMaximals.wkt"){
+    save("/tmp/edgesCONTROL.wkt"){
       maximals.map{ maximal =>
         val wkt  = maximal.center.toText
         val pids = maximal.pids.sorted.mkString(" ")

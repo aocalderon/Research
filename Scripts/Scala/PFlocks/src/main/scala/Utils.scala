@@ -36,10 +36,9 @@ object Utils {
   case class Data(id: Int, t: Int){
     override def toString = s"$id\t$t"
   }
-
-  case class Cell(id: Int, lineage: String, envelope: Envelope){
+ case class Cell(id: Int, lineage: String, envelope: Envelope){
     private val geofactory = new GeometryFactory(new PrecisionModel(1e3))
-    val mbr = geofactory.toGeometry(envelope).asInstanceOf[Polygon]
+   val mbr = geofactory.toGeometry(envelope).asInstanceOf[Polygon]
   }
 
   case class Settings(
@@ -59,7 +58,7 @@ object Utils {
 
   //** Parallel functions
 
-  def pruneDisks(disks: RDD[Point])(implicit settings: Settings): RDD[Disk] = {
+  def pruneDisksRDD(disks: RDD[Point])(implicit settings: Settings): RDD[Disk] = {
     disks.mapPartitions{ it =>
       val ds = it.toList.map{ center =>
         Disk(center, center.getUserData.asInstanceOf[List[Int]], List.empty[Int])
@@ -68,7 +67,7 @@ object Utils {
     }
   }
 
-  def getDisks(points: SpatialRDD[Point], centers: CircleRDD)
+  def getDisksRDD(points: SpatialRDD[Point], centers: CircleRDD)
     (implicit settings: Settings, logger: Logger):  RDD[Point] = {
 
     val mu = settings.mu
@@ -84,7 +83,7 @@ object Utils {
       }
   }
 
-  def computeCenters(pairs: RDD[(Point, Point)])
+  def computeCentersRDD(pairs: RDD[(Point, Point)])
     (implicit geofactory: GeometryFactory, settings: Settings): CircleRDD = {
 
     val r2 = settings.r2
@@ -377,5 +376,10 @@ object Utils {
 
   def log(msg: String)(implicit logger: Logger, settings: Settings): Unit = {
     logger.info(s"${settings.appId}|$msg")
+  }
+
+  def round(x: Double)(implicit settings: Settings): Double = {
+    val decimal_positions = math.log10(settings.scale).toInt
+    BigDecimal(x).setScale(decimal_positions, BigDecimal.RoundingMode.HALF_UP).toDouble
   }
 }
