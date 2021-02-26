@@ -14,13 +14,18 @@ import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.datasyslab.geospark.enums.GridType
 
 import org.slf4j.{Logger, LoggerFactory}
+import org.jgrapht.graph.{SimpleGraph, DefaultEdge}
+import org.jgrapht.Graphs
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 
+import edu.ucr.dblab.pflock.pbk.PBK.bk
+import edu.ucr.dblab.pflock.pbk.PBK_Utils.getEdges
+
 import Utils._
 
-object MF_prime {
+object MF_CMBC {
   def main(args: Array[String]) = {
     implicit val params = new Params(args)
     implicit val spark = SparkSession.builder()
@@ -49,74 +54,18 @@ object MF_prime {
     val partitions = params.partitions()
 
     val (pointsRDD, cells)  = readAndReplicatePoints(input)
-    
-    val disksRDD = pointsRDD.mapPartitionsWithIndex{ (i, it) =>
-      val points   = it.toList
-      val pairs    = computePairs(points, settings.epsilon)
-      val centers  = computeCenters(pairs) 
-      val disks    = getDisks(points, centers)
 
-      val cell = cells(i).envelope  
-      val maximals = pruneDisks(
-        disks
-          .filter(point => cell.contains(point.getCoordinate))
-          .map{ point =>
-            val pids = point.getUserData.asInstanceOf[List[Int]]
-            Disk(point, pids, List.empty[Int])
-          }
-      )
+    log(s"Points after replication: ${pointsRDD.count}")
+    log(s"Number of partitions: ${cells.size}")
 
-      maximals.toIterator
+    val rdd = pointsRDD.mapPartitionsWithIndex{ (i, it) =>
+      val vertices = it.toList
+      val edges = getEdges(vertices, settings.epsilon)
+      val cliques = bk(vertices, edges)
+
+      cliques.iterator.filter(_.size >= settings.mu)
     }
-
-    val maximals = pruneDisks(disksRDD.collect.toList)
-
-    if(settings.debug){
-      log(s"E\t${settings.epsilon}")
-      log(s"M\t${settings.mu}")
-      log(s"P\t${pointsRDD.getNumPartitions}")
-
-      log(s"Points   \t${pointsRDD.count}")
-      log(s"Disks    \t${disksRDD.count}")
-      log(s"Maximals \t${maximals.size}")
-
-      save("/tmp/edgesGrids.wkt"){
-        pointsRDD.mapPartitionsWithIndex{ (i, it) =>
-          val wkt = cells(i).mbr.toText 
-          val n   = it.size
-
-          Iterator(s"$wkt\t$n\t$i\n")
-        }.collect 
-      }
-      save("/tmp/edgesPoints.wkt"){
-        pointsRDD.mapPartitionsWithIndex{ (i, it) =>
-          it.map{ point =>
-            val wkt = point.toText
-            val data = point.getUserData.asInstanceOf[Data]
-            s"$wkt\t$data\t$i\n"
-          }
-        }.collect 
-      }
-    }
-    /*
-    save("/tmp/edgesDisks.wkt"){
-      disksRDD.mapPartitionsWithIndex{ (i, it) =>
-        it.map{ disk =>
-          val wkt = disk.center.buffer(settings.r, 25).toText
-          val pids = disk.pids
-          s"$wkt\t$pids\n"
-        }
-      }.collect
-    }
-     */
-    save("/tmp/edgesMaximals.wkt"){
-      maximals.map{ maximal =>
-        val wkt  = maximal.center.toText
-        val pids = maximal.pids.sorted.mkString(" ")
-
-        s"$wkt\t$pids\n"
-      }
-    }
+    log(s"Number of cliques: ${rdd.count}")
 
     spark.close
   }
