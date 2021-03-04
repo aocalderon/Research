@@ -76,14 +76,25 @@
     \end{frame}
 }
 
-\begin{frame}{Flowchart...}
-    \centering
-    \includegraphics[trim=2cm 9cm 2cm 4cm,clip, width=0.75\textwidth]{figures/flowchart} 
+\begin{frame}{Experiments...}
+    \begin{itemize}
+        \item Fixing some issues.  Testing outputs with sequential BFE.  Identical outputs.
+        \item Proof of concept using the dense area of the L.A. dataset (2671 points).
+        \item Using just one node with 10 cores.  
+        \item Using the same partitioning squema to 40 partitions (Quadtree with max entries = 250) for both methods.
+        \item Testing BFE and Clique/MBC (CMBC) alternatives at local level.
+        \item Varying epsilon and mu parameters.
+    \end{itemize}
 \end{frame}
 
-\begin{frame}{Some tests...}{Dataset: L.A., $\varepsilon=10$, $\mu=5$}
+\begin{frame}{Results...}
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/experiments} 
+    \includegraphics[width=0.85\textwidth]{figures/epsilon} 
+\end{frame}
+
+\begin{frame}{Results...}
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/mu} 
 \end{frame}
 
 \end{document}

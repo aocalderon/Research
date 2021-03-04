@@ -9,7 +9,7 @@ getParams <- function(command){
   return(paste(params, collapse = " "))
 }
 
-log = enframe(readLines("experiments.txt"))
+log = enframe(readLines("tmp/experiments.txt"))
 spark = log %>% filter(grepl(value, pattern = "SparkSubmit ")) %>% 
   separate(value, into = c("time", "duration", "appId", "command"), sep = "\\|")
 spark$params = spark$command %>% map(getParams)
@@ -44,11 +44,11 @@ p = ggplot(data = data, aes(x = epsilon, y = time, fill = method)) +
  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
  labs(x="Epsilon [m]", y="Time [sec]", title="Performance by epsilon") 
 plot(p)
+ggsave(paste0("epsilon.pdf"), device = "pdf")
 
 g = ggplot(data = data, aes(x = mu, y = time, fill = method)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
   labs(x="Mu [# of points]", y="Time [sec]", title="Performance by mu") 
 plot(g)
-
-# ggsave(paste0("data.pdf"), device = "pdf")
+ggsave(paste0("mu.pdf"), device = "pdf")
