@@ -20,7 +20,7 @@ import scala.collection.mutable.ListBuffer
 
 import Utils._
 
-object MF_prime {
+object MF_BFE {
   def main(args: Array[String]) = {
     implicit val params = new Params(args)
     implicit val spark = SparkSession.builder()
@@ -98,7 +98,7 @@ object MF_prime {
         }.collect 
       }
     }
-    save("/tmp/edgesCONTROL.wkt"){
+    save("/tmp/edgesBFE.wkt"){
       maximals.map{ maximal =>
         val wkt  = maximal.center.toText
         val pids = maximal.pids.sorted.mkString(" ")

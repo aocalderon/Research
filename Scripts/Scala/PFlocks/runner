@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DATASET="file:///home/acald013/Research/Datasets/dense2.tsv"
-METHODS=(MF_prime MF_CMBC)
+METHODS=(MF_BFE MF_CMBC)
 CS=(100 200 300 400 500)
 ES=(1 3 6 9 12 15)
 MS=(4 8 12 16)
