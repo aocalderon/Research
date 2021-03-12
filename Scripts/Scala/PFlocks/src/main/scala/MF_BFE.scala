@@ -72,15 +72,18 @@ object MF_BFE {
     val maximals = pruneDisks(disksRDD.collect.toList)
 
     if(settings.debug){
-      log(s"E\t${settings.epsilon}")
-      log(s"M\t${settings.mu}")
-      log(s"P\t${pointsRDD.getNumPartitions}")
+      val e = settings.epsilon
+      val m = settings.mu
+      val p = pointsRDD.getNumPartitions
+      val i = input.split("\\.").head.split("_").last
+      val me = params.maxentries()
 
+      log(s"E=${e}\tM=${m}\tP=${p}\tME=${me}\tI=${i}")
       log(s"Points   \t${pointsRDD.count}")
       log(s"Disks    \t${disksRDD.count}")
       log(s"Maximals \t${maximals.size}")
 
-      save("/tmp/edgesGrids.wkt"){
+      save(s"/tmp/edgesGrids_${i}_ME${me}_E${e.toInt}_M${m}_P${p}.wkt"){
         pointsRDD.mapPartitionsWithIndex{ (i, it) =>
           val wkt = cells(i).mbr.toText 
           val n   = it.size

@@ -1,18 +1,20 @@
 #!/bin/bash
 
-DATASET="file:///home/acald013/Research/Datasets/dense2.tsv"
 METHODS=(MF_BFE MF_CMBC)
-CS=(100 200 300 400 500)
-ES=(1 3 6 9 12 15)
+DS=(316 320 324)
+CS=(100 250 500)
+ES=(3 6 9 12 15)
 MS=(4 8 12 16)
 
 for n in $(seq 1 $1); do
-    for C in ${CS[@]}; do
-    	for E in ${ES[@]}; do
-	    for M in ${MS[@]}; do
-	    	for METHOD in ${METHODS[@]}; do
-		    echo "./run $METHOD $DATASET $E $M $C 1"
-		    ./run $METHOD $DATASET $E $M $C 1
+    for D in ${DS[@]}; do
+	for C in ${CS[@]}; do
+    	    for E in ${ES[@]}; do
+		for M in ${MS[@]}; do
+	    	    for METHOD in ${METHODS[@]}; do
+			echo "./run $METHOD hdfs:///user/acald013/Datasets/LA/sample/LA_50K_T${D}.tsv $E $M $C 1"
+			./run $METHOD hdfs:///user/acald013/Datasets/LA/sample/LA_50K_T${D}.tsv $E $M $C 1
+		    done
 		done
 	    done
 	done
