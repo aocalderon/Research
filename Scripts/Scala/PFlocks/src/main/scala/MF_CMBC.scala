@@ -33,7 +33,7 @@ object MF_CMBC {
       .config("spark.serializer", classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .config("spark.kryoserializer.buffer.max", "256m")
-      .appName("MF_prime").getOrCreate()
+      .appName("MF_CMBC").getOrCreate()
     implicit val settings = Settings(
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
@@ -98,7 +98,7 @@ object MF_CMBC {
       val e = settings.epsilon
       val m = settings.mu
       val p = pointsRDD.getNumPartitions
-      val i = input.split("\\.").head.split("_").last
+      val i = input.split("\\.").head.split("/").last
       val me = params.maxentries()
 
       log(s"E=${e}\tM=${m}\tP=${p}\tME=${me}\tI=${i}")

@@ -1,0 +1,2 @@
+index	Id	Attempt	Status	Locality	Executor	Launch	Duration	ScheduleDelay	Deserialization	GC	Serialization	GettingResults	PeakExecutionMemory	FetchWait	Size	Records	SuffleReadRemote	Errors	wkt	n
+95	100	0	SUCCESS	NODE_LOCAL	mr-10:8	2021/03/11 19:51:24	72	
