@@ -61,7 +61,7 @@ object MF_BFE {
         disks
           .filter(point => cell.contains(point.getCoordinate))
           .map{ point =>
-            val pids = point.getUserData.asInstanceOf[List[Int]]
+            val pids = point.getUserData.asInstanceOf[List[Long]]
             Disk(point, pids, List.empty[Int])
           }
       )
