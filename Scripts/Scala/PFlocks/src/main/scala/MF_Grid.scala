@@ -109,8 +109,6 @@ object MF_Grid {
     val fraction   = params.fraction()
     val maxlevel   = params.maxlevel()
 
-    log(s"Max Entries: $maxentries")
-
     val quadtree = new StandardQuadTree[Point](boundary, 0, maxentries, maxlevel)
     val samples = pointsRaw.sample(false, 1.0, params.seed()).collect
     samples.foreach{ sample =>
@@ -119,34 +117,36 @@ object MF_Grid {
     quadtree.assignPartitionIds()
     quadtree.assignPartitionLineage()
 
-    log(s"Quadtree cells: ${quadtree.getSize}")
+    log(s"Quadtree cells: ${quadtree.getLeafZones.size()}")
 
     val partitioner = new QuadTreePartitioner(quadtree)
     pointsRDD.spatialPartitioning(partitioner)
 
     //**
+    val threshold = 50
     val parts = pointsRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (pid, it) =>
       val n = it.size
       Iterator((pid, n))
     }.collect.toList
-
-    parts.foreach(println)
-
     val zones = quadtree.getLeafZones.asScala.map(z => (z.partitionId, z)).toList
-
-    println("")
-
-    zones.foreach(println)
-
     case class Cell(cid: Int, mbr: Polygon, pop: Int)
     val cells = for{
       p <- parts
-      z <- zones if z._1 == p._1
+      z <- zones if z._1 == p._1 && p._2 > threshold
     } yield {
       val cid = z._1
       val mbr = JTS.toGeometry(z._2.getEnvelope, geofactory)
       val pop = p._2
       Cell(cid, mbr, pop)
+    }
+    val cids = cells.map(_.cid).toSet
+    val points2RDD = pointsRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{(pid, it) =>
+      if(cids.contains(pid)){
+        val points = it.toList
+        allocateGrid(points, width, epsilon, pid).map( p => (p._1, p._2)).toIterator
+      } else {
+        it.map( p => (pid, p))
+      }
     }
     //**
 
@@ -160,12 +160,10 @@ object MF_Grid {
       }
     }
     save("/tmp/edgesR.wkt"){
-      pointsRDD.rawSpatialRDD.rdd.mapPartitionsWithIndex{ (pid, it) =>
-        it.map{ p =>
-          val wkt  = p.toText
-          val data = p.getUserData.toString()
-          s"$wkt\t$data\t$pid\n"
-        }
+      points2RDD.map{ case(pid, p) =>
+        val wkt  = p.toText
+        val data = p.getUserData.toString()
+        s"$wkt\t$data\t$pid\n"
       }.collect
     }
 
