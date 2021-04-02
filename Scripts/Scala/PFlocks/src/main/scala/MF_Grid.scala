@@ -1,28 +1,22 @@
 package edu.ucr.dblab.pflock
 
 import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Geometry}
-import com.vividsolutions.jts.geom.{Geometry, Coordinate, Point}
+import com.vividsolutions.jts.geom.{Coordinate, Point, Polygon}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.serializer.KryoSerializer
 
-import org.datasyslab.geospark.spatialRDD.{CircleRDD, SpatialRDD}
-import org.datasyslab.geospark.geometryObjects.Circle
-import org.datasyslab.geospark.spatialOperator.JoinQuery
+import org.datasyslab.geospark.spatialRDD.SpatialRDD
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
-import org.datasyslab.geospark.enums.GridType
+
+import org.geotools.geometry.jts.JTS
+
+import edu.ucr.dblab.pflock.quadtree.{StandardQuadTree, QuadRectangle, QuadTreePartitioner}
 
 import org.slf4j.{Logger, LoggerFactory}
-import org.jgrapht.graph.{SimpleGraph, DefaultEdge}
-import org.jgrapht.Graphs
 
-import scala.collection.JavaConverters._
-import scala.collection.mutable.ListBuffer
-
-import edu.ucr.dblab.pflock.pbk.PBK.bk
-import edu.ucr.dblab.pflock.pbk.PBK_Utils.getEdges
-import edu.ucr.dblab.pflock.welzl.Welzl
+import collection.JavaConverters._
 
 import Utils._
 
@@ -99,26 +93,79 @@ object MF_Grid {
     log(s"$command")
 
     val input = params.input()
-    val points = spark.read.option("header", "false").option("delimiter", "\t")
+    val rows = spark.read.option("header", "false").option("delimiter", "\t")
       .schema(schema).csv(input).as[ST_Point]
 
-    log(s"Point from input: ${points.count()}")
+    log(s"Point from input: ${rows.count()}")
 
     val width = params.width()
     val epsilon = params.epsilon()
-    val pointsR = points.rdd.mapPartitionsWithIndex{ (index, it) =>
-      val points = it.map{_.point}.toList
-      allocateGrid(points, width, epsilon).toIterator
-    }.cache
+    val pointsRaw = rows.rdd.map(_.point)
+    val pointsRDD = new SpatialRDD[Point]()
+    pointsRDD.setRawSpatialRDD(pointsRaw)
+    pointsRDD.analyze
+    val boundary = new QuadRectangle(pointsRDD.boundary)
+    val maxentries = params.maxentries()
+    val fraction   = params.fraction()
+    val maxlevel   = params.maxlevel()
 
-    log(s"Point replicated: ${pointsR.count()}")
+    log(s"Max Entries: $maxentries")
 
+    val quadtree = new StandardQuadTree[Point](boundary, 0, maxentries, maxlevel)
+    val samples = pointsRaw.sample(false, 1.0, params.seed()).collect
+    samples.foreach{ sample =>
+      quadtree.insert(new QuadRectangle(sample.getEnvelopeInternal), sample)
+    }
+    quadtree.assignPartitionIds()
+    quadtree.assignPartitionLineage()
+
+    log(s"Quadtree cells: ${quadtree.getSize}")
+
+    val partitioner = new QuadTreePartitioner(quadtree)
+    pointsRDD.spatialPartitioning(partitioner)
+
+    //**
+    val parts = pointsRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (pid, it) =>
+      val n = it.size
+      Iterator((pid, n))
+    }.collect.toList
+
+    parts.foreach(println)
+
+    val zones = quadtree.getLeafZones.asScala.map(z => (z.partitionId, z)).toList
+
+    println("")
+
+    zones.foreach(println)
+
+    case class Cell(cid: Int, mbr: Polygon, pop: Int)
+    val cells = for{
+      p <- parts
+      z <- zones if z._1 == p._1
+    } yield {
+      val cid = z._1
+      val mbr = JTS.toGeometry(z._2.getEnvelope, geofactory)
+      val pop = p._2
+      Cell(cid, mbr, pop)
+    }
+    //**
+
+    save("/tmp/edgesG.wkt"){
+      cells.map{ cell =>
+        val wkt = cell.mbr.toText
+        val id  = cell.cid
+        val n   = cell.pop
+
+        s"$wkt\t$id\t$n\n"
+      }
+    }
     save("/tmp/edgesR.wkt"){
-      pointsR.map{ p =>
-        val wkt  = p._2.toText
-        val key  = p._1
-        val flag = p._3
-        s"$wkt\t$key\t$flag\n"
+      pointsRDD.rawSpatialRDD.rdd.mapPartitionsWithIndex{ (pid, it) =>
+        it.map{ p =>
+          val wkt  = p.toText
+          val data = p.getUserData.toString()
+          s"$wkt\t$data\t$pid\n"
+        }
       }.collect
     }
 
