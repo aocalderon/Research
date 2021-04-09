@@ -6,7 +6,7 @@ WIDTH=$2
 EPSILON=$3
 MAXENTRIES=$4
 
-MASTER=local[8]
+MASTER=local[1]
 
 SPARK_JARS=$HOME/Spark/2.4/jars
 JAR_PATH=$HOME/Research/Scripts/Scala/PFlocks/target/scala-2.11/pflocks_2.11-0.1.jar
