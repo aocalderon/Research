@@ -14,8 +14,6 @@ import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.datasyslab.geospark.enums.GridType
 
 import org.slf4j.{Logger, LoggerFactory}
-//import org.jgrapht.graph.{SimpleGraph, DefaultEdge}
-//import org.jgrapht.Graphs
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
@@ -30,15 +28,24 @@ object Utils {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   //** Case classes
+  case class ST_Point(id: Long, x: Double, y: Double, t: Int){
+    def point(implicit geofactory: GeometryFactory): Point = {
+      val p = geofactory.createPoint(new Coordinate(x, y))
+      p.setUserData(Data(id, t))
+      p
+    }
+    override def toString: String = s"$id\t$x\t$y\t$t"
+  }
 
-  case class Disk(center: Point, pids: List[Int], support: List[Int])
+  case class Disk(center: Point, pids: List[Long], support: List[Int])
 
-  case class Data(id: Int, t: Int){
+  case class Data(id: Long, t: Int){
     override def toString = s"$id\t$t"
   }
- case class Cell(id: Int, lineage: String, envelope: Envelope){
+
+  case class Cell(id: Int, lineage: String, envelope: Envelope){
     private val geofactory = new GeometryFactory(new PrecisionModel(1e3))
-   val mbr = geofactory.toGeometry(envelope).asInstanceOf[Polygon]
+    val mbr = geofactory.toGeometry(envelope).asInstanceOf[Polygon]
   }
 
   case class Settings(
@@ -61,7 +68,7 @@ object Utils {
   def pruneDisksRDD(disks: RDD[Point])(implicit settings: Settings): RDD[Disk] = {
     disks.mapPartitions{ it =>
       val ds = it.toList.map{ center =>
-        Disk(center, center.getUserData.asInstanceOf[List[Int]], List.empty[Int])
+        Disk(center, center.getUserData.asInstanceOf[List[Long]], List.empty[Int])
       }
       pruneDisks(ds).toIterator
     }
@@ -291,7 +298,7 @@ object Utils {
 
     lcm.getPointsAndPids.asScala
       .map{ m =>
-        val pids = m.getItems.toList.map(_.toInt).sorted
+        val pids = m.getItems.toList.map(_.toLong).sorted
         val center = m.getCenter
         Disk(center, pids, List.empty[Int])
       }.toList

@@ -14,6 +14,8 @@ class Params(args: Seq[String]) extends ScallopConf(args) {
   val epsilon:     ScallopOption[Double]  = opt[Double]  (default = Some(10.0))
   val mu:          ScallopOption[Int]     = opt[Int]     (default = Some(5))
 
+  val width:       ScallopOption[Double]  = opt[Double]  (default = Some(100.0))
+
   val storage:     ScallopOption[Int]     = opt[Int]     (default = Some(0)) // Default value for storage level...
   val seed:        ScallopOption[Long]    = opt[Long]    (default = Some(42L))
   val tolerance:   ScallopOption[Double]  = opt[Double]  (default = Some(0.001))

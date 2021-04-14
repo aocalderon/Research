@@ -81,7 +81,7 @@ object MF_CMBC {
       val maximals2 = disks_prime.map{ case(mbc, points) =>
         val centers = computeCenters(computePairs(points, settings.epsilon))
         val disks = getDisks(points, centers).map{ p =>
-          val pids = p.getUserData.asInstanceOf[List[Int]]
+          val pids = p.getUserData.asInstanceOf[List[Long]]
           Disk(p, pids, List.empty[Int])
         }
         pruneDisks(disks)
