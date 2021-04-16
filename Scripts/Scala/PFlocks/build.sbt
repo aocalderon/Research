@@ -1,5 +1,6 @@
 name := "pflocks"
 organization := "edu.ucr.dblab"
+
 version := "0.1"
 scalaVersion in ThisBuild := "2.11.8"
 
@@ -19,7 +20,8 @@ libraryDependencies += "org.apache.commons" % "commons-numbers-parent" % "1.0-be
 libraryDependencies += "org.rogach" %% "scallop" % "4.0.1"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.2" % "test"
 
-libraryDependencies += "org.slf4j" % "slf4j-jdk14" % "1.7.25"
+libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25"
+libraryDependencies += "org.slf4j" % "slf4j-simple" % "1.7.25"
 libraryDependencies += "org.rogach" % "scallop_2.11" % "2.1.3"
 libraryDependencies += "ch.cern.sparkmeasure" %% "spark-measure" % "0.16"
 

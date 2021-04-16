@@ -48,19 +48,6 @@ object Utils {
     val mbr = geofactory.toGeometry(envelope).asInstanceOf[Polygon]
   }
 
-  case class LocalSettings(
-    epsilon_prime: Double = 10.0,
-    mu: Int = 3,
-    tolerance: Double = 1e-3,
-    debug: Boolean = false,
-    seed: Long = 42L
-  ){
-    val scale = 1 / tolerance
-    val epsilon = epsilon_prime + tolerance
-    val r = (epsilon_prime / 2.0) + tolerance
-    val r2 = math.pow(epsilon_prime / 2.0, 2) + tolerance
-  }
-
   case class Settings(
     epsilon_prime: Double = 10.0,
     mu: Int = 3,

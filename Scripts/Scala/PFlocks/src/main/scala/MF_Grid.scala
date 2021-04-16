@@ -11,6 +11,8 @@ import org.datasyslab.geospark.spatialRDD.SpatialRDD
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 
 import org.geotools.geometry.jts.{JTS, GeometryClipper}
+import com.vividsolutions.jts.index.strtree.STRtree
+import com.vividsolutions.jts.index.quadtree.Quadtree
 
 import edu.ucr.dblab.pflock.quadtree.{StandardQuadTree, QuadRectangle, QuadTreePartitioner}
 
@@ -21,91 +23,37 @@ import collection.JavaConverters._
 import Utils._
 
 object MF_Grid {
-  case class Cell(cid: String, mbr: Polygon, pop: Int, id: Int = -1)
+  case class Tag(pid: Int, gid: Int)
+  case class Cell(tag: Tag, mbr: Polygon, pop: Int = 0, id: Int = -1)
 
-  def getGrids(boundary: Polygon, points: List[Point], width: Double, prefix: Int = 0): List[Cell] = {
-    def digits(x: Int) = math.ceil( math.log( math.abs(x) + 1 ) / math.log(10) ).toInt
+  def getGrids(boundary: Polygon, width: Double, prefix: Int = 0)
+      (implicit geofactory: GeometryFactory): List[Cell] = {
     val clipper = new GeometryClipper(boundary.getEnvelopeInternal)
     val minX = boundary.getEnvelopeInternal.getMinX
     val minY = boundary.getEnvelopeInternal.getMinY
     val maxX = boundary.getEnvelopeInternal.getMaxX
     val maxY = boundary.getEnvelopeInternal.getMaxY
+
     val Xs = BigDecimal(minX) to BigDecimal(maxX) by BigDecimal(width)
     val Ys = BigDecimal(minY) to BigDecimal(maxY) by BigDecimal(width)
     val m = Ys.size - 1
 
-    val grids = (for{ x <- Xs; y <- Ys} yield { (x, y) }).map{ coord =>
-      val x = coord._1.toDouble
-      val y = coord._2.toDouble
-      val envelope = new Envelope(x, x + width, y, y + width)
+    val grids = ( for{ x <- Xs; y <- Ys} yield { (x, y) } ).map{ case(x, y) =>
+      val x1 = x.toDouble
+      val y1 = y.toDouble
+      val x2 = if (x1 + width > maxX) maxX else x1 + width
+      val y2 = if (y1 + width > maxY) maxY else y1 + width
+      val envelope = new Envelope(x1, x2, y1, y2)
+      val grid = JTS.toGeometry(envelope, geofactory)
 
-      val grid = clipper.clipSafe(JTS.toGeometry(envelope), true, 0.001).asInstanceOf[Polygon]
-
-      val point = grid.getCentroid
-      val i = math.floor( (point.getX - minX) / width).toInt
-      val j = math.floor( (point.getY - minY) / width).toInt
-      val id = i + j * m
-      
-      grid.setUserData(id)
-      grid
+      val p = grid.getCentroid
+      val i = math.floor( (p.getX - minX) / width ).toInt
+      val j = math.floor( (p.getY - minY) / width ).toInt
+      val gid = i + j * m
+      val tag = Tag(prefix, gid)
+       
+      Cell(tag, grid)
     }.toList
-
-    val pops = points.map{ point =>
-      val grid = grids.filter(_.contains(point))
-      if(!grid.isEmpty){
-        grid.head.getUserData.asInstanceOf[Int]
-      } else {
-        -1
-      }
-    }.foldLeft(Map.empty[Int, Int]){ (count, cid) =>
-      count + (cid -> (count.getOrElse(cid, 0) + 1))
-    }
-
-    grids.map{ grid =>
-      val cid = grid.getUserData.asInstanceOf[Int]
-
-      Cell(s"${prefix}_${cid}", grid, -1)
-    }
-  }
-
-  def allocateGrid(boundary: Polygon, points: List[Point], width: Double, epsilon: Double, pid: Int = -1): List[(String, Point)] = {
-    case class Key(i: Int, j: Int)
-    case class KeyPoint(key: Key, point: Point)
-
-    val minX = boundary.getEnvelopeInternal.getMinX
-    val minY = boundary.getEnvelopeInternal.getMinY
-    val maxX = boundary.getEnvelopeInternal.getMaxX
-    val maxY = boundary.getEnvelopeInternal.getMaxY
-    val w = math.floor((maxX - minX) / width).toInt
-    val h = math.floor((maxY - minY) / width).toInt
-    println(s"PID: $pid => $w x $h")
-
-    val keys_points = points.flatMap{ point =>
-      val i_start = math.floor(( (point.getX - minX) - epsilon) / width).toInt
-      val i_end   = math.floor(( (point.getX - minX) + epsilon) / width).toInt
-      val is = i_start to i_end
-      val j_start = math.floor(( (point.getY - minY) - epsilon) / width).toInt
-      val j_end   = math.floor(( (point.getY - minY) + epsilon) / width).toInt
-      val js = j_start to j_end
-
-      val keys = for{ 
-        i <- is
-        j <- js if 0 <= i && i <= w && 0 <= j && j <= h
-      } yield {
-        Key(i, j)
-      }
-
-      keys.map(key => KeyPoint(key, point))
-    }
-
-    val grids = keys_points.map{ p =>
-      val key = p.key.i + p.key.j * w
-      (s"${pid}_${key}", p.point)
-    }
-
-    println(s"$pid:")
-    grids.foreach{println}
-    println
 
     grids
   }
@@ -167,8 +115,7 @@ object MF_Grid {
     val partitioner = new QuadTreePartitioner(quadtree)
     pointsRDD.spatialPartitioning(partitioner)
 
-    //**
-    val threshold = 50
+    val threshold = params.threshold()
     val parts = pointsRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (pid, it) =>
       val n = it.size
       Iterator((pid, n))
@@ -179,62 +126,52 @@ object MF_Grid {
       p <- parts
       z <- zones if z._1 == p._1 
     } yield {
-      val cid = z._1
+      val pid = z._1
       val mbr = JTS.toGeometry(z._2.getEnvelope, geofactory)
       val pop = p._2
-      Cell(cid.toString, mbr, pop, cid)
+      Cell(Tag(pid, 0), mbr, pop, pid)
     }
 
-    val cids = cells.filter(_.pop > threshold).map(_.cid.toInt).toSet
+    val cids = cells.filter(_.pop > threshold).map(_.id).toSet
 
-    val points2RDD = pointsRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{(pid, it) =>
-      if(cids.contains(pid)){
-        val points = it.toList
-        val boundary = cells.filter(_.cid.toInt == pid).head.mbr
-        allocateGrid(boundary, points, width, epsilon, pid).map( p => (p._1, p._2)).toIterator
-      } else {
-        it.map( p => (s"${pid}_0", p))
-      }
-    }
-    val keys = points2RDD.map(_._1).distinct.collect.sortBy{ key =>
-        val coords = key.split("_").map(_.toInt)
-        val i = coords(0)
-        val j = coords(1)
+    // START: Testing cells...
+    val grids_prime = cells.filter(c => cids.contains(c.id)).map{ cell =>
+      getGrids(cell.mbr, width, cell.id)
+    }.flatten
+    val cells_prime = cells.filterNot(c => cids.contains(c.id))
 
-        (i, j)
-    }
-    val index = keys.zip(0 until keys.size).map(p => p._1 -> p._2).toMap
-    index.toList.sortBy(_._2).foreach(println)
+    val C_prime = grids_prime ++ cells_prime
+    val C = C_prime.sortBy{ c =>
+      (c.tag.pid, c.tag.gid)
+    }.zip(0 until C_prime.size).map{ case(c, index) => c.copy(id = index)}
 
-    val points3RDD = points2RDD.map{ case(key, point) =>
-      (index(key), point)
-    }
-    //**
-
-    val n = cells.size - cids.size
-    save("/tmp/edgesG.wkt"){
-      val grids_prime = cells.filter(c => cids.contains(c.cid.toInt)).map{ cell =>
-        getGrids(cell.mbr, pointsRaw.collect.toList, width, cell.cid.toInt)
-      }.flatten.sortBy(_.cid).zipWithIndex.map{ case(cell, index) =>
-        cell.copy(id = n + index)
-      }
-      val cells_prime = cells.filterNot(c => cids.contains(c.cid.toInt)).
-        sortBy(_.cid).zipWithIndex.map{ case(cell, index) =>
-          cell.copy(id = index)
-        }
-
-
-      (cells_prime ++ grids_prime).map{ cell =>
+    save("/tmp/edgesC.wkt"){
+      C.map{ cell =>
         val wkt = cell.mbr.toText
-        val id  = cell.cid
+        val id  = cell.id
         val n   = cell.pop
-        val i   = cell.id
+        val i   = s"${cell.tag.pid}_${cell.tag.gid}"
 
         s"$wkt\t$id\t$n\t$i\n"
       } 
     }
+    // END: Testing cells...
+
+    val tree = new STRtree()
+    C.foreach{ cell =>
+      tree.insert(cell.mbr.getEnvelopeInternal, cell.id)
+    }
+    val points2RDD = pointsRDD.spatialPartitionedRDD.rdd.mapPartitionsWithIndex{ (pid, points) =>
+      points.flatMap { point =>
+        val envelope = point.getEnvelopeInternal
+        envelope.expandBy(epsilon / 2.0)
+        tree.query(envelope).asScala.map{ id => (id.asInstanceOf[Int], point)}.toIterator
+      }
+    }
+    //**
+
     save("/tmp/edgesR.wkt"){
-      points3RDD.map{ case(pid, p) =>
+      points2RDD.map{ case(pid, p) =>
         val wkt  = p.toText
         val data = p.getUserData.toString()
         s"$wkt\t$data\t$pid\n"

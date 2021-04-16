@@ -13,10 +13,6 @@ import org.datasyslab.geospark.spatialOperator.JoinQuery
 import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.datasyslab.geospark.enums.GridType
 
-import org.slf4j.{Logger, LoggerFactory}
-import org.jgrapht.graph.{SimpleGraph, DefaultEdge}
-import org.jgrapht.Graphs
-
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 

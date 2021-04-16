@@ -15,12 +15,14 @@ class Params(args: Seq[String]) extends ScallopConf(args) {
   val mu:          ScallopOption[Int]     = opt[Int]     (default = Some(5))
 
   val width:       ScallopOption[Double]  = opt[Double]  (default = Some(100.0))
+  val threshold:   ScallopOption[Double]  = opt[Double]  (default = Some(50.0))
 
   val storage:     ScallopOption[Int]     = opt[Int]     (default = Some(0)) // Default value for storage level...
   val seed:        ScallopOption[Long]    = opt[Long]    (default = Some(42L))
   val tolerance:   ScallopOption[Double]  = opt[Double]  (default = Some(0.001))
   val output:      ScallopOption[String]  = opt[String]  (default = Some("/tmp"))
   val debug:       ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
+  val tag:         ScallopOption[String]  = opt[String]  (default = Some("TAG"))
 
   verify()
 }
