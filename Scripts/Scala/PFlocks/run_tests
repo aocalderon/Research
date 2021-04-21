@@ -1,19 +1,20 @@
 #!/bin/bash
 
 N=$1
-#DS=(87)
-#ES=(3 6 9)
-#MS=(4 8)
-DS=(87 92 93 94 95 96 97 98)
-ES=(3 6 9 12 15)
-MS=(4 8 12 16)
+DS=(95)
+ES=(3 6)
+MS=(4 8)
+#DS=(87 92 93 94 95 96 97 98)
+#ES=(3 6 9 12 15)
+#MS=(4 8 12 16)
 
 for n in `seq 1 $N`; do
     for D in ${DS[@]}; do
 	for E in ${ES[@]}; do
     	    for M in ${MS[@]}; do
-		echo "./tester /home/acald013/Research/Meetings/next/figures/datasets/sample${D}.tsv $E $M $D"
-		./tester /home/acald013/Research/Meetings/next/figures/datasets/sample${D}.tsv $E $M $D
+		echo "Dataset=sample${D} Epsilon=$E Mu=$M"
+		./tester /home/acald013/Research/Meetings/next/figures/datasets/sample${D}.tsv Tester1 $E $M "T1|$D"
+		./tester /home/acald013/Research/Meetings/next/figures/datasets/sample${D}.tsv Tester2 $E $M "T2|$D"
             done
 	done
     done

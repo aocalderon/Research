@@ -4,12 +4,11 @@ JAR=$HOME/Research/Scripts/Scala/PFlocks/target/scala-2.11/pflocks_2.11-0.1.jar
 LIBSPATH=$HOME/Spark/2.4/jars
 LIBS=${LIBSPATH}/geospark-1.3.1.jar:${LIBSPATH}/commons-numbers-fraction-1.0-beta1.jar:${LIBSPATH}/commons-numbers-core-1.0-beta1.jar:${LIBSPATH}/scallop_2.11-4.0.1.jar:${LIBSPATH}/spark-core_2.11-2.4.0.jar:${LIBSPATH}/jgrapht-core-1.4.0.jar:${LIBSPATH}/commons-geometry-core-1.0-beta1.jar:${LIBSPATH}/commons-geometry-enclosing-1.0-beta1.jar:${LIBSPATH}/commons-geometry-euclidean-1.0-beta1.jar:${LIBSPATH}/commons-numbers-fraction-1.0-beta1.jar:${LIBSPATH}/commons-numbers-core-1.0-beta1.jar:${LIBSPATH}/commons-numbers-arrays-1.0-beta1.jar:${LIBSPATH}/slf4j-api-1.7.25.jar:${LIBSPATH}/slf4j-simple-1.7.25.jar
 
-INPUT_PATH=$1  # Path to the file with the coordinates of the points...
-CLASS_NAME=$2
-EPSILON=$3
-MU=$4
-TAG=$5
+CLASS=edu.ucr.dblab.pflock.Tester
 
-CLASS=edu.ucr.dblab.pflock.${CLASS_NAME}
+INPUT_PATH=$1  # Path to the file with the coordinates of the points...
+EPSILON=$2
+MU=$3
+TAG=$4
 
 scala -cp $LIBS:$JAR $CLASS --tolerance 0.001 --input $INPUT_PATH --epsilon $EPSILON --mu $MU --tag $TAG

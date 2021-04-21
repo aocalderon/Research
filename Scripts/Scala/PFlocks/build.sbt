@@ -22,6 +22,8 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.2" % "test"
 
 libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25"
 libraryDependencies += "org.slf4j" % "slf4j-simple" % "1.7.25"
+libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.3.4"
+
 libraryDependencies += "org.rogach" % "scallop_2.11" % "2.1.3"
 libraryDependencies += "ch.cern.sparkmeasure" %% "spark-measure" % "0.16"
 
