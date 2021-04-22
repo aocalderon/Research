@@ -3,8 +3,7 @@ package edu.ucr.dblab.pflock
 import com.vividsolutions.jts.geom.{PrecisionModel, GeometryFactory}
 import com.vividsolutions.jts.geom.{Coordinate, Point}
 
-//import org.slf4j.Logger
-import grizzled.slf4j.Logger
+import org.slf4j.Logger
 
 import scala.io.Source
 import scala.collection.JavaConverters._
@@ -18,14 +17,13 @@ import Utils._
 
 object Tester2 {
   case class Timestamp(t: Long)
-  implicit val logger = Logger("edu.ucr.dblab.pflock.Tester2")
 
   def loginfo(msg: String)(implicit start: Timestamp, logger: Logger, settings: Settings): Unit = {
     val now = System.currentTimeMillis
     val e = settings.epsilon.toInt
     val m = settings.mu
     val a = settings.appId
-    logger.info(f"|LOG|$a|$e|$m|${start.t}|${now}|${now - start.t}%5s|${msg}")
+    logger.info(f"$a|$e|$m|${start.t}|${now}|${now - start.t}|${msg}")
   }
 
   def main(args: Array[String]): Unit = {
@@ -39,6 +37,9 @@ object Tester2 {
     )
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
     implicit val start = Timestamp(System.currentTimeMillis())
+
+    val properties = System.getProperties().asScala
+    loginfo(s"COMMAND|${properties("sun.java.command")}")
 
     loginfo(s"INFO|Start")
     val input = params.input()

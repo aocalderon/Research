@@ -23,7 +23,7 @@ object Tester1 {
     val e = settings.epsilon.toInt
     val m = settings.mu
     val a = settings.appId
-    logger.info(f"|LOG|$a|$e|$m|${start.t}|${now}|${now - start.t}%5s|${msg}")
+    logger.info(f"$a|$e|$m|${start.t}|${now}|${now - start.t}|${msg}")
   }
 
   def main(args: Array[String]): Unit = {
@@ -38,6 +38,9 @@ object Tester1 {
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
     implicit val start = Timestamp(System.currentTimeMillis())
 
+    val properties = System.getProperties().asScala
+    loginfo(s"COMMAND|${properties("sun.java.command")}")
+    
     loginfo(s"INFO|Start")
     val input = params.input()
 
