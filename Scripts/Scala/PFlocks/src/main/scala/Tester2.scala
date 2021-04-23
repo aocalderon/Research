@@ -86,7 +86,7 @@ object Tester2 {
       }
     }.flatten
     val remaining = temp.foldLeft(Map.empty[Long, Point]){ (map, tuple) => map + tuple }.values.toList
-
+    loginfo(s"INFO|point_set=${remaining.size}")
     ///////////////////////
     // START: Apply BFE...
     //////////////////////

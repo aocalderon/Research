@@ -71,7 +71,20 @@ object Tester1 {
         round(mbc.getRadius) < settings.r
     }
     loginfo(s"TIME|MBC")
-    val maximals1 = maximals_prime.map{ case(mbc, points) =>
+    val ins = maximals_prime.toList
+    val ncliques1 = ins.size
+    val points_prime1 = ins.flatMap(_._2).toList
+    val replicatedPoints1 = points_prime1.size
+    val uniquePoints1 = points_prime1.map(_.getUserData.asInstanceOf[Data].id).distinct.size
+    loginfo(s"INFO|ncliques=${ncliques1};uniquePoints=${uniquePoints1};replicatedPoints=${replicatedPoints1}")
+    val outs = disks_prime.toList
+    val ncliques2 = outs.size
+    val points_prime2 = outs.flatMap(_._2).toList
+    val replicatedPoints2 = points_prime2.size
+    val uniquePoints2 = points_prime2.map(_.getUserData.asInstanceOf[Data].id).distinct.size
+    loginfo(s"INFO|ncliques=${ncliques2};uniquePoints=${uniquePoints2};replicatedPoints=${replicatedPoints2}")
+    loginfo(s"TIME|Stats")
+    val maximals1 = ins.map{ case(mbc, points) =>
       val pids = points.map(_.getUserData.asInstanceOf[Data].id)
       val center = geofactory.createPoint(new Coordinate(mbc.getCenter.getX,
         mbc.getCenter.getY))
