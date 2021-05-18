@@ -76,38 +76,25 @@
     \end{frame}
 }
 
-\begin{frame}{Results by different Epsilon...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/M_E6} 
-\end{frame}
-\begin{frame}{Results...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/M_E9} 
-\end{frame}
-\begin{frame}{Results...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/M_E12} 
-\end{frame}
-\begin{frame}{Results...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/M_E15} 
+\begin{frame}{Experiments...}
+    \begin{itemize}
+        \item Fixing some issues.  Testing outputs with sequential BFE.  Identical outputs.
+        \item Proof of concept using the dense area of the L.A. dataset (2671 points).
+        \item Using just one node with 10 cores.  
+        \item Using the same partitioning squema to 40 partitions (Quadtree with max entries = 250) for both methods.
+        \item Testing BFE and Clique/MBC (CMBC) alternatives at local level.
+        \item Varying epsilon and mu parameters.
+    \end{itemize}
 \end{frame}
 
-\begin{frame}{Results by different Mu...}
+\begin{frame}{Results...}
     \centering
-    \includegraphics[width=0.95\textwidth]{figures/E_M4} 
+    \includegraphics[width=0.85\textwidth]{figures/epsilon} 
 \end{frame}
-\begin{frame}{Results by different Mu...}
+
+\begin{frame}{Results...}
     \centering
-    \includegraphics[width=0.95\textwidth]{figures/E_M8} 
-\end{frame}
-\begin{frame}{Results by different Mu...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/E_M12} 
-\end{frame}
-\begin{frame}{Results by different Mu...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/E_M16} 
+    \includegraphics[width=0.85\textwidth]{figures/mu} 
 \end{frame}
 
 \end{document}
