@@ -15,4 +15,4 @@ TAG=$5
 
 CLASS=edu.ucr.dblab.pflock.${CLASS_NAME}
 
-scala -cp $LIBS:$JAR -Dlog4j.configuration=$LOG_FILE $CLASS --tolerance 0.001 --input $INPUT_PATH --epsilon $EPSILON --mu $MU --tag $TAG
+scala -cp $LIBS:$JAR -Dlog4j.configuration=$LOG_FILE $CLASS --tolerance 0.001 --input $INPUT_PATH --epsilon $EPSILON --mu $MU --tag $TAG --debug

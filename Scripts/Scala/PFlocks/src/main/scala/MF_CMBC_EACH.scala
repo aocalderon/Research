@@ -15,10 +15,12 @@ import edu.ucr.dblab.pflock.welzl.Welzl
 
 import Utils._
 
-object Tester1 {
+object MF_CMBC_EACH {
+  // Helper function and case classes to log data...
   case class Timestamp(t: Long)
 
-  def loginfo(msg: String)(implicit start: Timestamp, logger: Logger, settings: Settings): Unit = {
+  def loginfo(msg: String)
+    (implicit start: Timestamp, logger: Logger, settings: Settings): Unit = {
     val now = System.currentTimeMillis
     val e = settings.epsilon.toInt
     val m = settings.mu
@@ -27,6 +29,7 @@ object Tester1 {
   }
 
   def main(args: Array[String]): Unit = {
+    // Starting session...
     implicit val params = new Params(args)
     implicit val settings = Settings(
       epsilon_prime = params.epsilon(),
@@ -37,13 +40,12 @@ object Tester1 {
     )
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
     implicit val start = Timestamp(System.currentTimeMillis())
-
     val properties = System.getProperties().asScala
     loginfo(s"COMMAND|${properties("sun.java.command")}")
-    
     loginfo(s"INFO|Start")
-    val input = params.input()
 
+    // Reading input data...
+    val input = params.input()
     val pointsBuffer = Source.fromFile(input)
     val points = pointsBuffer.getLines.map{ line =>
       val arr = line.split("\t")
@@ -56,15 +58,21 @@ object Tester1 {
       point
     }.toList
     pointsBuffer.close
-    
     loginfo(s"INFO|points=${points.size}")
+    loginfo(s"TIME|Read")
+
+    // Building initial graph...
     val vertices = points
     val edges = getEdges(vertices, settings.epsilon)
     loginfo(s"TIME|Graph")
+
+    // Computing cliques...
     val cliques = bk(vertices, edges).iterator
       .filter(_.size >= settings.mu) // Filter cliques with no enough points...
     loginfo(s"TIME|Cliques")
 
+    // Getting cliques enclosed by an unique MBC (maximals_prime) and
+    // those which require further analysis (disks_prime)...
     val (maximals_prime, disks_prime) = cliques.map{ points =>
       val mbc = Welzl.mbc(points)
       (mbc, points)
@@ -72,19 +80,25 @@ object Tester1 {
         round(mbc.getRadius) < settings.r
     }
     loginfo(s"TIME|MBC")
+
+    // Collecting stats...
     val ins = maximals_prime.toList
     val ncliques1 = ins.size
     val points_prime1 = ins.flatMap(_._2).toList
     val replicatedPoints1 = points_prime1.size
     val uniquePoints1 = points_prime1.map(_.getUserData.asInstanceOf[Data].id).distinct.size
-    loginfo(s"INFO|ncliques=${ncliques1};uniquePoints=${uniquePoints1};replicatedPoints=${replicatedPoints1}")
+    loginfo(s"INFO|ncliques=${ncliques1};uniquePoints=${uniquePoints1};" +
+      s"replicatedPoints=${replicatedPoints1}")
     val outs = disks_prime.toList
     val ncliques2 = outs.size
     val points_prime2 = outs.flatMap(_._2).toList
     val replicatedPoints2 = points_prime2.size
     val uniquePoints2 = points_prime2.map(_.getUserData.asInstanceOf[Data].id).distinct.size
-    loginfo(s"INFO|ncliques=${ncliques2};uniquePoints=${uniquePoints2};replicatedPoints=${replicatedPoints2}")
+    loginfo(s"INFO|ncliques=${ncliques2};uniquePoints=${uniquePoints2};" +
+      s"replicatedPoints=${replicatedPoints2}")
     loginfo(s"TIME|Stats")
+
+    // Collecting flocks on cliques enclosed by unique MBC...
     val maximals1 = ins.map{ case(mbc, points) =>
       val pids = points.map(_.getUserData.asInstanceOf[Data].id)
       val center = geofactory.createPoint(new Coordinate(mbc.getCenter.getX,
@@ -93,7 +107,10 @@ object Tester1 {
       Disk(center, pids, List.empty)
     }.toList
     loginfo("TIME|EnclosedByMBC")
-    val maximals2 = disks_prime.map{ case(mbc, points) =>
+
+    // Collecting flocks on cliques not enclosed by unique MBC...
+    // EACH variant...
+    val maximals2 = outs.map{ case(mbc, points) =>
       val centers = computeCenters(computePairs(points, settings.epsilon))
       val disks = getDisks(points, centers).map{ p =>
         val pids = p.getUserData.asInstanceOf[List[Long]]
@@ -102,17 +119,23 @@ object Tester1 {
       pruneDisks(disks)
     }.toList.flatten
     loginfo("TIME|NotEnclosedByMBC")
+
+    // Prunning possible duplicates...
     val maximals = pruneDisks(maximals1 ++ maximals2)
     loginfo("TIME|Prune")
+
+    // Reporting total number of flocks...
     loginfo(s"INFO|flocks=${maximals.size}")
 
+    // Ending session...
     if(settings.debug){
-      save("/tmp/flocks.txt"){
+      save(s"/tmp/flocks${params.tag()}.txt"){
         maximals.map{ maximal =>
-          maximal.toString + "\n"
+          maximal.pids.mkString(" ") + "\n"
         }
       }
     }
-    loginfo("INFO|End")
+    loginfo("INFO|End")    
+    
   }
 }
