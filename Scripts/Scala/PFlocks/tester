@@ -12,7 +12,8 @@ CLASS_NAME=$2
 EPSILON=$3
 MU=$4
 TAG=$5
+THRESHOLD=$6
 
 CLASS=edu.ucr.dblab.pflock.${CLASS_NAME}
 
-scala -cp $LIBS:$JAR -Dlog4j.configuration=$LOG_FILE $CLASS --tolerance 0.001 --input $INPUT_PATH --epsilon $EPSILON --mu $MU --tag $TAG --debug
+scala -cp $LIBS:$JAR -Dlog4j.configuration=$LOG_FILE $CLASS --tolerance 0.001 --input $INPUT_PATH --epsilon $EPSILON --mu $MU --tag $TAG --threshold $THRESHOLD

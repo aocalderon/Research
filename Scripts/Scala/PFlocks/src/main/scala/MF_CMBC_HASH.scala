@@ -117,7 +117,7 @@ object MF_CMBC_HASH {
       val key = points.map(_.getUserData.asInstanceOf[Data].id).toSet
       P(key, points)
     }.toList
-    val threshold = 10
+    val threshold = params.cluster()
     val L = List[(Set[Long], Int)]()
     val S = List[P]()
     val G = List[(Int, P)]()
