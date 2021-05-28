@@ -16,21 +16,13 @@ import edu.ucr.dblab.pflock.welzl.Welzl
 import Utils._
 import Hasher.{P, run}
 
-object MF_CMBC_HASH {
-  // Helper function and case classes to log data...
-  case class Timestamp(t: Long)
+import MF_CMBC_EACH.{Timestamp, Now, loginfo, stamp, collectStats}
 
-  def loginfo(msg: String)
-    (implicit start: Timestamp, logger: Logger, settings: Settings): Unit = {
-    val now = System.currentTimeMillis
-    val e = settings.epsilon.toInt
-    val m = settings.mu
-    val a = settings.appId
-    logger.info(f"$a|$e|$m|${start.t}|${now}|${now - start.t}|${msg}")
-  }
+object MF_CMBC_HASH {
 
   def main(args: Array[String]): Unit = {
     // Starting session...
+    implicit var now = Now(System.currentTimeMillis)
     implicit val params = new Params(args)
     implicit val settings = Settings(
       epsilon_prime = params.epsilon(),
@@ -83,20 +75,9 @@ object MF_CMBC_HASH {
     loginfo(s"TIME|MBC")
 
     // Collecting stats...
-    val ins = maximals_prime.toList
-    val ncliques1 = ins.size
-    val points_prime1 = ins.flatMap(_._2).toList
-    val replicatedPoints1 = points_prime1.size
-    val uniquePoints1 = points_prime1.map(_.getUserData.asInstanceOf[Data].id).distinct.size
-    loginfo(s"INFO|ncliques=${ncliques1};uniquePoints=${uniquePoints1};" +
-      s"replicatedPoints=${replicatedPoints1}")
+    val ins  = maximals_prime.toList
     val outs = disks_prime.toList
-    val ncliques2 = outs.size
-    val points_prime2 = outs.flatMap(_._2).toList
-    val replicatedPoints2 = points_prime2.size
-    val uniquePoints2 = points_prime2.map(_.getUserData.asInstanceOf[Data].id).distinct.size
-    loginfo(s"INFO|ncliques=${ncliques2};uniquePoints=${uniquePoints2};" +
-      s"replicatedPoints=${replicatedPoints2}")
+    collectStats(ins, outs)
     loginfo(s"TIME|Stats")
 
     // Collecting flocks on cliques enclosed by unique MBC...
@@ -111,8 +92,8 @@ object MF_CMBC_HASH {
 
     // Collecting flocks on cliques not enclosed by unique MBC...
     // HASH variant...
-
-    //
+    now.t = System.currentTimeMillis
+    // Hashing cliques...
     val C = outs.map{ case(ball, points) =>
       val key = points.map(_.getUserData.asInstanceOf[Data].id).toSet
       P(key, points)
@@ -123,18 +104,32 @@ object MF_CMBC_HASH {
     val G = List[(Int, P)]()
 
     val r = run(C, threshold, L, S, G)
+    loginfo(s"INFO2|ncliques=${r.length}")
+    stamp("TIME2|hash")
+    // Grouping cliques...
     val clusteredOuts = r.groupBy(_._1).map{ case(key, values) =>
       values.map{ case(k, v) => v.points }.flatten.distinct
-    }
-    //
-
+    }.toList
+    loginfo(s"INFO2|ngroups=${clusteredOuts.length}")
+    stamp("TIME2|group")
     val maximals2 = clusteredOuts.map{ points =>
-      val centers = computeCenters(computePairs(points, settings.epsilon))
+      now.t = System.currentTimeMillis
+      val pairs = computePairs(points, settings.epsilon)
+      stamp("TIME2|pairs")
+      loginfo(s"INFO2|npairs=${pairs.length}")
+      val centers = computeCenters(pairs)
+      stamp("TIME2|centers")
+      loginfo(s"INFO2|ncenters=${centers.length}")
       val disks = getDisks(points, centers).map{ p =>
         val pids = p.getUserData.asInstanceOf[List[Long]]
         Disk(p, pids, List.empty[Int])
       }
-      pruneDisks(disks)
+      stamp("TIME2|disks")
+      loginfo(s"INFO2|ndisks=${disks.length}")
+      val maximals = pruneDisks(disks)
+      stamp("TIME2|maximals")
+      loginfo(s"INFO2|nmaximals=${maximals.length}")
+      maximals
     }.toList.flatten
     loginfo("TIME|NotEnclosedByMBC")
 
@@ -154,6 +149,5 @@ object MF_CMBC_HASH {
       }
     }
     loginfo("INFO|End")    
-    
   }
 }

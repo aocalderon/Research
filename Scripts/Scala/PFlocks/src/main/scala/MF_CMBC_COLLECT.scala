@@ -13,23 +13,16 @@ import edu.ucr.dblab.pflock.pbk.PBK.bk
 import edu.ucr.dblab.pflock.pbk.PBK_Utils.getEdges
 import edu.ucr.dblab.pflock.welzl.Welzl
 
+import MF_CMBC_EACH.{Timestamp, Now, loginfo, stamp, collectStats}
+
 import Utils._
 
 object MF_CMBC_COLLECT {
   // Helper function and case classes to log data...
-  case class Timestamp(t: Long)
-
-  def loginfo(msg: String)
-    (implicit start: Timestamp, logger: Logger, settings: Settings): Unit = {
-    val now = System.currentTimeMillis
-    val e = settings.epsilon.toInt
-    val m = settings.mu
-    val a = settings.appId
-    logger.info(f"$a|$e|$m|${start.t}|${now}|${now - start.t}|${msg}")
-  }
 
   def main(args: Array[String]): Unit = {
     // Starting session...
+    implicit var now = Now(System.currentTimeMillis())    
     implicit val params = new Params(args)
     implicit val settings = Settings(
       epsilon_prime = params.epsilon(),
@@ -82,20 +75,9 @@ object MF_CMBC_COLLECT {
     loginfo(s"TIME|MBC")
 
     // Collecting stats...
-    val ins = maximals_prime.toList
-    val ncliques1 = ins.size
-    val points_prime1 = ins.flatMap(_._2).toList
-    val replicatedPoints1 = points_prime1.size
-    val uniquePoints1 = points_prime1.map(_.getUserData.asInstanceOf[Data].id).distinct.size
-    loginfo(s"INFO|ncliques=${ncliques1};uniquePoints=${uniquePoints1};" +
-      s"replicatedPoints=${replicatedPoints1}")
+    val ins  = maximals_prime.toList
     val outs = disks_prime.toList
-    val ncliques2 = outs.size
-    val points_prime2 = outs.flatMap(_._2).toList
-    val replicatedPoints2 = points_prime2.size
-    val uniquePoints2 = points_prime2.map(_.getUserData.asInstanceOf[Data].id).distinct.size
-    loginfo(s"INFO|ncliques=${ncliques2};uniquePoints=${uniquePoints2};" +
-      s"replicatedPoints=${replicatedPoints2}")
+    collectStats(ins, outs)
     loginfo(s"TIME|Stats")
 
     // Collecting flocks on cliques enclosed by unique MBC...
@@ -110,23 +92,37 @@ object MF_CMBC_COLLECT {
 
     // Collecting flocks on cliques not enclosed by unique MBC...
     // COLLECT variant...
-    val temp = outs.map{ case(mbc, points) =>
+    now.t = System.currentTimeMillis
+    // Collecting list of points in cliques not enclosed by unique MBC...
+    val collect_list = outs.map{ case(mbc, points) =>
       points.map{ point =>
         val id = point.getUserData.asInstanceOf[Data].id
         (id, point)
       }
-    }.flatten
-    // Collecting set of points in cliques not enclosed by unique MBC...
-    val collect_set = temp
-      .foldLeft(Map.empty[Long, Point]){ (map, tuple) => map + tuple }.values.toList
-    loginfo(s"INFO|collect_set=${collect_set.size}")
+    }
+    stamp("TIME2|collect")
+    // Prunning duplicate points...
+    val collect_set = collect_list.flatten.foldLeft(Map.empty[Long, Point]){
+      (map, tuple) => map + tuple
+    }.values.toList
+    stamp("TIME2|duplicates")
+    loginfo(s"INFO2|collect_set=${collect_set.size}")
     // Applying BFE over just that set...
-    val centers = computeCenters(computePairs(collect_set, settings.epsilon))
+    val pairs = computePairs(collect_set, settings.epsilon)
+    stamp("TIME2|pairs")
+    loginfo(s"INFO2|npairs=${pairs.length}")
+    val centers = computeCenters(pairs)
+    stamp("TIME2|centers")
+    loginfo(s"INFO2|ncenters=${centers.length}")
     val disks = getDisks(collect_set, centers).map{ p =>
       val pids = p.getUserData.asInstanceOf[List[Long]]
       Disk(p, pids, List.empty[Int])
     }
+    stamp("TIME2|disks")
+    loginfo(s"INFO2|ndisks=${disks.length}")
     val maximals2 = pruneDisks(disks)
+    stamp("TIME2|maximals")
+    loginfo(s"INFO2|nmaximals=${maximals2.length}")    
     loginfo("TIME|NotEnclosedByMBC")
 
     // Prunning possible duplicates...
