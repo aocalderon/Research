@@ -2,20 +2,20 @@
 
 N=$1
 #DS=(95)
-#ES=(3 6)
-#MS=(4 8)
-#TS=(3 4)
+#ES=(3)
+#MS=(8)
+#TS=(3)
 
-DS=(93 94 95 96)
-ES=(6 9 12 15)
+DS=(93 94 95)
+ES=(9 12 15)
 MS=(4 8 12 16)
-TS=(3 4 5 6 7 8)
+TS=(3 4 5)
 
 for n in `seq 1 $N`; do
     for D in ${DS[@]}; do
 	for E in ${ES[@]}; do
     	    for M in ${MS[@]}; do
-		echo "Dataset=sample${D} Epsilon=$E Mu=$M Threshold=$T"
+		echo "Dataset=sample${D} Epsilon=$E Mu=$M"
 		./tester /home/acald013/Research/Meetings/next/figures/datasets/sample${D}.tsv MF_CMBC_EACH $E $M "EACH" 5
 		./tester /home/acald013/Research/Meetings/next/figures/datasets/sample${D}.tsv MF_CMBC_COLLECT $E $M "COLLECT" 5
 		for T in ${TS[@]}; do
