@@ -31,6 +31,14 @@ spark-warehouse
 #/.bloop/
 #/.metals/
 
+Scripts/Scala/Cliques/target/*
+Scripts/Scala/Cliques/project/*
+Scripts/Scala/Cliques/.ensime
+Scripts/Scala/Cliques/.ensime_cache/*
+Scripts/Scala/Cliques/.classpath
+Scripts/Scala/Cliques/.project
+Scripts/Scala/Cliques/.settings/*
+
 Scripts/Scala/PFlocks/target/*
 Scripts/Scala/PFlocks/project/*
 Scripts/Scala/PFlocks/.idea/*
