@@ -1,7 +1,7 @@
 library(tidyverse)
 library(ggplot2)
 
-data0 = enframe(readLines("variants.txt"))
+data0 = enframe(readLines("variants4.txt"))
 
 paramsPattern = "input"
 getParams <- function(command){
@@ -44,8 +44,9 @@ data = scala %>% inner_join(variants, by = c("appId")) %>%
   select(variant, epsilon, mu, cell, stage, time) %>%
   group_by(cell, variant, epsilon, mu, stage) %>% summarise(time = mean(time)) %>% ungroup()
 
-M=4
-C="96"
+E=15
+M=3
+C="99"
 S="NotEnclosed"
 data95 = data %>% filter(cell == C & mu == M & stage == S)
 

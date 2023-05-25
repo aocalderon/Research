@@ -76,6 +76,32 @@
     \end{frame}
 }
 
+\begin{frame}{The problem...}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/LA2}
+\end{frame}
+
+\begin{frame}{The problem...}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/TP036}
+\end{frame}
+
+\begin{frame}{Reducing the number of disks...}
+    \centering
+    \includegraphics[trim={5cm 1cm 3cm 3cm}, clip, width=0.7\textheight]{figures/flowchart}
+\end{frame}
+
+
+\begin{frame}{Approach...}
+    Measuring three alternatives:
+    \begin{itemize}
+     \item Collect: apply BFE once over all the remained points.
+     \item Each: apply BFE many times with the points of each disk.
+     \item Hash: organize the disks in groups (according to points in common) and apply BFE at each group.
+    \end{itemize}
+
+\end{frame}
+
 \begin{frame}{Hash Variant...}{Logic}
     \centering
     \includegraphics[trim={1cm 10cm 11cm 1cm}, clip,width=0.8\textwidth]{figures/L1} 
@@ -109,19 +135,19 @@
     \includegraphics[trim={1cm 10cm 11cm 1cm}, clip,width=0.8\textwidth]{figures/L8} 
 \end{frame}
 
-\begin{frame}{Hash Variant...}{Experiments [Cell: 93]}
+\begin{frame}{Experiments...}{[Cell: 93]}
     \centering
     \includegraphics[width=0.95\textwidth]{figures/C_93E_15_M4} 
 \end{frame}
-\begin{frame}{Hash Variant...}{Experiments [Cell: 94]}
+\begin{frame}{Experiments...}{[Cell: 94]}
     \centering
     \includegraphics[width=0.95\textwidth]{figures/C_94E_15_M4} 
 \end{frame}
-\begin{frame}{Hash Variant...}{Experiments [Cell: 95]}
+\begin{frame}{Experiments...}{[Cell: 95]}
     \centering
     \includegraphics[width=0.95\textwidth]{figures/C_95E_15_M4} 
 \end{frame}
-\begin{frame}{Hash Variant...}{Experiments [Cell: 96]}
+\begin{frame}{Experiments...}{[Cell: 96]}
     \centering
     \includegraphics[width=0.95\textwidth]{figures/C_96E_15_M4} 
 \end{frame}
