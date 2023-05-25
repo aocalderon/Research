@@ -1,0 +1,14 @@
+#!/bin/bash
+
+TS=( 316 317 318 319 320 )
+CS=( 100 250 500 1000 2000 )
+
+for t in "${TS[@]}"
+do
+    for c in "${CS[@]}"
+    do
+	echo "./cell_explorer /home/acald013/Datasets/LA/LA_50K_T${t}.tsv $c \"T${t}_C${c}\""
+	./cell_explorer /home/acald013/Datasets/LA/LA_50K_T${t}.tsv $c "T${t}_C${c}"
+    done
+done
+

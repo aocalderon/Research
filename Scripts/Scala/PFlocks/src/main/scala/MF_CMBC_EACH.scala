@@ -33,12 +33,12 @@ object MF_CMBC_EACH {
   }
 
   def stamp(msg: String)
-    (implicit mark: Now, logger: Logger, settings: Settings): Unit = {
+    (implicit start: Timestamp, mark: Now, logger: Logger, settings: Settings): Unit = {
     val now = System.currentTimeMillis
     val e = settings.epsilon.toInt
     val m = settings.mu
     val a = settings.appId
-    logger.info(f"$a|$e|$m|${mark.t}|${now}|${now - mark.t}|${msg}")
+    logger.info(f"$a|$e|$m|${start.t}|${now}|${now - mark.t}|${msg}")
     mark.t = now
   }
 
