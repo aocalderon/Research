@@ -1,0 +1,31 @@
+---
+fontsize: 9pt
+output: 
+  pdf_document:
+    keep_tex: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE)
+knitr::opts_knit$set("/tmp")
+require(tidyverse)
+library(knitr)
+require(sf)
+unlink("quad_cache", recursive = TRUE)
+unlink("quad_child_cache", recursive = TRUE)
+```
+
+```{r histogram, echo=FALSE, include=FALSE}
+files <- as_tibble(list.files(path="data2/")) |> 
+  separate(col = value, into = c("tag", "time", "capacity", "ncells"), sep = "_", remove = F) |>
+  mutate(time = as.numeric(str_sub(time, 2, -1)), capacity = as.numeric(str_sub(capacity, 2, -1))) |>
+  select(value, time, capacity) |> arrange(time, capacity)
+
+out = NULL
+for(afile in files$value[c(1,2)]){
+#for(afile in files$value){
+  out = c(out,  knitr::knit_child('quad_child.Rmd', quiet = TRUE))
+}
+```
+
+`r paste(out, collapse='\n')`

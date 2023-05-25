@@ -13,8 +13,9 @@ require(tidyverse)
 require(sf)
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
 
 ```{r}
+file_list <- list.files(path="/home/and/Research/tmp/")
+
 plot(cars)
 ```
