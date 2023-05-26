@@ -64,17 +64,14 @@ object CellExplorer {
         }
       }
     }
-    save(s"/tmp/T${settings.tag}.tsv"){
-      points_by_cid.map(_.toString() + "\n")
-    }
-    case class Distances(cid: Int, dist: Double)
-    val distances = timer(s"${settings.appId}|Computing distances"){
+    case class Pairs(cid: Int, n: Int)
+    val pairs = timer(s"${settings.appId}|Computing distances"){
       points_by_cid.groupBy(_.cid).map{ case(cid, stpoints) =>
         val tree = new STRtree()
         stpoints.foreach{ stpoint =>
           tree.insert(stpoint.point.getEnvelopeInternal, stpoint)
         }
-        val dists = stpoints.map{ stpoint =>
+        val pairs = stpoints.map{ stpoint =>
           val envelope = stpoint.point.getEnvelopeInternal
           envelope.expandBy(settings.epsilon)
           tree.query(envelope).asScala.map(_.asInstanceOf[STPoint])
@@ -82,26 +79,17 @@ object CellExplorer {
               stpoint.distance(other)
             }.filter(_ < settings.epsilon)
         }.flatten.toList
-        if(cid == 94) {
-          println(s"Cell ID:         ${cid}")
-          println(s"Number of Pairs: ${dists.length}")
-          dists.foreach{println}
-          println(dists.sum)
-          println(dists.sum / dists.length)
-          
-        }
-        Distances(cid, dists.sum / dists.length)
+        Pairs(cid, pairs.length)
       }
     }
 
-    distances.filter(_.cid < 11).foreach{println}
-
-
     logger.info("INFO|Saving data|START")
     val ncells = quadtree.getLeafZones.size()
-    Quadtree.save(quadtree, s"/tmp/q_${settings.tag}_Q${ncells}_E${settings.epsilon.toInt}.wkt")
+    Quadtree.save(quadtree,
+      s"/tmp/q_${settings.tag}_Q${ncells}_E${settings.epsilon.toInt}.wkt")
 
-    val f = new java.io.FileWriter(s"/tmp/n_${settings.tag}_Q${ncells}_E${settings.epsilon.toInt}.wkt")
+    val f = new java.io.FileWriter(
+      s"/tmp/n_${settings.tag}_Q${ncells}_E${settings.epsilon.toInt}.wkt")
 
     case class Cell(cid: Int, mbr: String)
     val cells = quadtree.getLeafZones.asScala.map{ leaf =>
@@ -114,19 +102,19 @@ object CellExplorer {
     }
 
     val N = for{
-      cell     <- cells
-      count    <- counts
-      distance <- distances
+      cell  <- cells
+      count <- counts
+      pair  <- pairs
 
-      if(cell.cid == count.cid && cell.cid == distance.cid)
+      if(cell.cid == count.cid && cell.cid == pair.cid)
 
     } yield {
       val wkt = cell.mbr
       val cid = cell.cid
-      val   n = count.n
-      val   d = distance.dist
+      val npoints = count.n
+      val npairs  = pair.n
 
-      s"$wkt\t$cid\t$n\t$d\n"
+      s"$wkt\t$cid\t$npoints\t$npairs\n"
     }
     f.write(N.mkString(""))
     f.close()
