@@ -81,14 +81,14 @@ object Quadtree {
     }
   }
 
-  def getQuadtreeFromPoints(points: List[Point], maxItemsPerNode: Int, level: Int = 0, maxLevel: Int = 16): StandardQuadTree[Point] = {
+  def getQuadtreeFromPoints(points: List[Point], capacity: Int, level: Int = 0, maxLevel: Int = 16): StandardQuadTree[Point] = {
     val minx = points.minBy(_.getX).getX
     val miny = points.minBy(_.getY).getY
     val maxx = points.maxBy(_.getX).getX
     val maxy = points.maxBy(_.getY).getY
     val envelope = new Envelope(new Coordinate(minx, miny), new Coordinate(maxx, maxy))
     val rectangle = new QuadRectangle(envelope)
-    val quadtree = new StandardQuadTree[Point](rectangle, level, maxItemsPerNode, maxLevel)
+    val quadtree = new StandardQuadTree[Point](rectangle, level, capacity, maxLevel)
 
     points.foreach { point =>
       val mbr = new QuadRectangle(point.getEnvelopeInternal)
