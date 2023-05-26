@@ -1,9 +1,10 @@
 ---
 fontsize: 9pt
 geometry: margin=2cm
+classoption: landscape
 output: 
   pdf_document:
-    keep_tex: no
+    keep_tex: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -27,9 +28,14 @@ files <- as_tibble(list.files(path="data/")) |>
 
 out = NULL
 #for(afile in files){
-for(afile in files$value){
-  out = c(out,  knitr::knit_child('distance_child.Rmd', quiet = TRUE))
+for(afile in files$value[1:3]){
+  arr = str_split(afile, "_")
+  time_instant = str_sub(arr[[1]][2],2,-1)
+  capacity     = str_sub(arr[[1]][3],2,-1)
+  leafs        = str_sub(arr[[1]][4],2,-1)
+  epsilon      = str_split(str_sub(arr[[1]][5],2,-1), "\\.")[[1]][1]  
+  out = c(out,  knitr::knit_expand('distance_child.Rmd', quiet = TRUE))
 }
 ```
 
-`r paste(out, collapse='\n')`
+`r paste(knitr::knit(text = out), collapse = '\n')`

@@ -5,7 +5,7 @@ require(scales)
 #require(osmdata)
 
 CRS = 6423
-filename = "quads/n_T316_C2000_Q70.wkt"
+filename = "data/n_T318_C1000_Q127_E10.wkt"
 data = read_tsv(filename, col_names = c("wkt", "cid", "n"))
 geom = st_as_sf(data, crs = CRS, wkt = 1)
 
@@ -28,9 +28,18 @@ ggplot(geom) +
   #geom_sf(data = la_small_streets$osm_lines, inherit.aes = FALSE, color = "#a6a6a6", size = .2, alpha = .8) +
   #geom_sf(data = la_rivers$osm_lines, inherit.aes = FALSE, color = "#7fc0ff", size = .8, alpha = .5) +  
   geom_sf(aes(fill = n)) + 
+  coord_sf(datum = NA) +
   geom_point(data = points, aes(x = x, y = y), size = 0.1, alpha = 0.1) +   
-  scale_fill_gradient(low = "#FFFFFF", high ="#FF0000") +
+  scale_fill_gradient(low = "#FFFFFF", high ="#FF0000", name = "Points per cell") +
   xlab("") + ylab("") +
   theme_minimal() +
-  theme(axis.text = element_blank()) 
+  theme(axis.text = element_blank(), 
+        legend.position="top",
+        legend.key.height = unit(0.25, 'cm'),
+        legend.key.width  = unit(0.75, 'cm'),
+        legend.title      = element_text(size=8),
+        legend.text       = element_text(size=8),
+        legend.margin     = margin(0, 0, 0, 0),
+        legend.box.margin = margin(0, 0, -10, 0)
+        )
   
