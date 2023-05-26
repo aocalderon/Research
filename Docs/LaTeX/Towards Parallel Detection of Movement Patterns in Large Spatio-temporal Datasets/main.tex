@@ -3,7 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[square]{natbib}
 \usepackage{graphicx}
-\usepackage{minted}
+%\usepackage{minted}
 \usepackage{subcaption}
 
 \title{Towards Parallel Detection of Movement Patterns in Large Spatio-temporal Datasets}
@@ -66,18 +66,18 @@ In particular, \texttt{DISTANCE JOIN} and \texttt{CIRCLERANGE} operators were us
 
 \begin{figure}
  \centering
-    \begin{minted}[fontsize=\footnotesize,tabsize=8,breaklines,framesep=10pt,frame=single, escapeinside=||,mathescape=true]{sql}
-SELECT 
-	* 
-FROM 
-	points p1
-|\color{blue}{DISTANCE JOIN}|
-	points p2 
-ON 
-	POINT(p2.x, p2.y) IN |\color{blue}{CIRCLERANGE}|(POINT(p1.x, p1.y), |$\varepsilon$|)
-WHERE 
-	p1.id < p2.id
-    \end{minted}
+%     \begin{minted}[fontsize=\footnotesize,tabsize=8,breaklines,framesep=10pt,frame=single, escapeinside=||,mathescape=true]{sql}
+% SELECT
+% 	*
+% FROM
+% 	points p1
+% |\color{blue}{DISTANCE JOIN}|
+% 	points p2
+% ON
+% 	POINT(p2.x, p2.y) IN |\color{blue}{CIRCLERANGE}|(POINT(p1.x, p1.y), |$\varepsilon$|)
+% WHERE
+% 	p1.id < p2.id
+%     \end{minted}
  \caption{SQL statement on Simba to find points lying inside an $\varepsilon$ distance.}
  \label{fig:sql}
 \end{figure}

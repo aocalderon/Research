@@ -1,0 +1,50 @@
+```{r, echo=FALSE, include=FALSE, message=FALSE}
+  arr = str_split(afile, "_")
+  time_instant = str_sub(arr[[1]][2],2,-1)
+  capacity     = str_sub(arr[[1]][3],2,-1)
+  leafs        = str_sub(arr[[1]][4],2,-1)
+  epsilon      = str_split(str_sub(arr[[1]][5],2,-1), "\\.")[[1]][1]
+  
+  data = read_tsv(paste0("data/",afile), col_names = c("wkt", "cid", "n"))
+```
+
+```{r,echo=FALSE, results='asis'} 
+cat(paste0("\nTime instant   : ",  time_instant, " (capacity=", capacity,", leafs=", leafs,", epsilon=", epsilon,").\\"))
+```
+------------------------------------
+
+```{r,echo=FALSE, results='asis'}
+stats = unclass(summary(data$n))
+tab = xtable(t(as.data.frame(stats)))
+print(tab, comment=FALSE)
+```
+
+```{r, echo=FALSE, message=FALSE, fig.width=5, fig.height=2.5, fig.align='center'}
+  m = mean(data$n)
+  s = sd(data$n)
+  p = ggplot(data, aes(x = n)) + geom_histogram(color="black", fill="white") + 
+    geom_vline(aes(xintercept = m),col='red', linetype = "longdash") + 
+    geom_vline(aes(xintercept = m - s),col='blue', linetype = "dotted") + 
+    geom_vline(aes(xintercept = m + s),col='blue', linetype = "dotted") +
+    theme(axis.title.x = element_blank())
+  suppressWarnings(print(p))
+```
+
+```{r, echo=FALSE, message=FALSE, fig.height=6, fig.align='center'}
+CRS = 6423
+geom = st_as_sf(data, crs = CRS, wkt = 1)
+filename = paste0("time_instants/LA_50K_T",time_instant,".tsv")
+points = read_tsv(filename, col_names = c("oid", "x", "y", "tid")) 
+
+p = ggplot(geom) + 
+  geom_sf(aes(fill = n)) + 
+  #geom_point(data = points, aes(x = x, y = y), size = 0.1, alpha = 0.1) +   
+  scale_fill_gradient(low = "#FFFFFF", high ="#FF0000") +
+  xlab("") + ylab("") +
+  theme_minimal() +
+  theme(axis.text = element_blank()) 
+
+suppressWarnings(print(p))
+```
+
+\pagebreak

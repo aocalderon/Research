@@ -1,0 +1,35 @@
+---
+fontsize: 9pt
+geometry: margin=2cm
+output: 
+  pdf_document:
+    keep_tex: no
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(xtable)
+library(sf)
+```
+
+```{r histogram, echo=FALSE, include=FALSE}
+files <- as_tibble(list.files(path="data/")) |> 
+  separate(col = value, into = c("filename", NA), sep = "\\.", remove = F) |>
+  separate(col = filename, into = c("tag", "time", "capacity", "ncells", "epsilon"), sep = "_") |>
+  mutate(time = as.numeric(str_sub(time, 2, -1)), 
+         capacity = as.numeric(str_sub(capacity, 2, -1)),
+         ncells = as.numeric(str_sub(ncells, 2, -1)),
+         epsilon = as.numeric(str_sub(epsilon, 2, -1)) 
+         ) |>
+  select(value, time, epsilon, capacity) |> 
+  filter(time == 318) |> 
+  arrange(time, epsilon, capacity) 
+
+out = NULL
+#for(afile in files){
+for(afile in files$value){
+  out = c(out,  knitr::knit_child('quad_child.Rmd', quiet = TRUE))
+}
+```
+
+`r paste(out, collapse='\n')`
