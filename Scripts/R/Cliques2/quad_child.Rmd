@@ -2,13 +2,14 @@
   arr = str_split(afile, "_")
   time_instant = str_sub(arr[[1]][2],2,-1)
   capacity     = str_sub(arr[[1]][3],2,-1)
-  leafs        = str_split(str_sub(arr[[1]][4],2,-1), "\\.")[[1]][1]
+  leafs        = str_sub(arr[[1]][4],2,-1)
+  epsilon      = str_split(str_sub(arr[[1]][5],2,-1), "\\.")[[1]][1]
   
   data = read_tsv(paste0("data/",afile), col_names = c("wkt", "cid", "n"))
 ```
 
 ```{r,echo=FALSE, results='asis'} 
-cat(paste0("\nTime instant   : ",  time_instant, " (capacity=", capacity,", leafs=", leafs,").\\"))
+cat(paste0("\nTime instant   : ",  time_instant, " (capacity=", capacity,", leafs=", leafs,", epsilon=", epsilon,").\\"))
 ```
 ------------------------------------
 
