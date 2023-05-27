@@ -2,7 +2,7 @@ package edu.ucr.dblab.pflock
 
 import com.vividsolutions.jts.algorithm.MinimumBoundingCircle
 import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Geometry}
-import com.vividsolutions.jts.geom.{Coordinate, Point, Polygon}
+import com.vividsolutions.jts.geom.{Envelope, Coordinate, Point, Polygon}
 import com.vividsolutions.jts.io.WKTReader
 
 import org.apache.commons.math3.geometry.euclidean.twod.DiskGenerator
@@ -15,6 +15,8 @@ import scala.io.Source
 import org.slf4j.{Logger, LoggerFactory}
 
 import edu.ucr.dblab.pflock.spmf.{Transactions, Transaction, AlgoLCM2}
+
+import archery._
 
 object Utils {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -36,7 +38,7 @@ object Utils {
     val r2 = math.pow(epsilon_prime / 2.0, 2) + tolerance
   }
 
-  case class STPoint(point: Point, cid: Int){
+  case class STPoint(point: Point, cid: Int = 0){
     val userData = point.getUserData.asInstanceOf[String].split("\t")
     val oid = userData(0).toLong
     val tid = userData(1).toInt
@@ -45,12 +47,39 @@ object Utils {
       point.distance(other.point)
     }
 
+    def X: Double = point.getX
+
+    def Y: Double = point.getY
+
+    def toText: String = s"${point.toText()}"
+
     def wkt: String = s"${point.toText()}\t$cid\t$oid\t$tid"
 
     override def toString: String = s"${point.getX}\t${point.getY}\t$cid\t$oid\t$tid"
   }
 
-  case class Disk(center: Point, pids: List[Int], support: List[Int])
+  case class Disk(center: Point, pids: List[Int], support: List[Int] = List.empty[Int]){
+    var subset: Boolean = false
+    val X: Float = center.getX.toFloat
+    val Y: Float = center.getY.toFloat
+    
+    def envelope: Envelope = center.getEnvelopeInternal
+
+    def getExpandEnvelope(r: Double): Envelope = {
+      val envelope = center.getEnvelopeInternal
+      envelope.expandBy(r)
+      envelope
+    }
+
+    def pidsSet: Set[Int] = pids.toSet
+
+    def intersect(other: Disk): Set[Int] = this.pidsSet.intersect(other.pidsSet)
+
+    def bbox(r: Double): Box =
+      Box((X - r).toFloat, (Y - r).toFloat, (X + r).toFloat, (Y + r).toFloat)
+  }
+
+  case class Key(x: Int, y: Int)
 
   case class DataFiles(
     points:   List[Point],
@@ -60,7 +89,30 @@ object Utils {
     maximals: List[Disk]
   )
 
-  /*** BFE Functions ***/  
+  /*** BFE Functions ***/
+  def encode(x: Int, y: Int): Long = {
+    if (x < y)
+      (y + 1) * (y + 1) + (x + 1)
+    else
+      (x + 1) * (x + 1) + (y + 1)
+  }
+
+  def decode(z: Long): (Int, Int) = {
+    val q = math.floor(math.sqrt(z.toDouble))
+    val l = z - q * q
+    (l.toInt - 1, q.toInt - 1)
+  }
+
+  def buildGrid(points: List[STPoint], epsilon: Double): Map[Long, List[STPoint]] = {
+    val grid = points.map{ point =>
+      val i = (point.X / epsilon).toInt
+      val j = (point.Y / epsilon).toInt
+      (encode(i, j), point)
+    }.groupBy(_._1)
+
+    grid.mapValues(_.map(_._2))
+  }
+
   def findCenters(points: List[Point], epsilon: Double, r2: Double)
       (implicit geofactory: GeometryFactory, settings: Settings): List[Point] = {
     val centers = for {
@@ -101,7 +153,7 @@ object Utils {
         val x = m.getX
         val y = m.getY
         val center = geofactory.createPoint(new Coordinate(x, y))
-        Disk(center, pids, pids) // FIXME: update support list...
+        Disk(center, pids) // FIXME: update support list...
       }.toList
   }
 
@@ -143,9 +195,10 @@ object Utils {
       val k2: Double = ((Y + X * root) / 2) + p2.getY
       val h = geofactory.createPoint(new Coordinate(h1,k1))
       val k = geofactory.createPoint(new Coordinate(h2,k2))
-      val ids = List(p1.getUserData.asInstanceOf[Int], p2.getUserData.asInstanceOf[Int])
-      h.setUserData(ids)
-      k.setUserData(ids)
+      //val arr1 = p1.getUserData.asInstanceOf[String].split("\t")
+      //val ids = List(, p2.getUserData.asInstanceOf[Int])
+      //h.setUserData(ids)
+      //k.setUserData(ids)
       List(h, k)
     } else {
       val p2_prime = geofactory.createPoint(new Coordinate(p2.getX + settings.tolerance,
@@ -156,7 +209,7 @@ object Utils {
 
   /*** Misc Functions ***/
   def readPoints(input: String, isWKT: Boolean = false)
-    (implicit geofactory: GeometryFactory): List[Point] = {
+    (implicit geofactory: GeometryFactory): List[STPoint] = {
 
     val buffer = Source.fromFile(input)
     val points = buffer.getLines.zipWithIndex.toList
@@ -164,19 +217,21 @@ object Utils {
         if(isWKT){
           val reader = new WKTReader(geofactory)
           val id = line._2
+          val t  = 0
           val point = reader.read(line._1).asInstanceOf[Point]
 
-          point.setUserData(id)
-          point
+          point.setUserData(s"$id\t$t")
+          STPoint(point)
         } else {
           val arr = line._1.split("\t")
           val id = arr(0).toInt
           val x = arr(1).toDouble
           val y = arr(2).toDouble
+          val t = arr(3).toInt
           val point = geofactory.createPoint(new Coordinate(x, y))
 
-          point.setUserData(id)
-          point
+          point.setUserData(s"$id\t$t")
+          STPoint(point)
         }
       }
     buffer.close
