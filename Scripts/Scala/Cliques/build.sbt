@@ -3,8 +3,6 @@ organization := "edu.ucr.dblab"
 version := "0.1"
 scalaVersion in ThisBuild := "2.11.8"
 
-resolvers += "bintray/meetup" at "http://dl.bintray.com/meetup/maven"
-
 val SparkVersion = "2.4.0"
 val SedonaVersion = "1.3.1"
 
