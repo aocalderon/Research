@@ -1,0 +1,25 @@
+#!/bin/bash
+
+N=$1
+
+TS=( 'jts' 'archery' 'david' )
+ES=( 5 7.5 10 12.5 15 17.5 20 )
+MS=( 3 6 9 12 )
+#ES=( 10 20 )
+#MS=( 3 6 )
+
+for n in `seq 1 $N`
+do
+    for t in "${TS[@]}"
+    do
+	for e in "${ES[@]}"
+	do
+	    for m in "${MS[@]}"
+	    do
+		echo "./rtrees /home/acald013/Research/Datasets/dense2.tsv $e $m BFE_${t}"
+		./rtrees /home/acald013/Research/Datasets/dense2.tsv $e $m BFE_${t}
+	    done
+	done
+    done
+done
+

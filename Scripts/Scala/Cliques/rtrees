@@ -3,6 +3,8 @@
 THE_INPUT=$1
 THE_EPSILON=$2
 THE_MU=$3
+THE_RTREE=$4
+THE_TAG=$5
 
 JARS_PATH=$HOME/Spark/2.4/jars
 
@@ -17,7 +19,7 @@ JARS=${JARS},${JARS_PATH}/guava-mini-0.1.4.jar
 MASTER=local[1]
 
 LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
-CLASS=edu.ucr.dblab.pflock.BFE
+CLASS=edu.ucr.dblab.pflock.${THE_RTREE}
 JAR=$HOME/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar
 
 PARAMS=(
@@ -26,7 +28,7 @@ PARAMS=(
     --jars $JARS \
     --master $MASTER --deploy-mode client \
     --class $CLASS $JAR
-    --input $THE_INPUT --epsilon $THE_EPSILON --mu $THE_MU --debug
+    --input $THE_INPUT --epsilon $THE_EPSILON --mu $THE_MU --tag $THE_TAG --debug
 )
 
 echo "spark-submit ${PARAMS[@]}"

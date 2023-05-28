@@ -16,7 +16,10 @@ import scala.collection.JavaConverters._
 import edu.ucr.dblab.pflock.quadtree._
 import edu.ucr.dblab.pflock.Utils._
 
-object BFE {
+import com.github.davidmoten.rtree2._
+import com.github.davidmoten.rtree2.geometry._
+
+object BFE_david {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   def main(args: Array[String]): Unit = {
@@ -32,10 +35,7 @@ object BFE {
       tag = params.tag()
     )
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
-    val properties = System.getProperties().asScala
-    logger.info(s"COMMAND|${properties("sun.java.command")}")
     
-    logger.info("INFO|Reading data|START")
     val points = readPoints(params.input())
     logger.info("INFO|Reading data|END")
 
@@ -43,23 +43,9 @@ object BFE {
       buildGrid(points, settings.epsilon_prime)
     }
 
-    debug{
-      save("/tmp/edgesP.wkt"){
-        grid.map{ case(key, points) =>
-          val (i, j) = decode(key)
-          points.map{ point =>
-            val wkt = point.toText
-            val oid = point.oid
+    var T_david: RTree[Disk, geometry.Point] = RTree.create()
 
-            s"$wkt\t$key\t($i $j)\t$oid\n"
-          }
-        }.flatten.toList
-      }
-    }
-
-    val C = new STRtree(200)
-
-    timer("jts"){
+    timer(s"${settings.info}|David"){
       grid.filter(_._2.size >= 0) // just over non-empty cells...
         .keys.foreach{ key =>
           val (i, j) = decode(key) // position (i, j) for current cell...
@@ -92,7 +78,7 @@ object BFE {
                     if(ids.size >= settings.mu){ // just if disk have enough points...
                       val c = Disk(ck, ids)
                       
-                      C.insert(c.envelope, c)
+                      T_david = T_david.add(c, Geometries.point(c.X, c.Y));
 
                     }
                   }
@@ -102,40 +88,6 @@ object BFE {
           }
         }
       }
-    println(s"Candidate disks: ${C.size()}")
+    logger.info(s"INFO|Candidate disks|${T_david.size()}")
   }
 }
-
-import org.rogach.scallop._
-
-class BFEParams(args: Seq[String]) extends ScallopConf(args) {
-  val tolerance: ScallopOption[Double]  = opt[Double]  (default = Some(1e-3))
-  val input:     ScallopOption[String]  = opt[String]  (default = Some(""))
-  val epsilon:   ScallopOption[Double]  = opt[Double]  (default = Some(10.0))
-  val mu:        ScallopOption[Int]     = opt[Int]     (default = Some(5))
-  val capacity:  ScallopOption[Int]     = opt[Int]     (default = Some(100))
-  val tag:       ScallopOption[String]  = opt[String]  (default = Some(""))
-  val output:    ScallopOption[String]  = opt[String]  (default = Some("/tmp"))
-  val debug:     ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
-
-  verify()
-}
-
-
-/*
- // if c is subset of any disk in cs...
- if( cs.exists{ other => c.intersect(other).size == c.pidsSet.size } ){
- //do nothing
- } // if c is superset of one or more disks in cs...
- else if(cs.exists{ other => other.intersect(c).size == other.pidsSet.size }){
- // remove disks in cs and add c...
- cs.filter(other => other.intersect(c).size == other.pidsSet.size ).foreach{ d =>
- C.remove(d.getEnvelope(settings.r), d)
- }
- C.insert(envelope, c)
- } // neither subset or superset...
- else{
- // add c
- C.insert(envelope, c)
- }
- */

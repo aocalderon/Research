@@ -24,4 +24,7 @@ libraryDependencies += "org.rogach" %% "scallop" % "4.0.1"
 
 libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25"
 
-libraryDependencies += "com.meetup" %% "archery" % "0.4.0"
+//libraryDependencies += "com.meetup" %% "archery" % "0.4.0"
+libraryDependencies += "com.github.plokhotnyuk.rtree2d" %% "rtree2d-core" % "0.11.9"
+libraryDependencies += "com.github.davidmoten" % "rtree2" % "0.9.3"
+libraryDependencies += "org.spire-math" %% "archery" % "0.6.0"

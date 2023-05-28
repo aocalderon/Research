@@ -36,6 +36,8 @@ object Utils {
     val epsilon = epsilon_prime + tolerance
     val r = (epsilon_prime / 2.0) + tolerance
     val r2 = math.pow(epsilon_prime / 2.0, 2) + tolerance
+
+    def info: String = s"$appId|$epsilon_prime|$mu|$delta"
   }
 
   case class STPoint(point: Point, cid: Int = 0){
