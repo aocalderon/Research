@@ -39,7 +39,7 @@ object BFE_archery {
     logger.info("INFO|Reading data|END")
 
     val grid = timer(s"${settings.appId}|Grid"){
-      buildGrid(points, settings.epsilon_prime)
+      buildGrid(points)
     }
 
     var T_archery: archery.RTree[Disk] = archery.RTree()
@@ -70,7 +70,7 @@ object BFE_archery {
                 //println(s"$key\t($i, $j)\t${Pr.size}\t${Ps.size}\t${H.size}")
                 H.foreach{ pj =>
                   // compute two centers from pr and pj...
-                  val cs = calculateCenterCoordinates(pr.point, pj.point, settings.r2)
+                  val cs = calculateCenterCoordinates(pr.point, pj.point)
                   cs.foreach{ ck =>
                     // get points around each center ck...
                     val ids = H.filter{ h => ck.distance(h.point) <= settings.r2 }.map{_.oid.toInt}
