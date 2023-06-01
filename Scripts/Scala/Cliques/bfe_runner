@@ -2,10 +2,10 @@
 
 N=$1
 
-#ES=( 5 6 7 8 9 10 )
-#MS=( 3 4 5 6 7 8 )
-ES=( 5 6 )
-MS=( 3 4 )
+ES=( 10 12 14 16 18 20 )
+MS=( 3 )
+#ES=( 5 )
+#MS=( 3 )
 
 for n in `seq 1 $N`
 do
@@ -13,7 +13,8 @@ do
     do
 	for m in "${MS[@]}"
 	do
-	    echo "./bfe /home/acald013/Research/Datasets/ $e $m 1"
+	    echo "./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv $e $m 1"
+	    ./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv $e $m 1
 	done
     done
 done
