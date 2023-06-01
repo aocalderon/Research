@@ -2,7 +2,6 @@ package edu.ucr.dblab.pflock
 
 import com.vividsolutions.jts.geom.{PrecisionModel, GeometryFactory}
 import com.vividsolutions.jts.geom.{Envelope, Coordinate, Point}
-import com.vividsolutions.jts.index.strtree.STRtree
 import org.datasyslab.geospark.spatialRDD.SpatialRDD
 
 import org.apache.spark.rdd.RDD
@@ -16,7 +15,9 @@ import scala.collection.JavaConverters._
 import edu.ucr.dblab.pflock.quadtree._
 import edu.ucr.dblab.pflock.Utils._
 
-object BFE {
+import archery._
+
+object BFE2 {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   def main(args: Array[String]): Unit = {
@@ -53,7 +54,7 @@ object BFE {
     var nPairs = 0
     var nCenters = 0
     var nCandidates = 0
-    var Maximals = List.empty[Disk]
+    var Maximals: RTree[Disk] = RTree()
 
     timer(s"${settings.info}|Bfe"){
       val the_key = -1
@@ -135,33 +136,17 @@ object BFE {
       }
     }
 
-    val nMaximals = Maximals.size
+    val nMaximals = Maximals.entries.size
     debug{
       save("/tmp/edgesPairs.wkt"){ Pairs.toList }
-      //save("/tmp/edgesCandidates.wkt"){ Candidates.toList }
-      save("/tmp/edgesMaximals.wkt"){ Maximals.map(_.wkt + "\n") }
+      save("/tmp/edgesMaximals.wkt"){ Maximals.entries.toList.map(_.value.wkt + "\n") }
     }
 
-    logger.info(s"INFO|${settings.info}|Pairs|${nPairs}")
-    logger.info(s"INFO|${settings.info}|Centers|${nCenters}")
+    logger.info(s"INFO|${settings.info}|Pairs     |${nPairs}")
+    logger.info(s"INFO|${settings.info}|Centers   |${nCenters}")
     logger.info(s"INFO|${settings.info}|Candidates|${nCandidates}")
-    logger.info(s"INFO|${settings.info}|Maximals|${nMaximals}")
+    logger.info(s"INFO|${settings.info}|Maximals  |${nMaximals}")
 
     debug{ checkMaximals(points) }
   }
-}
-
-import org.rogach.scallop._
-
-class BFEParams(args: Seq[String]) extends ScallopConf(args) {
-  val tolerance: ScallopOption[Double]  = opt[Double]  (default = Some(1e-3))
-  val input:     ScallopOption[String]  = opt[String]  (default = Some(""))
-  val epsilon:   ScallopOption[Double]  = opt[Double]  (default = Some(10.0))
-  val mu:        ScallopOption[Int]     = opt[Int]     (default = Some(5))
-  val capacity:  ScallopOption[Int]     = opt[Int]     (default = Some(100))
-  val tag:       ScallopOption[String]  = opt[String]  (default = Some(""))
-  val output:    ScallopOption[String]  = opt[String]  (default = Some("/tmp"))
-  val debug:     ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
-
-  verify()
 }

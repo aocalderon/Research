@@ -270,6 +270,37 @@ object Utils {
     }
   }
 
+  def insertMaximal(maximals: archery.RTree[Disk], candidate: Disk)
+    (implicit settings: Settings): archery.RTree[Disk] = {
+
+    if(maximals.entries.size == 0){
+      val center = archery.Point(candidate.X, candidate.Y)
+      val toInsert = Entry(center, candidate)
+      maximals.insert(toInsert)
+    } else {
+      val maximals_prime = maximals.search(candidate.bbox(settings.epsilon)).map(_.value)
+
+      if( maximals_prime.exists( maximal => candidate.isSubsetOf(maximal) ) ){
+        maximals
+      } else {
+        if( maximals_prime.exists( maximal => maximal.isSubsetOf(candidate) ) ){
+          val toRemove = maximals_prime.filter( maximal => maximal.isSubsetOf(candidate) )
+            .map{ maximal =>
+              val center = archery.Point(maximal.X, maximal.Y)
+              Entry(center, maximal)
+            }
+          val center = archery.Point(candidate.X, candidate.Y)
+          val toInsert = Entry(center, candidate)
+          maximals.removeAll(toRemove).insert(toInsert)
+        } else {
+          val center = archery.Point(candidate.X, candidate.Y)
+          val toInsert = Entry(center, candidate)
+          maximals.insert(toInsert)
+        }
+      }
+    }
+  }
+
   def pruneDisks(disks: List[Disk])
     (implicit geofactory: GeometryFactory): List[Disk] = {
 
