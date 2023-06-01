@@ -254,6 +254,19 @@ object Utils {
     disks.filter(_.subset != true)
   }
 
+  def computePairs(points: List[Point], epsilon: Double): List[(Point, Point)] = {
+    for {
+      a <- points
+      b <- points if {
+        val id1 = a.getUserData.asInstanceOf[String].split("\t")(0).toInt
+        val id2 = b.getUserData.asInstanceOf[String].split("\t")(0).toInt
+          (id1 < id2) && (a.distance(b) <= epsilon)
+      }
+    } yield {
+      (a, b)
+    }
+  }
+
   def insertMaximal(maximals: List[Disk], candidate: Disk): List[Disk] = {
     if(maximals.isEmpty){
       maximals :+ candidate
