@@ -3,6 +3,7 @@ package edu.ucr.dblab.pflock
 import com.vividsolutions.jts.algorithm.MinimumBoundingCircle
 import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Geometry}
 import com.vividsolutions.jts.geom.{Envelope, Coordinate, Point, Polygon}
+import com.vividsolutions.jts.index.strtree.STRtree
 import com.vividsolutions.jts.io.WKTReader
 import org.geotools.geometry.jts.JTS
 
@@ -13,6 +14,7 @@ import org.apache.commons.math3.geometry.enclosing.SupportBallGenerator
 import scala.collection.JavaConverters._
 import scala.io.Source
 import scala.util.Random
+import sys.process._
 
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -25,6 +27,7 @@ object Utils {
 
   /*** Case Class ***/
   case class Settings(
+    input: String = "",
     epsilon_prime: Double = 10.0,
     mu: Int = 3,
     delta: Int = 5,
@@ -47,6 +50,8 @@ object Utils {
     val oid = userData(0).toInt
     val tid = userData(1).toInt
     var count = 0
+
+    def envelope: Envelope = point.getEnvelopeInternal
 
     def distance(other: STPoint): Double = point.distance(other.point)
 
@@ -144,27 +149,36 @@ object Utils {
       }.flatten.toList
     }
 
-    def wkt(implicit settings: Settings, geofactory: GeometryFactory): Seq[String] = {
-      val epsilon = settings.epsilon
-      val maxx = index.values.flatten.maxBy(_.X).X
-      val maxy = index.values.flatten.maxBy(_.Y).Y
-      n = math.ceil( (maxx - minx) / epsilon ).toInt 
-      m = math.ceil( (maxy - miny) / epsilon ).toInt 
+    def wkt(limit: Int = 2000)
+      (implicit settings: Settings, geofactory: GeometryFactory): Seq[String] = {
+      if(!index.isEmpty){
+        val epsilon = settings.epsilon
+        val maxx = index.values.flatten.maxBy(_.X).X
+        val maxy = index.values.flatten.maxBy(_.Y).Y
+        n = math.ceil( (maxx - minx) / epsilon ).toInt
+        m = math.ceil( (maxy - miny) / epsilon ).toInt
 
-      for{
-        i <- 0 until n
-        j <- 0 until m
-      } yield {
-        val x1 = minx + (i * epsilon)
-        val x2 = x1 + epsilon
-        val y1 = miny + (j * epsilon)
-        val y2 = y1 + epsilon
-        val envelope = new Envelope(x1,x2,y1,y2)
-        val polygon = JTS.toGeometry(envelope)
-        val wkt = polygon.toText
-        val k = encode(i, j)
+        if(n * m < limit){
+          for{
+            i <- 0 until n
+            j <- 0 until m
+          } yield {
+            val x1 = minx + (i * epsilon)
+            val x2 = x1 + epsilon
+            val y1 = miny + (j * epsilon)
+            val y2 = y1 + epsilon
+            val envelope = new Envelope(x1,x2,y1,y2)
+            val polygon = JTS.toGeometry(envelope)
+            val wkt = polygon.toText
+            val k = encode(i, j)
 
-        s"$wkt\t($i $j)\t$k\n"
+            s"$wkt\t($i $j)\t$k\n"
+          }
+        } else {
+          Seq.empty[String]
+        }
+      } else {
+        Seq.empty[String]
       }
     }
   }
@@ -238,6 +252,22 @@ object Utils {
     }
 
     disks.filter(_.subset != true)
+  }
+
+  def insertMaximal(maximals: List[Disk], candidate: Disk): List[Disk] = {
+    if(maximals.isEmpty){
+      maximals :+ candidate
+    } else {
+      if( maximals.exists( maximal => candidate.isSubsetOf(maximal) ) ){
+        maximals
+      } else {
+        if( maximals.exists( maximal => maximal.isSubsetOf(candidate) ) ){
+          maximals.filterNot( maximal => maximal.isSubsetOf(candidate) ) :+ candidate
+        } else {
+          maximals :+ candidate
+        }
+      }
+    }
   }
 
   def pruneDisks(disks: List[Disk])
@@ -472,5 +502,89 @@ object Utils {
     val end = clocktime
     val time = "%.2f".format((end - start) / 1e9)
     println(s"Saved ${filename}\tin\t${time}s\t[${content.size} records].")
+  }
+
+  def checkMaximals(points: List[STPoint], bfe2file: String = "/tmp/edgesMaximals.wkt")
+    (implicit geofactory: GeometryFactory, settings: Settings): Unit = {
+
+    timer(s"${settings.info}|Bfe0"){
+      s"bfe ${settings.input} ${settings.epsilon_prime.toInt} ${settings.mu} 1" !
+    }
+
+    val bfe1file = s"/tmp/BFE_E${settings.epsilon_prime.toInt}_M${settings.mu}_D1.txt"
+     
+    val buffer1 = Source.fromFile(bfe1file)
+    val bfe1 = buffer1.getLines.map{ line =>
+      val arr = line.split("\t")
+
+      arr(2)
+    }.toList
+    buffer1.close
+    val buffer2 = Source.fromFile(bfe2file)
+    val reader = new WKTReader(geofactory)
+    val maximals = buffer2.getLines.map{ line =>
+      val arr = line.split("\t")
+      val center = reader.read(arr(0)).asInstanceOf[Point]
+      val pids = arr(1).split(" ").map(_.toInt).sorted.toList
+
+      Disk(center, pids)
+    }.toList
+    val bfe2 = maximals.map(_.pidsText)
+    buffer2.close
+
+    val diff1 = bfe1.filterNot(bfe2.toSet)
+    val diff2 = bfe2.filterNot(bfe1.toSet)
+
+    /*
+    save("/tmp/bf1_compare.txt"){ bfe1.sorted.map{_ + "\n"} }
+    save("/tmp/bf2_compare.txt"){ bfe2.sorted.map{_ + "\n"} }
+
+    println("diff1")
+    diff1.sorted.foreach{println}
+    println("diff2")
+    diff2.sorted.foreach{println}
+
+    val subsets = for{
+      pids1 <- diff1.map{_.split(" ").map(_.toInt).toSet}
+      pids2 <- diff2.map{_.split(" ").map(_.toInt).toSet}
+    } yield {
+      val valid1 = pids1.subsetOf(pids2) 
+      val valid2 = pids2.subsetOf(pids1)
+      val t1 = (pids1, valid1)
+      val t2 = (pids2, valid2)
+      List(t1, t2)
+    }
+    subsets.flatten.filter(_._2).map(_._1.toList.sorted).foreach{println}
+     */
+
+    if(diff1.isEmpty && diff2.isEmpty){
+        logger.info(s"INFO|${settings.info}|Maximals OK|END")
+    } else {
+      val tree = new STRtree(200)
+      points.foreach{ point => tree.insert(point.envelope, point) }
+
+      val checksMaximals = for{
+        pids <- diff2
+        maximal <- maximals if{ maximal.pidsText == pids }
+      } yield {
+        val envelope = maximal.getExpandEnvelope(settings.r + settings.tolerance)
+        val hood = tree.query(envelope).asScala.map{ _.asInstanceOf[STPoint] }
+          .filter(_.distanceToPoint(maximal.center) <= settings.r + settings.tolerance)
+
+        val pids1 = maximal.pidsSet
+        val pids2 = hood.map(_.oid).toSet
+
+        val valid = pids1.subsetOf(pids2)
+        (maximal, valid)
+      }
+
+      checksMaximals.filterNot(_._2).map{_._1.wkt}.foreach{println}
+
+      if( checksMaximals.map(_._2).reduce(_ & _) ){
+        logger.info(s"INFO|${settings.info}|Maximals OK|END")
+      } else {
+        logger.info(s"INFO|${settings.info}|Maximals ERR|END")
+      }
+    }
   }
 }

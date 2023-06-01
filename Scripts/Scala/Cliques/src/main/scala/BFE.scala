@@ -20,11 +20,12 @@ object BFE {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   def main(args: Array[String]): Unit = {
-    //generateData(1000, 100, 100, "points.tsv")
+    //generateData(10000, 1000, 1000, "/home/acald013/Research/Datasets/P10K_W1K_H1K.tsv")
     implicit val params = new BFEParams(args)
     implicit val d: Boolean = params.debug()
 
     implicit val settings = Settings(
+      input = params.input(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
       capacity = params.capacity(),
@@ -35,7 +36,7 @@ object BFE {
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
     val points = readPoints(params.input())
-    logger.info("INFO|Reading data|END")
+    logger.info(s"INFO|${settings.info}|Reading data|START")
 
     val grid = timer(s"${settings.info}|Grid"){
       val G = Grid(points)
@@ -45,7 +46,7 @@ object BFE {
 
     debug{
       save("/tmp/edgesPoints.wkt"){ grid.pointsToText }
-      save("/tmp/edgesGrid.wkt"){ grid.wkt }
+      save("/tmp/edgesGrid.wkt"){ grid.wkt() }
     }
 
     var Pairs = new scala.collection.mutable.ListBuffer[String]
@@ -53,9 +54,9 @@ object BFE {
     var nCenters = 0
     var Candidates = new scala.collection.mutable.ListBuffer[Disk]
     var nCandidates = 0
-    val C = new STRtree(200)
+    var Maximals = List.empty[Disk]
 
-    val (maximals, nMaximals) = timer(s"${settings.info}|Bfe"){
+    timer(s"${settings.info}|Bfe"){
       val the_key = -1
       // for each non-empty cell...
       grid.index.filter(_._2.size > 0).keys.foreach{ key =>
@@ -123,6 +124,12 @@ object BFE {
                 val candidates = disks.filter(_.count >= settings.mu)
                 nCandidates += candidates.size
 
+                Candidates.appendAll(candidates)
+
+                candidates.foreach{ candidate =>
+                  Maximals = insertMaximal(Maximals, candidate)
+                }
+
                 debug{
                   val C = candidates.map{ candidate =>
                     val wkt  = candidate.center.toText
@@ -130,30 +137,27 @@ object BFE {
 
                     s"$wkt\t$pids\n"
                   }
-                  Candidates.appendAll(candidates)
                 }
-
               }
             }
           }
         }        
       }
-      // getting maximals disks...
-      val maximals = pruneDisks(Candidates.toList)
-      val nMaximals = maximals.size
-      (maximals, nMaximals)
     }
 
+    val nMaximals = Maximals.size
     debug{
       save("/tmp/edgesPairs.wkt"){ Pairs.toList }
       //save("/tmp/edgesCandidates.wkt"){ Candidates.toList }
-      save("/tmp/edgesMaximals.wkt"){ maximals.map(_.wkt + "\n") }
+      save("/tmp/edgesMaximals.wkt"){ Maximals.map(_.wkt + "\n") }
     }
 
-    logger.info(s"total Pairs:\t${nPairs}")
-    logger.info(s"totalCenters:\t${nCenters}")
-    logger.info(s"totalCandidates:\t${nCandidates}")
-    logger.info(s"totalMaximals:\t${nMaximals}")
+    logger.info(s"INFO|${settings.info}|Pairs|${nPairs}")
+    logger.info(s"INFO|${settings.info}|Centers|${nCenters}")
+    logger.info(s"INFO|${settings.info}|Candidates|${nCandidates}")
+    logger.info(s"INFO|${settings.info}|Maximals|${nMaximals}")
+
+    debug{ checkMaximals(points) }
   }
 }
 
@@ -171,49 +175,3 @@ class BFEParams(args: Seq[String]) extends ScallopConf(args) {
 
   verify()
 }
-
-
-/*
- // if c is subset of any disk in cs...
- if( cs.exists{ other => c.intersect(other).size == c.pidsSet.size } ){
- //do nothing
- } // if c is superset of one or more disks in cs...
- else if(cs.exists{ other => other.intersect(c).size == other.pidsSet.size }){
- // remove disks in cs and add c...
- cs.filter(other => other.intersect(c).size == other.pidsSet.size ).foreach{ d =>
- C.remove(d.getEnvelope(settings.r), d)
- }
- C.insert(envelope, c)
- } // neither subset or superset...
- else{
- // add c
- C.insert(envelope, c)
- }
- */
-
-        // continue just if there are enough points...
-        /* if(Ps.size >= settings.mu){
-          // Range query of pr and surrounding ps...
-          Pr.foreach{ pr =>
-            val H = Ps.filter{ ps => pr.oid < ps.oid & pr.distance(ps) <= settings.epsilon }
-            // just if H has enough points...
-            if(H.size >= settings.mu){
-              nPairs += H.size
-              //println(s"$key\t($i, $j)\t${Pr.size}\t${Ps.size}\t${H.size}")
-              val candidates_prime = H.flatMap{ pj =>
-                // compute two centers from pr and pj...
-                val centers = calculateCenterCoordinates(pr.point, pj.point, settings.r2)
-                centers.map{ ck =>
-                  // get points around each center ck...
-                  val ids = H.filter{ h => ck.distance(h.point) <= settings.r }.map{_.oid.toInt}
-                  val c = Disk(ck, ids)
-                  c
-                }.filter(_.pids.size >= settings.mu) // just disks with enough points...
-              }
-
-              // prune subset in candidates...
-              //candidates = candidates ++ candidates_prime
-            } 
-          }
-        } */ 
-
