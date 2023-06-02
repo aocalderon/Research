@@ -193,8 +193,28 @@ object Utils {
 
   case class MBC(center: Point, radius: Double, points: List[Point])
 
-  case class Stats(nPoints: Int = 0, nPairs: Int = 0, nCenters: Int = 0, nCandidates: Int = 0,
-    nMaximals: Int = 0)
+  case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 0,
+    var nCandidates: Int = 0, var nMaximals: Int = 0,
+    var tGrid: Double = 0.0, var tRead: Double = 0.0, var tCliques: Double = 0.0,
+    var tPairs: Double = 0.0, var tCenters: Double = 0.0,
+    var tCandidates: Double = 0.0, var tMaximals: Double = 0.0){
+
+    def print(implicit logger: Logger, settings: Settings): Unit = {
+      log(s"Points     |${nPoints}")
+      log(s"Pairs      |${nPairs}")
+      log(s"Centers    |${nCenters}")
+      log(s"Candidates |${nCandidates}")
+      log(s"Maximals   |${nMaximals}")
+      logt(s"Grid      |${tGrid}")
+      logt(s"Read      |${tRead}")
+      logt(s"Cliques   |${tCliques}")
+      logt(s"Pairs     |${tPairs}")
+      logt(s"Centers   |${tCenters}")
+      logt(s"Candidates|${tCandidates}")
+      logt(s"Maximals  |${tMaximals}")
+      logt(s"Total|${tMaximals + tCandidates + tCenters + tPairs + tCliques + tRead + tGrid}")
+    }
+  }
 
   case class DataFiles(
     points:   List[Point],
@@ -649,6 +669,10 @@ object Utils {
     logger.info(s"INFO|${settings.info}|$msg")
   }
 
+  def logt(msg: String)(implicit logger: Logger, settings: Settings): Unit = {
+    logger.info(s"TIME|${settings.info}|$msg")
+  }
+
   def round(x: Double)(implicit settings: Settings): Double = {
     val decimal_positions = math.log10(settings.scale).toInt
     BigDecimal(x).setScale(decimal_positions, BigDecimal.RoundingMode.HALF_UP).toDouble
@@ -660,6 +684,14 @@ object Utils {
     val t1 = clocktime
     logger.info("TIME|%-30s|%6.2f".format(msg, (t1 - t0) / 1e9))
     result
+  }
+
+  def timer[R](block: => R): (R, Double) = {
+    val t0 = clocktime
+    val result = block    // call-by-name
+    val t1 = clocktime
+    val time = (t1 - t0) / 1e9
+    (result, time)
   }
 
   def debug[R](block: => R)(implicit d: Boolean): Unit = { if(d) block }
@@ -717,7 +749,7 @@ object Utils {
     val diff2 = bfe2.filterNot(bfe1.toSet)
 
     if(diff1.isEmpty && diff2.isEmpty){
-        log(s"Maximals OK|END")
+        log(s"Maximals|OK!")
     } else {
       val tree = new STRtree(200)
       points.foreach{ point => tree.insert(point.envelope, point) }
@@ -740,9 +772,9 @@ object Utils {
       checksMaximals.filterNot(_._2).map{_._1.wkt}.foreach{println}
 
       if( checksMaximals.map(_._2).reduce(_ & _) ){
-        log(s"Maximals OK|END")
+        log(s"Maximals|OK")
       } else {
-        log(s"Maximals ERR|END")
+        log(s"Maximals|ERR")
       }
     }
   }

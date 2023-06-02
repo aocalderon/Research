@@ -20,20 +20,18 @@ import archery._
 object BFE {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
-  def run(points: List[STPoint])
+  def run(points: List[STPoint], defaultMaximals: RTree[Disk] = RTree.empty[Disk])
     (implicit settings: Settings, geofactory: GeometryFactory, debugOn: Boolean):
       (RTree[Disk], Stats) = {
 
+    val stats = Stats()
     var Pairs = new scala.collection.mutable.ListBuffer[String]
-    var nPairs = 0
-    var nCenters = 0
-    var nCandidates = 0
-    var Maximals: RTree[Disk] = RTree()
+    var Maximals: RTree[Disk] = defaultMaximals
 
     if(points.isEmpty){
       (Maximals, Stats())
     } else {
-      val grid = timer(s"${settings.info}|Grid"){
+      val (grid, tGrid) = timer{
         val G = Grid(points)
         G.buildGrid
         G
@@ -44,10 +42,11 @@ object BFE {
         save("/tmp/edgesGrid.wkt"){ grid.wkt() }
       }
 
-      timer(s"${settings.info}|Maximals"){
-        val the_key = -1
-        // for each non-empty cell...
-        grid.index.filter(_._2.size > 0).keys.foreach{ key =>
+      val the_key = -1
+      
+      // for each non-empty cell...
+      grid.index.keys.foreach{ key =>
+        val ( (_Pr, _Ps), tRead ) = timer{
           val (i, j) = decode(key) // position (i, j) for current cell...
           val Pr = grid.index(key) // getting points in current cell...
 
@@ -57,10 +56,6 @@ object BFE {
             (i-1, j-1),(i, j-1),(i+1, j-1)
           ).filter(_._1 >= 0).filter(_._2 >= 0) // just keep positive (i, j)...
 
-          debug{
-            if(key == the_key) println(s"($i $j) => ${indices.sortBy(_._1).sortBy(_._2).mkString(" ")}")
-          }
-
           val Ps = indices.flatMap{ case(i, j) => // getting points around current cell...
             val key = encode(i, j)
             if(grid.index.keySet.contains(key))
@@ -68,11 +63,21 @@ object BFE {
             else
               List.empty[STPoint]
           }
+          (Pr, Ps)
+        }
+        stats.tRead += tRead
+        val Pr = _Pr
+        val Ps = _Ps
 
-          debug{
-            if(key == the_key) println(s"Key: ${key} Ps.size=${Ps.size}")
-          }
+        debug{
+          if(key == the_key) println(s"Key: ${key} Ps.size=${Ps.size}")
+        }
 
+        var tCenters = 0.0
+        var tCandidates = 0.0
+        var tMaximals = 0.0
+
+        val (_, tPairs) = timer{
           if(Ps.size >= settings.mu){
             for{ pr <- Pr }{
               val H = pr.getNeighborhood(Ps) // get range around pr in Ps...
@@ -87,7 +92,7 @@ object BFE {
                   ps <- H if{ pr.oid < ps.oid }
                 } yield {
                   // a valid pair...
-                  nPairs += 1
+                  stats.nPairs += 1
 
                   debug{
                     val p1  = pr.oid
@@ -100,36 +105,49 @@ object BFE {
                     Pairs.append(P)
                   }
 
-                  // finding centers for each pair...
-                  val centers = calculateCenterCoordinates(pr.point, ps.point)
-                  // querying points around each center...
-                  val disks = centers.map{ center =>
-                    getPointsAroundCenter(center, Ps)
+                  val (disks, tC) = timer{
+                    // finding centers for each pair...
+                    val centers = calculateCenterCoordinates(pr.point, ps.point)
+                    // querying points around each center...
+                    centers.map{ center =>
+                      getPointsAroundCenter(center, Ps)
+                    }
                   }
-                  nCenters += 2
+                  stats.nCenters += 2
+                  tCenters += tC
 
-                  // getting candidate disks...
-                  val candidates = disks.filter(_.count >= settings.mu)
-                  nCandidates += candidates.size
-
-                  // cheking if a candidate is not a subset and adding to maximals...
-                  candidates.foreach{ candidate =>
-                    Maximals = insertMaximal(Maximals, candidate)
+                  val (candidates, tD) = timer{
+                    // getting candidate disks...
+                    disks.filter(_.count >= settings.mu)
                   }
+                  stats.nCandidates += candidates.size
+                  tCandidates += tD
+
+                  val (_, tM) = timer{
+                    // cheking if a candidate is not a subset and adding to maximals...
+                    candidates.foreach{ candidate =>
+                      Maximals = insertMaximal(Maximals, candidate)
+                    }
+                  }
+                  tMaximals += tM
                 }
               }
             }
           }
         }
+        stats.tGrid = tGrid
+        stats.tCenters += tCenters
+        stats.tCandidates += tCandidates
+        stats.tMaximals += tMaximals
+        stats.tPairs += tPairs - (tCenters + tCandidates + tMaximals)
       }
 
       debug{
         save("/tmp/edgesPairs.wkt"){ Pairs.toList }
       }
 
-      val nPoints = points.size
-      val nMaximals = Maximals.entries.size
-      val stats = Stats(nPoints, nPairs, nCenters, nCandidates, nMaximals)
+      stats.nPoints = points.size
+      stats.nMaximals = Maximals.entries.size
 
       (Maximals, stats)
     }
@@ -156,15 +174,11 @@ object BFE {
     log(s"Reading data|START")
 
     val (maximals, stats) = BFE.run(points)
+    stats.print
 
     debug{
       save("/tmp/edgesMaximals.wkt"){ maximals.entries.toList.map(_.value.wkt + "\n") }
     }
-
-    log(s"Pairs     |${stats.nPairs}")
-    log(s"Centers   |${stats.nCenters}")
-    log(s"Candidates|${stats.nCandidates}")
-    log(s"Maximals  |${stats.nMaximals}")
 
     debug{
       settings = settings.copy(method="BFE0")

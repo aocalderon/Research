@@ -28,33 +28,37 @@ object BFE_CMBC {
     // 3. divide MBCs by radius less than epsilon...
     // 4. return MBCs greater than epsilon as maximal disks...
     // 5. return remaining points in MBCs greater than epsilon as list of points...
-    val (maximals1, points_prime) = timer(s"${settings.info}|Cliques"){
-      partitionByRadius(getMBCsPerClique(points))
+    val ( (maximals1, points_prime, defaultMaximals), tCli) = timer{
+      val (maximals1, points_prime) = partitionByRadius(getMBCsPerClique(points))
+      val defaultMaximals = RTree[Disk]().insertAll(maximals1.map{ maximal =>
+        Entry(archery.Point(maximal.X, maximal.Y), maximal)
+      })
+      (maximals1, points_prime, defaultMaximals)
     }
     // Run traditial BFE with the remaining points...
-    val (maximals2, stats) = BFE.run(points_prime)
+    val (maximals, stats) = BFE.run(points_prime, defaultMaximals)
     // Put together and remove possible duplicates...
-    val maximals = timer(s"${settings.info}|Prune"){
-      pruneDisks(maximals1 ++ maximals2.entries.map(_.value))
+    val (maximals2, tM) = timer{
+      //pruneDisks(maximals1 ++ maximals2.entries.map(_.value))
     }
-    
-    (maximals, stats.copy(nMaximals = maximals.size))
+    val tMs = stats.tMaximals + tM
+    (maximals.entries.map(_.value).toList,
+      stats.copy(nPoints = points_prime.size,
+        nMaximals = maximals.size, tCliques = tCli, tMaximals = tMs))
   }
 
   def runByGrid(points: List[STPoint])
     (implicit settings: Settings, geofactory: GeometryFactory, debugOn: Boolean):
       (List[Disk], Stats) = {
 
+    val stats = Stats()
     var Pairs = new scala.collection.mutable.ListBuffer[String]
-    var nPairs = 0
-    var nCenters = 0
-    var nCandidates = 0
     var Maximals: RTree[Disk] = RTree()
 
     if(points.isEmpty){
       (List.empty[Disk], Stats())
     } else {
-      val grid = timer(s"${settings.info}|Grid"){
+      val (grid, tGrid) = timer{
         val G = Grid(points)
         G.buildGrid
         G
@@ -65,10 +69,10 @@ object BFE_CMBC {
         save("/tmp/edgesGrid.wkt"){ grid.wkt() }
       }
 
-      timer(s"${settings.info}|Maximals"){
-        val the_key = -1
-        // for each non-empty cell...
-        grid.index.filter(_._2.size > 0).keys.foreach{ key =>
+      val the_key = -1
+      // for each non-empty cell...
+      grid.index.keys.foreach{ key =>
+        val ( (_Pr, _Ps), tRead ) = timer{
           val (i, j) = decode(key) // position (i, j) for current cell...
           val Pr = grid.index(key) // getting points in current cell...
 
@@ -78,11 +82,6 @@ object BFE_CMBC {
             (i-1, j-1),(i, j-1),(i+1, j-1)
           ).filter(_._1 >= 0).filter(_._2 >= 0) // just keep positive (i, j)...
 
-          debug{
-            if(key == the_key)
-              println(s"($i $j) => ${indices.sortBy(_._1).sortBy(_._2).mkString(" ")}")
-          }
-
           val Ps = indices.flatMap{ case(i, j) => // getting points around current cell...
             val key = encode(i, j)
             if(grid.index.keySet.contains(key))
@@ -91,6 +90,13 @@ object BFE_CMBC {
               List.empty[STPoint]
           }
 
+          (Pr, Ps)
+        }
+        stats.tRead += tRead
+        val Pr = _Pr
+        val Ps = _Ps
+
+        val ( (pr_prime, ps_prime), tCliques) = timer{
           // filtering by Cliques and MBCs...
           val (maximals1, ps_prime) = partitionByRadius(getMBCsPerClique(Ps))
           // inserting new maximals...
@@ -98,10 +104,20 @@ object BFE_CMBC {
           // filtering by points already in maximals...
           val pr_prime = Pr.filterNot(maximals1.map{_.pidsSet}.flatten.toSet)
 
-          debug{
-            if(key == the_key) println(s"Key: ${key} Ps.size=${Ps.size}")
-          }
+          (pr_prime, ps_prime)
+        }
+        stats.nPoints += pr_prime.size
+        stats.tCliques += tCliques
 
+        debug{
+          if(key == the_key) println(s"Key: ${key} Ps.size=${Ps.size}")
+        }
+
+        var tCenters = 0.0
+        var tCandidates = 0.0
+        var tMaximals = 0.0
+
+        val (_, tPairs) = timer{
           if(ps_prime.size >= settings.mu){ // testing on new list ps_prime...
 
             for{ pr <- pr_prime }{ // iterating over new list pr_prime...
@@ -117,7 +133,7 @@ object BFE_CMBC {
                   ps <- H if{ pr.oid < ps.oid }
                 } yield {
                   // a valid pair...
-                  nPairs += 1
+                  stats.nPairs += 1
 
                   debug{
                     val p1  = pr.oid
@@ -130,37 +146,49 @@ object BFE_CMBC {
                     Pairs.append(P)
                   }
 
-                  // finding centers for each pair...
-                  val centers = calculateCenterCoordinates(pr.point, ps.point)
-                  // querying points around each center...
-                  val disks = centers.map{ center =>
-                    getPointsAroundCenter(center, Ps)
+                  val (disks, tC) = timer{
+                    // finding centers for each pair...
+                    val centers = calculateCenterCoordinates(pr.point, ps.point)
+                    // querying points around each center...
+                    centers.map{ center =>
+                      getPointsAroundCenter(center, Ps)
+                    }
                   }
-                  nCenters += 2
+                  stats.nCenters += 2
+                  tCenters += tC
 
-                  // getting candidate disks...
-                  val candidates = disks.filter(_.count >= settings.mu)
-                  nCandidates += candidates.size
-
-                  // cheking if a candidate is not a subset and adding to maximals...
-                  candidates.foreach{ candidate =>
-                    Maximals = insertMaximal(Maximals, candidate)
+                  val (candidates, tD) = timer{
+                    // getting candidate disks...
+                    disks.filter(_.count >= settings.mu)
                   }
+                  stats.nCandidates += candidates.size
+                  tCandidates += tD
+
+                  val (_, tM) = timer{
+                    // cheking if a candidate is not a subset and adding to maximals...
+                    candidates.foreach{ candidate =>
+                      Maximals = insertMaximal(Maximals, candidate)
+                    }
+                  }
+                  tMaximals += tM
                 }
               }
             }
           }
         }
+        stats.tGrid = tGrid
+        stats.tCenters += tCenters
+        stats.tCandidates += tCandidates
+        stats.tMaximals += tMaximals
+        stats.tPairs += tPairs - (tCenters + tCandidates + tMaximals)
       }
 
       debug{
         save("/tmp/edgesPairs.wkt"){ Pairs.toList }
       }
 
-      val nPoints = points.size
-      val nMaximals = Maximals.entries.size
-      val stats = Stats(nPoints, nPairs, nCenters, nCandidates, nMaximals)
-
+      stats.nMaximals = Maximals.entries.size
+      
       (Maximals.entries.map{_.value}.toList, stats)
     }
   }  
@@ -188,28 +216,18 @@ object BFE_CMBC {
 
     settings = settings.copy(method="BFE_CMBC1")
     val (maximals, stats1) = BFE_CMBC.runAtBegining(points)
-
-    debug{
-      save("/tmp/edgesMaximals.wkt"){ maximals.map(_.wkt + "\n") }
-    }
-
-    log(s"Points    |${stats1.nPoints}")
-    log(s"Pairs     |${stats1.nPairs}")
-    log(s"Centers   |${stats1.nCenters}")
-    log(s"Candidates|${stats1.nCandidates}")
-    log(s"Maximals  |${stats1.nMaximals}")
+    stats1.print
 
     settings = settings.copy(method="BFE_CMBC2")
     val (_, stats2) = BFE_CMBC.runByGrid(points)
+    stats2.print
 
-    log(s"Points    |${stats1.nPoints}")
-    log(s"Pairs     |${stats2.nPairs}")
-    log(s"Centers   |${stats2.nCenters}")
-    log(s"Candidates|${stats2.nCandidates}")
-    log(s"Maximals  |${stats2.nMaximals}")
-
+    settings = settings.copy(method="BFE")
+    val (_, stats3) = BFE.run(points)
+    stats3.print
 
     debug{
+      save("/tmp/edgesMaximals.wkt"){ maximals.map(_.wkt + "\n") }
       settings = settings.copy(method="BFE0")
       checkMaximals(points)
     }
