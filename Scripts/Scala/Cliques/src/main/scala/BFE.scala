@@ -153,7 +153,7 @@ object BFE {
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
     val points = readPoints(params.input())
-    logger.info(s"INFO|${settings.info}|Reading data|START")
+    log(s"Reading data|START")
 
     val (maximals, stats) = BFE.run(points)
 
@@ -166,7 +166,11 @@ object BFE {
     log(s"Candidates|${stats.nCandidates}")
     log(s"Maximals  |${stats.nMaximals}")
 
-    settings = settings.copy(method="BFE0")
-    debug{ checkMaximals(points) }
+    debug{
+      settings = settings.copy(method="BFE0")
+      checkMaximals(points)
+    }
+
+    log(s"Done.|END")
   }
 }

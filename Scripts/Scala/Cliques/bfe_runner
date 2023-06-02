@@ -2,19 +2,23 @@
 
 N=$1
 
-ES=( 10 12 14 16 18 20 )
+VS=( "BFE" "BFE_CMBC")
+ES=( 6 8 10 12 14 16 18 20 )
 MS=( 3 )
 #ES=( 5 )
 #MS=( 3 )
 
 for n in `seq 1 $N`
 do
-    for e in "${ES[@]}"
+    for m in "${MS[@]}"
     do
-	for m in "${MS[@]}"
+	for e in "${ES[@]}"
 	do
-	    echo "./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv $e $m 1"
-	    ./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv $e $m 1
+	    for v in "${VS[@]}"
+	    do
+		echo "./bfe /home/acald013/Research/Datasets/dense2.tsv $e $m 1 $v"
+		./bfe /home/acald013/Research/Datasets/dense2.tsv $e $m 1 $v
+	    done
 	done
     done
 done

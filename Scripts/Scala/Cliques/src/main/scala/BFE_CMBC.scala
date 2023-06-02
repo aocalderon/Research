@@ -209,7 +209,11 @@ object BFE_CMBC {
     log(s"Maximals  |${stats2.nMaximals}")
 
 
-    settings = settings.copy(method="BFE0")
-    debug{ checkMaximals(points) }
+    debug{
+      settings = settings.copy(method="BFE0")
+      checkMaximals(points)
+    }
+
+    log(s"Done.|END")
   }
 }
