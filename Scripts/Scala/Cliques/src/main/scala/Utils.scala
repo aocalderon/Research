@@ -9,7 +9,7 @@ import org.geotools.geometry.jts.JTS
 
 import org.apache.commons.math3.geometry.euclidean.twod.DiskGenerator
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D
-import org.apache.commons.math3.geometry.enclosing.SupportBallGenerator
+import org.apache.commons.math3.geometry.enclosing.{SupportBallGenerator, EnclosingBall}
 
 import scala.collection.JavaConverters._
 import scala.io.Source
@@ -21,6 +21,9 @@ import org.slf4j.{Logger, LoggerFactory}
 import edu.ucr.dblab.pflock.spmf.{Transactions, Transaction, AlgoLCM2}
 
 import archery._
+
+import edu.ucr.dblab.pflock.pbk.PBK.bk
+import edu.ucr.dblab.pflock.welzl.Welzl
 
 object Utils {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -35,6 +38,7 @@ object Utils {
     tolerance: Double = 1e-3,
     appId: String = "",
     tag: String = "",
+    method: String = "BFE",
     debug: Boolean = false
   ){
     val scale = 1 / tolerance
@@ -42,13 +46,13 @@ object Utils {
     val r = (epsilon_prime / 2.0) + tolerance
     val r2 = math.pow(epsilon_prime / 2.0, 2) + tolerance
 
-    def info: String = s"$appId|$epsilon_prime|$mu|$delta"
+    def info: String = s"$appId|$epsilon_prime|$mu|$delta|$method"
   }
 
   case class STPoint(point: Point, cid: Int = 0){
-    val userData = point.getUserData.asInstanceOf[String].split("\t")
-    val oid = userData(0).toInt
-    val tid = userData(1).toInt
+    val userData = point.getUserData.asInstanceOf[Data]
+    val oid = userData.id
+    val tid = userData.t
     var count = 0
 
     def envelope: Envelope = point.getEnvelopeInternal
@@ -77,6 +81,10 @@ object Utils {
 
     override def toString: String = s"${point.getX}\t${point.getY}\t$cid\t$oid\t$tid\t$count"
 
+  }
+
+  case class Data(id: Int, t: Int){
+    override def toString = s"$id\t$t"
   }
 
   case class Disk(center: Point, pids: List[Int], support: List[Int] = List.empty[Int]){
@@ -183,6 +191,11 @@ object Utils {
     }
   }
 
+  case class MBC(center: Point, radius: Double, points: List[Point])
+
+  case class Stats(nPoints: Int = 0, nPairs: Int = 0, nCenters: Int = 0, nCandidates: Int = 0,
+    nMaximals: Int = 0)
+
   case class DataFiles(
     points:   List[Point],
     pairs:    List[(Point, Point)],
@@ -190,6 +203,44 @@ object Utils {
     disks:    List[Disk],
     maximals: List[Disk]
   )
+
+  /*** CMBC Functions ***/
+
+  def getMBCsPerClique(points: List[STPoint])
+    (implicit settings: Settings, geofactory: GeometryFactory): Iterator[MBC] = {
+
+    val vertices = points.map{_.point}
+    val edges = getEdges(points)
+    
+    bk(vertices, edges).iterator   // finding cliques...
+      .filter(_.size >= settings.mu)
+      .map{ points_per_clique =>               
+        val mbc = Welzl.mbc(points_per_clique) // finding MBC in each clique...
+        val radius = round(mbc.getRadius)
+        val center = geofactory.createPoint(new Coordinate(mbc.getCenter.getX,
+          mbc.getCenter.getY))
+        MBC(center, radius, points_per_clique)
+      }
+  }
+
+  def partitionByRadius(mbcs: Iterator[MBC])
+    (implicit settings: Settings): (List[Disk], List[STPoint]) ={
+
+    // dividing MBCs by radius less than epsilon...
+    val (maximals_prime, disks_prime) = mbcs.partition{ _.radius < settings.r }
+    // returning MBCs less than epsilon as maximals disks (maximals1)...
+    val maximals1 = maximals_prime.map{ mbc =>
+      val pids = mbc.points.map(_.getUserData.asInstanceOf[Data].id)
+      
+      Disk(mbc.center, pids, List.empty)
+    }.toList
+
+    // returning remaining points in MBCs greater than epsilon as list of points (points_prime)...
+    val points_prime = pointsToSTPoint(disks_prime.flatMap{_.points}.toList)
+
+    (maximals1, points_prime)
+  }
+  
 
   /*** BFE Functions ***/
 
@@ -267,6 +318,17 @@ object Utils {
     }
   }
 
+  def getEdges(points: List[STPoint])(implicit settings: Settings): List[(Point, Point)] = {
+    for {
+      a <- points
+      b <- points if {
+          (a.oid < b.oid) && (a.distance(b) <= settings.epsilon)
+      }
+    } yield {
+      (a.point, b.point)
+    }
+  }
+
   def insertMaximal(maximals: List[Disk], candidate: Disk): List[Disk] = {
     if(maximals.isEmpty){
       maximals :+ candidate
@@ -280,6 +342,46 @@ object Utils {
           maximals :+ candidate
         }
       }
+    }
+  }
+
+  def insertMaximals(maximals: archery.RTree[Disk], candidates: Iterable[Disk])
+    (implicit settings: Settings): archery.RTree[Disk] = {
+
+    if(maximals.entries.size == 0){
+      val toInsert = candidates.map{ candidate =>
+        val center = archery.Point(candidate.X, candidate.Y)
+        Entry(center, candidate)
+      }
+      maximals.insertAll(toInsert)
+    } else {
+      val empty = Iterable.empty[Entry[Disk]]
+      val R = candidates.map{ candidate => 
+        val maximals_prime = maximals.search(candidate.bbox(settings.epsilon)).map(_.value)
+
+        if( maximals_prime.exists( maximal => candidate.isSubsetOf(maximal) ) ){
+          (empty, empty)
+        } else {
+          if( maximals_prime.exists( maximal => maximal.isSubsetOf(candidate) ) ){
+            val toRemove = maximals_prime.filter( maximal => maximal.isSubsetOf(candidate) )
+              .map{ maximal =>
+                val center = archery.Point(maximal.X, maximal.Y)
+                Entry(center, maximal)
+              }
+            val center = archery.Point(candidate.X, candidate.Y)
+            val toInsert = Iterable(Entry(center, candidate))
+            (toInsert, toRemove)
+          } else {
+            val center = archery.Point(candidate.X, candidate.Y)
+            val toInsert = Iterable(Entry(center, candidate))
+            (toInsert, empty)
+          }
+        }
+        
+      }
+      val toInsert = R.map{_._1}.flatten
+      val toRemove = R.map{_._2}.flatten.toList.distinct
+      maximals.insertAll(toInsert).removeAll(toRemove)
     }
   }
 
@@ -326,13 +428,13 @@ object Utils {
       new Transaction(x, y, pids)
     }.toList
 
-    transactions.foreach{println}
+    //transactions.foreach{println}
 
     val data = new Transactions(transactions.asJava, 0)
     val lcm = new AlgoLCM2()
     lcm.run(data)
 
-    lcm.printStats()
+    //lcm.printStats()
 
     lcm.getPointsAndPids.asScala
       //.filter(_.getItems.size >= mu)
@@ -423,11 +525,11 @@ object Utils {
       .map{ line =>
         if(isWKT){
           val reader = new WKTReader(geofactory)
-          val id = line._2
-          val t  = 0
+          val i = line._2.toInt
+          val t = 0
           val point = reader.read(line._1).asInstanceOf[Point]
 
-          point.setUserData(s"$id\t$t")
+          point.setUserData(Data(i, t))
           STPoint(point)
         } else {
           val arr = line._1.split("\t")
@@ -437,7 +539,7 @@ object Utils {
           val t = arr(3).toInt
           val point = geofactory.createPoint(new Coordinate(x, y))
 
-          point.setUserData(s"$i\t$t")
+          point.setUserData(Data(i, t))
           STPoint(point)
         }
       }
@@ -445,6 +547,21 @@ object Utils {
     val points = for{
       p1 <- points_prime
       p2 <- points_prime
+      if{ p1.distance(p2) <= settings.epsilon }
+    } yield {
+      (p1, 1)
+    }
+    points.groupBy(_._1).map{ case(point, counts) =>
+      point.count = counts.size
+      point
+    }.toList
+  }
+
+  def pointsToSTPoint(points_prime: List[Point])(implicit settings: Settings): List[STPoint] = {
+    val stpoints = points_prime.map(p => STPoint(p)).distinct
+    val points = for{
+      p1 <- stpoints
+      p2 <- stpoints
       if{ p1.distance(p2) <= settings.epsilon }
     } yield {
       (p1, 1)
@@ -528,6 +645,15 @@ object Utils {
 
   def clocktime: Long = System.nanoTime()
 
+  def log(msg: String)(implicit logger: Logger, settings: Settings): Unit = {
+    logger.info(s"INFO|${settings.info}|$msg")
+  }
+
+  def round(x: Double)(implicit settings: Settings): Double = {
+    val decimal_positions = math.log10(settings.scale).toInt
+    BigDecimal(x).setScale(decimal_positions, BigDecimal.RoundingMode.HALF_UP).toDouble
+  }
+
   def timer[R](msg: String)(block: => R): R = {
     val t0 = clocktime
     val result = block    // call-by-name
@@ -548,12 +674,23 @@ object Utils {
     println(s"Saved ${filename}\tin\t${time}s\t[${content.size} records].")
   }
 
-  def checkMaximals(points: List[STPoint], bfe2file: String = "/tmp/edgesMaximals.wkt")
-    (implicit geofactory: GeometryFactory, settings: Settings): Unit = {
+  def parseBFEOutput(out: String): List[String] = {
+    val o = out.split("\n").filter(_.startsWith("totalPairs")).flatMap{ line =>
+      val arr = line.split("\t").map(_.replace(":", ""))
+      arr
+    }.toList
 
-    timer(s"${settings.info}|Bfe0"){
-      s"bfe ${settings.input} ${settings.epsilon_prime.toInt} ${settings.mu} 1" !
+    o.zip(o.tail).map{case(a, b) => s"$a|$b"}.filter(_.startsWith("total"))
+  }
+
+  def checkMaximals(points: List[STPoint], bfe2file: String = "/tmp/edgesMaximals.wkt")
+    (implicit geofactory: GeometryFactory, settings: Settings, logger: Logger): Unit = {
+
+    val out = timer(s"${settings.info}|Bfe0"){
+      s"bfe ${settings.input} ${settings.epsilon_prime.toInt} ${settings.mu} 1" !!
     }
+
+    parseBFEOutput(out).foreach(log)
 
     val bfe1file = s"/tmp/BFE_E${settings.epsilon_prime.toInt}_M${settings.mu}_D1.txt"
      
@@ -579,30 +716,8 @@ object Utils {
     val diff1 = bfe1.filterNot(bfe2.toSet)
     val diff2 = bfe2.filterNot(bfe1.toSet)
 
-    /*
-    save("/tmp/bf1_compare.txt"){ bfe1.sorted.map{_ + "\n"} }
-    save("/tmp/bf2_compare.txt"){ bfe2.sorted.map{_ + "\n"} }
-
-    println("diff1")
-    diff1.sorted.foreach{println}
-    println("diff2")
-    diff2.sorted.foreach{println}
-
-    val subsets = for{
-      pids1 <- diff1.map{_.split(" ").map(_.toInt).toSet}
-      pids2 <- diff2.map{_.split(" ").map(_.toInt).toSet}
-    } yield {
-      val valid1 = pids1.subsetOf(pids2) 
-      val valid2 = pids2.subsetOf(pids1)
-      val t1 = (pids1, valid1)
-      val t2 = (pids2, valid2)
-      List(t1, t2)
-    }
-    subsets.flatten.filter(_._2).map(_._1.toList.sorted).foreach{println}
-     */
-
     if(diff1.isEmpty && diff2.isEmpty){
-        logger.info(s"INFO|${settings.info}|Maximals OK|END")
+        log(s"Maximals OK|END")
     } else {
       val tree = new STRtree(200)
       points.foreach{ point => tree.insert(point.envelope, point) }
@@ -625,10 +740,26 @@ object Utils {
       checksMaximals.filterNot(_._2).map{_._1.wkt}.foreach{println}
 
       if( checksMaximals.map(_._2).reduce(_ & _) ){
-        logger.info(s"INFO|${settings.info}|Maximals OK|END")
+        log(s"Maximals OK|END")
       } else {
-        logger.info(s"INFO|${settings.info}|Maximals ERR|END")
+        log(s"Maximals ERR|END")
       }
     }
   }
+}
+
+import org.rogach.scallop._
+
+class BFEParams(args: Seq[String]) extends ScallopConf(args) {
+  val tolerance: ScallopOption[Double]  = opt[Double]  (default = Some(1e-3))
+  val input:     ScallopOption[String]  = opt[String]  (default = Some(""))
+  val epsilon:   ScallopOption[Double]  = opt[Double]  (default = Some(10.0))
+  val mu:        ScallopOption[Int]     = opt[Int]     (default = Some(5))
+  val capacity:  ScallopOption[Int]     = opt[Int]     (default = Some(100))
+  val tag:       ScallopOption[String]  = opt[String]  (default = Some(""))
+  val output:    ScallopOption[String]  = opt[String]  (default = Some("/tmp"))
+  val debug:     ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
+  val method:    ScallopOption[String]  = opt[String]  (default = Some("BFE"))
+
+  verify()
 }

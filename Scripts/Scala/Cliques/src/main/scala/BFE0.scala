@@ -2,6 +2,7 @@ package edu.ucr.dblab.pflock
 
 import com.vividsolutions.jts.geom.{PrecisionModel, GeometryFactory}
 import com.vividsolutions.jts.geom.{Envelope, Coordinate, Point}
+import com.vividsolutions.jts.index.strtree.STRtree
 import org.datasyslab.geospark.spatialRDD.SpatialRDD
 
 import org.apache.spark.rdd.RDD
@@ -15,10 +16,8 @@ import scala.collection.JavaConverters._
 import edu.ucr.dblab.pflock.quadtree._
 import edu.ucr.dblab.pflock.Utils._
 
-import archery._
-
-object BFE2 {
-  private val logger: Logger = LoggerFactory.getLogger("myLogger")
+object BFE0 {
+  implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   def main(args: Array[String]): Unit = {
     //generateData(10000, 1000, 1000, "/home/acald013/Research/Datasets/P10K_W1K_H1K.tsv")
@@ -29,6 +28,7 @@ object BFE2 {
       input = params.input(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
+      method = params.method(),
       capacity = params.capacity(),
       appId = System.nanoTime().toString(),
       tolerance = params.tolerance(),
@@ -54,9 +54,9 @@ object BFE2 {
     var nPairs = 0
     var nCenters = 0
     var nCandidates = 0
-    var Maximals: RTree[Disk] = RTree()
+    var Maximals = List.empty[Disk]
 
-    timer(s"${settings.info}|Bfe"){
+    timer(s"${settings.info}|Maximals"){
       val the_key = -1
       // for each non-empty cell...
       grid.index.filter(_._2.size > 0).keys.foreach{ key =>
@@ -136,16 +136,17 @@ object BFE2 {
       }
     }
 
-    val nMaximals = Maximals.entries.size
+    val nMaximals = Maximals.size
     debug{
       save("/tmp/edgesPairs.wkt"){ Pairs.toList }
-      save("/tmp/edgesMaximals.wkt"){ Maximals.entries.toList.map(_.value.wkt + "\n") }
+      //save("/tmp/edgesCandidates.wkt"){ Candidates.toList }
+      save("/tmp/edgesMaximals.wkt"){ Maximals.map(_.wkt + "\n") }
     }
 
-    logger.info(s"INFO|${settings.info}|Pairs     |${nPairs}")
-    logger.info(s"INFO|${settings.info}|Centers   |${nCenters}")
+    logger.info(s"INFO|${settings.info}|Pairs|${nPairs}")
+    logger.info(s"INFO|${settings.info}|Centers|${nCenters}")
     logger.info(s"INFO|${settings.info}|Candidates|${nCandidates}")
-    logger.info(s"INFO|${settings.info}|Maximals  |${nMaximals}")
+    logger.info(s"INFO|${settings.info}|Maximals|${nMaximals}")
 
     debug{ checkMaximals(points) }
   }
