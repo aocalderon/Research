@@ -1,20 +1,9 @@
 package edu.ucr.dblab.pflock
 
 import com.vividsolutions.jts.geom.{PrecisionModel, GeometryFactory}
-import com.vividsolutions.jts.geom.{Envelope, Coordinate, Point}
-import org.datasyslab.geospark.spatialRDD.SpatialRDD
-
-import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.serializer.KryoSerializer
-
 import org.slf4j.{Logger, LoggerFactory}
-
 import scala.collection.JavaConverters._
-
-import edu.ucr.dblab.pflock.quadtree._
 import edu.ucr.dblab.pflock.Utils._
-
 import archery._
 
 object BFE {
@@ -38,6 +27,7 @@ object BFE {
       }
 
       debug{
+        log(s"${grid.index.size}")
         save("/tmp/edgesPoints.wkt"){ grid.pointsToText }
         save("/tmp/edgesGrid.wkt"){ grid.wkt() }
       }

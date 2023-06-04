@@ -592,6 +592,20 @@ object Utils {
     }.toList
   }
 
+  def setCount(points_prime: List[STPoint])(implicit settings: Settings): List[STPoint] = {
+    val points = for{
+      p1 <- points_prime
+      p2 <- points_prime
+      if{ p1.distance(p2) <= settings.epsilon }
+    } yield {
+      (p1, 1)
+    }
+    points.groupBy(_._1).map{ case(point, counts) =>
+      point.count = counts.size
+      point
+    }.toList
+  }
+
   def generateData(n: Int, width: Double, height: Double, filename: String): Unit = {
     val points = (0 until n).map{ i =>
       val x = Random.nextDouble * width
@@ -746,15 +760,17 @@ object Utils {
     buffer2.close
 
     val diff1 = bfe1.filterNot(bfe2.toSet)
+    //save("/tmp/bf1.txt"){diff1.sorted.map(_ + "\n")}
     val diff2 = bfe2.filterNot(bfe1.toSet)
+    //save("/tmp/bf2.txt"){diff2.sorted.map(_ + "\n")}
 
     if(diff1.isEmpty && diff2.isEmpty){
-        log(s"Maximals|OK!")
+        log(s"Maximals|OK!!")
     } else {
       val tree = new STRtree(200)
       points.foreach{ point => tree.insert(point.envelope, point) }
 
-      val checksMaximals = for{
+      val checks = for{
         pids <- diff2
         maximal <- maximals if{ maximal.pidsText == pids }
       } yield {
@@ -769,16 +785,37 @@ object Utils {
         (maximal, valid)
       }
 
-      checksMaximals.filterNot(_._2).map{_._1.wkt}.foreach{println}
-
-      if( checksMaximals.map(_._2).reduce(_ & _) ){
-        log(s"Maximals|OK")
+      val valids = checks.map(_._2).reduce(_ & _)
+      //println(s"are our maximals valid? $valids")
+      if( valids ){
+        //println(s"our maximals contains or are contained by theirs?")
+        log(checkMaximals2(diff1, diff2))
       } else {
-        log(s"Maximals|ERR")
+        val mistakes = checks.filterNot(_._2).map{_._1.wkt}.mkString("\n")
+        log(s"Maximals|ERR1 Fakes\n${mistakes}")
       }
     }
   }
+
+  private def checkMaximals2(theirs_prime: List[String], ours_prime: List[String])
+    (implicit geofactory: GeometryFactory, settings: Settings, logger: Logger): String = {
+
+    val theirs = theirs_prime.map{_.split(" ").map(_.toInt).toSet}
+    val ours = ours_prime.map{_.split(" ").map(_.toInt).toSet}
+
+    val missing = theirs.map{ their =>
+      val isSubset = ours.exists( our => their.subsetOf(our) )
+      (their, isSubset)
+    }.filterNot(_._2).map{_._1.toList.sorted.mkString(" ")}
+
+    if(missing.isEmpty){
+      "Maximals|OK!"
+    } else {
+      s"Maximals|ERR2 Missings\n${missing.mkString("\n")}\n"
+    }
+  }
 }
+
 
 import org.rogach.scallop._
 
