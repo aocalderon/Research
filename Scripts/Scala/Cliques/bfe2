@@ -1,0 +1,16 @@
+#!/bin/bash
+
+INPUT=$1
+EPSILON=$2
+MU=$3
+DELTA=$4
+METHOD=$5
+TAG=$6
+DEBUG=$7
+
+JAR="$HOME/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar"
+LIBSPATH="$HOME/Spark/2.4/jars"
+LIBS="${LIBSPATH}/scallop_2.11-4.0.1.jar"
+CLASS="edu.ucr.dblab.pflock.Runner"
+
+scala -cp $LIBS:$JAR $CLASS --input $INPUT --epsilon $EPSILON --mu $MU --method $METHOD --tag $TAG $DEBUG

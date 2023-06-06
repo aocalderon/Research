@@ -7,6 +7,8 @@ import com.vividsolutions.jts.index.strtree.STRtree
 import com.vividsolutions.jts.io.WKTReader
 import org.geotools.geometry.jts.JTS
 
+import org.apache.spark.rdd.RDD
+
 import org.apache.commons.math3.geometry.euclidean.twod.DiskGenerator
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D
 import org.apache.commons.math3.geometry.enclosing.{SupportBallGenerator, EnclosingBall}
@@ -87,6 +89,14 @@ object Utils {
     override def toString = s"$id\t$t"
   }
 
+  case class Cell(mbr: Envelope, cid: Int, lineage: String){
+    val wkt: String = toString + "\n"
+
+    def contains(disk: Disk): Boolean = mbr.contains(disk.X, disk.Y)
+
+    override def toString: String = s"${JTS.toGeometry(mbr).toText}\t$cid\t$lineage"
+  }
+
   case class Disk(center: Point, pids: List[Int], support: List[Int] = List.empty[Int]){
     var did: Int = -1
     var subset: Boolean = false
@@ -109,6 +119,8 @@ object Utils {
 
     def bbox(r: Double): Box =
       Box((X - r).toFloat, (Y - r).toFloat, (X + r).toFloat, (Y + r).toFloat)
+
+    def containedBy(cell: Cell): Boolean = cell.contains(this)
 
     def distance(other: Disk): Double = {
       center.distance(other.center)
@@ -349,6 +361,22 @@ object Utils {
     }
   }
 
+  def insertMaximalLCM(maximals: List[Disk], candidate: Disk): List[Disk] = {
+    if(maximals.isEmpty){
+      maximals :+ candidate
+    } else {
+      if( maximals.exists( maximal => candidate.isSubsetOf(maximal) ) ){
+        maximals
+      } else {
+        if( maximals.exists( maximal => maximal.isSubsetOf(candidate) ) ){
+          maximals.filterNot( maximal => maximal.isSubsetOf(candidate) ) :+ candidate
+        } else {
+          maximals :+ candidate
+        }
+      }
+    }
+  }
+
   def insertMaximal(maximals: List[Disk], candidate: Disk): List[Disk] = {
     if(maximals.isEmpty){
       maximals :+ candidate
@@ -368,40 +396,44 @@ object Utils {
   def insertMaximals(maximals: archery.RTree[Disk], candidates: Iterable[Disk])
     (implicit settings: Settings): archery.RTree[Disk] = {
 
-    if(maximals.entries.size == 0){
-      val toInsert = candidates.map{ candidate =>
-        val center = archery.Point(candidate.X, candidate.Y)
-        Entry(center, candidate)
-      }
-      maximals.insertAll(toInsert)
+    if(candidates.isEmpty){
+      maximals
     } else {
-      val empty = Iterable.empty[Entry[Disk]]
-      val R = candidates.map{ candidate => 
-        val maximals_prime = maximals.search(candidate.bbox(settings.epsilon)).map(_.value)
-
-        if( maximals_prime.exists( maximal => candidate.isSubsetOf(maximal) ) ){
-          (empty, empty)
-        } else {
-          if( maximals_prime.exists( maximal => maximal.isSubsetOf(candidate) ) ){
-            val toRemove = maximals_prime.filter( maximal => maximal.isSubsetOf(candidate) )
-              .map{ maximal =>
-                val center = archery.Point(maximal.X, maximal.Y)
-                Entry(center, maximal)
-              }
-            val center = archery.Point(candidate.X, candidate.Y)
-            val toInsert = Iterable(Entry(center, candidate))
-            (toInsert, toRemove)
-          } else {
-            val center = archery.Point(candidate.X, candidate.Y)
-            val toInsert = Iterable(Entry(center, candidate))
-            (toInsert, empty)
-          }
+      if(maximals.entries.size == 0){
+        val toInsert = candidates.map{ candidate =>
+          val center = archery.Point(candidate.X, candidate.Y)
+          Entry(center, candidate)
         }
-        
+        maximals.insertAll(toInsert)
+      } else {
+        val empty = Iterable.empty[Entry[Disk]]
+        val R = candidates.map{ candidate =>
+          val maximals_prime = maximals.search(candidate.bbox(settings.epsilon)).map(_.value)
+
+          if( maximals_prime.exists( maximal => candidate.isSubsetOf(maximal) ) ){
+            (empty, empty)
+          } else {
+            if( maximals_prime.exists( maximal => maximal.isSubsetOf(candidate) ) ){
+              val toRemove = maximals_prime.filter( maximal => maximal.isSubsetOf(candidate) )
+                .map{ maximal =>
+                  val center = archery.Point(maximal.X, maximal.Y)
+                  Entry(center, maximal)
+                }
+              val center = archery.Point(candidate.X, candidate.Y)
+              val toInsert = Iterable(Entry(center, candidate))
+              (toInsert, toRemove)
+            } else {
+              val center = archery.Point(candidate.X, candidate.Y)
+              val toInsert = Iterable(Entry(center, candidate))
+              (toInsert, empty)
+            }
+          }
+          
+        }
+        val toInsert = R.map{_._1}.flatten
+        val toRemove = R.map{_._2}.flatten.toList.distinct
+        maximals.insertAll(toInsert).removeAll(toRemove)
       }
-      val toInsert = R.map{_._1}.flatten
-      val toRemove = R.map{_._2}.flatten.toList.distinct
-      maximals.insertAll(toInsert).removeAll(toRemove)
     }
   }
 
@@ -428,6 +460,84 @@ object Utils {
           val toInsert = Entry(center, candidate)
           maximals.removeAll(toRemove).insert(toInsert)
         } else {
+          val center = archery.Point(candidate.X, candidate.Y)
+          val toInsert = Entry(center, candidate)
+          maximals.insert(toInsert)
+        }
+      }
+    }
+  }
+
+
+  def insertMaximalParallel(maximals: archery.RTree[Disk], candidate: Disk, cell: Cell)
+    (implicit settings: Settings): archery.RTree[Disk] = {
+
+    if(maximals.entries.size == 0){
+      // candidate is the first entry so we insert it...
+      val center = archery.Point(candidate.X, candidate.Y)
+      val toInsert = Entry(center, candidate)
+      maximals.insert(toInsert)
+    } else {
+      // we query the tree to retrieve maximals around the current candidate...
+      val maximals_prime = maximals.search(candidate.bbox(settings.epsilon)).map(_.value)
+
+      // we check if candidate is subset of any current maximal...
+      if( maximals_prime.exists( maximal => candidate.isSubsetOf(maximal) ) ){
+        // if so, we have to check if candidate is equal to that maximal...
+        // (if candidate is subset, it could be equal to one and only one maximal)...
+        // (if not, the tree has duplicates)...
+
+        // we find for a maximal equal to current candidate...
+        val maximal_prime = maximals_prime.find(_.pidsSet == candidate.pidsSet)
+        maximal_prime match {
+          case Some(maximal) => { 
+            // maximal == current; we only replace if current maximal is outside of the cell
+            //                      and new candidate is inside...
+            (cell.contains(maximal), cell.contains(candidate)) match {
+              // maximal out, candidate in; we replace...
+              case (false, true) => maximals
+                  .remove(Entry(archery.Point(maximal.X, maximal.Y), maximal))
+                  .insert(Entry(archery.Point(candidate.X, candidate.Y), candidate))
+              // any other case; we keep the tree without changes...
+              case _ => maximals
+            }
+          }
+          // None means they are not equal, so we keep the tree without changes...
+          case None => maximals
+        }
+      } else {
+        // we check if candidate is superset of one or more maximals...
+        if( maximals_prime.exists( maximal => maximal.isSubsetOf(candidate) ) ){
+          // we find for a maximal equal to current candidate...
+          val maximal_prime = maximals_prime.find(_.pidsSet == candidate.pidsSet)
+          maximal_prime match {
+            case Some(maximal) => {
+              // maximal == current; we only replace if current maximal is outside of the cell
+              //                      and new candidate is inside...
+              (cell.contains(maximal), cell.contains(candidate)) match {
+                // maximal out, candidate in; we replace...
+                case (false, true) => maximals
+                    .remove(Entry(archery.Point(maximal.X, maximal.Y), maximal))
+                    .insert(Entry(archery.Point(candidate.X, candidate.Y), candidate))
+                // any other case; we keep the tree without changes...
+                case _ => maximals
+              }
+            }
+            // None means there is not any equal, just subset(s) so
+            //  we remove subset(s) and insert new candidate...
+            case None => {
+              val toRemove = maximals_prime.filter( maximal => maximal.isSubsetOf(candidate) )
+                .map{ maximal =>
+                  val center = archery.Point(maximal.X, maximal.Y)
+                  Entry(center, maximal)
+                }
+              val center = archery.Point(candidate.X, candidate.Y)
+              val toInsert = Entry(center, candidate)
+              maximals.removeAll(toRemove).insert(toInsert)
+           }
+          }
+        } else {
+          // candidate is neither subset or superset so we insert it...
           val center = archery.Point(candidate.X, candidate.Y)
           val toInsert = Entry(center, candidate)
           maximals.insert(toInsert)
@@ -720,13 +830,19 @@ object Utils {
     println(s"Saved ${filename}\tin\t${time}s\t[${content.size} records].")
   }
 
-  def parseBFEOutput(out: String): List[String] = {
-    val o = out.split("\n").filter(_.startsWith("totalPairs")).flatMap{ line =>
-      val arr = line.split("\t").map(_.replace(":", ""))
-      arr
-    }.toList
+  def checkMF(maximalsRDD: RDD[Disk])
+    (implicit geofactory: GeometryFactory, settings: Settings, logger: Logger, d: Boolean): Unit = {
 
-    o.zip(o.tail).map{case(a, b) => s"$a|$b"}.filter(_.startsWith("total"))
+    val maximalsMF = maximalsRDD.collect.toList
+    val points = readPoints(s"/home/acald013/Research/${settings.input}")
+    val (maximals_prime, statsBFE) = BFE.run(points)
+    statsBFE.print
+    val maximalsBFE = maximals_prime.entries.map(_.value).toList
+    save("/tmp/edgesBFE.wkt"){
+      maximalsBFE.map(_.wkt + "\n")
+    }
+
+    checkMaximalDisks(maximalsBFE, maximalsMF, points)
   }
 
   def checkMaximals(points: List[STPoint], bfe2file: String = "/tmp/edgesMaximals.wkt")
@@ -735,34 +851,78 @@ object Utils {
     val out = timer(s"${settings.info}|Bfe0"){
       s"bfe ${settings.input} ${settings.epsilon_prime.toInt} ${settings.mu} 1" !!
     }
-
     parseBFEOutput(out).foreach(log)
-
     val bfe1file = s"/tmp/BFE_E${settings.epsilon_prime.toInt}_M${settings.mu}_D1.txt"
-     
+
+    checkMaximalsByFile(bfe1file, bfe2file, points)
+  }
+
+  private def parseBFEOutput(out: String): List[String] = {
+    val o = out.split("\n").filter(_.startsWith("totalPairs")).flatMap{ line =>
+      val arr = line.split("\t").map(_.replace(":", ""))
+      arr
+    }.toList
+
+    o.zip(o.tail).map{case(a, b) => s"$a|$b"}.filter(_.startsWith("total"))
+  }
+
+
+  private def checkMaximalsByFile(bfe1file: String, bfe2file: String, points: List[STPoint])
+    (implicit geofactory: GeometryFactory, settings: Settings, logger: Logger): Unit = {
+
     val buffer1 = Source.fromFile(bfe1file)
+    val center = geofactory.createPoint(new Coordinate(0,0))
     val bfe1 = buffer1.getLines.map{ line =>
       val arr = line.split("\t")
+      val pids = arr(2).split(" ").map(_.toInt).sorted.toList
 
-      arr(2)
+      Disk(center, pids)
     }.toList
     buffer1.close
+
     val buffer2 = Source.fromFile(bfe2file)
     val reader = new WKTReader(geofactory)
-    val maximals = buffer2.getLines.map{ line =>
+    val bfe2 = buffer2.getLines.map{ line =>
       val arr = line.split("\t")
       val center = reader.read(arr(0)).asInstanceOf[Point]
       val pids = arr(1).split(" ").map(_.toInt).sorted.toList
 
       Disk(center, pids)
     }.toList
-    val bfe2 = maximals.map(_.pidsText)
     buffer2.close
 
-    val diff1 = bfe1.filterNot(bfe2.toSet)
-    //save("/tmp/bf1.txt"){diff1.sorted.map(_ + "\n")}
-    val diff2 = bfe2.filterNot(bfe1.toSet)
-    //save("/tmp/bf2.txt"){diff2.sorted.map(_ + "\n")}
+    checkMaximalDisks(bfe1, bfe2, points)
+  }
+
+  private def checkMaximalDisks(bfe1_prime: List[Disk], bfe2_prime: List[Disk], points: List[STPoint])
+    (implicit geofactory: GeometryFactory, settings: Settings, logger: Logger): Unit = {
+
+    println("BFE1: " + bfe1_prime.size)
+    val bfe1 = bfe1_prime.map(_.pidsText)
+    save("/tmp/bf1.txt"){bfe1.sorted.map(_ + "\n")}
+
+    println("BFE2: " + bfe2_prime.size)
+    val bfe2 = bfe2_prime.map(_.pidsText)
+    save("/tmp/bf2.txt"){bfe2.sorted.map(_ + "\n")}
+
+    println("diff1")
+    val _diff1 = bfe1.filterNot(bfe2.toSet)
+    _diff1.foreach{println}
+    println("diff2")
+    val _diff2 = bfe2.filterNot(bfe1.toSet)
+    _diff2.foreach{println}
+
+    val diffs = "diff -s /tmp/bf1.txt /tmp/bf2.txt".lineStream_!
+    val (diff1_prime, diff2_prime) = diffs.filter(l => l.startsWith("<") || l.startsWith(">"))
+      .partition(_.startsWith("<"))
+
+    println("<")
+    val diff1 = diff1_prime.map(_.substring(2)).toList
+    diff1.foreach{println}
+
+    println(">")
+    val diff2 = diff2_prime.map(_.substring(2)).toList
+    diff2.foreach{println}
 
     if(diff1.isEmpty && diff2.isEmpty){
         log(s"Maximals|OK!!")
@@ -772,7 +932,7 @@ object Utils {
 
       val checks = for{
         pids <- diff2
-        maximal <- maximals if{ maximal.pidsText == pids }
+        maximal <- bfe2_prime if{ maximal.pidsText == pids }
       } yield {
         val envelope = maximal.getExpandEnvelope(settings.r + settings.tolerance)
         val hood = tree.query(envelope).asScala.map{ _.asInstanceOf[STPoint] }
@@ -789,7 +949,7 @@ object Utils {
       //println(s"are our maximals valid? $valids")
       if( valids ){
         //println(s"our maximals contains or are contained by theirs?")
-        log(checkMaximals2(diff1, diff2))
+        log(checkMaximalsDiff(diff1, diff2))
       } else {
         val mistakes = checks.filterNot(_._2).map{_._1.wkt}.mkString("\n")
         log(s"Maximals|ERR1 Fakes\n${mistakes}")
@@ -797,7 +957,7 @@ object Utils {
     }
   }
 
-  private def checkMaximals2(theirs_prime: List[String], ours_prime: List[String])
+  private def checkMaximalsDiff(theirs_prime: List[String], ours_prime: List[String])
     (implicit geofactory: GeometryFactory, settings: Settings, logger: Logger): String = {
 
     val theirs = theirs_prime.map{_.split(" ").map(_.toInt).toSet}
@@ -829,6 +989,7 @@ class BFEParams(args: Seq[String]) extends ScallopConf(args) {
   val output:    ScallopOption[String]  = opt[String]  (default = Some("/tmp"))
   val debug:     ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val method:    ScallopOption[String]  = opt[String]  (default = Some("BFE"))
+  val master:    ScallopOption[String]  = opt[String]  (default = Some("local[10]"))
 
   verify()
 }

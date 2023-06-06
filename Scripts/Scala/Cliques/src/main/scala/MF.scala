@@ -21,23 +21,24 @@ object MF {
     implicit val params = new BFEParams(args)
     implicit val d: Boolean = params.debug()
 
+    val spark = SparkSession.builder()
+      .config("spark.serializer",classOf[KryoSerializer].getName)
+      .appName("MF")
+      .getOrCreate()
+    import spark.implicits._
+
     implicit var settings = Settings(
       input = params.input(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
       method = params.method(),
       capacity = params.capacity(),
-      appId = System.nanoTime().toString(),
+      appId = spark.sparkContext.applicationId,
       tolerance = params.tolerance(),
       tag = params.tag()
     )
-    implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
-    val spark = SparkSession.builder()
-      .config("spark.serializer",classOf[KryoSerializer].getName)
-      .appName("MF")
-      .getOrCreate()
-    import spark.implicits._
+    implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
     val pointsRaw = spark.read
       .option("delimiter", "\t")
@@ -55,9 +56,17 @@ object MF {
       }
     log(s"Reading data|START")
 
-    val sample = pointsRaw.sample(false, 0.1, 42).collect().toList
-    val quadtree = timer(s"Creating quadtree"){
-      Quadtree.getQuadtreeFromPoints(sample, capacity = settings.capacity)
+    val (quadtree, cells) = timer(s"Creating quadtree"){
+      val sample = pointsRaw.sample(false, 0.1, 42).collect().toList
+      val quadtree = Quadtree.getQuadtreeFromPoints(sample, capacity = settings.capacity)
+      val cells = quadtree.getLeafZones.asScala.map{ leaf =>
+        val cid = leaf.partitionId
+        val lin = leaf.lineage
+        val env = leaf.getEnvelope
+
+        cid -> Cell(env, cid, lin)
+      }.toMap
+      (quadtree, cells)
     }
 
     val pointsRDD = timer(s"Partitioning data"){
@@ -83,8 +92,9 @@ object MF {
 
     val maximalsRDD = timer{"Runing BFE"}{
       val M = pointsRDD.mapPartitionsWithIndex{ case(cid, it) =>
+        val cell = cells(cid)
         val points = it.toList
-        val (maximals, stats) = BFE.run(points)
+        val (maximals, stats) = BFE.runParallel(points, cell)
 
         maximals.entries.map(_.value)
       }
@@ -100,11 +110,14 @@ object MF {
       }
       log(s"Cells|${quadtree.getLeafZones.size}")
       Quadtree.save(quadtree, "/tmp/edgesCells.wkt")
-      save("/tmp/edgesMaximals.wkt"){
+      val MFfile = "/tmp/edgesMF.wkt"
+      save(MFfile){
         maximalsRDD.mapPartitionsWithIndex{ case(cid, it) =>
-          it.map{ p => s"${p.wkt}\tIndex_${cid}\n"}
+          it.map{ p => s"${p.wkt}\n"}
         }.collect
       }
+
+      checkMF(maximalsRDD)
     }
 
     spark.close()
