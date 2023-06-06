@@ -1,0 +1,510 @@
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 10 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 10 --mu 3 --debug
+2023-05-31 23:20:55,066|0|INFO|21980338473223887|10.0|3|5|Reading data|START
+2023-05-31 23:20:55,136|70|TIME|21980338473223887|10.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-05-31 23:20:58,758|3692|TIME|21980338473223887|10.0|3|5|Bfe|  3.35
+Saved /tmp/edgesPairs.wkt	in	0.02s	[14301 records].
+Saved /tmp/edgesMaximals.wkt	in	0.00s	[3721 records].
+2023-05-31 23:20:58,816|3750|INFO|21980338473223887|10.0|3|5|Pairs     |14301
+2023-05-31 23:20:58,816|3750|INFO|21980338473223887|10.0|3|5|Centers   |28602
+2023-05-31 23:20:58,816|3750|INFO|21980338473223887|10.0|3|5|Candidates|17058
+2023-05-31 23:20:58,817|3751|INFO|21980338473223887|10.0|3|5|Maximals  |3721
+totalPairs:	14301	totalCenters:	28602	totalClusters:	3721
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 3721
+2023-05-31 23:21:23,695|28629|TIME|21980338473223887|10.0|3|5|Bfe0| 24.87
+2023-05-31 23:21:23,786|28720|INFO|21980338473223887|10.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 12 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 12 --mu 3 --debug
+2023-05-31 23:21:47,140|0|INFO|21980386704983938|12.0|3|5|Reading data|START
+2023-05-31 23:21:47,206|66|TIME|21980386704983938|12.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-05-31 23:21:53,621|6481|TIME|21980386704983938|12.0|3|5|Bfe|  6.15
+Saved /tmp/edgesPairs.wkt	in	0.02s	[22013 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[5725 records].
+2023-05-31 23:21:53,701|6561|INFO|21980386704983938|12.0|3|5|Pairs     |22013
+2023-05-31 23:21:53,702|6562|INFO|21980386704983938|12.0|3|5|Centers   |44026
+2023-05-31 23:21:53,702|6562|INFO|21980386704983938|12.0|3|5|Candidates|30736
+2023-05-31 23:21:53,702|6562|INFO|21980386704983938|12.0|3|5|Maximals  |5725
+totalPairs:	22013	totalCenters:	44026	totalClusters:	5725
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 5725
+2023-05-31 23:22:59,282|72142|TIME|21980386704983938|12.0|3|5|Bfe0| 65.58
+2023-05-31 23:22:59,397|72257|INFO|21980386704983938|12.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 14 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 14 --mu 3 --debug
+2023-05-31 23:23:20,233|1|INFO|21980482283492438|14.0|3|5|Reading data|START
+2023-05-31 23:23:20,298|66|TIME|21980482283492438|14.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-05-31 23:23:32,690|12458|TIME|21980482283492438|14.0|3|5|Bfe| 12.13
+Saved /tmp/edgesPairs.wkt	in	0.04s	[30470 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[7492 records].
+2023-05-31 23:23:32,805|12573|INFO|21980482283492438|14.0|3|5|Pairs     |30470
+2023-05-31 23:23:32,806|12574|INFO|21980482283492438|14.0|3|5|Centers   |60940
+2023-05-31 23:23:32,806|12574|INFO|21980482283492438|14.0|3|5|Candidates|48187
+2023-05-31 23:23:32,806|12574|INFO|21980482283492438|14.0|3|5|Maximals  |7492
+totalPairs:	30470	totalCenters:	60940	totalClusters:	7491
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 7491
+2023-05-31 23:25:47,286|147054|TIME|21980482283492438|14.0|3|5|Bfe0|134.48
+2023-05-31 23:25:47,521|147289|INFO|21980482283492438|14.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 16 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 16 --mu 3 --debug
+2023-05-31 23:26:07,543|0|INFO|21980650615386348|16.0|3|5|Reading data|START
+2023-05-31 23:26:07,615|72|TIME|21980650615386348|16.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-05-31 23:26:35,936|28393|TIME|21980650615386348|16.0|3|5|Bfe| 28.05
+Saved /tmp/edgesPairs.wkt	in	0.07s	[39924 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[9458 records].
+2023-05-31 23:26:36,115|28572|INFO|21980650615386348|16.0|3|5|Pairs     |39924
+2023-05-31 23:26:36,115|28572|INFO|21980650615386348|16.0|3|5|Centers   |79848
+2023-05-31 23:26:36,115|28572|INFO|21980650615386348|16.0|3|5|Candidates|69120
+2023-05-31 23:26:36,116|28573|INFO|21980650615386348|16.0|3|5|Maximals  |9458
+totalPairs:	39924	totalCenters:	79848	totalClusters:	9457
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 9457
+2023-05-31 23:30:48,597|281054|TIME|21980650615386348|16.0|3|5|Bfe0|252.48
+2023-05-31 23:30:48,817|281274|INFO|21980650615386348|16.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 18 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 18 --mu 3 --debug
+2023-05-31 23:31:12,486|0|INFO|21980951687807849|18.0|3|5|Reading data|START
+2023-05-31 23:31:12,554|68|TIME|21980951687807849|18.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.01s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-05-31 23:32:01,819|49333|TIME|21980951687807849|18.0|3|5|Bfe| 49.00
+Saved /tmp/edgesPairs.wkt	in	0.06s	[50434 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[11198 records].
+2023-05-31 23:32:01,973|49487|INFO|21980951687807849|18.0|3|5|Pairs     |50434
+2023-05-31 23:32:01,973|49487|INFO|21980951687807849|18.0|3|5|Centers   |100868
+2023-05-31 23:32:01,974|49488|INFO|21980951687807849|18.0|3|5|Candidates|92860
+2023-05-31 23:32:01,974|49488|INFO|21980951687807849|18.0|3|5|Maximals  |11198
+totalPairs:	50434	totalCenters:	100868	totalClusters:	11198
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 11198
+2023-05-31 23:39:10,651|478165|TIME|21980951687807849|18.0|3|5|Bfe0|428.67
+2023-05-31 23:39:10,896|478410|INFO|21980951687807849|18.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 20 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 20 --mu 3 --debug
+2023-05-31 23:39:34,412|0|INFO|21981453728788173|20.0|3|5|Reading data|START
+2023-05-31 23:39:34,475|63|TIME|21981453728788173|20.0|3|5|Grid|  0.05
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-05-31 23:40:40,576|66164|TIME|21981453728788173|20.0|3|5|Bfe| 65.83
+Saved /tmp/edgesPairs.wkt	in	0.07s	[62098 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[13031 records].
+2023-05-31 23:40:40,775|66363|INFO|21981453728788173|20.0|3|5|Pairs     |62098
+2023-05-31 23:40:40,776|66364|INFO|21981453728788173|20.0|3|5|Centers   |124196
+2023-05-31 23:40:40,777|66365|INFO|21981453728788173|20.0|3|5|Candidates|118557
+2023-05-31 23:40:40,777|66365|INFO|21981453728788173|20.0|3|5|Maximals  |13031
+totalPairs:	62098	totalCenters:	124196	totalClusters:	13031
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 13031
+2023-05-31 23:52:02,443|748031|TIME|21981453728788173|20.0|3|5|Bfe0|681.66
+2023-05-31 23:52:02,637|748225|INFO|21981453728788173|20.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 10 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 10 --mu 3 --debug
+2023-05-31 23:52:25,306|0|INFO|21982225493651672|10.0|3|5|Reading data|START
+2023-05-31 23:52:25,377|71|TIME|21982225493651672|10.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-05-31 23:52:29,194|3888|TIME|21982225493651672|10.0|3|5|Bfe|  3.54
+Saved /tmp/edgesPairs.wkt	in	0.02s	[14301 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[3721 records].
+2023-05-31 23:52:29,246|3940|INFO|21982225493651672|10.0|3|5|Pairs     |14301
+2023-05-31 23:52:29,246|3940|INFO|21982225493651672|10.0|3|5|Centers   |28602
+2023-05-31 23:52:29,246|3940|INFO|21982225493651672|10.0|3|5|Candidates|17058
+2023-05-31 23:52:29,246|3940|INFO|21982225493651672|10.0|3|5|Maximals  |3721
+totalPairs:	14301	totalCenters:	28602	totalClusters:	3721
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 3721
+2023-05-31 23:52:54,213|28907|TIME|21982225493651672|10.0|3|5|Bfe0| 24.96
+2023-05-31 23:52:54,313|29007|INFO|21982225493651672|10.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 12 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 12 --mu 3 --debug
+2023-05-31 23:53:09,754|0|INFO|21982277191292891|12.0|3|5|Reading data|START
+2023-05-31 23:53:09,829|75|TIME|21982277191292891|12.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-05-31 23:53:16,834|7080|TIME|21982277191292891|12.0|3|5|Bfe|  6.72
+Saved /tmp/edgesPairs.wkt	in	0.03s	[22013 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[5725 records].
+2023-05-31 23:53:16,929|7175|INFO|21982277191292891|12.0|3|5|Pairs     |22013
+2023-05-31 23:53:16,929|7175|INFO|21982277191292891|12.0|3|5|Centers   |44026
+2023-05-31 23:53:16,929|7175|INFO|21982277191292891|12.0|3|5|Candidates|30736
+2023-05-31 23:53:16,930|7176|INFO|21982277191292891|12.0|3|5|Maximals  |5725
+totalPairs:	22013	totalCenters:	44026	totalClusters:	5725
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 5725
+2023-05-31 23:54:22,545|72791|TIME|21982277191292891|12.0|3|5|Bfe0| 65.61
+2023-05-31 23:54:22,661|72907|INFO|21982277191292891|12.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 14 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 14 --mu 3 --debug
+2023-05-31 23:54:46,276|0|INFO|21982365495123461|14.0|3|5|Reading data|START
+2023-05-31 23:54:46,341|65|TIME|21982365495123461|14.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.01s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-05-31 23:55:02,203|15927|TIME|21982365495123461|14.0|3|5|Bfe| 15.58
+Saved /tmp/edgesPairs.wkt	in	0.04s	[30470 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[7492 records].
+2023-05-31 23:55:02,316|16040|INFO|21982365495123461|14.0|3|5|Pairs     |30470
+2023-05-31 23:55:02,316|16040|INFO|21982365495123461|14.0|3|5|Centers   |60940
+2023-05-31 23:55:02,316|16040|INFO|21982365495123461|14.0|3|5|Candidates|48187
+2023-05-31 23:55:02,316|16040|INFO|21982365495123461|14.0|3|5|Maximals  |7492
+totalPairs:	30470	totalCenters:	60940	totalClusters:	7491
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 7491
+2023-05-31 23:57:16,684|150408|TIME|21982365495123461|14.0|3|5|Bfe0|134.36
+2023-05-31 23:57:16,899|150623|INFO|21982365495123461|14.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 16 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 16 --mu 3 --debug
+2023-05-31 23:57:41,096|0|INFO|21982539730491965|16.0|3|5|Reading data|START
+2023-05-31 23:57:41,164|68|TIME|21982539730491965|16.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-05-31 23:58:07,839|26743|TIME|21982539730491965|16.0|3|5|Bfe| 26.41
+Saved /tmp/edgesPairs.wkt	in	0.05s	[39924 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[9458 records].
+2023-05-31 23:58:08,000|26904|INFO|21982539730491965|16.0|3|5|Pairs     |39924
+2023-05-31 23:58:08,000|26904|INFO|21982539730491965|16.0|3|5|Centers   |79848
+2023-05-31 23:58:08,001|26905|INFO|21982539730491965|16.0|3|5|Candidates|69120
+2023-05-31 23:58:08,001|26905|INFO|21982539730491965|16.0|3|5|Maximals  |9458
+totalPairs:	39924	totalCenters:	79848	totalClusters:	9457
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 9457
+2023-06-01 00:02:20,735|279639|TIME|21982539730491965|16.0|3|5|Bfe0|252.73
+2023-06-01 00:02:20,966|279870|INFO|21982539730491965|16.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 18 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 18 --mu 3 --debug
+2023-06-01 00:02:41,055|0|INFO|21982843891364832|18.0|3|5|Reading data|START
+2023-06-01 00:02:41,121|66|TIME|21982843891364832|18.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 00:03:27,825|46770|TIME|21982843891364832|18.0|3|5|Bfe| 46.43
+Saved /tmp/edgesPairs.wkt	in	0.05s	[50434 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[11198 records].
+2023-06-01 00:03:27,969|46914|INFO|21982843891364832|18.0|3|5|Pairs     |50434
+2023-06-01 00:03:27,969|46914|INFO|21982843891364832|18.0|3|5|Centers   |100868
+2023-06-01 00:03:27,969|46914|INFO|21982843891364832|18.0|3|5|Candidates|92860
+2023-06-01 00:03:27,970|46915|INFO|21982843891364832|18.0|3|5|Maximals  |11198
+totalPairs:	50434	totalCenters:	100868	totalClusters:	11198
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 11198
+2023-06-01 00:10:35,135|474080|TIME|21982843891364832|18.0|3|5|Bfe0|427.16
+2023-06-01 00:10:35,383|474328|INFO|21982843891364832|18.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 20 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 20 --mu 3 --debug
+2023-06-01 00:10:58,934|1|INFO|21983338363022937|20.0|3|5|Reading data|START
+2023-06-01 00:10:58,992|59|TIME|21983338363022937|20.0|3|5|Grid|  0.05
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 00:12:01,552|62619|TIME|21983338363022937|20.0|3|5|Bfe| 62.30
+Saved /tmp/edgesPairs.wkt	in	0.07s	[62098 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[13031 records].
+2023-06-01 00:12:01,770|62837|INFO|21983338363022937|20.0|3|5|Pairs     |62098
+2023-06-01 00:12:01,771|62838|INFO|21983338363022937|20.0|3|5|Centers   |124196
+2023-06-01 00:12:01,771|62838|INFO|21983338363022937|20.0|3|5|Candidates|118557
+2023-06-01 00:12:01,771|62838|INFO|21983338363022937|20.0|3|5|Maximals  |13031
+totalPairs:	62098	totalCenters:	124196	totalClusters:	13031
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 13031
+2023-06-01 00:23:23,798|744865|TIME|21983338363022937|20.0|3|5|Bfe0|681.68
+2023-06-01 00:23:24,011|745078|INFO|21983338363022937|20.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 10 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 10 --mu 3 --debug
+2023-06-01 00:23:47,215|0|INFO|21984106547811968|10.0|3|5|Reading data|START
+2023-06-01 00:23:47,292|77|TIME|21984106547811968|10.0|3|5|Grid|  0.07
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 00:23:51,591|4376|TIME|21984106547811968|10.0|3|5|Bfe|  3.95
+Saved /tmp/edgesPairs.wkt	in	0.03s	[14301 records].
+Saved /tmp/edgesMaximals.wkt	in	0.00s	[3721 records].
+2023-06-01 00:23:51,652|4437|INFO|21984106547811968|10.0|3|5|Pairs     |14301
+2023-06-01 00:23:51,652|4437|INFO|21984106547811968|10.0|3|5|Centers   |28602
+2023-06-01 00:23:51,653|4438|INFO|21984106547811968|10.0|3|5|Candidates|17058
+2023-06-01 00:23:51,653|4438|INFO|21984106547811968|10.0|3|5|Maximals  |3721
+totalPairs:	14301	totalCenters:	28602	totalClusters:	3721
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 3721
+2023-06-01 00:24:16,517|29302|TIME|21984106547811968|10.0|3|5|Bfe0| 24.86
+2023-06-01 00:24:16,613|29398|INFO|21984106547811968|10.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 12 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 12 --mu 3 --debug
+2023-06-01 00:24:40,214|0|INFO|21984159188872974|12.0|3|5|Reading data|START
+2023-06-01 00:24:40,284|70|TIME|21984159188872974|12.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.01s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 00:24:46,709|6495|TIME|21984159188872974|12.0|3|5|Bfe|  6.17
+Saved /tmp/edgesPairs.wkt	in	0.03s	[22013 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[5725 records].
+2023-06-01 00:24:46,803|6589|INFO|21984159188872974|12.0|3|5|Pairs     |22013
+2023-06-01 00:24:46,804|6590|INFO|21984159188872974|12.0|3|5|Centers   |44026
+2023-06-01 00:24:46,804|6590|INFO|21984159188872974|12.0|3|5|Candidates|30736
+2023-06-01 00:24:46,804|6590|INFO|21984159188872974|12.0|3|5|Maximals  |5725
+totalPairs:	22013	totalCenters:	44026	totalClusters:	5725
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 5725
+2023-06-01 00:25:52,397|72183|TIME|21984159188872974|12.0|3|5|Bfe0| 65.59
+2023-06-01 00:25:52,508|72294|INFO|21984159188872974|12.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 14 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 14 --mu 3 --debug
+2023-06-01 00:26:16,034|0|INFO|21984255149410811|14.0|3|5|Reading data|START
+2023-06-01 00:26:16,103|69|TIME|21984255149410811|14.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 00:26:31,813|15779|TIME|21984255149410811|14.0|3|5|Bfe| 15.43
+Saved /tmp/edgesPairs.wkt	in	0.04s	[30470 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[7492 records].
+2023-06-01 00:26:31,922|15888|INFO|21984255149410811|14.0|3|5|Pairs     |30470
+2023-06-01 00:26:31,922|15888|INFO|21984255149410811|14.0|3|5|Centers   |60940
+2023-06-01 00:26:31,922|15888|INFO|21984255149410811|14.0|3|5|Candidates|48187
+2023-06-01 00:26:31,922|15888|INFO|21984255149410811|14.0|3|5|Maximals  |7492
+totalPairs:	30470	totalCenters:	60940	totalClusters:	7491
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 7491
+2023-06-01 00:28:46,496|150462|TIME|21984255149410811|14.0|3|5|Bfe0|134.57
+2023-06-01 00:28:46,717|150683|INFO|21984255149410811|14.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 16 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 16 --mu 3 --debug
+2023-06-01 00:29:09,930|0|INFO|21984429333108829|16.0|3|5|Reading data|START
+2023-06-01 00:29:09,998|68|TIME|21984429333108829|16.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 00:29:39,156|29226|TIME|21984429333108829|16.0|3|5|Bfe| 28.89
+Saved /tmp/edgesPairs.wkt	in	0.05s	[39924 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[9458 records].
+2023-06-01 00:29:39,308|29378|INFO|21984429333108829|16.0|3|5|Pairs     |39924
+2023-06-01 00:29:39,309|29379|INFO|21984429333108829|16.0|3|5|Centers   |79848
+2023-06-01 00:29:39,309|29379|INFO|21984429333108829|16.0|3|5|Candidates|69120
+2023-06-01 00:29:39,309|29379|INFO|21984429333108829|16.0|3|5|Maximals  |9458
+totalPairs:	39924	totalCenters:	79848	totalClusters:	9457
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 9457
+2023-06-01 00:33:52,359|282429|TIME|21984429333108829|16.0|3|5|Bfe0|253.05
+2023-06-01 00:33:52,593|282663|INFO|21984429333108829|16.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 18 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 18 --mu 3 --debug
+2023-06-01 00:34:16,181|0|INFO|21984735170976290|18.0|3|5|Reading data|START
+2023-06-01 00:34:16,256|75|TIME|21984735170976290|18.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 00:35:06,035|49854|TIME|21984735170976290|18.0|3|5|Bfe| 49.46
+Saved /tmp/edgesPairs.wkt	in	0.06s	[50434 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[11198 records].
+2023-06-01 00:35:06,192|50011|INFO|21984735170976290|18.0|3|5|Pairs     |50434
+2023-06-01 00:35:06,192|50011|INFO|21984735170976290|18.0|3|5|Centers   |100868
+2023-06-01 00:35:06,192|50011|INFO|21984735170976290|18.0|3|5|Candidates|92860
+2023-06-01 00:35:06,193|50012|INFO|21984735170976290|18.0|3|5|Maximals  |11198
+totalPairs:	50434	totalCenters:	100868	totalClusters:	11198
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 11198
+2023-06-01 00:42:12,721|476540|TIME|21984735170976290|18.0|3|5|Bfe0|426.52
+2023-06-01 00:42:12,997|476816|INFO|21984735170976290|18.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 20 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 20 --mu 3 --debug
+2023-06-01 00:42:32,343|1|INFO|21985235531398438|20.0|3|5|Reading data|START
+2023-06-01 00:42:32,404|62|TIME|21985235531398438|20.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.01s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 00:43:35,099|62757|TIME|21985235531398438|20.0|3|5|Bfe| 62.44
+Saved /tmp/edgesPairs.wkt	in	0.07s	[62098 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[13031 records].
+2023-06-01 00:43:35,263|62921|INFO|21985235531398438|20.0|3|5|Pairs     |62098
+2023-06-01 00:43:35,263|62921|INFO|21985235531398438|20.0|3|5|Centers   |124196
+2023-06-01 00:43:35,264|62922|INFO|21985235531398438|20.0|3|5|Candidates|118557
+2023-06-01 00:43:35,264|62922|INFO|21985235531398438|20.0|3|5|Maximals  |13031
+totalPairs:	62098	totalCenters:	124196	totalClusters:	13031
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 13031
+2023-06-01 00:54:55,847|743505|TIME|21985235531398438|20.0|3|5|Bfe0|680.58
+2023-06-01 00:54:56,044|743702|INFO|21985235531398438|20.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 10 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 10 --mu 3 --debug
+2023-06-01 00:55:18,962|0|INFO|21985998707362887|10.0|3|5|Reading data|START
+2023-06-01 00:55:19,036|74|TIME|21985998707362887|10.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 00:55:22,830|3868|TIME|21985998707362887|10.0|3|5|Bfe|  3.52
+Saved /tmp/edgesPairs.wkt	in	0.02s	[14301 records].
+Saved /tmp/edgesMaximals.wkt	in	0.00s	[3721 records].
+2023-06-01 00:55:22,877|3915|INFO|21985998707362887|10.0|3|5|Pairs     |14301
+2023-06-01 00:55:22,878|3916|INFO|21985998707362887|10.0|3|5|Centers   |28602
+2023-06-01 00:55:22,878|3916|INFO|21985998707362887|10.0|3|5|Candidates|17058
+2023-06-01 00:55:22,878|3916|INFO|21985998707362887|10.0|3|5|Maximals  |3721
+totalPairs:	14301	totalCenters:	28602	totalClusters:	3721
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 3721
+2023-06-01 00:55:47,980|29018|TIME|21985998707362887|10.0|3|5|Bfe0| 25.10
+2023-06-01 00:55:48,071|29109|INFO|21985998707362887|10.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 12 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 12 --mu 3 --debug
+2023-06-01 00:56:11,613|0|INFO|21986050600923547|12.0|3|5|Reading data|START
+2023-06-01 00:56:11,691|78|TIME|21986050600923547|12.0|3|5|Grid|  0.07
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 00:56:21,008|9395|TIME|21986050600923547|12.0|3|5|Bfe|  9.04
+Saved /tmp/edgesPairs.wkt	in	0.03s	[22013 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[5725 records].
+2023-06-01 00:56:21,102|9489|INFO|21986050600923547|12.0|3|5|Pairs     |22013
+2023-06-01 00:56:21,102|9489|INFO|21986050600923547|12.0|3|5|Centers   |44026
+2023-06-01 00:56:21,103|9490|INFO|21986050600923547|12.0|3|5|Candidates|30736
+2023-06-01 00:56:21,103|9490|INFO|21986050600923547|12.0|3|5|Maximals  |5725
+totalPairs:	22013	totalCenters:	44026	totalClusters:	5725
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 5725
+2023-06-01 00:57:26,829|75216|TIME|21986050600923547|12.0|3|5|Bfe0| 65.72
+2023-06-01 00:57:26,956|75343|INFO|21986050600923547|12.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 14 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 14 --mu 3 --debug
+2023-06-01 00:57:42,846|0|INFO|21986149790514476|14.0|3|5|Reading data|START
+2023-06-01 00:57:42,909|63|TIME|21986149790514476|14.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.01s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 00:57:58,883|16037|TIME|21986149790514476|14.0|3|5|Bfe| 15.71
+Saved /tmp/edgesPairs.wkt	in	0.04s	[30470 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[7492 records].
+2023-06-01 00:57:58,980|16134|INFO|21986149790514476|14.0|3|5|Pairs     |30470
+2023-06-01 00:57:58,980|16134|INFO|21986149790514476|14.0|3|5|Centers   |60940
+2023-06-01 00:57:58,980|16134|INFO|21986149790514476|14.0|3|5|Candidates|48187
+2023-06-01 00:57:58,980|16134|INFO|21986149790514476|14.0|3|5|Maximals  |7492
+totalPairs:	30470	totalCenters:	60940	totalClusters:	7491
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 7491
+2023-06-01 01:00:13,246|150400|TIME|21986149790514476|14.0|3|5|Bfe0|134.26
+2023-06-01 01:00:13,471|150625|INFO|21986149790514476|14.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 16 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 16 --mu 3 --debug
+2023-06-01 01:00:34,631|0|INFO|21986316053117724|16.0|3|5|Reading data|START
+2023-06-01 01:00:34,713|82|TIME|21986316053117724|16.0|3|5|Grid|  0.07
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 01:01:01,662|27031|TIME|21986316053117724|16.0|3|5|Bfe| 26.65
+Saved /tmp/edgesPairs.wkt	in	0.06s	[39924 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[9458 records].
+2023-06-01 01:01:01,820|27189|INFO|21986316053117724|16.0|3|5|Pairs     |39924
+2023-06-01 01:01:01,821|27190|INFO|21986316053117724|16.0|3|5|Centers   |79848
+2023-06-01 01:01:01,821|27190|INFO|21986316053117724|16.0|3|5|Candidates|69120
+2023-06-01 01:01:01,821|27190|INFO|21986316053117724|16.0|3|5|Maximals  |9458
+totalPairs:	39924	totalCenters:	79848	totalClusters:	9457
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 9457
+2023-06-01 01:05:14,337|279706|TIME|21986316053117724|16.0|3|5|Bfe0|252.51
+2023-06-01 01:05:14,597|279966|INFO|21986316053117724|16.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 18 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 18 --mu 3 --debug
+2023-06-01 01:05:37,509|0|INFO|21986617095736197|18.0|3|5|Reading data|START
+2023-06-01 01:05:37,578|69|TIME|21986617095736197|18.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.01s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 01:06:24,464|46955|TIME|21986617095736197|18.0|3|5|Bfe| 46.61
+Saved /tmp/edgesPairs.wkt	in	0.05s	[50434 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[11198 records].
+2023-06-01 01:06:24,602|47093|INFO|21986617095736197|18.0|3|5|Pairs     |50434
+2023-06-01 01:06:24,602|47093|INFO|21986617095736197|18.0|3|5|Centers   |100868
+2023-06-01 01:06:24,603|47094|INFO|21986617095736197|18.0|3|5|Candidates|92860
+2023-06-01 01:06:24,603|47094|INFO|21986617095736197|18.0|3|5|Maximals  |11198
+totalPairs:	50434	totalCenters:	100868	totalClusters:	11198
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 11198
+2023-06-01 01:13:30,996|473487|TIME|21986617095736197|18.0|3|5|Bfe0|426.39
+2023-06-01 01:13:31,248|473739|INFO|21986617095736197|18.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 20 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 20 --mu 3 --debug
+2023-06-01 01:13:55,183|0|INFO|21987113820778596|20.0|3|5|Reading data|START
+2023-06-01 01:13:55,250|67|TIME|21987113820778596|20.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 01:15:00,944|65761|TIME|21987113820778596|20.0|3|5|Bfe| 65.42
+Saved /tmp/edgesPairs.wkt	in	0.07s	[62098 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[13031 records].
+2023-06-01 01:15:01,151|65968|INFO|21987113820778596|20.0|3|5|Pairs     |62098
+2023-06-01 01:15:01,151|65968|INFO|21987113820778596|20.0|3|5|Centers   |124196
+2023-06-01 01:15:01,151|65968|INFO|21987113820778596|20.0|3|5|Candidates|118557
+2023-06-01 01:15:01,152|65969|INFO|21987113820778596|20.0|3|5|Maximals  |13031
+totalPairs:	62098	totalCenters:	124196	totalClusters:	13031
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 13031
+2023-06-01 01:26:22,449|747266|TIME|21987113820778596|20.0|3|5|Bfe0|681.57
+2023-06-01 01:26:22,675|747492|INFO|21987113820778596|20.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 10 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 10 --mu 3 --debug
+2023-06-01 01:26:40,939|0|INFO|21987885622702981|10.0|3|5|Reading data|START
+2023-06-01 01:26:41,001|62|TIME|21987885622702981|10.0|3|5|Grid|  0.05
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 01:26:44,664|3725|TIME|21987885622702981|10.0|3|5|Bfe|  3.39
+Saved /tmp/edgesPairs.wkt	in	0.02s	[14301 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[3721 records].
+2023-06-01 01:26:44,723|3784|INFO|21987885622702981|10.0|3|5|Pairs     |14301
+2023-06-01 01:26:44,723|3784|INFO|21987885622702981|10.0|3|5|Centers   |28602
+2023-06-01 01:26:44,723|3784|INFO|21987885622702981|10.0|3|5|Candidates|17058
+2023-06-01 01:26:44,723|3784|INFO|21987885622702981|10.0|3|5|Maximals  |3721
+totalPairs:	14301	totalCenters:	28602	totalClusters:	3721
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 3721
+2023-06-01 01:27:12,449|31510|TIME|21987885622702981|10.0|3|5|Bfe0| 27.72
+2023-06-01 01:27:12,541|31602|INFO|21987885622702981|10.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 12 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 12 --mu 3 --debug
+2023-06-01 01:27:27,400|0|INFO|21987935414278659|12.0|3|5|Reading data|START
+2023-06-01 01:27:27,505|105|TIME|21987935414278659|12.0|3|5|Grid|  0.09
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 01:27:36,903|9503|TIME|21987935414278659|12.0|3|5|Bfe|  9.02
+Saved /tmp/edgesPairs.wkt	in	0.03s	[22013 records].
+Saved /tmp/edgesMaximals.wkt	in	0.00s	[5725 records].
+2023-06-01 01:27:37,018|9618|INFO|21987935414278659|12.0|3|5|Pairs     |22013
+2023-06-01 01:27:37,018|9618|INFO|21987935414278659|12.0|3|5|Centers   |44026
+2023-06-01 01:27:37,019|9619|INFO|21987935414278659|12.0|3|5|Candidates|30736
+2023-06-01 01:27:37,019|9619|INFO|21987935414278659|12.0|3|5|Maximals  |5725
+totalPairs:	22013	totalCenters:	44026	totalClusters:	5725
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 5725
+2023-06-01 01:28:42,616|75216|TIME|21987935414278659|12.0|3|5|Bfe0| 65.59
+2023-06-01 01:28:42,740|75340|INFO|21987935414278659|12.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 14 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 14 --mu 3 --debug
+2023-06-01 01:29:02,502|0|INFO|21988025590233184|14.0|3|5|Reading data|START
+2023-06-01 01:29:02,572|70|TIME|21988025590233184|14.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.01s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 01:29:18,791|16289|TIME|21988025590233184|14.0|3|5|Bfe| 15.93
+Saved /tmp/edgesPairs.wkt	in	0.04s	[30470 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[7492 records].
+2023-06-01 01:29:18,887|16385|INFO|21988025590233184|14.0|3|5|Pairs     |30470
+2023-06-01 01:29:18,887|16385|INFO|21988025590233184|14.0|3|5|Centers   |60940
+2023-06-01 01:29:18,888|16386|INFO|21988025590233184|14.0|3|5|Candidates|48187
+2023-06-01 01:29:18,888|16386|INFO|21988025590233184|14.0|3|5|Maximals  |7492
+totalPairs:	30470	totalCenters:	60940	totalClusters:	7491
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 7491
+2023-06-01 01:31:33,864|151362|TIME|21988025590233184|14.0|3|5|Bfe0|134.97
+2023-06-01 01:31:34,079|151577|INFO|21988025590233184|14.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 16 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 16 --mu 3 --debug
+2023-06-01 01:31:57,513|0|INFO|21988196956027712|16.0|3|5|Reading data|START
+2023-06-01 01:31:57,573|60|TIME|21988196956027712|16.0|3|5|Grid|  0.05
+Saved /tmp/edgesPoints.wkt	in	0.01s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 01:32:25,798|28285|TIME|21988196956027712|16.0|3|5|Bfe| 27.97
+Saved /tmp/edgesPairs.wkt	in	0.06s	[39924 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[9458 records].
+2023-06-01 01:32:25,948|28435|INFO|21988196956027712|16.0|3|5|Pairs     |39924
+2023-06-01 01:32:25,948|28435|INFO|21988196956027712|16.0|3|5|Centers   |79848
+2023-06-01 01:32:25,948|28435|INFO|21988196956027712|16.0|3|5|Candidates|69120
+2023-06-01 01:32:25,949|28436|INFO|21988196956027712|16.0|3|5|Maximals  |9458
+totalPairs:	39924	totalCenters:	79848	totalClusters:	9457
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 9457
+2023-06-01 01:36:38,908|281395|TIME|21988196956027712|16.0|3|5|Bfe0|252.96
+2023-06-01 01:36:39,141|281628|INFO|21988196956027712|16.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 18 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 18 --mu 3 --debug
+2023-06-01 01:37:02,664|0|INFO|21988501939529902|18.0|3|5|Reading data|START
+2023-06-01 01:37:02,729|65|TIME|21988501939529902|18.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 01:37:46,556|43892|TIME|21988501939529902|18.0|3|5|Bfe| 43.56
+Saved /tmp/edgesPairs.wkt	in	0.06s	[50434 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[11198 records].
+2023-06-01 01:37:46,703|44039|INFO|21988501939529902|18.0|3|5|Pairs     |50434
+2023-06-01 01:37:46,703|44039|INFO|21988501939529902|18.0|3|5|Centers   |100868
+2023-06-01 01:37:46,703|44039|INFO|21988501939529902|18.0|3|5|Candidates|92860
+2023-06-01 01:37:46,704|44040|INFO|21988501939529902|18.0|3|5|Maximals  |11198
+totalPairs:	50434	totalCenters:	100868	totalClusters:	11198
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 11198
+2023-06-01 01:44:53,500|470836|TIME|21988501939529902|18.0|3|5|Bfe0|426.79
+2023-06-01 01:44:53,763|471099|INFO|21988501939529902|18.0|3|5|Maximals OK|END
+./bfe2 /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv 20 3 1
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --jars /home/acald013/Spark/2.4/jars/geospark-1.3.1.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar --master local[1] --deploy-mode client --class edu.ucr.dblab.pflock.BFE2 /home/acald013/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar --input /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv --epsilon 20 --mu 3 --debug
+2023-06-01 01:45:16,995|0|INFO|21988996651544176|20.0|3|5|Reading data|START
+2023-06-01 01:45:17,065|70|TIME|21988996651544176|20.0|3|5|Grid|  0.06
+Saved /tmp/edgesPoints.wkt	in	0.02s	[10000 records].
+Saved /tmp/edgesGrid.wkt	in	0.00s	[0 records].
+2023-06-01 01:46:24,524|67529|TIME|21988996651544176|20.0|3|5|Bfe| 67.18
+Saved /tmp/edgesPairs.wkt	in	0.07s	[62098 records].
+Saved /tmp/edgesMaximals.wkt	in	0.01s	[13031 records].
+2023-06-01 01:46:24,693|67698|INFO|21988996651544176|20.0|3|5|Pairs     |62098
+2023-06-01 01:46:24,693|67698|INFO|21988996651544176|20.0|3|5|Centers   |124196
+2023-06-01 01:46:24,693|67698|INFO|21988996651544176|20.0|3|5|Candidates|118557
+2023-06-01 01:46:24,694|67699|INFO|21988996651544176|20.0|3|5|Maximals  |13031
+totalPairs:	62098	totalCenters:	124196	totalClusters:	13031
+Closing stream: /home/acald013/Research/Datasets/P10K_W1K_H1K.tsv Total answers: 13031
+2023-06-01 01:57:45,556|748561|TIME|21988996651544176|20.0|3|5|Bfe0|680.86
+2023-06-01 01:57:45,783|748788|INFO|21988996651544176|20.0|3|5|Maximals OK|END
