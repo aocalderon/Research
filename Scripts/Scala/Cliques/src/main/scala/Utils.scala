@@ -37,8 +37,8 @@ object Utils {
     epsilon_prime: Double = 10.0,
     mu: Int = 3,
     delta: Int = 5,
-    capacity: Int = 1000,
-    fraction: Double = 0.01,
+    capacity: Int = 200,
+    fraction: Double = 0.1,
     tolerance: Double = 1e-3,
     appId: String = "",
     tag: String = "",
@@ -50,7 +50,7 @@ object Utils {
     val r = (epsilon_prime / 2.0) + tolerance
     val r2 = math.pow(epsilon_prime / 2.0, 2) + tolerance
 
-    def info: String = s"$appId|$epsilon_prime|$mu|$delta|$method"
+    def info: String = s"$appId|$epsilon_prime|$mu|$delta|$method|$capacity"
   }
 
   case class STPoint(point: Point, cid: Int = 0){
@@ -82,6 +82,12 @@ object Utils {
     def toText: String = s"${point.toText()}"
 
     def wkt: String = s"${point.toText()}\t$cid\t$oid\t$tid"
+
+    def expandEnvelope(eps: Double): Envelope = {
+      val envelope = point.getEnvelopeInternal
+      envelope.expandBy(eps)
+      envelope
+    }
 
     override def toString: String = s"${point.getX}\t${point.getY}\t$cid\t$oid\t$tid\t$count"
 
@@ -373,11 +379,15 @@ object Utils {
     }
   }
 
-  def getEdges(points: List[STPoint])(implicit settings: Settings): List[(Point, Point)] = {
+  def getEdges(points_prime: List[STPoint])(implicit S: Settings): List[(Point, Point)] = {
+    val tree = new STRtree(200)
+    points_prime.foreach{ point => tree.insert(point.envelope, point) }
+
     for {
-      a <- points
-      b <- points if {
-          (a.oid < b.oid) && (a.distance(b) <= settings.epsilon)
+      a <- points_prime
+      b <- tree.query(a.expandEnvelope(S.epsilon)).asScala.map(_.asInstanceOf[STPoint])
+      if {
+          (a.oid < b.oid) && (a.distance(b) <= S.epsilon)
       }
     } yield {
       (a.point, b.point)
@@ -992,6 +1002,15 @@ object Utils {
       s"Maximals|ERR2 Missings\n${missing.mkString("\n")}\n"
     }
   }
+
+  def printParams(args: Seq[String])(implicit S: Settings): Unit = {
+    val p = args.filterNot(_ == "--debug")
+    val pp = p.zip(p.tail).filter{ case(a, b) => a.startsWith("--")}
+      .map{ case(a,b) => s"${a.replace("--", "")}|$b"}
+    pp.foreach{ param =>
+      logger.info(s"PARAMS|${S.appId}|${param}")
+    }
+  }  
 }
 
 

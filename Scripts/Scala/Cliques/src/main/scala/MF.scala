@@ -43,6 +43,8 @@ object MF {
 
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
+    printParams(args)
+
     val ( (pointsRaw, nRead), tRead) = timer{
       val pointsRaw = spark.read
         .option("delimiter", "\t")
@@ -139,8 +141,8 @@ object MF {
     spark.close()
 
     debug{
-      settings = settings.copy(method = "BFE")
-      checkMF(maximalsMF)
+      //settings = settings.copy(method = "BFE")
+      //checkMF(maximalsMF)
     }
 
     log(s"Done.|END")
