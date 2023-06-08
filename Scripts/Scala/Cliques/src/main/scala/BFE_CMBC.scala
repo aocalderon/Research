@@ -28,23 +28,19 @@ object BFE_CMBC {
     // 3. divide MBCs by radius less than epsilon...
     // 4. return MBCs greater than epsilon as maximal disks...
     // 5. return remaining points in MBCs greater than epsilon as list of points...
-    val ( (maximals1, points_prime, defaultMaximals), tCli) = timer{
-      val (maximals1, points_prime) = partitionByRadius(getMBCsPerClique(points))
-      val defaultMaximals = RTree[Disk]().insertAll(maximals1.map{ maximal =>
+    val ( (maximals_prime, points_prime, maximals_found), tCli) = timer{
+      val (maximals_prime, points_prime) = partitionByRadius(getMBCsPerClique(points))
+      val maximals_found = RTree[Disk]().insertAll(maximals_prime.map{ maximal =>
         Entry(archery.Point(maximal.X, maximal.Y), maximal)
       })
-      (maximals1, points_prime, defaultMaximals)
+      (maximals_prime, points_prime, maximals_found)
     }
-    // Run traditial BFE with the remaining points...
-    val (maximals, stats) = BFE.run(points_prime, defaultMaximals)
-    // Put together and remove possible duplicates...
-    val (maximals2, tM) = timer{
-      //pruneDisks(maximals1 ++ maximals2.entries.map(_.value))
-    }
-    val tMs = stats.tMaximals + tM
-    (maximals.entries.map(_.value).toList,
-      stats.copy(nPoints = points_prime.size,
-        nMaximals = maximals.size, tCliques = tCli, tMaximals = tMs))
+    // Run traditial BFE with the remaining points and maximals found...
+    val (maximals, stats) = BFE.run(points_prime, maximals_found)
+    val stats_update = stats.copy(nPoints = points_prime.size,
+      nMaximals = maximals.size,
+      tCliques = tCli)
+    (maximals, stats_update)
   }
 
   def runByGrid(points: List[STPoint])
@@ -216,15 +212,15 @@ object BFE_CMBC {
 
     settings = settings.copy(method="BFE_CMBC1")
     val (maximals, stats1) = BFE_CMBC.runAtBegining(points)
-    stats1.print
+    stats1.print()
 
     settings = settings.copy(method="BFE_CMBC2")
     val (_, stats2) = BFE_CMBC.runByGrid(points)
-    stats2.print
+    stats2.print()
 
     settings = settings.copy(method="BFE")
     val (_, stats3) = BFE.run(points)
-    stats3.print
+    stats3.print()
 
     debug{
       save("/tmp/edgesMaximals.wkt"){ maximals.map(_.wkt + "\n") }

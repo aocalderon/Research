@@ -8,6 +8,7 @@ import com.vividsolutions.jts.io.WKTReader
 import org.geotools.geometry.jts.JTS
 
 import org.apache.spark.rdd.RDD
+import org.apache.spark.TaskContext
 
 import org.apache.commons.math3.geometry.euclidean.twod.DiskGenerator
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D
@@ -37,6 +38,7 @@ object Utils {
     mu: Int = 3,
     delta: Int = 5,
     capacity: Int = 1000,
+    fraction: Double = 0.01,
     tolerance: Double = 1e-3,
     appId: String = "",
     tag: String = "",
@@ -92,12 +94,17 @@ object Utils {
   case class Cell(mbr: Envelope, cid: Int, lineage: String){
     val wkt: String = toString + "\n"
 
+    val bbox: Box = Box(mbr.getMinX.toFloat, mbr.getMinY.toFloat,
+      mbr.getMaxX.toFloat, mbr.getMaxY.toFloat)
+
     def contains(disk: Disk): Boolean = mbr.contains(disk.X, disk.Y)
 
     override def toString: String = s"${JTS.toGeometry(mbr).toText}\t$cid\t$lineage"
   }
 
-  case class Disk(center: Point, pids: List[Int], support: List[Int] = List.empty[Int]){
+  case class Disk(center: Point, pids: List[Int],
+    support: List[Int] = List.empty[Int]) extends Ordered [Disk]{
+
     var did: Int = -1
     var subset: Boolean = false
     val X: Float = center.getX.toFloat
@@ -117,8 +124,7 @@ object Utils {
 
     def intersect(other: Disk): Set[Int] = this.pidsSet.intersect(other.pidsSet)
 
-    def bbox(r: Double): Box =
-      Box((X - r).toFloat, (Y - r).toFloat, (X + r).toFloat, (Y + r).toFloat)
+    def bbox(r: Float): Box = Box(X - r, Y - r, X + r, Y + r)
 
     def containedBy(cell: Cell): Boolean = cell.contains(this)
 
@@ -131,6 +137,20 @@ object Utils {
     override def toString: String = s"${did}\t${pids.sorted.mkString(" ")}\t${X}\t${Y}"
 
     def wkt: String = s"${center.toText}\t${pidsText}"
+
+    def equals(other: Disk): Boolean = this.pidsText == other.pidsText
+
+    def compare(other: Disk): Int = 
+      this.X.compare(other.X) match {
+        case -1 => -1
+        case  0 =>  this.Y compare other.Y 
+        case  1 =>  1
+      }
+
+    def duplicates(tree: RTree[Disk])(implicit settings: Settings): Seq[Disk] = tree
+      .search(this.bbox(settings.epsilon.toFloat))
+      .map(_.value)
+      .filter(_.equals(this))
   }
 
   case class Grid(points: List[STPoint]){
@@ -138,8 +158,7 @@ object Utils {
     var miny: Double = 0.0
     var n: Int = 0
     var m: Int = 0
-
-    var index: Map[Long, List[STPoint]] = Map.empty[Long, List[STPoint]]
+    var index: Map[Long, List[STPoint]] = Map.empty
 
     def buildGrid(implicit settings: Settings): Unit = {
       minx = points.minBy(_.X).X
@@ -154,7 +173,7 @@ object Utils {
     }
 
     def pointsToText: List[String] = {
-      points.map{_.wkt + "\n"}
+      index.values.flatten.map{_.wkt + "\n"}.toList
     }
 
     def toText: List[String] = {
@@ -195,10 +214,10 @@ object Utils {
             s"$wkt\t($i $j)\t$k\n"
           }
         } else {
-          Seq.empty[String]
+          Seq.empty
         }
       } else {
-        Seq.empty[String]
+        Seq.empty
       }
     }
   }
@@ -206,17 +225,18 @@ object Utils {
   case class MBC(center: Point, radius: Double, points: List[Point])
 
   case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 0,
-    var nCandidates: Int = 0, var nMaximals: Int = 0,
+    var nCandidates: Int = 0, var nMaximals: Int = 0, var tCounts: Double = 0.0,
     var tGrid: Double = 0.0, var tRead: Double = 0.0, var tCliques: Double = 0.0,
     var tPairs: Double = 0.0, var tCenters: Double = 0.0,
     var tCandidates: Double = 0.0, var tMaximals: Double = 0.0){
 
-    def print(implicit logger: Logger, settings: Settings): Unit = {
+    def print(printTotal: Boolean = true)(implicit logger: Logger, settings: Settings): Unit = {
       log(s"Points     |${nPoints}")
       log(s"Pairs      |${nPairs}")
       log(s"Centers    |${nCenters}")
       log(s"Candidates |${nCandidates}")
       log(s"Maximals   |${nMaximals}")
+      logt(s"Count     |${tCounts}")
       logt(s"Grid      |${tGrid}")
       logt(s"Read      |${tRead}")
       logt(s"Cliques   |${tCliques}")
@@ -224,7 +244,10 @@ object Utils {
       logt(s"Centers   |${tCenters}")
       logt(s"Candidates|${tCandidates}")
       logt(s"Maximals  |${tMaximals}")
-      logt(s"Total|${tMaximals + tCandidates + tCenters + tPairs + tCliques + tRead + tGrid}")
+      if(printTotal){
+        val tTotal = tMaximals + tCandidates + tCenters + tPairs + tCliques + tRead + tGrid + tCounts
+        logt(s"Total     |${tTotal}")
+      }
     }
   }
 
@@ -408,7 +431,7 @@ object Utils {
       } else {
         val empty = Iterable.empty[Entry[Disk]]
         val R = candidates.map{ candidate =>
-          val maximals_prime = maximals.search(candidate.bbox(settings.epsilon)).map(_.value)
+          val maximals_prime = maximals.search(candidate.bbox(settings.epsilon.toFloat)).map(_.value)
 
           if( maximals_prime.exists( maximal => candidate.isSubsetOf(maximal) ) ){
             (empty, empty)
@@ -445,7 +468,7 @@ object Utils {
       val toInsert = Entry(center, candidate)
       maximals.insert(toInsert)
     } else {
-      val maximals_prime = maximals.search(candidate.bbox(settings.epsilon)).map(_.value)
+      val maximals_prime = maximals.search(candidate.bbox(settings.epsilon.toFloat)).map(_.value)
 
       if( maximals_prime.exists( maximal => candidate.isSubsetOf(maximal) ) ){
         maximals
@@ -468,10 +491,10 @@ object Utils {
     }
   }
 
-
   def insertMaximalParallel(maximals: archery.RTree[Disk], candidate: Disk, cell: Cell)
     (implicit settings: Settings): archery.RTree[Disk] = {
 
+    val cid = TaskContext.getPartitionId
     if(maximals.entries.size == 0){
       // candidate is the first entry so we insert it...
       val center = archery.Point(candidate.X, candidate.Y)
@@ -479,7 +502,7 @@ object Utils {
       maximals.insert(toInsert)
     } else {
       // we query the tree to retrieve maximals around the current candidate...
-      val maximals_prime = maximals.search(candidate.bbox(settings.epsilon)).map(_.value)
+      val maximals_prime = maximals.search(candidate.bbox(settings.epsilon.toFloat)).map(_.value)
 
       // we check if candidate is subset of any current maximal...
       if( maximals_prime.exists( maximal => candidate.isSubsetOf(maximal) ) ){
@@ -487,45 +510,49 @@ object Utils {
         // (if candidate is subset, it could be equal to one and only one maximal)...
         // (if not, the tree has duplicates)...
 
-        // we find for a maximal equal to current candidate...
-        val maximal_prime = maximals_prime.find(_.pidsSet == candidate.pidsSet)
+        // we find for a maximal with equal point ids (pids) to current candidate...
+        val maximal_prime = maximals_prime.find(_.equals(candidate))
         maximal_prime match {
-          case Some(maximal) => { 
-            // maximal == current; we only replace if current maximal is outside of the cell
-            //                      and new candidate is inside...
-            (cell.contains(maximal), cell.contains(candidate)) match {
-              // maximal out, candidate in; we replace...
-              case (false, true) => maximals
-                  .remove(Entry(archery.Point(maximal.X, maximal.Y), maximal))
-                  .insert(Entry(archery.Point(candidate.X, candidate.Y), candidate))
-              // any other case; we keep the tree without changes...
-              case _ => maximals
+          // If so...
+          case Some(maximal) => { // maximal pids == current pids...
+            // to be deterministic, we only replace if new candidate is most left-down disk...         
+            if(candidate < maximal){ // it is implemented in Disk class...
+              maximals
+                .remove(Entry(archery.Point(maximal.X, maximal.Y), maximal))
+                .insert(Entry(archery.Point(candidate.X, candidate.Y), candidate))
+            } else {
+              // the current maximal is still the most left-down disk...
+              // so we keep the tree without changes...
+              maximals
             }
           }
-          // None means they are not equal, so we keep the tree without changes...
+          // None means they are not equal (candidate is a truly subset)...
+          // so we keep the tree without changes...
           case None => maximals
         }
       } else {
         // we check if candidate is superset of one or more maximals...
         if( maximals_prime.exists( maximal => maximal.isSubsetOf(candidate) ) ){
-          // we find for a maximal equal to current candidate...
-          val maximal_prime = maximals_prime.find(_.pidsSet == candidate.pidsSet)
+          // we find for a maximal with equal point ids (pids) to current candidate...
+          val maximal_prime = maximals_prime.find(_.equals(candidate))
           maximal_prime match {
-            case Some(maximal) => {
-              // maximal == current; we only replace if current maximal is outside of the cell
-              //                      and new candidate is inside...
-              (cell.contains(maximal), cell.contains(candidate)) match {
-                // maximal out, candidate in; we replace...
-                case (false, true) => maximals
-                    .remove(Entry(archery.Point(maximal.X, maximal.Y), maximal))
-                    .insert(Entry(archery.Point(candidate.X, candidate.Y), candidate))
-                // any other case; we keep the tree without changes...
-                case _ => maximals
+            // if so...
+            case Some(maximal) => { // maximal pids == current pids...
+              // to be deterministic, we only replace if new candidate is most left-down point...
+              if(candidate < maximal){ // it is implemented in Disk class...
+                maximals
+                  .remove(Entry(archery.Point(maximal.X, maximal.Y), maximal))
+                  .insert(Entry(archery.Point(candidate.X, candidate.Y), candidate))
+              } else {
+                // the current maximal is still the most left-down disk...
+                // so we keep the tree without changes...
+                maximals
               }
             }
             // None means there is not any equal, just subset(s) so
-            //  we remove subset(s) and insert new candidate...
+            // we remove subset(s) and insert new candidate...
             case None => {
+              // collect a list of one or more maximal subsets...
               val toRemove = maximals_prime.filter( maximal => maximal.isSubsetOf(candidate) )
                 .map{ maximal =>
                   val center = archery.Point(maximal.X, maximal.Y)
@@ -533,11 +560,13 @@ object Utils {
                 }
               val center = archery.Point(candidate.X, candidate.Y)
               val toInsert = Entry(center, candidate)
+              // remove subset(s) and insert new candidate...
               maximals.removeAll(toRemove).insert(toInsert)
            }
           }
         } else {
-          // candidate is neither subset or superset so we insert it...
+          // candidate is neither subset or superset (ergo, not equal)...
+          // so we insert it...
           val center = archery.Point(candidate.X, candidate.Y)
           val toInsert = Entry(center, candidate)
           maximals.insert(toInsert)
@@ -558,16 +587,12 @@ object Utils {
       new Transaction(x, y, pids)
     }.toList
 
-    //transactions.foreach{println}
-
     val data = new Transactions(transactions.asJava, 0)
     val lcm = new AlgoLCM2()
     lcm.run(data)
 
-    //lcm.printStats()
-
     lcm.getPointsAndPids.asScala
-      //.filter(_.getItems.size >= mu)
+      //.filter(_.getItems.size >= mu)  // CHECK: is it safe to filter by mu?
       .map{ m =>
         val pids = m.getItems.toList.map(_.toInt).sorted
         val x = m.getX
@@ -646,12 +671,42 @@ object Utils {
 
     return if(a < b){ (a.toInt, b.toInt) } else { (b.toInt, (a - b).toInt) }
   }
-  
+
+  def computeCounts(points_prime: List[STPoint])(implicit S: Settings): List[STPoint] = {
+    val tree = new STRtree(200)
+    points_prime.foreach{ point => tree.insert(point.envelope, point) }
+
+    val join = points_prime.flatMap{ p1 =>
+      val envelope = p1.envelope
+      envelope.expandBy(S.epsilon)
+      val hood = tree.query(envelope).asScala.map{_.asInstanceOf[STPoint]}
+      for{
+        p2 <- hood if{ p1.distance(p2) <= S.epsilon }
+      } yield {
+        (p1, 1)
+      }
+    }
+    /*
+    val join = for{
+      p1 <- points_prime
+      p2 <- points_prime
+      if{ p1.distance(p2) <= S.epsilon }
+    } yield {
+      (p1, 1)
+    }
+    */
+    val points = join.groupBy(_._1).map{ case(point, counts) =>
+      point.count = counts.size
+      point
+    }.toList
+    points
+  }
+
   def readPoints(input: String, isWKT: Boolean = false)
-    (implicit geofactory: GeometryFactory, settings: Settings): List[STPoint] = {
+    (implicit geofactory: GeometryFactory, settings: Settings, logger: Logger): List[STPoint] = {
 
     val buffer = Source.fromFile(input)
-    val points_prime = buffer.getLines.zipWithIndex.toList
+    val points = buffer.getLines.zipWithIndex.toList
       .map{ line =>
         if(isWKT){
           val reader = new WKTReader(geofactory)
@@ -674,17 +729,7 @@ object Utils {
         }
       }
     buffer.close
-    val points = for{
-      p1 <- points_prime
-      p2 <- points_prime
-      if{ p1.distance(p2) <= settings.epsilon }
-    } yield {
-      (p1, 1)
-    }
-    points.groupBy(_._1).map{ case(point, counts) =>
-      point.count = counts.size
-      point
-    }.toList
+    points
   }
 
   def pointsToSTPoint(points_prime: List[Point])(implicit settings: Settings): List[STPoint] = {
@@ -692,20 +737,6 @@ object Utils {
     val points = for{
       p1 <- stpoints
       p2 <- stpoints
-      if{ p1.distance(p2) <= settings.epsilon }
-    } yield {
-      (p1, 1)
-    }
-    points.groupBy(_._1).map{ case(point, counts) =>
-      point.count = counts.size
-      point
-    }.toList
-  }
-
-  def setCount(points_prime: List[STPoint])(implicit settings: Settings): List[STPoint] = {
-    val points = for{
-      p1 <- points_prime
-      p2 <- points_prime
       if{ p1.distance(p2) <= settings.epsilon }
     } yield {
       (p1, 1)
@@ -818,7 +849,7 @@ object Utils {
     (result, time)
   }
 
-  def debug[R](block: => R)(implicit d: Boolean): Unit = { if(d) block }
+  def debug[R](block: => R)(implicit S: Settings): Unit = { if(S.debug) block }
 
   def save(filename: String)(content: Seq[String]): Unit = {
     val start = clocktime
@@ -830,17 +861,13 @@ object Utils {
     println(s"Saved ${filename}\tin\t${time}s\t[${content.size} records].")
   }
 
-  def checkMF(maximalsRDD: RDD[Disk])
-    (implicit geofactory: GeometryFactory, settings: Settings, logger: Logger, d: Boolean): Unit = {
+  def checkMF(maximalsMF: List[Disk])
+    (implicit geofactory: GeometryFactory, settings: Settings, logger: Logger): Unit = {
 
-    val maximalsMF = maximalsRDD.collect.toList
     val points = readPoints(s"/home/acald013/Research/${settings.input}")
-    val (maximals_prime, statsBFE) = BFE.run(points)
-    statsBFE.print
-    val maximalsBFE = maximals_prime.entries.map(_.value).toList
-    save("/tmp/edgesBFE.wkt"){
-      maximalsBFE.map(_.wkt + "\n")
-    }
+    val (maximalsBFE, statsBFE) = BFE.run(points)
+    statsBFE.print()
+    save("/tmp/edgesBFE.wkt"){ maximalsBFE.map(_.wkt + "\n") }
 
     checkMaximalDisks(maximalsBFE, maximalsMF, points)
   }
@@ -897,20 +924,11 @@ object Utils {
   private def checkMaximalDisks(bfe1_prime: List[Disk], bfe2_prime: List[Disk], points: List[STPoint])
     (implicit geofactory: GeometryFactory, settings: Settings, logger: Logger): Unit = {
 
-    println("BFE1: " + bfe1_prime.size)
     val bfe1 = bfe1_prime.map(_.pidsText)
     save("/tmp/bf1.txt"){bfe1.sorted.map(_ + "\n")}
 
-    println("BFE2: " + bfe2_prime.size)
     val bfe2 = bfe2_prime.map(_.pidsText)
     save("/tmp/bf2.txt"){bfe2.sorted.map(_ + "\n")}
-
-    println("diff1")
-    val _diff1 = bfe1.filterNot(bfe2.toSet)
-    _diff1.foreach{println}
-    println("diff2")
-    val _diff2 = bfe2.filterNot(bfe1.toSet)
-    _diff2.foreach{println}
 
     val diffs = "diff -s /tmp/bf1.txt /tmp/bf2.txt".lineStream_!
     val (diff1_prime, diff2_prime) = diffs.filter(l => l.startsWith("<") || l.startsWith(">"))
@@ -985,6 +1003,7 @@ class BFEParams(args: Seq[String]) extends ScallopConf(args) {
   val epsilon:   ScallopOption[Double]  = opt[Double]  (default = Some(10.0))
   val mu:        ScallopOption[Int]     = opt[Int]     (default = Some(5))
   val capacity:  ScallopOption[Int]     = opt[Int]     (default = Some(100))
+  val fraction:  ScallopOption[Double]  = opt[Double]  (default = Some(0.01))
   val tag:       ScallopOption[String]  = opt[String]  (default = Some(""))
   val output:    ScallopOption[String]  = opt[String]  (default = Some("/tmp"))
   val debug:     ScallopOption[Boolean] = opt[Boolean] (default = Some(false))

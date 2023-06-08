@@ -50,7 +50,7 @@ object CellExplorer {
     logger.info("INFO|Reading data|END")
 
     val quadtree = timer(s"${settings.appId}|Creating quadtree"){
-      Quadtree.getQuadtreeFromPoints(points, capacity = settings.capacity)
+      Quadtree.getQuadtreeFromPointList(points)
     }
     val points_by_cid = timer(s"${settings.appId}|Feeding Quadtree"){
       points.flatMap{ point =>
@@ -137,21 +137,3 @@ class Params(args: Seq[String]) extends ScallopConf(args) {
 
   verify()
 }
-
-
-
-/*
- val spark = SparkSession.builder()
- .config("spark.serializer",classOf[KryoSerializer].getName)
- .appName("CellExplorer")
- .getOrCreate()
- import spark.implicits._
- val points = spark.read
- .option("delimiter", "\t")
- .option("header", false)
- .textFile("file:///home/acald013/Datasets/LA/LA_50K_T316.tsv")
-
- points.show()
-
- spark.close()
- */
