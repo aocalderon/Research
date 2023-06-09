@@ -4,7 +4,7 @@ library(plotrix)
 
 n = 100
 epsilon = 0.5
-mu = 4
+mu = 3
 precision = 0.001
 size = 10
 lim=c(0-epsilon/2, size+epsilon/2)

@@ -49,15 +49,15 @@
 \addtobeamertemplate{headline}{}{\vskip2pt}
 \setbeamercovered{transparent}
 
+\title[PFlock report]{PFLOCK Report}
+\author[AC]{Andres Calderon}
+\institute[UCR]{University of California, Riverside}
 \makeatother
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Main document
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
-\title[PFlock report]{PFLOCK Report}
-\author[AC]{Andres Calderon}
-\institute[UCR]{University of California, Riverside}
 \makebeamertitle
 \newif\iflattersubsect
 
@@ -76,80 +76,64 @@
     \end{frame}
 }
 
-\begin{frame}{The problem...}
+\begin{frame}{On the spatial domain}{BFE overview...}
     \centering
-    \includegraphics[width=0.9\textwidth]{figures/LA2}
+    \includegraphics[width=0.7\textwidth]{figures/MF_flowchart}
 \end{frame}
 
-\begin{frame}{The problem...}
+\begin{frame}{On the spatial domain}{BFE overview...}
     \centering
-    \includegraphics[width=0.9\textwidth]{figures/TP036}
+    \includegraphics[page=2,width=0.6\textwidth]{figures/grid}
 \end{frame}
 
-\begin{frame}{Reducing the number of disks...}
+\begin{frame}{On the spatial domain}{BFE overview...}
     \centering
-    \includegraphics[trim={5cm 1cm 3cm 3cm}, clip, width=0.7\textheight]{figures/flowchart}
+    \includegraphics[page=3,width=0.6\textwidth]{figures/grid}
 \end{frame}
 
-
-\begin{frame}{Approach...}
-    Measuring three alternatives:
-    \begin{itemize}
-     \item Collect: apply BFE once over all the remained points.
-     \item Each: apply BFE many times with the points of each disk.
-     \item Hash: organize the disks in groups (according to points in common) and apply BFE at each group.
-    \end{itemize}
-
+\begin{frame}{On the spatial domain}{BFE overview...}
+    \centering
+    \includegraphics[page=4,width=0.6\textwidth]{figures/grid}
 \end{frame}
 
-\begin{frame}{Hash Variant...}{Logic}
+\begin{frame}{On the spatial domain}{BFE overview...}
     \centering
-    \includegraphics[trim={1cm 10cm 11cm 1cm}, clip,width=0.8\textwidth]{figures/L1} 
-\end{frame}
-\begin{frame}{Hash Variant...}{Logic}
-    \centering
-    \includegraphics[trim={1cm 10cm 11cm 1cm}, clip,width=0.8\textwidth]{figures/L2} 
-\end{frame}
-\begin{frame}{Hash Variant...}{Logic}
-    \centering
-    \includegraphics[trim={1cm 10cm 11cm 1cm}, clip,width=0.8\textwidth]{figures/L3} 
-\end{frame}
-\begin{frame}{Hash Variant...}{Logic}
-    \centering
-    \includegraphics[trim={1cm 10cm 11cm 1cm}, clip,width=0.8\textwidth]{figures/L4} 
-\end{frame}
-\begin{frame}{Hash Variant...}{Logic}
-    \centering
-    \includegraphics[trim={1cm 10cm 11cm 1cm}, clip,width=0.8\textwidth]{figures/L5} 
-\end{frame}
-\begin{frame}{Hash Variant...}{Logic}
-    \centering
-    \includegraphics[trim={1cm 10cm 11cm 1cm}, clip,width=0.8\textwidth]{figures/L6} 
-\end{frame}
-\begin{frame}{Hash Variant...}{Logic}
-    \centering
-    \includegraphics[trim={1cm 10cm 11cm 1cm}, clip,width=0.8\textwidth]{figures/L7} 
-\end{frame}
-\begin{frame}{Hash Variant...}{Logic}
-    \centering
-    \includegraphics[trim={1cm 10cm 11cm 1cm}, clip,width=0.8\textwidth]{figures/L8} 
+    \includegraphics[width=\textwidth]{figures/MF_stages/flow}
 \end{frame}
 
-\begin{frame}{Experiments...}{[Cell: 93]}
+\begin{frame}{On the spatial domain}{Parallel overview...}
     \centering
-    \includegraphics[width=0.95\textwidth]{figures/C_93E_15_M4} 
+    \includegraphics[width=\textwidth]{figures/MF_stages/P123}
 \end{frame}
-\begin{frame}{Experiments...}{[Cell: 94]}
+
+\begin{frame}{On the spatial domain}{Parallel overview...}
     \centering
-    \includegraphics[width=0.95\textwidth]{figures/C_94E_15_M4} 
+    \includegraphics[page=1,width=\textwidth]{figures/merge}
 \end{frame}
-\begin{frame}{Experiments...}{[Cell: 95]}
+
+\begin{frame}{On the spatial domain}{Parallel overview...}
     \centering
-    \includegraphics[width=0.95\textwidth]{figures/C_95E_15_M4} 
+    \includegraphics[page=2,width=\textwidth]{figures/merge}
 \end{frame}
-\begin{frame}{Experiments...}{[Cell: 96]}
+
+\begin{frame}{On the spatial domain}{Parallel overview...}
     \centering
-    \includegraphics[width=0.95\textwidth]{figures/C_96E_15_M4} 
+    \includegraphics[page=3,width=\textwidth]{figures/merge}
+\end{frame}
+
+\begin{frame}{On the spatial domain}{Parallel overview...}
+    \centering
+    \includegraphics[page=4,width=\textwidth]{figures/merge}
+\end{frame}
+
+\begin{frame}{On the time domain}{BFE overview...}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/FF_stages}
+\end{frame}
+
+\begin{frame}{On the time domain}{Proposal...}
+    \centering
+    \includegraphics[height=0.9\textheight]{figures/TemporalPartitioning}
 \end{frame}
 
 \end{document}
