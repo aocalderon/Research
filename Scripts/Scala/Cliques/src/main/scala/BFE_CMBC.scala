@@ -18,9 +18,10 @@ import edu.ucr.dblab.pflock.Utils._
 import archery._
 
 object BFE_CMBC {
+  implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   def runAtBegining(points: List[STPoint])
-    (implicit settings: Settings, geofactory: GeometryFactory, debugOn: Boolean):
+    (implicit settings: Settings, geofactory: GeometryFactory):
       (List[Disk], Stats) = {
 
     // 1. find cliques...
@@ -28,8 +29,11 @@ object BFE_CMBC {
     // 3. divide MBCs by radius less than epsilon...
     // 4. return MBCs greater than epsilon as maximal disks...
     // 5. return remaining points in MBCs greater than epsilon as list of points...
-    val ( (maximals_prime, points_prime, maximals_found), tCli) = timer{
-      val (maximals_prime, points_prime) = partitionByRadius(getMBCsPerClique(points))
+    val ( (mbcs, nCliques, tCliques, tMBC), _) = timer{
+      getMBCsPerClique(points)
+    }
+    val ( (maximals_prime, points_prime, maximals_found), t) = timer{
+      val (maximals_prime, points_prime) = partitionByRadius(mbcs)
       val maximals_found = RTree[Disk]().insertAll(maximals_prime.map{ maximal =>
         Entry(archery.Point(maximal.X, maximal.Y), maximal)
       })
@@ -37,28 +41,36 @@ object BFE_CMBC {
     }
     // Run traditial BFE with the remaining points and maximals found...
     val (maximals, stats) = BFE.run(points_prime, maximals_found)
-    val stats_update = stats.copy(nPoints = points_prime.size,
-      nMaximals = maximals.size,
-      tCliques = tCli)
+    val stats_update = stats.copy(nPoints = points_prime.size, nMaximals = maximals.size,
+      nCliques = nCliques, tCliques = tCliques,
+      nMBC = maximals_found.size, tMBC = tMBC )
     (maximals, stats_update)
   }
 
-  def runByGrid(points: List[STPoint])
-    (implicit settings: Settings, geofactory: GeometryFactory, debugOn: Boolean):
+  def runByGrid(points_prime: List[STPoint])
+    (implicit settings: Settings, geofactory: GeometryFactory):
       (List[Disk], Stats) = {
 
     val stats = Stats()
     var Pairs = new scala.collection.mutable.ListBuffer[String]
     var Maximals: RTree[Disk] = RTree()
 
-    if(points.isEmpty){
+    if(points_prime.isEmpty){
       (List.empty[Disk], Stats())
     } else {
+      val (points, tCounts) = timer{
+        computeCounts(points_prime)
+      }
+      stats.nPoints = points.size
+      stats.tCounts = tCounts
+
       val (grid, tGrid) = timer{
         val G = Grid(points)
         G.buildGrid
         G
       }
+      stats.tGrid = tGrid
+      log(s"GridSize=${grid.index.size}")
 
       debug{
         save("/tmp/edgesPoints.wkt"){ grid.pointsToText }
@@ -92,9 +104,18 @@ object BFE_CMBC {
         val Pr = _Pr
         val Ps = _Ps
 
-        val ( (pr_prime, ps_prime), tCliques) = timer{
+        val ((mbcs, nCliques, tCliques, tMBCs), _) = timer{
           // filtering by Cliques and MBCs...
-          val (maximals1, ps_prime) = partitionByRadius(getMBCsPerClique(Ps))
+          getMBCsPerClique(Ps)
+        }
+        stats.nCliques += nCliques
+        stats.tCliques += tCliques
+        stats.nMBC += mbcs.size
+        stats.tMBC += tMBCs
+
+        val ( (pr_prime, ps_prime), t) = timer{
+          // filtering by Cliques and MBCs...
+          val (maximals1, ps_prime) = partitionByRadius(mbcs)
           // inserting new maximals...
           Maximals = insertMaximals(Maximals, maximals1)
           // filtering by points already in maximals...
@@ -103,7 +124,6 @@ object BFE_CMBC {
           (pr_prime, ps_prime)
         }
         stats.nPoints += pr_prime.size
-        stats.tCliques += tCliques
 
         debug{
           if(key == the_key) println(s"Key: ${key} Ps.size=${Ps.size}")
@@ -191,9 +211,7 @@ object BFE_CMBC {
 
   def main(args: Array[String]): Unit = {
     //generateData(10000, 1000, 1000, "/home/acald013/Research/Datasets/P10K_W1K_H1K.tsv")
-    implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
     implicit val params = new BFEParams(args)
-    implicit val d: Boolean = params.debug()
 
     implicit var settings = Settings(
       input = params.input(),
@@ -203,7 +221,8 @@ object BFE_CMBC {
       capacity = params.capacity(),
       appId = System.nanoTime().toString(),
       tolerance = params.tolerance(),
-      tag = params.tag()
+      tag = params.tag(),
+      debug = params.debug()
     )
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 

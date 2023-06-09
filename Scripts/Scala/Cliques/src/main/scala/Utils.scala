@@ -45,12 +45,13 @@ object Utils {
     method: String = "BFE",
     debug: Boolean = false
   ){
-    val scale = 1 / tolerance
-    val epsilon = epsilon_prime + tolerance
-    val r = (epsilon_prime / 2.0) + tolerance
-    val r2 = math.pow(epsilon_prime / 2.0, 2) + tolerance
+    val scale: Double = 1 / tolerance
+    val epsilon: Double = epsilon_prime + tolerance
+    val r: Double = (epsilon_prime / 2.0) + tolerance
+    val r2: Double = math.pow(epsilon_prime / 2.0, 2) + tolerance
+    var partitions: Int = 1
 
-    def info: String = s"$appId|$epsilon_prime|$mu|$delta|$method|$capacity"
+    def info: String = s"$appId|$partitions|$epsilon_prime|$mu|$delta|$method"
   }
 
   case class STPoint(point: Point, cid: Int = 0){
@@ -231,13 +232,19 @@ object Utils {
   case class MBC(center: Point, radius: Double, points: List[Point])
 
   case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 0,
-    var nCandidates: Int = 0, var nMaximals: Int = 0, var tCounts: Double = 0.0,
-    var tGrid: Double = 0.0, var tRead: Double = 0.0, var tCliques: Double = 0.0,
+    var nCandidates: Int = 0, var nMaximals: Int = 0,
+    var nCliques: Int = 0, var nMBC: Int = 0,
+    var tCounts: Double = 0.0, var tRead: Double = 0.0, var tGrid: Double = 0.0, 
+    var tCliques: Double = 0.0, var tMBC: Double = 0.0,
     var tPairs: Double = 0.0, var tCenters: Double = 0.0,
     var tCandidates: Double = 0.0, var tMaximals: Double = 0.0){
 
-    def print(printTotal: Boolean = true)(implicit logger: Logger, settings: Settings): Unit = {
+    def print(printTotal: Boolean = true)(implicit logger: Logger, S: Settings): Unit = {
       log(s"Points     |${nPoints}")
+      if(S.method.contains("CMBC")){
+        logt(s"Cliques   |${nCliques}")
+        logt(s"MBCs      |${nMBC}")
+      }
       log(s"Pairs      |${nPairs}")
       log(s"Centers    |${nCenters}")
       log(s"Candidates |${nCandidates}")
@@ -245,7 +252,10 @@ object Utils {
       logt(s"Count     |${tCounts}")
       logt(s"Grid      |${tGrid}")
       logt(s"Read      |${tRead}")
-      logt(s"Cliques   |${tCliques}")
+      if(S.method.contains("CMBC")){
+        logt(s"Cliques   |${tCliques}")
+        logt(s"MBCs      |${tMBC}")
+      }
       logt(s"Pairs     |${tPairs}")
       logt(s"Centers   |${tCenters}")
       logt(s"Candidates|${tCandidates}")
@@ -268,23 +278,30 @@ object Utils {
   /*** CMBC Functions ***/
 
   def getMBCsPerClique(points: List[STPoint])
-    (implicit settings: Settings, geofactory: GeometryFactory): Iterator[MBC] = {
+    (implicit S: Settings, G: GeometryFactory): (List[MBC], Int, Double, Double) = {
 
     val vertices = points.map{_.point}
     val edges = getEdges(points)
     
-    bk(vertices, edges).iterator   // finding cliques...
-      .filter(_.size >= settings.mu)
-      .map{ points_per_clique =>               
-        val mbc = Welzl.mbc(points_per_clique) // finding MBC in each clique...
+    // finding cliques...
+    val (cliques, tCli) = timer{ bk(vertices, edges).iterator.filter(_.size >= S.mu).toList }
+    val nCli = cliques.size
+
+    // finding MBC in each clique...
+    val (mbcs, tMBC) = timer{
+      cliques.map{ points_per_clique =>
+        val mbc = Welzl.mbc(points_per_clique)
         val radius = round(mbc.getRadius)
-        val center = geofactory.createPoint(new Coordinate(mbc.getCenter.getX,
+        val center = G.createPoint(new Coordinate(mbc.getCenter.getX,
           mbc.getCenter.getY))
         MBC(center, radius, points_per_clique)
       }
+    }
+
+    (mbcs, nCli, tCli, tMBC)
   }
 
-  def partitionByRadius(mbcs: Iterator[MBC])
+  def partitionByRadius(mbcs: List[MBC])
     (implicit settings: Settings): (List[Disk], List[STPoint]) ={
 
     // dividing MBCs by radius less than epsilon...

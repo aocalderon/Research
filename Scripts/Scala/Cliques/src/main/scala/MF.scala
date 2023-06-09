@@ -32,7 +32,7 @@ object MF {
       input = params.input(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
-      method = "PBFE",
+      method = "PFlocks",
       capacity = params.capacity(),
       fraction = params.fraction(),
       appId = spark.sparkContext.applicationId,
@@ -79,6 +79,7 @@ object MF {
       (quadtree, cells)
     }
     val nIndex = cells.size
+    settings.partitions = cells.size
     log(s"Index|$nIndex")
     logt(s"Index|$tIndex")
 
@@ -97,7 +98,7 @@ object MF {
           }
         }
       }.partitionBy(new Partitioner {
-        def numPartitions: Int = quadtree.getTotalNumLeafNode
+        def numPartitions: Int = cells.size
         def getPartition(key: Any): Int = key.asInstanceOf[Int]
       }).cache
         .map(_._2).cache
