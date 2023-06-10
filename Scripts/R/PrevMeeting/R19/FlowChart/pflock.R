@@ -2,8 +2,8 @@ library(tidyverse)
 library(sqldf)
 library(plotrix)
 
-n = 100
-epsilon = 0.5
+n = 200
+epsilon = 0.75
 mu = 4
 precision = 0.001
 size = 10
@@ -18,7 +18,7 @@ data = sqldf("SELECT p1.x AS x1, p1.y AS y1, p2.x AS x2, p2.y AS y2 FROM pointse
 dim = 10
 margin = 0
 
-pdf("pflock.pdf", width = dim, height = dim, onefile = T)
+pdf("pflock2.pdf", width = dim, height = dim, onefile = T)
 par(mar=c(margin,margin,margin,margin))
 
 distance <- function(x1, y1, x2, y2){
