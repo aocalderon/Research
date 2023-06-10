@@ -242,8 +242,8 @@ object Utils {
     def print(printTotal: Boolean = true)(implicit logger: Logger, S: Settings): Unit = {
       log(s"Points     |${nPoints}")
       if(S.method.contains("CMBC")){
-        logt(s"Cliques   |${nCliques}")
-        logt(s"MBCs      |${nMBC}")
+        log(s"Cliques   |${nCliques}")
+        log(s"MBCs      |${nMBC}")
       }
       log(s"Pairs      |${nPairs}")
       log(s"Centers    |${nCenters}")
