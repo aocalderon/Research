@@ -31,6 +31,14 @@ spark-warehouse
 #/.bloop/
 #/.metals/
 
+Scripts/Scala/SITester/target/*
+Scripts/Scala/SITester/project/*
+Scripts/Scala/SITester/.ensime
+Scripts/Scala/SITester/.ensime_cache/*
+Scripts/Scala/SITester/.classpath
+Scripts/Scala/SITester/.project
+Scripts/Scala/SITester/.settings/*
+
 Scripts/Scala/Cliques/target/*
 Scripts/Scala/Cliques/project/*
 Scripts/Scala/Cliques/.ensime
