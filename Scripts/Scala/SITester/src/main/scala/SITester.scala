@@ -63,33 +63,60 @@ object SITester {
       logt(s"Insertion|$n|KDtree  |$iKdtreeTime")
     }
 
-    val point = new Coordinate(1982027.884,561914.125)
-    val sample = points.take(10 * size)
     val rtree = new STRtree()
-    sample.foreach{ point =>
+    points.foreach{ point =>
       rtree.insert(point.getEnvelopeInternal, point)
     }
     val hprtree = new HPRtree()
-    sample.foreach{ point =>
+    points.foreach{ point =>
       hprtree.insert(point.getEnvelopeInternal, point)
     }
     val quadtree = new Quadtree()
-    sample.foreach{ point =>
+    points.foreach{ point =>
       quadtree.insert(point.getEnvelopeInternal, point)
     }
     val kdtree = new KdTree()
-    sample.foreach{ point =>
+    points.foreach{ point =>
       kdtree.insert(point.getCoordinate, point)
     }
 
     for{ e <- (1 to 10) }{
       val n = e * epsilon
-      val envelope = new Envelope(point.x - n, point.x + n, point.y - n, point.y + n)
-      val (q1, qRtreeTime) = timer{ rtree.query(envelope).size }
-      val (q2, qHprtreeTime) = timer{ hprtree.query(envelope).size }
-      val (q3, qQuadtreeTime) = timer{ quadtree.query(envelope).size }
-      val (q4, qKdtreeTime) = timer{ kdtree.query(envelope).size }
-      log(s"Range query ${n}m [$q1 $q2 $q3 $q4]")
+      val (q1, qRtreeTime) = timer{
+        points.map{ p1 =>
+          val envelope = new Envelope(p1.getX - n, p1.getX + n, p1.getY - n, p1.getY + n)
+          val hood = rtree.query(envelope).asScala.map(_.asInstanceOf[Point])
+          val count = getCounts(p1, hood, n)
+          (p1, count)
+        }
+      }
+      val (q2, qHprtreeTime) = timer{
+        points.map{ p1 =>
+          val envelope = new Envelope(p1.getX - n, p1.getX + n, p1.getY - n, p1.getY + n)
+          val hood = hprtree.query(envelope).asScala.map(_.asInstanceOf[Point])
+          val count = getCounts(p1, hood, n)
+          (p1, count)
+        }
+      }
+      val (q3, qQuadtreeTime) = timer{
+        points.map{ p1 =>
+          val envelope = new Envelope(p1.getX - n, p1.getX + n, p1.getY - n, p1.getY + n)
+          val hood = quadtree.query(envelope).asScala.map(_.asInstanceOf[Point])
+          val count = getCounts(p1, hood, n)
+          (p1, count)
+        }
+      }
+      val (q4, qKdtreeTime) = timer{
+        points.map{ p1 =>
+          val envelope = new Envelope(p1.getX - n, p1.getX + n, p1.getY - n, p1.getY + n)
+          val hood = kdtree.query(envelope).asScala.map{ c =>
+            geofactory.createPoint(c.asInstanceOf[KdNode].getCoordinate)
+          }
+          val count = getCounts(p1, hood, n)
+          (p1, count)
+        }
+      }
+      log(s"Range query ${n}m [${q1.size} ${q2.size} ${q3.size} ${q4.size}]")
       logt(s"Query|$n|STRtree |$qRtreeTime")
       logt(s"Query|$n|HPRtree |$qHprtreeTime")
       logt(s"Query|$n|Quadtree|$qQuadtreeTime")
@@ -113,6 +140,19 @@ object SITester {
       }
     buffer.close
     points
+  }
+
+  def getCounts(p1: Point, hood: Iterable[Point], n: Double): Int = {
+    val c = for{
+      p2 <- hood
+      if{
+        p1.getCoordinate.compareTo(p2.getCoordinate) < 0 &&
+        p1.distance(p2) <= n
+      }
+    } yield {
+      1
+    }
+    c.size
   }
 
   def clocktime: Long = System.nanoTime()

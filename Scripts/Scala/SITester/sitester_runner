@@ -5,6 +5,6 @@ N=$1
 for n in `seq 1 $N`
 do
     echo "./sitester $HOME/Research/Datasets/LA_50K_T320.tsv 1000 5000"
-    ./sitester ~/Research/Datasets/LA_50K_T320.tsv 1000 5000
+    ./sitester ~/Research/Datasets/LA_50K_T320.tsv 10 5000
 done
 
