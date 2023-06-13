@@ -1,0 +1,12 @@
+#!/bin/bash
+
+N=$1
+ES=( 5 10 15 20 25 30 35 40 45 50 )
+
+for n in `seq 1 $N`; do
+    for e in ${ES[@]}; do
+	echo "./dstester $HOME/Research/Datasets/dense2.tsv $e 3"
+	./dstester $HOME/Research/Datasets/dense2.tsv $e 3
+    done
+done
+

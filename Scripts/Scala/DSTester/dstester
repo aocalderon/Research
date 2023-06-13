@@ -1,0 +1,61 @@
+#!/bin/bash
+
+INPUT=$1
+EPSILON=$2
+MU=$3
+
+JARS_PATH=$HOME/Spark/2.4/jars
+
+JARS=${JARS_PATH}/jts-core-1.19.0.jar
+JARS=${JARS}:${JARS_PATH}/scallop_2.11-4.0.1.jar
+JARS=${JARS}:${JARS_PATH}/slf4j-api-2.0.6.jar
+JARS=${JARS}:${JARS_PATH}/slf4j-simple-2.0.6.jar
+JARS=${JARS}:${JARS_PATH}/commons-math3-3.6.1.jar
+JARS=${JARS}:${JARS_PATH}/smile-core-3.0.1.jar
+JARS=${JARS}:${JARS_PATH}/smile-base-3.0.1.jar
+JARS=${JARS}:${JARS_PATH}/elki-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-classification-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-clustering-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-core-api-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-core-data-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-core-dbids-int-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-core-dbids-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-core-distance-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-core-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-core-math-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-core-parallel-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-core-util-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-database-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-data-generator-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-geo-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-index-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-index-lsh-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-index-mtree-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-index-preprocessed-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-index-rtree-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-index-various-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-input-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-itemsets-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-logging-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-outlier-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-persistent-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-precomputed-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/elki-timeseries-0.8.0.jar
+JARS=${JARS}:${JARS_PATH}/fastutil-8.5.12.jar
+
+LOG_FILE=$HOME/Spark/2.4/conf/simplelogger.properties
+CLASS=edu.ucr.dblab.dstester.DSTester
+JAR=$HOME/Research/Scripts/Scala/DSTester/target/scala-2.11/dstester_2.11-0.1.jar
+
+PARAMS=(
+    -cp $JARS:$JAR:$LOG_FILE \
+	-Dorg.slf4j.simpleLogger.showDateTime=true \
+	-Dorg.slf4j.simpleLogger.dateTimeFormat="yyyy-MM-dd'T'HH:mm:ss.SSS" \	
+	-Dorg.slf4j.simpleLogger.showThreadName=false \
+	-Dorg.slf4j.simpleLogger.showLogName=false \
+	$CLASS \
+	--input $INPUT --epsilon $EPSILON --mu $MU
+)
+
+echo "scala ${PARAMS[@]}"
+scala ${PARAMS[@]}
