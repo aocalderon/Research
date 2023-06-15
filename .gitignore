@@ -47,6 +47,8 @@ Scripts/Scala/SITester/.classpath
 Scripts/Scala/SITester/.project
 Scripts/Scala/SITester/.settings/*
 
+Scripts/Scala/Cliques/.idea/*
+Scripts/Scala/Cliques/.idea/workspace.xml
 Scripts/Scala/Cliques/target/*
 Scripts/Scala/Cliques/project/*
 Scripts/Scala/Cliques/.ensime
