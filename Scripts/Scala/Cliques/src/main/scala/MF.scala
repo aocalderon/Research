@@ -15,6 +15,7 @@ import org.apache.spark.Partitioner
 
 import edu.ucr.dblab.pflock.quadtree._
 import edu.ucr.dblab.pflock.Utils._
+import edu.ucr.dblab.pflock.MF_Utils._
 
 object MF {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -22,7 +23,7 @@ object MF {
   def main(args: Array[String]): Unit = {
     implicit val params = new BFEParams(args)
 
-    val spark = SparkSession.builder()
+    implicit val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .appName("MF").getOrCreate()
@@ -38,50 +39,57 @@ object MF {
       appId = spark.sparkContext.applicationId,
       tolerance = params.tolerance(),
       tag = params.tag(),
-      debug = params.debug()
+      debug = params.debug(),
+      cached = params.cached()
     )
 
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
     printParams(args)
 
-    val ( (pointsRaw, nRead), tRead) = timer{
-      val pointsRaw = spark.read
-        .option("delimiter", "\t")
-        .option("header", false)
-        .textFile(settings.input).rdd
-        .map { line =>
-          val arr = line.split("\t")
-          val i = arr(0).toInt
-          val x = arr(1).toDouble
-          val y = arr(2).toDouble
-          val t = arr(3).toInt
-          val point = geofactory.createPoint(new Coordinate(x, y))
-          point.setUserData(Data(i, t))
-          point
-        }.cache
-      val nRead = pointsRaw.count
-      (pointsRaw, nRead)
-    }
-    log(s"Read|$nRead")
-    logt(s"Read|$tRead")
+    val (pointsRaw, quadtree, cells) = if(settings.cached){
+      loadCachedData
+    } else {
+      val ( (pointsRaw, nRead), tRead) = timer{
+        val pointsRaw = spark.read
+          .option("delimiter", "\t")
+          .option("header", false)
+          .textFile(settings.input).rdd
+          .map { line =>
+            val arr = line.split("\t")
+            val i = arr(0).toInt
+            val x = arr(1).toDouble
+            val y = arr(2).toDouble
+            val t = arr(3).toInt
+            val point = geofactory.createPoint(new Coordinate(x, y))
+            point.setUserData(Data(i, t))
+            point
+          }.cache
+        val nRead = pointsRaw.count
+        (pointsRaw, nRead)
+      }
+      log(s"Read|$nRead")
+      logt(s"Read|$tRead")
 
-    val ( (quadtree, cells), tIndex) = timer{
-      val quadtree = Quadtree.getQuadtreeFromPoints(pointsRaw)
-      val cells = quadtree.getLeafZones.asScala.map{ leaf =>
-        val cid = leaf.partitionId
-        val lin = leaf.lineage
-        val env = leaf.getEnvelope
+      val ((quadtree, cells), tIndex) = timer{
+        val quadtree = Quadtree.getQuadtreeFromPoints(pointsRaw)
+        val cells = quadtree.getLeafZones.asScala.map{ leaf =>
+          val cid = leaf.partitionId.toInt
+          val lin = leaf.lineage
+          val env = leaf.getEnvelope
 
-        cid -> Cell(env, cid, lin)
-      }.toMap
-      quadtree.dropElements()
-      (quadtree, cells)
+          cid -> Cell(env, cid, lin)
+        }.toMap
+        quadtree.dropElements()
+        (quadtree, cells)
+      }
+      val nIndex = cells.size
+      log(s"Index|$nIndex")
+      logt(s"Index|$tIndex")
+
+      (pointsRaw, quadtree, cells)
     }
-    val nIndex = cells.size
     settings.partitions = cells.size
-    log(s"Index|$nIndex")
-    logt(s"Index|$tIndex")
 
     debug{ Quadtree.save(quadtree, "/tmp/edgesCells.wkt") }
 
@@ -121,6 +129,10 @@ object MF {
         val cell = cells(cid)
         val points = it.toList
         val (maximals, stats) = BFE.runParallel(points, cell)
+        debug{
+          println(s"CID=$cid")
+          stats.print()
+        }
 
         maximals
       }.cache

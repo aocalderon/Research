@@ -23,6 +23,9 @@ import elki.distance.minkowski.EuclideanDistance
 import elki.data.DoubleVector
 import elki.data.`type`.TypeUtil
 
+import elki.clustering.subspace.CLIQUE
+import elki.data.model.SubspaceModel
+
 object DSTester {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 

@@ -35,8 +35,9 @@ object BFE {
       log(s"GridSize=${grid.index.size}")
 
       debug{
-        save("/tmp/edgesPoints.wkt"){ grid.pointsToText }
-        save("/tmp/edgesGrid.wkt"){ grid.wkt() }
+        save(s"/tmp/edgesPoints${cid}.wkt"){ grid.pointsToText }
+        save(s"/tmp/P${cid}.tsv"){ points_prime.map{_.toString + "\n"} }
+        save(s"/tmp/edgesGrid${cid}.wkt"){ grid.wkt() }
       }
 
       val the_key = -1
@@ -129,6 +130,10 @@ object BFE {
 
       val M = Maximals.entries.toList.map(_.value).filter{ maximal => cell.contains(maximal) }
       stats.nMaximals = M.size
+
+      debug{
+        save(s"/tmp/edgesMaximals${cid}.wkt"){ M.map{_.wkt + "\n"} }
+      }
 
       (M.toIterator, stats)
     }

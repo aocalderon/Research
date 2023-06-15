@@ -1,12 +1,15 @@
 package edu.ucr.dblab.pflock.quadtree
 
-import com.vividsolutions.jts.geom.{Envelope, Coordinate, Point}
+import com.vividsolutions.jts.geom.{GeometryFactory, Envelope, Coordinate, Polygon, Point}
+import com.vividsolutions.jts.io.WKTReader
 import scala.collection.JavaConverters._
 import java.io.FileWriter
+import scala.io.Source
 
 object Quadtree {  
   def create[T](boundary: Envelope, lineages: List[String]): StandardQuadTree[T] = {
-    val quadtree = if(lineages.size < 4){  // If quadtree has only one level, we just return a simplre quadtree with the boundary...
+    val quadtree = if(lineages.size < 4){  // If quadtree has only one level,
+                                           // we just return a simplre quadtree with the boundary...
       new StandardQuadTree[T](new QuadRectangle(boundary), 0, 1, 0)
     } else {
       val maxLevel = lineages.map(_.size).max
@@ -57,6 +60,26 @@ object Quadtree {
     f.close
   }
 
+  def load[T](filename: String)(implicit geofactory: GeometryFactory): StandardQuadTree[T] = {
+    val reader = new WKTReader(geofactory)
+    val buffer = Source.fromFile(filename)
+    val cells = buffer.getLines.toList.map{ line =>
+      val arr = line.split("\t")
+      val envelope = reader.read(arr(0)).asInstanceOf[Polygon].getEnvelopeInternal
+      val lineage = arr(1)
+      (lineage, envelope)
+    }
+    buffer.close()
+    val left  = cells.map(_._2.getMinX).min
+    val right = cells.map(_._2.getMaxX).max
+    val down  = cells.map(_._2.getMinY).min
+    val up    = cells.map(_._2.getMaxY).max
+    val boundary = new Envelope(left, right, down, up)
+    val lineages = cells.map(_._1)
+
+    create[T](boundary, lineages)
+  }
+
   def extract[T](quadtree: StandardQuadTree[T], lineage: String): StandardQuadTree[T] = {
     var current = quadtree
     for(position <- lineage.map(_.toInt - 48)){
@@ -83,9 +106,9 @@ object Quadtree {
 
   /* Quite specific to PFlock project */
   import org.apache.spark.rdd.RDD
-  import edu.ucr.dblab.pflock.Utils.Settings
-  def getQuadtreeFromPoints(points: RDD[Point], level: Int = 0, maxLevel: Int = 16)
-    (implicit S: Settings): StandardQuadTree[Point] = {
+  import edu.ucr.dblab.pflock.Utils.{Settings, Cell}
+  def getQuadtreeFromPoints(points: RDD[Point], expand: Boolean = true, level: Int = 0,
+    maxLevel: Int = 16) (implicit S: Settings): StandardQuadTree[Point] = {
 
     val sample = points.sample(false, S.fraction, 42).collect().toList
     val minx = points.map(_.getX).min
@@ -93,7 +116,8 @@ object Quadtree {
     val maxx = points.map(_.getX).max
     val maxy = points.map(_.getY).max
     val envelope = new Envelope(new Coordinate(minx, miny), new Coordinate(maxx, maxy))
-    envelope.expandBy(S.epsilon) // For PFlock project...
+    if(expand) envelope.expandBy(S.epsilon) // For PFlock project,
+                                            // add a pad around the study area for possible disks ...
     val rectangle = new QuadRectangle(envelope)
     val quadtree = new StandardQuadTree[Point](rectangle, level, S.capacity, maxLevel)
 
@@ -127,5 +151,28 @@ object Quadtree {
     quadtree.assignPartitionLineage
     
     quadtree
+  }
+
+  def loadQuadtreeAndCells[T](filename: String)
+    (implicit geofactory: GeometryFactory): (StandardQuadTree[T], Map[Int, Cell]) = {
+    val reader = new WKTReader(geofactory)
+    val buffer = Source.fromFile(filename)
+    val cells = buffer.getLines.toList.map{ line =>
+      val arr = line.split("\t")
+      val mbr = reader.read(arr(0)).asInstanceOf[Polygon].getEnvelopeInternal
+      val lin = arr(1)
+      val cid = arr(2).toInt
+      Cell(mbr, cid, lin)
+    }
+    buffer.close()
+    val left  = cells.map(_.mbr.getMinX).min
+    val right = cells.map(_.mbr.getMaxX).max
+    val down  = cells.map(_.mbr.getMinY).min
+    val up    = cells.map(_.mbr.getMaxY).max
+    val boundary = new Envelope(left, right, down, up)
+    val lineages = cells.map(_.lineage)
+
+    val c = cells.map(cell => cell.cid -> cell).toMap
+    (create[T](boundary, lineages), c)
   }
 }

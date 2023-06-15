@@ -43,15 +43,18 @@ object Utils {
     appId: String = "",
     tag: String = "",
     method: String = "BFE",
-    debug: Boolean = false
+    debug: Boolean = false,
+    cached: Boolean = false
   ){
     val scale: Double = 1 / tolerance
     val epsilon: Double = epsilon_prime + tolerance
     val r: Double = (epsilon_prime / 2.0) + tolerance
     val r2: Double = math.pow(epsilon_prime / 2.0, 2) + tolerance
+    val dataset: String = input.split("/").last.split("\\.").head
+
     var partitions: Int = 1
 
-    def info: String = s"$appId|$partitions|$epsilon_prime|$mu|$delta|$method"
+    def info: String = s"$appId|$partitions|$dataset|$epsilon_prime|$mu|$delta|$method"
   }
 
   case class STPoint(point: Point, cid: Int = 0){
@@ -90,7 +93,7 @@ object Utils {
       envelope
     }
 
-    override def toString: String = s"${point.getX}\t${point.getY}\t$cid\t$oid\t$tid\t$count"
+    override def toString: String = s"$oid\t${point.getX}\t${point.getY}\t$tid\t$cid\t$count"
 
   }
 
@@ -177,6 +180,17 @@ object Utils {
       }.groupBy(_._1)
 
       index = grid.mapValues(_.map(_._2))
+    }
+
+    def buildGrid1_5(minX: Double, minY: Double)(implicit S:Settings): Map[Long, List[STPoint]] = {
+      val epsilon = (S.epsilon_prime * 1.5) + S.tolerance
+      val grid = points/*.filter(_.count >= S.mu)*/.map{ point =>
+        val i = math.floor( (point.X - minX) / epsilon ).toInt
+        val j = math.floor( (point.Y - minY) / epsilon ).toInt
+        (encode(i, j), point)
+      }.groupBy(_._1)
+
+      grid.mapValues(_.map(_._2))
     }
 
     def pointsToText: List[String] = {
@@ -848,11 +862,13 @@ object Utils {
   def clocktime: Long = System.nanoTime()
 
   def log(msg: String)(implicit logger: Logger, settings: Settings): Unit = {
-    logger.info(s"INFO|${settings.info}|$msg")
+    val tid = TaskContext.getPartitionId
+    logger.info(s"INFO|$tid|${settings.info}|$msg")
   }
 
   def logt(msg: String)(implicit logger: Logger, settings: Settings): Unit = {
-    logger.info(s"TIME|${settings.info}|$msg")
+    val tid = TaskContext.getPartitionId
+    logger.info(s"TIME|$tid|${settings.info}|$msg")
   }
 
   def round(x: Double)(implicit settings: Settings): Double = {
@@ -1043,6 +1059,7 @@ class BFEParams(args: Seq[String]) extends ScallopConf(args) {
   val tag:       ScallopOption[String]  = opt[String]  (default = Some(""))
   val output:    ScallopOption[String]  = opt[String]  (default = Some("/tmp"))
   val debug:     ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
+  val cached:    ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val method:    ScallopOption[String]  = opt[String]  (default = Some("BFE"))
   val master:    ScallopOption[String]  = opt[String]  (default = Some("local[10]"))
 

@@ -6,9 +6,8 @@ MU=$3
 DELTA=$4
 CAPACITY=$5
 FRACTION=$6
-MASTER=$7
-DEBUG=$8
-CACHED=$9
+DEBUG=$7
+MASTER=$8
 
 WAIT="0s"
 EXECUTORS=12
@@ -33,7 +32,7 @@ JARS=${JARS},${JARS_PATH}/commons-numbers-core-1.0-beta1.jar
 JARS=${JARS},${JARS_PATH}/commons-numbers-arrays-1.0-beta1.jar
 
 LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
-CLASS=edu.ucr.dblab.pflock.MF
+CLASS=edu.ucr.dblab.pflock.QuadtreePartitioner
 JAR=$HOME/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar
 
 PARAMS=(
@@ -47,7 +46,7 @@ PARAMS=(
 	    --num-executors $EXECUTORS --executor-cores $CORES \
 	    --executor-memory $EMEMORY --driver-memory $DMEMORY \
 	    --class $CLASS $JAR \
-	    --input $INPUT $DEBUG --epsilon $EPSILON --mu $MU --capacity $CAPACITY --fraction $FRACTION $CACHED
+	    --input $INPUT $DEBUG --epsilon $EPSILON --mu $MU --capacity $CAPACITY --fraction $FRACTION
 )
 
 echo "spark-submit ${PARAMS[@]}"
