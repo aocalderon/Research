@@ -250,6 +250,7 @@ object BFE {
             }
           }
         }
+        println(s"${key}\t${decode(key)}\t${Ps.size}\t${tMaximals}")
         stats.tCenters += tCenters
         stats.tCandidates += tCandidates
         stats.tMaximals += tMaximals

@@ -77,155 +77,16 @@
     \end{frame}
 }
 
-\begin{frame}{On the spatial domain}{BFE overview...}
+\begin{frame}{Dense areas}
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/MF_flowchart}
+    \includegraphics[width=\textwidth]{figures/performance}
 \end{frame}
 
-\begin{frame}{On the spatial domain}{BFE overview...}
-    \centering
-    \includegraphics[page=2,width=0.6\textwidth]{figures/grid}
-\end{frame}
 
-\begin{frame}{On the spatial domain}{BFE overview...}
-    \centering
-    \includegraphics[page=3,width=0.6\textwidth]{figures/grid}
-\end{frame}
-
-\begin{frame}{On the spatial domain}{BFE overview...}
-    \centering
-    \includegraphics[page=4,width=0.6\textwidth]{figures/grid}
-\end{frame}
-
-\begin{frame}{On the spatial domain}{BFE overview...}
-    \centering
-    \includegraphics[width=\textwidth]{figures/MF_stages/flow}
-\end{frame}
-
-\begin{frame}{On the spatial domain}{Parallel overview...}
-    \centering
-    \includegraphics[width=\textwidth]{figures/MF_stages/P123}
-\end{frame}
-
-\begin{frame}{On the spatial domain}{Parallel overview...}
-    \centering
-    \includegraphics[page=1,width=\textwidth]{figures/merge}
-\end{frame}
-
-\begin{frame}{On the spatial domain}{Parallel overview...}
-    \centering
-    \includegraphics[page=2,width=\textwidth]{figures/merge}
-\end{frame}
-
-\begin{frame}{On the spatial domain}{Parallel overview...}
-    \centering
-    \includegraphics[page=3,width=\textwidth]{figures/merge}
-\end{frame}
-
-\begin{frame}{On the spatial domain}{Parallel overview...}
-    \centering
-    \includegraphics[page=4,width=\textwidth]{figures/merge}
-\end{frame}
-
-\begin{frame}{On the spatial domain}{Performance...}
-    \centering
-    \includegraphics[width=0.9\textwidth]{/home/and/Research/Meetings/next/figures/LA_T320_N50K.png}
-\end{frame}
-
-\begin{frame}{On the spatial domain}{Performance...}
-    \begin{figure}
-        \centering
-        \begin{subfigure}[t]{0.32\textwidth}
-            \raisebox{-\height}{\includegraphics[width=\textwidth]{figures/R/MF/pflockE2_by_capacity}}
-        \end{subfigure}
-        \hfill
-        \begin{subfigure}[t]{0.32\textwidth}
-            \raisebox{-\height}{\includegraphics[width=\textwidth]{figures/R/MF/pflockE5_by_capacity}}
-        \end{subfigure}
-        \hfill
-        \begin{subfigure}[t]{0.32\textwidth}
-            \raisebox{-\height}{\includegraphics[width=\textwidth]{figures/R/MF/pflockE10_by_capacity}}
-        \end{subfigure}
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%second row
-        \begin{subfigure}[t]{0.32\textwidth}
-            \raisebox{-\height}{\includegraphics[width=\textwidth]{figures/R/MF/pflockE15_by_capacity}}
-        \end{subfigure}
-        %\hfill
-        \begin{subfigure}[t]{0.32\textwidth}
-            \raisebox{-\height}{\includegraphics[width=\textwidth]{figures/R/MF/pflockE20_by_capacity}}
-        \end{subfigure}
-    \end{figure}
-\end{frame}
-
-\begin{frame}{On the spatial domain}{Performance...}
-    \centering
-    \includegraphics[width=0.9\textwidth]{figures/R/MF/PFlockVsBFE2.pdf}
-\end{frame}
-
-\begin{frame}{On the spatial domain}{Density issues...}
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/density.png}
-\end{frame}
-
-\begin{frame}{On the spatial domain}{Density issues...}
-    \centering
-    \includegraphics[width=0.9\textwidth]{figures/LA_T320_N50K_dense.png}
-\end{frame}
-
-\begin{frame}{On the spatial domain}{Cliques and MBCs approach...}
-    \centering
-    \includegraphics[width=0.5\textheight]{figures/CMBC_flowchart2.pdf}
-\end{frame}
-
-\begin{frame}{On the spatial domain}{Cliques and MBCs approach...}
-    \begin{figure}
-        \centering
-        \begin{subfigure}[t]{0.49\textwidth}
-            \raisebox{-\height}{\includegraphics[width=\textwidth]{figures/CMBC1}}
-            \subcaption{Finding cliques...}
-        \end{subfigure}
-        \hfill
-        \begin{subfigure}[t]{0.49\textwidth}
-            \raisebox{-\height}{\includegraphics[width=\textwidth]{figures/CMBC2}}
-            \subcaption{Filtering by MBC...}
-        \end{subfigure}
-    \end{figure}
-\end{frame}
-
-\begin{frame}{On the spatial domain}{CMBC performance (work in progress)...}
-    \begin{figure}
-        \centering
-        \begin{subfigure}[t]{0.49\textwidth}
-            \raisebox{-\height}{\includegraphics[width=\textwidth]{figures/R/CMBC/cmbc_by_candidates}}
-            \subcaption*{It reduces the number of candidates...}
-        \end{subfigure}
-        \hfill
-        \begin{subfigure}[t]{0.49\textwidth}
-            \raisebox{-\height}{\includegraphics[width=\textwidth]{figures/R/CMBC/cmbc_by_time_stage}}
-            \subcaption*{But it is quite costly...}
-        \end{subfigure}
-    \end{figure}
-\end{frame}
-
-\begin{frame}{On the time domain}{BFE overview...}
-    \centering
-    \includegraphics[height=0.55\textheight]{figures/FF_stages}
-\end{frame}
-
-\begin{frame}{On the time domain}{Proposal...}
-    \centering
-    \includegraphics[height=0.85\textheight]{figures/TemporalPartitioning}
-\end{frame}
-
-\begin{frame}{What is next...}
-    \begin{itemize}
-     \item Double check CMBC approach.  If it prunes enough number of candidates it should gives us better times...
-     \item Explore DBScan implementations\footnote{\url{https://link.springer.com/article/10.1007/s10115-016-1004-2}} to use instead of cliques...
-     \item Give a try to distribute the neighborhood (stencil) during the PFlock parallelization...
-     \item Time domain implementation...
-    \end{itemize}
-
-\end{frame}
+%\begin{frame}{What is next...}
+%    \begin{itemize}
+%    \end{itemize}
+%\end{frame}
 
 \end{document}
 
