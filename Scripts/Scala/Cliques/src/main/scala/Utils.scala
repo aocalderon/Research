@@ -40,17 +40,20 @@ object Utils {
     capacity: Int = 200,
     fraction: Double = 0.1,
     tolerance: Double = 1e-3,
+    density: Double = 1000.0,
     appId: String = "",
     tag: String = "",
     method: String = "BFE",
     debug: Boolean = false,
-    cached: Boolean = false
+    cached: Boolean = false,
+    output: String = "/tmp/"
   ){
     val scale: Double = 1 / tolerance
     val epsilon: Double = epsilon_prime + tolerance
     val r: Double = (epsilon_prime / 2.0) + tolerance
     val r2: Double = math.pow(epsilon_prime / 2.0, 2) + tolerance
     val dataset: String = input.split("/").last.split("\\.").head
+    val dense: Boolean = if(density <= 0.0) false else true
 
     var partitions: Int = 1
 
@@ -101,15 +104,17 @@ object Utils {
     override def toString = s"$id\t$t"
   }
 
-  case class Cell(mbr: Envelope, cid: Int, lineage: String){
-    val wkt: String = toString + "\n"
+  case class Cell(mbr: Envelope, cid: Int, lineage: String, dense: Boolean = false){
+    var nPairs = 0
 
     val bbox: Box = Box(mbr.getMinX.toFloat, mbr.getMinY.toFloat,
       mbr.getMaxX.toFloat, mbr.getMaxY.toFloat)
 
     def contains(disk: Disk): Boolean = mbr.contains(disk.X, disk.Y)
 
-    override def toString: String = s"${JTS.toGeometry(mbr).toText}\t$cid\t$lineage"
+    def toText: String = JTS.toGeometry(mbr).toText
+
+    def wkt: String = s"${toText}\t$cid\t$lineage\t$nPairs"
   }
 
   case class Disk(center: Point, pids: List[Int],
@@ -1050,18 +1055,20 @@ object Utils {
 import org.rogach.scallop._
 
 class BFEParams(args: Seq[String]) extends ScallopConf(args) {
-  val tolerance: ScallopOption[Double]  = opt[Double]  (default = Some(1e-3))
-  val input:     ScallopOption[String]  = opt[String]  (default = Some(""))
-  val epsilon:   ScallopOption[Double]  = opt[Double]  (default = Some(10.0))
-  val mu:        ScallopOption[Int]     = opt[Int]     (default = Some(5))
-  val capacity:  ScallopOption[Int]     = opt[Int]     (default = Some(100))
-  val fraction:  ScallopOption[Double]  = opt[Double]  (default = Some(0.01))
-  val tag:       ScallopOption[String]  = opt[String]  (default = Some(""))
-  val output:    ScallopOption[String]  = opt[String]  (default = Some("/tmp"))
-  val debug:     ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
-  val cached:    ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
-  val method:    ScallopOption[String]  = opt[String]  (default = Some("BFE"))
-  val master:    ScallopOption[String]  = opt[String]  (default = Some("local[10]"))
+  val tolerance:  ScallopOption[Double]  = opt[Double]  (default = Some(1e-3))
+  val input:      ScallopOption[String]  = opt[String]  (default = Some(""))
+  val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(10.0))
+  val mu:         ScallopOption[Int]     = opt[Int]     (default = Some(3))
+  val delta:      ScallopOption[Int]     = opt[Int]     (default = Some(5))
+  val capacity:   ScallopOption[Int]     = opt[Int]     (default = Some(100))
+  val fraction:   ScallopOption[Double]  = opt[Double]  (default = Some(0.01))
+  val density:    ScallopOption[Double]  = opt[Double]  (default = Some(1000.0))
+  val tag:        ScallopOption[String]  = opt[String]  (default = Some(""))
+  val output:     ScallopOption[String]  = opt[String]  (default = Some("/tmp/"))
+  val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
+  val cached:     ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
+  val method:     ScallopOption[String]  = opt[String]  (default = Some("BFE"))
+  val master:     ScallopOption[String]  = opt[String]  (default = Some("local[10]"))
 
   verify()
 }

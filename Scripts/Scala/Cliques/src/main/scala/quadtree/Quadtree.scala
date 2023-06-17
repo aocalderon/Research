@@ -127,19 +127,21 @@ object Quadtree {
     }
     quadtree.assignPartitionIds
     quadtree.assignPartitionLineage
-    
+
+    quadtree.dropElements
     quadtree
   }
 
-  def getQuadtreeFromPointList(points: List[Point], level: Int = 0, maxLevel: Int = 16)
-    (implicit S: Settings): StandardQuadTree[Point] = {
+  def getQuadtreeFromPointList[T](points: List[Point], expand: Boolean = true, level: Int = 0,
+    maxLevel: Int = 16) (implicit S: Settings): StandardQuadTree[Point] = {
 
     val minx = points.map(_.getX).min
     val miny = points.map(_.getY).min
     val maxx = points.map(_.getX).max
     val maxy = points.map(_.getY).max
     val envelope = new Envelope(new Coordinate(minx, miny), new Coordinate(maxx, maxy))
-    envelope.expandBy(S.epsilon) // For PFlock project...
+    if(expand) envelope.expandBy(S.epsilon) // For PFlock project,
+                                            // add a pad around the study area for possible disks ...
     val rectangle = new QuadRectangle(envelope)
     val quadtree = new StandardQuadTree[Point](rectangle, level, S.capacity, maxLevel)
 
@@ -154,10 +156,10 @@ object Quadtree {
   }
 
   def loadQuadtreeAndCells[T](filename: String)
-    (implicit geofactory: GeometryFactory): (StandardQuadTree[T], Map[Int, Cell]) = {
+    (implicit S: Settings, geofactory: GeometryFactory): (StandardQuadTree[T], Map[Int, Cell]) = {
     val reader = new WKTReader(geofactory)
     val buffer = Source.fromFile(filename)
-    val cells = buffer.getLines.toList.map{ line =>
+    val cells_prime = buffer.getLines.toList.map{ line =>
       val arr = line.split("\t")
       val mbr = reader.read(arr(0)).asInstanceOf[Polygon].getEnvelopeInternal
       val lin = arr(1)
@@ -165,14 +167,19 @@ object Quadtree {
       Cell(mbr, cid, lin)
     }
     buffer.close()
-    val left  = cells.map(_.mbr.getMinX).min
-    val right = cells.map(_.mbr.getMaxX).max
-    val down  = cells.map(_.mbr.getMinY).min
-    val up    = cells.map(_.mbr.getMaxY).max
-    val boundary = new Envelope(left, right, down, up)
-    val lineages = cells.map(_.lineage)
 
-    val c = cells.map(cell => cell.cid -> cell).toMap
-    (create[T](boundary, lineages), c)
+    val left  = cells_prime.map(_.mbr.getMinX).min
+    val right = cells_prime.map(_.mbr.getMaxX).max
+    val down  = cells_prime.map(_.mbr.getMinY).min
+    val up    = cells_prime.map(_.mbr.getMaxY).max
+    val boundary = new Envelope(left, right, down, up)
+    boundary.expandBy(S.epsilon)
+
+    val lineages = cells_prime.map(_.lineage)
+
+    val quadtree = create[T](boundary, lineages)
+    val cells = cells_prime.map(cell => cell.cid -> cell).toMap
+
+    (quadtree, cells)
   }
 }

@@ -40,67 +40,138 @@ object MF {
       tolerance = params.tolerance(),
       tag = params.tag(),
       debug = params.debug(),
-      cached = params.cached()
+      cached = params.cached(),
+      density = params.density()
     )
 
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
     printParams(args)
+    log(s"START|")
 
-    val (pointsRaw, quadtree, cells) = if(settings.cached){
-      loadCachedData
-    } else {
-      val ( (pointsRaw, nRead), tRead) = timer{
-        val pointsRaw = spark.read
-          .option("delimiter", "\t")
-          .option("header", false)
-          .textFile(settings.input).rdd
-          .map { line =>
-            val arr = line.split("\t")
-            val i = arr(0).toInt
-            val x = arr(1).toDouble
-            val y = arr(2).toDouble
-            val t = arr(3).toInt
-            val point = geofactory.createPoint(new Coordinate(x, y))
-            point.setUserData(Data(i, t))
-            point
-          }.cache
-        val nRead = pointsRaw.count
-        (pointsRaw, nRead)
+    val (pointsRaw, quadtree_prime, cells_prime, tIndex1) =
+      if(settings.cached){
+        loadCachedData[Point]
+      } else {
+        loadData[Point]
       }
-      log(s"Read|$nRead")
-      logt(s"Read|$tRead")
+    val nIndex1 = cells_prime.size
+    log(s"Index1|$nIndex1")
+    logt(s"Index1|$tIndex1")
+    settings.partitions = nIndex1
 
-      val ((quadtree, cells), tIndex) = timer{
-        val quadtree = Quadtree.getQuadtreeFromPoints(pointsRaw)
-        val cells = quadtree.getLeafZones.asScala.map{ leaf =>
-          val cid = leaf.partitionId.toInt
-          val lin = leaf.lineage
-          val env = leaf.getEnvelope
+    val ( (stats_prime, nShuffle1), tShuffle1) = timer{
+      val stats_prime = pointsRaw.mapPartitionsWithIndex{ case(cid, it) =>
+        it.flatMap{ point =>
+          // make a copy of envelope to avoid modification...
+          val envelope = new Envelope(point.getX, point.getX, point.getY, point.getY)
+          envelope.expandBy(settings.epsilon)
+          quadtree_prime.findZones(new QuadRectangle(envelope)).asScala
+            .map{ zone =>
+              (zone.partitionId.toInt, point)
+            }.toList
+        }
+      }.groupBy{_._1}.cache
 
-          cid -> Cell(env, cid, lin)
-        }.toMap
-        quadtree.dropElements()
-        (quadtree, cells)
-      }
-      val nIndex = cells.size
-      log(s"Index|$nIndex")
-      logt(s"Index|$tIndex")
+      val nStats_prime = stats_prime.count
 
-      (pointsRaw, quadtree, cells)
+      (stats_prime, nStats_prime)
     }
-    settings.partitions = cells.size
+    log(s"Shuffle1|$nShuffle1")
+    logt(s"Shuffle1|$tShuffle1")
 
-    debug{ Quadtree.save(quadtree, "/tmp/edgesCells.wkt") }
 
+    /*** Computing statistics ***/
+    val (_, tStats) = timer{
+      val stats = stats_prime.map{ case(cid, it) =>
+          val tree = new com.vividsolutions.jts.index.strtree.STRtree()
+          val points = it.map(_._2).toList
+          points.foreach{ point =>
+            tree.insert(point.getEnvelopeInternal, point)
+          }
+          val nPairs = points.map{ point =>
+            // make a copy of envelope to avoid modification...
+            val envelope = new Envelope(point.getX, point.getX, point.getY, point.getY)
+            envelope.expandBy(settings.epsilon)
+            val neighbourhood = tree.query(envelope).asScala.map{_.asInstanceOf[Point]}
+            val pairs = for{
+              p2 <- neighbourhood
+              if{
+                val id1 = point.getUserData.asInstanceOf[Data].id 
+                val id2 = p2.getUserData.asInstanceOf[Data].id
+
+                id1 < id2 && point.distance(p2) < settings.epsilon_prime
+              }
+            } yield {
+              1
+            }
+            pairs.size
+          }.sum
+          (cid, nPairs)
+      }.collect
+
+      for{
+        key  <- cells_prime.keys
+        stat <- stats
+        if( cells_prime(key).cid == stat._1 )
+          } yield {
+        cells_prime(key).nPairs = stat._2
+      }
+
+      debug{
+        save("/tmp/edgesCellsStats.wkt"){
+          cells_prime.values.map{_.wkt + "\n"}.toList
+        }
+      }
+    }
+    logt(s"Stats|$tStats")
+
+    val ( (quadtree, cells), tIndex2) = timer{
+      if(settings.dense) {
+        val (changes_prime, no_changes) = cells_prime.values
+          .partition(_.nPairs > settings.density)
+        val changes = changes_prime.flatMap(cell => createInnerGrid(cell, squared = true))
+          .map{ envelope => new Cell(envelope, 0, "", true)}.toList
+        val mbrs_prime = (changes ++ no_changes).zipWithIndex
+          .map{ case(mbr, id) => mbr.copy(cid = id) }
+        val mbrs = mbrs_prime.map{cell => cell.cid -> cell}.toMap
+        val quad = new com.vividsolutions.jts.index.strtree.STRtree(2)
+        mbrs.values.foreach{ mbr => quad.insert(mbr.mbr, mbr) }
+
+        (quad, mbrs)
+      } else {
+        val quad = new com.vividsolutions.jts.index.strtree.STRtree(2)
+        cells_prime.values.foreach{ cell =>
+          quad.insert(cell.mbr, cell)
+        }
+
+        (quad, cells_prime)
+      }
+    }
+    val nIndex2 = cells.size
+    log(s"Index2|$nIndex2")
+    logt(s"Index2|$tIndex2")
+    settings.partitions = nIndex2
+
+    debug{
+      save("/tmp/edgesCells.wkt"){
+        cells.values.map{ mbr => mbr.wkt + "\n"}.toList
+      }
+    }
+
+    /* Repartition data across the cluster */
     val ( (pointsRDD, nShuffle), tShuffle) = timer{
       val pointsRDD = pointsRaw.mapPartitions{ points =>
         points.flatMap{ point =>
-          val envelope = point.getEnvelopeInternal
-          envelope.expandBy(settings.epsilon * 1.5)
-          val rectangle = new QuadRectangle(envelope)
-          quadtree.findZones(rectangle).asScala.map{ cell =>
-            val cid = cell.partitionId
+          val pad = (settings.epsilon_prime * 1.5) + settings.tolerance
+          val envelope = new Envelope(
+            point.getX - pad,
+            point.getX + pad,
+            point.getY - pad,
+            point.getY + pad
+          )
+          quadtree.query(envelope).asScala.map{ cell =>
+            val cid = cell.asInstanceOf[Cell].cid
 
             (cid, STPoint(point, cid))
           }
@@ -113,8 +184,8 @@ object MF {
       val nShuffle = pointsRDD.count
       (pointsRDD, nShuffle)
     }
-    log(s"Shuffle|$nShuffle")
-    logt(s"Shuffle|$tShuffle")
+    log(s"Shuffle2|$nShuffle")
+    logt(s"Shuffle2|$tShuffle")
 
     debug{
       save("/tmp/edgesPoints.wkt"){
@@ -128,9 +199,9 @@ object MF {
       val maximalsRDD = pointsRDD.mapPartitionsWithIndex{ case(cid, it) =>
         val cell = cells(cid)
         val points = it.toList
-        val (maximals, stats) = BFE.runParallel(points, cell)
+        val (maximals, stats) = MF_Utils.runBFEParallel(points, cell)
+
         debug{
-          println(s"CID=$cid")
           stats.print()
         }
 
@@ -158,6 +229,6 @@ object MF {
       //checkMF(maximalsMF)
     }
 
-    log(s"Done.|END")
+    log(s"END|")
   }
 }

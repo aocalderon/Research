@@ -1,21 +1,74 @@
 #!/bin/bash
 
-INPUT=$1
-EPSILON=$2
-MU=$3
-DELTA=$4
-CAPACITY=$5
-FRACTION=$6
-DEBUG=$7
-MASTER=$8
+POSITIONAL_ARGS=()
+while [[ $# -gt 0 ]]; do
+    case $1 in
+	-i|--input)
+	    INPUT="$2"
+	    shift
+	    shift
+	    ;;
+	-o|--output)
+	    OUTPUT="$2"
+	    shift
+	    shift
+	    ;;
+	-c|--capacity)
+	    CAPACITY="$2"
+	    shift # past argument
+	    shift # past value
+	    ;;
+	-f|--fraction)
+	    FRACTION="$2"
+	    shift # past argument
+	    shift # past value
+	    ;;
+	-t|--tolerance)
+	    TOLERANCE="$2"
+	    shift # past argument
+	    shift # past value
+	    ;;
+	-m|--master)
+	    MASTER="$2"
+	    shift # past argument
+	    shift # past value
+	    ;;	
+	-x|--executors)
+	    EXECUTORS=$2
+	    shift # past argument
+	    shift # past value
+	    ;;	
+	--debug)
+	    DEBUG="--debug"
+	    shift # past argument
+	    ;;
+	-*|--*)
+	    echo "Unknown option $1"
+	    exit 1
+	    ;;
+	*)
+	    POSITIONAL_ARGS+=("$1") # save positional arg
+	    shift # past argument
+	    ;;
+    esac
+done
+set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
 
-WAIT="0s"
-EXECUTORS=12
+if [ -v INPUT ];     then echo "INPUT      = $INPUT";     fi
+if [ -v OUTPUT ];    then echo "OUTPUT     = $OUTPUT";    else OUTPUT="tmp/";  echo "OUTPUT     = $OUTPUT";    fi
+if [ -v CAPACITY ];  then echo "CAPACITY   = $CAPACITY";  else CAPACITY=100;   echo "CAPACITY   = $CAPACITY";  fi
+if [ -v FRACTION ];  then echo "FRACTION   = $FRACTION";  else FRACTION=1;     echo "FRACTION   = $FRACTION";  fi
+if [ -v TOLERANCE ]; then echo "TOLERANCE  = $TOLERANCE"; else TOLERANCE=1e-3; echo "TOLERANCE  = $TOLERANCE"; fi
+if [ -v MASTER ];    then echo "MASTER     = $MASTER";    else MASTER="yarn";  echo "MASTER     = $MASTER";    fi
+if [ -v EXECUTORS ]; then echo "EXECUTORS  = $EXECUTORS"; else EXECUTORS=12;   echo "EXECUTORS  = $EXECUTORS"; fi
+if [ -v DEBUG ];     then echo "DEBUG      = YES";        else DEBUG="";       fi
+
 CORES=9
 DMEMORY=35g
 EMEMORY=20g
 MAX_RESULT_SIZE="4G"
 KRYO_BUFFER_MAX="256m"
+WAIT="0s"
 
 JARS_PATH=$HOME/Spark/2.4/jars
 
@@ -46,7 +99,7 @@ PARAMS=(
 	    --num-executors $EXECUTORS --executor-cores $CORES \
 	    --executor-memory $EMEMORY --driver-memory $DMEMORY \
 	    --class $CLASS $JAR \
-	    --input $INPUT $DEBUG --epsilon $EPSILON --mu $MU --capacity $CAPACITY --fraction $FRACTION
+	    --input $INPUT --output $OUTPUT --capacity $CAPACITY --fraction $FRACTION $DEBUG
 )
 
 echo "spark-submit ${PARAMS[@]}"

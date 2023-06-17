@@ -39,12 +39,14 @@ object QuadtreePartitioner {
       appId = spark.sparkContext.applicationId,
       tolerance = params.tolerance(),
       tag = params.tag(),
-      debug = params.debug()
+      debug = params.debug(),
+      output = params.output()
     )
 
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
     printParams(args)
+    log(s"START|")
 
     val ( (pointsRaw, nRead), tRead) = timer{
       val pointsRaw = spark.read
@@ -68,7 +70,7 @@ object QuadtreePartitioner {
     logt(s"Read|$tRead")
 
     val ( (quadtree, cells), tIndex) = timer{
-      val quadtree = Quadtree.getQuadtreeFromPoints(pointsRaw)
+      val quadtree = Quadtree.getQuadtreeFromPoints(pointsRaw, expand = false)
       val cells = quadtree.getLeafZones.asScala.map{ leaf =>
         val cid = leaf.partitionId
         val lin = leaf.lineage
@@ -76,11 +78,10 @@ object QuadtreePartitioner {
 
         cid -> Cell(env, cid, lin)
       }.toMap
-      quadtree.dropElements()
+
       (quadtree, cells)
     }
     val nIndex = cells.size
-    settings.partitions = cells.size
     log(s"Index|$nIndex")
     logt(s"Index|$tIndex")
 
@@ -91,7 +92,7 @@ object QuadtreePartitioner {
           val envelope = point.getEnvelopeInternal
           val rectangle = new QuadRectangle(envelope)
           quadtree.findZones(rectangle).asScala.map{ cell =>
-            val cid = cell.partitionId
+            val cid = cell.partitionId.toInt
 
             (cid, STPoint(point, cid).toString)
           }
@@ -106,16 +107,17 @@ object QuadtreePartitioner {
     log(s"Shuffle|$nShuffle")
     logt(s"Shuffle|$tShuffle")
 
-    timer{
-      val output = s"PFlock/LA/${settings.dataset}"
-      val output_quadtree = getOutputName(output, "quadtree", "wkt")
-      Quadtree.save(quadtree, output_quadtree) 
-      pointsRDD.map(_._2).toDF("point").write.mode(SaveMode.Overwrite)
-        .text(output)
+    val (_, tSave) = timer{
+      val (hdfs_name, fs_name) = getHDFSandFSnames("quadtree", "wkt")
+      Quadtree.save(quadtree, fs_name) 
+      pointsRDD.map(_._2).toDF("point").write
+        .mode(SaveMode.Overwrite)
+        .text(hdfs_name)
     }
+    logt(s"Save|$tSave")
 
     spark.close()
 
-    log(s"Done.|END")
+    log(s"END|")
   }
 }

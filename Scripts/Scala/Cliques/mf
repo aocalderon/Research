@@ -1,17 +1,92 @@
 #!/bin/bash
 
-INPUT=$1
-EPSILON=$2
-MU=$3
-DELTA=$4
-CAPACITY=$5
-FRACTION=$6
-MASTER=$7
-DEBUG=$8
-CACHED=$9
+POSITIONAL_ARGS=()
+while [[ $# -gt 0 ]]; do
+    case $1 in
+	-i|--input)
+	    INPUT="$2"
+	    shift
+	    shift
+	    ;;
+	-e|--epsilon)
+	    EPSILON="$2"
+	    shift # past argument
+	    shift # past value
+	    ;;
+	-m|--mu)
+	    MU="$2"
+	    shift # past argument
+	    shift # past value
+	    ;;
+	-d|--delta)
+	    DELTA="$2"
+	    shift # past argument
+	    shift # past value
+	    ;;
+	-c|--capacity)
+	    CAPACITY="$2"
+	    shift # past argument
+	    shift # past value
+	    ;;
+	-f|--fraction)
+	    FRACTION="$2"
+	    shift # past argument
+	    shift # past value
+	    ;;
+	-n|--density)
+	    DENSITY="$2"
+	    shift # past argument
+	    shift # past value
+	    ;;
+	-t|--tolerance)
+	    TOLERANCE="$2"
+	    shift # past argument
+	    shift # past value
+	    ;;
+	-m|--master)
+	    MASTER="$2"
+	    shift # past argument
+	    shift # past value
+	    ;;	
+	-x|--executors)
+	    EXECUTORS=$2
+	    shift # past argument
+	    shift # past value
+	    ;;	
+	--debug)
+	    DEBUG="--debug"
+	    shift # past argument
+	    ;;
+	--cached)
+	    CACHED="--cached"
+	    shift # past argument
+	    ;;
+	-w|--wait)
+	    WAIT="$2"
+	    shift # past argument
+	    shift # past value
+	    ;;
+	-*|--*)
+	    echo "Unknown option $1"
+	    exit 1
+	    ;;
+	*)
+	    POSITIONAL_ARGS+=("$1") # save positional arg
+	    shift # past argument
+	    ;;
+    esac
+done
+set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
 
-WAIT="0s"
-EXECUTORS=12
+if [ -v MASTER ];    then echo "MASTER     = ${MASTER}";  else MASTER="yarn"; echo "MASTER     = yarn";       fi
+if [ -v EXECUTORS ]; then echo "EXECUTORS  = $EXECUTORS"; else EXECUTORS=12;  echo "EXECUTORS  = $EXECUTORS"; fi
+if [ -v WAIT ];      then echo "WAIT       = $WAIT";      else WAIT="0s";     echo "WAIT       = $WAIT";      fi
+if [ -v CAPACITY ];  then echo "CAPACITY   = $CAPACITY";  else CAPACITY=100; fi
+if [ -v FRACTION ];  then echo "FRACTION   = $FRACTION";  else FRACTION=1;   fi
+if [ -v DENSITY ];   then echo "DENSITY    = $DENSITY";   else DENSITY=1000; fi
+if [ -v DEBUG ];     then echo "DEBUG      = YES";        else DEBUG="";     fi
+if [ -v CACHED ];    then echo "CACHED     = YES";        else CACHED="";    fi
+
 CORES=9
 DMEMORY=35g
 EMEMORY=20g
@@ -47,7 +122,7 @@ PARAMS=(
 	    --num-executors $EXECUTORS --executor-cores $CORES \
 	    --executor-memory $EMEMORY --driver-memory $DMEMORY \
 	    --class $CLASS $JAR \
-	    --input $INPUT $DEBUG --epsilon $EPSILON --mu $MU --capacity $CAPACITY --fraction $FRACTION $CACHED
+	    --input $INPUT $DEBUG $CACHED --epsilon $EPSILON --mu $MU --delta $DELTA --capacity $CAPACITY --fraction $FRACTION --density $DENSITY
 )
 
 echo "spark-submit ${PARAMS[@]}"
