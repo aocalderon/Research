@@ -1,6 +1,6 @@
 package edu.ucr.dblab.pflock
 
-import com.vividsolutions.jts.geom.{GeometryFactory, Envelope, Coordinate, Point}
+import org.locationtech.jts.geom.{GeometryFactory, Envelope, Coordinate, Point}
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.TaskContext

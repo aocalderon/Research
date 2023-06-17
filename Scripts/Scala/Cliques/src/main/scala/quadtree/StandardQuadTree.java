@@ -1,5 +1,4 @@
 /*
- * FILE: StandardQuadTree
  * Copyright (c) 2015 - 2019 GeoSpark Development Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,15 +15,12 @@
  */
 package edu.ucr.dblab.pflock.quadtree;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.Geometry;
-
-import org.apache.commons.lang3.mutable.MutableInt;
-import org.geotools.geometry.jts.GeometryClipper;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.MultiPoint;
+import org.locationtech.jts.geom.Geometry;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -68,8 +64,8 @@ public class StandardQuadTree<T> implements Serializable {
         this.maxLevel = maxLevel;
         this.zone = definition;
         this.level = level;
-	this.epsilon = 0.0;
-	this.factor = 4;
+        this.epsilon = 0.0;
+        this.factor = 4;
     }
 
     public StandardQuadTree(QuadRectangle definition, int level, int maxItemsPerZone, int maxLevel, double epsilon, int factor)
@@ -78,8 +74,8 @@ public class StandardQuadTree<T> implements Serializable {
         this.maxLevel = maxLevel;
         this.zone = definition;
         this.level = level;
-	this.epsilon = epsilon;
-	this.factor = factor;
+        this.epsilon = epsilon;
+        this.factor = factor;
     }
 
     public StandardQuadTree<T>[] getRegions(){
@@ -106,10 +102,10 @@ public class StandardQuadTree<T> implements Serializable {
     private int findRegion(QuadRectangle r, boolean split)
     {
         int region = REGION_SELF;
-	double w = this.getZone().width;
-	double h = this.getZone().height;
-	double e = this.factor * this.epsilon;
-	boolean too_small = w <= e || h <= e;
+        double w = this.getZone().width;
+        double h = this.getZone().height;
+        double e = this.factor * this.epsilon;
+        boolean too_small = w <= e || h <= e;
         if (!too_small && nodeNum >= maxItemsPerZone && this.level < maxLevel) {
             // we don't want to split if we just need to retrieve
             // the region, not inserting an element
@@ -366,32 +362,6 @@ public class StandardQuadTree<T> implements Serializable {
         return elements;
     }
 
-    public List<Point> getPointsByEnvelope(Envelope e){
-	QuadRectangle r = new QuadRectangle(e);
-	List<T> candidates = new ArrayList<T>();
-	for(QuadRectangle zone: this.findZones(r)){
-	    candidates.addAll( this.getElements(zone) );
-	}
-	Point[] points = new Point[candidates.size()];
-	int n = 0;
-	for(T candidate: candidates){
-	    Point p = (Point) candidate;
-	    points[n++] = p;
-	}
-	GeometryClipper clipper = new GeometryClipper(e);
-	GeometryFactory geofactory = new GeometryFactory();
-	MultiPoint pointset  = geofactory.createMultiPoint(points);
-	Geometry clipped = clipper.clip(pointset, true);
-	List<Point> results = new ArrayList<>();
-	if(clipped != null){
-	    for(int i = 0; i < clipped.getNumGeometries(); i++){
-		results.add( (Point) clipped.getGeometryN(i) );
-	    }
-	}
-	return results;
-    }
-
-
     public void assignPartitionIds()
     {
         traverse(new Visitor<T>()
@@ -458,6 +428,7 @@ public class StandardQuadTree<T> implements Serializable {
         return leafZones;
     }
 
+    /*
     public int getTotalNumLeafNode()
     {
         final MutableInt leafCount = new MutableInt(0);
@@ -475,6 +446,7 @@ public class StandardQuadTree<T> implements Serializable {
 
         return leafCount.getValue();
     }
+    */
 
     /**
      * Find the zone that fully contains this query point
@@ -512,8 +484,7 @@ public class StandardQuadTree<T> implements Serializable {
                 if (zone.contains(x, y)) {
                     // This should not happen
                     throw new Exception("[GeoSparkViz][StandardQuadTree][getParentZone] this leaf node doesn't have enough depth. " +
-                            "Please check ForceGrowUp. Expected: " + minLevel + " Actual: " + level + ". Query point: " + x + " " + y +
-                            ". Tree statistics, total leaf nodes: " + getTotalNumLeafNode());
+                            "Please check ForceGrowUp. Expected: " + minLevel + " Actual: " + level + ". Query point: " + x + " " + y + ".");
                 }
                 else {
                     throw new Exception("[GeoSparkViz][StandardQuadTree][getParentZone] this pixel is out of the quad tree boundary.");

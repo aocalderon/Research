@@ -1,6 +1,6 @@
 package edu.ucr.dblab.pflock
 
-import com.vividsolutions.jts.geom.{PrecisionModel, GeometryFactory}
+import org.locationtech.jts.geom.{PrecisionModel, GeometryFactory}
 import org.apache.spark.TaskContext
 import org.slf4j.{Logger, LoggerFactory}
 import scala.collection.JavaConverters._

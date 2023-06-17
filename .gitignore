@@ -39,6 +39,7 @@ Scripts/Scala/DSTester/.classpath
 Scripts/Scala/DSTester/.project
 Scripts/Scala/DSTester/.settings/*
 
+Scripts/Scala/SITester/.bsp/*
 Scripts/Scala/SITester/target/*
 Scripts/Scala/SITester/project/*
 Scripts/Scala/SITester/.ensime
@@ -47,6 +48,10 @@ Scripts/Scala/SITester/.classpath
 Scripts/Scala/SITester/.project
 Scripts/Scala/SITester/.settings/*
 
+Scripts/Scala/Cliques/.bsp/*
+Scripts/Scala/Cliques/.bloop/*
+Scripts/Scala/Cliques/.metals/*
+Scripts/Scala/Cliques/.vscode/*
 Scripts/Scala/Cliques/.idea/*
 Scripts/Scala/Cliques/.idea/workspace.xml
 Scripts/Scala/Cliques/target/*

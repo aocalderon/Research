@@ -9,7 +9,9 @@ val SedonaVersion = "1.3.1"
 libraryDependencies += "org.apache.spark" %% "spark-core" % SparkVersion
 libraryDependencies += "org.apache.spark" %% "spark-sql" % SparkVersion
 
-libraryDependencies += "org.datasyslab" % "geospark" % SedonaVersion
+//libraryDependencies += "org.datasyslab" % "geospark" % SedonaVersion
+
+libraryDependencies += "org.locationtech.jts" % "jts-core" % "1.19.0"
 
 libraryDependencies += "org.jgrapht" % "jgrapht-core" % "1.4.0"
 
@@ -22,6 +24,4 @@ libraryDependencies += "org.rogach" %% "scallop" % "4.0.1"
 
 libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25"
 
-libraryDependencies += "com.github.plokhotnyuk.rtree2d" %% "rtree2d-core" % "0.11.9"
-libraryDependencies += "com.github.davidmoten" % "rtree2" % "0.9.3"
 libraryDependencies += "org.spire-math" %% "archery" % "0.6.0"

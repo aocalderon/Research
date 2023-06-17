@@ -1,13 +1,13 @@
 package edu.ucr.dblab.pflock
 
-import com.vividsolutions.jts.geom.{PrecisionModel, GeometryFactory}
-import com.vividsolutions.jts.geom.{Envelope, Coordinate, Point}
+import org.locationtech.jts.geom.{PrecisionModel, GeometryFactory}
+import org.locationtech.jts.geom.{Envelope, Coordinate, Point}
+import org.locationtech.jts.index.quadtree.{Quadtree => JTSQuadtree}
 
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
 
-import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{SparkSession, SaveMode}
@@ -25,7 +25,6 @@ object QuadtreePartitioner {
 
     val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
-      .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .appName("QuadtreePartitioner").getOrCreate()
     import spark.implicits._
 

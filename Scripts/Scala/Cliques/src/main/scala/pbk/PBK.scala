@@ -9,7 +9,7 @@ Bron–Kerbosch Algorithm with pivot selection.
 
 import org.jgrapht.graph.{SimpleGraph, DefaultEdge}
 import org.jgrapht.Graphs
-import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Point, Coordinate}
+import org.locationtech.jts.geom.{GeometryFactory, PrecisionModel, Point, Coordinate}
 import scala.collection.mutable.{ListBuffer, HashSet}
 import scala.collection.JavaConverters._
 

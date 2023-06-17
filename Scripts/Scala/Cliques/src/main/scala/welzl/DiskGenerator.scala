@@ -1,6 +1,6 @@
 package edu.ucr.dblab.pflock.welzl
 
-import com.vividsolutions.jts.geom.{Coordinate, GeometryFactory, Point}
+import org.locationtech.jts.geom.{Coordinate, GeometryFactory, Point}
 import org.apache.commons.numbers.fraction.BigFraction
 
 object DiskGenerator {

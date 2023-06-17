@@ -1,6 +1,6 @@
 package edu.ucr.dblab.pflock.welzl
 
-import com.vividsolutions.jts.geom.{Coordinate, GeometryFactory, Point, PrecisionModel}
+import org.locationtech.jts.geom.{Coordinate, GeometryFactory, Point, PrecisionModel}
 import org.apache.commons.geometry.enclosing.euclidean.twod.WelzlEncloser2D
 import org.apache.commons.geometry.enclosing.EnclosingBall
 import org.apache.commons.geometry.core.precision.DoublePrecisionContext

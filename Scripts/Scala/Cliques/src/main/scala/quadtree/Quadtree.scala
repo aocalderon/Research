@@ -1,7 +1,7 @@
 package edu.ucr.dblab.pflock.quadtree
 
-import com.vividsolutions.jts.geom.{GeometryFactory, Envelope, Coordinate, Polygon, Point}
-import com.vividsolutions.jts.io.WKTReader
+import org.locationtech.jts.geom.{GeometryFactory, Envelope, Coordinate, Polygon, Point}
+import org.locationtech.jts.io.WKTReader
 import scala.collection.JavaConverters._
 import java.io.FileWriter
 import scala.io.Source

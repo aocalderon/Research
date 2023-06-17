@@ -1,6 +1,6 @@
 package edu.ucr.dblab.pflock.welzl
 
-import com.vividsolutions.jts.geom.Point
+import org.locationtech.jts.geom.Point
 
 case class EnclosingDisk(center: Point, radius: Double, support: Set[Point]) {
 

@@ -1,9 +1,8 @@
 package edu.ucr.dblab.pflock
 
-import com.vividsolutions.jts.geom.{PrecisionModel, GeometryFactory}
-import com.vividsolutions.jts.geom.{Envelope, Coordinate, Point}
-import com.vividsolutions.jts.index.strtree.STRtree
-import org.datasyslab.geospark.spatialRDD.SpatialRDD
+import org.locationtech.jts.geom.{PrecisionModel, GeometryFactory}
+import org.locationtech.jts.geom.{Envelope, Coordinate, Point}
+import org.locationtech.jts.index.strtree.STRtree
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession

@@ -1,6 +1,6 @@
 package edu.ucr.dblab.pflock.welzl
 
-import com.vividsolutions.jts.geom.{Coordinate, GeometryFactory, Point, PrecisionModel}
+import org.locationtech.jts.geom.{Coordinate, GeometryFactory, Point, PrecisionModel}
 import edu.ucr.dblab.pflock.welzl.sec.SmallestEnclosingCircle
 import scala.collection.mutable.ListBuffer
 import collection.JavaConverters._

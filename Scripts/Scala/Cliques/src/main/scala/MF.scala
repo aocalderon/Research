@@ -1,13 +1,14 @@
 package edu.ucr.dblab.pflock
 
-import com.vividsolutions.jts.geom.{PrecisionModel, GeometryFactory}
-import com.vividsolutions.jts.geom.{Envelope, Coordinate, Point}
+import org.locationtech.jts.geom.{PrecisionModel, GeometryFactory}
+import org.locationtech.jts.geom.{Envelope, Coordinate, Point}
+import org.locationtech.jts.index.strtree._
+import org.locationtech.jts.index.quadtree._
 
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
 
-import org.datasyslab.geospark.serde.GeoSparkKryoRegistrator
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
@@ -25,7 +26,6 @@ object MF {
 
     implicit val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
-      .config("spark.kryo.registrator", classOf[GeoSparkKryoRegistrator].getName)
       .appName("MF").getOrCreate()
     import spark.implicits._
 
@@ -84,7 +84,7 @@ object MF {
     /*** Computing statistics ***/
     val (_, tStats) = timer{
       val stats = stats_prime.map{ case(cid, it) =>
-          val tree = new com.vividsolutions.jts.index.strtree.STRtree()
+          val tree = new STRtree()
           val points = it.map(_._2).toList
           points.foreach{ point =>
             tree.insert(point.getEnvelopeInternal, point)
@@ -135,12 +135,12 @@ object MF {
         val mbrs_prime = (changes ++ no_changes).zipWithIndex
           .map{ case(mbr, id) => mbr.copy(cid = id) }
         val mbrs = mbrs_prime.map{cell => cell.cid -> cell}.toMap
-        val quad = new com.vividsolutions.jts.index.strtree.STRtree(2)
+        val quad = new STRtree(2)
         mbrs.values.foreach{ mbr => quad.insert(mbr.mbr, mbr) }
 
         (quad, mbrs)
       } else {
-        val quad = new com.vividsolutions.jts.index.strtree.STRtree(2)
+        val quad = new STRtree(2)
         cells_prime.values.foreach{ cell =>
           quad.insert(cell.mbr, cell)
         }

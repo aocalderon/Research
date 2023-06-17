@@ -1,5 +1,4 @@
 /*
- * FILE: QuadRectangle
  * Copyright (c) 2015 - 2019 GeoSpark Development Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +15,10 @@
  */
 package edu.ucr.dblab.pflock.quadtree;
 
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Envelope;
 import java.io.Serializable;
 
-public class QuadRectangle
-        implements Serializable
+public class QuadRectangle implements Serializable
 {
     public final double x, y, width, height;
     public Integer partitionId = null;
@@ -61,25 +59,9 @@ public class QuadRectangle
         return r.x >= this.x && r.x + r.width <= this.x + this.width
                 && r.y >= this.y && r.y + r.height <= this.y + this.height;
     }
-    /*
-    public boolean contains(int x, int y) {
-        return this.width > 0 && this.height > 0
-                && x >= this.x && x <= this.x + this.width
-                && y >= this.y && y <= this.y + this.height;
-    }
-    */
 
     public int getUniqueId()
     {
-        /*
-        Long uniqueId = Long.valueOf(-1);
-        try {
-            uniqueId = Long.valueOf(RasterizationUtils.Encode2DTo1DId(resolutionX,resolutionY,(int)this.x,(int)this.y));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return uniqueId;
-        */
         return hashCode();
     }
 

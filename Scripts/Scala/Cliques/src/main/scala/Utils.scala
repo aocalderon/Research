@@ -1,11 +1,10 @@
 package edu.ucr.dblab.pflock
 
-import com.vividsolutions.jts.algorithm.MinimumBoundingCircle
-import com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Geometry}
-import com.vividsolutions.jts.geom.{Envelope, Coordinate, Point, Polygon}
-import com.vividsolutions.jts.index.strtree.STRtree
-import com.vividsolutions.jts.io.WKTReader
-import org.geotools.geometry.jts.JTS
+import org.locationtech.jts.algorithm.MinimumBoundingCircle
+import org.locationtech.jts.geom.{GeometryFactory, PrecisionModel, Geometry}
+import org.locationtech.jts.geom.{Envelope, Coordinate, Point, Polygon}
+import org.locationtech.jts.index.strtree.STRtree
+import org.locationtech.jts.io.WKTReader
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.TaskContext
@@ -112,9 +111,9 @@ object Utils {
 
     def contains(disk: Disk): Boolean = mbr.contains(disk.X, disk.Y)
 
-    def toText: String = JTS.toGeometry(mbr).toText
+    def toText(implicit g: GeometryFactory): String = toGeometry(mbr).toText
 
-    def wkt: String = s"${toText}\t$cid\t$lineage\t$nPairs"
+    def wkt(implicit g: GeometryFactory): String = s"${toText}\t$cid\t$lineage\t$nPairs"
   }
 
   case class Disk(center: Point, pids: List[Int],
@@ -233,7 +232,7 @@ object Utils {
             val y1 = miny + (j * epsilon)
             val y2 = y1 + epsilon
             val envelope = new Envelope(x1,x2,y1,y2)
-            val polygon = JTS.toGeometry(envelope)
+            val polygon = toGeometry(envelope)
             val wkt = polygon.toText
             val k = encode(i, j)
 
@@ -862,6 +861,19 @@ object Utils {
         s"$wkt\t$id\n"
       }
     }
+  }
+
+  def toGeometry(envelope: Envelope)(implicit geofactory: GeometryFactory): Polygon = {
+    val minX = envelope.getMinX
+    val minY = envelope.getMinY
+    val maxX = envelope.getMaxX
+    val maxY = envelope.getMaxY
+    val p1 = new Coordinate(minX, minY)
+    val p2 = new Coordinate(maxX, minY)
+    val p3 = new Coordinate(maxX, maxY)
+    val p4 = new Coordinate(maxX, maxY)
+    val coords = Array(p1, p2, p3, p4, p1)
+    geofactory.createPolygon(coords)
   }
 
   def clocktime: Long = System.nanoTime()
