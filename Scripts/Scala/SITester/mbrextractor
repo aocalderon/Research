@@ -14,7 +14,7 @@ JARS=${JARS},${JARS_PATH}/slf4j-api-1.7.25.jar
 MASTER=local[1]
 
 LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
-CLASS=edu.ucr.dblab.sitester.SITester
+CLASS=edu.ucr.dblab.sitester.MBRExtractor
 JAR=$HOME/Research/Scripts/Scala/SITester/target/scala-2.11/sitester_2.11-0.1.jar
 
 PARAMS=(
@@ -23,7 +23,7 @@ PARAMS=(
     --jars $JARS \
     --master $MASTER --deploy-mode client \
     --class $CLASS $JAR
-    --input $INPUT --epsilon $EPSILON --size $SIZE $DEBUG
+    --input $INPUT 
 )
 
 echo "spark-submit ${PARAMS[@]}"
