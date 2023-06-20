@@ -3,7 +3,6 @@ package edu.ucr.dblab.pflock
 import org.locationtech.jts.geom.{PrecisionModel, GeometryFactory}
 import org.locationtech.jts.geom.{Envelope, Coordinate, Point}
 import org.locationtech.jts.index.strtree._
-import org.locationtech.jts.index.quadtree._
 
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -49,6 +48,7 @@ object MF {
     printParams(args)
     log(s"START|")
 
+    /*** Load data ***/
     val (pointsRaw, quadtree_prime, cells_prime, tIndex1) =
       if(settings.cached){
         loadCachedData[Point]
@@ -60,6 +60,7 @@ object MF {
     logt(s"Index1|$tIndex1")
     settings.partitions = nIndex1
 
+    /*** Group by Cell ***/
     val ( (stats_prime, nShuffle1), tShuffle1) = timer{
       val stats_prime = pointsRaw.mapPartitionsWithIndex{ case(cid, it) =>
         it.flatMap{ point =>
@@ -81,7 +82,7 @@ object MF {
     logt(s"Shuffle1|$tShuffle1")
 
 
-    /*** Computing statistics ***/
+    /*** Compute statistics per Cell ***/
     val (_, tStats) = timer{
       val stats = stats_prime.map{ case(cid, it) =>
           val tree = new STRtree()
@@ -126,26 +127,37 @@ object MF {
     }
     logt(s"Stats|$tStats")
 
+    /*** Repartition dense cells ***/
     val ( (quadtree, cells), tIndex2) = timer{
-      if(settings.dense) {
-        val (changes_prime, no_changes) = cells_prime.values
-          .partition(_.nPairs > settings.density)
-        val changes = changes_prime.flatMap(cell => createInnerGrid(cell, squared = true))
-          .map{ envelope => new Cell(envelope, 0, "", true)}.toList
-        val mbrs_prime = (changes ++ no_changes).zipWithIndex
-          .map{ case(mbr, id) => mbr.copy(cid = id) }
-        val mbrs = mbrs_prime.map{cell => cell.cid -> cell}.toMap
-        val quad = new STRtree(2)
-        mbrs.values.foreach{ mbr => quad.insert(mbr.mbr, mbr) }
+      if(true) {
+        if(settings.dense){
+          val (changes_prime, no_changes) = cells_prime.values
+            .partition(_.nPairs > settings.density)
+          val changes = changes_prime.flatMap(cell => createInnerGrid(cell, squared = true))
+            .map{ envelope => new Cell(envelope, 0, "", true)}.toList
+          val mbrs_prime = (changes ++ no_changes).zipWithIndex
+            .map{ case(mbr, id) => mbr.copy(cid = id) }
+          val mbrs = mbrs_prime.map{cell => cell.cid -> cell}.toMap
+          val quad = new STRtree(2)
+          mbrs.values.foreach{ mbr => quad.insert(mbr.mbr, mbr) }
 
-        (quad, mbrs)
+          (quad, mbrs)
+        } else {
+          val quad = new STRtree(2)
+          cells_prime.values.foreach{ cell =>
+            quad.insert(cell.mbr, cell)
+          }
+
+          (quad, cells_prime)
+        }
       } else {
+        val cells = Quadtree.loadCells("/tmp/edgesCellsStats.wkt")
         val quad = new STRtree(2)
         cells_prime.values.foreach{ cell =>
           quad.insert(cell.mbr, cell)
         }
 
-        (quad, cells_prime)
+        (quad, cells)
       }
     }
     val nIndex2 = cells.size
@@ -159,7 +171,7 @@ object MF {
       }
     }
 
-    /* Repartition data across the cluster */
+    /*** Repartition data across the cluster ***/
     val ( (pointsRDD, nShuffle), tShuffle) = timer{
       val pointsRDD = pointsRaw.mapPartitions{ points =>
         points.flatMap{ point =>
@@ -195,10 +207,12 @@ object MF {
       }
     }
 
+    /*** Run BFE at each cell ***/
     val ( (maximalsRDD, nRun), tRun) = timer{
       val maximalsRDD = pointsRDD.mapPartitionsWithIndex{ case(cid, it) =>
         val cell = cells(cid)
         val points = it.toList
+
         val (maximals, stats) = MF_Utils.runBFEParallel(points, cell)
 
         debug{

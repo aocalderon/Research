@@ -74,7 +74,18 @@ object Tester {
     }
     val bsp = BSPartitioner(test, params.epsilon(), params.capacity(), pointsOnly = true)
     bsp.printPartitions("/tmp/edgesPStark.wkt")
-    val partionedCountries = test.partitionBy(bsp).foreach{println}
+    val pointsRDD = test.partitionBy(bsp).cache
+    pointsRDD.count
+
+    save("/tmp/edgesPStark.wkt"){
+      (0 until bsp.numPartitions).map{ i =>
+        val cell = bsp.partitionBounds(i)
+        val wkt = cell.extent.wkt
+        val cid = cell.id
+
+        s"$wkt\t$cid\n"
+      }
+    }
 
     spark.close()
 

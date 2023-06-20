@@ -107,6 +107,22 @@ object Quadtree {
   /* Quite specific to PFlock project */
   import org.apache.spark.rdd.RDD
   import edu.ucr.dblab.pflock.Utils.{Settings, Cell}
+  def loadCells(filename: String, wkt_position: Int = 0, id_position: Int = 1)
+    (implicit G: GeometryFactory): Map[Int, Cell] = {
+
+    val reader = new WKTReader(G)
+    val buffer = Source.fromFile(filename)
+    val cells = buffer.getLines.map{ line =>
+      val arr = line.split("\t")
+      val envelope = reader.read(arr(wkt_position)).asInstanceOf[Polygon].getEnvelopeInternal
+      val id = arr(id_position).toInt
+      (id, Cell(mbr = envelope, cid = id, lineage = ""))
+    }.toMap
+    buffer.close()
+
+    cells
+  }
+
   def getQuadtreeFromPoints(points: RDD[Point], expand: Boolean = true, level: Int = 0,
     maxLevel: Int = 16) (implicit S: Settings): StandardQuadTree[Point] = {
 

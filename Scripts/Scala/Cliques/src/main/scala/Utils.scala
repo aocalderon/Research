@@ -111,7 +111,7 @@ object Utils {
 
     def contains(disk: Disk): Boolean = mbr.contains(disk.X, disk.Y)
 
-    def toText(implicit g: GeometryFactory): String = toGeometry(mbr).toText
+    def toText(implicit g: GeometryFactory): String = g.toGeometry(mbr).toText
 
     def wkt(implicit g: GeometryFactory): String = s"${toText}\t$cid\t$lineage\t$nPairs"
   }
@@ -232,7 +232,7 @@ object Utils {
             val y1 = miny + (j * epsilon)
             val y2 = y1 + epsilon
             val envelope = new Envelope(x1,x2,y1,y2)
-            val polygon = toGeometry(envelope)
+            val polygon = geofactory.toGeometry(envelope)
             val wkt = polygon.toText
             val k = encode(i, j)
 
@@ -863,19 +863,6 @@ object Utils {
     }
   }
 
-  def toGeometry(envelope: Envelope)(implicit geofactory: GeometryFactory): Polygon = {
-    val minX = envelope.getMinX
-    val minY = envelope.getMinY
-    val maxX = envelope.getMaxX
-    val maxY = envelope.getMaxY
-    val p1 = new Coordinate(minX, minY)
-    val p2 = new Coordinate(maxX, minY)
-    val p3 = new Coordinate(maxX, maxY)
-    val p4 = new Coordinate(maxX, maxY)
-    val coords = Array(p1, p2, p3, p4, p1)
-    geofactory.createPolygon(coords)
-  }
-
   def clocktime: Long = System.nanoTime()
 
   def log(msg: String)(implicit logger: Logger, settings: Settings): Unit = {
@@ -1054,7 +1041,10 @@ object Utils {
   }
 
   def printParams(args: Seq[String])(implicit S: Settings): Unit = {
-    val p = args.filterNot(_ == "--debug")
+    val p = args.filterNot(param => param == "--debug" || param == "--cached") ++ Seq(
+      "--debug", "true",
+      "--cached", "true"
+    )
     val pp = p.zip(p.tail).filter{ case(a, b) => a.startsWith("--")}
       .map{ case(a,b) => s"${a.replace("--", "")}|$b"}
     pp.foreach{ param =>

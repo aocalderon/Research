@@ -1,11 +1,15 @@
 package edu.ucr.dblab.pflock
 
 import org.locationtech.jts.geom.{GeometryFactory, Envelope, Coordinate, Point}
+import org.locationtech.jts.index.kdtree._
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.TaskContext
 import org.apache.spark.Partitioner
 import org.apache.spark.rdd.RDD
+
+import edu.ucr.dblab.sitester.spmf.{KDNode, KDTree}
+import edu.ucr.dblab.sitester.spmf.DoubleArray
 
 import scala.collection.JavaConverters._
 
@@ -26,77 +30,100 @@ object MF_Utils {
       (List.empty[Disk].toIterator, Stats())
     } else {
       if(cell.dense){
-        val cid = TaskContext.getPartitionId
-        val stats = Stats()
-        var Maximals: RTree[Disk] = RTree()
-
-        val Pr = points_prime.filter(point => cell.mbr.contains(point.getCoord))
-        val Ps = points_prime
-
-        var tCenters = 0.0
-        var tCandidates = 0.0
-        var tMaximals = 0.0
-
-        val (_, tPairs) = timer{
-          if(Ps.size >= S.mu){
-            for{ pr <- Pr }{
-              val H = pr.getNeighborhood(Ps) // get range around pr in Ps...
-
-              if(H.size >= S.mu){ // if range as enough points...
-
-                for{
-                  ps <- H if{ pr.oid < ps.oid }
-                } yield {
-                  // a valid pair...
-                  stats.nPairs += 1
-
-                  val (disks, tC) = timer{
-                    // finding centers for each pair...
-                    val centers = calculateCenterCoordinates(pr.point, ps.point)
-                    // querying points around each center...
-                    centers.map{ center =>
-                      getPointsAroundCenter(center, Ps)
-                    }
-                  }
-                  stats.nCenters += 2
-                  tCenters += tC
-
-                  val (candidates, tD) = timer{
-                    // getting candidate disks...
-                    disks.filter(_.count >= S.mu)
-                  }
-                  stats.nCandidates += candidates.size
-                  tCandidates += tD
-
-                  val (_, tM) = timer{
-                    // cheking if a candidate is not a subset and adding to maximals...
-                    candidates.foreach{ candidate =>
-                      Maximals = insertMaximalParallel(Maximals, candidate, cell)//
-                    }
-                  }
-                  tMaximals += tM
-                }
-              }
-            }
-          }
-        }
-        stats.tCenters += tCenters
-        stats.tCandidates += tCandidates
-        stats.tMaximals += tMaximals
-        stats.tPairs += tPairs - (tCenters + tCandidates + tMaximals)
-
-        val M = Maximals.entries.toList.map(_.value).filter{ maximal => cell.contains(maximal) }
-        stats.nMaximals = M.size
-
-        debug{
-          save(s"/tmp/edgesMaximals${cid}.wkt"){ M.map{_.wkt + "\n"} }
-        }
-
-        (M.toIterator, stats)
+        runDenseBFE(points_prime, cell)
       } else {
         runBFEParallelSimple(points_prime, cell)
       }
     } 
+  }
+
+  case class KDPoint(p: STPoint) extends DoubleArray(p.point)
+  def runDenseBFE(points_prime: List[STPoint], cell: Cell)
+    (implicit S: Settings, G: GeometryFactory, L: Logger): (Iterator[Disk], Stats) = {
+
+    val cid = TaskContext.getPartitionId
+    val ( (kdtree, points), tGrid) = timer{
+      val kdtree = new KDTree()
+      val vectors = points_prime.map{ point => KDPoint(point).asInstanceOf[DoubleArray] }.asJava
+      kdtree.buildtree(vectors)
+
+      val boundary = new Envelope(cell.mbr)
+      boundary.expandBy(S.epsilon)
+      val points = points_prime.filter{ p => boundary.contains(p.X, p.Y) }
+
+      (kdtree, points)
+    }
+
+    var Maximals: RTree[Disk] = RTree()
+    val stats = Stats()
+    stats.tGrid = tGrid
+    stats.nPoints = points.size
+    var tCenters = 0.0
+    var tCandidates = 0.0
+    var tMaximals = 0.0
+    var tPairs = 0.0
+    points.foreach{ point =>
+      val (tMinus, tPairs) = timer{
+        val Pr = KDPoint(point)
+        val H = kdtree.pointsWithinRadiusOf(Pr, S.epsilon).asScala
+          .map{_.asInstanceOf[KDPoint].p}.toList
+        if(H.size >= S.mu){ // if range as enough points...
+          val ts = for{
+            ps <- H if{ point.oid < ps.oid }
+          } yield {
+            // a valid pair...
+            stats.nPairs += 1
+
+            val (disks, tC) = timer{
+              // finding centers for each pair...
+              val centers = calculateCenterCoordinates(point.point, ps.point)
+              // querying points around each center...
+              centers.map{ center =>
+                val query =new  DoubleArray(center)
+                val hood = kdtree.pointsWithinRadiusOf(query, S.r).asScala
+                  .map{_.point.getUserData.asInstanceOf[Data].id}.toList
+                Disk(center, hood)
+              }
+            }
+            stats.nCenters += 2
+            tCenters += tC
+
+            val (candidates, tD) = timer{
+              // getting candidate disks...
+              disks.filter(_.count >= S.mu)
+            }
+            stats.nCandidates += candidates.size
+            tCandidates += tD
+
+            val (_, tM) = timer{
+              // cheking if a candidate is not a subset and adding to maximals...
+              candidates.foreach{ candidate =>
+                Maximals = insertMaximalParallel(Maximals, candidate, cell)//
+              }
+            }
+            tMaximals += tM
+
+            tC + tD + tM
+          }
+          ts.sum
+        } else {
+          0.0
+        }
+      }
+      stats.tPairs += tPairs - tMinus
+      stats.tCenters += tCenters
+      stats.tCandidates += tCandidates
+      stats.tMaximals += tMaximals
+    }
+
+    val M = Maximals.entries.toList.map(_.value).filter{ maximal => cell.contains(maximal) }
+    stats.nMaximals = M.size
+
+    debug{
+      save(s"/tmp/edgesMaximals${cid}.wkt"){ M.map{_.wkt + "\n"} }
+    }
+
+    (M.toIterator, stats)
   }
 
   def runBFEParallelSimple(points_prime: List[STPoint], cell: Cell)
@@ -214,6 +241,78 @@ object MF_Utils {
       stats.tMaximals += tMaximals
       stats.tPairs += tPairs - (tCenters + tCandidates + tMaximals)
     }
+
+    val M = Maximals.entries.toList.map(_.value).filter{ maximal => cell.contains(maximal) }
+    stats.nMaximals = M.size
+
+    debug{
+      save(s"/tmp/edgesMaximals${cid}.wkt"){ M.map{_.wkt + "\n"} }
+    }
+
+    (M.toIterator, stats)
+  }
+
+  def runDenseBFE2(points_prime: List[STPoint], cell: Cell)
+    (implicit S: Settings, G: GeometryFactory, L: Logger): (Iterator[Disk], Stats) = {
+
+    val cid = TaskContext.getPartitionId
+    val stats = Stats()
+    var Maximals: RTree[Disk] = RTree()
+
+    val Pr = points_prime.filter(point => cell.mbr.contains(point.getCoord))
+    val Ps = points_prime
+
+    var tCenters = 0.0
+    var tCandidates = 0.0
+    var tMaximals = 0.0
+
+    val (_, tPairs) = timer{
+      if(Ps.size >= S.mu){
+        for{ pr <- Pr }{
+          val H = pr.getNeighborhood(Ps) // get range around pr in Ps...
+
+          if(H.size >= S.mu){ // if range as enough points...
+
+            for{
+              ps <- H if{ pr.oid < ps.oid }
+            } yield {
+              // a valid pair...
+              stats.nPairs += 1
+
+              val (disks, tC) = timer{
+                // finding centers for each pair...
+                val centers = calculateCenterCoordinates(pr.point, ps.point)
+                // querying points around each center...
+                centers.map{ center =>
+                  getPointsAroundCenter(center, Ps)
+                }
+              }
+              stats.nCenters += 2
+              tCenters += tC
+
+              val (candidates, tD) = timer{
+                // getting candidate disks...
+                disks.filter(_.count >= S.mu)
+              }
+              stats.nCandidates += candidates.size
+              tCandidates += tD
+
+              val (_, tM) = timer{
+                // cheking if a candidate is not a subset and adding to maximals...
+                candidates.foreach{ candidate =>
+                  Maximals = insertMaximalParallel(Maximals, candidate, cell)//
+                }
+              }
+              tMaximals += tM
+            }
+          }
+        }
+      }
+    }
+    stats.tCenters += tCenters
+    stats.tCandidates += tCandidates
+    stats.tMaximals += tMaximals
+    stats.tPairs += tPairs - (tCenters + tCandidates + tMaximals)
 
     val M = Maximals.entries.toList.map(_.value).filter{ maximal => cell.contains(maximal) }
     stats.nMaximals = M.size
