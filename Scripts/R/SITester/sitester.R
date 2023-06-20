@@ -28,7 +28,7 @@ p = ggplot(data1, aes(x = metric, y = time, group = type, color = type, shape = 
   scale_color_discrete("Implementation") +
   scale_shape_manual("Implementation", values = 1:nlevels(data1$type)) +
   guides(linetype = "none") +
-  labs(x="Insertion(# of points)", y="Time(s)") +
+  labs(x="Range query(m)", y="Time(s)") +
   theme_bw()
 plot(p) 
 ggsave(paste0("queryPairs.pdf"), width = W, height = H)
