@@ -1,0 +1,85 @@
+#!/bin/bash
+
+INPUT=~/Research/Datasets/dense2.tsv
+EPSILON=1
+CAPACITY=100
+DEBUG=""
+MASTER="local[*]"
+EXECUTORS=12
+
+while [ "$1" != "" ]; do
+    case $1 in
+        -i|--input) shift
+		    INPUT="$1"
+		    ;;
+        -e|--epsilon) shift
+		      EPSILON="$1"
+		      ;;
+        -c|--capacity) shift
+		       CAPACITY="$1"
+		       ;;
+        -d|--debug) DEBUG="--debug"
+		    ;;
+        -m|--master) shift
+		     MASTER="$1"
+		     ;;
+        -x|--executors) shift
+		        EXECUTORS="$1"
+		        ;;
+	-*|--*) echo "Unknown option $1"
+		exit 1
+		;;
+    esac
+    shift
+done
+
+echo "INPUT     = $INPUT"
+echo "EPSILON   = $EPSILON"
+echo "CAPACITY  = $CAPACITY"
+if [ "$DEBUG" != "" ]; then
+echo "DEBUG     = YES"
+fi
+echo "MASTER    = $MASTER"
+echo "EXECUTORS = $EXECUTORS"
+
+CORES=9
+DMEMORY=35g
+EMEMORY=20g
+MAX_RESULT_SIZE="4G"
+KRYO_BUFFER_MAX="256m"
+WAIT="0s"
+
+JARS_PATH=$HOME/Spark/2.4/jars
+
+JARS=${JARS_PATH}/jts-core-1.19.0.jar
+JARS=${JARS},${JARS_PATH}/scallop_2.11-4.0.1.jar
+JARS=${JARS},${JARS_PATH}/slf4j-api-1.7.25.jar
+JARS=${JARS},${JARS_PATH}/archery_2.11-0.6.0.jar
+JARS=${JARS},${JARS_PATH}/jgrapht-core-1.4.0.jar
+JARS=${JARS},${JARS_PATH}/commons-geometry-core-1.0-beta1.jar
+JARS=${JARS},${JARS_PATH}/commons-geometry-enclosing-1.0-beta1.jar
+JARS=${JARS},${JARS_PATH}/commons-geometry-euclidean-1.0-beta1.jar
+JARS=${JARS},${JARS_PATH}/commons-numbers-fraction-1.0-beta1.jar
+JARS=${JARS},${JARS_PATH}/commons-numbers-core-1.0-beta1.jar
+JARS=${JARS},${JARS_PATH}/commons-numbers-arrays-1.0-beta1.jar
+
+LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
+CLASS=edu.ucr.dblab.pflock.Tester
+JAR=$HOME/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar
+
+PARAMS=(
+    --files $LOG_FILE \
+	    --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:$LOG_FILE \
+	    --conf spark.driver.maxResultSize=$MAX_RESULT_SIZE \
+	    --conf spark.kryoserializer.buffer.max=$KRYO_BUFFER_MAX \
+	    --conf spark.locality.wait=$WAIT \
+	    --jars $JARS \
+	    --master $MASTER --deploy-mode client \
+	    --num-executors $EXECUTORS --executor-cores $CORES \
+	    --executor-memory $EMEMORY --driver-memory $DMEMORY \
+	    --class $CLASS $JAR \
+	    --input $INPUT --epsilon $EPSILON --capacity $CAPACITY $DEBUG 
+)
+
+echo "spark-submit ${PARAMS[@]}"
+spark-submit ${PARAMS[@]}

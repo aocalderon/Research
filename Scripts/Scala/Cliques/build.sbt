@@ -1,7 +1,7 @@
 name := "cliques"
 organization := "edu.ucr.dblab"
 version := "0.1"
-scalaVersion in ThisBuild := "2.11.8"
+ThisBuild / scalaVersion := "2.11.12"
 
 val SparkVersion = "2.4.0"
 val SedonaVersion = "1.3.1"
