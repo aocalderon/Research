@@ -12,6 +12,7 @@ import edu.ucr.dblab.sitester.spmf.{KDNode, KDTree}
 import edu.ucr.dblab.sitester.spmf.DoubleArray
 
 import scala.collection.JavaConverters._
+import util.control.Breaks._
 
 import sys.process._
 import org.slf4j.Logger
@@ -22,6 +23,23 @@ import Utils._
 
 object MF_Utils {
 
+  def main(args: Array[String]): Unit = {
+    implicit val G = new GeometryFactory()
+    implicit val S = Settings()
+    implicit val L = org.slf4j.LoggerFactory.getLogger("MyLogger")
+
+    val d1 = Disk(G.createPoint(new Coordinate(0, 0)), List(1,2,3,4))
+    val d2 = Disk(G.createPoint(new Coordinate(2, 0)), List(2,3,4))
+    val d3 = Disk(G.createPoint(new Coordinate(4, 0)), List(1,2,3,4,5))
+    val d4 = Disk(G.createPoint(new Coordinate(6, 0)), List(1,2,3,4))
+
+    val C = List(d1,d2,d3,d4)
+    var M = archery.RTree[Disk]()
+    C.foreach{ c => 
+      insertMaximalParallel2(M, c, Cell(new Envelope(0,0,0,0), 1, ""))
+    }
+  }
+
   def runBFEParallel(points_prime: List[STPoint], cell: Cell)
     (implicit S: Settings, geofactory: GeometryFactory, logger: Logger)
       : (Iterator[Disk], Stats) = {
@@ -30,18 +48,21 @@ object MF_Utils {
       (List.empty[Disk].toIterator, Stats())
     } else {
       if(cell.dense){
-        runDenseBFE(points_prime, cell)
+        runDenseBFEinParallel(points_prime, cell)
       } else {
-        runBFEParallelSimple(points_prime, cell)
+        runBFEinParallel(points_prime, cell)
       }
     } 
   }
 
   case class KDPoint(p: STPoint) extends DoubleArray(p.point)
-  def runDenseBFE(points_prime: List[STPoint], cell: Cell)
+  def runDenseBFEinParallel(points_prime: List[STPoint], cell: Cell)
     (implicit S: Settings, G: GeometryFactory, L: Logger): (Iterator[Disk], Stats) = {
 
     val cid = TaskContext.getPartitionId
+    var Maximals: RTree[Disk] = RTree()
+    val stats = Stats()
+
     val ( (kdtree, points), tGrid) = timer{
       val kdtree = new KDTree()
       val vectors = points_prime.map{ point => KDPoint(point).asInstanceOf[DoubleArray] }.asJava
@@ -53,24 +74,20 @@ object MF_Utils {
 
       (kdtree, points)
     }
-
-    var Maximals: RTree[Disk] = RTree()
-    val stats = Stats()
     stats.tGrid = tGrid
     stats.nPoints = points.size
-    var tCenters = 0.0
-    var tCandidates = 0.0
-    var tMaximals = 0.0
-    var tPairs = 0.0
+
     points.foreach{ point =>
-      val (tMinus, tPairs) = timer{
+      var tCenters = 0.0
+      var tCandidates = 0.0
+      var tMaximals = 0.0
+      val (tCDM, tPairs) = timer{
         val Pr = KDPoint(point)
         val H = kdtree.pointsWithinRadiusOf(Pr, S.epsilon).asScala
           .map{_.asInstanceOf[KDPoint].p}.toList
-        if(H.size >= S.mu){ // if range as enough points...
-          val ts = for{
-            ps <- H if{ point.oid < ps.oid }
-          } yield {
+        // if range as enough points...
+        if(H.size >= S.mu) {
+          H.filter(_.oid < point.oid).map{ ps =>
             // a valid pair...
             stats.nPairs += 1
 
@@ -98,19 +115,17 @@ object MF_Utils {
             val (_, tM) = timer{
               // cheking if a candidate is not a subset and adding to maximals...
               candidates.foreach{ candidate =>
-                Maximals = insertMaximalParallel(Maximals, candidate, cell)//
+                Maximals = insertMaximalParallel2(Maximals, candidate, cell)
               }
             }
             tMaximals += tM
-
-            tC + tD + tM
-          }
-          ts.sum
+            (tC + tD + tM)
+          }.sum
         } else {
           0.0
         }
       }
-      stats.tPairs += tPairs - tMinus
+      stats.tPairs += tPairs - tCDM
       stats.tCenters += tCenters
       stats.tCandidates += tCandidates
       stats.tMaximals += tMaximals
@@ -126,7 +141,7 @@ object MF_Utils {
     (M.toIterator, stats)
   }
 
-  def runBFEParallelSimple(points_prime: List[STPoint], cell: Cell)
+  def runBFEinParallel(points_prime: List[STPoint], cell: Cell)
     (implicit settings: Settings, geofactory: GeometryFactory, logger: Logger)
       : (Iterator[Disk], Stats) = {
 
@@ -252,76 +267,188 @@ object MF_Utils {
     (M.toIterator, stats)
   }
 
-  def runDenseBFE2(points_prime: List[STPoint], cell: Cell)
-    (implicit S: Settings, G: GeometryFactory, L: Logger): (Iterator[Disk], Stats) = {
+  def insertMaximalParallel(maximals: archery.RTree[Disk], candidate: Disk, cell: Cell)
+    (implicit settings: Settings): archery.RTree[Disk] = {
 
     val cid = TaskContext.getPartitionId
-    val stats = Stats()
-    var Maximals: RTree[Disk] = RTree()
+    if(maximals.entries.size == 0){
+      // candidate is the first entry so we insert it...
+      val center = archery.Point(candidate.X, candidate.Y)
+      val toInsert = Entry(center, candidate)
+      maximals.insert(toInsert)
+    } else {
+      // we query the tree to retrieve maximals around the current candidate...
+      val maximals_prime = maximals.search(candidate.bbox(settings.epsilon.toFloat)).map(_.value)
 
-    val Pr = points_prime.filter(point => cell.mbr.contains(point.getCoord))
-    val Ps = points_prime
+      // we check if candidate is subset of any current maximal...
+      if( maximals_prime.exists( maximal => candidate.isSubsetOf(maximal) ) ){
+        // if so, we have to check if candidate is equal to that maximal...
+        // (if candidate is subset, it could be equal to one and only one maximal)...
+        // (if not, the tree has duplicates)...
 
-    var tCenters = 0.0
-    var tCandidates = 0.0
-    var tMaximals = 0.0
-
-    val (_, tPairs) = timer{
-      if(Ps.size >= S.mu){
-        for{ pr <- Pr }{
-          val H = pr.getNeighborhood(Ps) // get range around pr in Ps...
-
-          if(H.size >= S.mu){ // if range as enough points...
-
-            for{
-              ps <- H if{ pr.oid < ps.oid }
-            } yield {
-              // a valid pair...
-              stats.nPairs += 1
-
-              val (disks, tC) = timer{
-                // finding centers for each pair...
-                val centers = calculateCenterCoordinates(pr.point, ps.point)
-                // querying points around each center...
-                centers.map{ center =>
-                  getPointsAroundCenter(center, Ps)
-                }
-              }
-              stats.nCenters += 2
-              tCenters += tC
-
-              val (candidates, tD) = timer{
-                // getting candidate disks...
-                disks.filter(_.count >= S.mu)
-              }
-              stats.nCandidates += candidates.size
-              tCandidates += tD
-
-              val (_, tM) = timer{
-                // cheking if a candidate is not a subset and adding to maximals...
-                candidates.foreach{ candidate =>
-                  Maximals = insertMaximalParallel(Maximals, candidate, cell)//
-                }
-              }
-              tMaximals += tM
+        // we find for a maximal with equal point ids (pids) to current candidate...
+        val maximal_prime = maximals_prime.find(_.equals(candidate))
+        maximal_prime match {
+          // If so...
+          case Some(maximal) => { // maximal pids == current pids...
+            // to be deterministic, we only replace if new candidate is most left-down disk...         
+            if(candidate < maximal){ // it is implemented in Disk class...
+              maximals
+                .remove(Entry(archery.Point(maximal.X, maximal.Y), maximal))
+                .insert(Entry(archery.Point(candidate.X, candidate.Y), candidate))
+            } else {
+              // the current maximal is still the most left-down disk...
+              // so we keep the tree without changes...
+              maximals
             }
           }
+          // None means they are not equal (candidate is a truly subset)...
+          // so we keep the tree without changes...
+          case None => maximals
+        }
+      } else {
+        // we check if candidate is superset of one or more maximals...
+        if( maximals_prime.exists( maximal => maximal.isSubsetOf(candidate) ) ){
+          // we find for a maximal with equal point ids (pids) to current candidate...
+          val maximal_prime = maximals_prime.find(_.equals(candidate))
+          maximal_prime match {
+            // if so...
+            case Some(maximal) => { // maximal pids == current pids...
+              // to be deterministic, we only replace if new candidate is most left-down point...
+              if(candidate < maximal){ // it is implemented in Disk class...
+                maximals
+                  .remove(Entry(archery.Point(maximal.X, maximal.Y), maximal))
+                  .insert(Entry(archery.Point(candidate.X, candidate.Y), candidate))
+              } else {
+                // the current maximal is still the most left-down disk...
+                // so we keep the tree without changes...
+                maximals
+              }
+            }
+            // None means there is not any equal, just subset(s) so
+            // we remove subset(s) and insert new candidate...
+            case None => {
+              // collect a list of one or more maximal subsets...
+              val toRemove = maximals_prime.filter( maximal => maximal.isSubsetOf(candidate) )
+                .map{ maximal =>
+                  val center = archery.Point(maximal.X, maximal.Y)
+                  Entry(center, maximal)
+                }
+              val center = archery.Point(candidate.X, candidate.Y)
+              val toInsert = Entry(center, candidate)
+              // remove subset(s) and insert new candidate...
+              maximals.removeAll(toRemove).insert(toInsert)
+           }
+          }
+        } else {
+          // candidate is neither subset or superset (ergo, not equal)...
+          // so we insert it...
+          val center = archery.Point(candidate.X, candidate.Y)
+          val toInsert = Entry(center, candidate)
+          maximals.insert(toInsert)
         }
       }
     }
-    stats.tCenters += tCenters
-    stats.tCandidates += tCandidates
-    stats.tMaximals += tMaximals
-    stats.tPairs += tPairs - (tCenters + tCandidates + tMaximals)
+  }
 
-    val M = Maximals.entries.toList.map(_.value).filter{ maximal => cell.contains(maximal) }
-    stats.nMaximals = M.size
+  def insertMaximalParallel2(maximals: archery.RTree[Disk], candidate: Disk, cell: Cell)
+    (implicit S: Settings, L: Logger): archery.RTree[Disk] = {
 
-    debug{
-      save(s"/tmp/edgesMaximals${cid}.wkt"){ M.map{_.wkt + "\n"} }
-    }
+    val cid = TaskContext.getPartitionId
+    if(maximals.size == 0){
+      val (firstM, tM) = timer{
+        // candidate is the first entry so we insert it...
+        val center = archery.Point(candidate.X, candidate.Y)
+        val toInsert = Entry(center, candidate)
+        maximals.insert(toInsert)
+      }
+      logt(s"MAXIMALS|firstM|$tM")
 
-    (M.toIterator, stats)
+      firstM
+    } else {
+      // we query the tree to retrieve maximals around the current candidate...
+      val (maximals_prime, tS1) = timer{
+        maximals.search(candidate.bbox(S.epsilon.toFloat)).map(_.value)
+      }
+      logt(s"MAXIMALS|Search|$tS1")
+
+      var Mx = archery.RTree[Disk]()
+      var flag = 0
+      var t = 0.0
+
+      for( maximal <- maximals_prime if flag == 0) {
+        val (_M, tM) = timer {
+          tryBreakable{
+            (maximal, candidate) match {
+              case (maximal, candidate) if maximal.distance(candidate) > S.epsilon => {
+                // early break: refine stage after filter the tree...
+                // maximal and candidate don not intersect so they are different...
+                break
+              }
+              case (maximal, candidate) if maximal.equals(candidate) => {
+                flag = 1 // M equal C
+                         // to be deterministic, we only replace if new candidate is most left-down disk...
+                Mx = if(candidate < maximal){ // it is implemented in Disk class...
+                  maximals
+                    .remove(Entry(archery.Point(maximal.X, maximal.Y), maximal))
+                    .insert(Entry(archery.Point(candidate.X, candidate.Y), candidate))
+                } else {
+                  // the current maximal is still the most left-down disk...
+                  // so we keep the tree without changes...
+                  maximals
+                }
+                break
+              }
+              case (maximal, candidate) if maximal.isSubsetOf(candidate) => {
+                flag = 2 // M subset C
+                         // collect a list of one or more maximal subsets...
+                val toRemove = maximals_prime.filter( maximal => maximal.isSubsetOf(candidate) )
+                  .map{ maximal =>
+                    val center = archery.Point(maximal.X, maximal.Y)
+                    Entry(center, maximal)
+                  }
+                val center = archery.Point(candidate.X, candidate.Y)
+                val toInsert = Entry(center, candidate)
+                // remove subset(s) and insert new candidate...
+                Mx = maximals.removeAll(toRemove).insert(toInsert)
+                break
+              }
+              case (maximal, candidate) if candidate.isSubsetOf(maximal) => {
+                flag = 3 // C subset M
+                Mx = maximals
+                break
+              }
+              case _ => {
+                // We check the three alternatives and maximal and candidate are different,
+                // we can continue...
+              }
+
+            } // match
+          } // breakable
+        } // timer
+        t += tM
+        val tag = flag match{
+          case 0 => "C differ M"
+          case 1 => "C equals M"
+          case 2 => "M subset C"
+          case 3 => "C subset M"
+        }
+        logt(s"MAXIMALS|$tag|$tM")
+
+      } // for
+
+      if( flag != 0 ){
+        // We iterate over all the neighborhood and candidate is different to all of them...
+        // We add candidate to maximals...
+        val center = archery.Point(candidate.X, candidate.Y)
+        val toInsert = Entry(center, candidate)
+        maximals.insert(toInsert)
+      } else {
+        // Candidate was a subset, superset or equal and it was already handle it...
+        // We return the new tree...
+        Mx
+      }
+    } // if first time...
   }
 
   def createInnerGrid(cell: Cell, squared: Boolean = true)
