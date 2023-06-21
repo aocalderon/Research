@@ -1,7 +1,7 @@
 package edu.ucr.dblab.pflock
 
 import org.locationtech.jts.geom.{PrecisionModel, GeometryFactory}
-import org.apache.spark.TaskContext
+//import org.apache.spark.TaskContext
 import org.slf4j.{Logger, LoggerFactory}
 import scala.collection.JavaConverters._
 import edu.ucr.dblab.pflock.Utils._
