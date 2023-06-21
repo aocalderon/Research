@@ -347,12 +347,6 @@ object MF_Utils {
       val (maximals_prime, tS1) = timer{
         maximals.search(candidate.bbox(S.epsilon.toFloat)).map(_.value)
       }
-<<<<<<< HEAD
-      println(s"hood ${maximals_prime.map{_.pidsText}.mkString(" ")}")
-=======
-      println(s"Candidate: ${candidate.pidsText}")
-      maximals_prime.map{_.pidsText}.foreach{println}
->>>>>>> 3ae2b61502aff27e7cfc252361260827146766c6
       logt(s"MAXIMALS|Search|$tS1")
 
       var Mx = archery.RTree[Disk]()
@@ -362,60 +356,6 @@ object MF_Utils {
       for( maximal <- maximals_prime if flag == 0) {
         println(s"Maximal: ${maximal.pidsText}")
         val (_M, tM) = timer {
-<<<<<<< HEAD
-          tryBreakable{
-            (maximal, candidate) match {
-              case (maximal, candidate) if maximal.distance(candidate) > S.epsilon => {
-                println(s"Early break")
-                // early break: refine stage after filter the tree...
-                // maximal and candidate don not intersect so they are different...
-                break
-              }
-              case (maximal, candidate) if maximal.equals(candidate) => {
-                println(s"M equal C")
-                flag = 1 // M equal C
-                         // to be deterministic, we only replace if new candidate is most left-down disk...
-                Mx = if(candidate < maximal){ // it is implemented in Disk class...
-                  maximals
-                    .remove(Entry(archery.Point(maximal.X, maximal.Y), maximal))
-                    .insert(Entry(archery.Point(candidate.X, candidate.Y), candidate))
-                } else {
-                  // the current maximal is still the most left-down disk...
-                  // so we keep the tree without changes...
-                  maximals
-                }
-                break
-              }
-              case (maximal, candidate) if maximal.isSubsetOf(candidate) => {
-                println(s"M subset C")
-                flag = 2 // M subset C
-                         // collect a list of one or more maximal subsets...
-                val toRemove = maximals_prime.filter( maximal => maximal.isSubsetOf(candidate) )
-                  .map{ maximal =>
-                    val center = archery.Point(maximal.X, maximal.Y)
-                    Entry(center, maximal)
-                  }
-                val center = archery.Point(candidate.X, candidate.Y)
-                val toInsert = Entry(center, candidate)
-                // remove subset(s) and insert new candidate...
-                Mx = maximals.removeAll(toRemove).insert(toInsert)
-                break
-              }
-              case (maximal, candidate) if candidate.isSubsetOf(maximal) => {
-                println(s"C subset M")
-                flag = 3 // C subset M
-                Mx = maximals
-                break
-              }
-              case _ => {
-                println(s"Continue")
-                // We check the three alternatives and maximal and candidate are different,
-                // we can continue...
-              }
-
-            } // match
-          } // breakable
-=======
             if( maximal.distance(candidate) > S.epsilon ) {
               println("M disjoint C")
               // early break: refine stage after filter the tree...
@@ -459,7 +399,6 @@ object MF_Utils {
               // We check the three alternatives and maximal and candidate are different,
               // we can continue...
             }
->>>>>>> 3ae2b61502aff27e7cfc252361260827146766c6
         } // timer
         t += tM
         val tag = flag match{

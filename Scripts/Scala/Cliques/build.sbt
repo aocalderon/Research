@@ -9,8 +9,6 @@ val SedonaVersion = "1.3.1"
 libraryDependencies += "org.apache.spark" %% "spark-core" % SparkVersion
 libraryDependencies += "org.apache.spark" %% "spark-sql" % SparkVersion
 
-//libraryDependencies += "org.datasyslab" % "geospark" % SedonaVersion
-
 libraryDependencies += "org.locationtech.jts" % "jts-core" % "1.19.0"
 
 libraryDependencies += "org.jgrapht" % "jgrapht-core" % "1.4.0"
