@@ -1,4 +1,4 @@
-package edu.ucr.dblab.sitester.spmf;
+package edu.ucr.dblab.pflock.spmf;
 
 /* This file is copyright (c) 2008-2013 Philippe Fournier-Viger
 * 
@@ -617,19 +617,6 @@ public class KDTree {
 	/// ---------------------------------------------------------------------------------------------
 		
 	
-	
-	/**
-	 * Convert a vector of double to a string representation
-	 * @param values  the vector
-	 * @return a string
-	 */
-	private String toString(double [] values){
-		StringBuilder buffer = new StringBuilder();
-		for(Double element : values ){
-			buffer.append(" " + element);
-		}
-		return buffer.toString();
-	}
 	
 	/**
 	 * Convert this tree to a string representation

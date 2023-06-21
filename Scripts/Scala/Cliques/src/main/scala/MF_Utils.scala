@@ -1,44 +1,20 @@
 package edu.ucr.dblab.pflock
 
-import org.locationtech.jts.geom.{GeometryFactory, Envelope, Coordinate, Point}
-import org.locationtech.jts.index.kdtree._
-
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.TaskContext
-import org.apache.spark.Partitioner
+import archery._
+import edu.ucr.dblab.pflock.Utils._
+import edu.ucr.dblab.pflock.quadtree._
+import org.apache.spark.{Partitioner, TaskContext}
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.SparkSession
+import org.locationtech.jts.geom.{Coordinate, Envelope, GeometryFactory, Point}
+import org.slf4j.Logger
 
-import edu.ucr.dblab.sitester.spmf.{KDNode, KDTree}
-import edu.ucr.dblab.sitester.spmf.DoubleArray
+import edu.ucr.dblab.pflock.spmf.{DoubleArray, KDTree}
 
 import scala.collection.JavaConverters._
-import util.control.Breaks._
-
-import sys.process._
-import org.slf4j.Logger
-import archery._
-
-import quadtree._
-import Utils._
+import scala.util.control.Breaks._
 
 object MF_Utils {
-
-  def main(args: Array[String]): Unit = {
-    implicit val G = new GeometryFactory()
-    implicit val S = Settings()
-    implicit val L = org.slf4j.LoggerFactory.getLogger("MyLogger")
-
-    val d1 = Disk(G.createPoint(new Coordinate(0, 0)), List(1,2,3,4))
-    val d2 = Disk(G.createPoint(new Coordinate(2, 0)), List(2,3,4))
-    val d3 = Disk(G.createPoint(new Coordinate(4, 0)), List(1,2,3,4,5))
-    val d4 = Disk(G.createPoint(new Coordinate(6, 0)), List(1,2,3,4))
-
-    val C = List(d1,d2,d3,d4)
-    var M = archery.RTree[Disk]()
-    C.foreach{ c => 
-      insertMaximalParallel2(M, c, Cell(new Envelope(0,0,0,0), 1, ""))
-    }
-  }
 
   def runBFEParallel(points_prime: List[STPoint], cell: Cell)
     (implicit S: Settings, geofactory: GeometryFactory, logger: Logger)
@@ -370,6 +346,8 @@ object MF_Utils {
       val (maximals_prime, tS1) = timer{
         maximals.search(candidate.bbox(S.epsilon.toFloat)).map(_.value)
       }
+      println(s"Candidate: ${candidate.pidsText}")
+      maximals_prime.map{_.pidsText}.foreach{println}
       logt(s"MAXIMALS|Search|$tS1")
 
       var Mx = archery.RTree[Disk]()
@@ -377,54 +355,51 @@ object MF_Utils {
       var t = 0.0
 
       for( maximal <- maximals_prime if flag == 0) {
+        println(s"Maximal: ${maximal.pidsText}")
         val (_M, tM) = timer {
-          tryBreakable{
-            (maximal, candidate) match {
-              case (maximal, candidate) if maximal.distance(candidate) > S.epsilon => {
-                // early break: refine stage after filter the tree...
-                // maximal and candidate don not intersect so they are different...
-                break
+            if( maximal.distance(candidate) > S.epsilon ) {
+              println("M disjoint C")
+              // early break: refine stage after filter the tree...
+              // maximal and candidate don not intersect so they are different...
+              //break
+            } else if( maximal.equals(candidate) ) {
+              println("M equal C")
+              flag = 1 // M equal C
+                        // to be deterministic, we only replace if new candidate is most left-down disk...
+              Mx = if(candidate < maximal){ // it is implemented in Disk class...
+                maximals
+                  .remove(Entry(archery.Point(maximal.X, maximal.Y), maximal))
+                  .insert(Entry(archery.Point(candidate.X, candidate.Y), candidate))
+              } else {
+                // the current maximal is still the most left-down disk...
+                // so we keep the tree without changes...
+                maximals
               }
-              case (maximal, candidate) if maximal.equals(candidate) => {
-                flag = 1 // M equal C
-                         // to be deterministic, we only replace if new candidate is most left-down disk...
-                Mx = if(candidate < maximal){ // it is implemented in Disk class...
-                  maximals
-                    .remove(Entry(archery.Point(maximal.X, maximal.Y), maximal))
-                    .insert(Entry(archery.Point(candidate.X, candidate.Y), candidate))
-                } else {
-                  // the current maximal is still the most left-down disk...
-                  // so we keep the tree without changes...
-                  maximals
+              //break
+            } else if( maximal.isSubsetOf(candidate) ) {
+              println("M subset C")
+              flag = 2 // M subset C
+                        // collect a list of one or more maximal subsets...
+              val toRemove = maximals_prime.filter( maximal => maximal.isSubsetOf(candidate) )
+                .map{ maximal =>
+                  val center = archery.Point(maximal.X, maximal.Y)
+                  Entry(center, maximal)
                 }
-                break
-              }
-              case (maximal, candidate) if maximal.isSubsetOf(candidate) => {
-                flag = 2 // M subset C
-                         // collect a list of one or more maximal subsets...
-                val toRemove = maximals_prime.filter( maximal => maximal.isSubsetOf(candidate) )
-                  .map{ maximal =>
-                    val center = archery.Point(maximal.X, maximal.Y)
-                    Entry(center, maximal)
-                  }
-                val center = archery.Point(candidate.X, candidate.Y)
-                val toInsert = Entry(center, candidate)
-                // remove subset(s) and insert new candidate...
-                Mx = maximals.removeAll(toRemove).insert(toInsert)
-                break
-              }
-              case (maximal, candidate) if candidate.isSubsetOf(maximal) => {
-                flag = 3 // C subset M
-                Mx = maximals
-                break
-              }
-              case _ => {
-                // We check the three alternatives and maximal and candidate are different,
-                // we can continue...
-              }
-
-            } // match
-          } // breakable
+              val center = archery.Point(candidate.X, candidate.Y)
+              val toInsert = Entry(center, candidate)
+              // remove subset(s) and insert new candidate...
+              Mx = maximals.removeAll(toRemove).insert(toInsert)
+              //break
+            } else if( candidate.isSubsetOf(maximal) ) {
+              println("C subset M")
+              flag = 3 // C subset M
+              Mx = maximals
+              //break
+            } else {
+              println("continue...")
+              // We check the three alternatives and maximal and candidate are different,
+              // we can continue...
+            }
         } // timer
         t += tM
         val tag = flag match{
@@ -433,17 +408,20 @@ object MF_Utils {
           case 2 => "M subset C"
           case 3 => "C subset M"
         }
+        println(s"MAXIMALS|$tag|$tM")
         logt(s"MAXIMALS|$tag|$tM")
 
       } // for
 
-      if( flag != 0 ){
+      if( flag == 0 ){
         // We iterate over all the neighborhood and candidate is different to all of them...
         // We add candidate to maximals...
+        println(s"Return insert")
         val center = archery.Point(candidate.X, candidate.Y)
         val toInsert = Entry(center, candidate)
         maximals.insert(toInsert)
       } else {
+        println(s"Return new")
         // Candidate was a subset, superset or equal and it was already handle it...
         // We return the new tree...
         Mx
@@ -547,12 +525,12 @@ object MF_Utils {
 
     val ( (quadtree, cells), tIndex) = timer{
       val quadtree = Quadtree.getQuadtreeFromPoints(pointsRaw)
-      val cells = quadtree.getLeafZones.asScala.map{ leaf =>
+      val cells = quadtree.getLeafZones.asScala.map{ leaf: QuadRectangle =>
         val cid = leaf.partitionId.toInt
         val lin = leaf.lineage
         val env = leaf.getEnvelope
 
-        cid -> Cell(env, cid, lin)
+        (cid, Cell(env, cid, lin))
       }.toMap
 
       (quadtree, cells)

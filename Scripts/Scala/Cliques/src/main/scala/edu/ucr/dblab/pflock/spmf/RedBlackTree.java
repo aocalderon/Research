@@ -1,4 +1,4 @@
-package edu.ucr.dblab.sitester.spmf;
+package edu.ucr.dblab.pflock.spmf;
 
 /* This file is copyright (c) 2008-2013 Philippe Fournier-Viger
 * 
@@ -334,42 +334,6 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable<T> {
 		x.color = BLACK;
 	}
 	
-
-	/**
-	 * Get the successor node of a node 
-	 * (the node having the smallest value larger than the one of this node).
-	 * @param x a node 
-	 * @return the succesor node
-	 */
-	private Node successor(Node x) {
-		if (x.right != NULL) {
-			return minimum(x.right);
-		}
-		Node y = x.parent;
-		while (y != NULL && x.equals(y.right)) {
-			x = y;
-			y = y.parent;
-		}
-		return y;
-	}
-
-	/**
-	 * Get the predecessor node of a node 
-	 * (the node having the largest value smaller than the one of this node).
-	 * @param x a node 
-	 * @return the predecessor node
-	 */
-	private Node predecessor(Node x) {
-		if (x.left != NULL) {
-			return maximum(x.left);
-		}
-		Node y = x.parent;
-		while (y != NULL && x.equals(y.left)) {
-			x = y;
-			y = y.parent;
-		}
-		return y;
-	}
 
 	/**
 	 * Return the largest element having a value lower than a given element k.

@@ -16,17 +16,9 @@
 package edu.ucr.dblab.pflock.quadtree;
 
 import org.locationtech.jts.geom.Envelope;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.geom.MultiPoint;
-import org.locationtech.jts.geom.Geometry;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 
 public class StandardQuadTree<T> implements Serializable {
     // Maximum number of items in any given zone. When reached, a zone is sub-divided.
@@ -148,6 +140,9 @@ public class StandardQuadTree<T> implements Serializable {
         return new StandardQuadTree<T>(zone, level, this.maxItemsPerZone, this.maxLevel, this.epsilon, this.factor);
     }
 
+    /**
+     * 
+     */
     public void split()
     {
 
