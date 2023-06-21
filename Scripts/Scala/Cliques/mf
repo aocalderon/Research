@@ -86,7 +86,6 @@ if [ -v FRACTION ];  then echo "FRACTION   = $FRACTION";  else FRACTION=1;   fi
 if [ -v DENSITY ];   then echo "DENSITY    = $DENSITY";   else DENSITY=1000; fi
 if [ -v DEBUG ];     then echo "DEBUG      = YES";        else DEBUG="";     fi
 if [ -v CACHED ];    then echo "CACHED     = YES";        else CACHED="";    fi
-
 CORES=9
 DMEMORY=35g
 EMEMORY=20g

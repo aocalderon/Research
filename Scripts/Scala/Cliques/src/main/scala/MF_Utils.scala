@@ -22,7 +22,6 @@ import quadtree._
 import Utils._
 
 object MF_Utils {
-
   def main(args: Array[String]): Unit = {
     implicit val G = new GeometryFactory()
     implicit val S = Settings()
@@ -36,7 +35,7 @@ object MF_Utils {
     val C = List(d1,d2,d3,d4)
     var M = archery.RTree[Disk]()
     C.foreach{ c => 
-      insertMaximalParallel2(M, c, Cell(new Envelope(0,0,0,0), 1, ""))
+      M = MF_Utils.insertMaximalParallel2(M, c, Cell(new Envelope(0,0,0,0), 1, ""))
     }
   }
 
@@ -362,6 +361,7 @@ object MF_Utils {
         val toInsert = Entry(center, candidate)
         maximals.insert(toInsert)
       }
+      println(s"adding $candidate")
       logt(s"MAXIMALS|firstM|$tM")
 
       firstM
@@ -370,6 +370,7 @@ object MF_Utils {
       val (maximals_prime, tS1) = timer{
         maximals.search(candidate.bbox(S.epsilon.toFloat)).map(_.value)
       }
+      println(s"hood ${maximals_prime.map{_.pidsText}.mkString(" ")}")
       logt(s"MAXIMALS|Search|$tS1")
 
       var Mx = archery.RTree[Disk]()
@@ -381,11 +382,13 @@ object MF_Utils {
           tryBreakable{
             (maximal, candidate) match {
               case (maximal, candidate) if maximal.distance(candidate) > S.epsilon => {
+                println(s"Early break")
                 // early break: refine stage after filter the tree...
                 // maximal and candidate don not intersect so they are different...
                 break
               }
               case (maximal, candidate) if maximal.equals(candidate) => {
+                println(s"M equal C")
                 flag = 1 // M equal C
                          // to be deterministic, we only replace if new candidate is most left-down disk...
                 Mx = if(candidate < maximal){ // it is implemented in Disk class...
@@ -400,6 +403,7 @@ object MF_Utils {
                 break
               }
               case (maximal, candidate) if maximal.isSubsetOf(candidate) => {
+                println(s"M subset C")
                 flag = 2 // M subset C
                          // collect a list of one or more maximal subsets...
                 val toRemove = maximals_prime.filter( maximal => maximal.isSubsetOf(candidate) )
@@ -414,11 +418,13 @@ object MF_Utils {
                 break
               }
               case (maximal, candidate) if candidate.isSubsetOf(maximal) => {
+                println(s"C subset M")
                 flag = 3 // C subset M
                 Mx = maximals
                 break
               }
               case _ => {
+                println(s"Continue")
                 // We check the three alternatives and maximal and candidate are different,
                 // we can continue...
               }
@@ -433,6 +439,7 @@ object MF_Utils {
           case 2 => "M subset C"
           case 3 => "C subset M"
         }
+        println(s"MAXIMALS|$tag|$tM")
         logt(s"MAXIMALS|$tag|$tM")
 
       } // for
