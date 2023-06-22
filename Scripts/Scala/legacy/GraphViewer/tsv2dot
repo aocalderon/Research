@@ -1,0 +1,6 @@
+#!/bin/bash
+
+JAR="$HOME/Research/Scripts/Scala/GraphViewer/target/scala-2.11/graphviewer_2.11-0.1.jar"
+CLASS="edu.ucr.dblab.tsv2dot"
+
+scala -cp $JAR $CLASS $1 $2 $3

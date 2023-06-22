@@ -1,8 +1,0 @@
-#!/bin/bash
-
-JAR="$HOME/Research/Scripts/Scala/FF/target/scala-2.11/ff_2.11-0.1.jar"
-LIBSPATH="$HOME/Spark/2.4/jars"
-LIBS="$LIBSPATH/jts-core-1.18.0.jar:${LIBSPATH}/commons-numbers-fraction-1.0-beta1.jar:${LIBSPATH}/commons-numbers-core-1.0-beta1.jar"
-CLASS="edu.ucr.dblab.pflock.welzl.Welzl"
-
-scala -cp $LIBS:$JAR $CLASS

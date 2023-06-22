@@ -1,0 +1,9 @@
+#!/bin/bash
+
+BFE=$1
+PFLOCK=$2
+
+cut -f 3 -d ',' $BFE | awk '{$1=$1};1' | sort -o /tmp/bfe
+cut -f 2 $PFLOCK | sort -o /tmp/pflock
+
+diff -s /tmp/bfe /tmp/pflock

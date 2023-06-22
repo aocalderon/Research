@@ -1,9 +1,0 @@
-#!/bin/bash
-
-PFLOCK1=$1
-PFLOCK2=$2
-
-cut -f 2 $PFLOCK1 | sort -o /tmp/pflock1
-cut -f 2 $PFLOCK2 | sort -o /tmp/pflock2
-
-diff -s /tmp/pflock1 /tmp/pflock2

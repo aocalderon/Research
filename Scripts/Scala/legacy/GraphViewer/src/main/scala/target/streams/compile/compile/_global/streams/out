@@ -1,0 +1,312 @@
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKBenchmark.scala:4:12: object vividsolutions is not a member of package com[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel}[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKBenchmark.scala:5:12: object vividsolutions is not a member of package com[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport com.vividsolutions.jts.geom.{Geometry, Coordinate, Point}[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKBenchmark.scala:6:12: object vividsolutions is not a member of package com[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport com.vividsolutions.jts.io.WKTReader[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKBenchmark.scala:8:12: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.graph.{SimpleGraph, DefaultEdge}[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKBenchmark.scala:14:43: not found: type Point[0m[0J
+[0m[[0m[31merror[0m] [0m[0m  case class Clique(id: Int, points: List[Point])[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                          ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKBenchmark.scala:17:21: not found: type PrecisionModel[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    val model = new PrecisionModel(1000)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                    ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKBenchmark.scala:18:35: not found: type GeometryFactory[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    implicit val geofactory = new GeometryFactory(model)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                  ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKBenchmark.scala:19:22: not found: type WKTReader[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    val reader = new WKTReader()[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                     ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKBenchmark.scala:43:21: value getUserData is not a member of Nothing[0m[0J
+[0m[[0m[31merror[0m] [0m[0m        val id1 = a.getUserData.asInstanceOf[Int][0m[0J
+[0m[[0m[31merror[0m] [0m[0m                    ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKBenchmark.scala:44:21: value getUserData is not a member of Nothing[0m[0J
+[0m[[0m[31merror[0m] [0m[0m        val id2 = b.getUserData.asInstanceOf[Int][0m[0J
+[0m[[0m[31merror[0m] [0m[0m                    ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKBenchmark.scala:51:21: not found: type SimpleGraph[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    val graph = new SimpleGraph[Geometry, DefaultEdge](classOf[DefaultEdge])[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                    ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKBenchmark.scala:51:64: not found: type DefaultEdge[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    val graph = new SimpleGraph[Geometry, DefaultEdge](classOf[DefaultEdge])[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                                               ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKBenchmark.scala:53:24: constructor cannot be instantiated to expected type;[0m[0J
+[0m[[0m[31merror[0m] [0m[0m found   : (T1, T2)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m required: Nothing[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    pairs.foreach{ case(a, b) => graph.addEdge(a, b) }[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                       ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKCliqueFinder.java:21:8: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.*;[0m[0J
+[0m[[0m[31merror[0m] [0m[0m       ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKCliqueFinder.java:22:8: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.alg.clique.*;[0m[0J
+[0m[[0m[31merror[0m] [0m[0m       ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKCliqueFinder.java:52:5: not found: type PivotBronKerboschCliqueFinder[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    PivotBronKerboschCliqueFinder<V, E>[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKCliqueFinder.java:71:27: not found: type Graph[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    public BKCliqueFinder(Graph<V, E> graph, long timeout, TimeUnit unit)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                          ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKCliqueFinder.java:59:27: not found: type Graph[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    public BKCliqueFinder(Graph<V, E> graph)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                          ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/PBKCliqueFinder.java:21:8: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.*;[0m[0J
+[0m[[0m[31merror[0m] [0m[0m       ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/PBKCliqueFinder.java:22:8: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.alg.clique.*;[0m[0J
+[0m[[0m[31merror[0m] [0m[0m       ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/PBKCliqueFinder.java:28:44: not found: type PivotBronKerboschCliqueFinder[0m[0J
+[0m[[0m[31merror[0m] [0m[0mpublic class PBKCliqueFinder<V, E> extends PivotBronKerboschCliqueFinder<V, E> {[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/PBKCliqueFinder.java:30:28: not found: type Graph[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    public PBKCliqueFinder(Graph<V, E> graph) {[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/DBKCliqueFinder.java:21:8: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.*;[0m[0J
+[0m[[0m[31merror[0m] [0m[0m       ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/DBKCliqueFinder.java:22:8: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.traverse.*;[0m[0J
+[0m[[0m[31merror[0m] [0m[0m       ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/DBKCliqueFinder.java:23:8: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.alg.clique.*;[0m[0J
+[0m[[0m[31merror[0m] [0m[0m       ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/DBKCliqueFinder.java:68:28: not found: type Graph[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    public DBKCliqueFinder(Graph<V, E> graph)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:14:22: object djoin is not a member of package edu.ucr.dblab[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport edu.ucr.dblab.djoin.SPMF._[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                     ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/BKBenchmark.scala:62:26: value iterator is not a member of Any[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    val cliques = finder.iterator.asScala.toList.map{[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                         ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:3:12: object vividsolutions is not a member of package com[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport com.vividsolutions.jts.algorithm.MinimumBoundingCircle[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:4:12: object vividsolutions is not a member of package com[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Geometry}[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:5:12: object vividsolutions is not a member of package com[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport com.vividsolutions.jts.geom.{Coordinate, Point}[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:6:12: object vividsolutions is not a member of package com[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport com.vividsolutions.jts.io.WKTReader[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:7:12: object vividsolutions is not a member of package com[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport com.vividsolutions.jts.index.quadtree.Quadtree[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:9:12: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.graph.{SimpleGraph, DefaultEdge}[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:10:12: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.alg.clique.BronKerboschCliqueFinder[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:17:43: not found: type Point[0m[0J
+[0m[[0m[31merror[0m] [0m[0m  case class Clique(id: Int, points: List[Point])[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                          ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:19:26: not found: type MinimumBoundingCircle[0m[0J
+[0m[[0m[31merror[0m] [0m[0m  case class MBC(circle: MinimumBoundingCircle, inner: List[Int], outer: List[Int])[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                         ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:22:52: not found: type Point[0m[0J
+[0m[[0m[31merror[0m] [0m[0m      (implicit geofactory: GeometryFactory): List[Point] = {[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                                   ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:21:32: not found: type Point[0m[0J
+[0m[[0m[31merror[0m] [0m[0m  def findCenters(points: List[Point], epsilon: Double, r2: Double)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                               ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:22:29: not found: type GeometryFactory[0m[0J
+[0m[[0m[31merror[0m] [0m[0m      (implicit geofactory: GeometryFactory): List[Point] = {[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                            ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:61:72: not found: type Point[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    delta: Double = 0.001)(implicit geofactory: GeometryFactory): List[Point] = {[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                                                       ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:60:38: not found: type Point[0m[0J
+[0m[[0m[31merror[0m] [0m[0m  def calculateCenterCoordinates(p1: Point, p2: Point, r2: Double,[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                     ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:60:49: not found: type Point[0m[0J
+[0m[[0m[31merror[0m] [0m[0m  def calculateCenterCoordinates(p1: Point, p2: Point, r2: Double,[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                                ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:61:49: not found: type GeometryFactory[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    delta: Double = 0.001)(implicit geofactory: GeometryFactory): List[Point] = {[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                                ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:88:11: not found: type Transaction[0m[0J
+[0m[[0m[31merror[0m] [0m[0m      new Transaction(x, y, pids)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m          ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:91:20: not found: type Transactions[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    val data = new Transactions(transactions.asJava, 0)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                   ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:92:19: not found: type AlgoLCM2[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    val lcm = new AlgoLCM2()[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:105:53: not found: type Coordinate[0m[0J
+[0m[[0m[31merror[0m] [0m[0m  def farthestPoints(pts: Array[Coordinate]): Array[Coordinate] = {[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                                    ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:105:33: not found: type Coordinate[0m[0J
+[0m[[0m[31merror[0m] [0m[0m  def farthestPoints(pts: Array[Coordinate]): Array[Coordinate] = {[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:119:52: not found: type Coordinate[0m[0J
+[0m[[0m[31merror[0m] [0m[0m  def closestPoints(pts: Array[Coordinate]): Array[Coordinate] = {[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                                   ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/CliqueFinderUtils.scala:119:32: not found: type Coordinate[0m[0J
+[0m[[0m[31merror[0m] [0m[0m  def closestPoints(pts: Array[Coordinate]): Array[Coordinate] = {[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                               ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:3:12: object vividsolutions is not a member of package com[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport com.vividsolutions.jts.algorithm.MinimumBoundingCircle[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:4:12: object vividsolutions is not a member of package com[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport com.vividsolutions.jts.geom.{GeometryFactory, PrecisionModel, Geometry}[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:5:12: object vividsolutions is not a member of package com[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport com.vividsolutions.jts.geom.{Coordinate, Point}[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:6:12: object vividsolutions is not a member of package com[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport com.vividsolutions.jts.io.WKTReader[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:7:12: object vividsolutions is not a member of package com[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport com.vividsolutions.jts.index.quadtree.Quadtree[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:9:12: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.graph.{SimpleGraph, DefaultEdge}[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:10:12: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.alg.clique.BronKerboschCliqueFinder[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:14:22: object djoin is not a member of package edu.ucr.dblab[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport edu.ucr.dblab.djoin.SPMF._[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                     ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:20:21: not found: type PrecisionModel[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    val model = new PrecisionModel(1000)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                    ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:21:35: not found: type GeometryFactory[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    implicit val geofactory = new GeometryFactory(model)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                  ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:22:22: not found: type WKTReader[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    val reader = new WKTReader()[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                     ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:39:59: not found: type Point[0m[0J
+[0m[[0m[31merror[0m] [0m[0m            val point = reader.read(line._1).asInstanceOf[Point][0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                                          ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:61:23: value getUserData is not a member of Nothing[0m[0J
+[0m[[0m[31merror[0m] [0m[0m          val id1 = a.getUserData.asInstanceOf[Int][0m[0J
+[0m[[0m[31merror[0m] [0m[0m                      ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:62:23: value getUserData is not a member of Nothing[0m[0J
+[0m[[0m[31merror[0m] [0m[0m          val id2 = b.getUserData.asInstanceOf[Int][0m[0J
+[0m[[0m[31merror[0m] [0m[0m                      ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:71:23: not found: type SimpleGraph[0m[0J
+[0m[[0m[31merror[0m] [0m[0m      val graph = new SimpleGraph[Geometry, DefaultEdge](classOf[DefaultEdge])[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                      ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:71:66: not found: type DefaultEdge[0m[0J
+[0m[[0m[31merror[0m] [0m[0m      val graph = new SimpleGraph[Geometry, DefaultEdge](classOf[DefaultEdge])[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                                                 ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:73:26: constructor cannot be instantiated to expected type;[0m[0J
+[0m[[0m[31merror[0m] [0m[0m found   : (T1, T2)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m required: Nothing[0m[0J
+[0m[[0m[31merror[0m] [0m[0m      pairs.foreach{ case(a, b) => graph.addEdge(a, b) }[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                         ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:81:32: class edu.ucr.dblab.Clique is not a value[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    }.map{ case(points, id) => Clique(id, points)}[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                               ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:144:32: not found: type Point[0m[0J
+[0m[[0m[31merror[0m] [0m[0m      def getMBCs(points: List[Point]): List[MBC] = {[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                               ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:146:41: not found: type Point[0m[0J
+[0m[[0m[31merror[0m] [0m[0m        def getMBCsTailrec(points: List[Point], MBCs: List[MBC]): List[MBC] = {[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                        ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:149:28: not found: type MinimumBoundingCircle[0m[0J
+[0m[[0m[31merror[0m] [0m[0m          val circle = new MinimumBoundingCircle(geofactory.createMultiPoint(coords))[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:155:21: class edu.ucr.dblab.MBC is not a value[0m[0J
+[0m[[0m[31merror[0m] [0m[0m          val mbc = MBC(circle, inner, outer)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                    ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:173:24: value getUserData is not a member of Nothing[0m[0J
+[0m[[0m[31merror[0m] [0m[0m        val id = point.getUserData.asInstanceOf[Int][0m[0J
+[0m[[0m[31merror[0m] [0m[0m                       ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:183:39: value getCoordinate is not a member of Nothing[0m[0J
+[0m[[0m[31merror[0m] [0m[0m        val pMap = points.map{ p => p.getCoordinate -> p}.toMap[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                      ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:236:27: value toText is not a member of Nothing[0m[0J
+[0m[[0m[31merror[0m] [0m[0m          val wkt = point.toText()[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                          ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:237:26: value getUserData is not a member of Nothing[0m[0J
+[0m[[0m[31merror[0m] [0m[0m          val id = point.getUserData.asInstanceOf[Int][0m[0J
+[0m[[0m[31merror[0m] [0m[0m                         ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:242:24: constructor cannot be instantiated to expected type;[0m[0J
+[0m[[0m[31merror[0m] [0m[0m found   : (T1, T2)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m required: Nothing[0m[0J
+[0m[[0m[31merror[0m] [0m[0m        pairs.map{ case(a, b) =>[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                       ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/FlockFinder.scala:254:27: not found: type Coordinate[0m[0J
+[0m[[0m[31merror[0m] [0m[0m          val coord = new Coordinate(disk.x, disk.y)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                          ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/GraphViewer.scala:4:12: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.graph.{SimpleGraph, DefaultEdge}[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/GraphViewer.scala:5:12: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.alg.clique.BronKerboschCliqueFinder[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/GraphViewer.scala:11:21: not found: type SimpleGraph[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    val graph = new SimpleGraph[String, DefaultEdge](classOf[DefaultEdge])[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                    ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/GraphViewer.scala:11:62: not found: type DefaultEdge[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    val graph = new SimpleGraph[String, DefaultEdge](classOf[DefaultEdge])[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                                             ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/GraphViewer.scala:41:24: not found: type BronKerboschCliqueFinder[0m[0J
+[0m[[0m[31merror[0m] [0m[0m      val finder = new BronKerboschCliqueFinder(graph)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                       ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/TestBK.scala:3:12: object vividsolutions is not a member of package com[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport com.vividsolutions.jts.geom.{PrecisionModel, GeometryFactory, Coordinate, Geometry, Point, Polygon}[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/TestBK.scala:4:12: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.graph.{SimpleGraph, DefaultEdge}[0m[0J
+[0m[[0m[31merror[0m] [0m[0m           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/TestBK.scala:8:19: not found: type PrecisionModel[0m[0J
+[0m[[0m[31merror[0m] [0m[0m  val model = new PrecisionModel(1000)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/TestBK.scala:9:24: not found: type GeometryFactory[0m[0J
+[0m[[0m[31merror[0m] [0m[0m  val geofactory = new GeometryFactory(model)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                       ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/TestBK.scala:12:21: not found: type SimpleGraph[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    val graph = new SimpleGraph[P, DefaultEdge](classOf[DefaultEdge])[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                    ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/TestBK.scala:12:57: not found: type DefaultEdge[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    val graph = new SimpleGraph[P, DefaultEdge](classOf[DefaultEdge])[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                                                        ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/PBKCliqueFinderTest.java:21:8: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.*;[0m[0J
+[0m[[0m[31merror[0m] [0m[0m       ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/PBKCliqueFinderTest.java:22:8: object jgrapht is not a member of package org[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport org.jgrapht.alg.clique.*;[0m[0J
+[0m[[0m[31merror[0m] [0m[0m       ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/PBKCliqueFinderTest.java:121:5: not found: type PivotBronKerboschCliqueFinder[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    PivotBronKerboschCliqueFinder<V, E>[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/PBKCliqueFinderTest.java:143:32: not found: type Graph[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    public PBKCliqueFinderTest(Graph<V, E> graph, long timeout, TimeUnit unit)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                               ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/PBKCliqueFinderTest.java:131:32: not found: type Graph[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    public PBKCliqueFinderTest(Graph<V, E> graph)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                               ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/PBKCliqueFinderTest.java:60:8: object vividsolutions is not a member of package com[0m[0J
+[0m[[0m[31merror[0m] [0m[0mimport com.vividsolutions.jts.geom.Point;[0m[0J
+[0m[[0m[31merror[0m] [0m[0m       ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/PBKCliqueFinderTest.java:67:5: not found: type Point[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    Point point;[0m[0J
+[0m[[0m[31merror[0m] [0m[0m    ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/TestBK.scala:76:28: type mismatch;[0m[0J
+[0m[[0m[31merror[0m] [0m[0m found   : pid.type (with underlying type Int)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m required: Nothing[0m[0J
+[0m[[0m[31merror[0m] [0m[0m        val point = points(pid)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m                           ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/TestBK.scala:79:9: value toList is not a member of Array[Nothing][0m[0J
+[0m[[0m[31merror[0m] [0m[0mpossible cause: maybe a semicolon is missing before `value toList'?[0m[0J
+[0m[[0m[31merror[0m] [0m[0m      }.toList[0m[0J
+[0m[[0m[31merror[0m] [0m[0m        ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m/home/and/Research/Scripts/Scala/GraphViewer/src/main/scala/TestBK.scala:89:16: type mismatch;[0m[0J
+[0m[[0m[31merror[0m] [0m[0m found   : pid.type (with underlying type Int)[0m[0J
+[0m[[0m[31merror[0m] [0m[0m required: Nothing[0m[0J
+[0m[[0m[31merror[0m] [0m[0m        points(pid).getCoordinate[0m[0J
+[0m[[0m[31merror[0m] [0m[0m               ^[0m[0J
+[0m[[0m[31merror[0m] [0m[0m124 errors found[0m[0J
