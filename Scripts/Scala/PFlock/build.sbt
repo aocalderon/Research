@@ -26,6 +26,46 @@ lazy val hello = (project in file("."))
     libraryDependencies += "org.spire-math" %% "archery" % "0.6.0"
   )
 
+lazy val sparkBash = taskKey[Unit]("Create a spark bash script...")
+sparkBash := {
+  import sys.process._
+  val classpath: Seq[File] = (fullClasspathAsJars in Runtime).value.files
+
+  val modules = libraryDependencies.value.map(_.toString).filterNot(_.contains("spark")).filterNot(_.contains("scala-library"))
+  println(modules.mkString("\n"))
+  val jar_paths = for{
+    module <- modules.map(_.split(":")(1))
+    path   <- classpath.map(_.toString)
+    if { path.contains(module) }
+  } yield { path }
+
+  val finder: PathFinder = (baseDirectory.value / "target") ** "*.jar"
+  val jar = finder.get.mkString(" ")
+
+  val log_file = s"${System.getProperty("user.home")}/Spark/2.4/conf/log4j.properties "
+  val files    = s"$log_file "
+  val conf     = s"spark.driver.extraJavaOptions=-Dlog4j.configuration=file:$log_file "
+  val jars     = s"${jar_paths.mkString(",")} "
+  val master   = s"local[*] "
+  val aclass   = s"edu.ucr.dblab.pflock.MF "
+
+  val bash = List(
+    s"#!/bin/bash \n",
+    s"PARAMS=(",
+    s" --files  $files \\",
+    s" --conf   $conf \\",
+    s" --jars   $jars \\",
+    s" --master $master \\",
+    s" --class  $aclass ",
+    s")\n",
+    s"spark-submit $${PARAMS[@]} $jar $$* \n"
+  ).mkString("\n")
+
+  val f = new java.io.PrintWriter("bash/mf")
+  f.write(bash)
+  f.close
+}
+
 lazy val cpCP = taskKey[Unit]("Copy classpath to lib folder...")
 cpCP := {
   import sys.process._
@@ -47,36 +87,4 @@ scalaBash := {
   val jar = finder.get.mkString(":")
 
   println(s"scala -cp ${strCP}:${jar} edu.ucr.dblab.pflock.BFE")
-}
-
-lazy val sparkBash = taskKey[Unit]("Create a spark bash script...")
-sparkBash := {
-  import sys.process._
-  val cp: Seq[File] = (fullClasspathAsJars in Runtime).value.files
-  val base = baseDirectory.value
-  val finder: PathFinder = (base / "target") ** "*.jar" 
-  val jar = finder.get.mkString(" ")
-  val log_file = s"${System.getProperty("user.home")}/Spark/2.4/conf/log4j.properties"
-
-  val modules = libraryDependencies.value.map(_.toString).filterNot(_.contains("spark")).filterNot(_.contains("scala-library"))
-  println(modules.mkString("\n"))
-  val strCP = for{
-    module <- modules.map(_.split(":")(1))
-    path <- cp.map(_.toString)
-    if { path.contains(module) }
-  } yield { path }
-
-  val bash = List(
-    s"#!/bin/bash \n\n",
-    s" spark-submit",
-    s" --files $log_file",
-    s" --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:$log_file",
-    s" --jars ${strCP.mkString(",")}",
-    s" --master local[*]",
-    s" --class edu.ucr.dblab.pflock.MF ${jar} --input ~/Research/Datasets/dense.tsv --density 0"  
-  ).mkString("")
-
-  val f = new java.io.PrintWriter("lib/mf.sh")
-  f.write(bash)
-  f.close
 }
