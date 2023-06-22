@@ -24,7 +24,7 @@ object MF {
     implicit val params = new BFEParams(args)
 
     implicit val spark = SparkSession.builder()
-      .config("spark.serializer",classOf[KryoSerializer].getName)
+      .config("spark.serializer", classOf[KryoSerializer].getName)
       .appName("MF").getOrCreate()
     import spark.implicits._
 
