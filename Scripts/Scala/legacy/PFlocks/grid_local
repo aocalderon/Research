@@ -1,0 +1,23 @@
+#!/bin/bash
+
+CLASS="MF_Grid"
+INPUT=$1
+WIDTH=$2
+THRESHOLD=$3
+EPSILON=$4
+MAXENTRIES=$5
+
+MASTER=local[1]
+
+SPARK_JARS=$HOME/Spark/2.4/jars
+JAR_PATH=$HOME/Research/Scripts/Scala/PFlocks/target/scala-2.11/pflocks_2.11-0.1.jar
+CLASS_PATH="edu.ucr.dblab.pflock.$CLASS"
+LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
+
+spark-submit \
+    --files $LOG_FILE \
+    --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:$LOG_FILE \
+    --jars ${SPARK_JARS}/geospark-1.3.1.jar,${SPARK_JARS}/scallop_2.11-4.0.1.jar,${SPARK_JARS}/slf4j-api-1.7.16.jar,${SPARK_JARS}/jgrapht-core-1.4.0.jar,${SPARK_JARS}/commons-geometry-core-1.0-beta1.jar,${SPARK_JARS}/commons-geometry-enclosing-1.0-beta1.jar,${SPARK_JARS}/commons-geometry-euclidean-1.0-beta1.jar,${SPARK_JARS}/commons-numbers-fraction-1.0-beta1.jar,${SPARK_JARS}/commons-numbers-core-1.0-beta1.jar,${SPARK_JARS}/commons-numbers-arrays-1.0-beta1.jar \
+    --master $MASTER --deploy-mode client \
+    --class $CLASS_PATH $JAR_PATH \
+    --input $INPUT --width $WIDTH --threshold $THRESHOLD --epsilon $EPSILON --maxentries $MAXENTRIES --debug

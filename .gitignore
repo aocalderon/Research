@@ -48,19 +48,19 @@ Scripts/Scala/SITester/.classpath
 Scripts/Scala/SITester/.project
 Scripts/Scala/SITester/.settings/*
 
-Scripts/Scala/Cliques/.bsp/*
-Scripts/Scala/Cliques/.bloop/*
-Scripts/Scala/Cliques/.metals/*
-Scripts/Scala/Cliques/.vscode/*
-Scripts/Scala/Cliques/.idea/*
-Scripts/Scala/Cliques/.idea/workspace.xml
-Scripts/Scala/Cliques/target/*
-Scripts/Scala/Cliques/project/*
-Scripts/Scala/Cliques/.ensime
-Scripts/Scala/Cliques/.ensime_cache/*
-Scripts/Scala/Cliques/.classpath
-Scripts/Scala/Cliques/.project
-Scripts/Scala/Cliques/.settings/*
+Scripts/Scala/PFlock/.bsp/*
+Scripts/Scala/PFlock/.bloop/*
+Scripts/Scala/PFlock/.metals/*
+Scripts/Scala/PFlock/.vscode/*
+Scripts/Scala/PFlock/.idea/*
+Scripts/Scala/PFlock/.idea/workspace.xml
+Scripts/Scala/PFlock/target/*
+Scripts/Scala/PFlock/project/*
+Scripts/Scala/PFlock/.ensime
+Scripts/Scala/PFlock/.ensime_cache/*
+Scripts/Scala/PFlock/.classpath
+Scripts/Scala/PFlock/.project
+Scripts/Scala/PFlock/.settings/*
 
 Scripts/Scala/PFlocks/target/*
 Scripts/Scala/PFlocks/project/*
