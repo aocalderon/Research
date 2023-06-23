@@ -1,0 +1,1160 @@
+1 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 10 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 10 --fraction 1 --density 0
+2023-06-22 13:04:07,944|14037|PARAMS|application_1664835645085_0785|input|Datasets/dense
+2023-06-22 13:04:07,944|14037|PARAMS|application_1664835645085_0785|epsilon|20
+2023-06-22 13:04:07,944|14037|PARAMS|application_1664835645085_0785|mu|3
+2023-06-22 13:04:07,945|14038|PARAMS|application_1664835645085_0785|delta|1
+2023-06-22 13:04:07,945|14038|PARAMS|application_1664835645085_0785|capacity|10
+2023-06-22 13:04:07,945|14038|PARAMS|application_1664835645085_0785|fraction|1
+2023-06-22 13:04:07,945|14038|PARAMS|application_1664835645085_0785|density|0
+2023-06-22 13:04:07,945|14038|PARAMS|application_1664835645085_0785|debug|true
+2023-06-22 13:04:07,945|14038|PARAMS|application_1664835645085_0785|cached|true
+2023-06-22 13:04:07,946|14039|INFO|0|application_1664835645085_0785|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:04:16,152|22245|INFO|0|application_1664835645085_0785|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:04:16,152|22245|TIME|0|application_1664835645085_0785|1|dense|20.0|3|5|PFlocks|Read|8.201604039
+2023-06-22 13:04:16,801|22894|INFO|0|application_1664835645085_0785|1|dense|20.0|3|5|PFlocks|Index1|646
+2023-06-22 13:04:16,801|22894|TIME|0|application_1664835645085_0785|1|dense|20.0|3|5|PFlocks|Index1|0.647466325
+2023-06-22 13:04:22,968|29061|INFO|0|application_1664835645085_0785|646|dense|20.0|3|5|PFlocks|Shuffle1|630
+2023-06-22 13:04:22,968|29061|TIME|0|application_1664835645085_0785|646|dense|20.0|3|5|PFlocks|Shuffle1|6.165390204
+2023-06-22 13:04:23,604|29697|TIME|0|application_1664835645085_0785|646|dense|20.0|3|5|PFlocks|Stats|0.634472039
+2023-06-22 13:04:23,617|29710|INFO|0|application_1664835645085_0785|646|dense|20.0|3|5|PFlocks|Index2|646
+2023-06-22 13:04:23,618|29711|TIME|0|application_1664835645085_0785|646|dense|20.0|3|5|PFlocks|Index2|0.011147641
+2023-06-22 13:04:26,655|32748|INFO|0|application_1664835645085_0785|646|dense|20.0|3|5|PFlocks|Shuffle2|70273
+2023-06-22 13:04:26,655|32748|TIME|0|application_1664835645085_0785|646|dense|20.0|3|5|PFlocks|Shuffle2|3.034940383
+2023-06-22 13:04:52,136|58229|INFO|0|application_1664835645085_0785|646|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:04:52,136|58229|TIME|0|application_1664835645085_0785|646|dense|20.0|3|5|PFlocks|Run|25.479093519
+2023-06-22 13:04:52,910|59003|INFO|0|application_1664835645085_0785|646|dense|20.0|3|5|PFlocks|END|
+1 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 20 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 20 --fraction 1 --density 0
+2023-06-22 13:05:11,344|14832|PARAMS|application_1664835645085_0786|input|Datasets/dense
+2023-06-22 13:05:11,345|14833|PARAMS|application_1664835645085_0786|epsilon|20
+2023-06-22 13:05:11,345|14833|PARAMS|application_1664835645085_0786|mu|3
+2023-06-22 13:05:11,345|14833|PARAMS|application_1664835645085_0786|delta|1
+2023-06-22 13:05:11,345|14833|PARAMS|application_1664835645085_0786|capacity|20
+2023-06-22 13:05:11,345|14833|PARAMS|application_1664835645085_0786|fraction|1
+2023-06-22 13:05:11,346|14834|PARAMS|application_1664835645085_0786|density|0
+2023-06-22 13:05:11,346|14834|PARAMS|application_1664835645085_0786|debug|true
+2023-06-22 13:05:11,346|14834|PARAMS|application_1664835645085_0786|cached|true
+2023-06-22 13:05:11,347|14835|INFO|0|application_1664835645085_0786|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:05:19,578|23066|INFO|0|application_1664835645085_0786|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:05:19,578|23066|TIME|0|application_1664835645085_0786|1|dense|20.0|3|5|PFlocks|Read|8.227114429
+2023-06-22 13:05:20,255|23743|INFO|0|application_1664835645085_0786|1|dense|20.0|3|5|PFlocks|Index1|313
+2023-06-22 13:05:20,255|23743|TIME|0|application_1664835645085_0786|1|dense|20.0|3|5|PFlocks|Index1|0.675076653
+2023-06-22 13:05:24,932|28420|INFO|0|application_1664835645085_0786|313|dense|20.0|3|5|PFlocks|Shuffle1|304
+2023-06-22 13:05:24,932|28420|TIME|0|application_1664835645085_0786|313|dense|20.0|3|5|PFlocks|Shuffle1|4.675483456
+2023-06-22 13:05:25,495|28983|TIME|0|application_1664835645085_0786|313|dense|20.0|3|5|PFlocks|Stats|0.561066032
+2023-06-22 13:05:25,508|28996|INFO|0|application_1664835645085_0786|313|dense|20.0|3|5|PFlocks|Index2|313
+2023-06-22 13:05:25,508|28996|TIME|0|application_1664835645085_0786|313|dense|20.0|3|5|PFlocks|Index2|0.01110593
+2023-06-22 13:05:28,150|31638|INFO|0|application_1664835645085_0786|313|dense|20.0|3|5|PFlocks|Shuffle2|36931
+2023-06-22 13:05:28,150|31638|TIME|0|application_1664835645085_0786|313|dense|20.0|3|5|PFlocks|Shuffle2|2.639243716
+2023-06-22 13:05:45,896|49384|INFO|0|application_1664835645085_0786|313|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:05:45,896|49384|TIME|0|application_1664835645085_0786|313|dense|20.0|3|5|PFlocks|Run|17.743871896
+2023-06-22 13:05:46,592|50080|INFO|0|application_1664835645085_0786|313|dense|20.0|3|5|PFlocks|END|
+1 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 50 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 50 --fraction 1 --density 0
+2023-06-22 13:06:04,423|14330|PARAMS|application_1664835645085_0787|input|Datasets/dense
+2023-06-22 13:06:04,424|14331|PARAMS|application_1664835645085_0787|epsilon|20
+2023-06-22 13:06:04,424|14331|PARAMS|application_1664835645085_0787|mu|3
+2023-06-22 13:06:04,424|14331|PARAMS|application_1664835645085_0787|delta|1
+2023-06-22 13:06:04,424|14331|PARAMS|application_1664835645085_0787|capacity|50
+2023-06-22 13:06:04,424|14331|PARAMS|application_1664835645085_0787|fraction|1
+2023-06-22 13:06:04,425|14332|PARAMS|application_1664835645085_0787|density|0
+2023-06-22 13:06:04,425|14332|PARAMS|application_1664835645085_0787|debug|true
+2023-06-22 13:06:04,425|14332|PARAMS|application_1664835645085_0787|cached|true
+2023-06-22 13:06:04,426|14333|INFO|0|application_1664835645085_0787|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:06:12,506|22413|INFO|0|application_1664835645085_0787|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:06:12,506|22413|TIME|0|application_1664835645085_0787|1|dense|20.0|3|5|PFlocks|Read|8.076457405
+2023-06-22 13:06:13,121|23028|INFO|0|application_1664835645085_0787|1|dense|20.0|3|5|PFlocks|Index1|121
+2023-06-22 13:06:13,121|23028|TIME|0|application_1664835645085_0787|1|dense|20.0|3|5|PFlocks|Index1|0.613749568
+2023-06-22 13:06:16,142|26049|INFO|0|application_1664835645085_0787|121|dense|20.0|3|5|PFlocks|Shuffle1|116
+2023-06-22 13:06:16,143|26050|TIME|0|application_1664835645085_0787|121|dense|20.0|3|5|PFlocks|Shuffle1|3.019912531
+2023-06-22 13:06:16,498|26405|TIME|0|application_1664835645085_0787|121|dense|20.0|3|5|PFlocks|Stats|0.353721197
+2023-06-22 13:06:16,511|26418|INFO|0|application_1664835645085_0787|121|dense|20.0|3|5|PFlocks|Index2|121
+2023-06-22 13:06:16,512|26419|TIME|0|application_1664835645085_0787|121|dense|20.0|3|5|PFlocks|Index2|0.01117286
+2023-06-22 13:06:19,030|28937|INFO|0|application_1664835645085_0787|121|dense|20.0|3|5|PFlocks|Shuffle2|17744
+2023-06-22 13:06:19,031|28938|TIME|0|application_1664835645085_0787|121|dense|20.0|3|5|PFlocks|Shuffle2|2.516607187
+2023-06-22 13:06:36,216|46123|INFO|0|application_1664835645085_0787|121|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:06:36,217|46124|TIME|0|application_1664835645085_0787|121|dense|20.0|3|5|PFlocks|Run|17.183484399
+2023-06-22 13:06:36,821|46728|INFO|0|application_1664835645085_0787|121|dense|20.0|3|5|PFlocks|END|
+1 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 100 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 100 --fraction 1 --density 0
+2023-06-22 13:06:54,712|14430|PARAMS|application_1664835645085_0788|input|Datasets/dense
+2023-06-22 13:06:54,712|14430|PARAMS|application_1664835645085_0788|epsilon|20
+2023-06-22 13:06:54,713|14431|PARAMS|application_1664835645085_0788|mu|3
+2023-06-22 13:06:54,713|14431|PARAMS|application_1664835645085_0788|delta|1
+2023-06-22 13:06:54,713|14431|PARAMS|application_1664835645085_0788|capacity|100
+2023-06-22 13:06:54,713|14431|PARAMS|application_1664835645085_0788|fraction|1
+2023-06-22 13:06:54,713|14431|PARAMS|application_1664835645085_0788|density|0
+2023-06-22 13:06:54,713|14431|PARAMS|application_1664835645085_0788|debug|true
+2023-06-22 13:06:54,713|14431|PARAMS|application_1664835645085_0788|cached|true
+2023-06-22 13:06:54,714|14432|INFO|0|application_1664835645085_0788|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:07:02,951|22669|INFO|0|application_1664835645085_0788|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:07:02,952|22670|TIME|0|application_1664835645085_0788|1|dense|20.0|3|5|PFlocks|Read|8.233539115
+2023-06-22 13:07:03,610|23328|INFO|0|application_1664835645085_0788|1|dense|20.0|3|5|PFlocks|Index1|52
+2023-06-22 13:07:03,610|23328|TIME|0|application_1664835645085_0788|1|dense|20.0|3|5|PFlocks|Index1|0.655816455
+2023-06-22 13:07:05,694|25412|INFO|0|application_1664835645085_0788|52|dense|20.0|3|5|PFlocks|Shuffle1|51
+2023-06-22 13:07:05,694|25412|TIME|0|application_1664835645085_0788|52|dense|20.0|3|5|PFlocks|Shuffle1|2.083334013
+2023-06-22 13:07:05,980|25698|TIME|0|application_1664835645085_0788|52|dense|20.0|3|5|PFlocks|Stats|0.284036248
+2023-06-22 13:07:05,995|25713|INFO|0|application_1664835645085_0788|52|dense|20.0|3|5|PFlocks|Index2|52
+2023-06-22 13:07:05,996|25714|TIME|0|application_1664835645085_0788|52|dense|20.0|3|5|PFlocks|Index2|0.01339391
+2023-06-22 13:07:08,162|27880|INFO|0|application_1664835645085_0788|52|dense|20.0|3|5|PFlocks|Shuffle2|10368
+2023-06-22 13:07:08,163|27881|TIME|0|application_1664835645085_0788|52|dense|20.0|3|5|PFlocks|Shuffle2|2.164134244
+2023-06-22 13:07:23,675|43393|INFO|0|application_1664835645085_0788|52|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:07:23,675|43393|TIME|0|application_1664835645085_0788|52|dense|20.0|3|5|PFlocks|Run|15.51005633
+2023-06-22 13:07:24,018|43736|INFO|0|application_1664835645085_0788|52|dense|20.0|3|5|PFlocks|END|
+1 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 250 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 250 --fraction 1 --density 0
+2023-06-22 13:07:42,231|14621|PARAMS|application_1664835645085_0789|input|Datasets/dense
+2023-06-22 13:07:42,231|14621|PARAMS|application_1664835645085_0789|epsilon|20
+2023-06-22 13:07:42,231|14621|PARAMS|application_1664835645085_0789|mu|3
+2023-06-22 13:07:42,231|14621|PARAMS|application_1664835645085_0789|delta|1
+2023-06-22 13:07:42,232|14622|PARAMS|application_1664835645085_0789|capacity|250
+2023-06-22 13:07:42,232|14622|PARAMS|application_1664835645085_0789|fraction|1
+2023-06-22 13:07:42,232|14622|PARAMS|application_1664835645085_0789|density|0
+2023-06-22 13:07:42,232|14622|PARAMS|application_1664835645085_0789|debug|true
+2023-06-22 13:07:42,232|14622|PARAMS|application_1664835645085_0789|cached|true
+2023-06-22 13:07:42,233|14623|INFO|0|application_1664835645085_0789|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:07:50,369|22759|INFO|0|application_1664835645085_0789|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:07:50,369|22759|TIME|0|application_1664835645085_0789|1|dense|20.0|3|5|PFlocks|Read|8.131986283
+2023-06-22 13:07:51,042|23432|INFO|0|application_1664835645085_0789|1|dense|20.0|3|5|PFlocks|Index1|28
+2023-06-22 13:07:51,042|23432|TIME|0|application_1664835645085_0789|1|dense|20.0|3|5|PFlocks|Index1|0.671016193
+2023-06-22 13:07:52,051|24441|INFO|0|application_1664835645085_0789|28|dense|20.0|3|5|PFlocks|Shuffle1|27
+2023-06-22 13:07:52,051|24441|TIME|0|application_1664835645085_0789|28|dense|20.0|3|5|PFlocks|Shuffle1|1.008113483
+2023-06-22 13:07:52,318|24708|TIME|0|application_1664835645085_0789|28|dense|20.0|3|5|PFlocks|Stats|0.264697638
+2023-06-22 13:07:52,328|24718|INFO|0|application_1664835645085_0789|28|dense|20.0|3|5|PFlocks|Index2|28
+2023-06-22 13:07:52,328|24718|TIME|0|application_1664835645085_0789|28|dense|20.0|3|5|PFlocks|Index2|0.00886044
+2023-06-22 13:07:54,192|26582|INFO|0|application_1664835645085_0789|28|dense|20.0|3|5|PFlocks|Shuffle2|6876
+2023-06-22 13:07:54,193|26583|TIME|0|application_1664835645085_0789|28|dense|20.0|3|5|PFlocks|Shuffle2|1.862704063
+2023-06-22 13:08:09,779|42169|INFO|0|application_1664835645085_0789|28|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:08:09,780|42170|TIME|0|application_1664835645085_0789|28|dense|20.0|3|5|PFlocks|Run|15.584554044
+2023-06-22 13:08:10,102|42492|INFO|0|application_1664835645085_0789|28|dense|20.0|3|5|PFlocks|END|
+1 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 500 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 500 --fraction 1 --density 0
+2023-06-22 13:08:28,015|14546|PARAMS|application_1664835645085_0790|input|Datasets/dense
+2023-06-22 13:08:28,016|14547|PARAMS|application_1664835645085_0790|epsilon|20
+2023-06-22 13:08:28,016|14547|PARAMS|application_1664835645085_0790|mu|3
+2023-06-22 13:08:28,016|14547|PARAMS|application_1664835645085_0790|delta|1
+2023-06-22 13:08:28,016|14547|PARAMS|application_1664835645085_0790|capacity|500
+2023-06-22 13:08:28,016|14547|PARAMS|application_1664835645085_0790|fraction|1
+2023-06-22 13:08:28,017|14548|PARAMS|application_1664835645085_0790|density|0
+2023-06-22 13:08:28,017|14548|PARAMS|application_1664835645085_0790|debug|true
+2023-06-22 13:08:28,017|14548|PARAMS|application_1664835645085_0790|cached|true
+2023-06-22 13:08:28,018|14549|INFO|0|application_1664835645085_0790|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:08:36,463|22994|INFO|0|application_1664835645085_0790|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:08:36,463|22994|TIME|0|application_1664835645085_0790|1|dense|20.0|3|5|PFlocks|Read|8.43641353
+2023-06-22 13:08:37,100|23631|INFO|0|application_1664835645085_0790|1|dense|20.0|3|5|PFlocks|Index1|13
+2023-06-22 13:08:37,100|23631|TIME|0|application_1664835645085_0790|1|dense|20.0|3|5|PFlocks|Index1|0.635566592
+2023-06-22 13:08:37,964|24495|INFO|0|application_1664835645085_0790|13|dense|20.0|3|5|PFlocks|Shuffle1|13
+2023-06-22 13:08:37,964|24495|TIME|0|application_1664835645085_0790|13|dense|20.0|3|5|PFlocks|Shuffle1|0.863149128
+2023-06-22 13:08:38,204|24735|TIME|0|application_1664835645085_0790|13|dense|20.0|3|5|PFlocks|Stats|0.238138564
+2023-06-22 13:08:38,214|24745|INFO|0|application_1664835645085_0790|13|dense|20.0|3|5|PFlocks|Index2|13
+2023-06-22 13:08:38,214|24745|TIME|0|application_1664835645085_0790|13|dense|20.0|3|5|PFlocks|Index2|0.008800561
+2023-06-22 13:08:39,983|26514|INFO|0|application_1664835645085_0790|13|dense|20.0|3|5|PFlocks|Shuffle2|4715
+2023-06-22 13:08:39,983|26514|TIME|0|application_1664835645085_0790|13|dense|20.0|3|5|PFlocks|Shuffle2|1.766894122
+2023-06-22 13:09:01,112|47643|INFO|0|application_1664835645085_0790|13|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:09:01,113|47644|TIME|0|application_1664835645085_0790|13|dense|20.0|3|5|PFlocks|Run|21.126952595
+2023-06-22 13:09:01,473|48004|INFO|0|application_1664835645085_0790|13|dense|20.0|3|5|PFlocks|END|
+1 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 750 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 750 --fraction 1 --density 0
+2023-06-22 13:09:19,239|14341|PARAMS|application_1664835645085_0791|input|Datasets/dense
+2023-06-22 13:09:19,239|14341|PARAMS|application_1664835645085_0791|epsilon|20
+2023-06-22 13:09:19,239|14341|PARAMS|application_1664835645085_0791|mu|3
+2023-06-22 13:09:19,239|14341|PARAMS|application_1664835645085_0791|delta|1
+2023-06-22 13:09:19,239|14341|PARAMS|application_1664835645085_0791|capacity|750
+2023-06-22 13:09:19,240|14342|PARAMS|application_1664835645085_0791|fraction|1
+2023-06-22 13:09:19,240|14342|PARAMS|application_1664835645085_0791|density|0
+2023-06-22 13:09:19,240|14342|PARAMS|application_1664835645085_0791|debug|true
+2023-06-22 13:09:19,240|14342|PARAMS|application_1664835645085_0791|cached|true
+2023-06-22 13:09:19,241|14343|INFO|0|application_1664835645085_0791|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:09:27,447|22549|INFO|0|application_1664835645085_0791|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:09:27,447|22549|TIME|0|application_1664835645085_0791|1|dense|20.0|3|5|PFlocks|Read|8.202362901
+2023-06-22 13:09:28,175|23277|INFO|0|application_1664835645085_0791|1|dense|20.0|3|5|PFlocks|Index1|4
+2023-06-22 13:09:28,175|23277|TIME|0|application_1664835645085_0791|1|dense|20.0|3|5|PFlocks|Index1|0.726943537
+2023-06-22 13:09:28,831|23933|INFO|0|application_1664835645085_0791|4|dense|20.0|3|5|PFlocks|Shuffle1|4
+2023-06-22 13:09:28,831|23933|TIME|0|application_1664835645085_0791|4|dense|20.0|3|5|PFlocks|Shuffle1|0.654065344
+2023-06-22 13:09:29,242|24344|TIME|0|application_1664835645085_0791|4|dense|20.0|3|5|PFlocks|Stats|0.409103351
+2023-06-22 13:09:29,252|24354|INFO|0|application_1664835645085_0791|4|dense|20.0|3|5|PFlocks|Index2|4
+2023-06-22 13:09:29,252|24354|TIME|0|application_1664835645085_0791|4|dense|20.0|3|5|PFlocks|Index2|0.009453583
+2023-06-22 13:09:29,727|24829|INFO|0|application_1664835645085_0791|4|dense|20.0|3|5|PFlocks|Shuffle2|3202
+2023-06-22 13:09:29,728|24830|TIME|0|application_1664835645085_0791|4|dense|20.0|3|5|PFlocks|Shuffle2|0.472683554
+2023-06-22 13:09:50,007|45109|INFO|0|application_1664835645085_0791|4|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:09:50,007|45109|TIME|0|application_1664835645085_0791|4|dense|20.0|3|5|PFlocks|Run|20.276996194
+2023-06-22 13:09:50,436|45538|INFO|0|application_1664835645085_0791|4|dense|20.0|3|5|PFlocks|END|
+1 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 1000 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 1000 --fraction 1 --density 0
+2023-06-22 13:10:07,734|13962|PARAMS|application_1664835645085_0792|input|Datasets/dense
+2023-06-22 13:10:07,734|13962|PARAMS|application_1664835645085_0792|epsilon|20
+2023-06-22 13:10:07,734|13962|PARAMS|application_1664835645085_0792|mu|3
+2023-06-22 13:10:07,734|13962|PARAMS|application_1664835645085_0792|delta|1
+2023-06-22 13:10:07,735|13963|PARAMS|application_1664835645085_0792|capacity|1000
+2023-06-22 13:10:07,735|13963|PARAMS|application_1664835645085_0792|fraction|1
+2023-06-22 13:10:07,735|13963|PARAMS|application_1664835645085_0792|density|0
+2023-06-22 13:10:07,735|13963|PARAMS|application_1664835645085_0792|debug|true
+2023-06-22 13:10:07,735|13963|PARAMS|application_1664835645085_0792|cached|true
+2023-06-22 13:10:07,736|13964|INFO|0|application_1664835645085_0792|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:10:15,923|22151|INFO|0|application_1664835645085_0792|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:10:15,923|22151|TIME|0|application_1664835645085_0792|1|dense|20.0|3|5|PFlocks|Read|8.183267289
+2023-06-22 13:10:16,560|22788|INFO|0|application_1664835645085_0792|1|dense|20.0|3|5|PFlocks|Index1|4
+2023-06-22 13:10:16,561|22789|TIME|0|application_1664835645085_0792|1|dense|20.0|3|5|PFlocks|Index1|0.63624788
+2023-06-22 13:10:17,334|23562|INFO|0|application_1664835645085_0792|4|dense|20.0|3|5|PFlocks|Shuffle1|4
+2023-06-22 13:10:17,334|23562|TIME|0|application_1664835645085_0792|4|dense|20.0|3|5|PFlocks|Shuffle1|0.772087458
+2023-06-22 13:10:17,562|23790|TIME|0|application_1664835645085_0792|4|dense|20.0|3|5|PFlocks|Stats|0.227314935
+2023-06-22 13:10:17,572|23800|INFO|0|application_1664835645085_0792|4|dense|20.0|3|5|PFlocks|Index2|4
+2023-06-22 13:10:17,572|23800|TIME|0|application_1664835645085_0792|4|dense|20.0|3|5|PFlocks|Index2|0.00817233
+2023-06-22 13:10:18,069|24297|INFO|0|application_1664835645085_0792|4|dense|20.0|3|5|PFlocks|Shuffle2|3202
+2023-06-22 13:10:18,069|24297|TIME|0|application_1664835645085_0792|4|dense|20.0|3|5|PFlocks|Shuffle2|0.495009369
+2023-06-22 13:10:38,527|44755|INFO|0|application_1664835645085_0792|4|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:10:38,527|44755|TIME|0|application_1664835645085_0792|4|dense|20.0|3|5|PFlocks|Run|20.456379333
+2023-06-22 13:10:38,896|45124|INFO|0|application_1664835645085_0792|4|dense|20.0|3|5|PFlocks|END|
+2 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 10 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 10 --fraction 1 --density 0
+2023-06-22 13:10:56,279|14020|PARAMS|application_1664835645085_0793|input|Datasets/dense
+2023-06-22 13:10:56,280|14021|PARAMS|application_1664835645085_0793|epsilon|20
+2023-06-22 13:10:56,280|14021|PARAMS|application_1664835645085_0793|mu|3
+2023-06-22 13:10:56,280|14021|PARAMS|application_1664835645085_0793|delta|1
+2023-06-22 13:10:56,280|14021|PARAMS|application_1664835645085_0793|capacity|10
+2023-06-22 13:10:56,280|14021|PARAMS|application_1664835645085_0793|fraction|1
+2023-06-22 13:10:56,280|14021|PARAMS|application_1664835645085_0793|density|0
+2023-06-22 13:10:56,281|14022|PARAMS|application_1664835645085_0793|debug|true
+2023-06-22 13:10:56,281|14022|PARAMS|application_1664835645085_0793|cached|true
+2023-06-22 13:10:56,282|14023|INFO|0|application_1664835645085_0793|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:11:04,508|22249|INFO|0|application_1664835645085_0793|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:11:04,508|22249|TIME|0|application_1664835645085_0793|1|dense|20.0|3|5|PFlocks|Read|8.222777579
+2023-06-22 13:11:05,146|22887|INFO|0|application_1664835645085_0793|1|dense|20.0|3|5|PFlocks|Index1|646
+2023-06-22 13:11:05,146|22887|TIME|0|application_1664835645085_0793|1|dense|20.0|3|5|PFlocks|Index1|0.636883066
+2023-06-22 13:11:11,189|28930|INFO|0|application_1664835645085_0793|646|dense|20.0|3|5|PFlocks|Shuffle1|630
+2023-06-22 13:11:11,190|28931|TIME|0|application_1664835645085_0793|646|dense|20.0|3|5|PFlocks|Shuffle1|6.042127709
+2023-06-22 13:11:11,978|29719|TIME|0|application_1664835645085_0793|646|dense|20.0|3|5|PFlocks|Stats|0.785672557
+2023-06-22 13:11:11,991|29732|INFO|0|application_1664835645085_0793|646|dense|20.0|3|5|PFlocks|Index2|646
+2023-06-22 13:11:11,991|29732|TIME|0|application_1664835645085_0793|646|dense|20.0|3|5|PFlocks|Index2|0.010577972
+2023-06-22 13:11:15,051|32792|INFO|0|application_1664835645085_0793|646|dense|20.0|3|5|PFlocks|Shuffle2|70273
+2023-06-22 13:11:15,051|32792|TIME|0|application_1664835645085_0793|646|dense|20.0|3|5|PFlocks|Shuffle2|3.058317586
+2023-06-22 13:11:38,081|55822|INFO|0|application_1664835645085_0793|646|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:11:38,082|55823|TIME|0|application_1664835645085_0793|646|dense|20.0|3|5|PFlocks|Run|23.028208994
+2023-06-22 13:11:38,788|56529|INFO|0|application_1664835645085_0793|646|dense|20.0|3|5|PFlocks|END|
+2 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 20 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 20 --fraction 1 --density 0
+2023-06-22 13:11:56,564|14305|PARAMS|application_1664835645085_0794|input|Datasets/dense
+2023-06-22 13:11:56,565|14306|PARAMS|application_1664835645085_0794|epsilon|20
+2023-06-22 13:11:56,565|14306|PARAMS|application_1664835645085_0794|mu|3
+2023-06-22 13:11:56,565|14306|PARAMS|application_1664835645085_0794|delta|1
+2023-06-22 13:11:56,565|14306|PARAMS|application_1664835645085_0794|capacity|20
+2023-06-22 13:11:56,565|14306|PARAMS|application_1664835645085_0794|fraction|1
+2023-06-22 13:11:56,565|14306|PARAMS|application_1664835645085_0794|density|0
+2023-06-22 13:11:56,566|14307|PARAMS|application_1664835645085_0794|debug|true
+2023-06-22 13:11:56,566|14307|PARAMS|application_1664835645085_0794|cached|true
+2023-06-22 13:11:56,567|14308|INFO|0|application_1664835645085_0794|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:12:05,055|22796|INFO|0|application_1664835645085_0794|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:12:05,055|22796|TIME|0|application_1664835645085_0794|1|dense|20.0|3|5|PFlocks|Read|8.483890421
+2023-06-22 13:12:05,736|23477|INFO|0|application_1664835645085_0794|1|dense|20.0|3|5|PFlocks|Index1|313
+2023-06-22 13:12:05,736|23477|TIME|0|application_1664835645085_0794|1|dense|20.0|3|5|PFlocks|Index1|0.679849123
+2023-06-22 13:12:10,510|28251|INFO|0|application_1664835645085_0794|313|dense|20.0|3|5|PFlocks|Shuffle1|304
+2023-06-22 13:12:10,511|28252|TIME|0|application_1664835645085_0794|313|dense|20.0|3|5|PFlocks|Shuffle1|4.772799553
+2023-06-22 13:12:11,045|28786|TIME|0|application_1664835645085_0794|313|dense|20.0|3|5|PFlocks|Stats|0.532913717
+2023-06-22 13:12:11,057|28798|INFO|0|application_1664835645085_0794|313|dense|20.0|3|5|PFlocks|Index2|313
+2023-06-22 13:12:11,057|28798|TIME|0|application_1664835645085_0794|313|dense|20.0|3|5|PFlocks|Index2|0.010276179
+2023-06-22 13:12:13,466|31207|INFO|0|application_1664835645085_0794|313|dense|20.0|3|5|PFlocks|Shuffle2|36931
+2023-06-22 13:12:13,467|31208|TIME|0|application_1664835645085_0794|313|dense|20.0|3|5|PFlocks|Shuffle2|2.406953828
+2023-06-22 13:12:30,127|47868|INFO|0|application_1664835645085_0794|313|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:12:30,127|47868|TIME|0|application_1664835645085_0794|313|dense|20.0|3|5|PFlocks|Run|16.658112819
+2023-06-22 13:12:30,894|48635|INFO|0|application_1664835645085_0794|313|dense|20.0|3|5|PFlocks|END|
+2 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 50 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 50 --fraction 1 --density 0
+2023-06-22 13:12:48,801|14404|PARAMS|application_1664835645085_0795|input|Datasets/dense
+2023-06-22 13:12:48,802|14405|PARAMS|application_1664835645085_0795|epsilon|20
+2023-06-22 13:12:48,802|14405|PARAMS|application_1664835645085_0795|mu|3
+2023-06-22 13:12:48,802|14405|PARAMS|application_1664835645085_0795|delta|1
+2023-06-22 13:12:48,802|14405|PARAMS|application_1664835645085_0795|capacity|50
+2023-06-22 13:12:48,802|14405|PARAMS|application_1664835645085_0795|fraction|1
+2023-06-22 13:12:48,802|14405|PARAMS|application_1664835645085_0795|density|0
+2023-06-22 13:12:48,803|14406|PARAMS|application_1664835645085_0795|debug|true
+2023-06-22 13:12:48,803|14406|PARAMS|application_1664835645085_0795|cached|true
+2023-06-22 13:12:48,804|14407|INFO|0|application_1664835645085_0795|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:12:57,042|22645|INFO|0|application_1664835645085_0795|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:12:57,042|22645|TIME|0|application_1664835645085_0795|1|dense|20.0|3|5|PFlocks|Read|8.23427221
+2023-06-22 13:12:57,746|23349|INFO|0|application_1664835645085_0795|1|dense|20.0|3|5|PFlocks|Index1|121
+2023-06-22 13:12:57,747|23350|TIME|0|application_1664835645085_0795|1|dense|20.0|3|5|PFlocks|Index1|0.703206244
+2023-06-22 13:13:00,831|26434|INFO|0|application_1664835645085_0795|121|dense|20.0|3|5|PFlocks|Shuffle1|116
+2023-06-22 13:13:00,831|26434|TIME|0|application_1664835645085_0795|121|dense|20.0|3|5|PFlocks|Shuffle1|3.083398441
+2023-06-22 13:13:01,175|26778|TIME|0|application_1664835645085_0795|121|dense|20.0|3|5|PFlocks|Stats|0.341761729
+2023-06-22 13:13:01,186|26789|INFO|0|application_1664835645085_0795|121|dense|20.0|3|5|PFlocks|Index2|121
+2023-06-22 13:13:01,186|26789|TIME|0|application_1664835645085_0795|121|dense|20.0|3|5|PFlocks|Index2|0.009393517
+2023-06-22 13:13:03,858|29461|INFO|0|application_1664835645085_0795|121|dense|20.0|3|5|PFlocks|Shuffle2|17744
+2023-06-22 13:13:03,858|29461|TIME|0|application_1664835645085_0795|121|dense|20.0|3|5|PFlocks|Shuffle2|2.670046305
+2023-06-22 13:13:19,905|45508|INFO|0|application_1664835645085_0795|121|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:13:19,905|45508|TIME|0|application_1664835645085_0795|121|dense|20.0|3|5|PFlocks|Run|16.044346003
+2023-06-22 13:13:20,441|46044|INFO|0|application_1664835645085_0795|121|dense|20.0|3|5|PFlocks|END|
+2 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 100 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 100 --fraction 1 --density 0
+2023-06-22 13:13:38,604|14755|PARAMS|application_1664835645085_0796|input|Datasets/dense
+2023-06-22 13:13:38,605|14756|PARAMS|application_1664835645085_0796|epsilon|20
+2023-06-22 13:13:38,605|14756|PARAMS|application_1664835645085_0796|mu|3
+2023-06-22 13:13:38,605|14756|PARAMS|application_1664835645085_0796|delta|1
+2023-06-22 13:13:38,606|14757|PARAMS|application_1664835645085_0796|capacity|100
+2023-06-22 13:13:38,606|14757|PARAMS|application_1664835645085_0796|fraction|1
+2023-06-22 13:13:38,606|14757|PARAMS|application_1664835645085_0796|density|0
+2023-06-22 13:13:38,606|14757|PARAMS|application_1664835645085_0796|debug|true
+2023-06-22 13:13:38,606|14757|PARAMS|application_1664835645085_0796|cached|true
+2023-06-22 13:13:38,607|14758|INFO|0|application_1664835645085_0796|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:13:46,714|22865|INFO|0|application_1664835645085_0796|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:13:46,714|22865|TIME|0|application_1664835645085_0796|1|dense|20.0|3|5|PFlocks|Read|8.103140471
+2023-06-22 13:13:47,336|23487|INFO|0|application_1664835645085_0796|1|dense|20.0|3|5|PFlocks|Index1|52
+2023-06-22 13:13:47,336|23487|TIME|0|application_1664835645085_0796|1|dense|20.0|3|5|PFlocks|Index1|0.620533329
+2023-06-22 13:13:49,513|25664|INFO|0|application_1664835645085_0796|52|dense|20.0|3|5|PFlocks|Shuffle1|51
+2023-06-22 13:13:49,513|25664|TIME|0|application_1664835645085_0796|52|dense|20.0|3|5|PFlocks|Shuffle1|2.175959073
+2023-06-22 13:13:49,799|25950|TIME|0|application_1664835645085_0796|52|dense|20.0|3|5|PFlocks|Stats|0.284795616
+2023-06-22 13:13:49,810|25961|INFO|0|application_1664835645085_0796|52|dense|20.0|3|5|PFlocks|Index2|52
+2023-06-22 13:13:49,810|25961|TIME|0|application_1664835645085_0796|52|dense|20.0|3|5|PFlocks|Index2|0.009215707
+2023-06-22 13:13:51,975|28126|INFO|0|application_1664835645085_0796|52|dense|20.0|3|5|PFlocks|Shuffle2|10368
+2023-06-22 13:13:51,975|28126|TIME|0|application_1664835645085_0796|52|dense|20.0|3|5|PFlocks|Shuffle2|2.162766123
+2023-06-22 13:14:07,334|43485|INFO|0|application_1664835645085_0796|52|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:14:07,334|43485|TIME|0|application_1664835645085_0796|52|dense|20.0|3|5|PFlocks|Run|15.356643703
+2023-06-22 13:14:07,857|44008|INFO|0|application_1664835645085_0796|52|dense|20.0|3|5|PFlocks|END|
+2 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 250 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 250 --fraction 1 --density 0
+2023-06-22 13:14:25,258|14058|PARAMS|application_1664835645085_0797|input|Datasets/dense
+2023-06-22 13:14:25,258|14058|PARAMS|application_1664835645085_0797|epsilon|20
+2023-06-22 13:14:25,258|14058|PARAMS|application_1664835645085_0797|mu|3
+2023-06-22 13:14:25,259|14059|PARAMS|application_1664835645085_0797|delta|1
+2023-06-22 13:14:25,259|14059|PARAMS|application_1664835645085_0797|capacity|250
+2023-06-22 13:14:25,259|14059|PARAMS|application_1664835645085_0797|fraction|1
+2023-06-22 13:14:25,259|14059|PARAMS|application_1664835645085_0797|density|0
+2023-06-22 13:14:25,259|14059|PARAMS|application_1664835645085_0797|debug|true
+2023-06-22 13:14:25,259|14059|PARAMS|application_1664835645085_0797|cached|true
+2023-06-22 13:14:25,260|14060|INFO|0|application_1664835645085_0797|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:14:33,535|22335|INFO|0|application_1664835645085_0797|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:14:33,536|22336|TIME|0|application_1664835645085_0797|1|dense|20.0|3|5|PFlocks|Read|8.271543729
+2023-06-22 13:14:34,209|23009|INFO|0|application_1664835645085_0797|1|dense|20.0|3|5|PFlocks|Index1|28
+2023-06-22 13:14:34,209|23009|TIME|0|application_1664835645085_0797|1|dense|20.0|3|5|PFlocks|Index1|0.672253444
+2023-06-22 13:14:35,082|23882|INFO|0|application_1664835645085_0797|28|dense|20.0|3|5|PFlocks|Shuffle1|27
+2023-06-22 13:14:35,082|23882|TIME|0|application_1664835645085_0797|28|dense|20.0|3|5|PFlocks|Shuffle1|0.871578427
+2023-06-22 13:14:35,513|24313|TIME|0|application_1664835645085_0797|28|dense|20.0|3|5|PFlocks|Stats|0.429738358
+2023-06-22 13:14:35,526|24326|INFO|0|application_1664835645085_0797|28|dense|20.0|3|5|PFlocks|Index2|28
+2023-06-22 13:14:35,527|24327|TIME|0|application_1664835645085_0797|28|dense|20.0|3|5|PFlocks|Index2|0.01169711
+2023-06-22 13:14:37,416|26216|INFO|0|application_1664835645085_0797|28|dense|20.0|3|5|PFlocks|Shuffle2|6876
+2023-06-22 13:14:37,417|26217|TIME|0|application_1664835645085_0797|28|dense|20.0|3|5|PFlocks|Shuffle2|1.887157706
+2023-06-22 13:14:52,836|41636|INFO|0|application_1664835645085_0797|28|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:14:52,836|41636|TIME|0|application_1664835645085_0797|28|dense|20.0|3|5|PFlocks|Run|15.417206307
+2023-06-22 13:14:53,233|42033|INFO|0|application_1664835645085_0797|28|dense|20.0|3|5|PFlocks|END|
+2 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 500 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 500 --fraction 1 --density 0
+2023-06-22 13:15:10,699|14029|PARAMS|application_1664835645085_0798|input|Datasets/dense
+2023-06-22 13:15:10,700|14030|PARAMS|application_1664835645085_0798|epsilon|20
+2023-06-22 13:15:10,700|14030|PARAMS|application_1664835645085_0798|mu|3
+2023-06-22 13:15:10,700|14030|PARAMS|application_1664835645085_0798|delta|1
+2023-06-22 13:15:10,700|14030|PARAMS|application_1664835645085_0798|capacity|500
+2023-06-22 13:15:10,700|14030|PARAMS|application_1664835645085_0798|fraction|1
+2023-06-22 13:15:10,700|14030|PARAMS|application_1664835645085_0798|density|0
+2023-06-22 13:15:10,700|14030|PARAMS|application_1664835645085_0798|debug|true
+2023-06-22 13:15:10,701|14031|PARAMS|application_1664835645085_0798|cached|true
+2023-06-22 13:15:10,701|14031|INFO|0|application_1664835645085_0798|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:15:18,966|22296|INFO|0|application_1664835645085_0798|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:15:18,966|22296|TIME|0|application_1664835645085_0798|1|dense|20.0|3|5|PFlocks|Read|8.261113569
+2023-06-22 13:15:19,657|22987|INFO|0|application_1664835645085_0798|1|dense|20.0|3|5|PFlocks|Index1|13
+2023-06-22 13:15:19,657|22987|TIME|0|application_1664835645085_0798|1|dense|20.0|3|5|PFlocks|Index1|0.688976027
+2023-06-22 13:15:20,392|23722|INFO|0|application_1664835645085_0798|13|dense|20.0|3|5|PFlocks|Shuffle1|13
+2023-06-22 13:15:20,392|23722|TIME|0|application_1664835645085_0798|13|dense|20.0|3|5|PFlocks|Shuffle1|0.734335829
+2023-06-22 13:15:20,787|24117|TIME|0|application_1664835645085_0798|13|dense|20.0|3|5|PFlocks|Stats|0.392686154
+2023-06-22 13:15:20,798|24128|INFO|0|application_1664835645085_0798|13|dense|20.0|3|5|PFlocks|Index2|13
+2023-06-22 13:15:20,798|24128|TIME|0|application_1664835645085_0798|13|dense|20.0|3|5|PFlocks|Index2|0.009699211
+2023-06-22 13:15:22,548|25878|INFO|0|application_1664835645085_0798|13|dense|20.0|3|5|PFlocks|Shuffle2|4715
+2023-06-22 13:15:22,549|25879|TIME|0|application_1664835645085_0798|13|dense|20.0|3|5|PFlocks|Shuffle2|1.748415697
+2023-06-22 13:15:42,668|45998|INFO|0|application_1664835645085_0798|13|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:15:42,668|45998|TIME|0|application_1664835645085_0798|13|dense|20.0|3|5|PFlocks|Run|20.117628982
+2023-06-22 13:15:43,007|46337|INFO|0|application_1664835645085_0798|13|dense|20.0|3|5|PFlocks|END|
+2 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 750 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 750 --fraction 1 --density 0
+2023-06-22 13:16:01,253|14764|PARAMS|application_1664835645085_0799|input|Datasets/dense
+2023-06-22 13:16:01,254|14765|PARAMS|application_1664835645085_0799|epsilon|20
+2023-06-22 13:16:01,254|14765|PARAMS|application_1664835645085_0799|mu|3
+2023-06-22 13:16:01,254|14765|PARAMS|application_1664835645085_0799|delta|1
+2023-06-22 13:16:01,254|14765|PARAMS|application_1664835645085_0799|capacity|750
+2023-06-22 13:16:01,254|14765|PARAMS|application_1664835645085_0799|fraction|1
+2023-06-22 13:16:01,255|14766|PARAMS|application_1664835645085_0799|density|0
+2023-06-22 13:16:01,255|14766|PARAMS|application_1664835645085_0799|debug|true
+2023-06-22 13:16:01,255|14766|PARAMS|application_1664835645085_0799|cached|true
+2023-06-22 13:16:01,256|14767|INFO|0|application_1664835645085_0799|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:16:09,291|22802|INFO|0|application_1664835645085_0799|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:16:09,292|22803|TIME|0|application_1664835645085_0799|1|dense|20.0|3|5|PFlocks|Read|8.031971305
+2023-06-22 13:16:09,947|23458|INFO|0|application_1664835645085_0799|1|dense|20.0|3|5|PFlocks|Index1|4
+2023-06-22 13:16:09,947|23458|TIME|0|application_1664835645085_0799|1|dense|20.0|3|5|PFlocks|Index1|0.653668916
+2023-06-22 13:16:10,752|24263|INFO|0|application_1664835645085_0799|4|dense|20.0|3|5|PFlocks|Shuffle1|4
+2023-06-22 13:16:10,752|24263|TIME|0|application_1664835645085_0799|4|dense|20.0|3|5|PFlocks|Shuffle1|0.80385626
+2023-06-22 13:16:10,968|24479|TIME|0|application_1664835645085_0799|4|dense|20.0|3|5|PFlocks|Stats|0.215124591
+2023-06-22 13:16:10,978|24489|INFO|0|application_1664835645085_0799|4|dense|20.0|3|5|PFlocks|Index2|4
+2023-06-22 13:16:10,978|24489|TIME|0|application_1664835645085_0799|4|dense|20.0|3|5|PFlocks|Index2|0.008346652
+2023-06-22 13:16:11,455|24966|INFO|0|application_1664835645085_0799|4|dense|20.0|3|5|PFlocks|Shuffle2|3202
+2023-06-22 13:16:11,455|24966|TIME|0|application_1664835645085_0799|4|dense|20.0|3|5|PFlocks|Shuffle2|0.475521907
+2023-06-22 13:16:32,083|45594|INFO|0|application_1664835645085_0799|4|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:16:32,083|45594|TIME|0|application_1664835645085_0799|4|dense|20.0|3|5|PFlocks|Run|20.626202386
+2023-06-22 13:16:32,476|45987|INFO|0|application_1664835645085_0799|4|dense|20.0|3|5|PFlocks|END|
+2 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 1000 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 1000 --fraction 1 --density 0
+2023-06-22 13:16:50,699|14751|PARAMS|application_1664835645085_0800|input|Datasets/dense
+2023-06-22 13:16:50,699|14751|PARAMS|application_1664835645085_0800|epsilon|20
+2023-06-22 13:16:50,700|14752|PARAMS|application_1664835645085_0800|mu|3
+2023-06-22 13:16:50,700|14752|PARAMS|application_1664835645085_0800|delta|1
+2023-06-22 13:16:50,700|14752|PARAMS|application_1664835645085_0800|capacity|1000
+2023-06-22 13:16:50,700|14752|PARAMS|application_1664835645085_0800|fraction|1
+2023-06-22 13:16:50,700|14752|PARAMS|application_1664835645085_0800|density|0
+2023-06-22 13:16:50,700|14752|PARAMS|application_1664835645085_0800|debug|true
+2023-06-22 13:16:50,701|14753|PARAMS|application_1664835645085_0800|cached|true
+2023-06-22 13:16:50,701|14753|INFO|0|application_1664835645085_0800|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:16:58,953|23005|INFO|0|application_1664835645085_0800|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:16:58,953|23005|TIME|0|application_1664835645085_0800|1|dense|20.0|3|5|PFlocks|Read|8.247637407
+2023-06-22 13:16:59,592|23644|INFO|0|application_1664835645085_0800|1|dense|20.0|3|5|PFlocks|Index1|4
+2023-06-22 13:16:59,593|23645|TIME|0|application_1664835645085_0800|1|dense|20.0|3|5|PFlocks|Index1|0.638311919
+2023-06-22 13:17:00,386|24438|INFO|0|application_1664835645085_0800|4|dense|20.0|3|5|PFlocks|Shuffle1|4
+2023-06-22 13:17:00,386|24438|TIME|0|application_1664835645085_0800|4|dense|20.0|3|5|PFlocks|Shuffle1|0.792686242
+2023-06-22 13:17:00,624|24676|TIME|0|application_1664835645085_0800|4|dense|20.0|3|5|PFlocks|Stats|0.235867251
+2023-06-22 13:17:00,635|24687|INFO|0|application_1664835645085_0800|4|dense|20.0|3|5|PFlocks|Index2|4
+2023-06-22 13:17:00,635|24687|TIME|0|application_1664835645085_0800|4|dense|20.0|3|5|PFlocks|Index2|0.00955059
+2023-06-22 13:17:01,107|25159|INFO|0|application_1664835645085_0800|4|dense|20.0|3|5|PFlocks|Shuffle2|3202
+2023-06-22 13:17:01,107|25159|TIME|0|application_1664835645085_0800|4|dense|20.0|3|5|PFlocks|Shuffle2|0.470194382
+2023-06-22 13:17:21,069|45121|INFO|0|application_1664835645085_0800|4|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:17:21,070|45122|TIME|0|application_1664835645085_0800|4|dense|20.0|3|5|PFlocks|Run|20.485775278
+2023-06-22 13:17:21,416|45468|INFO|0|application_1664835645085_0800|4|dense|20.0|3|5|PFlocks|END|
+3 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 10 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 10 --fraction 1 --density 0
+2023-06-22 13:17:39,163|14380|PARAMS|application_1664835645085_0801|input|Datasets/dense
+2023-06-22 13:17:39,164|14381|PARAMS|application_1664835645085_0801|epsilon|20
+2023-06-22 13:17:39,164|14381|PARAMS|application_1664835645085_0801|mu|3
+2023-06-22 13:17:39,164|14381|PARAMS|application_1664835645085_0801|delta|1
+2023-06-22 13:17:39,164|14381|PARAMS|application_1664835645085_0801|capacity|10
+2023-06-22 13:17:39,164|14381|PARAMS|application_1664835645085_0801|fraction|1
+2023-06-22 13:17:39,165|14382|PARAMS|application_1664835645085_0801|density|0
+2023-06-22 13:17:39,165|14382|PARAMS|application_1664835645085_0801|debug|true
+2023-06-22 13:17:39,165|14382|PARAMS|application_1664835645085_0801|cached|true
+2023-06-22 13:17:39,166|14383|INFO|0|application_1664835645085_0801|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:17:47,358|22575|INFO|0|application_1664835645085_0801|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:17:47,359|22576|TIME|0|application_1664835645085_0801|1|dense|20.0|3|5|PFlocks|Read|8.188594405
+2023-06-22 13:17:48,049|23266|INFO|0|application_1664835645085_0801|1|dense|20.0|3|5|PFlocks|Index1|646
+2023-06-22 13:17:48,049|23266|TIME|0|application_1664835645085_0801|1|dense|20.0|3|5|PFlocks|Index1|0.688234488
+2023-06-22 13:17:53,986|29203|INFO|0|application_1664835645085_0801|646|dense|20.0|3|5|PFlocks|Shuffle1|630
+2023-06-22 13:17:53,986|29203|TIME|0|application_1664835645085_0801|646|dense|20.0|3|5|PFlocks|Shuffle1|5.935962167
+2023-06-22 13:17:54,654|29871|TIME|0|application_1664835645085_0801|646|dense|20.0|3|5|PFlocks|Stats|0.666443874
+2023-06-22 13:17:54,666|29883|INFO|0|application_1664835645085_0801|646|dense|20.0|3|5|PFlocks|Index2|646
+2023-06-22 13:17:54,666|29883|TIME|0|application_1664835645085_0801|646|dense|20.0|3|5|PFlocks|Index2|0.010632935
+2023-06-22 13:17:57,554|32771|INFO|0|application_1664835645085_0801|646|dense|20.0|3|5|PFlocks|Shuffle2|70273
+2023-06-22 13:17:57,554|32771|TIME|0|application_1664835645085_0801|646|dense|20.0|3|5|PFlocks|Shuffle2|2.885757856
+2023-06-22 13:18:21,080|56297|INFO|0|application_1664835645085_0801|646|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:18:21,081|56298|TIME|0|application_1664835645085_0801|646|dense|20.0|3|5|PFlocks|Run|23.52297833
+2023-06-22 13:18:21,809|57026|INFO|0|application_1664835645085_0801|646|dense|20.0|3|5|PFlocks|END|
+3 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 20 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 20 --fraction 1 --density 0
+2023-06-22 13:18:39,641|14396|PARAMS|application_1664835645085_0802|input|Datasets/dense
+2023-06-22 13:18:39,641|14396|PARAMS|application_1664835645085_0802|epsilon|20
+2023-06-22 13:18:39,641|14396|PARAMS|application_1664835645085_0802|mu|3
+2023-06-22 13:18:39,641|14396|PARAMS|application_1664835645085_0802|delta|1
+2023-06-22 13:18:39,642|14397|PARAMS|application_1664835645085_0802|capacity|20
+2023-06-22 13:18:39,642|14397|PARAMS|application_1664835645085_0802|fraction|1
+2023-06-22 13:18:39,642|14397|PARAMS|application_1664835645085_0802|density|0
+2023-06-22 13:18:39,642|14397|PARAMS|application_1664835645085_0802|debug|true
+2023-06-22 13:18:39,642|14397|PARAMS|application_1664835645085_0802|cached|true
+2023-06-22 13:18:39,643|14398|INFO|0|application_1664835645085_0802|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:18:47,984|22739|INFO|0|application_1664835645085_0802|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:18:47,984|22739|TIME|0|application_1664835645085_0802|1|dense|20.0|3|5|PFlocks|Read|8.33771526
+2023-06-22 13:18:48,645|23400|INFO|0|application_1664835645085_0802|1|dense|20.0|3|5|PFlocks|Index1|313
+2023-06-22 13:18:48,645|23400|TIME|0|application_1664835645085_0802|1|dense|20.0|3|5|PFlocks|Index1|0.658972009
+2023-06-22 13:18:53,236|27991|INFO|0|application_1664835645085_0802|313|dense|20.0|3|5|PFlocks|Shuffle1|304
+2023-06-22 13:18:53,236|27991|TIME|0|application_1664835645085_0802|313|dense|20.0|3|5|PFlocks|Shuffle1|4.590169105
+2023-06-22 13:18:53,786|28541|TIME|0|application_1664835645085_0802|313|dense|20.0|3|5|PFlocks|Stats|0.548226943
+2023-06-22 13:18:53,802|28557|INFO|0|application_1664835645085_0802|313|dense|20.0|3|5|PFlocks|Index2|313
+2023-06-22 13:18:53,802|28557|TIME|0|application_1664835645085_0802|313|dense|20.0|3|5|PFlocks|Index2|0.014194355
+2023-06-22 13:18:56,116|30871|INFO|0|application_1664835645085_0802|313|dense|20.0|3|5|PFlocks|Shuffle2|36931
+2023-06-22 13:18:56,116|30871|TIME|0|application_1664835645085_0802|313|dense|20.0|3|5|PFlocks|Shuffle2|2.311068985
+2023-06-22 13:19:12,568|47323|INFO|0|application_1664835645085_0802|313|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:19:12,569|47324|TIME|0|application_1664835645085_0802|313|dense|20.0|3|5|PFlocks|Run|16.449920872
+2023-06-22 13:19:13,195|47950|INFO|0|application_1664835645085_0802|313|dense|20.0|3|5|PFlocks|END|
+3 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 50 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 50 --fraction 1 --density 0
+2023-06-22 13:19:31,239|14618|PARAMS|application_1664835645085_0803|input|Datasets/dense
+2023-06-22 13:19:31,239|14618|PARAMS|application_1664835645085_0803|epsilon|20
+2023-06-22 13:19:31,240|14619|PARAMS|application_1664835645085_0803|mu|3
+2023-06-22 13:19:31,240|14619|PARAMS|application_1664835645085_0803|delta|1
+2023-06-22 13:19:31,240|14619|PARAMS|application_1664835645085_0803|capacity|50
+2023-06-22 13:19:31,240|14619|PARAMS|application_1664835645085_0803|fraction|1
+2023-06-22 13:19:31,240|14619|PARAMS|application_1664835645085_0803|density|0
+2023-06-22 13:19:31,240|14619|PARAMS|application_1664835645085_0803|debug|true
+2023-06-22 13:19:31,240|14619|PARAMS|application_1664835645085_0803|cached|true
+2023-06-22 13:19:31,241|14620|INFO|0|application_1664835645085_0803|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:19:54,505|37884|INFO|0|application_1664835645085_0803|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:19:54,505|37884|TIME|0|application_1664835645085_0803|1|dense|20.0|3|5|PFlocks|Read|23.25981618
+2023-06-22 13:19:55,093|38472|INFO|0|application_1664835645085_0803|1|dense|20.0|3|5|PFlocks|Index1|121
+2023-06-22 13:19:55,094|38473|TIME|0|application_1664835645085_0803|1|dense|20.0|3|5|PFlocks|Index1|0.587401695
+2023-06-22 13:19:58,272|41651|INFO|0|application_1664835645085_0803|121|dense|20.0|3|5|PFlocks|Shuffle1|116
+2023-06-22 13:19:58,272|41651|TIME|0|application_1664835645085_0803|121|dense|20.0|3|5|PFlocks|Shuffle1|3.177155513
+2023-06-22 13:19:58,639|42018|TIME|0|application_1664835645085_0803|121|dense|20.0|3|5|PFlocks|Stats|0.365166402
+2023-06-22 13:19:58,651|42030|INFO|0|application_1664835645085_0803|121|dense|20.0|3|5|PFlocks|Index2|121
+2023-06-22 13:19:58,651|42030|TIME|0|application_1664835645085_0803|121|dense|20.0|3|5|PFlocks|Index2|0.009839388
+2023-06-22 13:20:01,172|44551|INFO|0|application_1664835645085_0803|121|dense|20.0|3|5|PFlocks|Shuffle2|17744
+2023-06-22 13:20:01,172|44551|TIME|0|application_1664835645085_0803|121|dense|20.0|3|5|PFlocks|Shuffle2|2.518788006
+2023-06-22 13:20:17,512|60891|INFO|0|application_1664835645085_0803|121|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:20:17,512|60891|TIME|0|application_1664835645085_0803|121|dense|20.0|3|5|PFlocks|Run|16.335564296
+2023-06-22 13:20:17,948|61327|INFO|0|application_1664835645085_0803|121|dense|20.0|3|5|PFlocks|END|
+3 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 100 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 100 --fraction 1 --density 0
+2023-06-22 13:20:35,320|14059|PARAMS|application_1664835645085_0804|input|Datasets/dense
+2023-06-22 13:20:35,321|14060|PARAMS|application_1664835645085_0804|epsilon|20
+2023-06-22 13:20:35,321|14060|PARAMS|application_1664835645085_0804|mu|3
+2023-06-22 13:20:35,321|14060|PARAMS|application_1664835645085_0804|delta|1
+2023-06-22 13:20:35,321|14060|PARAMS|application_1664835645085_0804|capacity|100
+2023-06-22 13:20:35,322|14061|PARAMS|application_1664835645085_0804|fraction|1
+2023-06-22 13:20:35,322|14061|PARAMS|application_1664835645085_0804|density|0
+2023-06-22 13:20:35,322|14061|PARAMS|application_1664835645085_0804|debug|true
+2023-06-22 13:20:35,322|14061|PARAMS|application_1664835645085_0804|cached|true
+2023-06-22 13:20:35,323|14062|INFO|0|application_1664835645085_0804|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:20:43,488|22227|INFO|0|application_1664835645085_0804|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:20:43,488|22227|TIME|0|application_1664835645085_0804|1|dense|20.0|3|5|PFlocks|Read|8.160999142
+2023-06-22 13:20:44,153|22892|INFO|0|application_1664835645085_0804|1|dense|20.0|3|5|PFlocks|Index1|52
+2023-06-22 13:20:44,154|22893|TIME|0|application_1664835645085_0804|1|dense|20.0|3|5|PFlocks|Index1|0.664561472
+2023-06-22 13:20:46,246|24985|INFO|0|application_1664835645085_0804|52|dense|20.0|3|5|PFlocks|Shuffle1|51
+2023-06-22 13:20:46,247|24986|TIME|0|application_1664835645085_0804|52|dense|20.0|3|5|PFlocks|Shuffle1|2.090957247
+2023-06-22 13:20:46,522|25261|TIME|0|application_1664835645085_0804|52|dense|20.0|3|5|PFlocks|Stats|0.27466274
+2023-06-22 13:20:46,532|25271|INFO|0|application_1664835645085_0804|52|dense|20.0|3|5|PFlocks|Index2|52
+2023-06-22 13:20:46,532|25271|TIME|0|application_1664835645085_0804|52|dense|20.0|3|5|PFlocks|Index2|0.008715567
+2023-06-22 13:20:48,682|27421|INFO|0|application_1664835645085_0804|52|dense|20.0|3|5|PFlocks|Shuffle2|10368
+2023-06-22 13:20:48,682|27421|TIME|0|application_1664835645085_0804|52|dense|20.0|3|5|PFlocks|Shuffle2|2.147786505
+2023-06-22 13:21:03,861|42600|INFO|0|application_1664835645085_0804|52|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:21:03,861|42600|TIME|0|application_1664835645085_0804|52|dense|20.0|3|5|PFlocks|Run|15.176907202
+2023-06-22 13:21:04,221|42960|INFO|0|application_1664835645085_0804|52|dense|20.0|3|5|PFlocks|END|
+3 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 250 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 250 --fraction 1 --density 0
+2023-06-22 13:21:21,980|14349|PARAMS|application_1664835645085_0805|input|Datasets/dense
+2023-06-22 13:21:21,980|14349|PARAMS|application_1664835645085_0805|epsilon|20
+2023-06-22 13:21:21,980|14349|PARAMS|application_1664835645085_0805|mu|3
+2023-06-22 13:21:21,981|14350|PARAMS|application_1664835645085_0805|delta|1
+2023-06-22 13:21:21,981|14350|PARAMS|application_1664835645085_0805|capacity|250
+2023-06-22 13:21:21,981|14350|PARAMS|application_1664835645085_0805|fraction|1
+2023-06-22 13:21:21,981|14350|PARAMS|application_1664835645085_0805|density|0
+2023-06-22 13:21:21,981|14350|PARAMS|application_1664835645085_0805|debug|true
+2023-06-22 13:21:21,981|14350|PARAMS|application_1664835645085_0805|cached|true
+2023-06-22 13:21:21,982|14351|INFO|0|application_1664835645085_0805|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:21:30,020|22389|INFO|0|application_1664835645085_0805|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:21:30,021|22390|TIME|0|application_1664835645085_0805|1|dense|20.0|3|5|PFlocks|Read|8.034500542
+2023-06-22 13:21:30,712|23081|INFO|0|application_1664835645085_0805|1|dense|20.0|3|5|PFlocks|Index1|28
+2023-06-22 13:21:30,713|23082|TIME|0|application_1664835645085_0805|1|dense|20.0|3|5|PFlocks|Index1|0.690571705
+2023-06-22 13:21:31,768|24137|INFO|0|application_1664835645085_0805|28|dense|20.0|3|5|PFlocks|Shuffle1|27
+2023-06-22 13:21:31,768|24137|TIME|0|application_1664835645085_0805|28|dense|20.0|3|5|PFlocks|Shuffle1|1.053735911
+2023-06-22 13:21:32,033|24402|TIME|0|application_1664835645085_0805|28|dense|20.0|3|5|PFlocks|Stats|0.263362473
+2023-06-22 13:21:32,044|24413|INFO|0|application_1664835645085_0805|28|dense|20.0|3|5|PFlocks|Index2|28
+2023-06-22 13:21:32,044|24413|TIME|0|application_1664835645085_0805|28|dense|20.0|3|5|PFlocks|Index2|0.010052863
+2023-06-22 13:21:34,079|26448|INFO|0|application_1664835645085_0805|28|dense|20.0|3|5|PFlocks|Shuffle2|6876
+2023-06-22 13:21:34,079|26448|TIME|0|application_1664835645085_0805|28|dense|20.0|3|5|PFlocks|Shuffle2|2.032384875
+2023-06-22 13:21:50,162|42531|INFO|0|application_1664835645085_0805|28|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:21:50,162|42531|TIME|0|application_1664835645085_0805|28|dense|20.0|3|5|PFlocks|Run|16.080579799
+2023-06-22 13:21:50,501|42870|INFO|0|application_1664835645085_0805|28|dense|20.0|3|5|PFlocks|END|
+3 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 500 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 500 --fraction 1 --density 0
+2023-06-22 13:22:08,289|14411|PARAMS|application_1664835645085_0806|input|Datasets/dense
+2023-06-22 13:22:08,289|14411|PARAMS|application_1664835645085_0806|epsilon|20
+2023-06-22 13:22:08,289|14411|PARAMS|application_1664835645085_0806|mu|3
+2023-06-22 13:22:08,289|14411|PARAMS|application_1664835645085_0806|delta|1
+2023-06-22 13:22:08,290|14412|PARAMS|application_1664835645085_0806|capacity|500
+2023-06-22 13:22:08,290|14412|PARAMS|application_1664835645085_0806|fraction|1
+2023-06-22 13:22:08,290|14412|PARAMS|application_1664835645085_0806|density|0
+2023-06-22 13:22:08,290|14412|PARAMS|application_1664835645085_0806|debug|true
+2023-06-22 13:22:08,290|14412|PARAMS|application_1664835645085_0806|cached|true
+2023-06-22 13:22:08,291|14413|INFO|0|application_1664835645085_0806|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:22:16,205|22327|INFO|0|application_1664835645085_0806|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:22:16,206|22328|TIME|0|application_1664835645085_0806|1|dense|20.0|3|5|PFlocks|Read|7.910533483
+2023-06-22 13:22:16,834|22956|INFO|0|application_1664835645085_0806|1|dense|20.0|3|5|PFlocks|Index1|13
+2023-06-22 13:22:16,835|22957|TIME|0|application_1664835645085_0806|1|dense|20.0|3|5|PFlocks|Index1|0.627723217
+2023-06-22 13:22:17,761|23883|INFO|0|application_1664835645085_0806|13|dense|20.0|3|5|PFlocks|Shuffle1|13
+2023-06-22 13:22:17,762|23884|TIME|0|application_1664835645085_0806|13|dense|20.0|3|5|PFlocks|Shuffle1|0.925412899
+2023-06-22 13:22:17,994|24116|TIME|0|application_1664835645085_0806|13|dense|20.0|3|5|PFlocks|Stats|0.230855067
+2023-06-22 13:22:18,004|24126|INFO|0|application_1664835645085_0806|13|dense|20.0|3|5|PFlocks|Index2|13
+2023-06-22 13:22:18,004|24126|TIME|0|application_1664835645085_0806|13|dense|20.0|3|5|PFlocks|Index2|0.008802533
+2023-06-22 13:22:19,742|25864|INFO|0|application_1664835645085_0806|13|dense|20.0|3|5|PFlocks|Shuffle2|4715
+2023-06-22 13:22:19,742|25864|TIME|0|application_1664835645085_0806|13|dense|20.0|3|5|PFlocks|Shuffle2|1.736047697
+2023-06-22 13:22:41,094|47216|INFO|0|application_1664835645085_0806|13|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:22:41,094|47216|TIME|0|application_1664835645085_0806|13|dense|20.0|3|5|PFlocks|Run|21.349700365
+2023-06-22 13:22:41,445|47567|INFO|0|application_1664835645085_0806|13|dense|20.0|3|5|PFlocks|END|
+3 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 750 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 750 --fraction 1 --density 0
+2023-06-22 13:22:59,008|14117|PARAMS|application_1664835645085_0807|input|Datasets/dense
+2023-06-22 13:22:59,009|14118|PARAMS|application_1664835645085_0807|epsilon|20
+2023-06-22 13:22:59,009|14118|PARAMS|application_1664835645085_0807|mu|3
+2023-06-22 13:22:59,009|14118|PARAMS|application_1664835645085_0807|delta|1
+2023-06-22 13:22:59,009|14118|PARAMS|application_1664835645085_0807|capacity|750
+2023-06-22 13:22:59,009|14118|PARAMS|application_1664835645085_0807|fraction|1
+2023-06-22 13:22:59,009|14118|PARAMS|application_1664835645085_0807|density|0
+2023-06-22 13:22:59,010|14119|PARAMS|application_1664835645085_0807|debug|true
+2023-06-22 13:22:59,010|14119|PARAMS|application_1664835645085_0807|cached|true
+2023-06-22 13:22:59,011|14120|INFO|0|application_1664835645085_0807|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:23:07,130|22239|INFO|0|application_1664835645085_0807|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:23:07,130|22239|TIME|0|application_1664835645085_0807|1|dense|20.0|3|5|PFlocks|Read|8.115497726
+2023-06-22 13:23:07,780|22889|INFO|0|application_1664835645085_0807|1|dense|20.0|3|5|PFlocks|Index1|4
+2023-06-22 13:23:07,780|22889|TIME|0|application_1664835645085_0807|1|dense|20.0|3|5|PFlocks|Index1|0.649068174
+2023-06-22 13:23:08,542|23651|INFO|0|application_1664835645085_0807|4|dense|20.0|3|5|PFlocks|Shuffle1|4
+2023-06-22 13:23:08,542|23651|TIME|0|application_1664835645085_0807|4|dense|20.0|3|5|PFlocks|Shuffle1|0.760628979
+2023-06-22 13:23:08,780|23889|TIME|0|application_1664835645085_0807|4|dense|20.0|3|5|PFlocks|Stats|0.236350481
+2023-06-22 13:23:08,790|23899|INFO|0|application_1664835645085_0807|4|dense|20.0|3|5|PFlocks|Index2|4
+2023-06-22 13:23:08,790|23899|TIME|0|application_1664835645085_0807|4|dense|20.0|3|5|PFlocks|Index2|0.008790768
+2023-06-22 13:23:09,269|24378|INFO|0|application_1664835645085_0807|4|dense|20.0|3|5|PFlocks|Shuffle2|3202
+2023-06-22 13:23:09,269|24378|TIME|0|application_1664835645085_0807|4|dense|20.0|3|5|PFlocks|Shuffle2|0.476330383
+2023-06-22 13:23:29,990|45099|INFO|0|application_1664835645085_0807|4|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:23:29,990|45099|TIME|0|application_1664835645085_0807|4|dense|20.0|3|5|PFlocks|Run|20.718854405
+2023-06-22 13:23:30,353|45462|INFO|0|application_1664835645085_0807|4|dense|20.0|3|5|PFlocks|END|
+3 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 1000 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 1000 --fraction 1 --density 0
+2023-06-22 13:23:47,977|14114|PARAMS|application_1664835645085_0808|input|Datasets/dense
+2023-06-22 13:23:47,978|14115|PARAMS|application_1664835645085_0808|epsilon|20
+2023-06-22 13:23:47,978|14115|PARAMS|application_1664835645085_0808|mu|3
+2023-06-22 13:23:47,979|14116|PARAMS|application_1664835645085_0808|delta|1
+2023-06-22 13:23:47,979|14116|PARAMS|application_1664835645085_0808|capacity|1000
+2023-06-22 13:23:47,979|14116|PARAMS|application_1664835645085_0808|fraction|1
+2023-06-22 13:23:47,979|14116|PARAMS|application_1664835645085_0808|density|0
+2023-06-22 13:23:47,979|14116|PARAMS|application_1664835645085_0808|debug|true
+2023-06-22 13:23:47,979|14116|PARAMS|application_1664835645085_0808|cached|true
+2023-06-22 13:23:47,980|14117|INFO|0|application_1664835645085_0808|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:23:56,138|22275|INFO|0|application_1664835645085_0808|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:23:56,138|22275|TIME|0|application_1664835645085_0808|1|dense|20.0|3|5|PFlocks|Read|8.154146521
+2023-06-22 13:23:56,830|22967|INFO|0|application_1664835645085_0808|1|dense|20.0|3|5|PFlocks|Index1|4
+2023-06-22 13:23:56,830|22967|TIME|0|application_1664835645085_0808|1|dense|20.0|3|5|PFlocks|Index1|0.689794681
+2023-06-22 13:23:57,669|23806|INFO|0|application_1664835645085_0808|4|dense|20.0|3|5|PFlocks|Shuffle1|4
+2023-06-22 13:23:57,669|23806|TIME|0|application_1664835645085_0808|4|dense|20.0|3|5|PFlocks|Shuffle1|0.837531592
+2023-06-22 13:23:57,904|24041|TIME|0|application_1664835645085_0808|4|dense|20.0|3|5|PFlocks|Stats|0.233481659
+2023-06-22 13:23:57,915|24052|INFO|0|application_1664835645085_0808|4|dense|20.0|3|5|PFlocks|Index2|4
+2023-06-22 13:23:57,916|24053|TIME|0|application_1664835645085_0808|4|dense|20.0|3|5|PFlocks|Index2|0.009813004
+2023-06-22 13:23:58,502|24639|INFO|0|application_1664835645085_0808|4|dense|20.0|3|5|PFlocks|Shuffle2|3202
+2023-06-22 13:23:58,502|24639|TIME|0|application_1664835645085_0808|4|dense|20.0|3|5|PFlocks|Shuffle2|0.584095661
+2023-06-22 13:24:18,849|44986|INFO|0|application_1664835645085_0808|4|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:24:18,849|44986|TIME|0|application_1664835645085_0808|4|dense|20.0|3|5|PFlocks|Run|20.344960405
+2023-06-22 13:24:19,202|45339|INFO|0|application_1664835645085_0808|4|dense|20.0|3|5|PFlocks|END|
+4 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 10 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 10 --fraction 1 --density 0
+2023-06-22 13:24:54,000|31411|PARAMS|application_1664835645085_0809|input|Datasets/dense
+2023-06-22 13:24:54,000|31411|PARAMS|application_1664835645085_0809|epsilon|20
+2023-06-22 13:24:54,000|31411|PARAMS|application_1664835645085_0809|mu|3
+2023-06-22 13:24:54,001|31412|PARAMS|application_1664835645085_0809|delta|1
+2023-06-22 13:24:54,001|31412|PARAMS|application_1664835645085_0809|capacity|10
+2023-06-22 13:24:54,001|31412|PARAMS|application_1664835645085_0809|fraction|1
+2023-06-22 13:24:54,001|31412|PARAMS|application_1664835645085_0809|density|0
+2023-06-22 13:24:54,001|31412|PARAMS|application_1664835645085_0809|debug|true
+2023-06-22 13:24:54,001|31412|PARAMS|application_1664835645085_0809|cached|true
+2023-06-22 13:24:54,002|31413|INFO|0|application_1664835645085_0809|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:25:02,253|39664|INFO|0|application_1664835645085_0809|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:25:02,253|39664|TIME|0|application_1664835645085_0809|1|dense|20.0|3|5|PFlocks|Read|8.247123166
+2023-06-22 13:25:02,921|40332|INFO|0|application_1664835645085_0809|1|dense|20.0|3|5|PFlocks|Index1|646
+2023-06-22 13:25:02,921|40332|TIME|0|application_1664835645085_0809|1|dense|20.0|3|5|PFlocks|Index1|0.665965823
+2023-06-22 13:25:09,398|46809|INFO|0|application_1664835645085_0809|646|dense|20.0|3|5|PFlocks|Shuffle1|630
+2023-06-22 13:25:09,398|46809|TIME|0|application_1664835645085_0809|646|dense|20.0|3|5|PFlocks|Shuffle1|6.475830431
+2023-06-22 13:25:10,258|47669|TIME|0|application_1664835645085_0809|646|dense|20.0|3|5|PFlocks|Stats|0.858042118
+2023-06-22 13:25:10,270|47681|INFO|0|application_1664835645085_0809|646|dense|20.0|3|5|PFlocks|Index2|646
+2023-06-22 13:25:10,270|47681|TIME|0|application_1664835645085_0809|646|dense|20.0|3|5|PFlocks|Index2|0.01092553
+2023-06-22 13:25:13,254|50665|INFO|0|application_1664835645085_0809|646|dense|20.0|3|5|PFlocks|Shuffle2|70273
+2023-06-22 13:25:13,255|50666|TIME|0|application_1664835645085_0809|646|dense|20.0|3|5|PFlocks|Shuffle2|2.981847087
+2023-06-22 13:25:37,708|75119|INFO|0|application_1664835645085_0809|646|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:25:37,708|75119|TIME|0|application_1664835645085_0809|646|dense|20.0|3|5|PFlocks|Run|24.451344973
+2023-06-22 13:25:38,475|75886|INFO|0|application_1664835645085_0809|646|dense|20.0|3|5|PFlocks|END|
+4 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 20 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 20 --fraction 1 --density 0
+2023-06-22 13:25:56,663|14709|PARAMS|application_1664835645085_0810|input|Datasets/dense
+2023-06-22 13:25:56,664|14710|PARAMS|application_1664835645085_0810|epsilon|20
+2023-06-22 13:25:56,664|14710|PARAMS|application_1664835645085_0810|mu|3
+2023-06-22 13:25:56,664|14710|PARAMS|application_1664835645085_0810|delta|1
+2023-06-22 13:25:56,664|14710|PARAMS|application_1664835645085_0810|capacity|20
+2023-06-22 13:25:56,664|14710|PARAMS|application_1664835645085_0810|fraction|1
+2023-06-22 13:25:56,664|14710|PARAMS|application_1664835645085_0810|density|0
+2023-06-22 13:25:56,664|14710|PARAMS|application_1664835645085_0810|debug|true
+2023-06-22 13:25:56,665|14711|PARAMS|application_1664835645085_0810|cached|true
+2023-06-22 13:25:56,666|14712|INFO|0|application_1664835645085_0810|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:26:05,006|23052|INFO|0|application_1664835645085_0810|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:26:05,006|23052|TIME|0|application_1664835645085_0810|1|dense|20.0|3|5|PFlocks|Read|8.336771844
+2023-06-22 13:26:05,673|23719|INFO|0|application_1664835645085_0810|1|dense|20.0|3|5|PFlocks|Index1|313
+2023-06-22 13:26:05,673|23719|TIME|0|application_1664835645085_0810|1|dense|20.0|3|5|PFlocks|Index1|0.665120731
+2023-06-22 13:26:10,417|28463|INFO|0|application_1664835645085_0810|313|dense|20.0|3|5|PFlocks|Shuffle1|304
+2023-06-22 13:26:10,418|28464|TIME|0|application_1664835645085_0810|313|dense|20.0|3|5|PFlocks|Shuffle1|4.743566249
+2023-06-22 13:26:10,972|29018|TIME|0|application_1664835645085_0810|313|dense|20.0|3|5|PFlocks|Stats|0.552896268
+2023-06-22 13:26:10,983|29029|INFO|0|application_1664835645085_0810|313|dense|20.0|3|5|PFlocks|Index2|313
+2023-06-22 13:26:10,983|29029|TIME|0|application_1664835645085_0810|313|dense|20.0|3|5|PFlocks|Index2|0.009235886
+2023-06-22 13:26:13,313|31359|INFO|0|application_1664835645085_0810|313|dense|20.0|3|5|PFlocks|Shuffle2|36931
+2023-06-22 13:26:13,313|31359|TIME|0|application_1664835645085_0810|313|dense|20.0|3|5|PFlocks|Shuffle2|2.328215228
+2023-06-22 13:26:30,099|48145|INFO|0|application_1664835645085_0810|313|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:26:30,099|48145|TIME|0|application_1664835645085_0810|313|dense|20.0|3|5|PFlocks|Run|16.783800031
+2023-06-22 13:26:30,699|48745|INFO|0|application_1664835645085_0810|313|dense|20.0|3|5|PFlocks|END|
+4 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 50 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 50 --fraction 1 --density 0
+2023-06-22 13:26:48,326|14185|PARAMS|application_1664835645085_0811|input|Datasets/dense
+2023-06-22 13:26:48,326|14185|PARAMS|application_1664835645085_0811|epsilon|20
+2023-06-22 13:26:48,326|14185|PARAMS|application_1664835645085_0811|mu|3
+2023-06-22 13:26:48,327|14186|PARAMS|application_1664835645085_0811|delta|1
+2023-06-22 13:26:48,327|14186|PARAMS|application_1664835645085_0811|capacity|50
+2023-06-22 13:26:48,327|14186|PARAMS|application_1664835645085_0811|fraction|1
+2023-06-22 13:26:48,327|14186|PARAMS|application_1664835645085_0811|density|0
+2023-06-22 13:26:48,327|14186|PARAMS|application_1664835645085_0811|debug|true
+2023-06-22 13:26:48,327|14186|PARAMS|application_1664835645085_0811|cached|true
+2023-06-22 13:26:48,328|14187|INFO|0|application_1664835645085_0811|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:26:56,571|22430|INFO|0|application_1664835645085_0811|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:26:56,571|22430|TIME|0|application_1664835645085_0811|1|dense|20.0|3|5|PFlocks|Read|8.238687135
+2023-06-22 13:26:57,216|23075|INFO|0|application_1664835645085_0811|1|dense|20.0|3|5|PFlocks|Index1|121
+2023-06-22 13:26:57,216|23075|TIME|0|application_1664835645085_0811|1|dense|20.0|3|5|PFlocks|Index1|0.643414543
+2023-06-22 13:27:00,261|26120|INFO|0|application_1664835645085_0811|121|dense|20.0|3|5|PFlocks|Shuffle1|116
+2023-06-22 13:27:00,262|26121|TIME|0|application_1664835645085_0811|121|dense|20.0|3|5|PFlocks|Shuffle1|3.044409505
+2023-06-22 13:27:00,612|26471|TIME|0|application_1664835645085_0811|121|dense|20.0|3|5|PFlocks|Stats|0.348405626
+2023-06-22 13:27:00,624|26483|INFO|0|application_1664835645085_0811|121|dense|20.0|3|5|PFlocks|Index2|121
+2023-06-22 13:27:00,624|26483|TIME|0|application_1664835645085_0811|121|dense|20.0|3|5|PFlocks|Index2|0.010438337
+2023-06-22 13:27:03,083|28942|INFO|0|application_1664835645085_0811|121|dense|20.0|3|5|PFlocks|Shuffle2|17744
+2023-06-22 13:27:03,083|28942|TIME|0|application_1664835645085_0811|121|dense|20.0|3|5|PFlocks|Shuffle2|2.456953716
+2023-06-22 13:27:19,004|44863|INFO|0|application_1664835645085_0811|121|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:27:19,005|44864|TIME|0|application_1664835645085_0811|121|dense|20.0|3|5|PFlocks|Run|15.918794846
+2023-06-22 13:27:19,468|45327|INFO|0|application_1664835645085_0811|121|dense|20.0|3|5|PFlocks|END|
+4 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 100 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 100 --fraction 1 --density 0
+2023-06-22 13:27:37,512|14666|PARAMS|application_1664835645085_0812|input|Datasets/dense
+2023-06-22 13:27:37,513|14667|PARAMS|application_1664835645085_0812|epsilon|20
+2023-06-22 13:27:37,513|14667|PARAMS|application_1664835645085_0812|mu|3
+2023-06-22 13:27:37,513|14667|PARAMS|application_1664835645085_0812|delta|1
+2023-06-22 13:27:37,513|14667|PARAMS|application_1664835645085_0812|capacity|100
+2023-06-22 13:27:37,513|14667|PARAMS|application_1664835645085_0812|fraction|1
+2023-06-22 13:27:37,514|14668|PARAMS|application_1664835645085_0812|density|0
+2023-06-22 13:27:37,514|14668|PARAMS|application_1664835645085_0812|debug|true
+2023-06-22 13:27:37,514|14668|PARAMS|application_1664835645085_0812|cached|true
+2023-06-22 13:27:37,515|14669|INFO|0|application_1664835645085_0812|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:27:45,841|22995|INFO|0|application_1664835645085_0812|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:27:45,841|22995|TIME|0|application_1664835645085_0812|1|dense|20.0|3|5|PFlocks|Read|8.322693538
+2023-06-22 13:27:46,563|23717|INFO|0|application_1664835645085_0812|1|dense|20.0|3|5|PFlocks|Index1|52
+2023-06-22 13:27:46,563|23717|TIME|0|application_1664835645085_0812|1|dense|20.0|3|5|PFlocks|Index1|0.720069984
+2023-06-22 13:27:48,716|25870|INFO|0|application_1664835645085_0812|52|dense|20.0|3|5|PFlocks|Shuffle1|51
+2023-06-22 13:27:48,716|25870|TIME|0|application_1664835645085_0812|52|dense|20.0|3|5|PFlocks|Shuffle1|2.151701825
+2023-06-22 13:27:49,012|26166|TIME|0|application_1664835645085_0812|52|dense|20.0|3|5|PFlocks|Stats|0.295041947
+2023-06-22 13:27:49,025|26179|INFO|0|application_1664835645085_0812|52|dense|20.0|3|5|PFlocks|Index2|52
+2023-06-22 13:27:49,025|26179|TIME|0|application_1664835645085_0812|52|dense|20.0|3|5|PFlocks|Index2|0.011039159
+2023-06-22 13:27:51,173|28327|INFO|0|application_1664835645085_0812|52|dense|20.0|3|5|PFlocks|Shuffle2|10368
+2023-06-22 13:27:51,173|28327|TIME|0|application_1664835645085_0812|52|dense|20.0|3|5|PFlocks|Shuffle2|2.145792011
+2023-06-22 13:28:06,268|43422|INFO|0|application_1664835645085_0812|52|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:28:06,268|43422|TIME|0|application_1664835645085_0812|52|dense|20.0|3|5|PFlocks|Run|15.092380246
+2023-06-22 13:28:06,652|43806|INFO|0|application_1664835645085_0812|52|dense|20.0|3|5|PFlocks|END|
+4 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 250 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 250 --fraction 1 --density 0
+2023-06-22 13:28:24,039|14031|PARAMS|application_1664835645085_0813|input|Datasets/dense
+2023-06-22 13:28:24,039|14031|PARAMS|application_1664835645085_0813|epsilon|20
+2023-06-22 13:28:24,039|14031|PARAMS|application_1664835645085_0813|mu|3
+2023-06-22 13:28:24,039|14031|PARAMS|application_1664835645085_0813|delta|1
+2023-06-22 13:28:24,040|14032|PARAMS|application_1664835645085_0813|capacity|250
+2023-06-22 13:28:24,040|14032|PARAMS|application_1664835645085_0813|fraction|1
+2023-06-22 13:28:24,040|14032|PARAMS|application_1664835645085_0813|density|0
+2023-06-22 13:28:24,040|14032|PARAMS|application_1664835645085_0813|debug|true
+2023-06-22 13:28:24,040|14032|PARAMS|application_1664835645085_0813|cached|true
+2023-06-22 13:28:24,041|14033|INFO|0|application_1664835645085_0813|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:28:32,424|22416|INFO|0|application_1664835645085_0813|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:28:32,424|22416|TIME|0|application_1664835645085_0813|1|dense|20.0|3|5|PFlocks|Read|8.379640683
+2023-06-22 13:28:33,079|23071|INFO|0|application_1664835645085_0813|1|dense|20.0|3|5|PFlocks|Index1|28
+2023-06-22 13:28:33,079|23071|TIME|0|application_1664835645085_0813|1|dense|20.0|3|5|PFlocks|Index1|0.653374447
+2023-06-22 13:28:34,103|24095|INFO|0|application_1664835645085_0813|28|dense|20.0|3|5|PFlocks|Shuffle1|27
+2023-06-22 13:28:34,104|24096|TIME|0|application_1664835645085_0813|28|dense|20.0|3|5|PFlocks|Shuffle1|1.023501396
+2023-06-22 13:28:34,380|24372|TIME|0|application_1664835645085_0813|28|dense|20.0|3|5|PFlocks|Stats|0.275251758
+2023-06-22 13:28:34,391|24383|INFO|0|application_1664835645085_0813|28|dense|20.0|3|5|PFlocks|Index2|28
+2023-06-22 13:28:34,392|24384|TIME|0|application_1664835645085_0813|28|dense|20.0|3|5|PFlocks|Index2|0.009698818
+2023-06-22 13:28:36,251|26243|INFO|0|application_1664835645085_0813|28|dense|20.0|3|5|PFlocks|Shuffle2|6876
+2023-06-22 13:28:36,251|26243|TIME|0|application_1664835645085_0813|28|dense|20.0|3|5|PFlocks|Shuffle2|1.85656772
+2023-06-22 13:28:51,481|41473|INFO|0|application_1664835645085_0813|28|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:28:51,481|41473|TIME|0|application_1664835645085_0813|28|dense|20.0|3|5|PFlocks|Run|15.227749172
+2023-06-22 13:28:51,851|41843|INFO|0|application_1664835645085_0813|28|dense|20.0|3|5|PFlocks|END|
+4 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 500 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 500 --fraction 1 --density 0
+2023-06-22 13:29:09,731|14399|PARAMS|application_1664835645085_0814|input|Datasets/dense
+2023-06-22 13:29:09,732|14400|PARAMS|application_1664835645085_0814|epsilon|20
+2023-06-22 13:29:09,732|14400|PARAMS|application_1664835645085_0814|mu|3
+2023-06-22 13:29:09,732|14400|PARAMS|application_1664835645085_0814|delta|1
+2023-06-22 13:29:09,732|14400|PARAMS|application_1664835645085_0814|capacity|500
+2023-06-22 13:29:09,732|14400|PARAMS|application_1664835645085_0814|fraction|1
+2023-06-22 13:29:09,732|14400|PARAMS|application_1664835645085_0814|density|0
+2023-06-22 13:29:09,732|14400|PARAMS|application_1664835645085_0814|debug|true
+2023-06-22 13:29:09,732|14400|PARAMS|application_1664835645085_0814|cached|true
+2023-06-22 13:29:09,733|14401|INFO|0|application_1664835645085_0814|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:29:18,467|23135|INFO|0|application_1664835645085_0814|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:29:18,468|23136|TIME|0|application_1664835645085_0814|1|dense|20.0|3|5|PFlocks|Read|8.730205415
+2023-06-22 13:29:19,122|23790|INFO|0|application_1664835645085_0814|1|dense|20.0|3|5|PFlocks|Index1|13
+2023-06-22 13:29:19,122|23790|TIME|0|application_1664835645085_0814|1|dense|20.0|3|5|PFlocks|Index1|0.653087098
+2023-06-22 13:29:20,001|24669|INFO|0|application_1664835645085_0814|13|dense|20.0|3|5|PFlocks|Shuffle1|13
+2023-06-22 13:29:20,002|24670|TIME|0|application_1664835645085_0814|13|dense|20.0|3|5|PFlocks|Shuffle1|0.878238929
+2023-06-22 13:29:20,244|24912|TIME|0|application_1664835645085_0814|13|dense|20.0|3|5|PFlocks|Stats|0.241078714
+2023-06-22 13:29:20,254|24922|INFO|0|application_1664835645085_0814|13|dense|20.0|3|5|PFlocks|Index2|13
+2023-06-22 13:29:20,254|24922|TIME|0|application_1664835645085_0814|13|dense|20.0|3|5|PFlocks|Index2|0.009080771
+2023-06-22 13:29:22,002|26670|INFO|0|application_1664835645085_0814|13|dense|20.0|3|5|PFlocks|Shuffle2|4715
+2023-06-22 13:29:22,002|26670|TIME|0|application_1664835645085_0814|13|dense|20.0|3|5|PFlocks|Shuffle2|1.745678872
+2023-06-22 13:29:42,241|46909|INFO|0|application_1664835645085_0814|13|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:29:42,241|46909|TIME|0|application_1664835645085_0814|13|dense|20.0|3|5|PFlocks|Run|20.23629015
+2023-06-22 13:29:42,596|47264|INFO|0|application_1664835645085_0814|13|dense|20.0|3|5|PFlocks|END|
+4 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 750 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 750 --fraction 1 --density 0
+2023-06-22 13:30:00,448|14394|PARAMS|application_1664835645085_0815|input|Datasets/dense
+2023-06-22 13:30:00,449|14395|PARAMS|application_1664835645085_0815|epsilon|20
+2023-06-22 13:30:00,449|14395|PARAMS|application_1664835645085_0815|mu|3
+2023-06-22 13:30:00,449|14395|PARAMS|application_1664835645085_0815|delta|1
+2023-06-22 13:30:00,449|14395|PARAMS|application_1664835645085_0815|capacity|750
+2023-06-22 13:30:00,449|14395|PARAMS|application_1664835645085_0815|fraction|1
+2023-06-22 13:30:00,449|14395|PARAMS|application_1664835645085_0815|density|0
+2023-06-22 13:30:00,450|14396|PARAMS|application_1664835645085_0815|debug|true
+2023-06-22 13:30:00,450|14396|PARAMS|application_1664835645085_0815|cached|true
+2023-06-22 13:30:00,451|14397|INFO|0|application_1664835645085_0815|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:30:08,736|22682|INFO|0|application_1664835645085_0815|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:30:08,736|22682|TIME|0|application_1664835645085_0815|1|dense|20.0|3|5|PFlocks|Read|8.281754235
+2023-06-22 13:30:09,396|23342|INFO|0|application_1664835645085_0815|1|dense|20.0|3|5|PFlocks|Index1|4
+2023-06-22 13:30:09,396|23342|TIME|0|application_1664835645085_0815|1|dense|20.0|3|5|PFlocks|Index1|0.658253982
+2023-06-22 13:30:10,218|24164|INFO|0|application_1664835645085_0815|4|dense|20.0|3|5|PFlocks|Shuffle1|4
+2023-06-22 13:30:10,219|24165|TIME|0|application_1664835645085_0815|4|dense|20.0|3|5|PFlocks|Shuffle1|0.821196066
+2023-06-22 13:30:10,449|24395|TIME|0|application_1664835645085_0815|4|dense|20.0|3|5|PFlocks|Stats|0.228413972
+2023-06-22 13:30:10,459|24405|INFO|0|application_1664835645085_0815|4|dense|20.0|3|5|PFlocks|Index2|4
+2023-06-22 13:30:10,459|24405|TIME|0|application_1664835645085_0815|4|dense|20.0|3|5|PFlocks|Index2|0.008881052
+2023-06-22 13:30:10,954|24900|INFO|0|application_1664835645085_0815|4|dense|20.0|3|5|PFlocks|Shuffle2|3202
+2023-06-22 13:30:10,954|24900|TIME|0|application_1664835645085_0815|4|dense|20.0|3|5|PFlocks|Shuffle2|0.492779829
+2023-06-22 13:30:31,645|45591|INFO|0|application_1664835645085_0815|4|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:30:31,646|45592|TIME|0|application_1664835645085_0815|4|dense|20.0|3|5|PFlocks|Run|20.689656951
+2023-06-22 13:30:32,035|45981|INFO|0|application_1664835645085_0815|4|dense|20.0|3|5|PFlocks|END|
+4 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 1000 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 1000 --fraction 1 --density 0
+2023-06-22 13:30:50,297|14665|PARAMS|application_1664835645085_0816|input|Datasets/dense
+2023-06-22 13:30:50,298|14666|PARAMS|application_1664835645085_0816|epsilon|20
+2023-06-22 13:30:50,298|14666|PARAMS|application_1664835645085_0816|mu|3
+2023-06-22 13:30:50,298|14666|PARAMS|application_1664835645085_0816|delta|1
+2023-06-22 13:30:50,298|14666|PARAMS|application_1664835645085_0816|capacity|1000
+2023-06-22 13:30:50,298|14666|PARAMS|application_1664835645085_0816|fraction|1
+2023-06-22 13:30:50,298|14666|PARAMS|application_1664835645085_0816|density|0
+2023-06-22 13:30:50,298|14666|PARAMS|application_1664835645085_0816|debug|true
+2023-06-22 13:30:50,299|14667|PARAMS|application_1664835645085_0816|cached|true
+2023-06-22 13:30:50,300|14668|INFO|0|application_1664835645085_0816|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:30:58,579|22947|INFO|0|application_1664835645085_0816|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:30:58,579|22947|TIME|0|application_1664835645085_0816|1|dense|20.0|3|5|PFlocks|Read|8.275915744
+2023-06-22 13:30:59,227|23595|INFO|0|application_1664835645085_0816|1|dense|20.0|3|5|PFlocks|Index1|4
+2023-06-22 13:30:59,227|23595|TIME|0|application_1664835645085_0816|1|dense|20.0|3|5|PFlocks|Index1|0.64658899
+2023-06-22 13:31:00,014|24382|INFO|0|application_1664835645085_0816|4|dense|20.0|3|5|PFlocks|Shuffle1|4
+2023-06-22 13:31:00,015|24383|TIME|0|application_1664835645085_0816|4|dense|20.0|3|5|PFlocks|Shuffle1|0.786312193
+2023-06-22 13:31:00,252|24620|TIME|0|application_1664835645085_0816|4|dense|20.0|3|5|PFlocks|Stats|0.234793152
+2023-06-22 13:31:00,262|24630|INFO|0|application_1664835645085_0816|4|dense|20.0|3|5|PFlocks|Index2|4
+2023-06-22 13:31:00,262|24630|TIME|0|application_1664835645085_0816|4|dense|20.0|3|5|PFlocks|Index2|0.008720158
+2023-06-22 13:31:00,686|25054|INFO|0|application_1664835645085_0816|4|dense|20.0|3|5|PFlocks|Shuffle2|3202
+2023-06-22 13:31:00,686|25054|TIME|0|application_1664835645085_0816|4|dense|20.0|3|5|PFlocks|Shuffle2|0.42167708
+2023-06-22 13:31:20,896|45264|INFO|0|application_1664835645085_0816|4|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:31:20,896|45264|TIME|0|application_1664835645085_0816|4|dense|20.0|3|5|PFlocks|Run|20.207846331
+2023-06-22 13:31:21,256|45624|INFO|0|application_1664835645085_0816|4|dense|20.0|3|5|PFlocks|END|
+5 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 10 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 10 --fraction 1 --density 0
+2023-06-22 13:31:39,076|14466|PARAMS|application_1664835645085_0817|input|Datasets/dense
+2023-06-22 13:31:39,076|14466|PARAMS|application_1664835645085_0817|epsilon|20
+2023-06-22 13:31:39,076|14466|PARAMS|application_1664835645085_0817|mu|3
+2023-06-22 13:31:39,076|14466|PARAMS|application_1664835645085_0817|delta|1
+2023-06-22 13:31:39,077|14467|PARAMS|application_1664835645085_0817|capacity|10
+2023-06-22 13:31:39,077|14467|PARAMS|application_1664835645085_0817|fraction|1
+2023-06-22 13:31:39,077|14467|PARAMS|application_1664835645085_0817|density|0
+2023-06-22 13:31:39,077|14467|PARAMS|application_1664835645085_0817|debug|true
+2023-06-22 13:31:39,077|14467|PARAMS|application_1664835645085_0817|cached|true
+2023-06-22 13:31:39,078|14468|INFO|0|application_1664835645085_0817|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:31:47,116|22506|INFO|0|application_1664835645085_0817|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:31:47,116|22506|TIME|0|application_1664835645085_0817|1|dense|20.0|3|5|PFlocks|Read|8.034541086
+2023-06-22 13:31:47,814|23204|INFO|0|application_1664835645085_0817|1|dense|20.0|3|5|PFlocks|Index1|646
+2023-06-22 13:31:47,814|23204|TIME|0|application_1664835645085_0817|1|dense|20.0|3|5|PFlocks|Index1|0.696153492
+2023-06-22 13:31:53,856|29246|INFO|0|application_1664835645085_0817|646|dense|20.0|3|5|PFlocks|Shuffle1|630
+2023-06-22 13:31:53,856|29246|TIME|0|application_1664835645085_0817|646|dense|20.0|3|5|PFlocks|Shuffle1|6.040810339
+2023-06-22 13:31:54,579|29969|TIME|0|application_1664835645085_0817|646|dense|20.0|3|5|PFlocks|Stats|0.721005272
+2023-06-22 13:31:54,592|29982|INFO|0|application_1664835645085_0817|646|dense|20.0|3|5|PFlocks|Index2|646
+2023-06-22 13:31:54,592|29982|TIME|0|application_1664835645085_0817|646|dense|20.0|3|5|PFlocks|Index2|0.011580969
+2023-06-22 13:31:57,413|32803|INFO|0|application_1664835645085_0817|646|dense|20.0|3|5|PFlocks|Shuffle2|70273
+2023-06-22 13:31:57,413|32803|TIME|0|application_1664835645085_0817|646|dense|20.0|3|5|PFlocks|Shuffle2|2.81827025
+2023-06-22 13:32:20,388|55778|INFO|0|application_1664835645085_0817|646|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:32:20,388|55778|TIME|0|application_1664835645085_0817|646|dense|20.0|3|5|PFlocks|Run|22.972181793
+2023-06-22 13:32:21,086|56476|INFO|0|application_1664835645085_0817|646|dense|20.0|3|5|PFlocks|END|
+5 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 20 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 20 --fraction 1 --density 0
+2023-06-22 13:32:39,317|14813|PARAMS|application_1664835645085_0818|input|Datasets/dense
+2023-06-22 13:32:39,317|14813|PARAMS|application_1664835645085_0818|epsilon|20
+2023-06-22 13:32:39,318|14814|PARAMS|application_1664835645085_0818|mu|3
+2023-06-22 13:32:39,318|14814|PARAMS|application_1664835645085_0818|delta|1
+2023-06-22 13:32:39,318|14814|PARAMS|application_1664835645085_0818|capacity|20
+2023-06-22 13:32:39,318|14814|PARAMS|application_1664835645085_0818|fraction|1
+2023-06-22 13:32:39,318|14814|PARAMS|application_1664835645085_0818|density|0
+2023-06-22 13:32:39,318|14814|PARAMS|application_1664835645085_0818|debug|true
+2023-06-22 13:32:39,319|14815|PARAMS|application_1664835645085_0818|cached|true
+2023-06-22 13:32:39,320|14816|INFO|0|application_1664835645085_0818|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:32:47,486|22982|INFO|0|application_1664835645085_0818|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:32:47,486|22982|TIME|0|application_1664835645085_0818|1|dense|20.0|3|5|PFlocks|Read|8.163062745
+2023-06-22 13:32:48,161|23657|INFO|0|application_1664835645085_0818|1|dense|20.0|3|5|PFlocks|Index1|313
+2023-06-22 13:32:48,161|23657|TIME|0|application_1664835645085_0818|1|dense|20.0|3|5|PFlocks|Index1|0.672719705
+2023-06-22 13:32:52,762|28258|INFO|0|application_1664835645085_0818|313|dense|20.0|3|5|PFlocks|Shuffle1|304
+2023-06-22 13:32:52,762|28258|TIME|0|application_1664835645085_0818|313|dense|20.0|3|5|PFlocks|Shuffle1|4.599393095
+2023-06-22 13:32:53,312|28808|TIME|0|application_1664835645085_0818|313|dense|20.0|3|5|PFlocks|Stats|0.548481651
+2023-06-22 13:32:53,325|28821|INFO|0|application_1664835645085_0818|313|dense|20.0|3|5|PFlocks|Index2|313
+2023-06-22 13:32:53,325|28821|TIME|0|application_1664835645085_0818|313|dense|20.0|3|5|PFlocks|Index2|0.011502632
+2023-06-22 13:32:55,622|31118|INFO|0|application_1664835645085_0818|313|dense|20.0|3|5|PFlocks|Shuffle2|36931
+2023-06-22 13:32:55,622|31118|TIME|0|application_1664835645085_0818|313|dense|20.0|3|5|PFlocks|Shuffle2|2.294610046
+2023-06-22 13:33:11,904|47400|INFO|0|application_1664835645085_0818|313|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:33:11,904|47400|TIME|0|application_1664835645085_0818|313|dense|20.0|3|5|PFlocks|Run|16.279543437
+2023-06-22 13:33:12,535|48031|INFO|0|application_1664835645085_0818|313|dense|20.0|3|5|PFlocks|END|
+5 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 50 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 50 --fraction 1 --density 0
+2023-06-22 13:33:30,141|14215|PARAMS|application_1664835645085_0819|input|Datasets/dense
+2023-06-22 13:33:30,141|14215|PARAMS|application_1664835645085_0819|epsilon|20
+2023-06-22 13:33:30,141|14215|PARAMS|application_1664835645085_0819|mu|3
+2023-06-22 13:33:30,141|14215|PARAMS|application_1664835645085_0819|delta|1
+2023-06-22 13:33:30,142|14216|PARAMS|application_1664835645085_0819|capacity|50
+2023-06-22 13:33:30,142|14216|PARAMS|application_1664835645085_0819|fraction|1
+2023-06-22 13:33:30,142|14216|PARAMS|application_1664835645085_0819|density|0
+2023-06-22 13:33:30,142|14216|PARAMS|application_1664835645085_0819|debug|true
+2023-06-22 13:33:30,142|14216|PARAMS|application_1664835645085_0819|cached|true
+2023-06-22 13:33:30,144|14218|INFO|0|application_1664835645085_0819|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:33:38,184|22258|INFO|0|application_1664835645085_0819|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:33:38,184|22258|TIME|0|application_1664835645085_0819|1|dense|20.0|3|5|PFlocks|Read|8.036176981
+2023-06-22 13:33:38,827|22901|INFO|0|application_1664835645085_0819|1|dense|20.0|3|5|PFlocks|Index1|121
+2023-06-22 13:33:38,827|22901|TIME|0|application_1664835645085_0819|1|dense|20.0|3|5|PFlocks|Index1|0.641845098
+2023-06-22 13:33:41,924|25998|INFO|0|application_1664835645085_0819|121|dense|20.0|3|5|PFlocks|Shuffle1|116
+2023-06-22 13:33:41,924|25998|TIME|0|application_1664835645085_0819|121|dense|20.0|3|5|PFlocks|Shuffle1|3.095875121
+2023-06-22 13:33:42,298|26372|TIME|0|application_1664835645085_0819|121|dense|20.0|3|5|PFlocks|Stats|0.372473504
+2023-06-22 13:33:42,310|26384|INFO|0|application_1664835645085_0819|121|dense|20.0|3|5|PFlocks|Index2|121
+2023-06-22 13:33:42,310|26384|TIME|0|application_1664835645085_0819|121|dense|20.0|3|5|PFlocks|Index2|0.00974896
+2023-06-22 13:33:44,879|28953|INFO|0|application_1664835645085_0819|121|dense|20.0|3|5|PFlocks|Shuffle2|17744
+2023-06-22 13:33:44,879|28953|TIME|0|application_1664835645085_0819|121|dense|20.0|3|5|PFlocks|Shuffle2|2.566931444
+2023-06-22 13:34:00,433|44507|INFO|0|application_1664835645085_0819|121|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:34:00,433|44507|TIME|0|application_1664835645085_0819|121|dense|20.0|3|5|PFlocks|Run|15.551637452
+2023-06-22 13:34:00,860|44934|INFO|0|application_1664835645085_0819|121|dense|20.0|3|5|PFlocks|END|
+5 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 100 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 100 --fraction 1 --density 0
+2023-06-22 13:34:18,479|14156|PARAMS|application_1664835645085_0820|input|Datasets/dense
+2023-06-22 13:34:18,479|14156|PARAMS|application_1664835645085_0820|epsilon|20
+2023-06-22 13:34:18,479|14156|PARAMS|application_1664835645085_0820|mu|3
+2023-06-22 13:34:18,480|14157|PARAMS|application_1664835645085_0820|delta|1
+2023-06-22 13:34:18,480|14157|PARAMS|application_1664835645085_0820|capacity|100
+2023-06-22 13:34:18,480|14157|PARAMS|application_1664835645085_0820|fraction|1
+2023-06-22 13:34:18,480|14157|PARAMS|application_1664835645085_0820|density|0
+2023-06-22 13:34:18,480|14157|PARAMS|application_1664835645085_0820|debug|true
+2023-06-22 13:34:18,480|14157|PARAMS|application_1664835645085_0820|cached|true
+2023-06-22 13:34:18,481|14158|INFO|0|application_1664835645085_0820|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:34:26,646|22323|INFO|0|application_1664835645085_0820|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:34:26,647|22324|TIME|0|application_1664835645085_0820|1|dense|20.0|3|5|PFlocks|Read|8.161555625
+2023-06-22 13:34:27,409|23086|INFO|0|application_1664835645085_0820|1|dense|20.0|3|5|PFlocks|Index1|52
+2023-06-22 13:34:27,410|23087|TIME|0|application_1664835645085_0820|1|dense|20.0|3|5|PFlocks|Index1|0.761482452
+2023-06-22 13:34:29,594|25271|INFO|0|application_1664835645085_0820|52|dense|20.0|3|5|PFlocks|Shuffle1|51
+2023-06-22 13:34:29,595|25272|TIME|0|application_1664835645085_0820|52|dense|20.0|3|5|PFlocks|Shuffle1|2.182757199
+2023-06-22 13:34:29,897|25574|TIME|0|application_1664835645085_0820|52|dense|20.0|3|5|PFlocks|Stats|0.300685221
+2023-06-22 13:34:29,908|25585|INFO|0|application_1664835645085_0820|52|dense|20.0|3|5|PFlocks|Index2|52
+2023-06-22 13:34:29,908|25585|TIME|0|application_1664835645085_0820|52|dense|20.0|3|5|PFlocks|Index2|0.009504179
+2023-06-22 13:34:31,968|27645|INFO|0|application_1664835645085_0820|52|dense|20.0|3|5|PFlocks|Shuffle2|10368
+2023-06-22 13:34:31,968|27645|TIME|0|application_1664835645085_0820|52|dense|20.0|3|5|PFlocks|Shuffle2|2.05814342
+2023-06-22 13:34:47,652|43329|INFO|0|application_1664835645085_0820|52|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:34:47,652|43329|TIME|0|application_1664835645085_0820|52|dense|20.0|3|5|PFlocks|Run|15.681648745
+2023-06-22 13:34:48,043|43720|INFO|0|application_1664835645085_0820|52|dense|20.0|3|5|PFlocks|END|
+5 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 250 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 250 --fraction 1 --density 0
+2023-06-22 13:35:05,381|13979|PARAMS|application_1664835645085_0821|input|Datasets/dense
+2023-06-22 13:35:05,382|13980|PARAMS|application_1664835645085_0821|epsilon|20
+2023-06-22 13:35:05,382|13980|PARAMS|application_1664835645085_0821|mu|3
+2023-06-22 13:35:05,382|13980|PARAMS|application_1664835645085_0821|delta|1
+2023-06-22 13:35:05,382|13980|PARAMS|application_1664835645085_0821|capacity|250
+2023-06-22 13:35:05,382|13980|PARAMS|application_1664835645085_0821|fraction|1
+2023-06-22 13:35:05,383|13981|PARAMS|application_1664835645085_0821|density|0
+2023-06-22 13:35:05,383|13981|PARAMS|application_1664835645085_0821|debug|true
+2023-06-22 13:35:05,383|13981|PARAMS|application_1664835645085_0821|cached|true
+2023-06-22 13:35:05,384|13982|INFO|0|application_1664835645085_0821|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:35:13,506|22104|INFO|0|application_1664835645085_0821|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:35:13,506|22104|TIME|0|application_1664835645085_0821|1|dense|20.0|3|5|PFlocks|Read|8.118917057
+2023-06-22 13:35:14,129|22727|INFO|0|application_1664835645085_0821|1|dense|20.0|3|5|PFlocks|Index1|28
+2023-06-22 13:35:14,130|22728|TIME|0|application_1664835645085_0821|1|dense|20.0|3|5|PFlocks|Index1|0.622037042
+2023-06-22 13:35:15,134|23732|INFO|0|application_1664835645085_0821|28|dense|20.0|3|5|PFlocks|Shuffle1|27
+2023-06-22 13:35:15,135|23733|TIME|0|application_1664835645085_0821|28|dense|20.0|3|5|PFlocks|Shuffle1|1.003377032
+2023-06-22 13:35:15,390|23988|TIME|0|application_1664835645085_0821|28|dense|20.0|3|5|PFlocks|Stats|0.253727826
+2023-06-22 13:35:15,401|23999|INFO|0|application_1664835645085_0821|28|dense|20.0|3|5|PFlocks|Index2|28
+2023-06-22 13:35:15,401|23999|TIME|0|application_1664835645085_0821|28|dense|20.0|3|5|PFlocks|Index2|0.009598292
+2023-06-22 13:35:17,302|25900|INFO|0|application_1664835645085_0821|28|dense|20.0|3|5|PFlocks|Shuffle2|6876
+2023-06-22 13:35:17,303|25901|TIME|0|application_1664835645085_0821|28|dense|20.0|3|5|PFlocks|Shuffle2|1.899266119
+2023-06-22 13:35:32,997|41595|INFO|0|application_1664835645085_0821|28|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:35:32,997|41595|TIME|0|application_1664835645085_0821|28|dense|20.0|3|5|PFlocks|Run|15.69262063
+2023-06-22 13:35:33,332|41930|INFO|0|application_1664835645085_0821|28|dense|20.0|3|5|PFlocks|END|
+5 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 500 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 500 --fraction 1 --density 0
+2023-06-22 13:35:51,368|14520|PARAMS|application_1664835645085_0822|input|Datasets/dense
+2023-06-22 13:35:51,369|14521|PARAMS|application_1664835645085_0822|epsilon|20
+2023-06-22 13:35:51,369|14521|PARAMS|application_1664835645085_0822|mu|3
+2023-06-22 13:35:51,369|14521|PARAMS|application_1664835645085_0822|delta|1
+2023-06-22 13:35:51,369|14521|PARAMS|application_1664835645085_0822|capacity|500
+2023-06-22 13:35:51,369|14521|PARAMS|application_1664835645085_0822|fraction|1
+2023-06-22 13:35:51,369|14521|PARAMS|application_1664835645085_0822|density|0
+2023-06-22 13:35:51,369|14521|PARAMS|application_1664835645085_0822|debug|true
+2023-06-22 13:35:51,370|14522|PARAMS|application_1664835645085_0822|cached|true
+2023-06-22 13:35:51,371|14523|INFO|0|application_1664835645085_0822|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:35:59,568|22720|INFO|0|application_1664835645085_0822|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:35:59,568|22720|TIME|0|application_1664835645085_0822|1|dense|20.0|3|5|PFlocks|Read|8.193762647
+2023-06-22 13:36:00,217|23369|INFO|0|application_1664835645085_0822|1|dense|20.0|3|5|PFlocks|Index1|13
+2023-06-22 13:36:00,218|23370|TIME|0|application_1664835645085_0822|1|dense|20.0|3|5|PFlocks|Index1|0.648087156
+2023-06-22 13:36:01,073|24225|INFO|0|application_1664835645085_0822|13|dense|20.0|3|5|PFlocks|Shuffle1|13
+2023-06-22 13:36:01,074|24226|TIME|0|application_1664835645085_0822|13|dense|20.0|3|5|PFlocks|Shuffle1|0.854823224
+2023-06-22 13:36:01,328|24480|TIME|0|application_1664835645085_0822|13|dense|20.0|3|5|PFlocks|Stats|0.252615185
+2023-06-22 13:36:01,339|24491|INFO|0|application_1664835645085_0822|13|dense|20.0|3|5|PFlocks|Index2|13
+2023-06-22 13:36:01,340|24492|TIME|0|application_1664835645085_0822|13|dense|20.0|3|5|PFlocks|Index2|0.01050513
+2023-06-22 13:36:03,098|26250|INFO|0|application_1664835645085_0822|13|dense|20.0|3|5|PFlocks|Shuffle2|4715
+2023-06-22 13:36:03,098|26250|TIME|0|application_1664835645085_0822|13|dense|20.0|3|5|PFlocks|Shuffle2|1.756258462
+2023-06-22 13:36:24,704|47856|INFO|0|application_1664835645085_0822|13|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:36:24,704|47856|TIME|0|application_1664835645085_0822|13|dense|20.0|3|5|PFlocks|Run|21.603474903
+2023-06-22 13:36:25,040|48192|INFO|0|application_1664835645085_0822|13|dense|20.0|3|5|PFlocks|END|
+5 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 750 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 750 --fraction 1 --density 0
+2023-06-22 13:36:43,225|14319|PARAMS|application_1664835645085_0823|input|Datasets/dense
+2023-06-22 13:36:43,225|14319|PARAMS|application_1664835645085_0823|epsilon|20
+2023-06-22 13:36:43,225|14319|PARAMS|application_1664835645085_0823|mu|3
+2023-06-22 13:36:43,226|14320|PARAMS|application_1664835645085_0823|delta|1
+2023-06-22 13:36:43,226|14320|PARAMS|application_1664835645085_0823|capacity|750
+2023-06-22 13:36:43,226|14320|PARAMS|application_1664835645085_0823|fraction|1
+2023-06-22 13:36:43,226|14320|PARAMS|application_1664835645085_0823|density|0
+2023-06-22 13:36:43,226|14320|PARAMS|application_1664835645085_0823|debug|true
+2023-06-22 13:36:43,226|14320|PARAMS|application_1664835645085_0823|cached|true
+2023-06-22 13:36:43,227|14321|INFO|0|application_1664835645085_0823|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:36:51,347|22441|INFO|0|application_1664835645085_0823|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:36:51,347|22441|TIME|0|application_1664835645085_0823|1|dense|20.0|3|5|PFlocks|Read|8.1161377
+2023-06-22 13:36:52,025|23119|INFO|0|application_1664835645085_0823|1|dense|20.0|3|5|PFlocks|Index1|4
+2023-06-22 13:36:52,026|23120|TIME|0|application_1664835645085_0823|1|dense|20.0|3|5|PFlocks|Index1|0.677148156
+2023-06-22 13:36:52,866|23960|INFO|0|application_1664835645085_0823|4|dense|20.0|3|5|PFlocks|Shuffle1|4
+2023-06-22 13:36:52,866|23960|TIME|0|application_1664835645085_0823|4|dense|20.0|3|5|PFlocks|Shuffle1|0.83907493
+2023-06-22 13:36:53,112|24206|TIME|0|application_1664835645085_0823|4|dense|20.0|3|5|PFlocks|Stats|0.244509716
+2023-06-22 13:36:53,125|24219|INFO|0|application_1664835645085_0823|4|dense|20.0|3|5|PFlocks|Index2|4
+2023-06-22 13:36:53,125|24219|TIME|0|application_1664835645085_0823|4|dense|20.0|3|5|PFlocks|Index2|0.011414467
+2023-06-22 13:36:53,601|24695|INFO|0|application_1664835645085_0823|4|dense|20.0|3|5|PFlocks|Shuffle2|3202
+2023-06-22 13:36:53,601|24695|TIME|0|application_1664835645085_0823|4|dense|20.0|3|5|PFlocks|Shuffle2|0.472075379
+2023-06-22 13:37:14,062|45156|INFO|0|application_1664835645085_0823|4|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:37:14,063|45157|TIME|0|application_1664835645085_0823|4|dense|20.0|3|5|PFlocks|Run|20.459091539
+2023-06-22 13:37:14,431|45525|INFO|0|application_1664835645085_0823|4|dense|20.0|3|5|PFlocks|END|
+5 ./mf --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 1000 --fraction 1 --density 0 --master yarn
+MASTER     = yarn
+EXECUTORS  = 12
+WAIT       = 0s
+spark-submit --files /home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties --conf spark.driver.maxResultSize=4G --conf spark.kryoserializer.buffer.max=256m --conf spark.locality.wait=0s --jars /home/acald013/Spark/2.4/jars/jts-core-1.19.0.jar,/home/acald013/Spark/2.4/jars/scallop_2.11-4.0.1.jar,/home/acald013/Spark/2.4/jars/slf4j-api-1.7.25.jar,/home/acald013/Spark/2.4/jars/archery_2.11-0.6.0.jar,/home/acald013/Spark/2.4/jars/jgrapht-core-1.4.0.jar,/home/acald013/Spark/2.4/jars/commons-geometry-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-fraction-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-core-1.0-beta1.jar,/home/acald013/Spark/2.4/jars/commons-numbers-arrays-1.0-beta1.jar --master yarn --deploy-mode client --num-executors 12 --executor-cores 9 --executor-memory 20g --driver-memory 35g --class edu.ucr.dblab.pflock.MF /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar --input Datasets/dense --epsilon 20 --mu 3 --delta 1 --capacity 1000 --fraction 1 --density 0
+2023-06-22 13:37:32,216|14355|PARAMS|application_1664835645085_0824|input|Datasets/dense
+2023-06-22 13:37:32,217|14356|PARAMS|application_1664835645085_0824|epsilon|20
+2023-06-22 13:37:32,217|14356|PARAMS|application_1664835645085_0824|mu|3
+2023-06-22 13:37:32,217|14356|PARAMS|application_1664835645085_0824|delta|1
+2023-06-22 13:37:32,217|14356|PARAMS|application_1664835645085_0824|capacity|1000
+2023-06-22 13:37:32,217|14356|PARAMS|application_1664835645085_0824|fraction|1
+2023-06-22 13:37:32,218|14357|PARAMS|application_1664835645085_0824|density|0
+2023-06-22 13:37:32,218|14357|PARAMS|application_1664835645085_0824|debug|true
+2023-06-22 13:37:32,218|14357|PARAMS|application_1664835645085_0824|cached|true
+2023-06-22 13:37:32,219|14358|INFO|0|application_1664835645085_0824|1|dense|20.0|3|5|PFlocks|START|
+2023-06-22 13:37:40,529|22668|INFO|0|application_1664835645085_0824|1|dense|20.0|3|5|PFlocks|Read|2101
+2023-06-22 13:37:40,529|22668|TIME|0|application_1664835645085_0824|1|dense|20.0|3|5|PFlocks|Read|8.306549735
+2023-06-22 13:37:41,176|23315|INFO|0|application_1664835645085_0824|1|dense|20.0|3|5|PFlocks|Index1|4
+2023-06-22 13:37:41,176|23315|TIME|0|application_1664835645085_0824|1|dense|20.0|3|5|PFlocks|Index1|0.645448264
+2023-06-22 13:37:41,959|24098|INFO|0|application_1664835645085_0824|4|dense|20.0|3|5|PFlocks|Shuffle1|4
+2023-06-22 13:37:41,959|24098|TIME|0|application_1664835645085_0824|4|dense|20.0|3|5|PFlocks|Shuffle1|0.781972812
+2023-06-22 13:37:42,185|24324|TIME|0|application_1664835645085_0824|4|dense|20.0|3|5|PFlocks|Stats|0.223857798
+2023-06-22 13:37:42,195|24334|INFO|0|application_1664835645085_0824|4|dense|20.0|3|5|PFlocks|Index2|4
+2023-06-22 13:37:42,195|24334|TIME|0|application_1664835645085_0824|4|dense|20.0|3|5|PFlocks|Index2|0.009019265
+2023-06-22 13:37:42,655|24794|INFO|0|application_1664835645085_0824|4|dense|20.0|3|5|PFlocks|Shuffle2|3202
+2023-06-22 13:37:42,655|24794|TIME|0|application_1664835645085_0824|4|dense|20.0|3|5|PFlocks|Shuffle2|0.457561813
+2023-06-22 13:38:02,666|44805|INFO|0|application_1664835645085_0824|4|dense|20.0|3|5|PFlocks|Run|2317
+2023-06-22 13:38:02,667|44806|TIME|0|application_1664835645085_0824|4|dense|20.0|3|5|PFlocks|Run|20.009041011
+2023-06-22 13:38:03,023|45162|INFO|0|application_1664835645085_0824|4|dense|20.0|3|5|PFlocks|END|

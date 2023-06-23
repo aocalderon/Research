@@ -974,13 +974,13 @@ import org.rogach.scallop._
 
 class BFEParams(args: Seq[String]) extends ScallopConf(args) {
   val tolerance:  ScallopOption[Double]  = opt[Double]  (default = Some(1e-3))
-  val input:      ScallopOption[String]  = opt[String]  (default = Some(""))
-  val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(10.0))
+  val input:      ScallopOption[String]  = opt[String]  (default = Some(s"${System.getenv("HOME")}/Research/Datasets/dense.tsv"))
+  val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(5.0))
   val mu:         ScallopOption[Int]     = opt[Int]     (default = Some(3))
-  val delta:      ScallopOption[Int]     = opt[Int]     (default = Some(5))
+  val delta:      ScallopOption[Int]     = opt[Int]     (default = Some(1))
   val capacity:   ScallopOption[Int]     = opt[Int]     (default = Some(100))
   val fraction:   ScallopOption[Double]  = opt[Double]  (default = Some(0.01))
-  val density:    ScallopOption[Double]  = opt[Double]  (default = Some(1000.0))
+  val density:    ScallopOption[Double]  = opt[Double]  (default = Some(0))
   val tag:        ScallopOption[String]  = opt[String]  (default = Some(""))
   val output:     ScallopOption[String]  = opt[String]  (default = Some("/tmp/"))
   val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))

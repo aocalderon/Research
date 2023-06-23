@@ -1,4 +1,4 @@
-package edu.ucr.dblab.pflock
+package edu.ucr.dblab.pflock edu.ucr.dblab.pflock.MF.scala edu.ucr.dblab.pflock edu.ucr.dblab.pflock.MF.scala.MF.scala
 
 import org.locationtech.jts.geom.{PrecisionModel, GeometryFactory}
 import org.locationtech.jts.geom.{Envelope, Coordinate, Point}
@@ -25,7 +25,6 @@ object MF {
 
     implicit val spark = SparkSession.builder()
       .config("spark.serializer", classOf[KryoSerializer].getName)
-      .master(params.master())
       .appName("MF").getOrCreate()
     import spark.implicits._
 
