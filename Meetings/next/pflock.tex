@@ -9,8 +9,8 @@
   \usebeamertemplate{itemize item}}
 
 \usepackage{hyperref}
-%\usepackage{minted}
-\usepackage{animate}
+\usepackage{booktabs}
+\usepackage{xfp}
 \usepackage{graphicx}
 \def\Put(#1,#2)#3{\leavevmode\makebox(0,0){\put(#1,#2){#3}}}
 \usepackage{colortbl}
@@ -77,108 +77,77 @@
     \end{frame}
 }
 
-\begin{frame}{Benchmark DBScan implementations}
+\begin{frame}{Still slow for dense cells}
     \centering
-    \includegraphics[width=0.6\textwidth]{figures/DBScanByTime}
+    \includegraphics[width=0.7\textwidth]{figures/Capacity/capacity}
 \end{frame}
 
-\begin{frame}{Dense areas}{Still problem in partition performance...}
-    \centering
-    \includegraphics[width=0.9\textwidth]{figures/performance}
+\begin{frame}{Still slow for dense cells}
+        \centering
+        \begin{tikzpicture}
+                \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[width=0.7\textwidth]{figures/Capacity/capacity}};
+                \draw<1>[red,ultra thick,rounded corners] (4.4,0.75) rectangle (5.2,3.4);
+        \end{tikzpicture}
 \end{frame}
 
-\begin{frame}{Dense areas}{Having a look at problematic cells...}
-    \centering
-    \includegraphics[width=0.7\textwidth]{figures/cell518}
+
+\begin{frame}{Change title...}
+        \centering
+        \begin{tikzpicture}
+                \foreach \i in {1,...,8} {
+                        \def\j{\fpeval{9000 - \i * 1000}}
+                        \node<\i>[] at (5,-0.25) {density=\j};
+                        \node<\i>[anchor=south west,inner sep=0] at (0,0) {
+                                \includegraphics[width=1.25\textheight]{figures/Cells/Cells\j}
+                        };
+                }
+        \end{tikzpicture}
 \end{frame}
 
-\begin{frame}{Dense areas}{Some stats for Cell 518...}
-        \begin{table}[ht]
-                \centering
-                \begin{tabular}{ll}
-                        \hline
-                        \textbf{Stage} & \textbf{Number} \\
-                        \hline
-                        Points      & 455 \\
-                        Pairs       & 11603 \\
-                        Centers     & 23206 \\
-                        Candidates  & 23049 \\
-                        Maximals    & 558 \\
-                          \hline
-                \end{tabular}
-        \end{table}
-        \begin{table}[ht]
-                \centering
-                \begin{tabular}{ll}
-                        \hline
-                        \textbf{Stage} & \textbf{Time(s)} \\
-                        \hline
-                        Grid       & 0.0126 \\
-                        Read       & 0.0050 \\
-                        Pairs      & 0.0328 \\
-                        Centers    & 0.3852 \\
-                        Candidates & 0.0095 \\
-                        Maximals   & 11.8734 \\
-                        \textbf{Total}      & \textbf{12.4339} \\
-                        \hline
-                \end{tabular}
-        \end{table}
-\end{frame}
-
-\begin{frame}{Dense areas}
-    \centering
-    \includegraphics[trim={300 300 300 210}, clip, width=0.6\textwidth]{figures/cell518_grids}
-\end{frame}
-
-\begin{frame}{Dense areas}{Top 10 longest duration grids inside Cell 518...}
-        \begin{table}[ht]
-                \centering
-                \begin{tabular}{r r c r r}
-                        \hline
-                        & \textbf{Id} & \textbf{Position} & \textbf{Points} & \textbf{Time(s)} \\
-                        \hline
-                        1 & 17 & (1,4) & 156 & 3.67 \\
-                        2 & 9 & (0,3) & 135 & 3.05 \\
-                        3 & 16 & (0,4) & 125 & 1.18 \\
-                        4 & 18 & (2,4) & 124 & 0.99 \\
-                        5 & 10 & (1,3) & 166 & 0.58 \\
-                        6 & 3 & (1,1) & 111 & 0.48 \\
-                        7 & 26 & (1,5) & 110 & 0.47 \\
-                        8 & 20 & (4,0) & 88 & 0.26 \\
-                        9 & 4 & (0,2) & 116 & 0.21 \\
-                        10 & 0 & (0,0) & 68 & 0.17 \\
-                        \hline
-                \end{tabular}
-        \end{table}
-\end{frame}
-
-\begin{frame}{Dense areas}{Longest duration grid...}
-    \centering
-    \includegraphics[trim={300 300 300 210}, clip, width=0.6\textwidth]{figures/cell518_grid17}
-\end{frame}
-
-\begin{frame}{Dense areas}{Number of points and duration per grid...}
+\begin{frame}{Detecting maximal duplicates, subsets and supersets}
+        {Sum of time for each candidate to be evaluated...}
         \centering
         \begin{minipage}{0.49\textwidth}
-                \includegraphics[width=\textwidth]{figures/hoods518_n}
-        \end{minipage}
+                \includegraphics[width=\textwidth]{figures/Maximals/performanceBySum1}
+        \end{minipage} %
         \begin{minipage}{0.49\textwidth}
-                \includegraphics[width=\textwidth]{figures/hoods518_time}
+                \includegraphics[width=\textwidth]{figures/Maximals/performanceBySum2}
         \end{minipage}
 \end{frame}
 
-\begin{frame}{Dense areas}{Duration per grid...}
-    \centering
-    \includegraphics[trim={300 300 300 210}, clip, width=0.6\textwidth]{figures/cell518_grid_times}
+\begin{frame}{Detecting maximal duplicates, subsets and supersets}
+        {Average of time for each candidate to be evaluated...}
+        \centering
+        \begin{minipage}{0.49\textwidth}
+                \includegraphics[width=\textwidth]{figures/Maximals/performanceByMean1}
+        \end{minipage} %
+        \begin{minipage}{0.49\textwidth}
+                \includegraphics[width=\textwidth]{figures/Maximals/performanceByMean2}
+        \end{minipage}
 \end{frame}
 
-\begin{frame}{What is next...}
-        \begin{itemize}
-                \item Working on distributing the neighborhoods in dense areas...
-                \item Defining a metric to consider an area as \textit{``dense''}...
-                \item Validating and testing performance in cluster...
-                \item Exploring strategies to improve cell replication for large $\varepsilon$ values...
-        \end{itemize}
+\begin{frame}{Detecting maximal duplicates, subsets and supersets}
+        \begin{table}[ht]
+                \centering
+                \begin{tabular}{rrrrr}
+                        \toprule
+                               & Number & Tree & Range & Position \\
+                        Cell & candidates & size & size & found \\
+                        \midrule
+                        0 & 10393 & 258 & 170 & 77 \\
+                        1 & 9579 & 231 & 167 & 84 \\
+                        2 & 11994 & 276 & 166 & 78 \\
+                        3 & 10765 & 251 & 170 & 87 \\
+                        4 & 7974 & 204 & 123 & 64 \\
+                        5 & 7936 & 188 & 126 & 61 \\
+                        \bottomrule
+                \end{tabular}
+        \end{table}
+\end{frame}
+
+\begin{frame}{Detecting maximal duplicates, subsets and supersets}
+    \centering
+%    \includegraphics[width=0.6\textwidth]{figures/}
 \end{frame}
 
 \end{document}
