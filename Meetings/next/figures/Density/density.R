@@ -17,26 +17,35 @@ params = enframe(read_lines( "density.out" ), value = "line") |>
 
 data = perfs |> left_join(params, by = "appId") |>
   filter(!str_detect(stage, "Read")) |>
-  mutate(density = as.numeric(density), time = as.numeric(time),
-         stage = as.factor(stage)) |>
+  mutate(time = as.numeric(time), stage = as.factor(stage), 
+         density = as.factor(density)) |>
+  mutate(density = recode(density, "0" = "NA")) |>
   select(density, stage, time) |>
-  group_by(density, stage) |> summarise(time = mean(time)) 
-  
-p = ggplot(data, aes(x = as.factor(density), y = time, fill = stage)) + 
+  filter(density != 1000 & density != 1500) |>
+  group_by(density, stage) |> summarise(time = mean(time))
+
+data$stage <- factor(data$stage, levels = c("Index1","Shuffle1","Stats","Index2","Shuffle2","Run")) 
+dataByStage = data |> mutate(time = case_when(density=="NA"&stage=="Stats" ~ 0, 
+                                density=="NA"&stage=="Shuffle2" ~ 0, 
+                                density=="NA"&stage=="Index2" ~ 0, 
+                                TRUE ~ time))
+p = ggplot(dataByStage, aes(x = as.factor(density), y = time, fill = stage)) + 
   geom_col(position = "dodge") +
-  labs(x="Density (pairs per cell)", y="Time (s)") + 
+  scale_fill_discrete("Stage") +
+  labs(x="Threshold (pairs per cell)", y="Time (s)") + 
   theme_bw()
 plot(p)
 
-W = 6
+W = 8
 H = 4
 ggsave(paste0("densityByStage.pdf"), width = W, height = H)
-print(xtable(data, digits = c(0,0,0,2)), booktabs = TRUE, include.rownames=FALSE)
+
+print(xtable(dataByStage, digits = c(0,0,0,2)), booktabs = TRUE, include.rownames=FALSE)
 
 data = data |> group_by(density) |> summarise(time = sum(time))
 p = ggplot(data, aes(x = as.factor(density), y = time)) + 
   geom_col(position = "dodge") +
-  labs(x="Density (pairs per cell)", y="Time (s)") + 
+  labs(x="Threshold (pairs per cell)", y="Time (s)") + 
   theme_bw()
 plot(p)
 

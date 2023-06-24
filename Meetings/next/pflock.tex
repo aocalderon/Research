@@ -77,12 +77,17 @@
     \end{frame}
 }
 
-\begin{frame}{Still slow for dense cells}
+\begin{frame}{Dataset}
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/dataset}
+\end{frame}
+
+\begin{frame}{Looking for best partitioning}{$\varepsilon=20$ and $\mu=3$}
     \centering
     \includegraphics[width=0.7\textwidth]{figures/Capacity/capacity}
 \end{frame}
 
-\begin{frame}{Still slow for dense cells}
+\begin{frame}{Looking for best partitioning}{$\varepsilon=20$ and $\mu=3$}
         \centering
         \begin{tikzpicture}
                 \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[width=0.7\textwidth]{figures/Capacity/capacity}};
@@ -91,16 +96,42 @@
 \end{frame}
 
 
-\begin{frame}{Change title...}
+\begin{frame}{Exploring different threshold (pairs per cell)}{$\varepsilon=20$ and $\mu=3$}
         \centering
         \begin{tikzpicture}
-                \foreach \i in {1,...,8} {
+                \foreach \i in {1,...,7} {
                         \def\j{\fpeval{9000 - \i * 1000}}
-                        \node<\i>[] at (5,-0.25) {density=\j};
+                        \node<\i>[] at (5,-0.25) {threshold=\j};
                         \node<\i>[anchor=south west,inner sep=0] at (0,0) {
                                 \includegraphics[width=1.25\textheight]{figures/Cells/Cells\j}
                         };
                 }
+        \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Performance (???)}{$\varepsilon=20$, $\mu=3$}
+        \centering
+        \begin{figure}
+                \includegraphics[width=0.7\textwidth]{figures/Density/density}
+                \caption{Varying threshold from 2000 to 8000, comparing with no threshold (NA).}
+        \end{figure}
+\end{frame}
+
+\begin{frame}{Performance (???)}{$\varepsilon=20$, $\mu=3$}
+        \centering
+        \begin{figure}
+                \includegraphics[width=0.7\textwidth]{figures/Density/densityByStage}
+                \caption{Varying threshold from 2000 to 8000, comparing with no threshold (NA).}
+        \end{figure}
+\end{frame}
+
+\begin{frame}{Where the time goes...}{6 grids in the densest cell show the longest duration...}
+        \centering
+        \begin{tikzpicture}
+                \node[anchor=south west,inner sep=0] at (0,0) {
+                        \includegraphics[width=1.25\textheight]{figures/densest}
+                };
+                \draw<1>[blue,ultra thick] (4.35,3.27) rectangle (5.49,4.1);
         \end{tikzpicture}
 \end{frame}
 
@@ -126,13 +157,13 @@
         \end{minipage}
 \end{frame}
 
-\begin{frame}{Detecting maximal duplicates, subsets and supersets}
+\begin{frame}{Detecting maximal duplicates, subsets and supersets}{}
         \begin{table}[ht]
                 \centering
                 \begin{tabular}{rrrrr}
                         \toprule
-                               & Number & Tree & Range & Position \\
-                        Cell & candidates & size & size & found \\
+                               & Number & Tree & Range &  \\
+                        Cell & candidates & size & size & Position \\
                         \midrule
                         0 & 10393 & 258 & 170 & 77 \\
                         1 & 9579 & 231 & 167 & 84 \\
@@ -142,11 +173,17 @@
                         5 & 7936 & 188 & 126 & 61 \\
                         \bottomrule
                 \end{tabular}
+                \caption{Average size of tree index, query range and position where the candidate was detected (if
+any).}
         \end{table}
 \end{frame}
 
-\begin{frame}{Detecting maximal duplicates, subsets and supersets}
-    \centering
+\begin{frame}{What is next?}
+        \centering
+        \begin{itemize}
+                \item I think it is the best we can do under the given parameters...
+                \item Explore the temporal dimension and evaluate 3D partitioners...
+        \end{itemize}
 %    \includegraphics[width=0.6\textwidth]{figures/}
 \end{frame}
 
