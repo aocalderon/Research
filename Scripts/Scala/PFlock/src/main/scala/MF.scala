@@ -25,6 +25,7 @@ object MF {
 
     implicit val spark = SparkSession.builder()
       .config("spark.serializer", classOf[KryoSerializer].getName)
+      .master(params.master())
       .appName("MF").getOrCreate()
     import spark.implicits._
 
@@ -166,7 +167,7 @@ object MF {
     settings.partitions = nIndex2
 
     debug{
-      save("/tmp/edgesCells.wkt"){
+      save(s"/tmp/edgesCells${settings.density}.wkt"){
         cells.values.map{ mbr => mbr.wkt + "\n"}.toList
       }
     }

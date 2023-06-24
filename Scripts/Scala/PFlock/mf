@@ -1,91 +1,25 @@
 #!/bin/bash
 
-POSITIONAL_ARGS=()
-while [[ $# -gt 0 ]]; do
+PARGS=()
+while [[ "$1" != "" ]]; do
     case $1 in
-	-i|--input)
-	    INPUT="$2"
-	    shift
-	    shift
-	    ;;
-	-e|--epsilon)
-	    EPSILON="$2"
-	    shift # past argument
-	    shift # past value
-	    ;;
-	-m|--mu)
-	    MU="$2"
-	    shift # past argument
-	    shift # past value
-	    ;;
-	-d|--delta)
-	    DELTA="$2"
-	    shift # past argument
-	    shift # past value
-	    ;;
-	-c|--capacity)
-	    CAPACITY="$2"
-	    shift # past argument
-	    shift # past value
-	    ;;
-	-f|--fraction)
-	    FRACTION="$2"
-	    shift # past argument
-	    shift # past value
-	    ;;
-	-n|--density)
-	    DENSITY="$2"
-	    shift # past argument
-	    shift # past value
-	    ;;
-	-t|--tolerance)
-	    TOLERANCE="$2"
-	    shift # past argument
-	    shift # past value
-	    ;;
-	-m|--master)
-	    MASTER="$2"
-	    shift # past argument
-	    shift # past value
-	    ;;	
 	-x|--executors)
-	    EXECUTORS=$2
-	    shift # past argument
-	    shift # past value
+	    shift
+	    EXECUTORS="$1"
 	    ;;	
-	--debug)
-	    DEBUG="--debug"
-	    shift # past argument
-	    ;;
-	--cached)
-	    CACHED="--cached"
-	    shift # past argument
-	    ;;
 	-w|--wait)
-	    WAIT="$2"
-	    shift # past argument
-	    shift # past value
-	    ;;
-	-*|--*)
-	    echo "Unknown option $1"
-	    exit 1
+	    shift
+	    WAIT="$1"
 	    ;;
 	*)
-	    POSITIONAL_ARGS+=("$1") # save positional arg
-	    shift # past argument
+	    PARGS+=("$1") # save positional arg
 	    ;;
     esac
+    shift
 done
-set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
-
-if [ -v MASTER ];    then echo "MASTER     = ${MASTER}";  else MASTER="yarn"; echo "MASTER     = yarn";       fi
+set -- "${PARGS[@]}" # restore positional parameters
 if [ -v EXECUTORS ]; then echo "EXECUTORS  = $EXECUTORS"; else EXECUTORS=12;  echo "EXECUTORS  = $EXECUTORS"; fi
 if [ -v WAIT ];      then echo "WAIT       = $WAIT";      else WAIT="0s";     echo "WAIT       = $WAIT";      fi
-if [ -v CAPACITY ];  then echo "CAPACITY   = $CAPACITY";  else CAPACITY=100; fi
-if [ -v FRACTION ];  then echo "FRACTION   = $FRACTION";  else FRACTION=1;   fi
-if [ -v DENSITY ];   then echo "DENSITY    = $DENSITY";   else DENSITY=1000; fi
-if [ -v DEBUG ];     then echo "DEBUG      = YES";        else DEBUG="";     fi
-if [ -v CACHED ];    then echo "CACHED     = YES";        else CACHED="";    fi
 
 CORES=9
 DMEMORY=35g
@@ -118,12 +52,11 @@ PARAMS=(
 	    --conf spark.kryoserializer.buffer.max=$KRYO_BUFFER_MAX \
 	    --conf spark.locality.wait=$WAIT \
 	    --jars $JARS \
-	    --master $MASTER --deploy-mode client \
+	    --deploy-mode client \
 	    --num-executors $EXECUTORS --executor-cores $CORES \
 	    --executor-memory $EMEMORY --driver-memory $DMEMORY \
-	    --class $CLASS $JAR \
-	    --input $INPUT $DEBUG $CACHED --epsilon $EPSILON --mu $MU --delta $DELTA --capacity $CAPACITY --fraction $FRACTION --density $DENSITY
+	    --class $CLASS $JAR 
 )
 
-echo "spark-submit ${PARAMS[@]}"
-spark-submit ${PARAMS[@]}
+echo "spark-submit ${PARAMS[@]} ${PARGS[@]}"
+spark-submit ${PARAMS[@]} ${PARGS[@]}

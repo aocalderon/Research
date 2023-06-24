@@ -1,20 +1,29 @@
 #!/bin/bash
 
-N=$1
 
-ES=( 2 5 10 15 20 )
-CS=( 10 20 50 100 250 500 750 )
-#ES=( 5 )
-#MS=( 3 )
+N=$1
+#DATASET=PFlock/LA/LA_50K_T320
+DATASET=Datasets/dense
+
+ES=( 20 ) # epsilon
+MS=( 3 ) # mu
+CS=( 250 ) # capacity
+DS=( 0 6500 7000 7500 8000 ) # density
 
 for n in `seq 1 $N`
 do
-    for e in "${ES[@]}"
+    for d in "${DS[@]}"
     do
-	for c in "${CS[@]}"
+	for e in "${ES[@]}"
 	do
-	    echo "$n ./mf Datasets/LA_50K_T320.tsv $e 3 1 $c 1 yarn"
-	    ./mf Datasets/LA_50K_T320.tsv $e 3 1 $c 1 "" yarn
+	    for m in "${MS[@]}"
+	    do
+		for c in "${CS[@]}"
+		do
+		    echo "$n ./mf --input $DATASET --epsilon $e --mu $m --delta 1 --capacity $c --fraction 1 --density $d --master yarn"
+		    ./mf --input $DATASET --epsilon $e --mu $m --delta 1 --capacity $c --fraction 1 --density $d --master yarn
+		done
+	    done
 	done
     done
 done

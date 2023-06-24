@@ -9,8 +9,8 @@
   \usebeamertemplate{itemize item}}
 
 \usepackage{hyperref}
-%\usepackage{minted}
-\usepackage{animate}
+\usepackage{booktabs}
+\usepackage{xfp}
 \usepackage{graphicx}
 \def\Put(#1,#2)#3{\leavevmode\makebox(0,0){\put(#1,#2){#3}}}
 \usepackage{colortbl}
@@ -77,108 +77,265 @@
     \end{frame}
 }
 
-\begin{frame}{Benchmark DBScan implementations}
+<<<<<<< HEAD
+<<<<<<< HEAD
+\begin{frame}{Still slow for dense cells}
     \centering
-    \includegraphics[width=0.6\textwidth]{figures/DBScanByTime}
+    \includegraphics[width=0.7\textwidth]{figures/Capacity/capacity}
 \end{frame}
 
-\begin{frame}{Dense areas}{Still problem in partition performance...}
+\begin{frame}{Still slow for dense cells}
+=======
+\begin{frame}{Dataset}
     \centering
-    \includegraphics[width=0.9\textwidth]{figures/performance}
+    \includegraphics[width=0.8\textwidth]{figures/dataset}
 \end{frame}
 
-\begin{frame}{Dense areas}{Having a look at problematic cells...}
+\begin{frame}{Looking for best partitioning}{$\varepsilon=20$ and $\mu=3$}
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/cell518}
+    \includegraphics[width=0.7\textwidth]{figures/Capacity/capacity}
 \end{frame}
 
-\begin{frame}{Dense areas}{Some stats for Cell 518...}
-        \begin{table}[ht]
-                \centering
-                \begin{tabular}{ll}
-                        \hline
-                        \textbf{Stage} & \textbf{Number} \\
-                        \hline
-                        Points      & 455 \\
-                        Pairs       & 11603 \\
-                        Centers     & 23206 \\
-                        Candidates  & 23049 \\
-                        Maximals    & 558 \\
-                          \hline
-                \end{tabular}
-        \end{table}
-        \begin{table}[ht]
-                \centering
-                \begin{tabular}{ll}
-                        \hline
-                        \textbf{Stage} & \textbf{Time(s)} \\
-                        \hline
-                        Grid       & 0.0126 \\
-                        Read       & 0.0050 \\
-                        Pairs      & 0.0328 \\
-                        Centers    & 0.3852 \\
-                        Candidates & 0.0095 \\
-                        Maximals   & 11.8734 \\
-                        \textbf{Total}      & \textbf{12.4339} \\
-                        \hline
-                \end{tabular}
-        \end{table}
+\begin{frame}{Looking for best partitioning}{$\varepsilon=20$ and $\mu=3$}
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
+        \centering
+        \begin{tikzpicture}
+                \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[width=0.7\textwidth]{figures/Capacity/capacity}};
+                \draw<1>[red,ultra thick,rounded corners] (4.4,0.75) rectangle (5.2,3.4);
+        \end{tikzpicture}
+<<<<<<< HEAD
 \end{frame}
 
-\begin{frame}{Dense areas}
-    \centering
-    \includegraphics[trim={300 300 300 210}, clip, width=0.6\textwidth]{figures/cell518_grids}
+
+\begin{frame}{Change title...}
+        \centering
+        \begin{tikzpicture}
+                \foreach \i in {1,...,8} {
+                        \def\j{\fpeval{9000 - \i * 1000}}
+                        \node<\i>[] at (5,-0.25) {density=\j};
+                        \node<\i>[anchor=south west,inner sep=0] at (0,0) {
+                                \includegraphics[width=1.25\textheight]{figures/Cells/Cells\j}
+                        };
+                }
+        \end{tikzpicture}
 \end{frame}
 
-\begin{frame}{Dense areas}{Top 10 longest duration grids inside Cell 518...}
-        \begin{table}[ht]
-                \centering
-                \begin{tabular}{r r c r r}
-                        \hline
-                        & \textbf{Id} & \textbf{Position} & \textbf{Points} & \textbf{Time(s)} \\
-                        \hline
-                        1 & 17 & (1,4) & 156 & 3.67 \\
-                        2 & 9 & (0,3) & 135 & 3.05 \\
-                        3 & 16 & (0,4) & 125 & 1.18 \\
-                        4 & 18 & (2,4) & 124 & 0.99 \\
-                        5 & 10 & (1,3) & 166 & 0.58 \\
-                        6 & 3 & (1,1) & 111 & 0.48 \\
-                        7 & 26 & (1,5) & 110 & 0.47 \\
-                        8 & 20 & (4,0) & 88 & 0.26 \\
-                        9 & 4 & (0,2) & 116 & 0.21 \\
-                        10 & 0 & (0,0) & 68 & 0.17 \\
-                        \hline
-                \end{tabular}
-        \end{table}
-\end{frame}
-
-\begin{frame}{Dense areas}{Longest duration grid...}
-    \centering
-    \includegraphics[trim={300 300 300 210}, clip, width=0.6\textwidth]{figures/cell518_grid17}
-\end{frame}
-
-\begin{frame}{Dense areas}{Number of points and duration per grid...}
+\begin{frame}{Detecting maximal duplicates, subsets and supersets}
+        {Sum of time for each candidate to be evaluated...}
         \centering
         \begin{minipage}{0.49\textwidth}
-                \includegraphics[width=\textwidth]{figures/hoods518_n}
-        \end{minipage}
+                \includegraphics[width=\textwidth]{figures/Maximals/performanceBySum1}
+        \end{minipage} %
         \begin{minipage}{0.49\textwidth}
-                \includegraphics[width=\textwidth]{figures/hoods518_time}
+                \includegraphics[width=\textwidth]{figures/Maximals/performanceBySum2}
         \end{minipage}
 \end{frame}
 
-\begin{frame}{Dense areas}{Duration per grid...}
-    \centering
-    \includegraphics[trim={300 300 300 210}, clip, width=0.6\textwidth]{figures/cell518_grid_times}
+\begin{frame}{Detecting maximal duplicates, subsets and supersets}
+        {Average of time for each candidate to be evaluated...}
+        \centering
+        \begin{minipage}{0.49\textwidth}
+=======
 \end{frame}
 
-\begin{frame}{What is next...}
+
+\begin{frame}{Exploring different threshold (pairs per cell)}{$\varepsilon=20$ and $\mu=3$}
+=======
+\begin{frame}{Dataset}
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/dataset}
+\end{frame}
+
+\begin{frame}{Looking for best partitioning}{$\varepsilon=20$ and $\mu=3$}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/Capacity/capacity}
+\end{frame}
+
+\begin{frame}{Looking for best partitioning}{$\varepsilon=20$ and $\mu=3$}
+        \centering
+        \begin{tikzpicture}
+                \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[width=0.7\textwidth]{figures/Capacity/capacity}};
+                \draw<1>[red,ultra thick,rounded corners] (4.4,0.75) rectangle (5.2,3.4);
+        \end{tikzpicture}
+\end{frame}
+
+
+\begin{frame}{Exploring different threshold (pairs per cell)}{$\varepsilon=20$ and $\mu=3$}
+        \centering
+        \begin{tikzpicture}
+                \foreach \i in {1,...,7} {
+                        \def\j{\fpeval{9000 - \i * 1000}}
+                        \node<\i>[] at (5,-0.25) {threshold=\j};
+                        \node<\i>[anchor=south west,inner sep=0] at (0,0) {
+                                \includegraphics[width=1.25\textheight]{figures/Cells/Cells\j}
+                        };
+                }
+        \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Performance (???)}{$\varepsilon=20$, $\mu=3$}
+        \centering
+        \begin{figure}
+                \includegraphics[width=0.7\textwidth]{figures/Density/density}
+                \caption{Varying threshold from 2000 to 8000, comparing with no threshold (NA).}
+        \end{figure}
+\end{frame}
+
+\begin{frame}{Performance (???)}{$\varepsilon=20$, $\mu=3$}
+        \centering
+        \begin{figure}
+                \includegraphics[width=0.7\textwidth]{figures/Density/densityByStage}
+                \caption{Varying threshold from 2000 to 8000, comparing with no threshold (NA).}
+        \end{figure}
+\end{frame}
+
+\begin{frame}{Where the time goes...}{6 grids in the densest cell show the longest duration...}
+        \centering
+        \begin{tikzpicture}
+                \node[anchor=south west,inner sep=0] at (0,0) {
+                        \includegraphics[width=1.25\textheight]{figures/densest}
+                };
+                \draw<1>[blue,ultra thick] (4.35,3.27) rectangle (5.49,4.1);
+        \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Detecting maximal duplicates, subsets and supersets}
+        {Sum of time for each candidate to be evaluated...}
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
+        \centering
+        \begin{tikzpicture}
+                \foreach \i in {1,...,7} {
+                        \def\j{\fpeval{9000 - \i * 1000}}
+                        \node<\i>[] at (5,-0.25) {threshold=\j};
+                        \node<\i>[anchor=south west,inner sep=0] at (0,0) {
+                                \includegraphics[width=1.25\textheight]{figures/Cells/Cells\j}
+                        };
+                }
+        \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Performance (???)}{$\varepsilon=20$, $\mu=3$}
+        \centering
+        \begin{figure}
+                \includegraphics[width=0.7\textwidth]{figures/Density/density}
+                \caption{Varying threshold from 2000 to 8000, comparing with no threshold (NA).}
+        \end{figure}
+\end{frame}
+
+\begin{frame}{Performance (???)}{$\varepsilon=20$, $\mu=3$}
+        \centering
+        \begin{figure}
+                \includegraphics[width=0.7\textwidth]{figures/Density/densityByStage}
+                \caption{Varying threshold from 2000 to 8000, comparing with no threshold (NA).}
+        \end{figure}
+\end{frame}
+
+\begin{frame}{Where the time goes...}{6 grids in the densest cell show the longest duration...}
+        \centering
+        \begin{tikzpicture}
+                \node[anchor=south west,inner sep=0] at (0,0) {
+                        \includegraphics[width=1.25\textheight]{figures/densest}
+                };
+                \draw<1>[blue,ultra thick] (4.35,3.27) rectangle (5.49,4.1);
+        \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Detecting maximal duplicates, subsets and supersets}
+        {Sum of time for each candidate to be evaluated...}
+        \centering
+        \begin{minipage}{0.49\textwidth}
+                \includegraphics[width=\textwidth]{figures/Maximals/performanceBySum1}
+        \end{minipage} %
+        \begin{minipage}{0.49\textwidth}
+<<<<<<< HEAD
+=======
+                \includegraphics[width=\textwidth]{figures/Maximals/performanceBySum1}
+        \end{minipage} %
+        \begin{minipage}{0.49\textwidth}
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
+                \includegraphics[width=\textwidth]{figures/Maximals/performanceBySum2}
+        \end{minipage}
+\end{frame}
+
+\begin{frame}{Detecting maximal duplicates, subsets and supersets}
+        {Average of time for each candidate to be evaluated...}
+        \centering
+<<<<<<< HEAD
+        \begin{minipage}{0.49\textwidth}
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
+                \includegraphics[width=\textwidth]{figures/Maximals/performanceByMean1}
+        \end{minipage} %
+        \begin{minipage}{0.49\textwidth}
+=======
+        \begin{minipage}{0.49\textwidth}
+                \includegraphics[width=\textwidth]{figures/Maximals/performanceByMean1}
+        \end{minipage} %
+        \begin{minipage}{0.49\textwidth}
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
+                \includegraphics[width=\textwidth]{figures/Maximals/performanceByMean2}
+        \end{minipage}
+\end{frame}
+
+<<<<<<< HEAD
+<<<<<<< HEAD
+\begin{frame}{Detecting maximal duplicates, subsets and supersets}
+=======
+\begin{frame}{Detecting maximal duplicates, subsets and supersets}{}
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
+=======
+\begin{frame}{Detecting maximal duplicates, subsets and supersets}{}
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
+        \begin{table}[ht]
+                \centering
+                \begin{tabular}{rrrrr}
+                        \toprule
+<<<<<<< HEAD
+<<<<<<< HEAD
+                               & Number & Tree & Range & Position \\
+                        Cell & candidates & size & size & found \\
+=======
+                               & Number & Tree & Range &  \\
+                        Cell & candidates & size & size & Position \\
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
+=======
+                               & Number & Tree & Range &  \\
+                        Cell & candidates & size & size & Position \\
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
+                        \midrule
+                        0 & 10393 & 258 & 170 & 77 \\
+                        1 & 9579 & 231 & 167 & 84 \\
+                        2 & 11994 & 276 & 166 & 78 \\
+                        3 & 10765 & 251 & 170 & 87 \\
+                        4 & 7974 & 204 & 123 & 64 \\
+                        5 & 7936 & 188 & 126 & 61 \\
+                        \bottomrule
+                \end{tabular}
+<<<<<<< HEAD
+<<<<<<< HEAD
+        \end{table}
+\end{frame}
+
+\begin{frame}{Detecting maximal duplicates, subsets and supersets}
+    \centering
+=======
+=======
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
+                \caption{Average size of tree index, query range and position where the candidate was detected (if
+any).}
+        \end{table}
+\end{frame}
+
+\begin{frame}{What is next?}
+        \centering
         \begin{itemize}
-                \item Working on distributing the neighborhoods in dense areas...
-                \item Defining a metric to consider an area as \textit{``dense''}...
-                \item Validating and testing performance in cluster...
-                \item Exploring strategies to improve cell replication for large $\varepsilon$ values...
+                \item I think it is the best we can do under the given parameters...
+                \item Explore the temporal dimension and evaluate 3D partitioners...
         \end{itemize}
+<<<<<<< HEAD
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
+=======
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
+%    \includegraphics[width=0.6\textwidth]{figures/}
 \end{frame}
 
 \end{document}

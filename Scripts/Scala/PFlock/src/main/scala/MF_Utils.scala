@@ -24,7 +24,7 @@ object MF_Utils {
       (List.empty[Disk].toIterator, Stats())
     } else {
       if(cell.dense){
-        runDenseBFEinParallel(points_prime, cell)
+        runBFEinParallel(points_prime, cell)
       } else {
         runBFEinParallel(points_prime, cell)
       }
@@ -92,8 +92,7 @@ object MF_Utils {
             val (_, tM) = timer{
               // cheking if a candidate is not a subset and adding to maximals...
               candidates.foreach{ candidate =>
-                Maximals = insertMaximalParallel2(Maximals, candidate, cell, counter)
-                counter = counter + 1
+                Maximals = insertMaximalParallel(Maximals, candidate, cell)
               }
             }
             tMaximals += tM

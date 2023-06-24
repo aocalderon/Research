@@ -1,0 +1,325 @@
+{
+  "KEYFRAMES": {
+    "camera": {
+      "groups": []
+    },
+    "layers": {
+      "Cells1000_0_3d70d145_153d_4a7a_8d56_61e6eadb0a3b": {
+        "enabled": true,
+        "groups": []
+      },
+      "Cells1500_0_833afdf1_f33f_47a1_b334_f721ef77e1a5": {
+        "enabled": true,
+        "groups": []
+      },
+      "Cells2000_0_f479a8a1_2f0c_4576_a788_b6d3944db123": {
+        "enabled": true,
+        "groups": []
+      },
+      "Cells2500_0_9852f773_d093_476a_89b2_e15395ace18f": {
+        "enabled": true,
+        "groups": []
+      },
+      "Cells3000_0_11df0c34_9098_4610_b718_de81c3b897e5": {
+        "enabled": true,
+        "groups": []
+      },
+      "Cells3500_0_4240a8bb_1ea5_44a5_8b24_4aa2f696c7c0": {
+        "enabled": true,
+        "groups": []
+      },
+      "Cells4000_0_3f5f5b56_cb65_41b6_a94b_b6c0f359b9f8": {
+        "enabled": true,
+        "groups": []
+      },
+      "Cells4500_0_255532e6_4efd_4873_b4ca_03e6a289269e": {
+        "enabled": true,
+        "groups": []
+      },
+      "Cells5000_0_5c90e33b_0fda_4a1d_9e23_783cd17facf5": {
+        "enabled": true,
+        "groups": []
+      },
+      "Cells500_0_0aac99b7_867a_4b6b_a09b_9203d54f0203": {
+        "enabled": true,
+        "groups": []
+      },
+      "Cells5500_0_398f3678_a276_4077_932a_f7bed12581d4": {
+        "enabled": true,
+        "groups": []
+      },
+      "Cells6000_0_b270b9fe_9b77_4ec6_b5e7_0a61a7d7c527": {
+        "enabled": true,
+        "groups": []
+      },
+      "Cells6500_0_ce706af8_58e0_40be_bb4a_8e31a69a4cbc": {
+        "enabled": true,
+        "groups": []
+      },
+      "Cells7000_0_65979b1c_ef2c_4ef6_a119_d0a67bceeb4c": {
+        "enabled": true,
+        "groups": []
+      },
+      "Cells7500_0_411ff276_9a67_4764_a821_45e13ae0799a": {
+        "enabled": true,
+        "groups": []
+      },
+      "Cells8000_0_4f5e5fb0_27f9_4d1c_822d_bfb14b9fd759": {
+        "enabled": true,
+        "groups": []
+      },
+      "Cells8500_0_d22b4199_625e_4f4d_b768_f21ba9cf32c3": {
+        "enabled": true,
+        "groups": []
+      },
+      "CellsStats_9533d152_7346_4fb5_9bc1_6778e6058137": {
+        "enabled": true,
+        "groups": []
+      },
+      "dense_25b27677_2e24_45db_821f_767a53793736": {
+        "enabled": true,
+        "groups": []
+      },
+      "fp:9834fa5f": {
+        "enabled": true,
+        "groups": []
+      },
+      "test3d_bf82b8f7_afd6_4c89_a664_e0c6cd37e911": {
+        "enabled": true,
+        "groups": []
+      }
+    },
+    "repeat": false
+  },
+  "LAYERS": [
+    {
+      "geomType": 1,
+      "layerId": "dense_25b27677_2e24_45db_821f_767a53793736",
+      "name": "dense",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells500_0_0aac99b7_867a_4b6b_a09b_9203d54f0203",
+      "name": "Cells500.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells1000_0_3d70d145_153d_4a7a_8d56_61e6eadb0a3b",
+      "name": "Cells1000.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells1500_0_833afdf1_f33f_47a1_b334_f721ef77e1a5",
+      "name": "Cells1500.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells2000_0_f479a8a1_2f0c_4576_a788_b6d3944db123",
+      "name": "Cells2000.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells2500_0_9852f773_d093_476a_89b2_e15395ace18f",
+      "name": "Cells2500.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells3000_0_11df0c34_9098_4610_b718_de81c3b897e5",
+      "name": "Cells3000.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells3500_0_4240a8bb_1ea5_44a5_8b24_4aa2f696c7c0",
+      "name": "Cells3500.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells4000_0_3f5f5b56_cb65_41b6_a94b_b6c0f359b9f8",
+      "name": "Cells4000.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells4500_0_255532e6_4efd_4873_b4ca_03e6a289269e",
+      "name": "Cells4500.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells5000_0_5c90e33b_0fda_4a1d_9e23_783cd17facf5",
+      "name": "Cells5000.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells5500_0_398f3678_a276_4077_932a_f7bed12581d4",
+      "name": "Cells5500.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells6000_0_b270b9fe_9b77_4ec6_b5e7_0a61a7d7c527",
+      "name": "Cells6000.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells6500_0_ce706af8_58e0_40be_bb4a_8e31a69a4cbc",
+      "name": "Cells6500.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells7000_0_65979b1c_ef2c_4ef6_a119_d0a67bceeb4c",
+      "name": "Cells7000.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells7500_0_411ff276_9a67_4764_a821_45e13ae0799a",
+      "name": "Cells7500.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells8000_0_4f5e5fb0_27f9_4d1c_822d_bfb14b9fd759",
+      "name": "Cells8000.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "Cells8500_0_d22b4199_625e_4f4d_b768_f21ba9cf32c3",
+      "name": "Cells8500.0",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 3,
+      "layerId": "CellsStats_9533d152_7346_4fb5_9bc1_6778e6058137",
+      "name": "CellsStats",
+      "properties": {},
+      "visible": false
+    },
+    {
+      "geomType": 1,
+      "layerId": "test3d_bf82b8f7_afd6_4c89_a664_e0c6cd37e911",
+      "name": "test3d",
+      "properties": {
+        "checkBox_Clickable": true,
+        "checkBox_Clip": true,
+        "checkBox_ExportAttrs": false,
+        "checkBox_Label": false,
+        "checkBox_Outline": true,
+        "checkBox_Underline": false,
+        "checkBox_Visible": true,
+        "colorButton_BgColor": [
+          255,
+          255,
+          255,
+          176
+        ],
+        "colorButton_ConnColor": [
+          192,
+          192,
+          208,
+          255
+        ],
+        "colorButton_Label": [
+          0,
+          0,
+          0,
+          255
+        ],
+        "colorButton_OtlColor": [
+          255,
+          255,
+          255,
+          255
+        ],
+        "comboBox_FontFamily": "sans-serif",
+        "comboBox_ObjectType": "Sphere",
+        "comboBox_altitudeMode": null,
+        "comboEdit_Color": {
+          "comboData": 1,
+          "comboText": "Feature style",
+          "editText": "",
+          "type": 2
+        },
+        "comboEdit_Color2": {
+          "comboData": null,
+          "comboText": "None",
+          "editText": "",
+          "type": 7
+        },
+        "comboEdit_FilePath": {},
+        "comboEdit_Opacity": {
+          "comboData": 1,
+          "comboText": "Feature style",
+          "editText": "",
+          "type": 5
+        },
+        "comboEdit_altitude2": {},
+        "expression_Label": "\"field_1\"",
+        "fieldExpressionWidget_altitude": "0",
+        "geomWidget0": {
+          "comboData": null,
+          "comboText": "Expression",
+          "editText": "98.2",
+          "type": 1
+        },
+        "geomWidget1": {},
+        "geomWidget2": {},
+        "geomWidget3": {},
+        "geomWidget4": {},
+        "groupBox_Background": true,
+        "groupBox_Conn": true,
+        "labelHeightWidget": {
+          "comboData": 1,
+          "comboText": "Relative",
+          "editText": "50",
+          "type": 6
+        },
+        "lineEdit_Name": "",
+        "mtlWidget0": {},
+        "mtlWidget1": {},
+        "radioButton_IntersectingFeatures": true,
+        "radioButton_zValue": true,
+        "slider_FontSize": 3
+      },
+      "visible": true
+    },
+    {
+      "geomType": 0,
+      "layerId": "fp:9834fa5f",
+      "name": "Flat Plane",
+      "properties": {},
+      "visible": false
+    }
+  ],
+  "Version": 20701
+}
