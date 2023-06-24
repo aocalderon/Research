@@ -18,6 +18,7 @@ params = enframe(read_lines( "density.out" ), value = "line") |>
 data = perfs |> left_join(params, by = "appId") |>
   filter(!str_detect(stage, "Read")) |>
 <<<<<<< HEAD
+<<<<<<< HEAD
   mutate(density = as.numeric(density), time = as.numeric(time),
          stage = as.factor(stage)) |>
   select(density, stage, time) |>
@@ -34,6 +35,8 @@ H = 4
 ggsave(paste0("densityByStage.pdf"), width = W, height = H)
 print(xtable(data, digits = c(0,0,0,2)), booktabs = TRUE, include.rownames=FALSE)
 =======
+=======
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
   mutate(time = as.numeric(time), stage = as.factor(stage), 
          density = as.factor(density)) |>
   mutate(density = recode(density, "0" = "NA")) |>
@@ -58,13 +61,20 @@ H = 4
 ggsave(paste0("densityByStage.pdf"), width = W, height = H)
 
 print(xtable(dataByStage, digits = c(0,0,0,2)), booktabs = TRUE, include.rownames=FALSE)
+<<<<<<< HEAD
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
+=======
 >>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
 
 data = data |> group_by(density) |> summarise(time = sum(time))
 p = ggplot(data, aes(x = as.factor(density), y = time)) + 
   geom_col(position = "dodge") +
 <<<<<<< HEAD
+<<<<<<< HEAD
   labs(x="Density (pairs per cell)", y="Time (s)") + 
+=======
+  labs(x="Threshold (pairs per cell)", y="Time (s)") + 
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
 =======
   labs(x="Threshold (pairs per cell)", y="Time (s)") + 
 >>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e

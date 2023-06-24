@@ -78,6 +78,7 @@
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 \begin{frame}{Still slow for dense cells}
     \centering
     \includegraphics[width=0.7\textwidth]{figures/Capacity/capacity}
@@ -139,6 +140,68 @@
 
 
 \begin{frame}{Exploring different threshold (pairs per cell)}{$\varepsilon=20$ and $\mu=3$}
+=======
+\begin{frame}{Dataset}
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/dataset}
+\end{frame}
+
+\begin{frame}{Looking for best partitioning}{$\varepsilon=20$ and $\mu=3$}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/Capacity/capacity}
+\end{frame}
+
+\begin{frame}{Looking for best partitioning}{$\varepsilon=20$ and $\mu=3$}
+        \centering
+        \begin{tikzpicture}
+                \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[width=0.7\textwidth]{figures/Capacity/capacity}};
+                \draw<1>[red,ultra thick,rounded corners] (4.4,0.75) rectangle (5.2,3.4);
+        \end{tikzpicture}
+\end{frame}
+
+
+\begin{frame}{Exploring different threshold (pairs per cell)}{$\varepsilon=20$ and $\mu=3$}
+        \centering
+        \begin{tikzpicture}
+                \foreach \i in {1,...,7} {
+                        \def\j{\fpeval{9000 - \i * 1000}}
+                        \node<\i>[] at (5,-0.25) {threshold=\j};
+                        \node<\i>[anchor=south west,inner sep=0] at (0,0) {
+                                \includegraphics[width=1.25\textheight]{figures/Cells/Cells\j}
+                        };
+                }
+        \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Performance (???)}{$\varepsilon=20$, $\mu=3$}
+        \centering
+        \begin{figure}
+                \includegraphics[width=0.7\textwidth]{figures/Density/density}
+                \caption{Varying threshold from 2000 to 8000, comparing with no threshold (NA).}
+        \end{figure}
+\end{frame}
+
+\begin{frame}{Performance (???)}{$\varepsilon=20$, $\mu=3$}
+        \centering
+        \begin{figure}
+                \includegraphics[width=0.7\textwidth]{figures/Density/densityByStage}
+                \caption{Varying threshold from 2000 to 8000, comparing with no threshold (NA).}
+        \end{figure}
+\end{frame}
+
+\begin{frame}{Where the time goes...}{6 grids in the densest cell show the longest duration...}
+        \centering
+        \begin{tikzpicture}
+                \node[anchor=south west,inner sep=0] at (0,0) {
+                        \includegraphics[width=1.25\textheight]{figures/densest}
+                };
+                \draw<1>[blue,ultra thick] (4.35,3.27) rectangle (5.49,4.1);
+        \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Detecting maximal duplicates, subsets and supersets}
+        {Sum of time for each candidate to be evaluated...}
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
         \centering
         \begin{tikzpicture}
                 \foreach \i in {1,...,7} {
@@ -184,6 +247,12 @@
                 \includegraphics[width=\textwidth]{figures/Maximals/performanceBySum1}
         \end{minipage} %
         \begin{minipage}{0.49\textwidth}
+<<<<<<< HEAD
+=======
+                \includegraphics[width=\textwidth]{figures/Maximals/performanceBySum1}
+        \end{minipage} %
+        \begin{minipage}{0.49\textwidth}
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
                 \includegraphics[width=\textwidth]{figures/Maximals/performanceBySum2}
         \end{minipage}
 \end{frame}
@@ -191,17 +260,28 @@
 \begin{frame}{Detecting maximal duplicates, subsets and supersets}
         {Average of time for each candidate to be evaluated...}
         \centering
+<<<<<<< HEAD
         \begin{minipage}{0.49\textwidth}
 >>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
                 \includegraphics[width=\textwidth]{figures/Maximals/performanceByMean1}
         \end{minipage} %
         \begin{minipage}{0.49\textwidth}
+=======
+        \begin{minipage}{0.49\textwidth}
+                \includegraphics[width=\textwidth]{figures/Maximals/performanceByMean1}
+        \end{minipage} %
+        \begin{minipage}{0.49\textwidth}
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
                 \includegraphics[width=\textwidth]{figures/Maximals/performanceByMean2}
         \end{minipage}
 \end{frame}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 \begin{frame}{Detecting maximal duplicates, subsets and supersets}
+=======
+\begin{frame}{Detecting maximal duplicates, subsets and supersets}{}
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
 =======
 \begin{frame}{Detecting maximal duplicates, subsets and supersets}{}
 >>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
@@ -210,8 +290,13 @@
                 \begin{tabular}{rrrrr}
                         \toprule
 <<<<<<< HEAD
+<<<<<<< HEAD
                                & Number & Tree & Range & Position \\
                         Cell & candidates & size & size & found \\
+=======
+                               & Number & Tree & Range &  \\
+                        Cell & candidates & size & size & Position \\
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
 =======
                                & Number & Tree & Range &  \\
                         Cell & candidates & size & size & Position \\
@@ -226,12 +311,15 @@
                         \bottomrule
                 \end{tabular}
 <<<<<<< HEAD
+<<<<<<< HEAD
         \end{table}
 \end{frame}
 
 \begin{frame}{Detecting maximal duplicates, subsets and supersets}
     \centering
 =======
+=======
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
                 \caption{Average size of tree index, query range and position where the candidate was detected (if
 any).}
         \end{table}
@@ -243,6 +331,9 @@ any).}
                 \item I think it is the best we can do under the given parameters...
                 \item Explore the temporal dimension and evaluate 3D partitioners...
         \end{itemize}
+<<<<<<< HEAD
+>>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
+=======
 >>>>>>> b555d93a52051f78fad79a02a478e54243a06b8e
 %    \includegraphics[width=0.6\textwidth]{figures/}
 \end{frame}
