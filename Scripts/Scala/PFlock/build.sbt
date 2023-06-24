@@ -20,7 +20,6 @@ lazy val hello = (project in file("."))
     libraryDependencies += "org.apache.commons" % "commons-numbers-parent" % "1.0-beta1",
 
     libraryDependencies += "org.rogach" %% "scallop" % "4.0.1",
-
     libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25",
 
     libraryDependencies += "org.spire-math" %% "archery" % "0.6.0"
@@ -73,7 +72,7 @@ cpCP := {
   val base = baseDirectory.value
   cp.foreach{ c =>
     println(s"Copy $c ...")
-    s"cp $c ${base}/lib" !
+    s"cp $c /home/and/Spark/2.4/jars/" !
   }
 }
  
@@ -83,8 +82,22 @@ scalaBash := {
   val cp: Seq[File] = (fullClasspathAsJars in Runtime).value.files
   val base = baseDirectory.value
   val strCP = cp.mkString(":")
-  val finder: PathFinder = (base / "target") ** "*.jar" 
-  val jar = finder.get.mkString(":")
 
-  println(s"scala -cp ${strCP}:${jar} edu.ucr.dblab.pflock.BFE")
+  val bash = s"scala -cp ${strCP} edu.ucr.dblab.pflock.MF $$*"
+  val f = new java.io.PrintWriter("bash/mf_scala")
+  f.write(bash)
+  f.close
+}
+
+lazy val javaBash = taskKey[Unit]("Create a java bash script...")
+javaBash := {
+  import sys.process._
+  val cp: Seq[File] = (fullClasspathAsJars in Runtime).value.files
+  val base = baseDirectory.value
+  val strCP = cp.mkString(":")
+
+  val bash = s"java -cp ${strCP} edu.ucr.dblab.pflock.MF $$*"
+  val f = new java.io.PrintWriter("bash/mf_java")
+  f.write(bash)
+  f.close
 }

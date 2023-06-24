@@ -3,10 +3,6 @@
 PARGS=()
 while [[ "$1" != "" ]]; do
     case $1 in
-	-m|--master)
-	    shift
-	    MASTER="$1"
-	    ;;	
 	-x|--executors)
 	    shift
 	    EXECUTORS="$1"
@@ -22,7 +18,6 @@ while [[ "$1" != "" ]]; do
     shift
 done
 set -- "${PARGS[@]}" # restore positional parameters
-if [ -v MASTER ];    then echo "MASTER     = ${MASTER}";  else MASTER="yarn"; echo "MASTER     = yarn";       fi
 if [ -v EXECUTORS ]; then echo "EXECUTORS  = $EXECUTORS"; else EXECUTORS=12;  echo "EXECUTORS  = $EXECUTORS"; fi
 if [ -v WAIT ];      then echo "WAIT       = $WAIT";      else WAIT="0s";     echo "WAIT       = $WAIT";      fi
 
@@ -57,7 +52,7 @@ PARAMS=(
 	    --conf spark.kryoserializer.buffer.max=$KRYO_BUFFER_MAX \
 	    --conf spark.locality.wait=$WAIT \
 	    --jars $JARS \
-	    --master $MASTER --deploy-mode client \
+	    --deploy-mode client \
 	    --num-executors $EXECUTORS --executor-cores $CORES \
 	    --executor-memory $EMEMORY --driver-memory $DMEMORY \
 	    --class $CLASS $JAR 
