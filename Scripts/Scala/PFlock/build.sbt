@@ -52,6 +52,7 @@ scalaBash := {
 lazy val sparkBash = taskKey[Unit]("Create a spark bash script...")
 sparkBash := {
   import sys.process._
+  
   val cp: Seq[File] = (fullClasspathAsJars in Runtime).value.files
   val base = baseDirectory.value
   val finder: PathFinder = (base / "target") ** "*.jar" 
