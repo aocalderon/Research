@@ -14,7 +14,7 @@ import archery._
 
 import edu.ucr.dblab.pflock.spmf.{DoubleArray, KDTree}
 import edu.ucr.dblab.pflock.sedona.KDB
-import edu.ucr.dblab.pflock.quadtree._
+import edu.ucr.dblab.pflock.sedona.quadtree._
 import edu.ucr.dblab.pflock.Utils._
 
 object MF_Utils {

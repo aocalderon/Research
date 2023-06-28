@@ -22,6 +22,7 @@
  https://github.com/apache/sedona
  original package: org.apache.sedona.core.spatialPartitioning
  ***/
+
 package edu.ucr.dblab.pflock.sedona;
 
 import org.locationtech.jts.geom.Envelope;

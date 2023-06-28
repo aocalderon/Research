@@ -13,7 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.ucr.dblab.pflock.quadtree;
+
+ /***
+ From Project Sedona [https://sedona.apache.org/1.4.1/].
+ https://github.com/apache/sedona
+ original package: org.apache.sedona.core.spatialPartitioning
+ ***/
+
+package edu.ucr.dblab.pflock.sedona.quadtree;
 
 import java.io.Serializable;
 

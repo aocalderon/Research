@@ -22,12 +22,8 @@
  https://github.com/apache/sedona
  original package: org.apache.sedona.core.spatialPartitioning
  ***/
-package edu.ucr.dblab.pflock.sedona;
 
-import org.locationtech.jts.geom.Envelope;
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.Point;
-import scala.Tuple2;
+package edu.ucr.dblab.pflock.sedona;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,6 +34,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.Point;
+
+import scala.Tuple2;
 
 /**
  * see https://en.wikipedia.org/wiki/K-D-B-tree

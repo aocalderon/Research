@@ -13,7 +13,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{SparkSession, SaveMode}
 import org.apache.spark.Partitioner
 
-import edu.ucr.dblab.pflock.quadtree._
+import edu.ucr.dblab.pflock.sedona.quadtree._
 import edu.ucr.dblab.pflock.Utils._
 import edu.ucr.dblab.pflock.MF_Utils._
 

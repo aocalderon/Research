@@ -1,6 +1,6 @@
 ThisBuild / version      := "0.1.0"
 ThisBuild / organization := "edu.ucr.dblab"
-ThisBuild / scalaVersion := "2.11.12"
+ThisBuild / scalaVersion := "2.12.17"
 
 val SparkVersion = "2.4.0"
 
@@ -28,7 +28,7 @@ lazy val hello = (project in file("."))
 lazy val sparkBash = taskKey[Unit]("Create a spark bash script...")
 sparkBash := {
   import sys.process._
-  val classpath: Seq[File] = (fullClasspathAsJars in Runtime).value.files
+  val classpath: Seq[File] = (Runtime / fullClasspathAsJars).value.files
 
   val modules = libraryDependencies.value.map(_.toString).filterNot(_.contains("spark")).filterNot(_.contains("scala-library"))
   println(modules.mkString("\n"))
@@ -68,7 +68,7 @@ sparkBash := {
 lazy val cpCP = taskKey[Unit]("Copy classpath to lib folder...")
 cpCP := {
   import sys.process._
-  val cp: Seq[File] = (fullClasspathAsJars in Runtime).value.files
+  val cp: Seq[File] = (Runtime / fullClasspathAsJars).value.files
   val base = baseDirectory.value
   cp.foreach{ c =>
     println(s"Copy $c ...")
@@ -79,7 +79,7 @@ cpCP := {
 lazy val scalaBash = taskKey[Unit]("Create a scala bash script...")
 scalaBash := {
   import sys.process._
-  val cp: Seq[File] = (fullClasspathAsJars in Runtime).value.files
+  val cp: Seq[File] = (Runtime / fullClasspathAsJars).value.files
   val base = baseDirectory.value
   val strCP = cp.mkString(":")
 
@@ -92,7 +92,7 @@ scalaBash := {
 lazy val javaBash = taskKey[Unit]("Create a java bash script...")
 javaBash := {
   import sys.process._
-  val cp: Seq[File] = (fullClasspathAsJars in Runtime).value.files
+  val cp: Seq[File] = (Runtime / fullClasspathAsJars).value.files
   val base = baseDirectory.value
   val strCP = cp.mkString(":")
 

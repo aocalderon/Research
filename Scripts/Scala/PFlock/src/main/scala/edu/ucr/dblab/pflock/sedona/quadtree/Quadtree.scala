@@ -1,4 +1,4 @@
-package edu.ucr.dblab.pflock.quadtree
+package edu.ucr.dblab.pflock.sedona.quadtree
 
 import org.locationtech.jts.geom.{GeometryFactory, Envelope, Coordinate, Polygon, Point}
 import org.locationtech.jts.io.WKTReader
