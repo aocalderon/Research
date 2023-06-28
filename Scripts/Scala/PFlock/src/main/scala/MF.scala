@@ -50,18 +50,23 @@ object MF {
     printParams(args)
     log(s"START|")
 
-    /*** Load data ***/
+    /*** Load data                                         ***/
+    /*** read from HDFS and retung cells and spatial index ***/
     val (pointsRaw, spatial_index, cells, tIndex1) = loadData[Point]
     val nIndex1 = cells.size
     log(s"Index1|$nIndex1")
     logt(s"Index1|$tIndex1")
     settings.partitions = nIndex1
 
+
+    ///////////////////// Debug
     if(settings.saves){
       save(s"/tmp/edgesCells.wkt"){
         cells.values.map{ mbr => mbr.wkt + "\n"}.toList
       }
     }
+    ///////////////////// Debug
+
 
     /*** Repartition data across the cluster ***/
     /*** Partition by Cell ID                ***/
@@ -95,7 +100,9 @@ object MF {
     }
     log(s"Shuffle1|$nShuffle1")
     logt(s"Shuffle1|$tShuffle1")
-      
+
+    /*** Get set of pairs                                      ***/
+    /*** early call to count pairs to decide extra partitionig ***/
     val ( (pairsRDD, nPairs), tPairs ) = timer{
       val pairs = pointsRDD.mapPartitionsWithIndex{ case(cid, it) =>
         val cell   = cells(cid)
@@ -112,6 +119,8 @@ object MF {
     log(s"Pairs|$nPairs")
     logt(s"Pairs|$tPairs")
 
+
+    ///////////////////// Debug
     if(settings.saves){
       save("/tmp/edgesPairs.wkt"){
         pairsRDD.mapPartitionsWithIndex{ case(cid, it) =>
@@ -134,7 +143,11 @@ object MF {
         }.collect
       }
     }
+    ///////////////////// Debug
 
+
+    /*** Get maximals from set of pairs,        ***/
+    /*** should works after getPairsAtCell call ***/
     val ( (maximalsRDD2, nRun2), tRun2) = timer{
       val maximalsRDD = pairsRDD.mapPartitionsWithIndex{ case(cid, it) =>
         if(it.isEmpty){
@@ -179,6 +192,8 @@ object MF {
     log(s"Run|$nRun")
     logt(s"Run|$tRun")
 
+
+    ///////////////////// Debug
     if(settings.saves){
       save("/tmp/edgesMF.wkt"){
         maximalsRDD.mapPartitionsWithIndex{ case(cid, it) =>
@@ -186,7 +201,10 @@ object MF {
         }.collect.sorted
       }
     }
+    ///////////////////// Debug
 
+
+    ///////////////////// Validation
     if(settings.tester){
       val m1 = maximalsRDD2.collect.toList
       val m2 =  maximalsRDD.collect.toList
@@ -194,6 +212,7 @@ object MF {
 
       validate(testing = m1, validation = m2, points)
     }
+    ///////////////////// Validation
 
     spark.close()
 

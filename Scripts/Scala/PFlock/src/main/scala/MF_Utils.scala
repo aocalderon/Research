@@ -163,7 +163,7 @@ object MF_Utils {
       val H = for{            // get neighborhood of Pr points in Ps...
         r <- Pr
         s <- Ps
-        if{ r.distance(s) <= S.epsilon && r.oid < s.oid } // check distance and prune duplicates...
+        if{ r.distance(s) <= S.epsilon & r.oid < s.oid } // check distance and prune duplicates...
       } yield {
         Pair(r, s)            // store a valid pair...
       }
@@ -699,5 +699,16 @@ object MF_Utils {
       }
       case _ => log("Unknown exception in validation...")
     }
+  }
+
+  def spatialValidation(disk: Disk, points: KDTree)(implicit S: Settings, G: GeometryFactory): Boolean = {
+    val query = new DoubleArray(disk.center, disk.pidsText)
+    points.pointsWithinRadiusOf(query, S.epsilon + S.tolerance).asScala.map{ r =>
+      val center = r.point
+
+      ???
+    }
+
+    ???
   }
 }
