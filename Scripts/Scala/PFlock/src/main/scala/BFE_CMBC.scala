@@ -218,7 +218,6 @@ object BFE_CMBC {
       mu = params.mu(),
       method = params.method(),
       capacity = params.capacity(),
-      appId = System.nanoTime().toString(),
       tolerance = params.tolerance(),
       tag = params.tag(),
       debug = params.debug()

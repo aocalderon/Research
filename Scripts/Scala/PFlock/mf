@@ -58,5 +58,5 @@ PARAMS=(
 	    --class $CLASS $JAR 
 )
 
-echo "spark-submit ${PARAMS[@]} ${PARGS[@]}"
+#echo "spark-submit ${PARAMS[@]} ${PARGS[@]}"
 spark-submit ${PARAMS[@]} ${PARGS[@]}

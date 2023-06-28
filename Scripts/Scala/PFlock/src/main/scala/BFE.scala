@@ -269,11 +269,11 @@ object BFE {
       mu = params.mu(),
       method = params.method(),
       capacity = params.capacity(),
-      appId = System.nanoTime().toString(),
       tolerance = params.tolerance(),
       tag = params.tag(),
       debug = params.debug()
     )
+    settings.appId = System.nanoTime().toString()
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
     val points = readPoints(settings.input)

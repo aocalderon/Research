@@ -35,13 +35,13 @@ object QuadtreePartitioner {
       method = "PFlocks",
       capacity = params.capacity(),
       fraction = params.fraction(),
-      appId = spark.sparkContext.applicationId,
       tolerance = params.tolerance(),
       tag = params.tag(),
       debug = params.debug(),
       output = params.output()
     )
 
+    settings.appId = spark.sparkContext.applicationId
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
     printParams(args)

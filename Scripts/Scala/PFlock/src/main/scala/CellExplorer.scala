@@ -25,7 +25,6 @@ object CellExplorer {
       tag = params.tag(),
       epsilon_prime = params.epsilon(),
       capacity = params.capacity(),
-      appId = System.nanoTime().toString(),
       tolerance = params.tolerance()
     )
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))

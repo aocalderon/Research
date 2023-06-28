@@ -30,6 +30,7 @@ public class DoubleArray {
     // the vector
     public double[] data;
     public Point point;
+    public String pids;
 	
     /**
      * Constructor
@@ -51,6 +52,14 @@ public class DoubleArray {
 	this.point = point;
     }
     
+    public DoubleArray(Point point, String pids){
+	this.data = new double[2];
+	this.data[0] = (double) point.getX();
+	this.data[1] = (double) point.getY();
+	this.point = point;
+	this.pids = pids;
+    }
+
     /**
      * Get a string representation of this double array.
      * @return a string
