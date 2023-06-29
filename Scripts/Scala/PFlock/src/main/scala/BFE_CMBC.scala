@@ -11,7 +11,7 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
 
-import edu.ucr.dblab.pflock.quadtree._
+import edu.ucr.dblab.pflock.sedona.quadtree._
 import edu.ucr.dblab.pflock.Utils._
 
 import archery._
@@ -218,7 +218,6 @@ object BFE_CMBC {
       mu = params.mu(),
       method = params.method(),
       capacity = params.capacity(),
-      appId = System.nanoTime().toString(),
       tolerance = params.tolerance(),
       tag = params.tag(),
       debug = params.debug()

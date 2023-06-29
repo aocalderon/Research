@@ -12,7 +12,7 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
 
-import edu.ucr.dblab.pflock.quadtree._
+import edu.ucr.dblab.pflock.sedona.quadtree._
 import edu.ucr.dblab.pflock.Utils._
 
 object CellExplorer {
@@ -25,7 +25,6 @@ object CellExplorer {
       tag = params.tag(),
       epsilon_prime = params.epsilon(),
       capacity = params.capacity(),
-      appId = System.nanoTime().toString(),
       tolerance = params.tolerance()
     )
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))

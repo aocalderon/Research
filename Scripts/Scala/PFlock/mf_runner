@@ -8,7 +8,7 @@ DATASET=Datasets/dense
 ES=( 20 ) # epsilon
 MS=( 3 ) # mu
 CS=( 250 ) # capacity
-DS=( 0 6500 7000 7500 8000 ) # density
+DS=( 0 8000 ) # density
 
 for n in `seq 1 $N`
 do

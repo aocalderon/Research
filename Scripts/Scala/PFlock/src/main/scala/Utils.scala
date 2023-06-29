@@ -17,6 +17,7 @@ import scala.collection.JavaConverters._
 import scala.io.Source
 import scala.util.Random
 import sys.process._
+import java.net.InetAddress
 
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -40,11 +41,12 @@ object Utils {
     fraction: Double = 0.1,
     tolerance: Double = 1e-3,
     density: Double = 1000.0,
-    appId: String = "",
     tag: String = "",
-    method: String = "BFE",
+    method: String = "PFlock",
     debug: Boolean = false,
     cached: Boolean = false,
+    tester: Boolean = false,
+    saves: Boolean = false,
     output: String = "/tmp/"
   ){
     val scale: Double = 1 / tolerance
@@ -55,6 +57,9 @@ object Utils {
     val dense: Boolean = if(density <= 0.0) false else true
 
     var partitions: Int = 1
+    var appId: String   = clocktime.toString
+
+    def appName: String = s"$method|$dataset|$epsilon_prime|$mu|$delta"
 
     def info: String = s"$appId|$partitions|$dataset|$epsilon_prime|$mu|$delta|$method"
   }
@@ -781,14 +786,17 @@ object Utils {
 
   def clocktime: Long = System.nanoTime()
 
-  def log(msg: String)(implicit logger: Logger, settings: Settings): Unit = {
+  def log(msg: String)(implicit L: Logger, S: Settings): Unit = {
     val tid = TaskContext.getPartitionId
-    logger.info(s"INFO|$tid|${settings.info}|$msg")
+    val hostname: String = InetAddress.getLocalHost.getHostName
+    
+    L.info(s"${hostname}|INFO|$tid|${S.info}|$msg")
   }
 
-  def logt(msg: String)(implicit logger: Logger, settings: Settings): Unit = {
+  def logt(msg: String)(implicit L: Logger, S: Settings): Unit = {
     val tid = TaskContext.getPartitionId
-    logger.info(s"TIME|$tid|${settings.info}|$msg")
+    val hostname: String = InetAddress.getLocalHost.getHostName
+    L.info(s"${hostname}|TIME|$tid|${S.info}|$msg")
   }
 
   def round(x: Double)(implicit settings: Settings): Double = {
@@ -885,7 +893,7 @@ object Utils {
   }
 
   private def checkMaximalDisks(bfe1_prime: List[Disk], bfe2_prime: List[Disk], points: List[STPoint])
-    (implicit geofactory: GeometryFactory, settings: Settings, logger: Logger): Unit = {
+    (implicit G: GeometryFactory, S: Settings, L: Logger): Unit = {
 
     val bfe1 = bfe1_prime.map(_.pidsText)
     save("/tmp/bf1.txt"){bfe1.sorted.map(_ + "\n")}
@@ -915,9 +923,9 @@ object Utils {
         pids <- diff2
         maximal <- bfe2_prime if{ maximal.pidsText == pids }
       } yield {
-        val envelope = maximal.getExpandEnvelope(settings.r + settings.tolerance)
+        val envelope = maximal.getExpandEnvelope(S.r + S.tolerance)
         val hood = tree.query(envelope).asScala.map{ _.asInstanceOf[STPoint] }
-          .filter(_.distanceToPoint(maximal.center) <= settings.r + settings.tolerance)
+          .filter(_.distanceToPoint(maximal.center) <= S.r + S.tolerance)
 
         val pids1 = maximal.pidsSet
         val pids2 = hood.map(_.oid).toSet
@@ -927,9 +935,7 @@ object Utils {
       }
 
       val valids = checks.map(_._2).reduce(_ & _)
-      //println(s"are our maximals valid? $valids")
       if( valids ){
-        //println(s"our maximals contains or are contained by theirs?")
         log(checkMaximalsDiff(diff1, diff2))
       } else {
         val mistakes = checks.filterNot(_._2).map{_._1.wkt}.mkString("\n")
@@ -939,7 +945,7 @@ object Utils {
   }
 
   private def checkMaximalsDiff(theirs_prime: List[String], ours_prime: List[String])
-    (implicit geofactory: GeometryFactory, settings: Settings, logger: Logger): String = {
+    : String = {
 
     val theirs = theirs_prime.map{_.split(" ").map(_.toInt).toSet}
     val ours = ours_prime.map{_.split(" ").map(_.toInt).toSet}
@@ -956,16 +962,30 @@ object Utils {
     }
   }
 
-  def printParams(args: Seq[String])(implicit S: Settings): Unit = {
-    val p = args.filterNot(param => param == "--debug" || param == "--cached") ++ Seq(
-      "--debug", "true",
-      "--cached", "true"
-    )
-    val pp = p.zip(p.tail).filter{ case(a, b) => a.startsWith("--")}
-      .map{ case(a,b) => s"${a.replace("--", "")}|$b"}
-    pp.foreach{ param =>
-      logger.info(s"PARAMS|${S.appId}|${param}")
+  def printParams(args_prime: Seq[String])(implicit S: Settings): Unit = {
+    @annotation.tailrec
+    def parser(booleans: List[String], args: Seq[String]): Seq[String] = {
+      booleans match {
+        case b :: btail => {
+          val flag = args.exists(_ == b) 
+          val updated_args = args.filterNot(_ == b) ++ Seq(b, flag.toString)
+          parser(btail, updated_args)
+        }
+        case Nil => args
+      }
     }
+    val booleans = List(
+      "--debug",
+      "--tester",
+      "--saves",
+      "--cached"
+    )
+    val args = parser(booleans, args_prime)
+    args.zip(args.tail).filter{ case(a, b) => a.startsWith("--")}
+      .map{ case(a,b) => s"${a.replace("--", "")}|$b"}
+      .foreach{ param =>
+        logger.info(s"PARAMS|${S.appId}|${param}")
+      }
   }  
 }
 
@@ -973,8 +993,10 @@ object Utils {
 import org.rogach.scallop._
 
 class BFEParams(args: Seq[String]) extends ScallopConf(args) {
+  val default_filename =     s"${System.getenv("HOME")}/Research/Datasets/dense.tsv"
+
   val tolerance:  ScallopOption[Double]  = opt[Double]  (default = Some(1e-3))
-  val input:      ScallopOption[String]  = opt[String]  (default = Some(s"${System.getenv("HOME")}/Research/Datasets/dense.tsv"))
+  val input:      ScallopOption[String]  = opt[String]  (default = Some(default_filename))
   val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(5.0))
   val mu:         ScallopOption[Int]     = opt[Int]     (default = Some(3))
   val delta:      ScallopOption[Int]     = opt[Int]     (default = Some(1))
@@ -985,7 +1007,9 @@ class BFEParams(args: Seq[String]) extends ScallopConf(args) {
   val output:     ScallopOption[String]  = opt[String]  (default = Some("/tmp/"))
   val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val cached:     ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
-  val method:     ScallopOption[String]  = opt[String]  (default = Some("BFE"))
+  val tester:     ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
+  val saves:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
+  val method:     ScallopOption[String]  = opt[String]  (default = Some("PFlock"))
   val master:     ScallopOption[String]  = opt[String]  (default = Some("local[10]"))
 
   verify()

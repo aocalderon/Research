@@ -12,7 +12,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.Partitioner
 
-import edu.ucr.dblab.pflock.quadtree._
+import edu.ucr.dblab.pflock.sedona.quadtree._
 import edu.ucr.dblab.pflock.Utils._
 
 object GridPartitioner {
@@ -33,12 +33,12 @@ object GridPartitioner {
       method = "GridPartitioner",
       capacity = params.capacity(),
       fraction = params.fraction(),
-      appId = spark.sparkContext.applicationId,
       tolerance = params.tolerance(),
       tag = params.tag(),
       debug = params.debug()
     )
 
+    settings.appId = spark.sparkContext.applicationId
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
     printParams(args)
