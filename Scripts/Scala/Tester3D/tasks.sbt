@@ -1,0 +1,65 @@
+lazy val sparkBash = taskKey[Unit]("Create a spark bash script...")
+sparkBash := {
+  import sys.process._
+  val classpathJars: Seq[File] = (fullClasspathAsJars in Runtime).value.files
+
+  val modules = libraryDependencies.value.map(_.toString).filterNot(_.contains("spark")).filterNot(_.contains("scala-library"))
+  val cpJars_paths = for{
+    module <- modules.map(_.split(":")(1))
+    path   <- classpathJars.map(_.toString)
+    if { path.contains(module) }
+  } yield { path }
+  cpJars_paths.map{_.toString.split("/").last}.foreach{println}
+
+  val libJars_paths: Seq[File] = (unmanagedJars in Runtime).value.files
+  libJars_paths.map{_.getName}.foreach{println}
+
+  val finder: PathFinder = (baseDirectory.value / "target") ** "*.jar"
+  val jar = finder.get.mkString(" ")
+
+  val log_file = s"${System.getProperty("user.home")}/Spark/2.4/conf/log4j.properties "
+  val files    = s"$log_file "
+  val conf     = s"spark.driver.extraJavaOptions=-Dlog4j.configuration=file:$log_file "
+  val jars     = s"${cpJars_paths.mkString(",")},${libJars_paths.mkString(",")} "
+  val master   = s"local[*] "
+  val aclass   = s"edu.ucr.dblab.pflock.MF " // should be a parameter...
+
+  val bash = List(
+    s"#!/bin/bash \n",
+    s"PARAMS=(",
+    s" --files  $files \\",
+    s" --conf   $conf \\",
+    s" --jars   $jars \\",
+    s" --master $master \\",
+    s" --class  $aclass ",
+    s")\n",
+    s"spark-submit $${PARAMS[@]} $jar $$* \n"
+  ).mkString("\n")
+
+  val f = new java.io.PrintWriter("bash/mf")
+  f.write(bash)
+  f.close
+}
+
+lazy val cpCP = taskKey[Unit]("Copy classpath to lib folder...")
+cpCP := {
+  import sys.process._
+  val cp: Seq[File] = (fullClasspathAsJars in Runtime).value.files
+  val base = baseDirectory.value
+  cp.foreach{ c =>
+    println(s"Copy $c ...")
+    s"cp $c ${base}/lib" !
+  }
+}
+
+lazy val scalaBash = taskKey[Unit]("Create a scala bash script...")
+scalaBash := {
+  import sys.process._
+  val cp: Seq[File] = (fullClasspathAsJars in Runtime).value.files
+  val base = baseDirectory.value
+  val strCP = cp.mkString(":")
+  val finder: PathFinder = (base / "target") ** "*.jar"
+  val jar = finder.get.mkString(":")
+
+  println(s"scala -cp ${strCP}:${jar} edu.ucr.dblab.pflock.BFE")
+}
