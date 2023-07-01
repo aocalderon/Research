@@ -1,15 +1,9 @@
 #!/bin/bash 
 
 PARAMS=(
-<<<<<<< HEAD
- --files  /home/acald013/Spark/2.4/conf/log4j.properties   \
- --conf   spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties   \
- --jars   /home/acald013/.cache/coursier/v1/https/repo1.maven.org/maven2/org/locationtech/jts/jts-core/1.19.0/jts-core-1.19.0.jar,/home/acald013/.cache/coursier/v1/https/repo1.maven.org/maven2/org/jgrapht/jgrapht-core/1.4.0/jgrapht-core-1.4.0.jar,/home/acald013/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar,/home/acald013/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/commons/commons-geometry-enclosing/1.0-beta1/commons-geometry-enclosing-1.0-beta1.jar,/home/acald013/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/commons/commons-geometry-euclidean/1.0-beta1/commons-geometry-euclidean-1.0-beta1.jar,/home/acald013/.cache/coursier/v1/https/repo1.maven.org/maven2/org/rogach/scallop_2.11/4.0.1/scallop_2.11-4.0.1.jar,/home/acald013/.cache/coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar,/home/acald013/.cache/coursier/v1/https/repo1.maven.org/maven2/org/spire-math/archery_2.11/0.6.0/archery_2.11-0.6.0.jar  \
-=======
  --files  /home/and/Spark/2.4/conf/log4j.properties   \
  --conf   spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/and/Spark/2.4/conf/log4j.properties   \
  --jars   /home/and/.cache/coursier/v1/https/repo1.maven.org/maven2/org/locationtech/jts/jts-core/1.19.0/jts-core-1.19.0.jar,/home/and/.cache/coursier/v1/https/repo1.maven.org/maven2/org/jgrapht/jgrapht-core/1.4.0/jgrapht-core-1.4.0.jar,/home/and/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar,/home/and/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/commons/commons-geometry-enclosing/1.0-beta1/commons-geometry-enclosing-1.0-beta1.jar,/home/and/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/commons/commons-geometry-euclidean/1.0-beta1/commons-geometry-euclidean-1.0-beta1.jar,/home/and/.cache/coursier/v1/https/repo1.maven.org/maven2/org/rogach/scallop_2.11/4.0.1/scallop_2.11-4.0.1.jar,/home/and/.cache/coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar,/home/and/.cache/coursier/v1/https/repo1.maven.org/maven2/org/spire-math/archery_2.11/0.6.0/archery_2.11-0.6.0.jar,/home/and/Research/Scripts/Scala/PFlock/lib/stark.jar  \
->>>>>>> 358b22306726f279e0ea1d33e1af41d7175b7fd3
  --master local[*]  \
  --class  edu.ucr.dblab.pflock.CandidatesTester  
 )
