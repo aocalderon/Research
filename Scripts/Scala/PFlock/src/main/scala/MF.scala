@@ -74,7 +74,9 @@ object MF {
       val points = pointsRaw.mapPartitionsWithIndex{ case(cid, it) =>
         it.flatMap{ point =>
           // computing a pad for the expansion area...
-          val pad = (settings.epsilon_prime * 1.5) + settings.tolerance
+          //val pad = (settings.epsilon_prime * 1.5) + settings.tolerance
+          val pad = (settings.epsilon_prime * 1) + settings.tolerance
+
           // make a copy of envelope to avoid modification...
           val envelope = new Envelope(
             point.getX - pad,
@@ -101,6 +103,8 @@ object MF {
     log(s"Shuffle1|$nShuffle1")
     logt(s"Shuffle1|$tShuffle1")
 
+/*
+
     /*** Get set of pairs                                      ***/
     /*** early call to count pairs to decide extra partitionig ***/
     val ( (pairsRDD, nPairs), tPairs ) = timer{
@@ -112,7 +116,7 @@ object MF {
         getPairsAtCell(points, cell, stats)
 
       }.cache
-      val nPairs = countPairs(pairs)
+      val nPairs = countPairs(pairs.map(_._2), cells)
 
       (pairs, nPairs)
     }
@@ -135,42 +139,109 @@ object MF {
       }
 
       save("/tmp/edgesCellsStats.wkt"){
-        pairsRDD.mapPartitionsWithIndex{ case(cid, it) =>
-          val cell   = cells(cid)
-          cell.nPairs = it.map(_._2.nPairs).sum
-
-          Iterator( cell.wkt + "\n" )
-        }.collect
+        cells.values.map{ cell =>
+          cell.wkt + "\n"
+        }.toList
       }
     }
     ///////////////////// Debug
 
+  */
+
+    /*
 
     /*** Get maximals from set of pairs,        ***/
     /*** should works after getPairsAtCell call ***/
     val ( (maximalsRDD2, nRun2), tRun2) = timer{
-      val maximalsRDD = pairsRDD.mapPartitionsWithIndex{ case(cid, it) =>
+      val maximals1 = pairsRDD.mapPartitionsWithIndex{ case(cid, it) =>
         if(it.isEmpty){
           Iterator.empty
         } else {
           val cell = cells(cid)
           val (pairsByKey, stats1) = it.next()
 
-          // createInnerGrid(cell, squared = true)
-          val (maximals, stats2) = getMaximalsAtCell(pairsByKey, cell, stats1)
-
-          debug{
-            stats2.print()
+          if(cell.nPairs >= settings.density){
+            pairsByKey.map{ pairByKey =>
+              val key = pairByKey.key
+              (key, (pairByKey, stats1))
+            }.toIterator
+          } else {
+            val (maximals, stats2) = getMaximalsAtCell(pairsByKey, cell, cell, stats1)
+            debug{
+              //stats2.print()
+            }
+            val M = maximals.toList
+            save(s"/tmp/edgesPMF${cid}"){
+              M.map{_.wkt + "\n"}
+            }
+            log(s"MF|${M.size}")
+            Iterator.empty
           }
-
-          maximals
         }
       }.cache
-      val nRun = maximalsRDD.count
-      (maximalsRDD, nRun)
+      val grids = maximals1.map(_._1).distinct.collect.sorted.zipWithIndex.toMap
+      debug{
+        println(
+          s"KEY: "+grids.toList.sortBy(_._2).map{case(key, value) => s"$key $value"}.mkString(";")
+        )
+      }
+      val grids_reverse = grids.map(_.swap)
+      val maximals2 = maximals1.partitionBy{
+        new Partitioner {
+          def numPartitions: Int = grids.size
+          def getPartition(key: Any): Int = grids(key.asInstanceOf[Long])
+        }
+      }.mapPartitionsWithIndex{ case(cid, it) =>
+        if(it.isEmpty){
+          Iterator.empty
+        } else {
+          val (_, (pairsByKey, stats1)) = it.next()
+          val cellId = pairsByKey.cellId
+          val key    = pairsByKey.key.toInt
+
+          val cell = cells(cellId)
+          val boundary = new Envelope(cell.mbr)
+          boundary.expandBy(settings.expansion)
+          val inner_cells = recreateInnerGrid(cell.copy(mbr = boundary), expansion = true)
+          val inner_cell  = inner_cells.filter(_.cid == key).head
+          if(settings.saves){
+            save(s"/tmp/edgesIC${key}.wkt"){
+              inner_cells.filter(_.cid == key).map{ inner_cell =>
+                s"${inner_cell.wkt}\t$key\n"
+              }
+            }
+            save(s"/tmp/edgesPT${key}.wkt"){
+              pairsByKey.Ps.map{_.wkt + "\n"}
+            }
+          }
+          //val (maximals, stats2) = getMaximalsAtCell(List(pairsByKey), cell, inner_cell, stats1, 2)
+          val Ps = pairsByKey.Ps
+          val (maximals, stats2) = BFE.run(Ps)
+          debug{
+            //stats2.print()
+          }
+          maximals.toIterator.filter(m => inner_cell.contains(m)).filter(m => cell.contains(m))
+        }
+      }.cache
+      val nRun = maximals2.count
+      (maximals2, nRun)
     }
     log(s"Run2|$nRun2")
     logt(s"Run2|$tRun2")
+
+
+    ///////////////////// Debug
+    if(settings.saves){
+      save("/tmp/edgesMF2.wkt"){
+        maximalsRDD2.mapPartitionsWithIndex{ case(cid, it) =>
+          it.map{ p => s"${p.wkt}\t$cid\n"}
+        }.collect.sorted
+      }
+    }
+     ///////////////////// Debug
+
+     */
+
 
     /*** Run BFE at each cell ***/
     val ( (maximalsRDD, nRun), tRun) = timer{
@@ -181,11 +252,12 @@ object MF {
         val (maximals, stats) = MF_Utils.runBFEParallel(points, cell)
 
         debug{
-          stats.print()
+          //stats.print()
         }
 
         maximals
       }.cache
+      
       val nRun = maximalsRDD.count
       (maximalsRDD, nRun)
     }
@@ -206,11 +278,12 @@ object MF {
 
     ///////////////////// Validation
     if(settings.tester){
-      val m1 = maximalsRDD2.collect.toList
-      val m2 =  maximalsRDD.collect.toList
-      val points = pointsRDD.map(_._2).collect.toList
+      //val m1 = maximalsRDD2.collect.toList
+      val points  = pointsRDD.map(_._2).collect.toList
+      val m1      = maximalsRDD.collect.toList
+      val (m2, _) = BFE.run(points)
 
-      validate(testing = m1, validation = m2, points)
+      diff(testing = m1, validation = m2, points)
     }
     ///////////////////// Validation
 

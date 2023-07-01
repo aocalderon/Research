@@ -1,7 +1,6 @@
 package edu.ucr.dblab.pflock
 
 import org.locationtech.jts.geom.{PrecisionModel, GeometryFactory}
-//import org.apache.spark.TaskContext
 import org.slf4j.{Logger, LoggerFactory}
 import scala.collection.JavaConverters._
 import edu.ucr.dblab.pflock.Utils._
@@ -34,9 +33,9 @@ object BFE {
         G
       }
       stats.tGrid = tGrid
-      log(s"GridSize=${grid.index.size}")
-
+      
       debug{
+        log(s"GridSize=${grid.index.size}")
         save("/tmp/edgesPoints.wkt"){ grid.pointsToText }
         save("/tmp/edgesGrid.wkt"){ grid.wkt() }
       }
@@ -123,7 +122,6 @@ object BFE {
             }
           }
         }
-        println(s"${key}\t${decode(key)}\t${Ps.size}\t${tMaximals}")
         stats.tCenters += tCenters
         stats.tCandidates += tCandidates
         stats.tMaximals += tMaximals

@@ -53,8 +53,9 @@ object Utils {
     val epsilon: Double = epsilon_prime + tolerance
     val r: Double = (epsilon_prime / 2.0) + tolerance
     val r2: Double = math.pow(epsilon_prime / 2.0, 2) + tolerance
+    val expansion: Double = epsilon_prime * 1.5 + tolerance
     val dataset: String = input.split("/").last.split("\\.").head
-    val dense: Boolean = if(density <= 0.0) false else true
+    //val dense: Boolean = if(density <= 0.0) false else true
 
     var partitions: Int = 1
     var appId: String   = clocktime.toString
@@ -111,14 +112,16 @@ object Utils {
   case class Cell(mbr: Envelope, cid: Int, lineage: String, dense: Boolean = false){
     var nPairs = 0
 
+    def isDense(implicit S: Settings): Boolean = this.nPairs >= S.density
+
     val bbox: Box = Box(mbr.getMinX.toFloat, mbr.getMinY.toFloat,
       mbr.getMaxX.toFloat, mbr.getMaxY.toFloat)
 
     def contains(disk: Disk): Boolean = mbr.contains(disk.X, disk.Y)
 
-    def toText(implicit g: GeometryFactory): String = g.toGeometry(mbr).toText
+    def toText(implicit G: GeometryFactory): String = G.toGeometry(mbr).toText
 
-    def wkt(implicit g: GeometryFactory): String = s"${toText}\t$cid\t$lineage\t$nPairs"
+    def wkt(implicit G: GeometryFactory): String = s"${toText}\t$cid\t$lineage\t$nPairs"
   }
 
   case class Disk(center: Point, pids: List[Int],
@@ -172,19 +175,21 @@ object Utils {
       .filter(_.equals(this))
   }
 
-  case class Grid(points: List[STPoint]){
-    var minx: Double = 0.0
-    var miny: Double = 0.0
-    var n: Int = 0
-    var m: Int = 0
+  case class Grid(points: List[STPoint], envelope: Envelope = new Envelope()){
+    private var minx: Double = _
+    private var miny: Double = _
+    private var maxx: Double = _
+    private var maxy: Double = _
     var index: Map[Long, List[STPoint]] = Map.empty
+    var expansion: Boolean = false
 
-    def buildGrid(implicit settings: Settings): Unit = {
-      minx = points.minBy(_.X).X
-      miny = points.minBy(_.Y).Y
-      val grid = points.filter(_.count >= settings.mu).map{ point =>
-        val i = math.floor( (point.X - minx) / settings.epsilon_prime ).toInt
-        val j = math.floor( (point.Y - miny) / settings.epsilon_prime ).toInt
+    def buildGrid(implicit S: Settings): Unit = {
+      val epsilon = if(expansion) S.expansion else S.epsilon_prime
+      minx = if(envelope.isNull()) points.minBy(_.X).X else envelope.getMinX
+      miny = if(envelope.isNull()) points.minBy(_.Y).Y else envelope.getMinY
+      val grid = points.filter(_.count >= S.mu).map{ point =>
+        val i = math.floor( (point.X - minx) / epsilon ).toInt
+        val j = math.floor( (point.Y - miny) / epsilon ).toInt
         (encode(i, j), point)
       }.groupBy(_._1)
 
@@ -218,30 +223,66 @@ object Utils {
       }.flatten.toList
     }
 
-    def wkt(limit: Int = 2000)
-      (implicit settings: Settings, geofactory: GeometryFactory): Seq[String] = {
+    def getRows(implicit S: Settings): Int = {
       if(!index.isEmpty){
-        val epsilon = settings.epsilon
-        val maxx = index.values.flatten.maxBy(_.X).X
-        val maxy = index.values.flatten.maxBy(_.Y).Y
-        n = math.ceil( (maxx - minx) / epsilon ).toInt
-        m = math.ceil( (maxy - miny) / epsilon ).toInt
+        maxx = if(envelope.isNull) index.values.flatten.maxBy(_.X).X else envelope.getMaxX
+        val epsilon = if(expansion) S.expansion else S.epsilon_prime
+        math.ceil( (maxx - minx) / epsilon ).toInt
+      } else {
+        0
+      }
+    }
+
+    def getColumns(implicit S: Settings): Int = {
+      if(!index.isEmpty){
+        maxy = if(envelope.isNull) index.values.flatten.maxBy(_.Y).Y else envelope.getMaxY
+        val epsilon = if(expansion) S.expansion else S.epsilon_prime
+        math.ceil( (maxy - miny) / epsilon ).toInt
+      } else {
+        0
+      }
+    }
+
+    def getEnvelope(implicit S: Settings): Envelope = {
+      if(!index.isEmpty){
+        if(envelope.isNull){
+          getRows
+          getColumns
+          new Envelope(minx, maxx, miny, maxy)
+        } else {
+          envelope
+        }
+      } else {
+        new Envelope()
+      }
+    }
+
+    def wkt(limit: Int = 2000)(implicit S: Settings, G: GeometryFactory): Seq[String] = {
+      if(!index.isEmpty){
+        val epsilon = if(expansion) S.expansion else S.epsilon_prime
+        val (mbr, n, m) = if(envelope.isNull){
+          buildGrid
+          ( new Envelope(minx, maxx, miny, maxy), getRows, getColumns )
+        } else{
+          val n = math.ceil(envelope.getWidth  / epsilon).toInt
+          val m = math.ceil(envelope.getHeight / epsilon).toInt
+          ( envelope, n, m )
+        }
 
         if(n * m < limit){
+          val X = (mbr.getMinX until mbr.getMaxX by epsilon).toList :+ mbr.getMaxX
+          val Y = (mbr.getMinY until mbr.getMaxY by epsilon).toList :+ mbr.getMaxY
+
           for{
             i <- 0 until n
             j <- 0 until m
           } yield {
-            val x1 = minx + (i * epsilon)
-            val x2 = x1 + epsilon
-            val y1 = miny + (j * epsilon)
-            val y2 = y1 + epsilon
-            val envelope = new Envelope(x1,x2,y1,y2)
-            val polygon = geofactory.toGeometry(envelope)
+            val grid_cell = new Envelope( X(i), X(i + 1), Y(j), Y(j + 1) )
+            val gridId = encode(i, j).toInt
+            val polygon = G.toGeometry(grid_cell)
             val wkt = polygon.toText
-            val k = encode(i, j)
 
-            s"$wkt\t($i $j)\t$k\n"
+            s"$wkt\t($i $j)\t$gridId\n"
           }
         } else {
           Seq.empty
@@ -1000,8 +1041,8 @@ class BFEParams(args: Seq[String]) extends ScallopConf(args) {
   val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(5.0))
   val mu:         ScallopOption[Int]     = opt[Int]     (default = Some(3))
   val delta:      ScallopOption[Int]     = opt[Int]     (default = Some(1))
-  val capacity:   ScallopOption[Int]     = opt[Int]     (default = Some(100))
-  val fraction:   ScallopOption[Double]  = opt[Double]  (default = Some(0.01))
+  val capacity:   ScallopOption[Int]     = opt[Int]     (default = Some(250))
+  val fraction:   ScallopOption[Double]  = opt[Double]  (default = Some(1))
   val density:    ScallopOption[Double]  = opt[Double]  (default = Some(0))
   val tag:        ScallopOption[String]  = opt[String]  (default = Some(""))
   val output:     ScallopOption[String]  = opt[String]  (default = Some("/tmp/"))
