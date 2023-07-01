@@ -4,9 +4,9 @@ import org.locationtech.jts.geom.{PrecisionModel, GeometryFactory}
 import org.slf4j.{Logger, LoggerFactory}
 import scala.collection.JavaConverters._
 import edu.ucr.dblab.pflock.Utils._
+import edu.ucr.dblab.pflock.MF_Utils._
 import archery._
 
-import MF_Utils._
 
 object BFE {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")

@@ -26,7 +26,7 @@ sparkBash := {
   val conf      = s"spark.driver.extraJavaOptions=-Dlog4j.configuration=file:$log_file "
   val jars      = s"${cpJars_paths.mkString(",")},${libJars_paths.mkString(",")} "
   val master    = s"local[*] "
-  val classname = s"${args(0)} " // should be a parameter...
+  val classname = s"${args(0)} "
 
   val bash = List(
     s"#!/bin/bash \n",
@@ -35,7 +35,7 @@ sparkBash := {
     s" --conf   $conf \\",
     s" --jars   $jars \\",
     s" --master $master \\",
-    s" --class  $classname ",  // pass as argument
+    s" --class  $classname ",
     s")\n",
     s"spark-submit $${PARAMS[@]} $jar $$* \n"
   ).mkString("\n")
