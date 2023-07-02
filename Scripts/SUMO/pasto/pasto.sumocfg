@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2023-07-01 20:30:15 by Eclipse SUMO sumo Version v1_18_0+0023-ef591d47046
+-->
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="pasto.net.xml.gz"/>
+	<!--route-files value="pasto.pedestrian.rou.xml"/-->
+	<route-files value="pasto.bicycle.trips.xml,pasto.bus.trips.xml,pasto.motorcycle.trips.xml,pasto.passenger.trips.xml,pasto.pedestrian.rou.xml,pasto.truck.trips.xml"/>
+        <additional-files value="pasto.poly.xml.gz"/>
+    </input>
+
+    <output>
+        <fcd-output value="trajectories.xml"/>
+        <fcd-output.geo value="true"/>
+        <precision.geo value="10"/>
+        <precision value="3"/>
+    </output>
+    
+    <time>
+	<step-length value="5"/>
+    </time>
+
+    <processing>
+        <threads value="8"/>
+        <ignore-route-errors value="true"/>
+    </processing>
+
+    <routing>
+        <device.rerouting.adaptation-steps value="18"/>
+        <device.rerouting.adaptation-interval value="10"/>
+        <device.rerouting.threads value="8"/>
+    </routing>
+
+    <report>
+        <log value="pasto.log"/>
+        <verbose value="true"/>
+        <no-warnings value="true"/>
+        <duration-log.statistics value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+    <gui_only>
+        <gui-settings-file value="pasto.view.xml"/>
+        <start value="true"/>
+        <delay value="10"/>
+    </gui_only>
+
+</configuration>
