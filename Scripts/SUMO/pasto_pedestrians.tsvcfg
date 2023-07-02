@@ -1,0 +1,5 @@
+<configuration>
+    <source value="trajectories.xml"/>
+    <output value="trajectories_pedestrians"/>
+    <xsd value="fcd_pedestrians.xsd"/>
+</configuration>

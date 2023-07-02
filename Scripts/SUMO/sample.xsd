@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+    <!--xsd:include schemaLocation="baseTypes.xsd"/-->
+
+    <xsd:element name="fcd-export">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element minOccurs="0" maxOccurs="unbounded" ref="timestep"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="vehicle" type="ab"/>
+    <xsd:element name="person" type="ab"/>
+    <xsd:element name="ab">
+        <xsd:complexType name="ab">
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:attribute name="id"/>
+			<xsd:attribute name="x"/>
+			<xsd:attribute name="y"/>
+			<xsd:attribute name="speed"/>
+		</xsd:choice>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="timestep">
+        <xsd:complexType>
+            <xsd:attribute name="time"/>
+            <xsd:sequence>
+                <xsd:element minOccurs="0" maxOccurs="unbounded" ref="ab"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
