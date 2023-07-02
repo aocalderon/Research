@@ -33,9 +33,9 @@ object BFE {
         G
       }
       stats.tGrid = tGrid
-      log(s"GridSize=${grid.index.size}")
-
+      
       debug{
+        log(s"GridSize=${grid.index.size}")
         save("/tmp/edgesPoints.wkt"){ grid.pointsToText }
         save("/tmp/edgesGrid.wkt"){ grid.wkt() }
       }
@@ -122,7 +122,6 @@ object BFE {
             }
           }
         }
-        println(s"${key}\t${decode(key)}\t${Ps.size}\t${tMaximals}")
         stats.tCenters += tCenters
         stats.tCandidates += tCandidates
         stats.tMaximals += tMaximals

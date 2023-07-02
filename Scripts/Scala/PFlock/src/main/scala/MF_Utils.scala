@@ -8,6 +8,7 @@ import org.locationtech.jts.geom.{Coordinate, Envelope, GeometryFactory, Point, 
 import org.locationtech.jts.index.strtree.STRtree
 
 import scala.collection.JavaConverters._
+import sys.process._
 
 import org.slf4j.Logger
 import archery._
@@ -37,7 +38,8 @@ object MF_Utils {
     } 
   }
 
-  def getMaximalsAtCell(pairsByKey: List[PairsByKey], cell: Cell, stats: Stats)
+  def getMaximalsAtCell(pairsByKey: List[PairsByKey], cell: Cell, inner_cell: Cell, stats: Stats,
+    debug: Int = -1)
       (implicit S: Settings, G: GeometryFactory, L: Logger): (Iterator[Disk], Stats) = {
 
     val cellId = TaskContext.getPartitionId
@@ -47,6 +49,10 @@ object MF_Utils {
       val key   = tuple.key
       val pairs = tuple.pairs
       val Ps    = tuple.Ps
+
+      /////////////////////////////////////////
+      if(debug == cellId) println(s"DEBUG|$cellId|\n${Ps.map{_.toString}.mkString("\n")}")
+      if(debug == cellId) println(s"DEBUG|$cellId|\n${pairs.map{_.wkt}.mkString("\n")}")
 
       var tCenters    = 0.0
       var tCandidates = 0.0
@@ -68,7 +74,12 @@ object MF_Utils {
 
         val (candidates, tD) = timer{
           // getting candidate disks...
-          disks.filter(_.count >= S.mu)
+          val d = disks.filter(_.count >= S.mu)
+
+          ///////////////////////////////////////////////////////////
+          if(debug == cellId) L.info(s"${cellId}|Candidates|${d.map(_.toString).mkString("\n")}")
+
+          d
         }
         stats.nCandidates += candidates.size
         tCandidates += tD
@@ -76,7 +87,7 @@ object MF_Utils {
         val (_, tM) = timer{
           // cheking if a candidate is not a subset and adding to maximals...
           candidates.foreach{ candidate =>
-            Maximals = insertMaximalParallel(Maximals, candidate, cell)
+            Maximals = insertMaximalParallel(Maximals, candidate, acid = 2)
             // use insertMaximalParallelStats to debug and collect statistics...
           }
         }
@@ -88,14 +99,25 @@ object MF_Utils {
       stats.tMaximals += tMaximals
     }
 
-    val M = Maximals.entries.toList.map(_.value).filter{ maximal => cell.contains(maximal) }
+    ////////////////////////
+    if(cellId == debug) println(s"${Maximals.entries.map{_.toString}.mkString("\n")}")
+
+    val M = if(cell.isDense){
+      Maximals.entries.toList.map(_.value)
+        .filter{ maximal => cell.contains(maximal) }
+        .filter{ maximal => inner_cell.contains(maximal)}
+    } else {
+      Maximals.entries.toList.map(_.value)
+        .filter{ maximal => cell.contains(maximal) }
+    }
     stats.nMaximals = M.size
 
     (M.toIterator, stats)
   }
 
   def getPairsAtCell(points_prime: List[STPoint], cell: Cell, stats: Stats)
-    (implicit S: Settings, G: GeometryFactory, L: Logger): (Iterator[ (List[PairsByKey], Stats) ]) = {
+    (implicit S: Settings, G: GeometryFactory, L: Logger):
+      (Iterator[ (List[PairsByKey], Stats) ]) = {
 
 
     if(points_prime.isEmpty){
@@ -110,8 +132,12 @@ object MF_Utils {
       stats.tCounts = tCounts
 
       val (grid, tGrid) = timer{
-        val grid = Grid(points)
+        val boundary = new Envelope(cell.mbr)
+        boundary.expandBy(S.expansion)
+        val grid = Grid(points, envelope = boundary)
+        grid.expansion = true
         grid.buildGrid
+        //save(s"/tmp/edgesG1_${cellId}.wkt"){ grid.wkt() }
         grid
       }
       stats.tGrid = tGrid
@@ -163,7 +189,7 @@ object MF_Utils {
       val H = for{            // get neighborhood of Pr points in Ps...
         r <- Pr
         s <- Ps
-        if{ r.distance(s) <= S.epsilon & r.oid < s.oid } // check distance and prune duplicates...
+        if{ r.distance(s) <= S.epsilon && r.oid < s.oid } // check distance and prune duplicates...
       } yield {
         Pair(r, s)            // store a valid pair...
       }
@@ -258,7 +284,7 @@ object MF_Utils {
                 val (_, tM) = timer{
                   // cheking if a candidate is not a subset and adding to maximals...
                   candidates.foreach{ candidate =>
-                    Maximals = insertMaximalParallel(Maximals, candidate, cell)
+                    Maximals = insertMaximalParallel(Maximals, candidate)
                     // use insertMaximalParallelStats to debug and collect statistics...
                   }
                 }
@@ -280,8 +306,8 @@ object MF_Utils {
     (M.toIterator, stats)
   }
 
-  def insertMaximalParallel(maximals: archery.RTree[Disk], candidate: Disk, cell: Cell)
-    (implicit settings: Settings, logger: Logger): archery.RTree[Disk] = {
+  def insertMaximalParallel(maximals: archery.RTree[Disk], candidate: Disk, acid: Int = -1)
+    (implicit S: Settings, L: Logger): archery.RTree[Disk] = {
 
     val cid = TaskContext.getPartitionId
     if(maximals.entries.size == 0){
@@ -291,10 +317,9 @@ object MF_Utils {
       maximals.insert(toInsert)
     } else {
       // we query the tree to retrieve maximals around the current candidate...
-      val maximals_prime = maximals.search(candidate.bbox(settings.epsilon.toFloat))
+      val maximals_prime = maximals.search(candidate.bbox(S.epsilon.toFloat))
         .map(_.value)
-        .filter{ maximal => maximal.distance(candidate) <= settings.epsilon }
-
+        .filter{ maximal => maximal.distance(candidate) <= S.epsilon }
       // we check if candidate and current maximal have the same pids...
       maximals_prime.find(_.equals(candidate)) match {
         
@@ -303,7 +328,7 @@ object MF_Utils {
                                 // to be deterministic, we only replace if
                                 // new candidate is most left-down disk...
           val Mx = if(candidate < maximal){ // candidate spatial order (left-down most)
-                                   // is implemented in Disk class...
+                                            // is implemented in Disk class...
             maximals
               .remove(Entry(archery.Point(maximal.X, maximal.Y), maximal))
               .insert(Entry(archery.Point(candidate.X, candidate.Y), candidate))
@@ -463,32 +488,23 @@ object MF_Utils {
     } // if first time...
   }
 
-  def createInnerGrid(cell: Cell, squared: Boolean = true)
-    (implicit S: Settings, geofactory: GeometryFactory): List[Envelope] = {
-
+  def recreateInnerGrid(cell: Cell, expansion: Boolean = false)(implicit S: Settings): List[Cell] = {
     val mbr = cell.mbr
 
-    val (_X, _Y, m, n) = if(squared){
-      val n = math.ceil(mbr.getWidth / S.epsilon_prime)
-      val X = (mbr.getMinX until mbr.getMaxX by S.epsilon_prime).toList :+ mbr.getMaxX
-      val m = math.ceil(mbr.getHeight / S.epsilon_prime)
-      val Y = (mbr.getMinY until mbr.getMaxY by S.epsilon_prime).toList :+ mbr.getMaxY
-      (X, Y, m, n)
-    } else {
-      val n = math.floor(mbr.getWidth / S.epsilon_prime)
-      val width = mbr.getWidth / n
-      val X = (mbr.getMinX until mbr.getMaxX by width).toList :+ mbr.getMaxX // ensure maxX...
-      val m = math.floor(mbr.getHeight / S.epsilon_prime)
-      val height = mbr.getHeight / m
-      val Y = (mbr.getMinY until mbr.getMaxY by height).toList :+ mbr.getMaxY // ensure maxY...
-        (X, Y, m, n)
-    }
+    val epsilon = if(expansion) S.expansion else S.epsilon_prime
+    val n = math.ceil(mbr.getWidth  / epsilon)
+    val X = (mbr.getMinX until mbr.getMaxX by epsilon).toList :+ mbr.getMaxX
+    val m = math.ceil(mbr.getHeight / epsilon)
+    val Y = (mbr.getMinY until mbr.getMaxY by epsilon).toList :+ mbr.getMaxY
 
     (for{
       i <- 0 until n.toInt
       j <- 0 until m.toInt
     } yield {
-      new Envelope( _X(i), _X(i + 1), _Y(j), _Y(j + 1) )
+      val mbr = new Envelope( X(i), X(i + 1), Y(j), Y(j + 1) )
+      val gridId = encode(i, j).toInt
+      val lin = s"${cell.cid}_$gridId"
+      Cell(mbr, gridId, lin)
     }).toList
   }
 
@@ -611,8 +627,21 @@ object MF_Utils {
     kdtree
   }
 
-  def countPairs(pairs: RDD[(List[PairsByKey], Stats)]): Int =
-    pairs.map{_._1.map(_.pairs.size).sum}.sum.toInt
+  def countPairs(pairs: RDD[Stats], cells: Map[Int, Cell]): Int = {
+    val pairsPerCell = pairs.mapPartitionsWithIndex{ case(cid, it) =>
+      it.map{ p => (cid, p.nPairs) }
+    }.collect.toList
+
+    var n = 0
+    for{
+      cell  <- cells.values
+      count <- pairsPerCell if(count._1 == cell.cid)
+    } yield {
+      cell.nPairs = count._2
+      n += count._2
+    }
+    n
+  }
 
   def getHDFSPath(implicit S: Settings): String = S.input.split("/").reverse.tail.reverse.mkString("/")
 
@@ -640,11 +669,46 @@ object MF_Utils {
     (hdfs, fs)
   }
 
+  def diff(testing: List[Disk], validation: List[Disk], points: List[STPoint])
+    (implicit S: Settings, G: GeometryFactory, L: Logger): Unit = {
+    val test     = testing.map(_.pidsText + "\n").sorted
+    val validate = validation.map(_.pidsText + "\n").sorted
+
+    save("/tmp/m1.txt"){test}
+    save("/tmp/m2.txt"){validate}
+    val diffs = s"diff /tmp/m1.txt /tmp/m2.txt".lineStream_!
+    val (diff1_prime, diff2_prime) = diffs.filter(l => l.startsWith("<") || l.startsWith(">"))
+      .partition(_.startsWith("<"))
+
+    val fails   = diff1_prime.map(_.substring(2)).toList
+    val missing = diff2_prime.map(_.substring(2)).toList
+    
+    (fails, missing) match {
+      case _ if  fails.isEmpty &&  missing.isEmpty => log("Pass!!")
+      case _ if  fails.isEmpty && !missing.isEmpty => {
+        missing.sorted.foreach{println}
+        log(s"${missing.size} missing disks not reported by testing set...")
+      }
+      case _ if !fails.isEmpty &&  missing.isEmpty => {
+        fails.sorted.foreach{println}
+        log(s"${fails.size} extra disks reported by testing set...")
+      }
+      case _ if !fails.isEmpty && !missing.isEmpty => {
+        fails.sorted.foreach{println}
+        log(s"${fails.size} extra disks reported by testing set...")
+        println
+        missing.sorted.foreach{println}
+        log(s"${missing.size} missing disks not reported by testing set...")
+      }
+      case _ => log("Unknown exception in validation...")
+    }
+  }
+
   def validate(testing: List[Disk], validation: List[Disk], points: List[STPoint])
     (implicit S: Settings, G: GeometryFactory, L: Logger): Unit = {
 
     @annotation.tailrec
-    def compare(testing: List[Disk], validation: KDTree, fails: List[Disk], found: List[Disk])
+    def compare_recursive(testing: List[Disk], validation: KDTree, fails: List[Disk], found: List[Disk])
         : (List[Disk], List[Disk]) = {
       testing match {
         case head :: tail => {
@@ -655,12 +719,12 @@ object MF_Utils {
             Disk(center, pids)
           }
 
-          hood.find(entry => head.equals(entry)) match { // equals compare pids in each disk...
+          hood.find(_.pidsText.compare(head.pidsText) == 0) match { // equals compare pids in each disk...
             case Some(v) => { // disk found!
-              compare(tail, validation, fails, found :+ v)
+              compare_recursive(tail, validation, fails, found :+ v)
             }
             case None => { // disk not found...
-              compare(tail, validation, fails :+ head, found)
+              compare_recursive(tail, validation, fails :+ head, found)
             }
           }
         }
@@ -670,31 +734,36 @@ object MF_Utils {
       }
     }
 
-    val kdtree = new KDTree()
-    val entries = validation.map{ disk =>
-      new DoubleArray(disk.center, disk.pidsText)
-    }.asJava
-    kdtree.buildtree(entries)
+    def compare(testing: List[Disk], validation: List[Disk]): (List[Disk], List[Disk]) = {
+      val kdtree = new KDTree()
+      val entries = validation.map{ disk =>
+        new DoubleArray(disk.center, disk.pidsText)
+      }.asJava
+      kdtree.buildtree(entries)
 
-    val (fails, found) = compare(testing, kdtree, List.empty, List.empty)
+      val (fails, found) = compare_recursive(testing, kdtree, List.empty, List.empty)
+      val missing = validation.filterNot{ valid => found.exists(_.equals(valid)) }
 
-    val missing = validation.filterNot{ valid => found.exists(_.equals(valid)) }
+      (fails, missing)
+    }
+
+    val (fails, missing) = compare(testing, validation)
 
     (fails, missing) match {
       case _ if  fails.isEmpty &&  missing.isEmpty => log("Pass!!")
       case _ if  fails.isEmpty && !missing.isEmpty => {
-        missing.foreach{println}
+        missing.sortBy(_.pidsText).foreach{println}
         log(s"${missing.size} missing disks not reported by testing set...")
       }
       case _ if !fails.isEmpty &&  missing.isEmpty => {
-        fails.foreach{println}
+        fails.sortBy(_.pidsText).foreach{println}
         log(s"${fails.size} extra disks reported by testing set...")
       }
       case _ if !fails.isEmpty && !missing.isEmpty => {
-        fails.foreach{println}
+        fails.sortBy(_.pidsText).foreach{println}
         log(s"${fails.size} extra disks reported by testing set...")
         println
-        missing.foreach{println}
+        missing.sortBy(_.pidsText).foreach{println}
         log(s"${missing.size} missing disks not reported by testing set...")
       }
       case _ => log("Unknown exception in validation...")

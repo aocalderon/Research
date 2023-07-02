@@ -1,6 +1,7 @@
 ThisBuild / version      := "0.1.0"
 ThisBuild / organization := "edu.ucr.dblab"
 ThisBuild / scalaVersion := "2.11.12"
+crossScalaVersions := Seq("2.11.12", "2.12.17")
 
 val SparkVersion = "2.4.0"
 

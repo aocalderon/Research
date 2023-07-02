@@ -8,4 +8,5 @@ PARAMS=(
  --class  edu.ucr.dblab.pflock.CandidatesTester  
 )
 
-spark-submit ${PARAMS[@]} /home/and/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar $* 
+#spark-submit ${PARAMS[@]} /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar  $* 
+spark-submit ${PARAMS[@]} /home/acald013/Research/Scripts/Scala/PFlock/target/scala-2.12/pflock_2.12-0.1.0.jar $* 

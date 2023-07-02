@@ -25,7 +25,7 @@ MASTER=local[1]
 
 LOG_FILE=$HOME/Spark/2.4/conf/log4j.properties
 CLASS=edu.ucr.dblab.pflock.$THE_METHOD
-JAR=$HOME/Research/Scripts/Scala/Cliques/target/scala-2.11/cliques_2.11-0.1.jar
+JAR=$HOME/Research/Scripts/Scala/PFlock/target/scala-2.11/pflock_2.11-0.1.0.jar
 
 PARAMS=(
     --files $LOG_FILE \
