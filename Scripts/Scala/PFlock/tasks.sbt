@@ -6,7 +6,7 @@ sparkBash := {
 
   val args: Seq[String] = spaceDelimited("<arg>").parsed
 
-  val classpathJars: Seq[File] = (fullClasspathAsJars in Runtime).value.files
+  val classpathJars: Seq[File] = (Runtime / fullClasspathAsJars).value.files
   val modules = libraryDependencies.value.map(_.toString).filterNot(_.contains("spark")).filterNot(_.contains("scala-library"))
   val cpJars_paths = for{
     module <- modules.map(_.split(":")(1))
@@ -15,7 +15,7 @@ sparkBash := {
   } yield { path }
   cpJars_paths.map{_.toString.split("/").last}.foreach{println}
 
-  val libJars_paths: Seq[File] = (unmanagedJars in Runtime).value.files
+  val libJars_paths: Seq[File] = (Runtime / unmanagedJars).value.files
   libJars_paths.map{_.getName}.foreach{println}
 
   val finder: PathFinder = (baseDirectory.value / "target") ** "*.jar"
@@ -48,7 +48,7 @@ sparkBash := {
 lazy val cpCP = taskKey[Unit]("Copy classpath to lib folder...")
 cpCP := {
   import sys.process._
-  val cp: Seq[File] = (fullClasspathAsJars in Runtime).value.files
+  val cp: Seq[File] = (Runtime / fullClasspathAsJars).value.files
   val base = baseDirectory.value
   cp.foreach{ c =>
     println(s"Copy $c ...")
@@ -59,7 +59,7 @@ cpCP := {
 lazy val scalaBash = taskKey[Unit]("Create a scala bash script...")
 scalaBash := {
   import sys.process._
-  val cp: Seq[File] = (fullClasspathAsJars in Runtime).value.files
+  val cp: Seq[File] = (Runtime / fullClasspathAsJars).value.files
   val base = baseDirectory.value
   val strCP = cp.mkString(":")
   val finder: PathFinder = (base / "target") ** "*.jar"

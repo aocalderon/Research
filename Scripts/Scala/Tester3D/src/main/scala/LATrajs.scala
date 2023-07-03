@@ -88,6 +88,7 @@ object LATrajs {
     val f = new java.io.PrintWriter("/tmp/edgesLA.wkt")
     f.write(wkt.mkString(""))
     f.close
+    logger.info("READ")
 
     val pointsRDD = pointsRaw.mapPartitionsWithIndex{ case(cid, it) =>
       it.flatMap{ point =>
