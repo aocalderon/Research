@@ -39,7 +39,9 @@ object MF {
 
     println(s"NAME       = ${settings.appName}")
     implicit val spark = SparkSession.builder()
+      .config("spark.testing.memory", "2147480000")
       .config("spark.serializer", classOf[KryoSerializer].getName)
+      .master(params.master())
       .appName(settings.appName).getOrCreate()
     import spark.implicits._
 

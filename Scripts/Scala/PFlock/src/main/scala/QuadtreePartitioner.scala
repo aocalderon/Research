@@ -7,6 +7,7 @@ import org.locationtech.jts.index.quadtree.{Quadtree => JTSQuadtree}
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
+import java.io.FileWriter
 
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.rdd.RDD
@@ -25,18 +26,16 @@ object QuadtreePartitioner {
 
     val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
+      .master(params.master())
       .appName("QuadtreePartitioner").getOrCreate()
     import spark.implicits._
 
     implicit var settings = Settings(
       input = params.input(),
-      epsilon_prime = params.epsilon(),
-      mu = params.mu(),
       method = "PFlocks",
       capacity = params.capacity(),
       fraction = params.fraction(),
       tolerance = params.tolerance(),
-      tag = params.tag(),
       debug = params.debug(),
       output = params.output()
     )
@@ -49,8 +48,6 @@ object QuadtreePartitioner {
 
     val ( (pointsRaw, nRead), tRead) = timer{
       val pointsRaw = spark.read
-        .option("delimiter", "\t")
-        .option("header", false)
         .textFile(settings.input).rdd
         .map { line =>
           val arr = line.split("\t")
@@ -106,12 +103,24 @@ object QuadtreePartitioner {
     log(s"Shuffle|$nShuffle")
     logt(s"Shuffle|$tShuffle")
 
+    // Save quadtree's cells to disk and data to HDFS or Local...
     val (_, tSave) = timer{
       val (hdfs_name, fs_name) = getHDFSandFSnames("quadtree", "wkt")
       Quadtree.save(quadtree, fs_name) 
-      pointsRDD.map(_._2).toDF("point").write
-        .mode(SaveMode.Overwrite)
-        .text(hdfs_name)
+      if(params.master() == "yarn"){
+        pointsRDD.map(_._2).toDF("point").write
+          .mode(SaveMode.Overwrite)
+          .text(hdfs_name)
+        log("Save|HDFS")
+      } else {
+        val filename = settings.input.split("/").last.split("\\.")
+        filename.foreach{println}
+        val fs_path = settings.input.split("/").reverse.tail.reverse.mkString("/")
+        val f = new FileWriter(s"${fs_path}/${filename(0)}_partitioned.${filename(1)}")
+        f.write( pointsRDD.map(_._2 + "\n").collect.mkString("") )
+        f.close
+        log("Save|Local")
+      }
     }
     logt(s"Save|$tSave")
 

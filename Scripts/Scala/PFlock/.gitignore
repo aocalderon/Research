@@ -27,3 +27,5 @@ lib/*
 *.toc
 *.pcl
 *~
+src/main/scala/#*#
+src/main/scala/.#*

@@ -90,10 +90,17 @@ object LATrajsAnalyzer {
     logger.info(s"Read|${pointsRDD.count}")
 
     if(params.saves()){
-      pointsRDD.map(_.toString).toDF.write
-        .mode(SaveMode.Overwrite)
-        .text(s"${params.dataset()}_shifted")
-      logger.info(s"Save|${pointsRDD.count}")
+      if(params.master() == "yarn"){
+        pointsRDD.map(_.toString).toDF.write
+          .mode(SaveMode.Overwrite)
+          .text(s"${params.dataset()}_shifted")
+        logger.info(s"SaveHDFS|${pointsRDD.count}")
+      } else {
+        val f = new java.io.PrintWriter(params.output())
+        f.write( pointsRDD.map(_.toString + "\n").collect.mkString("") )
+        f.close
+        logger.info(s"SaveLocal|${pointsRDD.count}")
+      }
     }
 
     if(params.debug()){

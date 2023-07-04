@@ -51,10 +51,10 @@ object Quadtree {
     val f = new FileWriter(filename)
     val WKT = quadtree.getLeafZones.asScala.map{ leaf =>
       val wkt = leaf.wkt
-      val lin = leaf.lineage
       val cid = leaf.partitionId
+      val lin = leaf.lineage
 
-      s"$wkt\t$lin\t$cid\n"
+      s"$wkt\t$cid\t$lin\n"
     }.mkString("")
     f.write(WKT)
     f.close
