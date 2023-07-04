@@ -1,0 +1,26 @@
+* TODO *Read papers!*
+DEADLINE: <2023-07-07 Fri> SCHEDULED: <2023-07-06 Thu>
+  - [ ] Sanchez 2018
+  - [ ] Tanaka 2016
+  - [ ] Tanaka 2015
+* TODO *Email Vanda!!!*
+DEADLINE: <2023-07-07 Fri> SCHEDULED: <2023-07-05 Wed>
+** Who is in my committee?
+** Do I need to make changes?
+* TODO *Check RIDIR reviews*
+DEADLINE: <2023-07-07 Fri> SCHEDULED: <2023-07-05 Wed>
+  - [X] Put in a google sheet
+  - [ ] Share it with Professor
+
+* TODO Validate points arriving to cells.
+* TODO Check if I am getting same cell's boundaries before and after repartition
+* TODO Run BFE individually at each grid cell and compare with parallel implementation
+* TODO Distribute just candidate disk which touch the central grid of the neighborhood
+* TODO Explore when would be the best momento to stop subdivision
+* TODO Validate double precision and duplicates in LA dataset
+* TODO Explore 3D partitioners
+
+Free time?
+* TODO Document creation of scenarios in SUMO
+* TODO Document ensime configuration
+
