@@ -352,11 +352,33 @@ display: none;
 </div>
 
 
+<ul>
+<li><p>Create the network from OSM file…</p>
+<p><code>netconvert -c pasto.netccfg</code></p></li>
+<li><p>Extract polygons from OSM file to be included during the
+visualization…</p>
+<p><code>polyconvert -c pasto.polycfg</code></p></li>
+<li><p>Script to call ‘randomTrips.py’ and ‘duarouter’ to create random
+origin and destination, and then generate routes using shortest path
+algorithms. It creates routes for pedestrians, bicycles, motorcycles,
+cars, buses and trucks…</p>
+<p><code>./build</code></p></li>
+<li><p>Run the simulation calling ‘sumo’ and save the trajectories to a
+XML file…</p>
+<p><code>./simulate -c pasto.sumocfg</code></p>
+<p>or to launch the visualization…</p>
+<p><code>./simulate-gui -c pasto.sumocfg</code></p></li>
+<li><p>Convert the XML file to a TSV file with just ID of the object,
+lat and lon, speed and time instant…</p>
+<p><code>./xml2tsv</code></p></li>
+</ul>
+<p>The script <code>runAll</code> executes all the steps…</p>
+<hr />
 <p>Large files were not attached. They are available online [1,2].</p>
 <table>
 <colgroup>
-<col width="28%" />
-<col width="71%" />
+<col width="31%" />
+<col width="68%" />
 </colgroup>
 <thead>
 <tr class="header">
