@@ -18,9 +18,19 @@ DEADLINE: <2023-07-07 Fri> SCHEDULED: <2023-07-05 Wed>
 * TODO Distribute just candidate disk which touch the central grid of the neighborhood
 * TODO Explore when would be the best momento to stop subdivision
 * TODO Validate double precision and duplicates in LA dataset
+  - [X] Extract left-down coordinate to shift the position of the points
+  - [X] Move and save points in new position (HDFS and local)
+  - [X] Group points by proximity (using a RTree?) to check duplicates
+  - [ ] Repeated for all time instants 
 * TODO Explore 3D partitioners
 
 Free time?
 * TODO Document creation of scenarios in SUMO
+* DONE Fix problem with the network printer
+CLOSED: [2023-07-04 Tue 16:31]
+:LOGBOOK:
+- State "DONE"       from "NEXT"       [2023-07-04 Tue 16:31]
+:END:
+Script _printer_ send a file to server and then to network printer.
 * TODO Document ensime configuration
 

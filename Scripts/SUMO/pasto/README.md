@@ -1,3 +1,13 @@
+* netconvert -c pasto.netccfg
+
+* polyconvert -c pasto.polycfg
+
+* ./build
+
+* ./simulate -c pasto.sumocfg or ./simulate-gui -c pasto.sumocfg
+
+* ./xml2tsv
+
 Large files were not attached.  They are available online [1,2].
 
 | Files                          | Description|
