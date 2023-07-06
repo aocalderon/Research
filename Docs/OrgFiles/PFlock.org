@@ -1,36 +1,61 @@
 * TODO *Read papers!*
 DEADLINE: <2023-07-07 Fri> SCHEDULED: <2023-07-06 Thu>
   - [ ] Sanchez 2018
-  - [ ] Tanaka 2016
-  - [ ] Tanaka 2015
-* TODO *Email Vanda!!!*
-DEADLINE: <2023-07-07 Fri> SCHEDULED: <2023-07-05 Wed>
-** Who is in my committee?
-** Do I need to make changes?
-* TODO *Check RIDIR reviews*
-DEADLINE: <2023-07-07 Fri> SCHEDULED: <2023-07-05 Wed>
-  - [X] Put in a google sheet
-  - [ ] Share it with Professor
-
-* TODO Validate points arriving to cells.
+  - [X] Tanaka 2016
+  - [X] Tanaka 2015
+* TODO *Sent request to Graduate Division*
+SCHEDULED: <2023-07-10 Mon>
+Coordinate* with Petko and Marissa and sent request to graduate division to include Petko
+as member of my committee.
+  - [ ] Ask Petko's CV
+  - [ ] Ask Professor (or Graduate Advisor?) the justification
+  - [ ] Send documents to Marissa
+  - [ ] Send request to Graduate Division
+* TODO Validate points arriving to cells. 
 * TODO Check if I am getting same cell's boundaries before and after repartition
 * TODO Run BFE individually at each grid cell and compare with parallel implementation
 * TODO Distribute just candidate disk which touch the central grid of the neighborhood
 * TODO Explore when would be the best momento to stop subdivision
 * TODO Validate double precision and duplicates in LA dataset
-  - [X] Extract left-down coordinate to shift the position of the points
-  - [X] Move and save points in new position (HDFS and local)
-  - [X] Group points by proximity (using a RTree?) to check duplicates
-  - [ ] Repeated for all time instants 
+  - [X] Save in FS by time instant.
+  - [X] Compute general quadtree for all time instants using _capacity=250_ and _fraction=0.05_.
+  - [ ] Save cells and boundary to FS (Research/local_path/LA_50K)
+  - [ ] Save in HSFS by time instant *shifted* and *spatial partitioned* using cells and boundary.
+  - [ ] Check duplicates and convex hulls for testing purposes.
 * TODO Explore 3D partitioners
+* DONE *Email Vanda!!!*
+CLOSED: [2023-07-05 Wed 11:56] DEADLINE: <2023-07-07 Fri> SCHEDULED: <2023-07-05 Wed>
+:LOGBOOK:
+- State "DONE"       from "NEXT"       [2023-07-05 Wed 11:56]
+:END:
+** Who is in my committee?
+** Do I need to make changes?
+* DONE *Check RIDIR reviews*
+CLOSED: [2023-07-05 Wed 12:01] DEADLINE: <2023-07-07 Fri> SCHEDULED: <2023-07-05 Wed>
+:LOGBOOK:
+- State "DONE"       from "NEXT"       [2023-07-05 Wed 12:01]
+:END:
+  - [X] Put in a google sheet.
+  - [X] Share it with Professor.
 
-Free time?
-* TODO Document creation of scenarios in SUMO
+
+
+
+=====================================================================================  
+* TODO Document ensime configuration
+* DONE Check ensime in dblab
+CLOSED: [2023-07-05 Wed 17:15]
+:LOGBOOK:
+- State "DONE"       from "NEXT"       [2023-07-05 Wed 17:15]
+:END:
+* DONE Document creation of scenarios in SUMO
+CLOSED: [2023-07-05 Wed 17:13]
+:LOGBOOK:
+- State "DONE"       from "NEXT"       [2023-07-05 Wed 17:13]
+:END:
 * DONE Fix problem with the network printer
 CLOSED: [2023-07-04 Tue 16:31]
 :LOGBOOK:
 - State "DONE"       from "NEXT"       [2023-07-04 Tue 16:31]
 :END:
 Script _printer_ send a file to server and then to network printer.
-* TODO Document ensime configuration
-
