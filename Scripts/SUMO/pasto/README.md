@@ -1,4 +1,4 @@
-#### Creating a SUMO scenario from scratch.
+#### Creating a (quite simple) SUMO scenario from scratch.
 Be sure [SUMO](https://eclipse.dev/sumo/) is installed and $SUMO_HOME is set correctly (this recipe uses version 1.18.0 for Linux). Most of the calls use configuration files.  See `pasto.netccfg`, `pasto.polycfg`, `pasto.sumocfg`, etc. for details in the input and output settings...
 
 -   Call [`netconvert`](https://sumo.dlr.de/docs/netconvert.html) to create the network from OSM file...
@@ -21,7 +21,7 @@ Be sure [SUMO](https://eclipse.dev/sumo/) is installed and $SUMO_HOME is set cor
 
     `./sumo-gui -c pasto.sumocfg`
 
--   Run `xml2tsv` script to call [xml2csv.py](https://sumo.dlr.de/docs/Tools/Xml.html) and convert the XML file to a TSV file with just ID of the object, lat and lon, speed and time instant...
+-   Run `xml2tsv` script to call [`xml2csv.py`](https://sumo.dlr.de/docs/Tools/Xml.html) and convert the XML file to a TSV file with just ID of the object, lat and lon, speed and time instant...
 
     `./xml2tsv`
 
