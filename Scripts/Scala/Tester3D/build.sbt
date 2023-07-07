@@ -17,5 +17,7 @@ lazy val buildSettings = (project in file("."))
     libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25",
 
     libraryDependencies += "tech.tablesaw" % "tablesaw-core" % "0.43.1",
-    libraryDependencies += "tech.tablesaw" % "tablesaw-jsplot" % "0.43.1"
+    libraryDependencies += "tech.tablesaw" % "tablesaw-jsplot" % "0.43.1",
+
+    libraryDependencies += "net.openhft" % "zero-allocation-hashing" % "0.16"
   )
