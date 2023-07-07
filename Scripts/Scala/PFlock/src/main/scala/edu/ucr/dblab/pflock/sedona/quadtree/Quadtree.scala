@@ -1,10 +1,14 @@
 package edu.ucr.dblab.pflock.sedona.quadtree
 
 import org.locationtech.jts.geom.{GeometryFactory, Envelope, Coordinate, Polygon, Point}
+import org.locationtech.jts.index.strtree.STRtree
 import org.locationtech.jts.io.WKTReader
+import org.apache.spark.rdd.RDD
 import scala.collection.JavaConverters._
 import java.io.FileWriter
 import scala.io.Source
+
+import edu.ucr.dblab.pflock.Utils.Cell
 
 object Quadtree {  
   def create[T](boundary: Envelope, lineages: List[String]): StandardQuadTree[T] = {
@@ -104,8 +108,71 @@ object Quadtree {
     }
   }
 
+  def build(points: RDD[Point], envelope: Envelope = new Envelope(), capacity: Int = 100,
+    fraction: Double = 0.05, maxLevel: Int = 16, level: Int = 0, seed: Int = 42)
+      : (Map[Int, Envelope], STRtree, Envelope) = {
+
+    val rectangle = if(envelope.isNull){
+      val coords   = points.map(_.getCoordinate).cache
+      val minCoord = coords.min()
+      val maxCoord = coords.max()
+      val width    = maxCoord.x - minCoord.x
+      val height   = maxCoord.y - minCoord.y
+      new QuadRectangle(minCoord.x, minCoord.y, width, height)
+    } else {
+      new QuadRectangle(envelope)
+    }
+
+    val quadtree = new StandardQuadTree[Point](rectangle, level, capacity, maxLevel)
+
+    points.sample(false, fraction, seed)
+      .collect
+      .foreach{ point =>
+        val mbr = new QuadRectangle(point.getEnvelopeInternal)
+        quadtree.insert(mbr, point)
+      }
+    quadtree.assignPartitionIds
+    quadtree.assignPartitionLineage
+    quadtree.dropElements
+
+    val tree  = new STRtree()
+    val cells = quadtree.getLeafZones.asScala.map{ leaf =>
+      val  id = leaf.partitionId.toInt
+      val env = leaf.getEnvelope
+
+      tree.insert(env, id)
+
+      (id -> env)
+    }.toMap
+
+    (cells, tree, rectangle.getEnvelope)
+  }
+
+  def read(cells_file: String, boundary_file: String)(implicit geofactory: GeometryFactory)
+      : (Map[Int, Envelope], STRtree, Envelope) = {
+
+    val reader = new WKTReader(geofactory)
+    val buffer = Source.fromFile(cells_file)
+    val tree   = new STRtree()
+    val cells = buffer.getLines.toList.map{ line =>
+      val arr = line.split("\t")
+      val envelope = reader.read(arr(0)).asInstanceOf[Polygon].getEnvelopeInternal
+      val cellId   = arr(1).toInt
+
+      tree.insert(envelope, cellId)
+      (cellId, envelope)
+    }.toMap
+    buffer.close()
+
+    val buffer2 = Source.fromFile(boundary_file)
+    val boundary = reader.read(buffer2.getLines.next.split("\t")(0))
+      .asInstanceOf[Polygon].getEnvelopeInternal
+    buffer2.close
+
+    (cells, tree, boundary)
+  }
+
   /* Quite specific to PFlock project */
-  import org.apache.spark.rdd.RDD
   import edu.ucr.dblab.pflock.Utils.{Settings, Cell}
   def loadCells(filename: String, wkt_position: Int = 0, id_position: Int = 1)
     (implicit G: GeometryFactory): Map[Int, Cell] = {

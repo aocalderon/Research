@@ -20,13 +20,25 @@ import edu.ucr.dblab.pflock.Utils._
 
 object MF_Utils {
   case class KDPoint(p: STPoint) extends DoubleArray(p.point)
+
   case class Pair(p1: STPoint, p2: STPoint){
     def line(implicit G: GeometryFactory): LineString =
       G.createLineString(Array(p1.getCoord, p2.getCoord))
     def wkt(implicit G: GeometryFactory): String =
       s"${line.toText()}\t${p1.oid}\t${p2.oid}\t${line.getLength}"
   }
+
   case class PairsByKey(cellId: Int, key: Long, pairs: List[Pair], Ps: List[STPoint])
+
+  case class SimplePartitioner(partitions: Int) extends Partitioner {
+    override def numPartitions: Int = partitions
+    override def getPartition(key: Any): Int = key.asInstanceOf[Int]
+  }
+
+  case class MapPartitioner(map: Map[Int, Int]) extends Partitioner {
+    override def numPartitions: Int = map.size
+    override def getPartition(key: Any): Int = map(key.asInstanceOf[Int])
+  }
 
   def runBFEParallel(points: List[STPoint], cell: Cell)
     (implicit S: Settings, G: GeometryFactory, L: Logger): (Iterator[Disk], Stats) = {
@@ -781,3 +793,4 @@ object MF_Utils {
     ???
   }
 }
+

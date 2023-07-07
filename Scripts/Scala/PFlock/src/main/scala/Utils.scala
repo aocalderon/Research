@@ -109,7 +109,7 @@ object Utils {
     override def toString = s"$id\t$t"
   }
 
-  case class Cell(mbr: Envelope, cid: Int, lineage: String, dense: Boolean = false){
+  case class Cell(mbr: Envelope, cid: Int, lineage: String = "", dense: Boolean = false){
     var nPairs = 0
 
     def isDense(implicit S: Settings): Boolean = this.nPairs >= S.density
@@ -842,6 +842,11 @@ object Utils {
 
   def round(x: Double)(implicit settings: Settings): Double = {
     val decimal_positions = math.log10(settings.scale).toInt
+    BigDecimal(x).setScale(decimal_positions, BigDecimal.RoundingMode.HALF_UP).toDouble
+  }
+
+  def round3(x: Double, tolerance: Double = 1e-3): Double = {
+    val decimal_positions = math.log10(1.0/tolerance).toInt
     BigDecimal(x).setScale(decimal_positions, BigDecimal.RoundingMode.HALF_UP).toDouble
   }
 

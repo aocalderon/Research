@@ -1,31 +1,12 @@
 #!/bin/bash
 
-PARGS=()
-while [[ "$1" != "" ]]; do
-    case $1 in
-	-x|--executors)
-	    shift
-	    EXECUTORS="$1"
-	    ;;	
-	-w|--wait)
-	    shift
-	    WAIT="$1"
-	    ;;
-	*)
-	    PARGS+=("$1") # save positional arg
-	    ;;
-    esac
-    shift
-done
-set -- "${PARGS[@]}" # restore positional parameters
-if [ -v EXECUTORS ]; then echo "EXECUTORS  = $EXECUTORS"; else EXECUTORS=12;  echo "EXECUTORS  = $EXECUTORS"; fi
-if [ -v WAIT ];      then echo "WAIT       = $WAIT";      else WAIT="0s";     echo "WAIT       = $WAIT";      fi
-
-CORES=9
-DMEMORY=35g
-EMEMORY=20g
-MAX_RESULT_SIZE="4G"
+EXECUTORS="12"
+CORES="9"
+DMEMORY="35g"
+EMEMORY="20g"
+MAX_RESULT_SIZE="4g"
 KRYO_BUFFER_MAX="256m"
+WAIT="0s"
 
 JARS_PATH=$HOME/Spark/2.4/jars
 
@@ -59,4 +40,4 @@ PARAMS=(
 )
 
 #echo "spark-submit ${PARAMS[@]} ${PARGS[@]}"
-spark-submit ${PARAMS[@]} ${PARGS[@]}
+spark-submit ${PARAMS[@]} ${PARGS[@]} $*
