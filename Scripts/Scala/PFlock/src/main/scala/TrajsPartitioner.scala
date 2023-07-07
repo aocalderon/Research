@@ -80,7 +80,12 @@ object TrajsPartitioner {
           (tid, APoint(oid, lat, lon, tid))
         }
       }
-    logger.info("Read points from HDFS...")
+    logger.info(s"Read points from HDFS...")
+
+    if(params.debug()){
+      println(s"pointsRaw... ${pointsRaw.count}")
+      pointsRaw.take(20).foreach{println}
+    }
 
     // Compute number of time instances to use as number of partitions...
     val times = pointsRaw.map(_._1).distinct.collect.sorted.zipWithIndex.toMap
@@ -90,7 +95,14 @@ object TrajsPartitioner {
         point.copy(tid = times(tid))   /** Map original times for consecutives unit times **/
     }.cache
     pointsByTime.count
-    logger.info("Compute number of time instances to use as number of partitions...")
+    logger.info(s"Compute number of times to use as number of partitions...")
+
+    if(params.debug()){
+      println("Times:")
+      println(times.mkString(" "))
+      println(s"pointsByTime... ${pointsByTime.count}")
+      pointsByTime.take(20).foreach{println}
+    }
 
     // Build the quadtree, extract cells and boundary...
     val dataset_name = params.dataset().split("/").last.split("\\.").head
@@ -117,10 +129,15 @@ object TrajsPartitioner {
         val wkt = geofactory.toGeometry(boundary).toText
         List(s"$wkt\t${dataset_name}\n")
       }
-      logger.info("Save quadtree's cells and boundary...")
+      logger.info(s"Save quadtree's cells and boundary...  ${cells.size}")
 
       (cells, tree, boundary)
     }
+
+    if(params.debug()){
+      println(s"Cells... ${cells.size}")
+      cells.take(20).foreach{println}
+    }    
 
     // Update the cellId attribute...
     val pointsRDD = pointsByTime.mapPartitions{ points =>
@@ -133,6 +150,11 @@ object TrajsPartitioner {
       }
     }.cache
     logger.info("Update the cellId attribute...")
+
+    if(params.debug()){
+      println(s"pointsRDD... ${pointsRDD.count}")
+      pointsRDD.take(20).foreach{println}
+    }
 
     // Save points with updated cellId attribute...
     pointsRDD.toDS
@@ -171,7 +193,14 @@ object TrajsPartitioner {
         List(s"$wkt\t${dataset_name}_shifted\n")
       }
       logger.info("Save shifted quadtree's cells and shifted boundary...")
+
+      if(params.debug()){
+        println("Boundary:")
+        println(shiftEnvelope(boundary, minX, minY))
+      }
     }
+
+
 
     spark.close()
 
@@ -190,6 +219,7 @@ class TPParams(args: Seq[String]) extends ScallopConf(args) {
   val cached:     ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val shifted:    ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val master:     ScallopOption[String]  = opt[String]  (default = Some("local[*]"))
+  val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
 
   verify()
 }

@@ -262,7 +262,7 @@ object BFE {
     implicit val params = new BFEParams(args)
 
     implicit var settings = Settings(
-      input = params.input(),
+      dataset = params.dataset(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
       method = params.method(),
@@ -274,7 +274,7 @@ object BFE {
     settings.appId = System.nanoTime().toString()
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
-    val points = readPoints(settings.input)
+    val points = readPoints(settings.dataset)
     log(s"START")
 
     val (maximals, stats1) = BFE.run(points)

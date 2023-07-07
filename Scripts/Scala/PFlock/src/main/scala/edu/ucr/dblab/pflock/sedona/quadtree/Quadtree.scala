@@ -113,15 +113,20 @@ object Quadtree {
       : (Map[Int, Envelope], STRtree, Envelope) = {
 
     val rectangle = if(envelope.isNull){
-      val coords   = points.map(_.getCoordinate).cache
-      val minCoord = coords.min()
-      val maxCoord = coords.max()
-      val width    = maxCoord.x - minCoord.x
-      val height   = maxCoord.y - minCoord.y
-      new QuadRectangle(minCoord.x, minCoord.y, width, height)
+      val Xs   = points.map(_.getX).cache
+      val Ys   = points.map(_.getY).cache
+      val minX = Xs.min()
+      val maxX = Xs.max()
+      val minY = Ys.min()
+      val maxY = Ys.max()
+      val enve = new Envelope(minX, maxX, minY, maxY)
+      new QuadRectangle(enve)
     } else {
       new QuadRectangle(envelope)
     }
+
+    val G = new GeometryFactory()
+    println(G.toGeometry(rectangle.getEnvelope).toText)
 
     val quadtree = new StandardQuadTree[Point](rectangle, level, capacity, maxLevel)
 

@@ -43,7 +43,7 @@ object Runner {
       epsilon <- List(3,4,5)
     } yield {
       val PARAMS = List(
-        s"--input ${params.input()}",
+        s"--dataset ${params.dataset()}",
         s"--epsilon ${epsilon}",
         s"--mu ${params.mu()}",
         s"--method ${params.method()}"

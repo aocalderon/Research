@@ -213,7 +213,7 @@ object BFE_CMBC {
     implicit val params = new BFEParams(args)
 
     implicit var settings = Settings(
-      input = params.input(),
+      dataset = params.dataset(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
       method = params.method(),
@@ -224,7 +224,7 @@ object BFE_CMBC {
     )
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
-    val points = readPoints(params.input())
+    val points = readPoints(params.dataset())
     log(s"Reading data|START")
 
     settings = settings.copy(method="BFE_CMBC1")

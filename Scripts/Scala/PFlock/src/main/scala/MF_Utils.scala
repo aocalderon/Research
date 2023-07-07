@@ -535,7 +535,7 @@ object MF_Utils {
       val pointsRaw = spark.read
         .option("delimiter", "\t")
         .option("header", false)
-        .textFile(S.input).rdd
+        .textFile(S.dataset).rdd
         .map { line =>
           val arr = line.split("\t")
           val i = arr(0).toInt
@@ -567,7 +567,7 @@ object MF_Utils {
       val pointsRaw = spark.read
         .option("delimiter", "\t")
         .option("header", false)
-        .textFile(S.input).rdd
+        .textFile(S.dataset).rdd
         .map { line =>
           val arr = line.split("\t")
           val i = arr(0).toInt
@@ -655,7 +655,8 @@ object MF_Utils {
     n
   }
 
-  def getHDFSPath(implicit S: Settings): String = S.input.split("/").reverse.tail.reverse.mkString("/")
+  def getHDFSPath(implicit S: Settings): String = S.dataset.split("/")
+    .reverse.tail.reverse.mkString("/")
 
   def getPaths(implicit S: Settings): (String, String) = {
     val home = System.getenv("HOME")

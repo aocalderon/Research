@@ -23,7 +23,7 @@ object MF {
     implicit val params = new BFEParams(args)
 
     implicit var settings = Settings(
-      input = params.input(),
+      dataset = params.dataset(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
       capacity = params.capacity(),

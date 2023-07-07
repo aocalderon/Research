@@ -24,7 +24,7 @@ object BFE0 {
     implicit val d: Boolean = params.debug()
 
     implicit val settings = Settings(
-      input = params.input(),
+      dataset = params.dataset(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
       method = params.method(),
@@ -34,7 +34,7 @@ object BFE0 {
     )
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
-    val points = readPoints(params.input())
+    val points = readPoints(params.dataset())
     logger.info(s"INFO|${settings.info}|Reading data|START")
 
     val grid = timer(s"${settings.info}|Grid"){

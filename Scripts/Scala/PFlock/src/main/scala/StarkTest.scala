@@ -30,7 +30,7 @@ object StarkTest {
     import spark.implicits._
 
     implicit var settings = Settings(
-      input = params.input(),
+      dataset = params.dataset(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
       method = "PFlocks",
@@ -52,7 +52,7 @@ object StarkTest {
       val pointsRaw = spark.read
         .option("delimiter", "\t")
         .option("header", false)
-        .textFile(settings.input).rdd
+        .textFile(settings.dataset).rdd
         .map { line =>
           val arr = line.split("\t")
           val i = arr(0).toInt

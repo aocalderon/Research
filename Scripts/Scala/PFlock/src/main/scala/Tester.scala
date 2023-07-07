@@ -29,7 +29,7 @@ object Tester {
     import spark.implicits._
 
     implicit var settings = Settings(
-      input = params.input(),
+      dataset = params.dataset(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
       method = "PFlocks",
@@ -48,7 +48,7 @@ object Tester {
     log(s"START|")
 
     val pointsRaw = spark.read
-      .textFile(settings.input).rdd
+      .textFile(settings.dataset).rdd
       .map { line =>
         val arr = line.split("\t")
         val t = arr(3).toInt// - 316 // TODO: Remove for large dataset...

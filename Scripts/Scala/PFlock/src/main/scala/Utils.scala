@@ -33,7 +33,7 @@ object Utils {
 
   /*** Case Class ***/
   case class Settings(
-    input: String = "",
+    dataset: String = "",
     epsilon_prime: Double = 10.0,
     mu: Int = 3,
     delta: Int = 5,
@@ -54,8 +54,7 @@ object Utils {
     val r: Double = (epsilon_prime / 2.0) + tolerance
     val r2: Double = math.pow(epsilon_prime / 2.0, 2) + tolerance
     val expansion: Double = epsilon_prime * 1.5 + tolerance
-    val dataset: String = input.split("/").last.split("\\.").head
-    //val dense: Boolean = if(density <= 0.0) false else true
+    val dataset_name: String = dataset.split("/").last.split("\\.").head
 
     var partitions: Int = 1
     var appId: String   = clocktime.toString
@@ -881,7 +880,7 @@ object Utils {
   def checkMF(maximalsMF: List[Disk])
     (implicit geofactory: GeometryFactory, settings: Settings, logger: Logger): Unit = {
 
-    val points = readPoints(s"/home/acald013/Research/${settings.input}")
+    val points = readPoints(s"/home/acald013/Research/${settings.dataset}")
     val (maximalsBFE, statsBFE) = BFE.run(points)
     statsBFE.print()
     save("/tmp/edgesBFE.wkt"){ maximalsBFE.map(_.wkt + "\n") }
@@ -893,7 +892,7 @@ object Utils {
     (implicit geofactory: GeometryFactory, settings: Settings, logger: Logger): Unit = {
 
     val out = timer(s"${settings.info}|Bfe0"){
-      s"bfe ${settings.input} ${settings.epsilon_prime.toInt} ${settings.mu} 1" !!
+      s"bfe ${settings.dataset} ${settings.epsilon_prime.toInt} ${settings.mu} 1" !!
     }
     parseBFEOutput(out).foreach(log)
     val bfe1file = s"/tmp/BFE_E${settings.epsilon_prime.toInt}_M${settings.mu}_D1.txt"
@@ -1039,10 +1038,10 @@ object Utils {
 import org.rogach.scallop._
 
 class BFEParams(args: Seq[String]) extends ScallopConf(args) {
-  val default_filename =     s"${System.getenv("HOME")}/Research/Datasets/dense.tsv"
+  val default_dataset = s"PFlock/LA/dense"
 
   val tolerance:  ScallopOption[Double]  = opt[Double]  (default = Some(1e-3))
-  val input:      ScallopOption[String]  = opt[String]  (default = Some(default_filename))
+  val dataset:    ScallopOption[String]  = opt[String]  (default = Some(default_dataset))
   val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(5.0))
   val mu:         ScallopOption[Int]     = opt[Int]     (default = Some(3))
   val delta:      ScallopOption[Int]     = opt[Int]     (default = Some(1))
