@@ -30,6 +30,9 @@ object MF_Utils {
 
   case class PairsByKey(cellId: Int, key: Long, pairs: List[Pair], Ps: List[STPoint])
 
+  /** Class collecting candidate disks which intersect a grid's cell in BFE **/
+  case class CandidatesByKey(cellId: Int, key: Long, candidates: List[Disk])
+
   case class SimplePartitioner(partitions: Int) extends Partitioner {
     override def numPartitions: Int = partitions
     override def getPartition(key: Any): Int = key.asInstanceOf[Int]
@@ -127,6 +130,48 @@ object MF_Utils {
     (M.toIterator, stats)
   }
 
+  def getCandidatesAtCell(points_prime: List[STPoint], cell: Cell, stats: Stats)
+    (implicit S: Settings, G: GeometryFactory, L: Logger):
+      (Iterator[ (List[CandidatesByKey], Stats) ]) = {
+
+    if(points_prime.isEmpty){
+      Iterator.empty
+    } else {
+      val cellId = TaskContext.getPartitionId
+
+      val (points, tCounts) = timer{
+        computeCounts(points_prime)
+      }
+      stats.nPoints = points.size
+      stats.tCounts = tCounts
+
+      val (grid, tGrid) = timer{
+        val grid = Grid(points)
+        grid.buildGrid
+        grid
+      }
+      stats.tGrid = tGrid
+
+      // for each non-empty cell...
+      val candidatesByKey = grid.index.keys.map{ key =>
+        val ( (_Pr, _Ps), tGrid ) = timer{
+          getPrPs(grid, key)
+        }
+        stats.tGrid += tGrid
+
+        val (candidates, tCandidates) = timer{
+          getCandidates(_Pr, _Ps)
+        }
+        stats.nCandidates += candidates.size
+        stats.tCandidates += tCandidates
+
+        CandidatesByKey(cellId, key, candidates)
+      }.toList
+
+      Iterator( (candidatesByKey, stats) )
+    }
+  }
+
   def getPairsAtCell(points_prime: List[STPoint], cell: Cell, stats: Stats)
     (implicit S: Settings, G: GeometryFactory, L: Logger):
       (Iterator[ (List[PairsByKey], Stats) ]) = {
@@ -210,6 +255,30 @@ object MF_Utils {
       } else {
         H                     // return List of Pairs...
       }
+    }
+  }
+
+  private def getCandidates(Pr: List[STPoint], Ps: List[STPoint])
+    (implicit S: Settings, G: GeometryFactory): List[Disk] = {
+
+    if(Ps.size < S.mu) { // if grid's cells around have not enough points...
+      List.empty[Disk]   // return empty...
+    } else {
+      val C = for{       // get candidates from Pr and Ps...
+        pr <- Pr
+        ps <- Ps
+        if{ pr.distance(ps) <= S.epsilon && pr.oid < ps.oid } // check distance and prune duplicates...
+      } yield {
+        // finding centers for each pair...
+        val centers = calculateCenterCoordinates(pr.point, ps.point)
+        // querying points around each center...
+        val disks = centers.map{ center =>
+          getPointsAroundCenter(center, Ps)
+        }
+        // getting candidate disks...
+        disks.filter(_.count >= S.mu)
+      }
+      C.flatten
     }
   }
 
@@ -783,7 +852,31 @@ object MF_Utils {
     }
   }
 
-  def spatialValidation(disk: Disk, points: KDTree)(implicit S: Settings, G: GeometryFactory): Boolean = {
+  def readSTPointsFromFile(filename: String)
+    (implicit spark: SparkSession, G: GeometryFactory): List[STPoint] = {
+
+    import spark.implicits._
+    val points = spark
+      .read
+      .option("header", "false")
+      .option("delimiter", "\t")
+      .csv(filename)
+      .rdd
+      .map{ row =>
+        val i = row.getString(0).toInt
+        val x = row.getString(1).toDouble
+        val y = row.getString(2).toDouble
+        val t = row.getString(3).toInt
+        val point = G.createPoint(new Coordinate(x, y))
+        point.setUserData(Data(i, t))
+        STPoint(point)
+      }.collect.toList
+    points
+  }
+
+  def spatialValidation(disk: Disk, points: KDTree)
+    (implicit S: Settings, G: GeometryFactory): Boolean = {
+
     val query = new DoubleArray(disk.center, disk.pidsText)
     points.pointsWithinRadiusOf(query, S.epsilon + S.tolerance).asScala.map{ r =>
       val center = r.point

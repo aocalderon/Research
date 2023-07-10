@@ -7,6 +7,7 @@ import org.locationtech.jts.index.strtree.STRtree
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
+import sys.process._
 
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.rdd.RDD
@@ -17,39 +18,8 @@ import edu.ucr.dblab.pflock.Utils._
 import edu.ucr.dblab.pflock.MF_Utils._
 
 object MF {
-  implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
-  def main(args: Array[String]): Unit = {
-    implicit val params = new BFEParams(args)
-
-    implicit var settings = Settings(
-      dataset = params.dataset(),
-      epsilon_prime = params.epsilon(),
-      mu = params.mu(),
-      capacity = params.capacity(),
-      fraction = params.fraction(),
-      tolerance = params.tolerance(),
-      tag = params.tag(),
-      debug = params.debug(),
-      cached = params.cached(),
-      tester = params.tester(),
-      saves = params.saves(),
-      density = params.density()
-    )
-
-    println(s"NAME       = ${settings.appName}")
-    implicit val spark = SparkSession.builder()
-      .config("spark.testing.memory", "2147480000")
-      .config("spark.serializer", classOf[KryoSerializer].getName)
-      .master(params.master())
-      .appName(settings.appName).getOrCreate()
-    import spark.implicits._
-
-    settings.appId = spark.sparkContext.applicationId
-    implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
-
-    printParams(args)
-    log(s"START|")
+  def run(implicit spark: SparkSession, S: Settings, G: GeometryFactory, L: Logger): RDD[Disk] = {
 
     /*** Load data                                         ***/
     /*** read from HDFS and retung cells and spatial index ***/
@@ -57,11 +27,11 @@ object MF {
     val nIndex1 = cells.size
     log(s"Index1|$nIndex1")
     logt(s"Index1|$tIndex1")
-    settings.partitions = nIndex1
+    S.partitions = nIndex1
 
 
     ///////////////////// Debug
-    if(settings.saves){
+    if(S.saves){
       save(s"/tmp/edgesCells.wkt"){
         cells.values.map{ mbr => mbr.wkt + "\n"}.toList
       }
@@ -75,8 +45,9 @@ object MF {
       val points = pointsRaw.mapPartitionsWithIndex{ case(cid, it) =>
         it.flatMap{ point =>
           // computing a pad for the expansion area...
-          //val pad = (settings.epsilon_prime * 1.5) + settings.tolerance
-          val pad = (settings.epsilon_prime * 1) + settings.tolerance
+          //val pad = (S.epsilon_prime * 1.5) + S.tolerance
+          //val pad = (S.epsilon_prime * 1) + S.tolerance
+          val pad = S.epsilon
 
           // make a copy of envelope to avoid modification...
           val envelope = new Envelope(
@@ -91,20 +62,13 @@ object MF {
               (cell.cid, STPoint(point))
             }.toList
         }
-      }.partitionBy{
-        new Partitioner {
-          def numPartitions: Int = cells.size
-          def getPartition(key: Any): Int = key.asInstanceOf[Int]
-        }
-      }.cache
+      }.partitionBy{ SimplePartitioner(cells.size) }.cache
       val nPoints = points.count
 
       (points, nPoints)
     }
     log(s"Shuffle1|$nShuffle1")
     logt(s"Shuffle1|$tShuffle1")
-
-/*
 
     /*** Get set of pairs                                      ***/
     /*** early call to count pairs to decide extra partitionig ***/
@@ -126,7 +90,7 @@ object MF {
 
 
     ///////////////////// Debug
-    if(settings.saves){
+    if(S.saves){
       save("/tmp/edgesPairs.wkt"){
         pairsRDD.mapPartitionsWithIndex{ case(cid, it) =>
           it.flatMap{ case(pairsByKey, _) =>
@@ -147,10 +111,9 @@ object MF {
     }
     ///////////////////// Debug
 
-  */
 
-    /*
-
+    /* // START MF for denser cells !!!
+     
     /*** Get maximals from set of pairs,        ***/
     /*** should works after getPairsAtCell call ***/
     val ( (maximalsRDD2, nRun2), tRun2) = timer{
@@ -161,7 +124,7 @@ object MF {
           val cell = cells(cid)
           val (pairsByKey, stats1) = it.next()
 
-          if(cell.nPairs >= settings.density){
+          if(cell.nPairs >= S.density){
             pairsByKey.map{ pairByKey =>
               val key = pairByKey.key
               (key, (pairByKey, stats1))
@@ -202,10 +165,10 @@ object MF {
 
           val cell = cells(cellId)
           val boundary = new Envelope(cell.mbr)
-          boundary.expandBy(settings.expansion)
+          boundary.expandBy(S.expansion)
           val inner_cells = recreateInnerGrid(cell.copy(mbr = boundary), expansion = true)
           val inner_cell  = inner_cells.filter(_.cid == key).head
-          if(settings.saves){
+          if(S.saves){
             save(s"/tmp/edgesIC${key}.wkt"){
               inner_cells.filter(_.cid == key).map{ inner_cell =>
                 s"${inner_cell.wkt}\t$key\n"
@@ -232,7 +195,7 @@ object MF {
 
 
     ///////////////////// Debug
-    if(settings.saves){
+    if(S.saves){
       save("/tmp/edgesMF2.wkt"){
         maximalsRDD2.mapPartitionsWithIndex{ case(cid, it) =>
           it.map{ p => s"${p.wkt}\t$cid\n"}
@@ -241,7 +204,7 @@ object MF {
     }
      ///////////////////// Debug
 
-     */
+    */ // END MF for denser cell !!!
 
 
     /*** Run BFE at each cell ***/
@@ -267,7 +230,7 @@ object MF {
 
 
     ///////////////////// Debug
-    if(settings.saves){
+    if(S.saves){
       save("/tmp/edgesMF.wkt"){
         maximalsRDD.mapPartitionsWithIndex{ case(cid, it) =>
           it.map{ p => s"${p.wkt}\t$cid\n"}
@@ -276,17 +239,64 @@ object MF {
     }
     ///////////////////// Debug
 
+    maximalsRDD
+  }
 
-    ///////////////////// Validation
-    if(settings.tester){
-      //val m1 = maximalsRDD2.collect.toList
-      val points  = pointsRDD.map(_._2).collect.toList
-      val m1      = maximalsRDD.collect.toList
-      val (m2, _) = BFE.run(points)
+  def main(args: Array[String]): Unit = {
+    implicit val params = new BFEParams(args)
 
-      diff(testing = m1, validation = m2, points)
+    implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
+
+    println(s"NAME       = ${appName}")
+    implicit val spark = SparkSession.builder()
+      .config("spark.testing.memory", "2147480000")
+      .config("spark.serializer", classOf[KryoSerializer].getName)
+      .master(params.master())
+      .appName(appName).getOrCreate()
+    import spark.implicits._
+
+    implicit var S = Settings(
+      dataset = params.dataset(),
+      epsilon_prime = params.epsilon(),
+      mu = params.mu(),
+      capacity = params.capacity(),
+      fraction = params.fraction(),
+      tolerance = params.tolerance(),
+      tag = params.tag(),
+      debug = params.debug(),
+      cached = params.cached(),
+      tester = params.tester(),
+      saves = params.saves(),
+      density = params.density(),
+      appId = spark.sparkContext.applicationId
+    )
+
+    implicit val geofactory = new GeometryFactory(new PrecisionModel(S.scale))
+
+    printParams(args)
+    log(s"START|")
+
+    val begin = params.begin()
+    val pointsByTime_prime = f"hdfs dfs -ls ${params.dataset()}/part-${begin}%05d*".lineStream_!
+    val pointsByTime = pointsByTime_prime.head.split(" ").last
+    val path_tail = pointsByTime.split(f"-${begin}%05d-")(1)
+
+    val end   = params.end()
+    ( {if(begin < 1) 1 else begin} to {if(end < begin) begin else end} ).foreach{ time =>
+
+      val current_dataset = f"${params.dataset()}/part-${time}%05d-${path_tail}"
+      println(current_dataset)
+      S = S.copy(dataset = current_dataset)
+      val maximalsRDD = run
+
+      if(S.tester){
+        val points  = readSTPointsFromFile(S.dataset)
+        val m1      = maximalsRDD.collect.toList
+        val (m2, _) = BFE.run(points)
+
+        diff(testing = m1, validation = m2, points)
+      }
     }
-    ///////////////////// Validation
 
     spark.close()
 

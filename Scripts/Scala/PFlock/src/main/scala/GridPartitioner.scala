@@ -35,10 +35,10 @@ object GridPartitioner {
       fraction = params.fraction(),
       tolerance = params.tolerance(),
       tag = params.tag(),
-      debug = params.debug()
+      debug = params.debug(),
+      appId = spark.sparkContext.applicationId
     )
 
-    settings.appId = spark.sparkContext.applicationId
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
     printParams(args)
