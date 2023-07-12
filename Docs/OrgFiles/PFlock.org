@@ -3,6 +3,16 @@ DEADLINE: <2023-07-07 Fri> SCHEDULED: <2023-07-06 Thu>
   - [ ] Sanchez 2018
   - [X] Tanaka 2016
   - [X] Tanaka 2015
+* PLAN Meeting with Marcos and Petko
+SCHEDULED: <2023-07-11 Tue 15:00>
+:LOGBOOK:
+- State "DONE"       from "NEXT"       [2023-07-07 Fri 15:16]
+:END:
+* PLAN Appointment Dr Valdovinos
+SCHEDULED: <2023-07-11 Tue 14:00>
+:LOGBOOK:
+- State "DONE"       from "NEXT"       [2023-07-10 Mon 09:26]
+:END:
 * TODO *Sent request to Graduate Division*
 SCHEDULED: <2023-07-10 Mon>
 Coordinate with Petko and Marisa and sent request to graduate division to include Petko
@@ -11,7 +21,15 @@ as member of my committee.
   - [ ] Ask Professor (or Graduate Advisor?) the justification
   - [ ] Send documents to Marissa
   - [ ] Send request to Graduate Division
-* TODO Validate points arriving to cells. 
+* DONE Run time instant by time instant for the full dataset.
+CLOSED: [2023-07-07 Fri 13:55]
+:LOGBOOK:
+- State "DONE"       from "NEXT"       [2023-07-07 Fri 13:55]
+:END:
+  - [X] Add begin and end parameters.
+  - [X] Validate and create ranges.
+  - [X] Call HDFS and extract dataset for specific time instant.
+  - [X] Run and test.
 * TODO Check if I am getting same cell's boundaries before and after repartition
 * TODO Run BFE individually at each grid cell and compare with parallel implementation
 * TODO Distribute just candidate disk which touch the central grid of the neighborhood
