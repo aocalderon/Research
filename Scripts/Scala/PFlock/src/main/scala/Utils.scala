@@ -111,6 +111,7 @@ object Utils {
 
   case class Cell(mbr: Envelope, cid: Int, lineage: String = "", dense: Boolean = false){
     var nPairs = 0
+    var nCandidates = 0
 
     def isDense(implicit S: Settings): Boolean = this.nPairs >= S.density
 
@@ -121,7 +122,7 @@ object Utils {
 
     def toText(implicit G: GeometryFactory): String = G.toGeometry(mbr).toText
 
-    def wkt(implicit G: GeometryFactory): String = s"${toText}\t$cid\t$lineage\t$nPairs"
+    def wkt(implicit G: GeometryFactory): String = s"${toText}\t$cid\t$lineage\t$nPairs\t$nCandidates"
   }
 
   case class Disk(center: Point, pids: List[Int],
@@ -984,8 +985,8 @@ class BFEParams(args: Seq[String]) extends ScallopConf(args) {
   val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(5.0))
   val mu:         ScallopOption[Int]     = opt[Int]     (default = Some(3))
   val delta:      ScallopOption[Int]     = opt[Int]     (default = Some(1))
-  val begin:      ScallopOption[Int]     = opt[Int]     (default = Some(1))
-  val end:        ScallopOption[Int]     = opt[Int]     (default = Some(1))
+  val begin:      ScallopOption[Int]     = opt[Int]     (default = Some(0))
+  val end:        ScallopOption[Int]     = opt[Int]     (default = Some(0))
   val capacity:   ScallopOption[Int]     = opt[Int]     (default = Some(250))
   val fraction:   ScallopOption[Double]  = opt[Double]  (default = Some(1))
   val density:    ScallopOption[Double]  = opt[Double]  (default = Some(0))

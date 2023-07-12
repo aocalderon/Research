@@ -53,74 +53,42 @@ object MF_Utils {
     } 
   }
 
-  def getMaximalsAtCell(pairsByKey: List[PairsByKey], cell: Cell, inner_cell: Cell, stats: Stats,
-    debug: Int = -1)
+  def getMaximalsAtCell(candidatesByKey: List[CandidatesByKey], cell: Cell,
+    inner_cell: Cell, stats: Stats)
       (implicit S: Settings, G: GeometryFactory, L: Logger): (Iterator[Disk], Stats) = {
 
     val cellId = TaskContext.getPartitionId
     var Maximals: RTree[Disk] = RTree()
 
-    pairsByKey.map{ tuple =>
-      val key   = tuple.key
-      val pairs = tuple.pairs
-      val Ps    = tuple.Ps
+    candidatesByKey.map{ tuple =>
+      val key = tuple.key
+      val candidates = tuple.candidates
 
-      /////////////////////////////////////////
-      if(debug == cellId) println(s"DEBUG|$cellId|\n${Ps.map{_.toString}.mkString("\n")}")
-      if(debug == cellId) println(s"DEBUG|$cellId|\n${pairs.map{_.wkt}.mkString("\n")}")
-
-      var tCenters    = 0.0
-      var tCandidates = 0.0
       var tMaximals   = 0.0
-      pairs.foreach{ pair =>
-        val pr = pair.p1
-        val ps = pair.p2
-
-        val (disks, tC) = timer{
-          // finding centers for each pair...
-          val centers = calculateCenterCoordinates(pr.point, ps.point)
-          // querying points around each center...
-          centers.map{ center =>
-            getPointsAroundCenter(center, Ps)
-          }
-        }
-        stats.nCenters += 2
-        tCenters += tC
-
-        val (candidates, tD) = timer{
-          // getting candidate disks...
-          val d = disks.filter(_.count >= S.mu)
-
-          ///////////////////////////////////////////////////////////
-          if(debug == cellId) L.info(s"${cellId}|Candidates|${d.map(_.toString).mkString("\n")}")
-
-          d
-        }
-        stats.nCandidates += candidates.size
-        tCandidates += tD
-
+      candidates.foreach{ candidate =>
         val (_, tM) = timer{
           // cheking if a candidate is not a subset and adding to maximals...
-          candidates.foreach{ candidate =>
-            Maximals = insertMaximalParallel(Maximals, candidate, acid = 2)
-            // use insertMaximalParallelStats to debug and collect statistics...
+          Maximals = insertMaximalParallel(Maximals, candidate, acid = 2)
+          // use insertMaximalParallelStats to debug and collect statistics...
+        }
+
+        debug{
+          if(cell.cid == 6){
+            log(s"CandidateSize|${candidate.pids.size}")
+            val s = Maximals.entries.map{_.value.pids.size}.sum.toDouble
+            val n = Maximals.entries.size.toDouble
+            log(s"MaximalAverage|${s/n}")
           }
         }
         tMaximals += tM
-
       }
-      stats.tCenters += tCenters
-      stats.tCandidates += tCandidates
       stats.tMaximals += tMaximals
     }
-
-    ////////////////////////
-    if(cellId == debug) println(s"${Maximals.entries.map{_.toString}.mkString("\n")}")
 
     val M = if(cell.isDense){
       Maximals.entries.toList.map(_.value)
         .filter{ maximal => cell.contains(maximal) }
-        .filter{ maximal => inner_cell.contains(maximal)}
+        //.filter{ maximal => inner_cell.contains(maximal)}
     } else {
       Maximals.entries.toList.map(_.value)
         .filter{ maximal => cell.contains(maximal) }
@@ -719,6 +687,22 @@ object MF_Utils {
       count <- pairsPerCell if(count._1 == cell.cid)
     } yield {
       cell.nPairs = count._2
+      n += count._2
+    }
+    n
+  }
+
+  def countCandidates(candidates: RDD[Stats], cells: Map[Int, Cell]): Int = {
+    val candidatesPerCell = candidates.mapPartitionsWithIndex{ case(cid, it) =>
+      it.map{ p => (cid, p.nCandidates) }
+    }.collect.toList
+
+    var n = 0
+    for{
+      cell  <- cells.values
+      count <- candidatesPerCell if(count._1 == cell.cid)
+    } yield {
+      cell.nCandidates = count._2
       n += count._2
     }
     n

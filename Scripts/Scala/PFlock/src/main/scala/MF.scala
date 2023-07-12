@@ -70,34 +70,37 @@ object MF {
     log(s"Shuffle1|$nShuffle1")
     logt(s"Shuffle1|$tShuffle1")
 
-    /*** Get set of pairs                                      ***/
+    /*** Get candidates                                        ***/
     /*** early call to count pairs to decide extra partitionig ***/
-    val ( (pairsRDD, nPairs), tPairs ) = timer{
-      val pairs = pointsRDD.mapPartitionsWithIndex{ case(cid, it) =>
+    val ( (candidatesRDD, nCandidates), tCandidates ) = timer{
+      val candidates = pointsRDD.mapPartitionsWithIndex{ case(cid, it) =>
         val cell   = cells(cid)
         val points = it.map(_._2).toList
         val stats  = Stats()
 
-        getPairsAtCell(points, cell, stats)
+        getCandidatesAtCell(points, cell, stats)
 
       }.cache
-      val nPairs = countPairs(pairs.map(_._2), cells)
+      val nCandidates = countCandidates(candidates.map(_._2), cells)
 
-      (pairs, nPairs)
+      (candidates, nCandidates)
     }
-    log(s"Pairs|$nPairs")
-    logt(s"Pairs|$tPairs")
+    log(s"Candidates|$nCandidates")
+    logt(s"Candidates|$tCandidates")
 
 
     ///////////////////// Debug
     if(S.saves){
-      save("/tmp/edgesPairs.wkt"){
-        pairsRDD.mapPartitionsWithIndex{ case(cid, it) =>
-          it.flatMap{ case(pairsByKey, _) =>
-            pairsByKey.flatMap{ pairByKey =>
-              val key = pairByKey.key
-              val cellId = pairByKey.cellId
-              pairByKey.pairs.map(_.wkt + s"\t$cellId\t$key\n")
+      save("/tmp/edgesCandidates.wkt"){
+        candidatesRDD.mapPartitionsWithIndex{ case(cid, it) =>
+          it.flatMap{ case(candidatesByKey, _) =>
+            candidatesByKey.flatMap{ candidateByKey =>
+              val key = candidateByKey.key
+              val cellId = candidateByKey.cellId
+              candidateByKey.candidates.map{ candidate =>
+                val wkt = candidate.center.buffer(25).toText
+                s"$wkt\t$cellId\t$key\n"
+              }
             }
           }
         }.collect
@@ -112,50 +115,73 @@ object MF {
     ///////////////////// Debug
 
 
-    /* // START MF for denser cells !!!
+    // START MF for denser cells !!!
      
     /*** Get maximals from set of pairs,        ***/
     /*** should works after getPairsAtCell call ***/
     val ( (maximalsRDD2, nRun2), tRun2) = timer{
-      val maximals1 = pairsRDD.mapPartitionsWithIndex{ case(cid, it) =>
+      val maximals1 = candidatesRDD.mapPartitionsWithIndex{ case(cid, it) =>
         if(it.isEmpty){
           Iterator.empty
         } else {
           val cell = cells(cid)
-          val (pairsByKey, stats1) = it.next()
+          val (candidatesByKey, stats1) = it.next()
 
-          if(cell.nPairs >= S.density){
-            pairsByKey.map{ pairByKey =>
-              val key = pairByKey.key
-              (key, (pairByKey, stats1))
+          if(cell.nCandidates >= S.density){
+            debug{ println(s"Dense cell detected: $cid")  }
+            candidatesByKey.map{ candidateByKey =>
+              val key = candidateByKey.key.toInt
+              (key, (candidateByKey, stats1, 0))
             }.toIterator
           } else {
-            val (maximals, stats2) = getMaximalsAtCell(pairsByKey, cell, cell, stats1)
-            debug{
-              //stats2.print()
-            }
+            val (maximals, stats2) = getMaximalsAtCell(candidatesByKey, cell, cell, stats1)
             val M = maximals.toList
-            save(s"/tmp/edgesPMF${cid}"){
-              M.map{_.wkt + "\n"}
-            }
-            log(s"MF|${M.size}")
-            Iterator.empty
+            debug{ println(s"Processing cell $cid: ${M.size} maximals found.")  }
+            Iterator(  (-1, (candidatesByKey.head, stats1, M.size))  )
           }
         }
       }.cache
+
       val grids = maximals1.map(_._1).distinct.collect.sorted.zipWithIndex.toMap
       debug{
         println(
-          s"KEY: "+grids.toList.sortBy(_._2).map{case(key, value) => s"$key $value"}.mkString(";")
+          s"KEYs: "+grids.toList.sortBy(_._2).map{case(key, value) => s"$key $value"}.mkString(";")
         )
+        val partial = maximals1.map{_._2._3}.sum
+        println(s"Partial maximals found: ${partial}")
       }
-      val grids_reverse = grids.map(_.swap)
-      val maximals2 = maximals1.partitionBy{
-        new Partitioner {
-          def numPartitions: Int = grids.size
-          def getPartition(key: Any): Int = grids(key.asInstanceOf[Long])
+
+      val maximals2 = maximals1.filter(_._1 >= 0).partitionBy{ MapPartitioner(grids) }.cache
+      maximals2.count
+
+      ///////////////////////////////////////////////////////////////////////////////////////////////
+      val x = maximals2.mapPartitionsWithIndex{ case(cid, it) =>
+        if(it.isEmpty){
+          Iterator.empty
+        } else {
+          val (_, (candidatesByKey, stats1, _)) = it.next()
+          val cellId = candidatesByKey.cellId
+          val key    = candidatesByKey.key.toInt
+
+          println(s"$cellId\t$key")
+
+          //val cell = cells(cellId)
+          //val boundary = new Envelope(cell.mbr)
+          //boundary.expandBy(S.expansion)
+          //val inner_cells = recreateInnerGrid(cell.copy(mbr = boundary), expansion = true)
+          //val inner_cell  = inner_cells.filter(_.cid == key).head
+
+          Iterator.empty
         }
-      }.mapPartitionsWithIndex{ case(cid, it) =>
+      }
+      x.count
+      ///////////////////////////////////////////////////////////////////////////////////////////////
+
+      (maximals2, maximals2.count)
+
+      /*
+
+       maximals2.mapPartitionsWithIndex{ case(cid, it) =>
         if(it.isEmpty){
           Iterator.empty
         } else {
@@ -188,7 +214,9 @@ object MF {
         }
       }.cache
       val nRun = maximals2.count
-      (maximals2, nRun)
+       (maximals2, nRun)
+
+      */ // END MF for denser cell !!!
     }
     log(s"Run2|$nRun2")
     logt(s"Run2|$tRun2")
@@ -196,15 +224,13 @@ object MF {
 
     ///////////////////// Debug
     if(S.saves){
-      save("/tmp/edgesMF2.wkt"){
-        maximalsRDD2.mapPartitionsWithIndex{ case(cid, it) =>
-          it.map{ p => s"${p.wkt}\t$cid\n"}
-        }.collect.sorted
-      }
+      //save("/tmp/edgesMF2.wkt"){
+        //maximalsRDD2.mapPartitionsWithIndex{ case(cid, it) =>
+        //  it.map{ p => s"${p.wkt}\t$cid\n"}
+        //}.collect.sorted
+      //}
     }
-     ///////////////////// Debug
-
-    */ // END MF for denser cell !!!
+    ///////////////////// Debug
 
 
     /*** Run BFE at each cell ***/
@@ -282,7 +308,7 @@ object MF {
     val path_tail = pointsByTime.split(f"-${begin}%05d-")(1)
 
     val end   = params.end()
-    ( {if(begin < 1) 1 else begin} to {if(end < begin) begin else end} ).foreach{ time =>
+    ( {if(begin < 0) 0 else begin} to {if(end < begin) begin else end} ).foreach{ time =>
 
       val current_dataset = f"${params.dataset()}/part-${time}%05d-${path_tail}"
       println(current_dataset)
