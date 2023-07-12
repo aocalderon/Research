@@ -39,10 +39,10 @@ object StarkTest {
       tolerance = params.tolerance(),
       tag = params.tag(),
       debug = params.debug(),
-      output = params.output()
+      output = params.output(),
+      appId = spark.sparkContext.applicationId
     )
 
-    settings.appId = spark.sparkContext.applicationId
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
     printParams(args)

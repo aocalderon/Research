@@ -23,5 +23,8 @@ lazy val buildSettings = (project in file("."))
     libraryDependencies += "org.rogach" %% "scallop" % "4.0.1",
     libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25",
 
+    libraryDependencies += "com.graphhopper" % "graphhopper-core" % "7.0",
+    libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "2.32.0",
+    
     libraryDependencies += "org.spire-math" %% "archery" % "0.6.0"
   )

@@ -11,6 +11,7 @@ WAIT="0s"
 JARS_PATH=$HOME/Spark/2.4/jars
 
 JARS=${JARS_PATH}/jts-core-1.19.0.jar
+JARS=${JARS},${JARS_PATH}/graphhopper-core-7.0.jar
 JARS=${JARS},${JARS_PATH}/stark.jar
 JARS=${JARS},${JARS_PATH}/scallop_2.11-4.0.1.jar
 JARS=${JARS},${JARS_PATH}/slf4j-api-1.7.25.jar
@@ -37,8 +38,8 @@ PARAMS=(
 	    --deploy-mode client \
 	    --num-executors $EXECUTORS --executor-cores $CORES \
 	    --executor-memory $EMEMORY --driver-memory $DMEMORY \
-	    --class $CLASS $JAR $*
+	    --class $CLASS $JAR
 )
 
-echo "spark-submit ${PARAMS[@]}"
-spark-submit ${PARAMS[@]}
+echo "spark-submit ${PARAMS[@]} $*"
+spark-submit ${PARAMS[@]} $*

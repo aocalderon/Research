@@ -47,21 +47,22 @@ object Utils {
     cached: Boolean = false,
     tester: Boolean = false,
     saves: Boolean = false,
-    output: String = "/tmp/"
+    output: String = "/tmp/",
+    appId: String = clocktime.toString
   ){
     val scale: Double = 1 / tolerance
     val epsilon: Double = epsilon_prime + tolerance
     val r: Double = (epsilon_prime / 2.0) + tolerance
     val r2: Double = math.pow(epsilon_prime / 2.0, 2) + tolerance
     val expansion: Double = epsilon_prime * 1.5 + tolerance
-    val dataset_name: String = dataset.split("/").last.split("\\.").head
+    val dataset_name: String = {
+      val d = dataset.split("/").last.split("\\.").head
+      if(d.startsWith("part-")) d.split("-")(1) else d
+    }
 
     var partitions: Int = 1
-    var appId: String   = clocktime.toString
 
-    def appName: String = s"$method|$dataset|$epsilon_prime|$mu|$delta"
-
-    def info: String = s"$appId|$partitions|$dataset|$epsilon_prime|$mu|$delta|$method"
+    def info: String = s"$appId|$partitions|$dataset_name|$epsilon_prime|$mu|$delta|$method"
   }
 
   case class STPoint(point: Point, cid: Int = 0){
@@ -330,13 +331,10 @@ object Utils {
     }
   }
 
-  case class DataFiles(
-    points:   List[Point],
-    pairs:    List[(Point, Point)],
-    centers:  List[Point],
-    disks:    List[Disk],
-    maximals: List[Disk]
-  )
+  def appName(implicit p: BFEParams): String = s"${p.dataset()};" +
+      s"${p.epsilon()};" +
+      s"${p.mu()};" +
+      s"${p.delta()}"
 
   /*** CMBC Functions ***/
 
@@ -765,65 +763,6 @@ object Utils {
     }
   }
 
-  def saveData(implicit data: DataFiles, geofactory: GeometryFactory): Unit = {
-    save("/tmp/edgesPoints.wkt"){
-      data.points.map{ point =>
-        val wkt = point.toText
-        val id  = point.getUserData
-        s"$wkt\t$id\n"
-      }
-    }
-    save("/tmp/edgesPairs.wkt"){
-      data.pairs.map{ case(p1, p2) =>
-        val coords = Array(p1.getCoordinate, p2.getCoordinate)
-        val line = geofactory.createLineString(coords)
-        val wkt = line.toText
-        val id  = s"${p1.getUserData}\t${p2.getUserData}"
-        s"$wkt\t$id\n"
-      }
-    }
-    save("/tmp/edgesCenters.wkt"){
-      data.centers.map{ center =>
-        val wkt = center.toText
-        val ids = center.getUserData.asInstanceOf[List[Int]]
-        val id1 = ids(0)
-        val id2 = ids(1)
-
-        s"$wkt\t$id1\t$id2\n"
-      }
-    }
-    save("/tmp/edgesDisks.wkt"){
-      data.disks.map{ disk =>
-        val wkt     = disk.center.toText
-        val pids    = disk.pids.sorted.mkString(" ")
-        val support = disk.support.sorted.mkString(" ")
-
-        s"$wkt\t$pids\t$support\n"
-      }
-    }
-    save("/tmp/edgesMaximals.wkt"){
-      data.maximals.map{ disk =>
-        val wkt     = disk.center.toText
-        val pids    = disk.pids.sorted.mkString(" ")
-        val support = disk.support.sorted.mkString(" ")
-
-        s"$wkt\t$pids\t$support\n"
-      }
-    }
-  }
-
-  def checkPoints(x: String)(implicit data: DataFiles): Unit = {
-    val l = x.split(" ").map(_.toInt).toSet
-    val s = data.points.filter(x => l.contains(x.getUserData.asInstanceOf[Int]))
-    save("/tmp/edgesSample.wkt"){
-      s.map{ p =>
-        val wkt = p.toText
-        val id  = p.getUserData
-        s"$wkt\t$id\n"
-      }
-    }
-  }
-
   def clocktime: Long = System.nanoTime()
 
   def log(msg: String)(implicit L: Logger, S: Settings): Unit = {
@@ -1045,6 +984,8 @@ class BFEParams(args: Seq[String]) extends ScallopConf(args) {
   val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(5.0))
   val mu:         ScallopOption[Int]     = opt[Int]     (default = Some(3))
   val delta:      ScallopOption[Int]     = opt[Int]     (default = Some(1))
+  val begin:      ScallopOption[Int]     = opt[Int]     (default = Some(1))
+  val end:        ScallopOption[Int]     = opt[Int]     (default = Some(1))
   val capacity:   ScallopOption[Int]     = opt[Int]     (default = Some(250))
   val fraction:   ScallopOption[Double]  = opt[Double]  (default = Some(1))
   val density:    ScallopOption[Double]  = opt[Double]  (default = Some(0))
