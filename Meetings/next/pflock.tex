@@ -77,28 +77,57 @@
     \end{frame}
 }
 
-\begin{frame}{Pair distribution issue...}
+\begin{frame}{Candidate pruning bottleneck...}{We have to deal with +188K candidates...}
     \centering
-    \includegraphics[page=1,width=0.65\textwidth]{figures/grid}
+    \includegraphics[width=0.6\textwidth]{figures/candidates}
 \end{frame}
 
-\begin{frame}{Pair distribution issue...}
+\begin{frame}{Candidate pruning bottleneck...}{$\varepsilon=20$ and $\mu=3$}
     \centering
-    \includegraphics[page=2,width=0.65\textwidth]{figures/grid}
-\end{frame}
-
-\begin{frame}{Pair distribution issue...}
-    \centering
-    \includegraphics[page=3,width=0.65\textwidth]{figures/grid}
-\end{frame}
-
-\begin{frame}{What is next?}
-    \centering
+    \includegraphics[trim=8cm 9cm 8cm 8cm, clip, width=\textwidth]{figures/table}
+    Indeed...
     \begin{itemize}
-            \item I have to check the dataset for all times instants (duplicates, double precision)...
-            \item Once server is back check performance keeping all the pairs or computing the complement...
-            \item Need to work in temporal dimension...
+            \item Average size of maximal disks hold in the tree: 25.88
+            \item Average size of candidate disks query to the tree: 17.70
     \end{itemize}
+\end{frame}
+
+\begin{frame}{Currently working on PSB \textrightarrow PSI...}{Plane sweeping [80\%]}
+    \centering
+    \includegraphics[trim=3.5cm 4.25cm 3.15cm 18cm, clip, width=0.9\textwidth]{figures/sweeping}
+    %\includegraphics[trim=8cm 9cm 8cm 8cm, clip, width=\textwidth]{figures/signatures}
+\end{frame}
+
+\begin{frame}{Currently working on PSB \textrightarrow PSI...}{Binary signature [50\%]}
+    \centering
+    \includegraphics[trim=4.75cm 19.95cm 4cm 3.5cm, clip, width=\textwidth]{figures/signatures}
+\end{frame}
+
+\begin{frame}{Alternative trajectory datasets...}{ny\_bikes [\href{https://citibikenyc.com/system-data}{Citi Bike NY}]}
+    \centering
+    \includegraphics[width=0.625\textwidth]{figures/ny_bikes}
+    \begin{tabular}{r r}
+            \small Trajectories: 2'734.157 & \small Time span: March 2023
+    \end{tabular}
+\end{frame}
+
+\begin{frame}{Alternative trajectory datasets...}{ny\_taxis [\href{https://chriswhong.com/open-data/foil_nyc_taxi/}{TLC Trip Record Data}]}
+    \centering
+    \includegraphics[width=0.625\textwidth]{figures/ny_taxis}
+    \begin{tabular}{r r}
+            \small Trajectories: 14'336.486 & \small Time span: October 2013
+    \end{tabular}
+\end{frame}
+
+\begin{frame}{What's next?}
+  \begin{itemize}
+          \item Complete implementation for PSB (plane sweeping and binary signatures)...
+          \item Run interpolation for new datasets...
+          \item Start working on temporal dimension...
+          \begin{itemize}
+                  \item Explore 3D partitioners...
+          \end{itemize}
+  \end{itemize}
 
 \end{frame}
 
