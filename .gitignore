@@ -19,6 +19,12 @@ spark-warehouse
 *.pcl
 *~
 
+Scripts/Scala/.ipynb_checkpoints/*
+Scripts/Scala/notebooks/.ipynb_checkpoints/*
+Scripts/Scala/PFlock/bash/target/routing-graph-cache/*
+Scripts/Scala/PFlock/target/routing-graph-cache/*
+
+
 #/target/*
 #/project/*
 #/.idea/*
@@ -30,10 +36,6 @@ spark-warehouse
 #/.settings/*
 #/.bloop/
 #/.metals/
-
-Scripts/Scala/.ipynb_checkpoints/*
-Scripts/Scala/PFlock/bash/target/routing-graph-cache/*
-Scripts/Scala/PFlock/target/routing-graph-cache/*
 
 Scripts/Scala/DSTester/target/*
 Scripts/Scala/DSTester/project/*
