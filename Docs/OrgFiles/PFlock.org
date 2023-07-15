@@ -3,24 +3,54 @@ DEADLINE: <2023-07-07 Fri> SCHEDULED: <2023-07-06 Thu>
   - [ ] Sanchez 2018
   - [X] Tanaka 2016
   - [X] Tanaka 2015
-* PLAN Meeting with Marcos and Petko
-SCHEDULED: <2023-07-11 Tue 15:00>
-:LOGBOOK:
-- State "DONE"       from "NEXT"       [2023-07-07 Fri 15:16]
-:END:
-* PLAN Appointment Dr Valdovinos
-SCHEDULED: <2023-07-11 Tue 14:00>
-:LOGBOOK:
-- State "DONE"       from "NEXT"       [2023-07-10 Mon 09:26]
-:END:
 * TODO *Sent request to Graduate Division*
 SCHEDULED: <2023-07-10 Mon>
 Coordinate with Petko and Marisa and sent request to graduate division to include Petko
 as member of my committee.
   - [X] Ask Petko's CV
-  - [ ] Ask Professor (or Graduate Advisor?) the justification
-  - [ ] Send documents to Marissa
+  - [X] Ask Professor (or Graduate Advisor?) the justification
+  - [X] Send documents to Marissa
   - [ ] Send request to Graduate Division
+* TODO Implement PSI
+:LOGBOOK:
+- State "DONE"       from "NEXT"       [2023-07-14 Fri 16:18]
+:END:
+** Plane sweeping [[https://drive.google.com/file/d/1gAYqIfYty7fKmKL8213BQ4HIsW_nD5Ks/view?usp=sharing][finding candidates]]
+   - [X] Sort dataset by x-axis (extending STPoint case class to JTS Coordinate class).
+   - [X] Set candidates and boxes data structures as RTrees.
+   - [X] Feed band (RTree) with points en the 2-epsilon x 2-epsilon neighborhood.
+   - [X] Find pairs, centres, candidates and boxes.
+   - [X] Test implementation.
+** Binary signatures
+   - [X] Find MurMur3 and SpookyHash64 implementations.
+     - [[https://github.com/mayconbordin/streaminer/blob/master/src/main/java/org/streaminer/util/hash/MurmurHash3.java][MurMur3]]
+     - [[https://github.com/mayconbordin/streaminer/blob/master/src/main/java/org/streaminer/util/hash/SpookyHash64.java][SpookyHash64]]
+   - [ ] Sort boxes by left-bottom coordinate at the x-axis.
+   - [ ] Set M = 0 // RTree of maximals disks.
+     - M: archery.RTree.
+       - we need mutable.
+       - we need remove some entries.
+   - [ ] Traverse sorted_boxes
+     - iterate sorted_boxes using box'.
+     - query boxes to retrieve intersecting boxes (the hood).
+     - foreach box in the hood:
+       - foreach candidate in the box:
+	 - M = insertDisk(M, candidate)
+     - remove box' from boxes
+   - [ ] Implement insertDisk procedure.
+     - [[https://drive.google.com/file/d/1fvLfVZVSJtM7rQN3GiHAHurvToG4QmGM/view?usp=sharing][insertDisk(M, candidate)]]
+** Test the implementation
+   - [ ] Run test with:
+     - dense
+     - LA_50K_T320
+* TODO Explore 3D partitioners
+
+
+
+
+
+
+====================================================================================== 
 * DONE Run time instant by time instant for the full dataset.
 CLOSED: [2023-07-07 Fri 13:55]
 :LOGBOOK:
@@ -30,10 +60,6 @@ CLOSED: [2023-07-07 Fri 13:55]
   - [X] Validate and create ranges.
   - [X] Call HDFS and extract dataset for specific time instant.
   - [X] Run and test.
-* TODO Check if I am getting same cell's boundaries before and after repartition
-* TODO Run BFE individually at each grid cell and compare with parallel implementation
-* TODO Distribute just candidate disk which touch the central grid of the neighborhood
-* TODO Explore when would be the best momento to stop subdivision
 * DONE Validate double precision and duplicates in LA dataset
 CLOSED: [2023-07-06 Thu 17:17]
 :LOGBOOK:
@@ -47,7 +73,16 @@ CLOSED: [2023-07-06 Thu 17:17]
   - [X] Work on shifted option to ensure no problems with precision.
   - [X] Save cells and boundary to FS (Research/local_path/LA_50K)..
   - [X] Check duplicates and convex hulls for testing purposes.
-* TODO Explore 3D partitioners
+* DONE Appointment Dr Valdovinos
+CLOSED: [2023-07-13 Thu 18:33] SCHEDULED: <2023-07-11 Tue 14:00>
+:LOGBOOK:
+- State "DONE"       from "BACKLOG"    [2023-07-13 Thu 18:33]
+:END:
+* DONE Meeting with Marcos and Petko
+CLOSED: [2023-07-13 Thu 18:31] SCHEDULED: <2023-07-11 Tue 15:00>
+:LOGBOOK:
+- State "DONE"       from "BACKLOG"    [2023-07-13 Thu 18:31]
+:END:
 * DONE *Email Vanda!!!*
 CLOSED: [2023-07-05 Wed 11:56] DEADLINE: <2023-07-07 Fri> SCHEDULED: <2023-07-05 Wed>
 :LOGBOOK:
@@ -68,6 +103,7 @@ CLOSED: [2023-07-05 Wed 12:01] DEADLINE: <2023-07-07 Fri> SCHEDULED: <2023-07-05
 
 =====================================================================================  
 * TODO Document ensime configuration
+* TODO Working on ParRouter and ParResampler
 * DONE Check ensime in dblab
 CLOSED: [2023-07-05 Wed 17:15]
 :LOGBOOK:
