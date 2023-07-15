@@ -1,12 +1,5 @@
 #!/bin/bash
 
-THE_INPUT=$1
-THE_EPSILON=$2
-THE_MU=$3
-THE_DELTA=$4
-THE_METHOD=$5
-THE_DEBUG=$6
-
 JARS_PATH=$HOME/Spark/2.4/jars
 
 JARS=${JARS_PATH}/jts-core-1.19.0.jar
@@ -33,8 +26,7 @@ PARAMS=(
     --jars $JARS \
     --master $MASTER --deploy-mode client \
     --class $CLASS $JAR
-    --input $THE_INPUT --epsilon $THE_EPSILON --mu $THE_MU --method $THE_METHOD $THE_DEBUG
 )
 
-echo "spark-submit ${PARAMS[@]}"
-spark-submit ${PARAMS[@]}
+echo "spark-submit ${PARAMS[@]} $*"
+spark-submit ${PARAMS[@]} $*

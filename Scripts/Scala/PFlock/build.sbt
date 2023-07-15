@@ -27,4 +27,5 @@ lazy val buildSettings = (project in file("."))
     libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "2.32.0",
     
     libraryDependencies += "org.spire-math" %% "archery" % "0.6.0"
+
   )

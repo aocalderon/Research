@@ -75,7 +75,7 @@ scalaBash := {
   val strCP = cp.map{ j => s"""\t"${j.toString}"""" }.mkString("\n")
   val finder: PathFinder = (base / "target") ** "*.jar"
   val jar = finder.get.mkString(":")
-  val classname = "edu.ucr.dblab.parrouter.Routing" //args(0)
+  val classname = args(0)
 
   val script_name = classname.split("\\.").last.toLowerCase.trim
   val script = new File(s"bash/${script_name}_scala")

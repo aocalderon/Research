@@ -130,6 +130,7 @@ object Utils {
 
     var did: Int = -1
     var subset: Boolean = false
+    val data: String = center.getUserData.toString
     val X: Float = center.getX.toFloat
     val Y: Float = center.getY.toFloat
     val count: Int = pids.size
@@ -160,6 +161,8 @@ object Utils {
     override def toString: String = s"${did}\t${pids.sorted.mkString(" ")}\t${X}\t${Y}"
 
     def wkt: String = s"${center.toText}\t${pidsText}"
+
+    def getCircleWTK(implicit S: Settings): String = s"${center.buffer(S.r).toText}\t$X\t$Y\t$data"
 
     def equals(other: Disk): Boolean = this.pidsText == other.pidsText
 
@@ -632,25 +635,33 @@ object Utils {
   }
 
   def calculateCenterCoordinates(p1: Point, p2: Point)
-    (implicit geofactory: GeometryFactory, settings: Settings): List[Point] = {
+    (implicit G: GeometryFactory, S: Settings): List[Point] = {
 
     val X: Double = p1.getX - p2.getX
     val Y: Double = p1.getY - p2.getY
     val D2: Double = math.pow(X, 2) + math.pow(Y, 2)
     if (D2 != 0.0){
-      val root: Double = math.sqrt(math.abs(4.0 * (settings.r2 / D2) - 1.0))
+      val root: Double = math.sqrt(math.abs(4.0 * (S.r2 / D2) - 1.0))
       val h1: Double = ((X + Y * root) / 2) + p2.getX
       val k1: Double = ((Y - X * root) / 2) + p2.getY
       val h2: Double = ((X - Y * root) / 2) + p2.getX
       val k2: Double = ((Y + X * root) / 2) + p2.getY
-      val h = geofactory.createPoint(new Coordinate(h1,k1))
-      val k = geofactory.createPoint(new Coordinate(h2,k2))
+      val h = G.createPoint(new Coordinate(h1,k1))
+      val k = G.createPoint(new Coordinate(h2,k2))
 
       List(h, k)
     } else {
-      val p2_prime = geofactory.createPoint(new Coordinate(p2.getX + settings.tolerance,
-        p2.getY))
+      val p2_prime = G.createPoint(new Coordinate(p2.getX + S.tolerance, p2.getY))
       calculateCenterCoordinates(p1, p2_prime)
+    }
+  }
+
+  def computeCentres(p1: STPoint, p2:STPoint)
+    (implicit G: GeometryFactory, S: Settings): List[Point] = {
+
+    calculateCenterCoordinates(p1.point, p2.point).map{ centre =>
+      centre.setUserData(s"${p1.oid} ${p2.oid}")
+      centre
     }
   }
 

@@ -6,6 +6,8 @@ import org.locationtech.jts.geom.{Coordinate, LineString}
 import com.graphhopper.{GraphHopper, ResponsePath, GHRequest, GHResponse}
 import com.graphhopper.config.{CHProfile,Profile}
 import com.github.nscala_time.time.Imports._
+import org.geotools.geometry.jts.JTS
+import org.geotools.referencing.CRS
 
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -13,8 +15,9 @@ import scala.collection.JavaConverters._
 import scala.io.Source
 import java.io.{BufferedWriter, FileWriter}
 
+import ParResampler._
 
-object Routing {
+object ParRouter {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   case class RoutePoint(id: String, lon: Double, lat: Double, dateStr: String, zone: String = "UTC")
@@ -33,6 +36,20 @@ object Routing {
   case class Route(id: String, line: LineString, t1: Long, t2: Long = -1L,
     duration: Long = 0){
 
+    def resampleByTime(resample_rate: Int)(implicit G: GeometryFactory): Route = {
+      val time = if(t2 == -1){ duration } else { t2 - t1 }
+      val distance = line.getLength
+      val speed = distance / time
+
+      resampleByDistance(speed * resample_rate)
+    }
+
+    def resampleByDistance(resample_rate: Double)(implicit G: GeometryFactory): Route = {
+      val resampled_line = resample(line, resample_rate)
+
+      this.copy(line = resampled_line)
+    }
+
     val wkt: String = s"${line.toText}\t$id\t$t1\t$t2\t$duration"
 
     override def toString: String = {
@@ -46,7 +63,7 @@ object Routing {
     }
   }
 
-  def createGraphHopperInstance(ghLoc: String)(implicit P: RoutingParams): GraphHopper = {
+  def createGraphHopperInstance(ghLoc: String)(implicit P: ParRouterParams): GraphHopper = {
     val hopper = new GraphHopper()
     hopper.setOSMFile(ghLoc)
     // specify where to store graphhopper files
@@ -71,10 +88,7 @@ object Routing {
   }
 
   def routing(p1: RoutePoint, p2: RoutePoint)
-    (implicit GH: GraphHopper, G: GeometryFactory, P: RoutingParams): Route = {
-
-    //if(P.debug()) println(p1)
-    //if(P.debug()) println(p2)
+    (implicit GH: GraphHopper, G: GeometryFactory, P: ParRouterParams): Route = {
 
     // simple configuration of the request object, note that we have to specify which
     //   profile we are using even when there is only one like here...
@@ -105,18 +119,18 @@ object Routing {
   }
 
   def main(args: Array[String]): Unit = {
-    implicit val params = new RoutingParams(args)
+    implicit val params = new ParRouterParams(args)
     implicit val geofactory = new GeometryFactory(new PrecisionModel(1.0/params.tolerance()))
 
     logger.info("Reading...")
     val buffer = Source.fromFile(params.dataset())
-    val od_prime = if(params.header()){
+    val od_prime = if(params.noheader()){
+      buffer.getLines.toList
+    } else {
       val prime = buffer.getLines
       val header = prime.next
       println(header.replaceAll(",", "\t"))
       prime.toList
-    } else {
-      buffer.getLines.toList
     }
 
     val t1 = params.tim1_pos()
@@ -138,13 +152,11 @@ object Routing {
         val lon1 = arr(params.lon1_pos()).toDouble
         val lat1 = arr(params.lat1_pos()).toDouble
         val   p1 = RoutePoint(id, lon1, lat1, tim1)
-        //if(params.debug()) print(p1)
 
         val tim2 = if(params.tim2_pos() < 0) "" else arr(params.tim2_pos())
         val lon2 = arr(params.lon2_pos()).toDouble
         val lat2 = arr(params.lat2_pos()).toDouble
         val   p2 = RoutePoint(id, lon2, lat2, tim2)
-        //if(params.debug()) print(p2)
 
         (p1, p2)
       }
@@ -154,11 +166,15 @@ object Routing {
     val f = new BufferedWriter(new FileWriter(params.output()), 16384) // Buffer size...
     logger.info("Routing...")
     implicit val hopper = createGraphHopperInstance(params.osm())
-    od.map{ case(p1, p2) =>
-        progress.add(1)
-        val route = routing(p1, p2)
-        if(route.id != "") f.write(s"${route.wkt}\n")
-      }
+    od.foreach{ case(p1, p2) =>
+      progress.add(1)
+      val route = if(params.resample_rate() <= 0)
+          routing(p1, p2)
+        else
+          routing(p1, p2).resampleByTime(params.resample_rate())
+
+      if(route.id != "") f.write(s"${route.wkt}\n")
+    }
     progress.current = od.size - 1
     progress.add(1)
    
@@ -171,26 +187,28 @@ object Routing {
 import org.rogach.scallop._
 import java.io.File
 
-class RoutingParams(args: Seq[String]) extends ScallopConf(args) {
+class ParRouterParams(args: Seq[String]) extends ScallopConf(args) {
   val path = new File(".").getCanonicalPath
   println(s"Working directory: $path")
-  val default_dataset = s"${path}/src/main/resources/parrouter/sample_trajs.csv"
-  val default_osm = s"${path}/src/main/resources/parrouter/sample.osm"
+  val default_dataset = s"${path}/src/main/resources/sample_trajs.csv"
+  val default_osm = s"${path}/src/main/resources/sample.osm"
 
-  val tolerance: ScallopOption[Double]  = opt[Double]  (default = Some(1e-6))
-  val dataset:   ScallopOption[String]  = opt[String]  (default = Some(default_dataset))
-  val id_pos:    ScallopOption[Int]     = opt[Int]     (default = Some(0))
-  val tim1_pos:  ScallopOption[Int]     = opt[Int]     (default = Some(1))
-  val tim2_pos:  ScallopOption[Int]     = opt[Int]     (default = Some(2))
-  val lon1_pos:  ScallopOption[Int]     = opt[Int]     (default = Some(4))
-  val lat1_pos:  ScallopOption[Int]     = opt[Int]     (default = Some(3))
-  val lon2_pos:  ScallopOption[Int]     = opt[Int]     (default = Some(6))
-  val lat2_pos:  ScallopOption[Int]     = opt[Int]     (default = Some(5))
-  val osm:       ScallopOption[String]  = opt[String]  (default = Some(default_osm))
-  val profile:   ScallopOption[String]  = opt[String]  (default = Some("bike"))
-  val output:    ScallopOption[String]  = opt[String]  (default = Some("/tmp/edgesT.wkt"))
-  val header:    ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
-  val debug:     ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
+  val tolerance:     ScallopOption[Double]  = opt[Double]  (default = Some(1e-6))
+  val dataset:       ScallopOption[String]  = opt[String]  (default = Some(default_dataset))
+  val delimiter:     ScallopOption[String]  = opt[String]  (default = Some("\t"))
+  val id_pos:        ScallopOption[Int]     = opt[Int]     (default = Some(0))
+  val tim1_pos:      ScallopOption[Int]     = opt[Int]     (default = Some(1))
+  val tim2_pos:      ScallopOption[Int]     = opt[Int]     (default = Some(2))
+  val lon1_pos:      ScallopOption[Int]     = opt[Int]     (default = Some(4))
+  val lat1_pos:      ScallopOption[Int]     = opt[Int]     (default = Some(3))
+  val lon2_pos:      ScallopOption[Int]     = opt[Int]     (default = Some(6))
+  val lat2_pos:      ScallopOption[Int]     = opt[Int]     (default = Some(5))
+  val osm:           ScallopOption[String]  = opt[String]  (default = Some(default_osm))
+  val profile:       ScallopOption[String]  = opt[String]  (default = Some("bike"))
+  val resample_rate: ScallopOption[Int]     = opt[Int]     (default = Some(5))
+  val output:        ScallopOption[String]  = opt[String]  (default = Some("/tmp/edgesT.wkt"))
+  val noheader:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
+  val debug:         ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
 
   verify()
 }
