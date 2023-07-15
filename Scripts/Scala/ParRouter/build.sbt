@@ -1,6 +1,6 @@
 ThisBuild / version      := "0.1.0"
 ThisBuild / organization := "edu.ucr.dblab"
-ThisBuild / scalaVersion := "2.12.17"
+ThisBuild / scalaVersion := "2.11.12"
 
 lazy val buildSettings = (project in file("."))
   .settings(
