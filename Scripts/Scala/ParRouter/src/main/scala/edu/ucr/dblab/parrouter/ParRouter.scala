@@ -10,10 +10,12 @@ import org.geotools.geometry.jts.JTS
 import org.geotools.referencing.CRS
 
 import org.slf4j.{Logger, LoggerFactory}
+import org.rogach.scallop._
 
+import java.nio.file.{Files, Paths, StandardCopyOption}
+import java.io.{BufferedWriter, FileWriter, File}
 import scala.collection.JavaConverters._
 import scala.io.Source
-import java.io.{BufferedWriter, FileWriter}
 
 import ParResampler._
 
@@ -123,14 +125,29 @@ object ParRouter {
     implicit val geofactory = new GeometryFactory(new PrecisionModel(1.0/params.tolerance()))
 
     logger.info("Reading...")
-    val buffer = Source.fromFile(params.dataset())
-    val od_prime = if(params.noheader()){
-      buffer.getLines.toList
-    } else {
-      val prime = buffer.getLines
+    val dataset_prime = if(params.dataset() == "") {
+      val name = "sample_trajs.csv"
+      val stream = Source.fromInputStream(getClass.getClassLoader.getResourceAsStream(name))
+      val prime = stream.getLines
       val header = prime.next
       println(header.replaceAll(",", "\t"))
-      prime.toList
+      val dataset_prime = prime.toList
+      stream.close
+
+      dataset_prime
+    } else {
+      val buffer = Source.fromFile(params.dataset())
+      val dataset_prime = if(params.noheader()){
+        buffer.getLines.toList
+      } else {
+        val prime = buffer.getLines
+        val header = prime.next
+        println(header.replaceAll(",", "\t"))
+        prime.toList
+      }
+      buffer.close
+
+      dataset_prime
     }
 
     val t1 = params.tim1_pos()
@@ -141,7 +158,7 @@ object ParRouter {
       case _ if t1 <  0 && t2 >= 0 => 6
       case _ if t1 >= 0 && t2 >= 0 => 7
     }
-    val od = od_prime.par
+    val dataset = dataset_prime.par
       .filter(_.split(",").size == n)
       .map{ line =>
         val arr = line.split(",")
@@ -160,22 +177,32 @@ object ParRouter {
 
         (p1, p2)
       }
-    buffer.close
 
-    implicit var progress = new pb.ProgressBar(od.size)
+    import java.io.{DataOutputStream, FileOutputStream}
+    implicit var progress = new pb.ProgressBar(dataset.size)
     val f = new BufferedWriter(new FileWriter(params.output()), 16384) // Buffer size...
     logger.info("Routing...")
-    implicit val hopper = createGraphHopperInstance(params.osm())
-    od.foreach{ case(p1, p2) =>
-      progress.add(1)
-      val route = if(params.resample_rate() <= 0)
-          routing(p1, p2)
-        else
-          routing(p1, p2).resampleByTime(params.resample_rate())
+    val osmLocation = if(params.osm() == ""){
+      val osmLocation = "/tmp/sample.osm"
+      val name = "sample.pbf"
+      val stream = getClass.getClassLoader.getResourceAsStream(name)
+      Files.copy(stream, Paths.get(osmLocation), StandardCopyOption.REPLACE_EXISTING)
+      stream.close
 
+      osmLocation
+    } else {
+      params.osm()
+    }
+    implicit val hopper = createGraphHopperInstance(osmLocation)
+    dataset.foreach{ case(p1, p2) =>
+      progress.add(1)
+      val route = if(params.resample())
+          routing(p1, p2).resampleByTime(params.resample_rate())
+        else
+          routing(p1, p2)
       if(route.id != "") f.write(s"${route.wkt}\n")
     }
-    progress.current = od.size - 1
+    progress.current = dataset.size - 1
     progress.add(1)
    
     logger.info("Closing...")
@@ -184,17 +211,12 @@ object ParRouter {
   }
 }
 
-import org.rogach.scallop._
-import java.io.File
-
 class ParRouterParams(args: Seq[String]) extends ScallopConf(args) {
   val path = new File(".").getCanonicalPath
   println(s"Working directory: $path")
-  val default_dataset = s"${path}/src/main/resources/sample_trajs.csv"
-  val default_osm = s"${path}/src/main/resources/sample.osm"
 
   val tolerance:     ScallopOption[Double]  = opt[Double]  (default = Some(1e-6))
-  val dataset:       ScallopOption[String]  = opt[String]  (default = Some(default_dataset))
+  val dataset:       ScallopOption[String]  = opt[String]  (default = Some(""))
   val delimiter:     ScallopOption[String]  = opt[String]  (default = Some("\t"))
   val id_pos:        ScallopOption[Int]     = opt[Int]     (default = Some(0))
   val tim1_pos:      ScallopOption[Int]     = opt[Int]     (default = Some(1))
@@ -203,9 +225,10 @@ class ParRouterParams(args: Seq[String]) extends ScallopConf(args) {
   val lat1_pos:      ScallopOption[Int]     = opt[Int]     (default = Some(3))
   val lon2_pos:      ScallopOption[Int]     = opt[Int]     (default = Some(6))
   val lat2_pos:      ScallopOption[Int]     = opt[Int]     (default = Some(5))
-  val osm:           ScallopOption[String]  = opt[String]  (default = Some(default_osm))
+  val osm:           ScallopOption[String]  = opt[String]  (default = Some(""))
   val profile:       ScallopOption[String]  = opt[String]  (default = Some("bike"))
-  val resample_rate: ScallopOption[Int]     = opt[Int]     (default = Some(5))
+  val resample:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
+  val resample_rate: ScallopOption[Int]     = opt[Int]     (default = Some(5000))
   val output:        ScallopOption[String]  = opt[String]  (default = Some("/tmp/edgesT.wkt"))
   val noheader:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val debug:         ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
