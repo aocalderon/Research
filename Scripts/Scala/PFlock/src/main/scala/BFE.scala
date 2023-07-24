@@ -265,7 +265,7 @@ object BFE {
       dataset = params.dataset(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
-      method = params.method(),
+      method = "BFE",
       capacity = params.capacity(),
       tolerance = params.tolerance(),
       tag = params.tag(),
@@ -281,7 +281,7 @@ object BFE {
     stats1.print()
 
     debug{
-      save("/tmp/edgesMaximals.wkt"){ maximals.map(_.wkt + "\n") }
+      save("/tmp/edgesC_prime.wkt"){ maximals.map(_.getCircleWTK + "\n") }
     }
 
     debug{

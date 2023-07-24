@@ -1,32 +1,33 @@
 package edu.ucr.dblab.pflock
 
-import org.locationtech.jts.algorithm.MinimumBoundingCircle
 import org.locationtech.jts.geom.{GeometryFactory, PrecisionModel, Geometry}
 import org.locationtech.jts.geom.{Envelope, Coordinate, Point, Polygon}
+import org.locationtech.jts.algorithm.MinimumBoundingCircle
 import org.locationtech.jts.index.strtree.STRtree
 import org.locationtech.jts.io.WKTReader
 
-import org.apache.spark.rdd.RDD
 import org.apache.spark.TaskContext
+import org.apache.spark.rdd.RDD
 
+import org.apache.commons.math3.geometry.enclosing.{SupportBallGenerator, EnclosingBall}
 import org.apache.commons.math3.geometry.euclidean.twod.DiskGenerator
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D
-import org.apache.commons.math3.geometry.enclosing.{SupportBallGenerator, EnclosingBall}
-
-import scala.collection.JavaConverters._
-import scala.io.Source
-import scala.util.Random
-import sys.process._
-import java.net.InetAddress
-
-import org.slf4j.{Logger, LoggerFactory}
 
 import edu.ucr.dblab.pflock.spmf.{Transactions, Transaction, AlgoLCM2}
-
+import org.streaminer.util.hash.{MurmurHash3, SpookyHash64}
+import org.slf4j.{Logger, LoggerFactory}
 import archery._
+
+import scala.collection.JavaConverters._
+import scala.collection.mutable.BitSet
+import java.net.InetAddress
+import scala.util.Random
+import scala.io.Source
+import sys.process._
 
 import edu.ucr.dblab.pflock.pbk.PBK.bk
 import edu.ucr.dblab.pflock.welzl.Welzl
+
 
 object Utils {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -103,6 +104,12 @@ object Utils {
 
     override def toString: String = s"$oid\t${point.getX}\t${point.getY}\t$tid\t$cid\t$count"
 
+    def archeryEntry: archery.Entry[STPoint] = {
+      val x: Float = X.toFloat
+      val y: Float = Y.toFloat
+      archery.Entry(archery.Point(x, y), this)
+    }
+
   }
 
   case class Data(id: Int, t: Int){
@@ -130,12 +137,39 @@ object Utils {
 
     var did: Int = -1
     var subset: Boolean = false
-    val data: String = center.getUserData.toString
+    val data: String = try { center.getUserData.toString }
+    catch { case e: java.lang.NullPointerException => "NoData" }
+
     val X: Float = center.getX.toFloat
     val Y: Float = center.getY.toFloat
     val count: Int = pids.size
     val pidsText = pids.sorted.mkString(" ")
+    val SIG_SIZE = 128
+
+    val signature: BitSet = {
+      val signature_prime: BitSet = new BitSet
+      pids.foreach{ oid =>
+        pureHash(signature_prime, oid)
+      }
+      signature_prime
+    }
+
+    def pureHash(signature: BitSet, oid: Int, size: Int = SIG_SIZE, seed: Int = 42): Unit = {
+      val murmur_pos = math.abs(
+        MurmurHash3.MurmurHash3_x64_128(Array(oid.toByte), seed)(1) % size
+      ).toInt
+      val spooky_pos = math.abs(
+        SpookyHash64.hash(Array(oid.toByte), seed) % size
+      ).toInt
+      signature(murmur_pos) = true
+      signature(spooky_pos) = true
+    }
     
+    def &(other: Disk): Boolean = {
+      val r = this.signature & other.signature
+      r == other.signature
+    }
+
     def envelope: Envelope = center.getEnvelopeInternal
 
     def getExpandEnvelope(r: Double): Envelope = {
@@ -150,11 +184,11 @@ object Utils {
 
     def bbox(r: Float): Box = Box(X - r, Y - r, X + r, Y + r)
 
+    def archeryEntry(implicit S: Settings): archery.Entry[Disk] = archery.Entry(this.bbox(S.r.toFloat), this)
+
     def containedBy(cell: Cell): Boolean = cell.contains(this)
 
-    def distance(other: Disk): Double = {
-      center.distance(other.center)
-    }
+    def distance(other: Disk): Double = center.distance(other.center)
 
     def isSubsetOf(other: Disk): Boolean = pidsSet.subsetOf(other.pidsSet)
 
@@ -166,12 +200,7 @@ object Utils {
 
     def equals(other: Disk): Boolean = this.pidsText == other.pidsText
 
-    def compare(other: Disk): Int = 
-      this.X.compare(other.X) match {
-        case -1 => -1
-        case  0 =>  this.Y compare other.Y 
-        case  1 =>  1
-      }
+    def compare(other: Disk): Int = this.center.getCoordinate.compareTo(other.center.getCoordinate)
 
     def duplicates(tree: RTree[Disk])(implicit settings: Settings): Seq[Disk] = tree
       .search(this.bbox(settings.epsilon.toFloat))
