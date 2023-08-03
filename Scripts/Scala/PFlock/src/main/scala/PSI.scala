@@ -7,6 +7,7 @@ import org.locationtech.jts.index.strtree.STRtree
 
 import archery.{RTree => ArcheryRTree, Entry, Box => ArcheryBox}
 
+import scala.collection.mutable.ListBuffer
 import scala.collection.JavaConverters._
 import edu.ucr.dblab.pflock.Utils._
 
@@ -236,7 +237,7 @@ object PSI {
             case _ if{ (candidate & maximal) && maximal.isSubsetOf(candidate) } => {
               insert_disk(candidates.remove(maximal.archeryEntry), candidate, hood_prime)
             }
-            case _ => {
+            case _ => { 
               insert_disk(candidates, candidate, hood_prime)
             }
           }
@@ -317,6 +318,27 @@ object PSI {
     // call Algorithm 2
     filter_candidates(sorted_boxes, boxes, candidate_disks).entries.map{_.value}.toList
 
+  }
+
+  def insertDisk( C: ListBuffer[Disk], c: Disk)(implicit S: Settings): ListBuffer[Disk] = {
+    var continue: Boolean = true
+    for( d <- C if( continue ) ){
+      (d, c) match {
+        case _ if{ (d & c) && c.distance(d) <= S.epsilon } => {
+          if( c.isSubsetOf(d) ){
+            continue = false
+          }
+        }
+        case _ if{ (c & d) && d.distance(d) <= S.epsilon } => {
+          if( d.isSubsetOf(c) ){
+            C -= d
+          }
+        }
+        case _ => { /* Just continue... */ }
+      }
+    }
+
+    if( !continue ) C else C += c 
   }
 
   /**
