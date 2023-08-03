@@ -185,6 +185,7 @@ object Utils {
     def bbox(r: Float): Box = Box(X - r, Y - r, X + r, Y + r)
 
     def archeryEntry(implicit S: Settings): archery.Entry[Disk] = archery.Entry(this.bbox(S.r.toFloat), this)
+    def pointEntry: archery.Entry[Disk] = archery.Entry(archery.Point(this.X, this.Y), this)
 
     def containedBy(cell: Cell): Boolean = cell.contains(this)
 
@@ -1018,11 +1019,11 @@ object Utils {
 import org.rogach.scallop._
 
 class BFEParams(args: Seq[String]) extends ScallopConf(args) {
-  val default_dataset = s"PFlock/LA/dense"
+  val default_dataset = s"/home/and/Research/Datasets/dummy.tsv"
 
   val tolerance:  ScallopOption[Double]  = opt[Double]  (default = Some(1e-3))
   val dataset:    ScallopOption[String]  = opt[String]  (default = Some(default_dataset))
-  val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(5.0))
+  val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(2.0))
   val mu:         ScallopOption[Int]     = opt[Int]     (default = Some(3))
   val delta:      ScallopOption[Int]     = opt[Int]     (default = Some(1))
   val begin:      ScallopOption[Int]     = opt[Int]     (default = Some(0))

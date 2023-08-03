@@ -47,11 +47,17 @@ class LoaderDialog(DialogType, DialogBase):
                 symbol = QgsFillSymbol.createSimple({'color_border': 'black', 'style': 'no', 'style_border': 'dash'})
                 layer.renderer().setSymbol(symbol)
                 layer.triggerRepaint()
+            if name == "B" or name == "Box":
+                symbol = QgsFillSymbol.createSimple({'color_border': 'black', 'outline_style': 'dot', 'color': '190,207,80,89', 'outline_width': 0.4 })
+                layer.renderer().setSymbol(symbol)
+                layer.triggerRepaint()
             if name == "C" or name == "Centers":
                 props = layer.renderer().symbol().symbolLayer(0).properties()
                 props['color'] = 'black'
                 props['name'] = 'cross'
                 props['size'] = '2'
+                props['angle'] = '45'
+                props['outline_width'] = '0.5' 
                 layer.renderer().setSymbol(QgsMarkerSymbol.createSimple(props))
                 
                 layer.triggerRepaint()

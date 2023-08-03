@@ -43,11 +43,11 @@ object PSI {
       * @param envelope envelope of the element.
       * @param element the element to be stored.
       **/
-    def put[T](envelope: Envelope, element: T): Unit = {
-      if(envelope.getMinX < minx) minx = envelope.getMinX
-      if(envelope.getMinY < miny) miny = envelope.getMinY
-      if(envelope.getMaxX > maxx) maxx = envelope.getMaxX
-      if(envelope.getMaxY > maxy) maxy = envelope.getMaxY
+    def put[T](envelope: Envelope, element: T)(implicit S: Settings): Unit = {
+      if(envelope.getMinX < minx) minx = envelope.getMinX - S.tolerance // to fix precision issues...
+      if(envelope.getMinY < miny) miny = envelope.getMinY - S.tolerance
+      if(envelope.getMaxX > maxx) maxx = envelope.getMaxX + S.tolerance
+      if(envelope.getMaxY > maxy) maxy = envelope.getMaxY + S.tolerance
 
       super.insert(envelope, element)
     }
@@ -67,7 +67,13 @@ object PSI {
       * @return boolean true if exists, false otherwise.
       **/
     def exists[T](envelope: Envelope): Boolean = {
-      this.get(envelope).exists { _ == envelope }
+      this.get(envelope).exists { element: T =>
+          if(element.isInstanceOf[Geometry]){
+            element.asInstanceOf[Geometry].getEnvelopeInternal.compareTo(envelope) == 0
+          } else {
+            false
+          }
+      }
     }
 
     /**
@@ -88,10 +94,11 @@ object PSI {
     val envelope: Envelope = hood.envelope
     val left_bottom: Coordinate = new Coordinate(envelope.getMinX, envelope.getMinY)
 
-    val bbox: ArcheryBox = ArcheryBox(getMinX.toFloat, getMinY.toFloat,
-      getMaxX.toFloat, getMaxY.toFloat)
+    def boundingBox(implicit S: Settings): ArcheryBox = {
+      ArcheryBox(getMinX.toFloat, getMinY.toFloat, getMaxX.toFloat, getMaxY.toFloat)
+    }
 
-    val archeryEntry: archery.Entry[Box] = archery.Entry(this.bbox, this)
+    def archeryEntry(implicit S: Settings): archery.Entry[Box] = archery.Entry(this.boundingBox, this)
 
     def wkt(implicit G: GeometryFactory): String = G.toGeometry(this).toText
   }
@@ -247,6 +254,7 @@ object PSI {
     }
 
     val hood: List[Disk] = candidates
+      .remove(candidate.pointEntry)
       .search(candidate.bbox(S.r.toFloat))
       .map(_.value)
       .filter(_.distance(candidate) < S.epsilon)
@@ -255,21 +263,20 @@ object PSI {
     insert_disk(candidates, candidate, hood)
   }
 
-  private def insertBox(candidates: ArcheryRTree[Disk], box: Box)
-    (implicit S: Settings): ArcheryRTree[Disk] = {
+  private def insertBox(candidates: ArcheryRTree[Disk], box: Box)(implicit S: Settings): ArcheryRTree[Disk] = {
 
     @annotation.tailrec
     def insert_box(disks: List[Disk], candidates: ArcheryRTree[Disk]): ArcheryRTree[Disk] = {
       disks match {
         case candidate :: disks_prime => {
-          val candidates_prime = insertDisk(candidates, candidate)
+          val candidates_prime = insertDisk(candidates.remove(candidate.pointEntry), candidate)
           insert_box(disks_prime, candidates_prime)
         }
         case Nil => candidates
       }
     }
 
-    val disks: List[Disk] = candidates.search(box.bbox).map(_.value).toList
+    val disks: List[Disk] = candidates.search(box.boundingBox).map(_.value).toList
 
     insert_box(disks, candidates)
   }
@@ -290,7 +297,7 @@ object PSI {
       sorted match {
         case current_box :: sorted_prime => {
           val candidates_prime =
-            if(lookup.search(current_box.bbox).size > 0){
+            if(lookup.search(current_box.boundingBox).size > 0){
               insertBox(candidates, current_box)
             } else {
               candidates
@@ -310,13 +317,15 @@ object PSI {
     }
 
     // C is the initial set of candidates...
-    val C: List[Entry[Disk]] = candidates.getAll[Disk].map(_.archeryEntry)
+    val C: List[Entry[Disk]] = candidates.getAll[Disk].map(_.pointEntry)
     val candidate_disks: ArcheryRTree[Disk] = ArcheryRTree[Disk](C: _*)
     // Sort boxes by left-bottom corner...
     val sorted_boxes: List[Box] = boxes.values.toList.sortBy{ _.left_bottom }
 
     // call Algorithm 2
-    filter_candidates(sorted_boxes, boxes, candidate_disks).entries.map{_.value}.toList
+    val r = filter_candidates(sorted_boxes, boxes, candidate_disks)
+
+    r.entries.map{_.value}.toList
 
   }
 
@@ -355,6 +364,7 @@ object PSI {
     }
 
     PSI.filterCandidates(candidates, boxes)
+    
   }
 
   def main(args: Array[String]): Unit = {
