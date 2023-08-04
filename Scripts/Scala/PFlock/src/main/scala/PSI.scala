@@ -86,13 +86,13 @@ object PSI {
   /**
     * Stores the active boxes for candidates.
     * @constructor create a box from an envelope and the point it belongs
-    * @param envelope the envelope defining the box.
-    * @param point    the point this box belongs to.
+    * @param hood an RTree with the points and envelope defining the box.
     **/
   case class Box(hood: RTree[STPoint]) extends Envelope(hood.envelope){
     val points: List[STPoint] = hood.getAll[STPoint]
     val envelope: Envelope = hood.envelope
     val left_bottom: Coordinate = new Coordinate(envelope.getMinX, envelope.getMinY)
+    var disks: List[Disk] = _
 
     def boundingBox(implicit S: Settings): ArcheryBox = {
       ArcheryBox(getMinX.toFloat, getMinY.toFloat, getMaxX.toFloat, getMaxY.toFloat)
@@ -101,6 +101,8 @@ object PSI {
     def archeryEntry(implicit S: Settings): archery.Entry[Box] = archery.Entry(this.boundingBox, this)
 
     def wkt(implicit G: GeometryFactory): String = G.toGeometry(this).toText
+
+    def getDisks: List[Disk] = this.disks
   }
 
   /**
@@ -212,7 +214,6 @@ object PSI {
 
             val active_box = Box(band_for_pr)
             if(!boxes.values.exists(_ == active_box)){
-              println("inserting BBox...")
               boxes = boxes.insert(active_box.archeryEntry) // getting boxes...
             }
           }
@@ -329,6 +330,35 @@ object PSI {
 
   }
 
+  def filterCandidates(boxes_prime: ArcheryRTree[Box])(implicit S: Settings): List[Disk] = {
+    // Sort boxes by left-bottom corner...
+    val boxes: List[Box] = boxes_prime.values.toList.sortBy {
+      _.left_bottom
+    }
+    var C: ListBuffer[Disk] = ListBuffer()
+
+    if(!boxes.isEmpty) {
+      boxes.size match {
+        case 1 =>
+          for (c <- boxes.head.disks) {
+            C = insertDisk(C, c)
+          }
+        case _ =>
+          for {
+            j <- 0 to boxes.size
+            k <- j + 1 to boxes.size if {
+              boxes(j).intersects(boxes(k))
+            }
+          } yield {
+            for (c <- boxes(j).disks) {
+              C = insertDisk(C, c)
+            }
+          }
+      }
+    }
+
+    C.toList
+  }
   def insertDisk( C: ListBuffer[Disk], c: Disk)(implicit S: Settings): ListBuffer[Disk] = {
     var continue: Boolean = true
     for( d <- C if( continue ) ){
@@ -352,18 +382,26 @@ object PSI {
 
   /**
     * Run the PSI algorithm.
-    * @param list list of points.
+    * @param points list of points.
     **/
   def run(points: List[STPoint])(implicit S: Settings, G: GeometryFactory, L: Logger): List[Disk] = {
 
+    // Call plane sweeping technique algorithm...
     val (candidates, boxes) = PSI.planeSweeping(points)
+
     debug{
       save("/tmp/edgesC.wkt"){ candidates.getAll[Disk].map{ _.wkt + "\n" } }
       save("/tmp/edgesC_prime.wkt"){ candidates.getAll[Disk].map{ _.getCircleWTK + "\n" } }
       save("/tmp/edgesB.wkt"){ boxes.values.map{ _.wkt + "\n" }.toList }
     }
 
-    PSI.filterCandidates(candidates, boxes)
+    // Feed each box with the disks it contains...
+    boxes.values.foreach{ box =>
+      box.disks = candidates.get[Disk](box)
+    }
+
+    // Call filter candidates algorithm...
+    PSI.filterCandidates(boxes)
     
   }
 
@@ -389,7 +427,9 @@ object PSI {
     val maximals = PSI.run(points)
 
     debug{
+      save("/tmp/edgesP.wkt"){   points.map{ _.wkt + "\n" } }
       save("/tmp/edgesM.wkt"){ maximals.map{ _.wkt + "\n" } }
+      save("/tmp/edgesM_prime.wkt"){ maximals.map{ _.getCircleWTK + "\n" } }
     }
 
 
