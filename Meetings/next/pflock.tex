@@ -77,52 +77,62 @@
     \end{frame}
 }
 
-\begin{frame}{Candidate pruning bottleneck...}{We have to deal with +188K candidates...}
+\begin{frame}{PSI stages...}{Small dense dataset (100 points, $\varepsilon$=1, $\mu$=3)}
     \centering
-    \includegraphics[width=0.6\textwidth]{figures/candidates}
+    \includegraphics[width=0.55\textwidth]{figures/psi0}
 \end{frame}
 
-\begin{frame}{Candidate pruning bottleneck...}{$\varepsilon=20$ and $\mu=3$}
+
+\begin{frame}{PSI stages...}{Finding centres... [1020]}
     \centering
-    \includegraphics[trim=8cm 9cm 8cm 8cm, clip, width=\textwidth]{figures/table}
-    Indeed...
-    \begin{itemize}
-            \item Average size of maximal disks hold in the tree: 25.88
-            \item Average size of candidate disks query to the tree: 17.70
-    \end{itemize}
+    \includegraphics[width=0.55\textwidth]{figures/psi1}
 \end{frame}
 
-\begin{frame}{Currently working on PSB \textrightarrow PSI...}{Plane sweeping [80\%]}
+\begin{frame}{PSI stages...}{Finding candidates... [959]}
     \centering
-    \includegraphics[trim=3.5cm 4.25cm 3.15cm 18cm, clip, width=0.9\textwidth]{figures/sweeping}
-    %\includegraphics[trim=8cm 9cm 8cm 8cm, clip, width=\textwidth]{figures/signatures}
+    \includegraphics[width=0.55\textwidth]{figures/psi2}
 \end{frame}
 
-\begin{frame}{Currently working on PSB \textrightarrow PSI...}{Binary signature [50\%]}
+\begin{frame}{PSI stages...}{Finding active boxes... [88]}
     \centering
-    \includegraphics[trim=4.75cm 19.95cm 4cm 3.5cm, clip, width=\textwidth]{figures/signatures}
+    \includegraphics[width=0.55\textwidth]{figures/psi3}
 \end{frame}
 
-\begin{frame}{Alternative trajectory datasets...}{ny\_bikes [\href{https://citibikenyc.com/system-data}{Citi Bike NY}]}
+\begin{frame}{PSI stages...}{Updating disks in boxes...}
     \centering
-    \includegraphics[width=0.625\textwidth]{figures/ny_bikes}
-    \begin{tabular}{r r}
-            \small Trajectories: 2'734.157 & \small Time span: March 2023
-    \end{tabular}
+    \includegraphics[width=0.55\textwidth]{figures/psi4}
 \end{frame}
 
-\begin{frame}{Alternative trajectory datasets...}{ny\_taxis [\href{https://chriswhong.com/open-data/foil_nyc_taxi/}{TLC Trip Record Data}]}
+\begin{frame}{PSI stages...}{Updating disks in boxes...}
     \centering
-    \includegraphics[width=0.625\textwidth]{figures/ny_taxis}
-    \begin{tabular}{r r}
-            \small Trajectories: 14'336.486 & \small Time span: October 2013
-    \end{tabular}
+    \includegraphics[width=0.55\textwidth]{figures/psi5}
+\end{frame}
+
+\begin{frame}{PSI stages...}{Running filterCandidates algorithm... [98]}
+    \centering
+    \includegraphics[width=0.55\textwidth]{figures/psi6}
+\end{frame}
+
+\begin{frame}{PSI results...}{Maximal disks in PSI...}
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/psi7}
+\end{frame}
+
+\begin{frame}{PSI results...}{Maximal disks in BFE...}
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/psi8}
+\end{frame}
+
+\begin{frame}{PSI and BFE...}
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/psi9}
 \end{frame}
 
 \begin{frame}{What's next?}
   \begin{itemize}
-          \item Complete implementation for PSB (plane sweeping and binary signatures)...
-          \item Run interpolation for new datasets...
+          \item Run performance experiments using BFE and PSI for dense datasets en parallel...
+          \item Router, Resampler and Reprojector (RRR) are ready for ny\_taxis and ny\_bikes.
+          \item Run RRR in new dataset sf\_taxis (San Francisco taxis)...
           \item Start working on temporal dimension...
           \begin{itemize}
                   \item Explore 3D partitioners...
