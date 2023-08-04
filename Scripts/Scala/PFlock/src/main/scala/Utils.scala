@@ -304,12 +304,19 @@ object Utils {
         }
 
         if(n * m < limit){
-          val X = (mbr.getMinX until mbr.getMaxX by epsilon).toList :+ mbr.getMaxX
-          val Y = (mbr.getMinY until mbr.getMaxY by epsilon).toList :+ mbr.getMaxY
+          val X_prime = (mbr.getMinX until mbr.getMaxX by epsilon).toList :+ mbr.getMaxX
+          val X = if(X_prime.size == 1) mbr.getMinX +: X_prime else X_prime
+          val Y_prime = (mbr.getMinY until mbr.getMaxY by epsilon).toList :+ mbr.getMaxY
+          val Y = if(Y_prime.size == 1) mbr.getMinY +: Y_prime else Y_prime
+
+          if(S.debug){
+            println(s"X size: ${X.size}")
+            println(s"Y size: ${Y.size}")
+          }
 
           for{
-            i <- 0 until n
-            j <- 0 until m
+            i <- 0 until X.size - 1
+            j <- 0 until Y.size - 1
           } yield {
             val grid_cell = new Envelope( X(i), X(i + 1), Y(j), Y(j + 1) )
             val gridId = encode(i, j).toInt

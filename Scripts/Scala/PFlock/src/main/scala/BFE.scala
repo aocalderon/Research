@@ -269,7 +269,8 @@ object BFE {
       capacity = params.capacity(),
       tolerance = params.tolerance(),
       tag = params.tag(),
-      debug = params.debug(),
+      debug = params.debug(), 
+      tester = params.tester(),
       appId = System.nanoTime().toString()
     )
     implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
@@ -281,12 +282,12 @@ object BFE {
     stats1.print()
 
     debug{
-      save("/tmp/edgesC_prime.wkt"){ maximals.map(_.getCircleWTK + "\n") }
+      save("/tmp/edgesBFE_M.wkt"){ maximals.map(_.wkt + "\n") }
+      save("/tmp/edgesBFE_M_prime.wkt"){ maximals.map(_.getCircleWTK + "\n") }
     }
 
-    debug{
-      settings = settings.copy(method="BFE0")
-      checkMaximals(points)
+    if(settings.tester){
+      save("/tmp/edgesBFE_M.wkt"){ maximals.map(_.wkt + "\n") }
     }
 
     log(s"END")

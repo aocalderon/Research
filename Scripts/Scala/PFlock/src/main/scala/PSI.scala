@@ -173,7 +173,7 @@ object PSI {
       val band_for_pr: RTree[STPoint] = RTree[STPoint]
       pointset.filter{ ps: STPoint =>
         val q = math.abs(ps.X - pr.X) <= S.epsilon && math.abs(ps.Y - pr.Y) <= S.epsilon
-        println(s"Band for ${pr.oid} and ${ps.oid} = $q")
+        if(S.debug){ println(s"Band for ${pr.oid} and ${ps.oid} = $q") }
         q
       }.foreach{ ps: STPoint =>
         band_for_pr.put(ps.envelope, ps)
@@ -347,7 +347,11 @@ object PSI {
           for {
             j <- 0 to boxes.size
             k <- j + 1 to boxes.size if {
-              boxes(j).intersects(boxes(k))
+              try{
+                boxes(j).intersects(boxes(k))
+              } catch {
+                case e: java.lang.IndexOutOfBoundsException => false
+              }
             }
           } yield {
             for (c <- boxes(j).disks) {
@@ -417,6 +421,7 @@ object PSI {
       tolerance = params.tolerance(),
       tag = params.tag(),
       debug = params.debug(),
+      tester = params.tester(),
       appId = System.nanoTime().toString()
     )
     implicit val geofactory = new GeometryFactory(new PrecisionModel(S.scale))
@@ -428,10 +433,15 @@ object PSI {
 
     debug{
       save("/tmp/edgesP.wkt"){   points.map{ _.wkt + "\n" } }
-      save("/tmp/edgesM.wkt"){ maximals.map{ _.wkt + "\n" } }
-      save("/tmp/edgesM_prime.wkt"){ maximals.map{ _.getCircleWTK + "\n" } }
+      save("/tmp/edgesPSI_M.wkt"){ maximals.map{ _.wkt + "\n" } }
+      save("/tmp/edgesPSI_M_prime.wkt"){ maximals.map{ _.getCircleWTK + "\n" } }
     }
 
+    if(S.tester){
+      println("Testing...")
+      save("/tmp/edgesPSI_M.wkt"){ maximals.map{ _.wkt + "\n" } }
+      checkMaximals(points, "/tmp/edgesBFE_M.wkt")
+    }
 
     log(s"END")
   }
