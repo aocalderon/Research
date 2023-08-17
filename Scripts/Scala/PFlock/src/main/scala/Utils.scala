@@ -28,7 +28,6 @@ import sys.process._
 import edu.ucr.dblab.pflock.pbk.PBK.bk
 import edu.ucr.dblab.pflock.welzl.Welzl
 
-
 object Utils {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
 
