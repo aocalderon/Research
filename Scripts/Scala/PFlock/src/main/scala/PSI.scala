@@ -149,22 +149,25 @@ object PSI {
     * @return list of candidates and list of boxes.
     **/
   def planeSweeping(points: List[STPoint])
-    (implicit S: Settings, G: GeometryFactory): (RTree[Disk], ArcheryRTree[Box]) = {
-    
+    (implicit S: Settings, G: GeometryFactory, stats: Stats): (RTree[Disk], ArcheryRTree[Box]) = {
+
     // ordering by coordinate (it is first by x and then by y)...
     val pointset: List[STPoint] = points.sortBy(_.getCoord)
 
     debug{
-      println("Pointset...")
-      pointset
-        .zipWithIndex
-        .map{ case(point, order) => s"${point.wkt}\t${order}" }
-        .foreach{println}
+      save("/tmp/edgesPointsPSI.wkt"){
+        pointset
+          .zipWithIndex
+          .map{ case(point, order) => s"${point.wkt}\t${order}\n" }
+      }
     }
 
     // setting data structures to store candidates and boxes...
     val candidates: RTree[Disk] = RTree[Disk]
     var boxes: ArcheryRTree[Box] = ArcheryRTree[Box]()
+
+    // for debugging purposes...
+    var pairs: ListBuffer[(STPoint, STPoint)] = ListBuffer()
 
     // feeding candidates and active boxes...
     pointset.foreach{ pr: STPoint =>
@@ -172,9 +175,7 @@ object PSI {
       // feeding band with points inside 2-epsilon x 2-epsilon...
       val band_for_pr: RTree[STPoint] = RTree[STPoint]
       pointset.filter{ ps: STPoint =>
-        val q = math.abs(ps.X - pr.X) <= S.epsilon && math.abs(ps.Y - pr.Y) <= S.epsilon
-        if(S.debug){ println(s"Band for ${pr.oid} and ${ps.oid} = $q") }
-        q
+        math.abs(ps.X - pr.X) <= S.epsilon && math.abs(ps.Y - pr.Y) <= S.epsilon
       }.foreach{ ps: STPoint =>
         band_for_pr.put(ps.envelope, ps)
       }
@@ -188,16 +189,11 @@ object PSI {
         }.toList
 
       debug{
-        println("Band_pairs...")
-        band_pairs.foreach{println}
+        pairs.appendAll( band_pairs.map{ p => (pr, p) }.filter{ case(p1, p2) => p1.oid < p2.oid} )
       }
 
       band_pairs.foreach{ p =>
         val band_centres = computeCentres(pr, p) // gettings centres...
-
-        debug{
-          band_centres.map{_.buffer(S.r, 25).toText}.foreach{println}
-        }
 
         band_centres.foreach{ centre =>
           val envelope = centre.getEnvelopeInternal
@@ -219,12 +215,21 @@ object PSI {
           }
         }
       }
+      // check boxes here...
 
-      debug{
-        println(s"Boxes for ${pr.oid} so far...")
-        boxes.values.map{_.wkt}.foreach{println}
-      }
     } // foreach pointset
+
+    if(S.debug){
+      val pairs_prime = pairs.toSet
+      stats.nPairs = pairs_prime.size
+      save("/tmp/edgesPairsPSI.wkt"){
+        pairs_prime.map{ case(p1, p2) =>
+          G.createLineString( Array(p1.getCoord, p2.getCoord) ).toText + s"\t${p1.oid}\t${p2.oid}\n"
+        }.toList
+      }
+      stats.nCenters = 2 * stats.nPairs
+      stats.nCandidates = candidates.size
+    }
 
     (candidates, boxes)
   }
@@ -388,15 +393,20 @@ object PSI {
     * Run the PSI algorithm.
     * @param points list of points.
     **/
-  def run(points: List[STPoint])(implicit S: Settings, G: GeometryFactory, L: Logger): List[Disk] = {
+  def run(points: List[STPoint])
+    (implicit S: Settings, G: GeometryFactory, L: Logger): (List[Disk], Stats) = {
+
+    // For debugging purposes...
+    implicit val stats = Stats()
+    stats.nPoints = points.size
 
     // Call plane sweeping technique algorithm...
     val (candidates, boxes) = PSI.planeSweeping(points)
 
     debug{
-      save("/tmp/edgesC.wkt"){ candidates.getAll[Disk].map{ _.wkt + "\n" } }
-      save("/tmp/edgesC_prime.wkt"){ candidates.getAll[Disk].map{ _.getCircleWTK + "\n" } }
-      save("/tmp/edgesB.wkt"){ boxes.values.map{ _.wkt + "\n" }.toList }
+      save("/tmp/edgesCandidatesPSI.wkt"){ candidates.getAll[Disk].map{ _.wkt + "\n" } }
+      save("/tmp/edgesCandidatesPSI_prime.wkt"){ candidates.getAll[Disk].map{ _.getCircleWTK + "\n" } }
+      save("/tmp/edgesBoxesPSI.wkt"){ boxes.values.map{ _.wkt + "\n" }.toList }
     }
 
     // Feed each box with the disks it contains...
@@ -405,8 +415,10 @@ object PSI {
     }
 
     // Call filter candidates algorithm...
-    PSI.filterCandidates(boxes)
-    
+    val maximals = PSI.filterCandidates(boxes)
+    stats.nMaximals = maximals.size
+
+    (maximals, stats)
   }
 
   def main(args: Array[String]): Unit = {
@@ -429,18 +441,12 @@ object PSI {
     val points = readPoints(S.dataset)
     log(s"START")
 
-    val maximals = PSI.run(points)
+    val (maximals, stats) = PSI.run(points)
 
-    debug{
-      save("/tmp/edgesP.wkt"){   points.map{ _.wkt + "\n" } }
-      save("/tmp/edgesPSI_M.wkt"){ maximals.map{ _.wkt + "\n" } }
-      save("/tmp/edgesPSI_M_prime.wkt"){ maximals.map{ _.getCircleWTK + "\n" } }
-    }
-
-    if(S.tester){
-      println("Testing...")
-      save("/tmp/edgesPSI_M.wkt"){ maximals.map{ _.wkt + "\n" } }
-      checkMaximals(points, "/tmp/edgesBFE_M.wkt")
+    if(S.debug){
+      save("/tmp/edgesPointsPSI.wkt"){ points.map{ _.wkt + "\n" } }
+      save("/tmp/edgesMaximalsPSI.wkt"){ maximals.map{ _.wkt + "\n" } }
+      save("/tmp/edgesMaximalsPSI_prime.wkt"){ maximals.map{ _.getCircleWTK + "\n" } }
     }
 
     log(s"END")
