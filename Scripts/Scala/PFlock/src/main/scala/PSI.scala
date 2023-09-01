@@ -52,6 +52,12 @@ object PSI {
       super.insert(envelope, element)
     }
 
+    def putAll(elements: List[STPoint])(implicit S: Settings): Unit = {
+      elements.foreach{ element =>
+        this.put(element.point.getEnvelopeInternal, element)
+      }
+    }
+
     /**
       * Return a list of elements enclosed by an envelope.
       * @param envelope the envelope.
@@ -93,6 +99,10 @@ object PSI {
     val envelope: Envelope = hood.envelope
     val left_bottom: Coordinate = new Coordinate(envelope.getMinX, envelope.getMinY)
     var disks: List[Disk] = _
+
+    def activeBox(points: List[STPoint])(implicit G: GeometryFactory): Envelope = {
+      G.createMultiPoint(points.map(_.point).toArray).getEnvelopeInternal
+    }
 
     def boundingBox(implicit S: Settings): ArcheryBox = {
       ArcheryBox(getMinX.toFloat, getMinY.toFloat, getMaxX.toFloat, getMaxY.toFloat)
@@ -183,13 +193,17 @@ object PSI {
       // finding pairs of points, centers, candidates and boxes...
       val band_pairs = band_for_pr.getAll[STPoint]
         .filter{ p =>
-          p.X >= pr.X &&
-          p.oid != pr.oid &&
+          p.X >= pr.X &&  // those at the right...
+          p.oid != pr.oid && // prune duplicates...
           p.distance(pr) <= S.epsilon // getting pairs...
-        }.toList
+        }
 
       debug{
-        pairs.appendAll( band_pairs.map{ p => (pr, p) }.filter{ case(p1, p2) => p1.oid < p2.oid} )
+        pairs.appendAll( band_pairs.map{ p => (pr, p) } )
+        val current_pairs = band_pairs.map{ p =>
+          G.createLineString(Array(pr.getCoord, p.getCoord)).toText
+        }.mkString("\n")
+        //println(current_pairs)
       }
 
       band_pairs.foreach{ p =>
@@ -201,21 +215,30 @@ object PSI {
           val hood = band_for_pr
             .get[STPoint](envelope)
             .filter{ _.distanceToPoint(centre) <= S.r }
-            .map(_.oid)
-            .toList
+
+          debug {
+            println(Disk(centre, hood.map(_.oid)).getCircleWTK)
+          }
 
           if(hood.size >= S.mu){
-            val candidate = Disk(centre, hood)
+            val candidate = Disk(centre, hood.map(_.oid))
             candidates.put(candidate.envelope, candidate) // getting candidates...
 
-            val active_box = Box(band_for_pr)
-            if(!boxes.values.exists(_ == active_box)){
+            val active_points = RTree[STPoint]()
+            active_points.putAll(hood.filter(p => p.X >= pr.X))
+            val active_box = Box(active_points)
+            if(!boxes.values.exists(_.contains(active_box))){
               boxes = boxes.insert(active_box.archeryEntry) // getting boxes...
+              //println(G.toGeometry(active_box.envelope).toText)
             }
           }
         }
       }
       // check boxes here...
+
+      boxes.values.map{ b =>
+        println(G.toGeometry(b.envelope).toText)
+      }
 
     } // foreach pointset
 
