@@ -31,12 +31,12 @@ object PSI {
     /**
       * Return the most right top corner of all the points stored in the RTree.
       **/
-    def   right_top: Coordinate = new Coordinate(maxx, maxy)
+    def right_top: Coordinate = new Coordinate(maxx, maxy)
 
     /**
       * Return the extend of the points stored in the RTree.
       **/
-    def    envelope: Envelope   = new Envelope(left_bottom, right_top)
+    def envelope: Envelope   = new Envelope(left_bottom, right_top)
 
     /**
       * Store the envelope attached to the element in the RTree.
@@ -217,7 +217,7 @@ object PSI {
             .filter{ _.distanceToPoint(centre) <= S.r }
 
           debug {
-            println(Disk(centre, hood.map(_.oid)).getCircleWTK)
+            //println(Disk(centre, hood.map(_.oid)).getCircleWTK)
           }
 
           if(hood.size >= S.mu){
@@ -236,9 +236,9 @@ object PSI {
       }
       // check boxes here...
 
-      boxes.values.map{ b =>
-        println(G.toGeometry(b.envelope).toText)
-      }
+      //boxes.values.map{ b =>
+      //  println(G.toGeometry(b.envelope).toText)
+      //}
 
     } // foreach pointset
 
