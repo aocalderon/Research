@@ -100,6 +100,7 @@ object PSI {
     val left_bottom: Coordinate = new Coordinate(envelope.getMinX, envelope.getMinY)
     var disks: List[Disk] = _
     var pidsSet: Set[List[Int]] = _
+    var id: Int = -1
 
     def activeBox(points: List[STPoint])(implicit G: GeometryFactory): Envelope = {
       G.createMultiPoint(points.map(_.point).toArray).getEnvelopeInternal
@@ -444,6 +445,10 @@ object PSI {
 
     // Call plane sweeping technique algorithm...
     val (candidates, boxes) = PSI.planeSweeping(points)
+    val candidates_prime = new STRtree()
+    candidates.getAll[Disk].foreach{ candidate =>
+      candidates_prime.insert(candidate.getExpandEnvelope(S.r), candidate)
+    }
 
     debug{
       save("/tmp/edgesCandidatesPSI.wkt"){ candidates.getAll[Disk].map{ _.wkt + "\n" } }
@@ -451,15 +456,28 @@ object PSI {
     }
 
     // Feed each box with the disks it contains...
-    boxes.values.foreach{ box =>
-      box.disks = candidates.get[Disk](box)
+    boxes.values.zipWithIndex.foreach{ case(box, id) =>
+      if(id == 7){
+        println("debug...")
+        println(s"${box.wkt}")
+        println(s"${candidates.get[Disk](box)}")
+        val geomBox = G.toGeometry(box.envelope)
+        candidates.getAll[Disk].filter( c => c.center.buffer(S.r, 25).intersects(geomBox)).map{ x =>
+
+          x.getCircleWTK
+        }.foreach{println}
+      }
+      box.id = id
+      //box.disks = candidates.get[Disk](box)
+      val geomBox = G.toGeometry(box.envelope)
+      box.disks = candidates_prime.query(box).asScala.map{_.asInstanceOf[Disk]}.toList
       box.pidsSet = box.disks.map(_.pids).toSet
     }
 
     debug {
       save("/tmp/edgesBoxesPSI.wkt") {
         boxes.values.map { box =>
-          s"${box.wkt}\t${box.pidsSet.map(_.mkString(" ")).mkString("; ")}\n"
+          s"${box.wkt}\t${box.id}\t${box.pidsSet.map(_.mkString(" ")).mkString("; ")}\n"
         }.toList
       }
     }
