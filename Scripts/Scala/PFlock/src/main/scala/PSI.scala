@@ -444,7 +444,12 @@ object PSI {
     stats.nPoints = points.size
 
     // Call plane sweeping technique algorithm...
-    val (candidates, boxes) = PSI.planeSweeping(points)
+
+    val ((candidates, boxes), tPS) = timer{
+      PSI.planeSweeping(points)
+    }
+
+
     val candidates_prime = new STRtree()
     candidates.getAll[Disk].foreach{ candidate =>
       candidates_prime.insert(candidate.getExpandEnvelope(S.r), candidate)
