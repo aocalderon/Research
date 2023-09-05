@@ -99,6 +99,7 @@ object PSI {
     val envelope: Envelope = hood.envelope
     val left_bottom: Coordinate = new Coordinate(envelope.getMinX, envelope.getMinY)
     var disks: List[Disk] = _
+    var pidsSet: Set[List[Int]] = _
 
     def activeBox(points: List[STPoint])(implicit G: GeometryFactory): Envelope = {
       G.createMultiPoint(points.map(_.point).toArray).getEnvelopeInternal
@@ -216,9 +217,9 @@ object PSI {
             .get[STPoint](envelope)
             .filter{ _.distanceToPoint(centre) <= S.r }
 
-          debug {
+          //debug {
             //println(Disk(centre, hood.map(_.oid)).getCircleWTK)
-          }
+          //}
 
           if(hood.size >= S.mu){
             val candidate = Disk(centre, hood.map(_.oid))
@@ -237,7 +238,7 @@ object PSI {
       // check boxes here...
 
       //boxes.values.map{ b =>
-      //  println(G.toGeometry(b.envelope).toText)
+        //println(G.toGeometry(b.envelope).toText)
       //}
 
     } // foreach pointset
@@ -391,6 +392,24 @@ object PSI {
 
     C.toList
   }
+
+  def filterCandidatesByBox(boxes_prime: ArcheryRTree[Box])(implicit S: Settings): List[Disk] = {
+    // Sort boxes by left-bottom corner...
+    val boxes: List[Box] = boxes_prime.values.toList.sortBy {
+      _.left_bottom
+    }
+    var C: ListBuffer[Disk] = ListBuffer()
+
+    if (!boxes.isEmpty) {
+      for (box <- boxes) {
+        for(c <- box.disks)
+          C = insertDisk(C, c)
+      }
+    }
+
+    C.toList
+  }
+
   def insertDisk( C: ListBuffer[Disk], c: Disk)(implicit S: Settings): ListBuffer[Disk] = {
     var continue: Boolean = true
     for( d <- C if( continue ) ){
@@ -429,16 +448,24 @@ object PSI {
     debug{
       save("/tmp/edgesCandidatesPSI.wkt"){ candidates.getAll[Disk].map{ _.wkt + "\n" } }
       save("/tmp/edgesCandidatesPSI_prime.wkt"){ candidates.getAll[Disk].map{ _.getCircleWTK + "\n" } }
-      save("/tmp/edgesBoxesPSI.wkt"){ boxes.values.map{ _.wkt + "\n" }.toList }
     }
 
     // Feed each box with the disks it contains...
     boxes.values.foreach{ box =>
       box.disks = candidates.get[Disk](box)
+      box.pidsSet = box.disks.map(_.pids).toSet
+    }
+
+    debug {
+      save("/tmp/edgesBoxesPSI.wkt") {
+        boxes.values.map { box =>
+          s"${box.wkt}\t${box.pidsSet.map(_.mkString(" ")).mkString("; ")}\n"
+        }.toList
+      }
     }
 
     // Call filter candidates algorithm...
-    val maximals = PSI.filterCandidates(boxes)
+    val maximals = PSI.filterCandidatesByBox(boxes)
     stats.nMaximals = maximals.size
 
     (maximals, stats)
