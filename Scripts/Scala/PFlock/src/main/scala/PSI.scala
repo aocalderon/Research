@@ -457,7 +457,7 @@ object PSI {
 
     // Feed each box with the disks it contains...
     boxes.values.zipWithIndex.foreach{ case(box, id) =>
-      if(id == 7){
+      if(id == -2){
         println("debug...")
         println(s"${box.wkt}")
         println(s"${candidates.get[Disk](box)}")
