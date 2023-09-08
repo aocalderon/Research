@@ -456,8 +456,8 @@ object PSI {
     }
 
     debug{
-      save("/tmp/edgesCandidatesPSI.wkt"){ candidates.getAll[Disk].map{ _.wkt + "\n" } }
-      save("/tmp/edgesCandidatesPSI_prime.wkt"){ candidates.getAll[Disk].map{ _.getCircleWTK + "\n" } }
+      save("/tmp/edgesCandidatesPSI.wkt"){ candidates.getAll[Disk].map{ c => s"${c.wkt}\n" } }
+      save("/tmp/edgesCandidatesPSI_prime.wkt"){ candidates.getAll[Disk].map{ c => s"${c.getCircleWTK}\t${c.pidsText}\n" } }
     }
 
     // Feed each box with the disks it contains...
