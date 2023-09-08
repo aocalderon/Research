@@ -448,7 +448,7 @@ object PSI {
     val ((candidates, boxes), tPS) = timer{
       PSI.planeSweeping(points)
     }
-
+    stats.tPS = tPS
 
     val candidates_prime = new STRtree()
     candidates.getAll[Disk].foreach{ candidate =>
@@ -488,8 +488,11 @@ object PSI {
     }
 
     // Call filter candidates algorithm...
-    val maximals = PSI.filterCandidatesByBox(boxes)
+    val (maximals, tFC) = timer{
+      PSI.filterCandidatesByBox(boxes)
+    }
     stats.nMaximals = maximals.size
+    stats.tFC = tFC
 
     (maximals, stats)
   }

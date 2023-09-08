@@ -96,7 +96,7 @@ object Checker {
     stats1.print()
     S = S.copy(method="PSI")
     val (maximalsPSI, stats2) = PSI.run(points)
-    stats2.print()
+    stats2.printPSI()
 
     if(S.tester){
       println("Testing...")

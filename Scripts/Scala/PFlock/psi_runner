@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+N=$1
+
+ES=( 1 2 3 4 5) # epsilon
+MS=( 4 ) # mu
+
+for n in `seq 1 $N`
+do
+	for e in "${ES[@]}"
+	do
+		for m in "${MS[@]}"
+		do
+			echo "Running..."
+			bash/checker_scala --dataset ~/Research/Datasets/dense.tsv --epsilon $e --mu $m --tester
+		done
+	done
+done

@@ -341,7 +341,8 @@ object Utils {
     var tCounts: Double = 0.0, var tRead: Double = 0.0, var tGrid: Double = 0.0, 
     var tCliques: Double = 0.0, var tMBC: Double = 0.0,
     var tPairs: Double = 0.0, var tCenters: Double = 0.0,
-    var tCandidates: Double = 0.0, var tMaximals: Double = 0.0){
+    var tCandidates: Double = 0.0, var tMaximals: Double = 0.0,
+    var tPS: Double = 0.0, var tFC: Double = 0.0){
 
     def print(printTotal: Boolean = true)(implicit logger: Logger, S: Settings): Unit = {
       log(s"Points     |${nPoints}")
@@ -366,6 +367,18 @@ object Utils {
       logt(s"Maximals  |${tMaximals}")
       if(printTotal){
         val tTotal = tMaximals + tCandidates + tCenters + tPairs + tCliques + tRead + tGrid + tCounts
+        logt(s"Total     |${tTotal}")
+      }
+    }
+
+    def printPSI(printTotal: Boolean = true)(implicit logger: Logger, S: Settings): Unit = {
+      log(s"Points     |${nPoints}")
+      log(s"Candidates |${nCandidates}")
+      log(s"Maximals   |${nMaximals}")
+      logt(s"PS|${tPS}")
+      logt(s"FC|${tFC}")
+      if (printTotal) {
+        val tTotal = tPS + tFC
         logt(s"Total     |${tTotal}")
       }
     }
