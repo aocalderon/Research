@@ -5,7 +5,7 @@ import org.slf4j.{Logger, LoggerFactory}
 import org.locationtech.jts.geom._
 import org.locationtech.jts.index.strtree.STRtree
 
-import archery.{RTree => ArcheryRTree, Entry, Box => ArcheryBox}
+import archery.{RTree => ArcheryRTree, Entry, Box => ArcheryBox, Geom}
 
 import scala.collection.mutable.ListBuffer
 import scala.collection.JavaConverters._
@@ -94,7 +94,7 @@ object PSI {
     * @constructor create a box from an envelope and the point it belongs
     * @param hood an RTree with the points and envelope defining the box.
     **/
-  case class Box(hood: RTree[STPoint]) extends Envelope(hood.envelope){
+  case class Box(hood: RTree[STPoint], pr: Int = -1) extends Envelope(hood.envelope){
     val points: List[STPoint] = hood.getAll[STPoint]
     val envelope: Envelope = hood.envelope
     val left_bottom: Coordinate = new Coordinate(envelope.getMinX, envelope.getMinY)
@@ -102,8 +102,9 @@ object PSI {
     var pidsSet: Set[List[Int]] = _
     var id: Int = -1
 
-    def activeBox(points: List[STPoint])(implicit G: GeometryFactory): Envelope = {
-      G.createMultiPoint(points.map(_.point).toArray).getEnvelopeInternal
+    def diagonal(implicit G: GeometryFactory): String = {
+      val right_top: Coordinate = new Coordinate(envelope.getMaxX, envelope.getMaxY)
+      G.createLineString(Array( left_bottom, right_top )).toString
     }
 
     def boundingBox(implicit S: Settings): ArcheryBox = {
@@ -155,6 +156,15 @@ object PSI {
     get_envelope(tree.values.toList, new Envelope())
   }
 
+  private def covers(e1: Envelope, e2: Envelope): Boolean = {
+    val xmin1 = e1.getMinX; val xmin2 = e2.getMinX
+    val xmax1 = e1.getMaxX; val xmax2 = e2.getMaxX
+    val ymin1 = e1.getMinY; val ymin2 = e2.getMinY
+    val ymax1 = e1.getMaxY; val ymax2 = e2.getMaxY
+
+    xmin1 <= xmin2 && xmax1 >= xmax2 && ymin1 <= ymin2 && ymax1 >= ymax2
+  }
+
   /**
     * Find candidates disks and active boxes with plane sweeping technique.
     * @param points the set of points.
@@ -183,13 +193,19 @@ object PSI {
 
     // feeding candidates and active boxes...
     pointset.foreach{ pr: STPoint =>
-
       // feeding band with points inside 2-epsilon x 2-epsilon...
       val band_for_pr: RTree[STPoint] = RTree[STPoint]
       pointset.filter{ ps: STPoint =>
         math.abs(ps.X - pr.X) <= S.epsilon && math.abs(ps.Y - pr.Y) <= S.epsilon
       }.foreach{ ps: STPoint =>
         band_for_pr.put(ps.envelope, ps)
+      }
+
+      val the_pr = 4743482
+      if(pr.oid == the_pr){
+        println(s"${pr.wkt}\tPr")
+        println(s"${G.toGeometry(pr.expandEnvelope(S.epsilon)).toText}\tBand")
+        println(s"${G.toGeometry(band_for_pr.envelope).toText}\tActiveBox")
       }
 
       // finding pairs of points, centers, candidates and boxes...
@@ -202,10 +218,13 @@ object PSI {
 
       debug{
         pairs.appendAll( band_pairs.map{ p => (pr, p) } )
-        val current_pairs = band_pairs.map{ p =>
-          G.createLineString(Array(pr.getCoord, p.getCoord)).toText
+      }
+
+      if (pr.oid == the_pr) {
+        val current_pairs = band_pairs.map { p =>
+          s"${G.createLineString(Array(pr.getCoord, p.getCoord)).toText}\tPair"
         }.mkString("\n")
-        //println(current_pairs)
+        println(current_pairs)
       }
 
       band_pairs.foreach{ p =>
@@ -218,20 +237,23 @@ object PSI {
             .get[STPoint](envelope)
             .filter{ _.distanceToPoint(centre) <= S.r }
 
-          //debug {
-            //println(Disk(centre, hood.map(_.oid)).getCircleWTK)
-          //}
+          if (pr == the_pr) {
+            println(s"${centre.toText}\t${hood.map(_.oid).sorted.mkString(" ")}\tCentre")
+          }
 
           if(hood.size >= S.mu){
             val candidate = Disk(centre, hood.map(_.oid))
             candidates.put(candidate.envelope, candidate) // getting candidates...
 
-            val active_points = RTree[STPoint]()
-            active_points.putAll(hood.filter(p => p.X >= pr.X))
-            val active_box = Box(active_points)
-            if(!boxes.values.exists(_.contains(active_box))){
-              boxes = boxes.insert(active_box.archeryEntry) // getting boxes...
-              //println(G.toGeometry(active_box.envelope).toText)
+            if (pr == the_pr) {
+              println(s"${candidate.getCircleWTK}\t${candidate.pidsText}\tCentre")
+            }
+
+            val active_box = Box(band_for_pr, pr.oid)
+            val active_box_hood = boxes.searchIntersection(active_box.boundingBox)
+            val is_contained_by_previous_box = active_box_hood.exists(b => b.value.envelope.covers(active_box))
+            if(!is_contained_by_previous_box){
+              boxes = boxes.insert(active_box.archeryEntry) // storing active box...
             }
           }
         }
@@ -482,7 +504,7 @@ object PSI {
     debug {
       save("/tmp/edgesBoxesPSI.wkt") {
         boxes.values.map { box =>
-          s"${box.wkt}\t${box.id}\t${box.pidsSet.map(_.mkString(" ")).mkString("; ")}\n"
+          s"${box.wkt}\t${box.id}\t${box.pr}\t${box.diagonal}\t${box.pidsSet.map(_.mkString(" ")).mkString("; ")}\n"
         }.toList
       }
     }
