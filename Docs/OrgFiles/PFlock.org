@@ -1,6 +1,6 @@
 * TODO *Read papers!*
 DEADLINE: <2023-07-07 Fri> SCHEDULED: <2023-07-06 Thu>
-  - [ ] Sanchez 2018
+  - [X] Sanchez 2018
   - [X] Tanaka 2016
   - [X] Tanaka 2015
 * TODO *Sent request to Graduate Division*
