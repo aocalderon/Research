@@ -1,0 +1,141 @@
+\documentclass{beamer}
+
+\usefonttheme{professionalfonts} % using non standard fonts for beamer
+\usefonttheme{serif} % default family is serif
+
+\usepackage{enumitem}
+\setitemize{label=\usebeamerfont*{itemize item}%
+  \usebeamercolor[fg]{itemize item}
+  \usebeamertemplate{itemize item}}
+
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{xfp}
+\usepackage{graphicx}
+\def\Put(#1,#2)#3{\leavevmode\makebox(0,0){\put(#1,#2){#3}}}
+\usepackage{colortbl}
+\usepackage{tikz}
+\usepackage{amssymb}
+\usepackage{enumerate}
+\usepackage{arydshln}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{subcaption} %to have subfigures available
+
+\usepackage[absolute,overlay]{textpos}
+
+\colorlet{lightred}{red!25}
+\colorlet{lightgreen}{green!25}
+\beamertemplatenavigationsymbolsempty
+
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+\makeatletter
+
+%% Textclass specific LaTeX commands.
+\newcommand\makebeamertitle{\frame{\maketitle}}%
+\AtBeginDocument{%
+  \let\origtableofcontents=\tableofcontents
+  \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+  \def\gobbletableofcontents#1{\origtableofcontents}
+}
+%% User specified LaTeX commands.
+\usetheme{Malmoe}
+\useoutertheme{infolines}
+\addtobeamertemplate{headline}{}{\vskip2pt}
+\setbeamercovered{transparent}
+
+\title[PFlock report]{PFLOCK Report}
+\author[AC]{Andres Calderon}
+\institute[UCR]{University of California, Riverside}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Main document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\makebeamertitle
+\newif\iflattersubsect
+
+\AtBeginSection[] {
+    \begin{frame}<beamer>
+    \frametitle{Outline} 
+    \tableofcontents[currentsection]  
+    \end{frame}
+    \lattersubsectfalse
+}
+
+\AtBeginSubsection[] {
+    \begin{frame}<beamer>
+    \frametitle{Outline} 
+    \tableofcontents[currentsubsection]  
+    \end{frame}
+}
+
+\begin{frame}{PSI stages...}
+    \centering
+    \includegraphics[trim={0cm 0cm 0cm 1.5cm}, clip, width=0.9\textwidth]{figures/psi2/p01}
+\end{frame}
+\begin{frame}{PSI stages...}
+    \centering
+    \includegraphics[trim={0cm 0cm 0cm 1.5cm}, clip, width=0.9\textwidth]{figures/psi2/p02}
+\end{frame}
+\begin{frame}{PSI stages...}
+    \centering
+    \includegraphics[trim={0cm 0cm 0cm 1.5cm}, clip, width=0.9\textwidth]{figures/psi2/p03}
+\end{frame}
+\begin{frame}{PSI stages...}
+    \centering
+    \includegraphics[trim={0cm 0cm 0cm 1.5cm}, clip, width=0.9\textwidth]{figures/psi2/p04}
+\end{frame}
+\begin{frame}{PSI stages...}
+    \centering
+    \includegraphics[trim={0cm 0cm 0cm 1.5cm}, clip, width=0.9\textwidth]{figures/psi2/p05}
+\end{frame}
+\begin{frame}{PSI stages...}
+    \centering
+    \includegraphics[trim={0cm 0cm 0cm 1.5cm}, clip, width=0.9\textwidth]{figures/psi2/p06}
+\end{frame}
+\begin{frame}{PSI stages...}
+    \centering
+    \includegraphics[trim={0cm 0cm 0cm 1.5cm}, clip, width=0.9\textwidth]{figures/psi2/p07}
+\end{frame}
+\begin{frame}{PSI stages...}
+    \centering
+    \includegraphics[trim={0cm 0cm 0cm 1.5cm}, clip, width=0.9\textwidth]{figures/psi2/p08}
+\end{frame}
+\begin{frame}{PSI stages...}
+    \centering
+    \includegraphics[trim={0cm 0cm 0cm 1.5cm}, clip, width=0.9\textwidth]{figures/psi2/p09}
+\end{frame}
+\begin{frame}{PSI stages...}
+    \centering
+    \includegraphics[trim={0cm 0cm 0cm 1.5cm}, clip, width=0.9\textwidth]{figures/psi2/p10}
+\end{frame}
+\begin{frame}{PSI stages...}
+    \centering
+    \includegraphics[trim={0cm 0cm 0cm 1.5cm}, clip, width=0.9\textwidth]{figures/psi2/p11}
+\end{frame}
+\begin{frame}{PSI stages...}
+    \centering
+    \includegraphics[trim={0cm 0cm 0cm 1.5cm}, clip, width=0.9\textwidth]{figures/psi2/p12}
+\end{frame}
+
+\begin{frame}{What's next?}
+  \begin{itemize}
+        \item Fixing some minor details during testing...
+        \item Re-run performance experiments using BFE and PSI for dense datasets en parallel...
+        \item Start working on temporal dimension...
+        \begin{itemize}
+            \item Explore 3D partitioners...
+        \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\end{document}
+

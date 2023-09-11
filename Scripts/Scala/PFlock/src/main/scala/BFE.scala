@@ -2,17 +2,20 @@ package edu.ucr.dblab.pflock
 
 import org.locationtech.jts.geom.{PrecisionModel, GeometryFactory}
 import org.slf4j.{Logger, LoggerFactory}
+
 import scala.collection.JavaConverters._
+import scala.collection.mutable.ListBuffer
+
 import edu.ucr.dblab.pflock.Utils._
 import edu.ucr.dblab.pflock.MF_Utils._
-import archery._
 
+import archery._
 
 object BFE {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   def run(points_prime: List[STPoint], maximals_found: RTree[Disk] = RTree.empty)
-    (implicit settings: Settings, geofactory: GeometryFactory):
+    (implicit S: Settings, G: GeometryFactory):
       (List[Disk], Stats) = {
 
     val stats = Stats()
@@ -36,10 +39,12 @@ object BFE {
       
       debug{
         log(s"GridSize=${grid.index.size}")
-        save("/tmp/edgesPoints.wkt"){ grid.pointsToText }
-        save("/tmp/edgesGrid.wkt"){ grid.wkt() }
+        save("/tmp/edgesPointsBFE.wkt"){ grid.pointsToText }
+        save("/tmp/edgesGridBFE.wkt"){ grid.wkt() }
       }
 
+      // for debugging purposes...
+      var pairs: ListBuffer[(STPoint, STPoint)] = ListBuffer()
       val the_key = -1
       
       // for each non-empty cell...
@@ -71,12 +76,13 @@ object BFE {
           if(key == the_key) println(s"Key: ${key} Ps.size=${Ps.size}")
         }
 
+        // for debugging purposes...
         var tCenters = 0.0
         var tCandidates = 0.0
         var tMaximals = 0.0
 
         val (_, tPairs) = timer{
-          if(Ps.size >= settings.mu){
+          if(Ps.size >= S.mu){
             for{ pr <- Pr }{
               val H = pr.getNeighborhood(Ps) // get range around pr in Ps...
 
@@ -84,13 +90,16 @@ object BFE {
                 if(key == the_key) println(s"Key=${key}\t${pr.oid}\tH.size=${H.size}")
               }
 
-              if(H.size >= settings.mu){ // if range as enough points...
+              if(H.size >= S.mu){ // if range as enough points...
 
                 for{
                   ps <- H if{ pr.oid < ps.oid }
                 } yield {
                   // a valid pair...
                   stats.nPairs += 1
+                  debug{
+                    pairs.append{ (pr, ps) }
+                  }
 
                   val (disks, tC) = timer{
                     // finding centers for each pair...
@@ -105,7 +114,7 @@ object BFE {
 
                   val (candidates, tD) = timer{
                     // getting candidate disks...
-                    disks.filter(_.count >= settings.mu)
+                    disks.filter(_.count >= S.mu)
                   }
                   stats.nCandidates += candidates.size
                   tCandidates += tD
@@ -126,6 +135,14 @@ object BFE {
         stats.tCandidates += tCandidates
         stats.tMaximals += tMaximals
         stats.tPairs += tPairs - (tCenters + tCandidates + tMaximals)
+      }
+
+      debug{
+        save("/tmp/edgesPairsBFE.wkt"){
+          pairs.toList.map{ case(p1, p2) =>
+            G.createLineString(Array(p1.getCoord, p2.getCoord)).toText + "\n"
+          }
+        }
       }
 
       val M = Maximals.entries.map{_.value}.toList
@@ -261,32 +278,29 @@ object BFE {
     //generateData(10000, 1000, 1000, "/home/acald013/Research/Datasets/P10K_W1K_H1K.tsv")
     implicit val params = new BFEParams(args)
 
-    implicit var settings = Settings(
+    implicit var S= Settings(
       dataset = params.dataset(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
-      method = params.method(),
+      method = "BFE",
       capacity = params.capacity(),
       tolerance = params.tolerance(),
       tag = params.tag(),
-      debug = params.debug(),
+      debug = params.debug(), 
+      tester = params.tester(),
       appId = System.nanoTime().toString()
     )
-    implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
+    implicit val geofactory = new GeometryFactory(new PrecisionModel(S.scale))
 
-    val points = readPoints(settings.dataset)
+    val points = readPoints(S.dataset)
     log(s"START")
 
     val (maximals, stats1) = BFE.run(points)
     stats1.print()
 
     debug{
-      save("/tmp/edgesMaximals.wkt"){ maximals.map(_.wkt + "\n") }
-    }
-
-    debug{
-      settings = settings.copy(method="BFE0")
-      checkMaximals(points)
+      save("/tmp/edgesMaximalsBFE.wkt"){ maximals.map(_.wkt + "\n") }
+      save("/tmp/edgesMaximalsBFE_prime.wkt"){ maximals.map(_.getCircleWTK + "\n") }
     }
 
     log(s"END")
