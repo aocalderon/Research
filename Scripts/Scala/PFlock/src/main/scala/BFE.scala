@@ -40,7 +40,7 @@ object BFE {
       debug{
         log(s"GridSize=${grid.index.size}")
         save("/tmp/edgesPointsBFE.wkt"){ grid.pointsToText }
-        save("/tmp/edgesGridBFE.wkt"){ grid.wkt() }
+        //save("/tmp/edgesGridBFE.wkt"){ grid.wkt() }
       }
 
       // for debugging purposes...

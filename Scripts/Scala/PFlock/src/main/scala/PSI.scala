@@ -201,7 +201,8 @@ object PSI {
         band_for_pr.put(ps.envelope, ps)
       }
 
-      val the_pr = 4743482
+      val the_pr = 11257710
+
       if(pr.oid == the_pr){
         println(s"${pr.wkt}\tPr")
         println(s"${G.toGeometry(pr.expandEnvelope(S.epsilon)).toText}\tBand")
@@ -230,6 +231,10 @@ object PSI {
       band_pairs.foreach{ p =>
         val band_centres = computeCentres(pr, p) // gettings centres...
 
+        if (pr == the_pr) {
+          println(s"${ band_centres.size } centres")
+        }
+
         band_centres.foreach{ centre =>
           val envelope = centre.getEnvelopeInternal
           envelope.expandBy(S.r)
@@ -251,9 +256,18 @@ object PSI {
 
             val active_box = Box(band_for_pr, pr.oid)
             val active_box_hood = boxes.searchIntersection(active_box.boundingBox)
-            val is_contained_by_previous_box = active_box_hood.exists(b => b.value.envelope.covers(active_box))
-            if(!is_contained_by_previous_box){
-              boxes = boxes.insert(active_box.archeryEntry) // storing active box...
+
+            def coveredBy: Boolean = active_box_hood.exists(b => b.value.covers(active_box))
+            def    covers: Boolean = active_box_hood.exists(b => active_box.covers(b.value))
+            if(coveredBy){
+              // do nothing...
+            } else if(covers){
+              // remove previous box and add the active one...
+              val box_prime = active_box_hood.find(b => active_box.covers(b.value)).get
+              boxes = boxes.remove(box_prime).insert(active_box.archeryEntry)
+            } else {
+              // otherwise add the active box...
+              boxes = boxes.insert(active_box.archeryEntry)
             }
           }
         }
