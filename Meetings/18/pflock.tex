@@ -77,39 +77,14 @@
     \end{frame}
 }
 
-\begin{frame}{Fixing issues in binary signatures...}
+\begin{frame}{Still dealing with performance issues...}
     \centering
-    \includegraphics[width=\textwidth]{figures/debug}
+    \includegraphics[width=0.8\textwidth]{figures/performance}
 \end{frame}
 
-\begin{frame}{Fixing issues in binary signatures...}
-  \begin{itemize}
-          \item Reported by PSI:
-          \begin{itemize}
-                  \item 15202 1524051 4743482 5046703 5685626
-                  \item 15202 1524051 4743482 5685626 6281391
-          \end{itemize}
-          \item Reported by BFE:
-          \begin{itemize}
-                  \item 15202 1524051 4743482 5046703 5685626 6281391
-          \end{itemize}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Fixing issues in binary signatures...}
+\begin{frame}{Still dealing with performance issues...}
     \centering
-    \includegraphics[width=\textwidth]{figures/hashes}
-\end{frame}
-
-\begin{frame}{Fixing issues in binary signatures...}
-  \begin{itemize}
-          \item Solved:
-          \begin{itemize}
-                  \item I was using 128bits as size of the signature.  Marcos' code use 16bits.
-                  \item I seems Java implementations do not retrieve expected values when $oid > 65536$ using signature size of 16bits.  Fixed by re-coding
-oids.
-          \end{itemize}
-  \end{itemize}
+    \includegraphics[width=0.8\textwidth]{figures/performancePSI}
 \end{frame}
 
 \end{document}

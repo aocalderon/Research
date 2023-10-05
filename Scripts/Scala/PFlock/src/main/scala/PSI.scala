@@ -355,7 +355,7 @@ object PSI {
     * @return set of maximal disks.
     */
   def filterCandidates(candidates: RTree[Disk], boxes: ArcheryRTree[Box])
-    (implicit S: Settings): List[Disk] = {
+    (implicit S: Settings, G: GeometryFactory): List[Disk] = {
 
     @annotation.tailrec
     def filter_candidates(sorted: List[Box], lookup: ArcheryRTree[Box],
@@ -396,11 +396,23 @@ object PSI {
 
   }
 
-  def filterCandidates(boxes_prime: ArcheryRTree[Box])(implicit S: Settings): List[Disk] = {
+  def filterCandidates(boxes_prime: ArcheryRTree[Box])(implicit S: Settings, G: GeometryFactory): List[Disk] = {
     // Sort boxes by left-bottom corner...
     val boxes: List[Box] = boxes_prime.values.toList.sortBy {
       _.left_bottom
     }
+
+    save("/tmp/edgesBCandidates.wkt") {
+      boxes.flatMap { box =>
+        val bid = box.id
+        box.disks.sortBy(_.pidsText).map { disk =>
+          val pids = disk.pidsText
+          val disk_wkt = disk.getCircleWTK
+          s"$disk_wkt\t$bid\t$pids\n"
+        }.sorted
+      }
+    }
+
     var C: ListBuffer[Disk] = ListBuffer()
 
     if(!boxes.isEmpty) {
@@ -420,6 +432,7 @@ object PSI {
               }
             }
           } yield {
+            println(s"Pruning disk in Box $j")
             for (c <- boxes(j).disks) {
               C = insertDisk(C, c)
             }
@@ -435,6 +448,7 @@ object PSI {
     val boxes: List[Box] = boxes_prime.values.toList.sortBy {
       _.left_bottom
     }
+
     var C: ListBuffer[Disk] = ListBuffer()
 
     if (!boxes.isEmpty) {
@@ -450,13 +464,23 @@ object PSI {
   def insertDisk( C: ListBuffer[Disk], c: Disk)(implicit S: Settings): ListBuffer[Disk] = {
     var continue: Boolean = true
     for( d <- C if( continue ) ){
+      if(c.pidsText == "15202 1524051 4743482 5046703 5685626 6281391"){
+        println(d.pidsText)
+      }
+
       (d, c) match {
-        case _ if{ (d & c) && c.distance(d) <= S.epsilon } => {
+        case _ if{
+          val r = c.signature & d.signature
+          r == c.signature && c.distance(d) <= S.epsilon
+        } => {
           if( c.isSubsetOf(d) ){
             continue = false
           }
         }
-        case _ if{ (c & d) && d.distance(d) <= S.epsilon } => {
+        case _ if{
+          val r = c.signature & d.signature
+          r == d.signature && d.distance(c) <= S.epsilon
+        } => {
           if( d.isSubsetOf(c) ){
             C -= d
           }
@@ -487,31 +511,24 @@ object PSI {
     stats.tPS = tPS
 
     val candidates_prime = new STRtree()
-    candidates.getAll[Disk].foreach{ candidate =>
-      candidates_prime.insert(candidate.getExpandEnvelope(S.r), candidate)
-    }
-
-    debug{
-      save("/tmp/edgesCandidatesPSI.wkt"){ candidates.getAll[Disk].map{ c => s"${c.wkt}\n" } }
-      save("/tmp/edgesCandidatesPSI_prime.wkt"){ candidates.getAll[Disk].map{ c => s"${c.getCircleWTK}\t${c.pidsText}\n" } }
-    }
+    candidates.getAll[Disk]
+      .groupBy{ candidate =>
+        candidate.pidsText
+      }
+      .map{ case(_, disks) =>
+        disks.head
+      }
+      .foreach{ candidate =>
+        candidates_prime.insert(candidate.getExpandEnvelope(S.r), candidate)
+      }
 
     // Feed each box with the disks it contains...
     boxes.values.zipWithIndex.foreach{ case(box, id) =>
-      if(id == -2){
-        println("debug...")
-        println(s"${box.wkt}")
-        println(s"${candidates.get[Disk](box)}")
-        val geomBox = G.toGeometry(box.envelope)
-        candidates.getAll[Disk].filter( c => c.center.buffer(S.r, 25).intersects(geomBox)).map{ x =>
-
-          x.getCircleWTK
-        }.foreach{println}
-      }
       box.id = id
-      //box.disks = candidates.get[Disk](box)
-      val geomBox = G.toGeometry(box.envelope)
-      box.disks = candidates_prime.query(box).asScala.map{_.asInstanceOf[Disk]}.toList
+      box.disks = candidates_prime.query(box).asScala
+        .map{_.asInstanceOf[Disk]}
+        .filter{_.center.distance(G.toGeometry(box)) <= S.r} // the disk intersects the box...
+        .toList
       box.pidsSet = box.disks.map(_.pids).toSet
     }
 
@@ -525,7 +542,7 @@ object PSI {
 
     // Call filter candidates algorithm...
     val (maximals, tFC) = timer{
-      PSI.filterCandidatesByBox(boxes)
+      PSI.filterCandidates(boxes)
     }
     stats.nMaximals = maximals.size
     stats.tFC = tFC

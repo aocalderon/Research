@@ -8,7 +8,7 @@ import org.locationtech.jts.index.strtree.STRtree
 import scala.collection.JavaConverters._
 import edu.ucr.dblab.pflock.Utils._
 
-import org.streaminer.util.hash._
+import streaminer.SpookyHash
 
 import PSI.logger
 

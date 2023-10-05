@@ -1,20 +1,13 @@
 package edu.ucr.dblab.pflock
 
-import org.locationtech.jts.geom.{GeometryFactory, PrecisionModel, Geometry}
-import org.locationtech.jts.geom.{Envelope, Coordinate, Point, Polygon}
-import org.locationtech.jts.algorithm.MinimumBoundingCircle
+import org.locationtech.jts.geom.{Geometry, GeometryFactory, PrecisionModel}
+import org.locationtech.jts.geom.{Coordinate, Envelope, Point, Polygon}
+import streaminer.SpookyHash32
 import org.locationtech.jts.index.strtree.STRtree
 import org.locationtech.jts.io.WKTReader
-
 import org.apache.spark.TaskContext
-import org.apache.spark.rdd.RDD
-
-import org.apache.commons.math3.geometry.enclosing.{SupportBallGenerator, EnclosingBall}
-import org.apache.commons.math3.geometry.euclidean.twod.DiskGenerator
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D
-
-import edu.ucr.dblab.pflock.spmf.{Transactions, Transaction, AlgoLCM2}
-import org.streaminer.util.hash.{MurmurHash3, SpookyHash64}
+import edu.ucr.dblab.pflock.spmf.{AlgoLCM2, Transaction, Transactions}
+import streaminer.{MurmurHash3 => Murmur, SpookyHash32 => Spooky}
 import org.slf4j.{Logger, LoggerFactory}
 import archery._
 
@@ -24,9 +17,11 @@ import java.net.InetAddress
 import scala.util.Random
 import scala.io.Source
 import sys.process._
-
 import edu.ucr.dblab.pflock.pbk.PBK.bk
 import edu.ucr.dblab.pflock.welzl.Welzl
+
+import scala.Byte
+import scala.collection.mutable
 
 object Utils {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -143,7 +138,7 @@ object Utils {
     val Y: Float = center.getY.toFloat
     val count: Int = pids.size
     val pidsText = pids.sorted.mkString(" ")
-    val SIG_SIZE = 128
+    val SIG_SIZE = 16
 
     val signature: BitSet = {
       val signature_prime: BitSet = new BitSet
@@ -153,17 +148,28 @@ object Utils {
       signature_prime
     }
 
-    def pureHash(signature: BitSet, oid: Int, size: Int = SIG_SIZE, seed: Int = 42): Unit = {
-      val murmur_pos = math.abs(
-        MurmurHash3.MurmurHash3_x64_128(Array(oid.toByte), seed)(1) % size
-      ).toInt
-      val spooky_pos = math.abs(
-        SpookyHash64.hash(Array(oid.toByte), seed) % size
-      ).toInt
-      signature(murmur_pos) = true
-      signature(spooky_pos) = true
+    private def pureHash(signature: BitSet, oid: Int, size: Int = SIG_SIZE, seed: Int = 0): Unit = {
+      val murmur_pos = math.abs( Murmur.hashInt(oid, seed) )
+      val spooky_pos = math.abs( Spooky.hashInt(oid, seed) )
+      val murmur_value = murmur_pos % size
+      val spooky_value = spooky_pos % size
+      println(s"Hash: MurMur($oid) =  pos: $murmur_pos\tvalue:${murmur_value}")
+      println(s"Hash: Spooky($oid) =  pos: $spooky_pos\tvalue:${spooky_value}")
+      signature(murmur_value) = true
+      signature(spooky_value) = true
     }
-    
+
+    private def toBinaryString(bs: BitSet) = {
+      val sb = new mutable.StringBuilder(SIG_SIZE)
+      for (i <- SIG_SIZE - 1 to 0 by -1) {
+        val bit = if( bs(i) ) 1 else 0
+        sb.append(bit)
+      }
+      sb.reverse.toString
+    }
+
+    def toBinarySignature: String = toBinaryString(signature)
+
     def &(other: Disk): Boolean = {
       val r = this.signature & other.signature
       r == other.signature
@@ -245,7 +251,7 @@ object Utils {
     }
 
     def toText: List[String] = {
-      index.map{ case(key, points) =>
+      index.flatMap{ case(key, points) =>
         val (i, j) = decode(key)
         points.map{ point =>
           val wkt = point.toText
@@ -253,7 +259,7 @@ object Utils {
 
           s"$wkt\t$key\t($i $j)\t$oid\n"
         }
-      }.flatten.toList
+      }.toList
     }
 
     def getRows(implicit S: Settings): Int = {
