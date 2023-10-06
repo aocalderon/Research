@@ -538,6 +538,13 @@ object PSI {
           s"${box.wkt}\t${box.id}\t${box.pr}\t${box.diagonal}\t${box.pidsSet.map(_.mkString(" ")).mkString("; ")}\n"
         }.toList
       }
+      save(s"/tmp/boxes_${S.dataset_name}.tsv") {
+        boxes.values.flatMap { box =>
+          box.disks.map{ disk =>
+            s"${box.id}\t${disk.pidsText}\n"
+          }
+        }.toList
+      }
     }
 
     // Call filter candidates algorithm...
