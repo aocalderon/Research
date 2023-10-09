@@ -10,7 +10,7 @@ object HashesTest {
     val oids = oids_prime.split(",").map(_.toInt).toList
     val disk = Disk(point, oids)
 
-    s"OIDS\t$oids\t${disk.toBinarySignature}"
+    s"OIDS\t${oids.mkString(",")}\t${disk.toBinarySignature}"
   }
   def main(args: Array[String]): Unit = {
     implicit val P: HashesParams = new HashesParams(args)

@@ -96,26 +96,42 @@ public class MurmurHash3 extends Hash {
                       | (((int) key[i + 7] & 0x000000FF) << 56);
    }
 
+
    static void bmix(State state) {
+//      k1 *= c1;
+//      k1  = ROTL64(k1,31);
+//      k1 *= c2;
       state.k1 *= state.c1;
-      state.k1 = (state.k1 << 23) | (state.k1 >>> 64 - 23);
+      state.k1  = (state.k1 << 31) | (state.k1 >>> 64 - 31);
       state.k1 *= state.c2;
+
+//      h1 ^= k1;
+//      h1  = ROTL64(h1,27);
+//      h1 += h2;
+//      h1  = h1 * 5 + 0x52dce729;
       state.h1 ^= state.k1;
+      state.h1  = (state.h1 << 27) | (state.h1 >>> 64 - 27);
       state.h1 += state.h2;
+      state.h1  = state.h1 * 5 + 0x52dce729;
 
-      state.h2 = (state.h2 << 41) | (state.h2 >>> 64 - 41);
-
+//      k2 *= c2;
+//      k2  = ROTL64(k2,33);
+//      k2 *= c1;
       state.k2 *= state.c2;
-      state.k2 = (state.k2 << 23) | (state.k2 >>> 64 - 23);
+      state.k2 = (state.k2 << 33) | (state.k2 >>> 64 - 33);
       state.k2 *= state.c1;
+
+//      h2 ^= k2;
+//      h2  = ROTL64(h2,31);
+//      h2 += h1;
+//      h2  = h2 * 5 + 0x38495ab5;
       state.h2 ^= state.k2;
+      state.h2  = (state.h2 << 31) | (state.h2 >>> 64 - 31);
       state.h2 += state.h1;
+      state.h2  = state.h2 * 5 + 0x38495ab5;
 
-      state.h1 = state.h1 * 3 + 0x52dce729;
-      state.h2 = state.h2 * 3 + 0x38495ab5;
-
-      state.c1 = state.c1 * 5 + 0x7b7d159c;
-      state.c2 = state.c2 * 5 + 0x6bce6396;
+      //state.c1 = state.c1 * 5 + 0x7b7d159c;
+      //state.c2 = state.c2 * 5 + 0x6bce6396;
    }
 
    static void bmixInt(StateInt state) {
@@ -161,6 +177,59 @@ public class MurmurHash3 extends Hash {
 
    /**
     * Hash a value using the x64 128 bit variant of MurmurHash3
+    *
+    * @param a value to hash
+    * @param seed random value
+    * @return 128 bit hashed key, in an array containing two longs
+    */
+   public static long hashInt2(final int a, final int seed) {
+      final long[] key = {a};
+      State state = new State();
+      //state.h1 = 0x9368e53c2f6af274L ^ seed;
+      //state.h2 = 0x586dcd208f7cd3fdL ^ seed;
+      state.h1 = seed;
+      state.h2 = seed;
+      //0x87c37b91114253d5
+      state.c1 = 0x87c37b91114253d5L;
+      //0x4cf5ad432745937f
+      state.c2 = 0x4cf5ad432745937fL;
+
+      //----------
+      // body
+      //System.out.println("len / 2: " + key.length / 2);
+      for (int i = 0; i < key.length / 2; i++) {
+         // shouldn't enter here...
+         state.k1 = key[i * 2];
+         state.k2 = key[i * 2 + 1];
+
+         bmix(state);
+      }
+
+      //----------
+      // tail
+      long tail = key[key.length - 1];
+
+      if (key.length % 2 != 0) {
+         state.k1 ^= tail;
+         bmix(state);
+      }
+
+      state.h2 ^= key.length * 8;
+
+      state.h1 += state.h2;
+      state.h2 += state.h1;
+
+      state.h1 = fmix(state.h1);
+      state.h2 = fmix(state.h2);
+
+      state.h1 += state.h2;
+      state.h2 += state.h1;
+
+      return state.h1;
+   }
+
+   /**
+    * Hash a value using the x64 128 bit variant of MurmurHash3
     * 
     * @param key value to hash
     * @param seed random value
@@ -168,24 +237,30 @@ public class MurmurHash3 extends Hash {
     */
    public static long[] MurmurHash3_x64_128(final byte[] key, final int seed) {
       State state = new State();
-
-      state.h1 = 0x9368e53c2f6af274L ^ seed;
-      state.h2 = 0x586dcd208f7cd3fdL ^ seed;
-
+      //state.h1 = 0x9368e53c2f6af274L ^ seed;
+      //state.h2 = 0x586dcd208f7cd3fdL ^ seed;
+      state.h1 = seed;
+      state.h2 = seed;
+               //0x87c37b91114253d5
       state.c1 = 0x87c37b91114253d5L;
+               //0x4cf5ad432745937f
       state.c2 = 0x4cf5ad432745937fL;
 
+      //----------
+      // body
       for (int i = 0; i < key.length / 16; i++) {
-         state.k1 = getblock(key, i * 2 * 8);
+         state.k1 = getblock(key, (i * 2 + 0) * 8);
          state.k2 = getblock(key, (i * 2 + 1) * 8);
 
          bmix(state);
       }
 
+      //----------
+      // tail
+      int tail = (key.length >>> 4) << 4;
+
       state.k1 = 0;
       state.k2 = 0;
-
-      int tail = (key.length >>> 4) << 4;
 
       switch (key.length & 15) {
          case 15: state.k2 ^= (long) key[tail + 14] << 48;
@@ -195,6 +270,10 @@ public class MurmurHash3 extends Hash {
          case 11: state.k2 ^= (long) key[tail + 10] << 16;
          case 10: state.k2 ^= (long) key[tail + 9] << 8;
          case 9:  state.k2 ^= (long) key[tail + 8] << 0;
+            state.k2 *= state.c2;
+            state.k2 = (state.k2 << 33) | (state.k2 >>> 64 - 33);
+            state.k2 *= state.c1;
+            state.h2 ^= state.k2;
 
          case 8:  state.k1 ^= (long) key[tail + 7] << 56;
          case 7:  state.k1 ^= (long) key[tail + 6] << 48;
@@ -204,9 +283,16 @@ public class MurmurHash3 extends Hash {
          case 3:  state.k1 ^= (long) key[tail + 2] << 16;
          case 2:  state.k1 ^= (long) key[tail + 1] << 8;
          case 1:  state.k1 ^= (long) key[tail + 0] << 0;
-            bmix(state);
+            state.k1 *= state.c1;
+            state.k1  = (state.k1 << 31) | (state.k1 >>> 64 - 31);
+            state.k1 *= state.c2;
+            state.h1 ^= state.k1;
+            //bmix(state);
       }
 
+      //----------
+      // finalization
+      state.h1 ^= key.length;
       state.h2 ^= key.length;
 
       state.h1 += state.h2;

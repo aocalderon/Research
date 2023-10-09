@@ -15,6 +15,9 @@
  */
 package streaminer;
 
+import java.math.BigInteger;
+import java.util.Arrays;
+
 /**
  * A non-cryptographic, 128-bit hash function.<p>
  * SpookyHash is a Java implementation of Bob Jenkins' <i>SpookyHash V2</i> 
@@ -65,7 +68,7 @@ public class SpookyHash32 {
      *		is a not-very-regular mix of 1's and 0's
      *		does not need any other special mathematical properties"
      */
-    private static final long ARBITRARY_BITS = 0xdeadbeefdeadbeefL;
+    private static final long ARBITRARY_BITS = 0xdeadbeefdeadbeefL; //16045690984833335023UL
 
     /*
      * Default seed value used but non-static hash methods
@@ -819,8 +822,10 @@ public class SpookyHash32 {
      * @param seedResult on entry, the first two elements contain the seed 
      * value; on exit, the first two elements contain the computed result 
      */
-    private static void smallHash(long[] src, int start, int length, long[] seedResult) {
 
+    private static void smallHash(long[] src, int start, int length, long[] seedResult) {
+            //Long l1 = Long.parseUnsignedLong("16045690984833335023");
+            //private static final long ARBITRARY_BITS = 0xdeadbeefdeadbeefL; //16045690984833335023UL
             long h0, h1, h2, h3;
             h0 = seedResult[0];
             h1 = seedResult[1];
@@ -899,6 +904,200 @@ public class SpookyHash32 {
     seedResult[0] = h0;
     seedResult[1] = h1;
     }
+
+        static long Rot64(long x, int k) {
+                return (x << k) | (x >> (64 - k));
+        }
+
+        //
+        // The goal is for each bit of the input to expand into 128 bits of
+        //   apparent entropy before it is fully overwritten.
+        // n trials both set and cleared at least m bits of h0 h1 h2 h3
+        //   n: 2   m: 29
+        //   n: 3   m: 46
+        //   n: 4   m: 57
+        //   n: 5   m: 107
+        //   n: 6   m: 146
+        //   n: 7   m: 152
+        // when run forwards or backwards
+        // for all 1-bit and 2-bit diffs
+        // with diffs defined by either xor or subtraction
+        // with a base of all zeros plus a counter, or plus another bit, or random
+        //
+
+        static long[] ShortMix(long[] hs) {
+                long h0, h1, h2, h3;
+                h0 = hs[0];
+                h1 = hs[1];
+                h2 = hs[2];
+                h3 = hs[3];
+
+                h2 = Rot64(h2, 50);
+                h2 += h3;
+                h0 ^= h2;
+                h3 = Rot64(h3, 52);
+                h3 += h0;
+                h1 ^= h3;
+                h0 = Rot64(h0, 30);
+                h0 += h1;
+                h2 ^= h0;
+                h1 = Rot64(h1, 41);
+                h1 += h2;
+                h3 ^= h1;
+                h2 = Rot64(h2, 54);
+                h2 += h3;
+                h0 ^= h2;
+                h3 = Rot64(h3, 48);
+                h3 += h0;
+                h1 ^= h3;
+                h0 = Rot64(h0, 38);
+                h0 += h1;
+                h2 ^= h0;
+                h1 = Rot64(h1, 37);
+                h1 += h2;
+                h3 ^= h1;
+                h2 = Rot64(h2, 62);
+                h2 += h3;
+                h0 ^= h2;
+                h3 = Rot64(h3, 34);
+                h3 += h0;
+                h1 ^= h3;
+                h0 = Rot64(h0, 5);
+                h0 += h1;
+                h2 ^= h0;
+                h1 = Rot64(h1, 36);
+                h1 += h2;
+                h3 ^= h1;
+
+                hs[0] = h0;
+                hs[1] = h1;
+                hs[2] = h2;
+                hs[3] = h3;
+                return hs;
+        }
+
+        //
+        // Mix all 4 inputs together so that h0, h1 are a hash of them all.
+        //
+        // For two inputs differing in just the input bits
+        // Where "differ" means xor or subtraction
+        // And the base value is random, or a counting value starting at that bit
+        // The final result will have each bit of h0, h1 flip
+        // For every input bit,
+        // with probability 50 +- .3% (it is probably better than that)
+        // For every pair of input bits,
+        // with probability 50 +- .75% (the worst case is approximately that)
+        //
+        static long[] ShortEnd(long[] hs) {
+                long h0, h1, h2, h3;
+                h0 = hs[0];
+                h1 = hs[1];
+                h2 = hs[2];
+                h3 = hs[3];
+
+                h3 ^= h2;
+                h2 = Rot64(h2, 15);
+                h3 += h2;
+                h0 ^= h3;
+                h3 = Rot64(h3, 52);
+                h0 += h3;
+                h1 ^= h0;
+                h0 = Rot64(h0, 26);
+                h1 += h0;
+                h2 ^= h1;
+                h1 = Rot64(h1, 51);
+                h2 += h1;
+                h3 ^= h2;
+                h2 = Rot64(h2, 28);
+                h3 += h2;
+                h0 ^= h3;
+                h3 = Rot64(h3, 9);
+                h0 += h3;
+                h1 ^= h0;
+                h0 = Rot64(h0, 47);
+                h1 += h0;
+                h2 ^= h1;
+                h1 = Rot64(h1, 54);
+                h2 += h1;
+                h3 ^= h2;
+                h2 = Rot64(h2, 32);
+                h3 += h2;
+                h0 ^= h3;
+                h3 = Rot64(h3, 25);
+                h0 += h3;
+                h1 ^= h0;
+                h0 = Rot64(h0, 63);
+                h1 += h0;
+
+                hs[0] = h0;
+                hs[1] = h1;
+                hs[2] = h2;
+                hs[3] = h3;
+                return hs;
+        }
+
+        private static void smallHash2(long[] src, int start, int length, long[] seedResult) {
+                //Long l1 = Long.parseUnsignedLong("16045690984833335023");
+                final long sc_const = 0xdeadbeefdeadbeefL; //16045690984833335023UL
+                long a, b, c, d;
+                a = seedResult[0];
+                b = seedResult[1];
+                c = sc_const;
+                d = sc_const;
+
+                int remaining = length;
+                int pos = start;
+
+                while (remaining >= 4) {
+                        c += src[pos];
+                        d += src[pos + 1];
+
+                        long[] hs = {a,b,c,d};
+                        hs = ShortMix(hs);
+                        a = hs[0];
+                        b = hs[1];
+                        c = hs[2];
+                        d = hs[3];
+
+                        a += src[pos + 2];
+                        b += src[pos + 3];
+                        pos += 4;
+                        remaining -= 4;
+                }
+
+                if (remaining >= 2) {
+                        c += src[pos];
+                        d += src[pos + 1];
+
+                        long[] hs = {a,b,c,d};
+                        hs = ShortMix(hs);
+                        a = hs[0];
+                        b = hs[1];
+                        c = hs[2];
+                        d = hs[3];
+
+                        pos += 2;
+                        remaining -= 2;
+                }
+
+                // assert remaining < 2;
+                d += ( (long)(length << 3)) << 56;
+
+                if (remaining > 0) {
+                        c += src[pos];
+                } else {
+                        c += sc_const;
+                        d += sc_const;
+                }
+
+                long[] hs = {a,b,c,d};
+                hs = ShortEnd(hs);
+                a = hs[0];
+                b = hs[1];
+
+                seedResult[0] = a;
+                seedResult[1] = b;
+        }
 
     public static int smallIntHash(int[] src, int start, int length, int[] seedResult) {
         int A_BITS = 0xdeadbeef;
@@ -996,10 +1195,16 @@ public class SpookyHash32 {
      * not obtain
      * @throws IllegalArgumentException if {@code length} is negative
      */
+    public static long hash32(int i, int seed) {
+            long[] src = {i};
+            long[] seedResult = {seed, seed};
+            return hash(src, 0, src.length, seedResult);
+    }
     public static long hash(long[] src, int start, int length,  long[] seedResult) {
-            System.out.println("LIMIT: " + SMALLHASH_LIMIT_LONGS);
+            //System.out.println("Hash128: " + SMALLHASH_LIMIT_LONGS);
             if (length < SMALLHASH_LIMIT_LONGS) {
-                    smallHash(src, start, length, seedResult);
+                    //System.out.println("Hash128: Calling smallHash2...");
+                    smallHash2(src, start, length, seedResult); // My version...
                     return seedResult[0];
             }
             long h0, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11;

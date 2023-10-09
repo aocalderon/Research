@@ -138,7 +138,7 @@ object Utils {
     val Y: Float = center.getY.toFloat
     val count: Int = pids.size
     val pidsText = pids.sorted.mkString(" ")
-    val SIG_SIZE = 16
+    val SIG_SIZE = 128
 
     val signature: BitSet = {
       val signature_prime: BitSet = new BitSet
@@ -149,14 +149,14 @@ object Utils {
     }
 
     private def pureHash(signature: BitSet, oid: Int, size: Int = SIG_SIZE, seed: Int = 0): Unit = {
-      val murmur_pos = math.abs( Murmur.hashInt(oid, seed) )
-      val spooky_pos = math.abs( Spooky.hashInt(oid, seed) )
-      val murmur_value = murmur_pos % size
-      val spooky_value = spooky_pos % size
-      //println(s"Hash: MurMur($oid) =  pos: $murmur_pos\tvalue:${murmur_value}")
-      //println(s"Hash: Spooky($oid) =  pos: $spooky_pos\tvalue:${spooky_value}")
-      signature(murmur_value) = true
-      signature(spooky_value) = true
+      val murmur_value = math.abs( Murmur.hashInt2(oid, seed) )
+      val spooky_value = math.abs( Spooky.hash32(oid, seed) )
+      val murmur_pos = murmur_value % size
+      val spooky_pos = spooky_value % size
+      println(s"Hash: MurMur($oid) =  pos: $murmur_pos\tvalue:${murmur_value}")
+      println(s"Hash: Spooky($oid) =  pos: $spooky_pos\tvalue:${spooky_value}")
+      signature(murmur_pos.toInt) = true
+      signature(spooky_pos.toInt) = true
     }
 
     private def toBinaryString(bs: BitSet) = {

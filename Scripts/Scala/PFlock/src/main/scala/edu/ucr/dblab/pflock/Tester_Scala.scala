@@ -1,23 +1,20 @@
 package edu.ucr.dblab.pflock
 
 import edu.ucr.dblab.pflock.Utils._
-import org.locationtech.jts.geom.{Coordinate, GeometryFactory, LineString, PrecisionModel}
+import edu.ucr.dblab.pflock.{HashesTest => scala_hashes}
+import org.locationtech.jts.geom.{GeometryFactory, PrecisionModel}
 import org.slf4j.{Logger, LoggerFactory}
 
-import sys.process._
-
-import scala.collection.JavaConverters._
 import scala.io.Source
-
-import edu.ucr.dblab.pflock.{HashesTest => scala_hashes}
+import scala.sys.process._
 
 object Tester_Scala {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   def main(args: Array[String]): Unit = {
-    implicit val params = new BFEParams(args)
+    implicit val params: BFEParams = new BFEParams(args)
 
-    implicit var settings = Settings(
+    implicit val settings: Settings = Settings(
       dataset = params.dataset(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
@@ -30,7 +27,7 @@ object Tester_Scala {
       output = params.output()
     )
 
-    implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
+    implicit val geofactory: GeometryFactory = new GeometryFactory(new PrecisionModel(settings.scale))
 
     printParams(args)
     log(s"START|")
@@ -48,7 +45,7 @@ object Tester_Scala {
       val signature_s = scala_hashes.run(oids)
       val signature2  = signature_s.split("\t").last
 
-      s"$id\t$oids\t$signature1\t$signature2\n"
+      s"$id\n$oids\n$signature1\n$signature2\n"
     }.toList
     buffer.close()
 
@@ -56,7 +53,7 @@ object Tester_Scala {
     data.foreach{ record =>
       f.write(record)
     }
-    f.close
+    f.close()
 
     log(s"END|")
   }
