@@ -272,24 +272,19 @@ object PSI {
           }
         }
       }
-      // check boxes here...
-
-      //boxes.values.map{ b =>
-        //println(G.toGeometry(b.envelope).toText)
-      //}
-
     } // foreach pointset
 
-    if(S.debug){
-      val pairs_prime = pairs.toSet
-      stats.nPairs = pairs_prime.size
-      save("/tmp/edgesPairsPSI.wkt"){
-        pairs_prime.map{ case(p1, p2) =>
-          G.createLineString( Array(p1.getCoord, p2.getCoord) ).toText + s"\t${p1.oid}\t${p2.oid}\n"
+
+    stats.nPairs = pairs.toList.size
+    stats.nCenters = 2 * stats.nPairs
+    stats.nCandidates = candidates.size
+    if (S.debug) {
+      save("/tmp/edgesPairsPSI.wkt") {
+        val pairs_prime = pairs.toSet
+        pairs_prime.map { case (p1, p2) =>
+          G.createLineString(Array(p1.getCoord, p2.getCoord)).toText + s"\t${p1.oid}\t${p2.oid}\n"
         }.toList
       }
-      stats.nCenters = 2 * stats.nPairs
-      stats.nCandidates = candidates.size
     }
 
     (candidates, boxes)
@@ -402,14 +397,16 @@ object PSI {
       _.left_bottom
     }
 
-    save("/tmp/edgesBCandidates.wkt") {
-      boxes.flatMap { box =>
-        val bid = box.id
-        box.disks.sortBy(_.pidsText).map { disk =>
-          val pids = disk.pidsText
-          val disk_wkt = disk.getCircleWTK
-          s"$disk_wkt\t$bid\t$pids\n"
-        }.sorted
+    if(S.debug) {
+      save("/tmp/edgesBCandidates.wkt") {
+        boxes.flatMap { box =>
+          val bid = box.id
+          box.disks.sortBy(_.pidsText).map { disk =>
+            val pids = disk.pidsText
+            val disk_wkt = disk.getCircleWTK
+            s"$disk_wkt\t$bid\t$pids\n"
+          }.sorted
+        }
       }
     }
 
@@ -432,7 +429,49 @@ object PSI {
               }
             }
           } yield {
-            println(s"Pruning disk in Box $j")
+            //println(s"Pruning disk in Box $j")
+            for (c <- boxes(j).disks) {
+              C = insertDisk(C, c)
+            }
+          }
+      }
+    }
+
+    C.toList
+  }
+
+  def filterCandidates3(boxes_prime: ArcheryRTree[Box])(implicit S: Settings, G: GeometryFactory): List[Disk] = {
+    // Sort boxes by left-bottom corner...
+    val boxes: List[Box] = boxes_prime.values.toList.sortBy {
+      _.left_bottom
+    }
+
+    if (S.debug) {
+      save("/tmp/edgesBCandidates.wkt") {
+        boxes.flatMap { box =>
+          val bid = box.id
+          box.disks.sortBy(_.pidsText).map { disk =>
+            val pids = disk.pidsText
+            val disk_wkt = disk.getCircleWTK
+            s"$disk_wkt\t$bid\t$pids\n"
+          }.sorted
+        }
+      }
+    }
+
+    var C: ListBuffer[Disk] = ListBuffer()
+
+    if (!boxes.isEmpty) {
+      boxes.size match {
+        case 1 =>
+          for (c <- boxes.head.disks) {
+            C = insertDisk(C, c)
+          }
+        case _ =>
+          for {
+            j <- 0 to boxes.size - 1
+          } yield {
+            //println(s"Pruning disk in Box $j")
             for (c <- boxes(j).disks) {
               C = insertDisk(C, c)
             }
@@ -545,11 +584,35 @@ object PSI {
           }
         }.toList
       }
+      save(s"/tmp/pids.tsv") {
+        boxes.values.flatMap { box =>
+          val id = box.id
+          box.pidsSet.flatten.toList.map { pid =>
+            s"${pid}\t${id}\n"
+          }
+        }.toList
+      }
+      save(s"/tmp/samples.tsv") {
+        val pids = boxes.values.flatMap { box =>
+          val id = box.id
+          box.pidsSet.flatten.toList.map{ pid =>
+            (pid, id)
+          }.toSet
+        }.toList
+
+        for{
+          b <- pids
+          p <- points if(b._1 == p.oid)
+        } yield {
+          s"${p.oid}\t${p.point.getX}\t${p.point.getY}\t0\t${b._2}\n"
+        }
+      }
+
     }
 
     // Call filter candidates algorithm...
     val (maximals, tFC) = timer{
-      PSI.filterCandidates(boxes)
+      PSI.filterCandidates3(boxes)
     }
     stats.nMaximals = maximals.size
     stats.tFC = tFC
@@ -583,6 +646,8 @@ object PSI {
       save("/tmp/edgesPointsPSI.wkt"){ points.map{ _.wkt + "\n" } }
       save("/tmp/edgesMaximalsPSI.wkt"){ maximals.map{ _.wkt + "\n" } }
       save("/tmp/edgesMaximalsPSI_prime.wkt"){ maximals.map{ _.getCircleWTK + "\n" } }
+
+      stats.printPSI()
     }
 
     log(s"END")

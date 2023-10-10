@@ -52,6 +52,7 @@ public class MurmurHash3 extends Hash {
     }
 
    static class State {
+       // need to recompile...
       long h1;
       long h2;
 

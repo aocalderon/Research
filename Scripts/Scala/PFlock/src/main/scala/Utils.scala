@@ -148,13 +148,20 @@ object Utils {
       signature_prime
     }
 
+    private def printHashInfo(name: String, oid: Int, value: Long, position: Long): Unit = {
+      val soid = s"Hash: $name($oid) = "
+      val sval = s" value: $value"
+      val spos = s" position: $position"
+      println(f"${soid}%-20s\t${sval}%-20s\t${spos}%-20s")
+    }
+
     private def pureHash(signature: BitSet, oid: Int, size: Int = SIG_SIZE, seed: Int = 0): Unit = {
       val murmur_value = math.abs( Murmur.hashInt2(oid, seed) )
       val spooky_value = math.abs( Spooky.hash32(oid, seed) )
       val murmur_pos = murmur_value % size
       val spooky_pos = spooky_value % size
-      println(s"Hash: MurMur($oid) =  pos: $murmur_pos\tvalue:${murmur_value}")
-      println(s"Hash: Spooky($oid) =  pos: $spooky_pos\tvalue:${spooky_value}")
+      printHashInfo("murmur", oid, murmur_value, murmur_pos)
+      printHashInfo("spooky", oid, spooky_value, spooky_pos)
       signature(murmur_pos.toInt) = true
       signature(spooky_pos.toInt) = true
     }
@@ -379,6 +386,8 @@ object Utils {
 
     def printPSI(printTotal: Boolean = true)(implicit logger: Logger, S: Settings): Unit = {
       log(s"Points     |${nPoints}")
+      log(s"Pairs      |${nPairs}")
+      log(s"Centers    |${nCenters}")
       log(s"Candidates |${nCandidates}")
       log(s"Maximals   |${nMaximals}")
       logt(s"PS|${tPS}")
