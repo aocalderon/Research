@@ -155,13 +155,15 @@ object Utils {
       println(f"${soid}%-20s\t${sval}%-20s\t${spos}%-20s")
     }
 
-    private def pureHash(signature: BitSet, oid: Int, size: Int = SIG_SIZE, seed: Int = 0): Unit = {
+    private def pureHash(signature: BitSet, oid: Int, size: Int = SIG_SIZE, seed: Int = 0, debug: Boolean = false): Unit = {
       val murmur_value = math.abs( Murmur.hashInt2(oid, seed) )
       val spooky_value = math.abs( Spooky.hash32(oid, seed) )
       val murmur_pos = murmur_value % size
       val spooky_pos = spooky_value % size
-      printHashInfo("murmur", oid, murmur_value, murmur_pos)
-      printHashInfo("spooky", oid, spooky_value, spooky_pos)
+      if(debug){
+        printHashInfo("murmur", oid, murmur_value, murmur_pos)
+        printHashInfo("spooky", oid, spooky_value, spooky_pos)
+      }
       signature(murmur_pos.toInt) = true
       signature(spooky_pos.toInt) = true
     }
@@ -179,7 +181,7 @@ object Utils {
 
     def &(other: Disk): Boolean = {
       val r = this.signature & other.signature
-      r == other.signature
+      r == this.signature
     }
 
     def envelope: Envelope = center.getEnvelopeInternal
@@ -350,8 +352,9 @@ object Utils {
 
   case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 0,
     var nCandidates: Int = 0, var nMaximals: Int = 0,
-    var nCliques: Int = 0, var nMBC: Int = 0,
-    var tCounts: Double = 0.0, var tRead: Double = 0.0, var tGrid: Double = 0.0, 
+    var nCliques: Int = 0, var nMBC: Int = 0, var nBoxes: Int = 0,
+    var tCounts: Double = 0.0, var tRead: Double = 0.0, var tGrid: Double = 0.0,
+    var tBand: Double = 0.0,  var tBoxes: Double = 0.0, var tSort: Double = 0.0,  var tInsert: Double = 0.0,
     var tCliques: Double = 0.0, var tMBC: Double = 0.0,
     var tPairs: Double = 0.0, var tCenters: Double = 0.0,
     var tCandidates: Double = 0.0, var tMaximals: Double = 0.0,
@@ -389,9 +392,17 @@ object Utils {
       log(s"Pairs      |${nPairs}")
       log(s"Centers    |${nCenters}")
       log(s"Candidates |${nCandidates}")
+      log(s"Boxes      |${nBoxes}")
       log(s"Maximals   |${nMaximals}")
-      logt(s"PS|${tPS}")
-      logt(s"FC|${tFC}")
+      logt(s"PS        |${tPS}")
+      logt(s"FC        |${tFC}")
+      logt(s"Band      |${tBand}")
+      logt(s"Pairs     |${tPairs}")
+      logt(s"Centers   |${tCenters}")
+      logt(s"Candidates|${tCandidates}")
+      logt(s"Boxes     |${tBoxes}")
+      logt(s"Sort      |${tSort}")
+      logt(s"Insert    |${tInsert}")
       if (printTotal) {
         val tTotal = tPS + tFC
         logt(s"Total     |${tTotal}")

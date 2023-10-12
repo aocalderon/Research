@@ -190,14 +190,15 @@ public class MurmurHash3 extends Hash {
       //state.h2 = 0x586dcd208f7cd3fdL ^ seed;
       state.h1 = seed;
       state.h2 = seed;
-      //0x87c37b91114253d5
-      state.c1 = 0x87c37b91114253d5L;
+               //0x87c37b91114253d5
+      state.c1 = 0x47c37b91114253d5L;
       //0x4cf5ad432745937f
       state.c2 = 0x4cf5ad432745937fL;
 
       //----------
       // body
-      //System.out.println("len / 2: " + key.length / 2);
+      //System.out.println(state.h1 + "\t" + state.h2  + "\t" + state.c1  + "\t" + state.c2);
+
       for (int i = 0; i < key.length / 2; i++) {
          // shouldn't enter here...
          state.k1 = key[i * 2];
@@ -208,6 +209,8 @@ public class MurmurHash3 extends Hash {
 
       //----------
       // tail
+      //System.out.println(state.h1 + "\t" + state.h2  + "\t" + state.c1  + "\t" + state.c2);
+
       long tail = key[key.length - 1];
 
       if (key.length % 2 != 0) {
@@ -215,7 +218,13 @@ public class MurmurHash3 extends Hash {
          bmix(state);
       }
 
-      state.h2 ^= key.length * 8;
+      //----------
+      // finalization
+      //System.out.println(state.h1 + "\t" + state.h2  + "\t" + state.c1  + "\t" + state.c2);
+
+      state.h1 ^= key.length;
+      state.h2 ^= key.length;
+      //System.out.println(state.h1 + "\t" + state.h2  + "\t" + state.c1  + "\t" + state.c2);
 
       state.h1 += state.h2;
       state.h2 += state.h1;
