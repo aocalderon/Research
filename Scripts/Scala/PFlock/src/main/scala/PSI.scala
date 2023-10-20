@@ -224,10 +224,11 @@ object PSI {
         } // foreach centres
       } // foreach pairs
 
-      candidates.toList.foreach(println)
+      candidates.toList.map{_.wkt + s"\t${band.pr.oid}"}.foreach(println)
     }
 
     // feeding candidates and active boxes...
+    println("BEGIN...")
     pointset.foreach { pr: STPoint =>
       // feeding band with points inside 2-epsilon x 2-epsilon...
       val band_for_pr: RTree[STPoint] = RTree[STPoint]()
