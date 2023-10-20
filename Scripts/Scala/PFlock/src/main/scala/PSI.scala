@@ -161,16 +161,16 @@ object PSI {
     var pairs: ListBuffer[(STPoint, STPoint)] = ListBuffer()
     var nPairs = 0
     var nCenters = 0
-    var tBand = 0.0
     var tPairs = 0.0
     var tCenters = 0.0
     var tCandidates = 0.0
     var tBoxes = 0.0
 
     // feeding bands with points inside 2-epsilon x 2-epsilon...
-    val (bands, tB) = timer {
+    val (bands, tBand) = timer {
       pointset.map { pr: STPoint =>
         val band_for_pr: RTree[STPoint] = RTree[STPoint]()
+        band_for_pr.pr = pr
 
         pointset.filter { ps: STPoint =>
           math.abs(ps.X - pr.X) <= S.epsilon && math.abs(ps.Y - pr.Y) <= S.epsilon
@@ -188,6 +188,45 @@ object PSI {
       }
     }
 
+    bands.foreach{ band =>
+      var candidates: ListBuffer[Disk] = new ListBuffer[Disk]
+      val points = band.getAll[STPoint]
+      val pr = band.pr
+      val (band_pairs, tP) = timer {
+        points.filter { p =>
+          p.X >= pr.X && // those at the right...
+            p.oid != pr.oid && // prune duplicates...
+            p.distance(pr) <= S.epsilon // getting pairs...
+        }
+      }
+      pairs.appendAll(band_pairs.map(p => (pr, p)))
+      nPairs += band_pairs.size
+      tPairs += tP
+
+      band_pairs.foreach { p =>
+        val (band_centres, tC) = timer {
+          computeCentres(pr, p) // gettings centres...
+        }
+        nCenters += band_centres.size
+        tCenters += tC
+
+        band_centres.foreach { centre =>
+          val t0 = clocktime
+          val envelope = centre.getEnvelopeInternal
+          envelope.expandBy(S.r)
+          val hood = band.get[STPoint](envelope).filter { _.distanceToPoint(centre) <= S.r }
+
+          if (hood.size >= S.mu) {
+            val candidate = Disk(centre, hood.map(_.oid))
+            candidates.append(candidate) // getting candidates...
+          }
+          tCandidates += (clocktime - t0)
+        } // foreach centres
+      } // foreach pairs
+
+      candidates.toList.foreach(println)
+    }
+
     // feeding candidates and active boxes...
     pointset.foreach { pr: STPoint =>
       // feeding band with points inside 2-epsilon x 2-epsilon...
@@ -199,7 +238,6 @@ object PSI {
           band_for_pr.put(ps.envelope, ps)
         }
       }
-      tBand += tB
 
       // finding pairs of points, centers, candidates and boxes...
       val (band_pairs, tP) = timer {
@@ -260,7 +298,7 @@ object PSI {
           tCandidates += (t1 - t0)
           tBoxes += (t2 - t1)
         }
-      }
+      } // foreach pairs
     } // foreach pointset
     stats.nPairs = nPairs
     stats.nCenters = nCenters

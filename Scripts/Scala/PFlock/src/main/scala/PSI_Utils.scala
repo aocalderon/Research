@@ -20,6 +20,7 @@ object PSI_Utils {
     var miny: Double = Double.MaxValue
     var maxx: Double = Double.MinValue
     var maxy: Double = Double.MinValue
+    var pr:  STPoint = null
 
     /**
       * Return the most left bottom corner of all the points stored in the RTree.

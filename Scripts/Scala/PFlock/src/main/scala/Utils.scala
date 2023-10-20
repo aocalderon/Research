@@ -106,6 +106,8 @@ object Utils {
 
   }
 
+  def NullPoint(implicit G: GeometryFactory): STPoint = STPoint(G.createPoint())
+
   case class Data(id: Int, t: Int){
     override def toString = s"$id\t$t"
   }
