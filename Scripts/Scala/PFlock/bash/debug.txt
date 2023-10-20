@@ -1,0 +1,310 @@
+Running...
+/home/and/Research/Scripts/Scala/PFlock/bash/checker_scala --dataset /home/and/Research/Datasets/dense_recode.tsv --epsilon 1 --mu 3 --tester
+2023-10-13 17:24:40,173|0|and-pc|INFO|0|349338152141417|1|dense_recode|1.0|3|5|PFlock|START
+2023-10-13 17:24:40,176|3|and-pc|INFO|0|349338152141417|1|dense_recode|1.0|3|5|PFlock|BFE
+2023-10-13 17:24:40,505|332|and-pc|INFO|0|349338152141417|1|dense_recode|1.0|3|5|BFE|Points     |2101
+2023-10-13 17:24:40,505|332|and-pc|INFO|0|349338152141417|1|dense_recode|1.0|3|5|BFE|Pairs      |681
+2023-10-13 17:24:40,507|334|and-pc|INFO|0|349338152141417|1|dense_recode|1.0|3|5|BFE|Centers    |1362
+2023-10-13 17:24:40,508|335|and-pc|INFO|0|349338152141417|1|dense_recode|1.0|3|5|BFE|Candidates |727
+2023-10-13 17:24:40,508|335|and-pc|INFO|0|349338152141417|1|dense_recode|1.0|3|5|BFE|Maximals   |205
+2023-10-13 17:24:40,508|335|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|BFE|Count     |0.116354922
+2023-10-13 17:24:40,509|336|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|BFE|Grid      |0.014847118
+2023-10-13 17:24:40,509|336|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|BFE|Read      |0.015041195999999991
+2023-10-13 17:24:40,509|336|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|BFE|Pairs     |0.01194228899999999
+2023-10-13 17:24:40,509|336|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|BFE|Centers   |0.07826071399999997
+2023-10-13 17:24:40,509|336|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|BFE|Candidates|0.002659355999999999
+2023-10-13 17:24:40,510|337|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|BFE|Maximals  |0.07058780700000002
+2023-10-13 17:24:40,510|337|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|BFE|Total     |0.30969340199999995
+2023-10-13 17:24:40,858|685|and-pc|INFO|0|349338152141417|1|dense_recode|1.0|3|5|PSI|Points     |2101
+2023-10-13 17:24:40,860|687|and-pc|INFO|0|349338152141417|1|dense_recode|1.0|3|5|PSI|Pairs      |1153
+2023-10-13 17:24:40,861|688|and-pc|INFO|0|349338152141417|1|dense_recode|1.0|3|5|PSI|Centers    |2306
+2023-10-13 17:24:40,861|688|and-pc|INFO|0|349338152141417|1|dense_recode|1.0|3|5|PSI|Candidates |733
+2023-10-13 17:24:40,861|688|and-pc|INFO|0|349338152141417|1|dense_recode|1.0|3|5|PSI|Boxes      |162
+2023-10-13 17:24:40,861|688|and-pc|INFO|0|349338152141417|1|dense_recode|1.0|3|5|PSI|Maximals   |205
+2023-10-13 17:24:40,862|689|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|PSI|PS        |0.217463732
+2023-10-13 17:24:40,862|689|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|PSI|FC        |0.10159288
+2023-10-13 17:24:40,862|689|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|PSI|Band      |0.11154068300000004
+2023-10-13 17:24:40,863|690|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|PSI|Pairs     |0.02701038900000007
+2023-10-13 17:24:40,863|690|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|PSI|Centers   |0.012067270000000007
+2023-10-13 17:24:40,863|690|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|PSI|Candidates|0.019510681
+2023-10-13 17:24:40,864|691|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|PSI|Boxes     |0.022599854
+2023-10-13 17:24:40,864|691|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|PSI|Sort      |7.28717E-4
+2023-10-13 17:24:40,864|691|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|PSI|Insert    |0.100321557
+2023-10-13 17:24:40,865|692|and-pc|TIME|0|349338152141417|1|dense_recode|1.0|3|5|PSI|Total     |0.319056612
+Testing...
+Saved /tmp/PSI_pids.txt	in	0.00s	[205 records].
+Saved /tmp/BFE_pids.txt	in	0.00s	[205 records].
+Files /tmp/PSI_pids.txt and /tmp/BFE_pids.txt are identical
+2023-10-13 17:24:40,952|779|and-pc|INFO|0|349338152141417|1|dense_recode|1.0|3|5|PSI|Maximals|OK!!
+2023-10-13 17:24:40,952|779|and-pc|INFO|0|349338152141417|1|dense_recode|1.0|3|5|PSI|END
+/opt/bfe_modified/build/flocks -f /home/and/Research/Datasets/dense_recode.tsv -d 1 -s 3 -l 1 -m PSI
+NroFlk: 3	LenFlk: 1	DistFlk: 1	PSI
+Openning stream: /home/and/Research/Datasets/dense_recode.tsv
+
+2023-10-13 15:27:55,451|1118|and-pc|TIME|0|325781697243080|1|dense_recode|1|3|1|PSICPP|Total     |0.020875
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243080|1|dense_recode|1|3|1|PSICPP|Pairs     |876
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243080|1|dense_recode|1|3|1|PSICPP|Centers   |1752
+
+totalTime(ms):	20.875	timeSearch:	2.982	timeSetTest:	0	timeJoin:	14.698	timeBuildIdx:	0	totalAnswers:	205
+totalPairs:	876	totalCenters:	1752	totalClusters:	205	timeInvIdx:	0.341	clustersPruned:	0
+Closing stream: /home/and/Research/Datasets/dense_recode.tsv Total answers: 205
+NroFlk: 3	LenFlk: 1	DistFlk: 1	BFE
+Openning stream: /home/and/Research/Datasets/dense_recode.tsv
+
+
+
+2023-10-13 15:27:55,451|1118|and-pc|TIME|0|325781697243081|1|dense_recode|1|3|1|BFECPP|Total     |0.101803
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243081|1|dense_recode|1|3|1|BFECPP|Pairs     |681
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243081|1|dense_recode|1|3|1|BFECPP|Centers   |1362
+
+totalTime(ms):	101.803	timeSearch:	1.119	timeSetTest:	14.126	timeJoin:	13.747	timeBuildIdx:	63.938	totalAnswers:	205
+totalPairs:	681	totalCenters:	1362	totalClusters:	205
+Closing stream: /home/and/Research/Datasets/dense_recode.tsv Total answers: 205
+Running...
+/home/and/Research/Scripts/Scala/PFlock/bash/checker_scala --dataset /home/and/Research/Datasets/dense_recode.tsv --epsilon 2 --mu 3 --tester
+2023-10-13 17:24:41,734|0|and-pc|INFO|0|349339715149220|1|dense_recode|2.0|3|5|PFlock|START
+2023-10-13 17:24:41,737|3|and-pc|INFO|0|349339715149220|1|dense_recode|2.0|3|5|PFlock|BFE
+2023-10-13 17:24:42,414|680|and-pc|INFO|0|349339715149220|1|dense_recode|2.0|3|5|BFE|Points     |2101
+2023-10-13 17:24:42,415|681|and-pc|INFO|0|349339715149220|1|dense_recode|2.0|3|5|BFE|Pairs      |2691
+2023-10-13 17:24:42,417|683|and-pc|INFO|0|349339715149220|1|dense_recode|2.0|3|5|BFE|Centers    |5382
+2023-10-13 17:24:42,417|683|and-pc|INFO|0|349339715149220|1|dense_recode|2.0|3|5|BFE|Candidates |3967
+2023-10-13 17:24:42,418|684|and-pc|INFO|0|349339715149220|1|dense_recode|2.0|3|5|BFE|Maximals   |541
+2023-10-13 17:24:42,418|684|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|BFE|Count     |0.126245596
+2023-10-13 17:24:42,418|684|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|BFE|Grid      |0.017870313
+2023-10-13 17:24:42,418|684|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|BFE|Read      |0.02089921399999998
+2023-10-13 17:24:42,419|685|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|BFE|Pairs     |0.019032774000000023
+2023-10-13 17:24:42,419|685|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|BFE|Centers   |0.20310395600000017
+2023-10-13 17:24:42,419|685|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|BFE|Candidates|0.004778813000000008
+2023-10-13 17:24:42,419|685|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|BFE|Maximals  |0.26359058700000026
+2023-10-13 17:24:42,419|685|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|BFE|Total     |0.6555212530000003
+2023-10-13 17:24:43,265|1531|and-pc|INFO|0|349339715149220|1|dense_recode|2.0|3|5|PSI|Points     |2101
+2023-10-13 17:24:43,267|1533|and-pc|INFO|0|349339715149220|1|dense_recode|2.0|3|5|PSI|Pairs      |2945
+2023-10-13 17:24:43,268|1534|and-pc|INFO|0|349339715149220|1|dense_recode|2.0|3|5|PSI|Centers    |5890
+2023-10-13 17:24:43,268|1534|and-pc|INFO|0|349339715149220|1|dense_recode|2.0|3|5|PSI|Candidates |3979
+2023-10-13 17:24:43,268|1534|and-pc|INFO|0|349339715149220|1|dense_recode|2.0|3|5|PSI|Boxes      |334
+2023-10-13 17:24:43,268|1534|and-pc|INFO|0|349339715149220|1|dense_recode|2.0|3|5|PSI|Maximals   |541
+2023-10-13 17:24:43,268|1534|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|PSI|PS        |0.288156458
+2023-10-13 17:24:43,269|1535|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|PSI|FC        |0.500177336
+2023-10-13 17:24:43,269|1535|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|PSI|Band      |0.10787315199999996
+2023-10-13 17:24:43,269|1535|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|PSI|Pairs     |0.02564728600000007
+2023-10-13 17:24:43,269|1535|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|PSI|Centers   |0.022165524999999995
+2023-10-13 17:24:43,269|1535|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|PSI|Candidates|0.038736127
+2023-10-13 17:24:43,269|1535|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|PSI|Boxes     |0.071648285
+2023-10-13 17:24:43,270|1536|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|PSI|Sort      |9.3628E-4
+2023-10-13 17:24:43,270|1536|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|PSI|Insert    |0.498612225
+2023-10-13 17:24:43,270|1536|and-pc|TIME|0|349339715149220|1|dense_recode|2.0|3|5|PSI|Total     |0.788333794
+Testing...
+Saved /tmp/PSI_pids.txt	in	0.00s	[541 records].
+Saved /tmp/BFE_pids.txt	in	0.00s	[541 records].
+Files /tmp/PSI_pids.txt and /tmp/BFE_pids.txt are identical
+2023-10-13 17:24:43,350|1616|and-pc|INFO|0|349339715149220|1|dense_recode|2.0|3|5|PSI|Maximals|OK!!
+2023-10-13 17:24:43,351|1617|and-pc|INFO|0|349339715149220|1|dense_recode|2.0|3|5|PSI|END
+/opt/bfe_modified/build/flocks -f /home/and/Research/Datasets/dense_recode.tsv -d 2 -s 3 -l 1 -m PSI
+NroFlk: 3	LenFlk: 1	DistFlk: 2	PSI
+Openning stream: /home/and/Research/Datasets/dense_recode.tsv
+
+2023-10-13 15:27:55,451|1118|and-pc|TIME|0|325781697243083|1|dense_recode|2|3|1|PSICPP|Total     |0.177049
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243083|1|dense_recode|2|3|1|PSICPP|Pairs     |2781
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243083|1|dense_recode|2|3|1|PSICPP|Centers   |5562
+
+totalTime(ms):	177.049	timeSearch:	9.141	timeSetTest:	0	timeJoin:	155.328	timeBuildIdx:	0	totalAnswers:	541
+totalPairs:	2781	totalCenters:	5562	totalClusters:	541	timeInvIdx:	1.447	clustersPruned:	0
+Closing stream: /home/and/Research/Datasets/dense_recode.tsv Total answers: 541
+NroFlk: 3	LenFlk: 1	DistFlk: 2	BFE
+Openning stream: /home/and/Research/Datasets/dense_recode.tsv
+
+
+
+2023-10-13 15:27:55,451|1118|and-pc|TIME|0|325781697243084|1|dense_recode|2|3|1|BFECPP|Total     |0.489974
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243084|1|dense_recode|2|3|1|BFECPP|Pairs     |2691
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243084|1|dense_recode|2|3|1|BFECPP|Centers   |5382
+
+totalTime(ms):	489.974	timeSearch:	5.134	timeSetTest:	285.967	timeJoin:	141.939	timeBuildIdx:	47.732	totalAnswers:	541
+totalPairs:	2691	totalCenters:	5382	totalClusters:	541
+Closing stream: /home/and/Research/Datasets/dense_recode.tsv Total answers: 541
+Running...
+/home/and/Research/Scripts/Scala/PFlock/bash/checker_scala --dataset /home/and/Research/Datasets/dense_recode.tsv --epsilon 3 --mu 3 --tester
+2023-10-13 17:24:44,635|0|and-pc|INFO|0|349342615310896|1|dense_recode|3.0|3|5|PFlock|START
+2023-10-13 17:24:44,638|3|and-pc|INFO|0|349342615310896|1|dense_recode|3.0|3|5|PFlock|BFE
+2023-10-13 17:24:45,552|917|and-pc|INFO|0|349342615310896|1|dense_recode|3.0|3|5|BFE|Points     |2101
+2023-10-13 17:24:45,553|918|and-pc|INFO|0|349342615310896|1|dense_recode|3.0|3|5|BFE|Pairs      |4149
+2023-10-13 17:24:45,555|920|and-pc|INFO|0|349342615310896|1|dense_recode|3.0|3|5|BFE|Centers    |8298
+2023-10-13 17:24:45,555|920|and-pc|INFO|0|349342615310896|1|dense_recode|3.0|3|5|BFE|Candidates |6672
+2023-10-13 17:24:45,555|920|and-pc|INFO|0|349342615310896|1|dense_recode|3.0|3|5|BFE|Maximals   |586
+2023-10-13 17:24:45,556|921|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|BFE|Count     |0.123179274
+2023-10-13 17:24:45,556|921|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|BFE|Grid      |0.016481932
+2023-10-13 17:24:45,556|921|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|BFE|Read      |0.02153791999999997
+2023-10-13 17:24:45,556|921|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|BFE|Pairs     |0.026764231999999975
+2023-10-13 17:24:45,557|922|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|BFE|Centers   |0.3028487900000004
+2023-10-13 17:24:45,557|922|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|BFE|Candidates|0.006936026999999999
+2023-10-13 17:24:45,557|922|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|BFE|Maximals  |0.3933274580000002
+2023-10-13 17:24:45,557|922|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|BFE|Total     |0.8910756330000007
+2023-10-13 17:24:47,018|2383|and-pc|INFO|0|349342615310896|1|dense_recode|3.0|3|5|PSI|Points     |2101
+2023-10-13 17:24:47,020|2385|and-pc|INFO|0|349342615310896|1|dense_recode|3.0|3|5|PSI|Pairs      |4330
+2023-10-13 17:24:47,020|2385|and-pc|INFO|0|349342615310896|1|dense_recode|3.0|3|5|PSI|Centers    |8660
+2023-10-13 17:24:47,021|2386|and-pc|INFO|0|349342615310896|1|dense_recode|3.0|3|5|PSI|Candidates |6685
+2023-10-13 17:24:47,021|2386|and-pc|INFO|0|349342615310896|1|dense_recode|3.0|3|5|PSI|Boxes      |380
+2023-10-13 17:24:47,021|2386|and-pc|INFO|0|349342615310896|1|dense_recode|3.0|3|5|PSI|Maximals   |586
+2023-10-13 17:24:47,021|2386|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|PSI|PS        |0.600273702
+2023-10-13 17:24:47,021|2386|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|PSI|FC        |0.736291257
+2023-10-13 17:24:47,021|2386|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|PSI|Band      |0.31419631999999975
+2023-10-13 17:24:47,022|2387|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|PSI|Pairs     |0.029605722000000043
+2023-10-13 17:24:47,022|2387|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|PSI|Centers   |0.023953720000000064
+2023-10-13 17:24:47,022|2387|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|PSI|Candidates|0.076634208
+2023-10-13 17:24:47,022|2387|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|PSI|Boxes     |0.129756543
+2023-10-13 17:24:47,023|2388|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|PSI|Sort      |9.68348E-4
+2023-10-13 17:24:47,023|2388|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|PSI|Insert    |0.734662902
+2023-10-13 17:24:47,023|2388|and-pc|TIME|0|349342615310896|1|dense_recode|3.0|3|5|PSI|Total     |1.336564959
+Testing...
+Saved /tmp/PSI_pids.txt	in	0.00s	[586 records].
+Saved /tmp/BFE_pids.txt	in	0.00s	[586 records].
+Files /tmp/PSI_pids.txt and /tmp/BFE_pids.txt are identical
+2023-10-13 17:24:47,104|2469|and-pc|INFO|0|349342615310896|1|dense_recode|3.0|3|5|PSI|Maximals|OK!!
+2023-10-13 17:24:47,104|2469|and-pc|INFO|0|349342615310896|1|dense_recode|3.0|3|5|PSI|END
+/opt/bfe_modified/build/flocks -f /home/and/Research/Datasets/dense_recode.tsv -d 3 -s 3 -l 1 -m PSI
+NroFlk: 3	LenFlk: 1	DistFlk: 3	PSI
+Openning stream: /home/and/Research/Datasets/dense_recode.tsv
+
+2023-10-13 15:27:55,451|1118|and-pc|TIME|0|325781697243087|1|dense_recode|3|3|1|PSICPP|Total     |0.266152
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243087|1|dense_recode|3|3|1|PSICPP|Pairs     |4214
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243087|1|dense_recode|3|3|1|PSICPP|Centers   |8428
+
+totalTime(ms):	266.152	timeSearch:	12.435	timeSetTest:	0	timeJoin:	233.182	timeBuildIdx:	0	totalAnswers:	589
+totalPairs:	4214	totalCenters:	8428	totalClusters:	589	timeInvIdx:	1.949	clustersPruned:	0
+Closing stream: /home/and/Research/Datasets/dense_recode.tsv Total answers: 589
+NroFlk: 3	LenFlk: 1	DistFlk: 3	BFE
+Openning stream: /home/and/Research/Datasets/dense_recode.tsv
+
+
+
+2023-10-13 15:27:55,451|1118|and-pc|TIME|0|325781697243088|1|dense_recode|3|3|1|BFECPP|Total     |0.872261
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243088|1|dense_recode|3|3|1|BFECPP|Pairs     |4149
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243088|1|dense_recode|3|3|1|BFECPP|Centers   |8298
+
+totalTime(ms):	872.261	timeSearch:	8.4	timeSetTest:	603.973	timeJoin:	203.973	timeBuildIdx:	43.558	totalAnswers:	590
+totalPairs:	4149	totalCenters:	8298	totalClusters:	590
+Closing stream: /home/and/Research/Datasets/dense_recode.tsv Total answers: 590
+Running...
+/home/and/Research/Scripts/Scala/PFlock/bash/checker_scala --dataset /home/and/Research/Datasets/dense_recode.tsv --epsilon 4 --mu 3 --tester
+2023-10-13 17:24:48,892|0|and-pc|INFO|0|349346872262279|1|dense_recode|4.0|3|5|PFlock|START
+2023-10-13 17:24:48,895|3|and-pc|INFO|0|349346872262279|1|dense_recode|4.0|3|5|PFlock|BFE
+2023-10-13 17:24:49,974|1082|and-pc|INFO|0|349346872262279|1|dense_recode|4.0|3|5|BFE|Points     |2101
+2023-10-13 17:24:49,975|1083|and-pc|INFO|0|349346872262279|1|dense_recode|4.0|3|5|BFE|Pairs      |5703
+2023-10-13 17:24:49,977|1085|and-pc|INFO|0|349346872262279|1|dense_recode|4.0|3|5|BFE|Centers    |11406
+2023-10-13 17:24:49,977|1085|and-pc|INFO|0|349346872262279|1|dense_recode|4.0|3|5|BFE|Candidates |9593
+2023-10-13 17:24:49,978|1086|and-pc|INFO|0|349346872262279|1|dense_recode|4.0|3|5|BFE|Maximals   |668
+2023-10-13 17:24:49,978|1086|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|BFE|Count     |0.129824745
+2023-10-13 17:24:49,978|1086|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|BFE|Grid      |0.015919301
+2023-10-13 17:24:49,978|1086|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|BFE|Read      |0.020234430999999983
+2023-10-13 17:24:49,979|1087|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|BFE|Pairs     |0.027953122999999986
+2023-10-13 17:24:49,979|1087|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|BFE|Centers   |0.36380654599999973
+2023-10-13 17:24:49,979|1087|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|BFE|Candidates|0.007067275999999997
+2023-10-13 17:24:49,979|1087|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|BFE|Maximals  |0.4924118970000001
+2023-10-13 17:24:49,980|1088|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|BFE|Total     |1.0572173189999998
+2023-10-13 17:24:52,394|3502|and-pc|INFO|0|349346872262279|1|dense_recode|4.0|3|5|PSI|Points     |2101
+2023-10-13 17:24:52,396|3504|and-pc|INFO|0|349346872262279|1|dense_recode|4.0|3|5|PSI|Pairs      |5858
+2023-10-13 17:24:52,397|3505|and-pc|INFO|0|349346872262279|1|dense_recode|4.0|3|5|PSI|Centers    |11716
+2023-10-13 17:24:52,397|3505|and-pc|INFO|0|349346872262279|1|dense_recode|4.0|3|5|PSI|Candidates |9607
+2023-10-13 17:24:52,397|3505|and-pc|INFO|0|349346872262279|1|dense_recode|4.0|3|5|PSI|Boxes      |480
+2023-10-13 17:24:52,397|3505|and-pc|INFO|0|349346872262279|1|dense_recode|4.0|3|5|PSI|Maximals   |668
+2023-10-13 17:24:52,397|3505|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|PSI|PS        |0.417523479
+2023-10-13 17:24:52,397|3505|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|PSI|FC        |1.856980154
+2023-10-13 17:24:52,398|3506|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|PSI|Band      |0.13121402800000007
+2023-10-13 17:24:52,398|3506|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|PSI|Pairs     |0.031019808999999947
+2023-10-13 17:24:52,398|3506|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|PSI|Centers   |0.02343605899999987
+2023-10-13 17:24:52,398|3506|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|PSI|Candidates|0.084517184
+2023-10-13 17:24:52,398|3506|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|PSI|Boxes     |0.114697151
+2023-10-13 17:24:52,399|3507|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|PSI|Sort      |0.001177819
+2023-10-13 17:24:52,399|3507|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|PSI|Insert    |1.85523091
+2023-10-13 17:24:52,399|3507|and-pc|TIME|0|349346872262279|1|dense_recode|4.0|3|5|PSI|Total     |2.274503633
+Testing...
+Saved /tmp/PSI_pids.txt	in	0.00s	[668 records].
+Saved /tmp/BFE_pids.txt	in	0.00s	[668 records].
+Files /tmp/PSI_pids.txt and /tmp/BFE_pids.txt are identical
+2023-10-13 17:24:52,486|3594|and-pc|INFO|0|349346872262279|1|dense_recode|4.0|3|5|PSI|Maximals|OK!!
+2023-10-13 17:24:52,487|3595|and-pc|INFO|0|349346872262279|1|dense_recode|4.0|3|5|PSI|END
+/opt/bfe_modified/build/flocks -f /home/and/Research/Datasets/dense_recode.tsv -d 4 -s 3 -l 1 -m PSI
+NroFlk: 3	LenFlk: 1	DistFlk: 4	PSI
+Openning stream: /home/and/Research/Datasets/dense_recode.tsv
+
+2023-10-13 15:27:55,451|1118|and-pc|TIME|0|325781697243092|1|dense_recode|4|3|1|PSICPP|Total     |0.392769
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243092|1|dense_recode|4|3|1|PSICPP|Pairs     |5777
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243092|1|dense_recode|4|3|1|PSICPP|Centers   |11554
+
+totalTime(ms):	392.769	timeSearch:	17.024	timeSetTest:	0	timeJoin:	345.729	timeBuildIdx:	0	totalAnswers:	670
+totalPairs:	5777	totalCenters:	11554	totalClusters:	670	timeInvIdx:	2.806	clustersPruned:	0
+Closing stream: /home/and/Research/Datasets/dense_recode.tsv Total answers: 670
+NroFlk: 3	LenFlk: 1	DistFlk: 4	BFE
+Openning stream: /home/and/Research/Datasets/dense_recode.tsv
+
+
+
+2023-10-13 15:27:55,451|1118|and-pc|TIME|0|325781697243094|1|dense_recode|4|3|1|BFECPP|Total     |1.47998
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243094|1|dense_recode|4|3|1|BFECPP|Pairs     |5703
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243094|1|dense_recode|4|3|1|BFECPP|Centers   |11406
+
+totalTime(ms):	1479.98	timeSearch:	12.536	timeSetTest:	1109.71	timeJoin:	297.246	timeBuildIdx:	43.881	totalAnswers:	670
+totalPairs:	5703	totalCenters:	11406	totalClusters:	670
+Closing stream: /home/and/Research/Datasets/dense_recode.tsv Total answers: 670
+Running...
+/home/and/Research/Scripts/Scala/PFlock/bash/checker_scala --dataset /home/and/Research/Datasets/dense_recode.tsv --epsilon 5 --mu 3 --tester
+2023-10-13 17:24:55,013|0|and-pc|INFO|0|349352993247709|1|dense_recode|5.0|3|5|PFlock|START
+2023-10-13 17:24:55,015|2|and-pc|INFO|0|349352993247709|1|dense_recode|5.0|3|5|PFlock|BFE
+2023-10-13 17:24:56,423|1410|and-pc|INFO|0|349352993247709|1|dense_recode|5.0|3|5|BFE|Points     |2101
+2023-10-13 17:24:56,423|1410|and-pc|INFO|0|349352993247709|1|dense_recode|5.0|3|5|BFE|Pairs      |7470
+2023-10-13 17:24:56,425|1412|and-pc|INFO|0|349352993247709|1|dense_recode|5.0|3|5|BFE|Centers    |14940
+2023-10-13 17:24:56,426|1413|and-pc|INFO|0|349352993247709|1|dense_recode|5.0|3|5|BFE|Candidates |13081
+2023-10-13 17:24:56,426|1413|and-pc|INFO|0|349352993247709|1|dense_recode|5.0|3|5|BFE|Maximals   |836
+2023-10-13 17:24:56,426|1413|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|BFE|Count     |0.137405087
+2023-10-13 17:24:56,426|1413|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|BFE|Grid      |0.01786363
+2023-10-13 17:24:56,427|1414|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|BFE|Read      |0.019379762999999998
+2023-10-13 17:24:56,427|1414|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|BFE|Pairs     |0.03279013699999996
+2023-10-13 17:24:56,427|1414|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|BFE|Centers   |0.4484714409999995
+2023-10-13 17:24:56,427|1414|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|BFE|Candidates|0.00927222899999999
+2023-10-13 17:24:56,427|1414|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|BFE|Maximals  |0.7203510579999998
+2023-10-13 17:24:56,428|1415|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|BFE|Total     |1.3855333449999994
+2023-10-13 17:25:00,984|5971|and-pc|INFO|0|349352993247709|1|dense_recode|5.0|3|5|PSI|Points     |2101
+2023-10-13 17:25:00,986|5973|and-pc|INFO|0|349352993247709|1|dense_recode|5.0|3|5|PSI|Pairs      |7592
+2023-10-13 17:25:00,986|5973|and-pc|INFO|0|349352993247709|1|dense_recode|5.0|3|5|PSI|Centers    |15184
+2023-10-13 17:25:00,986|5973|and-pc|INFO|0|349352993247709|1|dense_recode|5.0|3|5|PSI|Candidates |13097
+2023-10-13 17:25:00,986|5973|and-pc|INFO|0|349352993247709|1|dense_recode|5.0|3|5|PSI|Boxes      |543
+2023-10-13 17:25:00,987|5974|and-pc|INFO|0|349352993247709|1|dense_recode|5.0|3|5|PSI|Maximals   |836
+2023-10-13 17:25:00,987|5974|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|PSI|PS        |0.557057821
+2023-10-13 17:25:00,987|5974|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|PSI|FC        |3.73409461
+2023-10-13 17:25:00,987|5974|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|PSI|Band      |0.11057635900000003
+2023-10-13 17:25:00,987|5974|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|PSI|Pairs     |0.032750468000000005
+2023-10-13 17:25:00,988|5975|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|PSI|Centers   |0.028504271000000015
+2023-10-13 17:25:00,988|5975|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|PSI|Candidates|0.108949941
+2023-10-13 17:25:00,988|5975|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|PSI|Boxes     |0.240209139
+2023-10-13 17:25:00,988|5975|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|PSI|Sort      |0.001532796
+2023-10-13 17:25:00,988|5975|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|PSI|Insert    |3.731882734
+2023-10-13 17:25:00,989|5976|and-pc|TIME|0|349352993247709|1|dense_recode|5.0|3|5|PSI|Total     |4.291152431
+Testing...
+Saved /tmp/PSI_pids.txt	in	0.00s	[836 records].
+Saved /tmp/BFE_pids.txt	in	0.00s	[836 records].
+Files /tmp/PSI_pids.txt and /tmp/BFE_pids.txt are identical
+2023-10-13 17:25:01,076|6063|and-pc|INFO|0|349352993247709|1|dense_recode|5.0|3|5|PSI|Maximals|OK!!
+2023-10-13 17:25:01,076|6063|and-pc|INFO|0|349352993247709|1|dense_recode|5.0|3|5|PSI|END
+/opt/bfe_modified/build/flocks -f /home/and/Research/Datasets/dense_recode.tsv -d 5 -s 3 -l 1 -m PSI
+NroFlk: 3	LenFlk: 1	DistFlk: 5	PSI
+Openning stream: /home/and/Research/Datasets/dense_recode.tsv
+
+2023-10-13 15:27:55,451|1118|and-pc|TIME|0|325781697243101|1|dense_recode|5|3|1|PSICPP|Total     |0.658892
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243101|1|dense_recode|5|3|1|PSICPP|Pairs     |7526
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243101|1|dense_recode|5|3|1|PSICPP|Centers   |15052
+
+totalTime(ms):	658.892	timeSearch:	23.897	timeSetTest:	0	timeJoin:	591.78	timeBuildIdx:	0	totalAnswers:	835
+totalPairs:	7526	totalCenters:	15052	totalClusters:	837	timeInvIdx:	3.565	clustersPruned:	0
+Closing stream: /home/and/Research/Datasets/dense_recode.tsv Total answers: 835
+NroFlk: 3	LenFlk: 1	DistFlk: 5	BFE
+Openning stream: /home/and/Research/Datasets/dense_recode.tsv
+
+
+
+2023-10-13 15:27:55,451|1118|and-pc|TIME|0|325781697243104|1|dense_recode|5|3|1|BFECPP|Total     |2.62708
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243104|1|dense_recode|5|3|1|BFECPP|Pairs     |7470
+2023-10-13 15:27:55,451|1118|and-pc|INFO|0|325781697243104|1|dense_recode|5|3|1|BFECPP|Centers   |14940
+
+totalTime(ms):	2627.08	timeSearch:	17.498	timeSetTest:	2033.62	timeJoin:	510.91	timeBuildIdx:	43.211	totalAnswers:	836
+totalPairs:	7470	totalCenters:	14940	totalClusters:	836
+Closing stream: /home/and/Research/Datasets/dense_recode.tsv Total answers: 836

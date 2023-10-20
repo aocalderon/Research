@@ -85,6 +85,7 @@ object PSI_Utils {
       * @return list a list of elements.
       * */
     def getAll[T]: List[T] = super.query(this.envelope).asScala.map(_.asInstanceOf[T]).toList
+
   }
 
   /**

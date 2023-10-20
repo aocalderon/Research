@@ -1,17 +1,14 @@
 package edu.ucr.dblab.pflock
 
-import scala.collection.mutable.ListBuffer
-import scala.collection.JavaConverters._
-
+import archery.{RTree => ArcheryRTree}
+import edu.ucr.dblab.pflock.PSI_Utils._
+import edu.ucr.dblab.pflock.Utils._
+import org.locationtech.jts.geom._
+import org.locationtech.jts.index.strtree.STRtree
 import org.slf4j.{Logger, LoggerFactory}
 
-import org.locationtech.jts.index.strtree.STRtree
-import org.locationtech.jts.geom._
-
-import archery.{RTree => ArcheryRTree}
-
-import edu.ucr.dblab.pflock.Utils._
-import edu.ucr.dblab.pflock.PSI_Utils._
+import scala.collection.JavaConverters._
+import scala.collection.mutable.ListBuffer
 
 object PSI {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -39,6 +36,7 @@ object PSI {
     // setting data structures to store candidates and boxes...
     val candidates: RTree[Disk] = RTree[Disk]()
     var boxes: ArcheryRTree[Box] = ArcheryRTree[Box]()
+    var pairs: ListBuffer[(STPoint, STPoint)] = ListBuffer()
     var nPairs = 0
     var nCenters = 0
     var tBand = 0.0
@@ -69,6 +67,7 @@ object PSI {
               p.distance(pr) <= S.epsilon // getting pairs...
           }
       }
+      pairs.appendAll(band_pairs.map(p => (pr, p)))
       nPairs += band_pairs.size
       tPairs += tP
 
@@ -93,6 +92,11 @@ object PSI {
             val t1 = clocktime
 
             val active_box = Box(band_for_pr, pr.oid)
+
+            debug{
+                println(active_box.wkt)
+            }
+
             val active_box_hood = boxes.searchIntersection(active_box.boundingBox)
 
             def coveredBy: Boolean = active_box_hood.exists(b => b.value.covers(active_box))
@@ -124,6 +128,158 @@ object PSI {
     stats.tCenters = tCenters
     stats.tCandidates = tCandidates / 1e9
     stats.tBoxes = tBoxes / 1e9
+
+    debug{
+      save("/tmp/edgesPairsPSI.wkt"){
+        pairs.toList.map{ case(pr, p) =>
+          val coords = Array(pr.getCoord, p.getCoord)
+          G.createLineString(coords).toText + "\n"
+        }
+      }
+    }
+
+    (candidates, boxes)
+  }
+
+  def planeSweeping2(points: List[STPoint])
+                   (implicit S: Settings, G: GeometryFactory, stats: Stats): (RTree[Disk], ArcheryRTree[Box]) = {
+
+    // ordering by coordinate (it is first by x and then by y)...
+    val pointset: List[STPoint] = points.sortBy(_.getCoord)
+
+    debug {
+      save("/tmp/edgesPointsPSI.wkt") {
+        pointset
+          .zipWithIndex
+          .map { case (point, order) => s"${point.wkt}\t$order\n" }
+      }
+    }
+
+    // setting data structures to store candidates and boxes...
+    val candidates: RTree[Disk] = RTree[Disk]()
+    var boxes: ArcheryRTree[Box] = ArcheryRTree[Box]()
+    var pairs: ListBuffer[(STPoint, STPoint)] = ListBuffer()
+    var nPairs = 0
+    var nCenters = 0
+    var tBand = 0.0
+    var tPairs = 0.0
+    var tCenters = 0.0
+    var tCandidates = 0.0
+    var tBoxes = 0.0
+
+    // feeding bands with points inside 2-epsilon x 2-epsilon...
+    val (bands, tB) = timer {
+      pointset.map { pr: STPoint =>
+        val band_for_pr: RTree[STPoint] = RTree[STPoint]()
+
+        pointset.filter { ps: STPoint =>
+          math.abs(ps.X - pr.X) <= S.epsilon && math.abs(ps.Y - pr.Y) <= S.epsilon
+        }.foreach { ps: STPoint =>
+          band_for_pr.put(ps.envelope, ps)
+        }
+
+        band_for_pr
+      }.filter(_.size() >= S.mu)
+    }
+
+    debug{
+      bands.zipWithIndex.foreach{ case(band, i) =>
+        println(G.toGeometry(band.envelope).toText + s"\t$i")
+      }
+    }
+
+    // feeding candidates and active boxes...
+    pointset.foreach { pr: STPoint =>
+      // feeding band with points inside 2-epsilon x 2-epsilon...
+      val band_for_pr: RTree[STPoint] = RTree[STPoint]()
+      val (_, tB) = timer {
+        pointset.filter { ps: STPoint =>
+          math.abs(ps.X - pr.X) <= S.epsilon && math.abs(ps.Y - pr.Y) <= S.epsilon
+        }.foreach { ps: STPoint =>
+          band_for_pr.put(ps.envelope, ps)
+        }
+      }
+      tBand += tB
+
+      // finding pairs of points, centers, candidates and boxes...
+      val (band_pairs, tP) = timer {
+        band_for_pr.getAll[STPoint]
+          .filter { p =>
+            p.X >= pr.X && // those at the right...
+              p.oid != pr.oid && // prune duplicates...
+              p.distance(pr) <= S.epsilon // getting pairs...
+          }
+      }
+      pairs.appendAll(band_pairs.map(p => (pr, p)))
+      nPairs += band_pairs.size
+      tPairs += tP
+
+      band_pairs.foreach { p =>
+        val (band_centres, tC) = timer {
+          computeCentres(pr, p) // gettings centres...
+        }
+        nCenters += band_centres.size
+        tCenters += tC
+
+        band_centres.foreach { centre =>
+          val t0 = clocktime
+          val envelope = centre.getEnvelopeInternal
+          envelope.expandBy(S.r)
+          val hood = band_for_pr
+            .get[STPoint](envelope)
+            .filter {
+              _.distanceToPoint(centre) <= S.r
+            }
+
+          val t1 = if (hood.size >= S.mu) {
+            val candidate = Disk(centre, hood.map(_.oid))
+            candidates.put(candidate.envelope, candidate) // getting candidates...
+            val t1 = clocktime
+
+            val active_box = Box(band_for_pr, pr.oid)
+
+            val active_box_hood = boxes.searchIntersection(active_box.boundingBox)
+
+            def coveredBy: Boolean = active_box_hood.exists(b => b.value.covers(active_box))
+
+            def covers: Boolean = active_box_hood.exists(b => active_box.covers(b.value))
+
+            if (coveredBy) {
+              // do nothing...
+            } else if (covers) {
+              // remove previous box and add the active one...
+              val box_prime = active_box_hood.find(b => active_box.covers(b.value)).get
+              boxes = boxes.remove(box_prime).insert(active_box.archeryEntry)
+            } else {
+              // otherwise add the active box...
+              boxes = boxes.insert(active_box.archeryEntry)
+            }
+            t1
+          } else clocktime
+          val t2 = clocktime
+          tCandidates += (t1 - t0)
+          tBoxes += (t2 - t1)
+        }
+      }
+    } // foreach pointset
+    stats.nPairs = nPairs
+    stats.nCenters = nCenters
+    stats.nCandidates = candidates.size
+    stats.nBoxes = boxes.size
+    stats.tBand = tBand
+    stats.tPairs = tPairs
+    stats.tCenters = tCenters
+    stats.tCandidates = tCandidates / 1e9
+    stats.tBoxes = tBoxes / 1e9
+
+    debug {
+      save("/tmp/edgesPairsPSI.wkt") {
+        pairs.toList.map { case (pr, p) =>
+          val coords = Array(pr.getCoord, p.getCoord)
+          G.createLineString(coords).toText + "\n"
+        }
+      }
+    }
 
     (candidates, boxes)
   }
@@ -243,7 +399,7 @@ object PSI {
     // Call plane sweeping technique algorithm...
 
     val ((candidates, boxes), tPS) = timer{
-      PSI.planeSweeping(points)
+      PSI.planeSweeping2(points)
     }
     stats.tPS = tPS
 
