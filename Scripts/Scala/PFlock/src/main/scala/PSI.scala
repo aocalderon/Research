@@ -224,7 +224,7 @@ object PSI {
         } // foreach centres
       } // foreach pairs
 
-      candidates.toList.map{_.wkt + s"\t${band.pr.oid}"}.foreach(println)
+      candidates.toList.map{_.wkt + s"\tCANDIDATE\t${band.pr.oid}"}.foreach(println)
     }
 
     // feeding candidates and active boxes...
@@ -249,16 +249,16 @@ object PSI {
               p.distance(pr) <= S.epsilon // getting pairs...
           }
       }
-      pairs.appendAll(band_pairs.map(p => (pr, p)))
-      nPairs += band_pairs.size
-      tPairs += tP
+      //pairs.appendAll(band_pairs.map(p => (pr, p)))
+      //nPairs += band_pairs.size
+      //tPairs += tP
 
       band_pairs.foreach { p =>
         val (band_centres, tC) = timer {
           computeCentres(pr, p) // gettings centres...
         }
-        nCenters += band_centres.size
-        tCenters += tC
+        //nCenters += band_centres.size
+        //tCenters += tC
 
         band_centres.foreach { centre =>
           val t0 = clocktime
