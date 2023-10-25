@@ -95,13 +95,14 @@ object PSI_Utils {
     * @constructor create a box from an envelope and the point it belongs
     * @param hood an RTree with the points and envelope defining the box.
     * */
-  case class Box(hood: RTree[STPoint], pr: Int = -1) extends Envelope(hood.envelope) {
+  case class Box(hood: RTree[STPoint]) extends Envelope(hood.envelope) {
     val points: List[STPoint] = hood.getAll[STPoint]
     val envelope: Envelope = hood.envelope
     val left_bottom: Coordinate = new Coordinate(envelope.getMinX, envelope.getMinY)
     var disks: List[Disk] = _
     var pidsSet: Set[List[Int]] = _
     var id: Int = -1
+    var pr: STPoint = NullPoint
 
     def diagonal(implicit G: GeometryFactory): String = {
       val right_top: Coordinate = new Coordinate(envelope.getMaxX, envelope.getMaxY)

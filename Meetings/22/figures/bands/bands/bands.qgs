@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="3.32.3-Lima" saveDateTime="2023-10-23T11:20:28" saveUser="and" projectname="" saveUserFull="and">
+<qgis version="3.32.3-Lima" saveDateTime="2023-10-23T15:57:24" saveUser="and" projectname="" saveUserFull="and">
   <homePath path=""/>
   <title></title>
   <transaction mode="Disabled"/>
@@ -22,11 +22,11 @@
     <customproperties>
       <Option/>
     </customproperties>
-    <layer-tree-group name="group1" mutually-exclusive="1" mutually-exclusive-child="0" checked="Qt::Checked" groupLayer="" expanded="1">
+    <layer-tree-group name="group1" mutually-exclusive="1" mutually-exclusive-child="9" checked="Qt::Checked" groupLayer="" expanded="1">
       <customproperties>
         <Option/>
       </customproperties>
-      <layer-tree-group name="Band1" checked="Qt::Checked" groupLayer="" expanded="0">
+      <layer-tree-group name="Band1" checked="Qt::Unchecked" groupLayer="" expanded="0">
         <customproperties>
           <Option/>
         </customproperties>
@@ -125,17 +125,17 @@
             <Option/>
           </customproperties>
         </layer-tree-layer>
-        <layer-tree-layer name="Centers5" id="Centers5_e65f74e1_644f_4db2_9db1_5decdef7c1ef" source="./Centers5.gpkg|layername=Centers5" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Unchecked" legend_exp="" expanded="1">
+        <layer-tree-layer name="Centers5" id="Centers5_e65f74e1_644f_4db2_9db1_5decdef7c1ef" source="./Centers5.gpkg|layername=Centers5" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Checked" legend_exp="" expanded="1">
           <customproperties>
             <Option/>
           </customproperties>
         </layer-tree-layer>
-        <layer-tree-layer name="Pairs5" id="pasted_features_dc606335_ed8a_4dfd_b202_53b7aba8acba" source="./Pairs5.gpkg" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Unchecked" legend_exp="" expanded="1">
+        <layer-tree-layer name="Pairs5" id="pasted_features_dc606335_ed8a_4dfd_b202_53b7aba8acba" source="./Pairs5.gpkg" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Checked" legend_exp="" expanded="1">
           <customproperties>
             <Option/>
           </customproperties>
         </layer-tree-layer>
-        <layer-tree-layer name="Candidates5" id="Candidates5_76e83d73_7587_4232_9f35_6042fd67554e" source="./Candidates5.gpkg|layername=Candidates5" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Unchecked" legend_exp="" expanded="1">
+        <layer-tree-layer name="Candidates5" id="Candidates5_76e83d73_7587_4232_9f35_6042fd67554e" source="./Candidates5.gpkg|layername=Candidates5" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Checked" legend_exp="" expanded="1">
           <customproperties>
             <Option/>
           </customproperties>
@@ -155,7 +155,7 @@
             <Option/>
           </customproperties>
         </layer-tree-layer>
-        <layer-tree-layer name="Candidates6" id="Candidates6_5e9a9a5b_3258_4f58_a7cd_d03176facca2" source="./Candidates6.gpkg|layername=Candidates6" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Unchecked" legend_exp="" expanded="1">
+        <layer-tree-layer name="Candidates6" id="Candidates6_5e9a9a5b_3258_4f58_a7cd_d03176facca2" source="./Candidates6.gpkg|layername=Candidates6" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Checked" legend_exp="" expanded="1">
           <customproperties>
             <Option/>
           </customproperties>
@@ -165,7 +165,7 @@
             <Option/>
           </customproperties>
         </layer-tree-layer>
-        <layer-tree-layer name="Pairs6" id="pasted_features_51553910_5bf4_4f5b_8acc_c4c4070b52b5" source="./Pairs6.gpkg" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Unchecked" legend_exp="" expanded="1">
+        <layer-tree-layer name="Pairs6" id="pasted_features_51553910_5bf4_4f5b_8acc_c4c4070b52b5" source="./Pairs6.gpkg" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Checked" legend_exp="" expanded="1">
           <customproperties>
             <Option/>
           </customproperties>
@@ -190,12 +190,12 @@
             <Option/>
           </customproperties>
         </layer-tree-layer>
-        <layer-tree-layer name="Pairs7" id="pasted_features_2a6ec4b6_a775_41a5_9b3a_dfc07b3fe58f" source="./Pairs7.gpkg" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Unchecked" legend_exp="" expanded="1">
+        <layer-tree-layer name="Pairs7" id="pasted_features_2a6ec4b6_a775_41a5_9b3a_dfc07b3fe58f" source="./Pairs7.gpkg" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Checked" legend_exp="" expanded="1">
           <customproperties>
             <Option/>
           </customproperties>
         </layer-tree-layer>
-        <layer-tree-layer name="Candidates7" id="Candidates7_1fc2e1b4_6e66_4e39_888c_2715423ebccf" source="./Candidates7.gpkg|layername=Candidates7" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Unchecked" legend_exp="" expanded="1">
+        <layer-tree-layer name="Candidates7" id="Candidates7_1fc2e1b4_6e66_4e39_888c_2715423ebccf" source="./Candidates7.gpkg|layername=Candidates7" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Checked" legend_exp="" expanded="1">
           <customproperties>
             <Option/>
           </customproperties>
@@ -220,7 +220,7 @@
             <Option/>
           </customproperties>
         </layer-tree-layer>
-        <layer-tree-layer name="Pairs8" id="pasted_features_27725606_021f_4bb6_a7c8_24d31956c3e4" source="./Pairs8.gpkg" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Unchecked" legend_exp="" expanded="1">
+        <layer-tree-layer name="Pairs8" id="pasted_features_27725606_021f_4bb6_a7c8_24d31956c3e4" source="./Pairs8.gpkg" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Checked" legend_exp="" expanded="1">
           <customproperties>
             <Option/>
           </customproperties>
@@ -245,7 +245,7 @@
             <Option/>
           </customproperties>
         </layer-tree-layer>
-        <layer-tree-layer name="Pairs9" id="pasted_features_3b22951c_4490_4cfb_8fb7_f31c5d213e11" source="./Pairs9.gpkg" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Unchecked" legend_exp="" expanded="1">
+        <layer-tree-layer name="Pairs9" id="pasted_features_3b22951c_4490_4cfb_8fb7_f31c5d213e11" source="./Pairs9.gpkg" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Checked" legend_exp="" expanded="1">
           <customproperties>
             <Option/>
           </customproperties>
@@ -266,7 +266,7 @@
           </customproperties>
         </layer-tree-layer>
       </layer-tree-group>
-      <layer-tree-group name="Band10" checked="Qt::Unchecked" groupLayer="" expanded="0">
+      <layer-tree-group name="Band10" checked="Qt::Checked" groupLayer="" expanded="1">
         <customproperties>
           <Option/>
         </customproperties>
@@ -280,7 +280,7 @@
             <Option/>
           </customproperties>
         </layer-tree-layer>
-        <layer-tree-layer name="Pairs10" id="pasted_features_cdbc9ee4_5a6b_4218_9f71_9289776460e0" source="./Pairs10.gpkg" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Unchecked" legend_exp="" expanded="1">
+        <layer-tree-layer name="Pairs10" id="pasted_features_cdbc9ee4_5a6b_4218_9f71_9289776460e0" source="./Pairs10.gpkg" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Checked" legend_exp="" expanded="1">
           <customproperties>
             <Option/>
           </customproperties>
@@ -397,7 +397,7 @@
         </layer-tree-layer>
       </layer-tree-group>
     </layer-tree-group>
-    <layer-tree-layer name="PointsPSI" id="PointsPSI_8a2415ff_c7cd_4507_a2a7_614d3b4da624" source="./PointsPSI.gpkg" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Unchecked" legend_exp="" expanded="1">
+    <layer-tree-layer name="PointsPSI" id="PointsPSI_8a2415ff_c7cd_4507_a2a7_614d3b4da624" source="./PointsPSI.gpkg" providerKey="ogr" patch_size="-1,-1" legend_split_behavior="0" checked="Qt::Checked" legend_exp="" expanded="1">
       <customproperties>
         <Option/>
       </customproperties>
@@ -480,69 +480,69 @@
   </layer-tree-group>
   <snapping-settings type="1" tolerance="12" intersection-snapping="0" maxScale="0" enabled="0" mode="2" scaleDependencyMode="0" minScale="0" self-snapping="0" unit="1">
     <individual-layer-settings>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_32d0fd26_a765_4622_a4d2_106c90cfdc90" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_7_044e4369_12b5_4673_97a8_5c6a656b11ff" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_649bd33b_4bf8_4315_a980_038bf16d2e70" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_3b22951c_4490_4cfb_8fb7_f31c5d213e11" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_2_27f09d05_ccf0_4ef0_898c_a10061bf881d" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers11_c4463891_733b_42cd_8a74_a8bedf7bf8f7" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_66c29f7b_ff36_4e92_a7b4_c92789657a39" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers12_b52a64d2_79ee_4eda_b903_23a64eb3917a" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_0cfa6f2b_9c8e_44ce_9db8_ae0cf3f8e46d" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Candidates9_d7633b3b_fcaf_4c43_874e_f68146d78d74" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_2cb351f0_c8c7_453b_bc88_980ed89b9ae9" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers13_6dd3ec1c_113a_4464_9476_cf945d7fb76c" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Candidates8_267faa90_87f3_490f_8bae_0e27b2bb1f9c" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_6_809300b3_5588_45f6_b6ef_6905f3655892" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_1_ea48f235_351e_4766_a6d7_83fd09572f83" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_d30fbca9_0a3b_4620_87e8_ee4ee06437c2" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers5_e65f74e1_644f_4db2_9db1_5decdef7c1ef" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_dc606335_ed8a_4dfd_b202_53b7aba8acba" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_12_dda95da7_dc8d_4e7d_8d19_18869deb950b" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_598aef2a_8631_474c_ad7c_e88fd09eb28b" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_54687dbb_ad5d_4851_a3cd_f6c471b82262" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_3_604143a8_fdc6_42da_8297_758aee79f946" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_27725606_021f_4bb6_a7c8_24d31956c3e4" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PointsPSI_8a2415ff_c7cd_4507_a2a7_614d3b4da624" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_45fead2f_cb14_4ff2_9703_33ffb4033e22" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Candidates12_4500d2ad_69f2_4a61_9915_203b6357499e" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_51553910_5bf4_4f5b_8acc_c4c4070b52b5" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_4_66304777_4d2d_42c9_a834_c02112def506" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_4528e0c9_9f0a_4bac_bae3_c257d9258abf" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_39dd2de6_0ead_408c_a97e_94ad6617c046" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Candidates6_5e9a9a5b_3258_4f58_a7cd_d03176facca2" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_b8a7b173_0536_4d2b_b255_5fce0d77cad3" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_9_7e94c6c0_3b7a_460d_a7a0_959afef46bf5" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_e3fece7b_ccb4_4af7_a0b7_8ab71b287121" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers1_e2e7acb8_5688_4def_8dde_e7748717968d" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Candidates5_76e83d73_7587_4232_9f35_6042fd67554e" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_73669352_c19b_4bcb_9399_2148fe1bede1" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_10_ae54ffcd_3815_42cf_8cff_c15409e46ae4" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_f48687c2_95c3_430e_a904_6ad2e8646efa" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_8_b5b8b5dd_1322_439c_8e12_48ce256ed019" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_3fd7a7cf_6632_4c02_b6e2_2ef3137d070e" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers9_4cc23d5a_2ef1_48ea_a386_64b141356c15" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_3b89076c_53c4_4afd_8106_cfa8869f4c49" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_2a6ec4b6_a775_41a5_9b3a_dfc07b3fe58f" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_5_0bad8e57_2919_4fe3_b4e5_14f21cd90b71" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Candidates7_1fc2e1b4_6e66_4e39_888c_2715423ebccf" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_13_e4735276_f74b_44c0_80ee_c5ed3f17f6bc" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers7_44efa608_3efc_48b1_9bc5_ae04ccd0dd0f" minScale="0" units="1"/>
       <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_11_f01f9e78_19f4_4524_ba85_93a7b4e046e6" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_cdbc9ee4_5a6b_4218_9f71_9289776460e0" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_4_66304777_4d2d_42c9_a834_c02112def506" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_649bd33b_4bf8_4315_a980_038bf16d2e70" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Candidates12_4500d2ad_69f2_4a61_9915_203b6357499e" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers13_6dd3ec1c_113a_4464_9476_cf945d7fb76c" minScale="0" units="1"/>
       <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pairs_b016c13c_d77d_46ac_9ca0_9d6c7428f96b" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="box14_1b12743b_059c_473b_aca2_e75bfe441e86" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_d9a6f5da_d54c_4dce_a111_1a18eef25a52" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Candidates10_36f7b72f_5863_4a63_bf36_14c89ffb0de1" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers8_55d45da6_3720_49fe_8d67_f72924a629a8" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Candidates11_443e09e9_bb9d_4491_93e6_098755ceaa88" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_b960de56_f19e_4ad8_bcef_7f5b7758fd67" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers3_97211bd5_e3f5_4a60_a07c_98c8512f8151" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_5ba4cb72_917f_465c_9b5d_cdad067d05e8" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers10_7f2cf5d8_b012_4b28_a4a6_db5e2f5006df" minScale="0" units="1"/>
-      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers4_4062f91a_2485_491e_87f2_cb8fc1f32f8e" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PointsPSI_8a2415ff_c7cd_4507_a2a7_614d3b4da624" minScale="0" units="1"/>
       <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_5ed89eb4_8fe3_4a6e_ae9a_5652f1fb780d" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_73669352_c19b_4bcb_9399_2148fe1bede1" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_27725606_021f_4bb6_a7c8_24d31956c3e4" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_b8a7b173_0536_4d2b_b255_5fce0d77cad3" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers4_4062f91a_2485_491e_87f2_cb8fc1f32f8e" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Candidates8_267faa90_87f3_490f_8bae_0e27b2bb1f9c" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Candidates9_d7633b3b_fcaf_4c43_874e_f68146d78d74" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_b960de56_f19e_4ad8_bcef_7f5b7758fd67" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_e3fece7b_ccb4_4af7_a0b7_8ab71b287121" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_39dd2de6_0ead_408c_a97e_94ad6617c046" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_1_ea48f235_351e_4766_a6d7_83fd09572f83" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_9_7e94c6c0_3b7a_460d_a7a0_959afef46bf5" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Candidates6_5e9a9a5b_3258_4f58_a7cd_d03176facca2" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_2_27f09d05_ccf0_4ef0_898c_a10061bf881d" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_10_ae54ffcd_3815_42cf_8cff_c15409e46ae4" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers1_e2e7acb8_5688_4def_8dde_e7748717968d" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Candidates11_443e09e9_bb9d_4491_93e6_098755ceaa88" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_3b89076c_53c4_4afd_8106_cfa8869f4c49" minScale="0" units="1"/>
       <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers6_d3256618_148a_4e30_898b_fac4f27fe5bb" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_3fd7a7cf_6632_4c02_b6e2_2ef3137d070e" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers3_97211bd5_e3f5_4a60_a07c_98c8512f8151" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_2cb351f0_c8c7_453b_bc88_980ed89b9ae9" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_13_e4735276_f74b_44c0_80ee_c5ed3f17f6bc" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_598aef2a_8631_474c_ad7c_e88fd09eb28b" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_f48687c2_95c3_430e_a904_6ad2e8646efa" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_3_604143a8_fdc6_42da_8297_758aee79f946" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="box14_1b12743b_059c_473b_aca2_e75bfe441e86" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_dc606335_ed8a_4dfd_b202_53b7aba8acba" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_6_809300b3_5588_45f6_b6ef_6905f3655892" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers5_e65f74e1_644f_4db2_9db1_5decdef7c1ef" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_7_044e4369_12b5_4673_97a8_5c6a656b11ff" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_54687dbb_ad5d_4851_a3cd_f6c471b82262" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_12_dda95da7_dc8d_4e7d_8d19_18869deb950b" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Candidates7_1fc2e1b4_6e66_4e39_888c_2715423ebccf" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_66c29f7b_ff36_4e92_a7b4_c92789657a39" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_5_0bad8e57_2919_4fe3_b4e5_14f21cd90b71" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_45fead2f_cb14_4ff2_9703_33ffb4033e22" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers11_c4463891_733b_42cd_8a74_a8bedf7bf8f7" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Candidates10_36f7b72f_5863_4a63_bf36_14c89ffb0de1" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_0cfa6f2b_9c8e_44ce_9db8_ae0cf3f8e46d" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_4528e0c9_9f0a_4bac_bae3_c257d9258abf" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_8_b5b8b5dd_1322_439c_8e12_48ce256ed019" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers10_7f2cf5d8_b012_4b28_a4a6_db5e2f5006df" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Candidates5_76e83d73_7587_4232_9f35_6042fd67554e" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers7_44efa608_3efc_48b1_9bc5_ae04ccd0dd0f" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_32d0fd26_a765_4622_a4d2_106c90cfdc90" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_51553910_5bf4_4f5b_8acc_c4c4070b52b5" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_2a6ec4b6_a775_41a5_9b3a_dfc07b3fe58f" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers12_b52a64d2_79ee_4eda_b903_23a64eb3917a" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_3b22951c_4490_4cfb_8fb7_f31c5d213e11" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_d9a6f5da_d54c_4dce_a111_1a18eef25a52" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="PSI1_Boxes_d30fbca9_0a3b_4620_87e8_ee4ee06437c2" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_5ba4cb72_917f_465c_9b5d_cdad067d05e8" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers9_4cc23d5a_2ef1_48ea_a386_64b141356c15" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="pasted_features_cdbc9ee4_5a6b_4218_9f71_9289776460e0" minScale="0" units="1"/>
+      <layer-setting type="1" tolerance="12" maxScale="0" enabled="0" id="Centers8_55d45da6_3720_49fe_8d67_f72924a629a8" minScale="0" units="1"/>
     </individual-layer-settings>
   </snapping-settings>
   <relations/>
@@ -550,10 +550,10 @@
   <mapcanvas name="theMapCanvas" annotationsVisible="1">
     <units>degrees</units>
     <extent>
-      <xmin>-0.26787500000000009</xmin>
-      <ymin>0.19187499999999957</ymin>
-      <xmax>11.57087500000000091</xmax>
-      <ymax>8.09312500000000057</ymax>
+      <xmin>2.8470822499999997</xmin>
+      <ymin>0.26938625000000016</ymin>
+      <xmax>12.16762774999999941</xmax>
+      <ymax>10.69100375000000014</ymax>
     </extent>
     <rotation>0</rotation>
     <destinationsrs>
@@ -575,10 +575,10 @@
   <projectModels/>
   <legend updateDrawingOrder="true">
     <legendgroup name="group1" checked="Qt::Checked" open="true">
-      <legendgroup name="Band1" checked="Qt::Checked" open="false">
+      <legendgroup name="Band1" checked="Qt::Unchecked" open="false">
         <legendlayer name="Points1" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
           <filegroup hidden="false" open="true">
-            <legendlayerfile isInOverview="0" visible="1" layerid="pasted_features_e3fece7b_ccb4_4af7_a0b7_8ab71b287121"/>
+            <legendlayerfile isInOverview="0" visible="0" layerid="pasted_features_e3fece7b_ccb4_4af7_a0b7_8ab71b287121"/>
           </filegroup>
         </legendlayer>
         <legendlayer name="Centers1" checked="Qt::Unchecked" drawingOrder="-1" open="true" showFeatureCount="0">
@@ -593,7 +593,7 @@
         </legendlayer>
         <legendlayer name="Box1" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
           <filegroup hidden="false" open="true">
-            <legendlayerfile isInOverview="0" visible="1" layerid="PSI1_Boxes_1_ea48f235_351e_4766_a6d7_83fd09572f83"/>
+            <legendlayerfile isInOverview="0" visible="0" layerid="PSI1_Boxes_1_ea48f235_351e_4766_a6d7_83fd09572f83"/>
           </filegroup>
         </legendlayer>
       </legendgroup>
@@ -659,17 +659,17 @@
             <legendlayerfile isInOverview="0" visible="0" layerid="pasted_features_54687dbb_ad5d_4851_a3cd_f6c471b82262"/>
           </filegroup>
         </legendlayer>
-        <legendlayer name="Centers5" checked="Qt::Unchecked" drawingOrder="-1" open="true" showFeatureCount="0">
+        <legendlayer name="Centers5" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
           <filegroup hidden="false" open="true">
             <legendlayerfile isInOverview="0" visible="0" layerid="Centers5_e65f74e1_644f_4db2_9db1_5decdef7c1ef"/>
           </filegroup>
         </legendlayer>
-        <legendlayer name="Pairs5" checked="Qt::Unchecked" drawingOrder="-1" open="true" showFeatureCount="0">
+        <legendlayer name="Pairs5" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
           <filegroup hidden="false" open="true">
             <legendlayerfile isInOverview="0" visible="0" layerid="pasted_features_dc606335_ed8a_4dfd_b202_53b7aba8acba"/>
           </filegroup>
         </legendlayer>
-        <legendlayer name="Candidates5" checked="Qt::Unchecked" drawingOrder="-1" open="true" showFeatureCount="0">
+        <legendlayer name="Candidates5" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
           <filegroup hidden="false" open="true">
             <legendlayerfile isInOverview="0" visible="0" layerid="Candidates5_76e83d73_7587_4232_9f35_6042fd67554e"/>
           </filegroup>
@@ -686,7 +686,7 @@
             <legendlayerfile isInOverview="0" visible="0" layerid="pasted_features_0cfa6f2b_9c8e_44ce_9db8_ae0cf3f8e46d"/>
           </filegroup>
         </legendlayer>
-        <legendlayer name="Candidates6" checked="Qt::Unchecked" drawingOrder="-1" open="true" showFeatureCount="0">
+        <legendlayer name="Candidates6" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
           <filegroup hidden="false" open="true">
             <legendlayerfile isInOverview="0" visible="0" layerid="Candidates6_5e9a9a5b_3258_4f58_a7cd_d03176facca2"/>
           </filegroup>
@@ -696,7 +696,7 @@
             <legendlayerfile isInOverview="0" visible="0" layerid="Centers6_d3256618_148a_4e30_898b_fac4f27fe5bb"/>
           </filegroup>
         </legendlayer>
-        <legendlayer name="Pairs6" checked="Qt::Unchecked" drawingOrder="-1" open="true" showFeatureCount="0">
+        <legendlayer name="Pairs6" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
           <filegroup hidden="false" open="true">
             <legendlayerfile isInOverview="0" visible="0" layerid="pasted_features_51553910_5bf4_4f5b_8acc_c4c4070b52b5"/>
           </filegroup>
@@ -718,12 +718,12 @@
             <legendlayerfile isInOverview="0" visible="0" layerid="Centers7_44efa608_3efc_48b1_9bc5_ae04ccd0dd0f"/>
           </filegroup>
         </legendlayer>
-        <legendlayer name="Pairs7" checked="Qt::Unchecked" drawingOrder="-1" open="true" showFeatureCount="0">
+        <legendlayer name="Pairs7" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
           <filegroup hidden="false" open="true">
             <legendlayerfile isInOverview="0" visible="0" layerid="pasted_features_2a6ec4b6_a775_41a5_9b3a_dfc07b3fe58f"/>
           </filegroup>
         </legendlayer>
-        <legendlayer name="Candidates7" checked="Qt::Unchecked" drawingOrder="-1" open="true" showFeatureCount="0">
+        <legendlayer name="Candidates7" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
           <filegroup hidden="false" open="true">
             <legendlayerfile isInOverview="0" visible="0" layerid="Candidates7_1fc2e1b4_6e66_4e39_888c_2715423ebccf"/>
           </filegroup>
@@ -745,7 +745,7 @@
             <legendlayerfile isInOverview="0" visible="0" layerid="Centers8_55d45da6_3720_49fe_8d67_f72924a629a8"/>
           </filegroup>
         </legendlayer>
-        <legendlayer name="Pairs8" checked="Qt::Unchecked" drawingOrder="-1" open="true" showFeatureCount="0">
+        <legendlayer name="Pairs8" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
           <filegroup hidden="false" open="true">
             <legendlayerfile isInOverview="0" visible="0" layerid="pasted_features_27725606_021f_4bb6_a7c8_24d31956c3e4"/>
           </filegroup>
@@ -767,7 +767,7 @@
             <legendlayerfile isInOverview="0" visible="0" layerid="pasted_features_b8a7b173_0536_4d2b_b255_5fce0d77cad3"/>
           </filegroup>
         </legendlayer>
-        <legendlayer name="Pairs9" checked="Qt::Unchecked" drawingOrder="-1" open="true" showFeatureCount="0">
+        <legendlayer name="Pairs9" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
           <filegroup hidden="false" open="true">
             <legendlayerfile isInOverview="0" visible="0" layerid="pasted_features_3b22951c_4490_4cfb_8fb7_f31c5d213e11"/>
           </filegroup>
@@ -788,30 +788,30 @@
           </filegroup>
         </legendlayer>
       </legendgroup>
-      <legendgroup name="Band10" checked="Qt::Unchecked" open="false">
+      <legendgroup name="Band10" checked="Qt::Checked" open="true">
         <legendlayer name="Points10" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
           <filegroup hidden="false" open="true">
-            <legendlayerfile isInOverview="0" visible="0" layerid="pasted_features_5ed89eb4_8fe3_4a6e_ae9a_5652f1fb780d"/>
+            <legendlayerfile isInOverview="0" visible="1" layerid="pasted_features_5ed89eb4_8fe3_4a6e_ae9a_5652f1fb780d"/>
           </filegroup>
         </legendlayer>
         <legendlayer name="Centers10" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
           <filegroup hidden="false" open="true">
-            <legendlayerfile isInOverview="0" visible="0" layerid="Centers10_7f2cf5d8_b012_4b28_a4a6_db5e2f5006df"/>
+            <legendlayerfile isInOverview="0" visible="1" layerid="Centers10_7f2cf5d8_b012_4b28_a4a6_db5e2f5006df"/>
           </filegroup>
         </legendlayer>
-        <legendlayer name="Pairs10" checked="Qt::Unchecked" drawingOrder="-1" open="true" showFeatureCount="0">
+        <legendlayer name="Pairs10" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
           <filegroup hidden="false" open="true">
-            <legendlayerfile isInOverview="0" visible="0" layerid="pasted_features_cdbc9ee4_5a6b_4218_9f71_9289776460e0"/>
+            <legendlayerfile isInOverview="0" visible="1" layerid="pasted_features_cdbc9ee4_5a6b_4218_9f71_9289776460e0"/>
           </filegroup>
         </legendlayer>
         <legendlayer name="Candidates10" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
           <filegroup hidden="false" open="true">
-            <legendlayerfile isInOverview="0" visible="0" layerid="Candidates10_36f7b72f_5863_4a63_bf36_14c89ffb0de1"/>
+            <legendlayerfile isInOverview="0" visible="1" layerid="Candidates10_36f7b72f_5863_4a63_bf36_14c89ffb0de1"/>
           </filegroup>
         </legendlayer>
         <legendlayer name="Box10" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
           <filegroup hidden="false" open="true">
-            <legendlayerfile isInOverview="0" visible="0" layerid="PSI1_Boxes_9_7e94c6c0_3b7a_460d_a7a0_959afef46bf5"/>
+            <legendlayerfile isInOverview="0" visible="1" layerid="PSI1_Boxes_9_7e94c6c0_3b7a_460d_a7a0_959afef46bf5"/>
           </filegroup>
         </legendlayer>
       </legendgroup>
@@ -904,9 +904,9 @@
         </legendlayer>
       </legendgroup>
     </legendgroup>
-    <legendlayer name="PointsPSI" checked="Qt::Unchecked" drawingOrder="-1" open="true" showFeatureCount="0">
+    <legendlayer name="PointsPSI" checked="Qt::Checked" drawingOrder="-1" open="true" showFeatureCount="0">
       <filegroup hidden="false" open="true">
-        <legendlayerfile isInOverview="0" visible="0" layerid="PointsPSI_8a2415ff_c7cd_4507_a2a7_614d3b4da624"/>
+        <legendlayerfile isInOverview="0" visible="1" layerid="PointsPSI_8a2415ff_c7cd_4507_a2a7_614d3b4da624"/>
       </filegroup>
     </legendlayer>
     <legendlayer name="PairsPSI" checked="Qt::Unchecked" drawingOrder="-1" open="true" showFeatureCount="0">
@@ -12735,7 +12735,7 @@ def my_form_open(dialog, layer, feature):
       <previewExpression>"name"</previewExpression>
       <mapTip enabled="1"></mapTip>
     </maplayer>
-    <maplayer simplifyLocal="1" simplifyDrawingHints="1" simplifyAlgorithm="0" styleCategories="AllStyleCategories" symbologyReferenceScale="-1" maxScale="0" type="vector" simplifyMaxScale="1" refreshOnNotifyMessage="" minScale="100000000" labelsEnabled="0" legendPlaceholderImage="" refreshOnNotifyEnabled="0" geometry="Point" hasScaleBasedVisibilityFlag="0" autoRefreshEnabled="0" wkbType="Point" readOnly="0" simplifyDrawingTol="1" autoRefreshTime="0">
+    <maplayer simplifyLocal="1" simplifyDrawingHints="1" simplifyAlgorithm="0" styleCategories="AllStyleCategories" symbologyReferenceScale="-1" maxScale="0" type="vector" simplifyMaxScale="1" refreshOnNotifyMessage="" minScale="100000000" labelsEnabled="1" legendPlaceholderImage="" refreshOnNotifyEnabled="0" geometry="Point" hasScaleBasedVisibilityFlag="0" autoRefreshEnabled="0" wkbType="Point" readOnly="0" simplifyDrawingTol="1" autoRefreshTime="0">
       <extent>
         <xmin>0.014</xmin>
         <ymin>0.38</ymin>
@@ -12992,6 +12992,130 @@ def my_form_open(dialog, layer, feature):
         <rotation/>
         <sizescale/>
       </renderer-v2>
+      <labeling type="simple">
+        <settings calloutType="simple">
+          <text-style fontStrikeout="0" fieldName="fid" multilineHeightUnit="Percentage" fontFamily="Ubuntu" fontItalic="0" fontKerning="1" capitalization="0" textOpacity="1" fontSizeUnit="Point" blendMode="0" fontSizeMapUnitScale="3x:0,0,0,0,0,0" multilineHeight="1" forcedItalic="0" fontWeight="50" fontWordSpacing="0" textOrientation="horizontal" useSubstitutions="0" namedStyle="Regular" fontSize="10" fontUnderline="0" fontLetterSpacing="0" textColor="0,0,0,255" legendString="Aa" forcedBold="0" allowHtml="0" previewBkgrdColor="255,255,255,255" isExpression="0">
+            <families/>
+            <text-buffer bufferJoinStyle="128" bufferSizeUnits="MM" bufferColor="255,255,255,255" bufferNoFill="1" bufferOpacity="1" bufferDraw="0" bufferSizeMapUnitScale="3x:0,0,0,0,0,0" bufferSize="1" bufferBlendMode="0"/>
+            <text-mask maskSizeMapUnitScale="3x:0,0,0,0,0,0" maskType="0" maskedSymbolLayers="" maskSize="1.5" maskSizeUnits="MM" maskJoinStyle="128" maskOpacity="1" maskEnabled="0"/>
+            <background shapeFillColor="255,255,255,255" shapeOffsetMapUnitScale="3x:0,0,0,0,0,0" shapeBorderWidthMapUnitScale="3x:0,0,0,0,0,0" shapeType="0" shapeRadiiY="0" shapeOffsetX="0" shapeOffsetY="0" shapeBorderWidth="0" shapeSizeUnit="MM" shapeBlendMode="0" shapeRadiiUnit="MM" shapeSizeX="0" shapeBorderColor="128,128,128,255" shapeRotation="0" shapeDraw="0" shapeOffsetUnit="MM" shapeRadiiX="0" shapeSizeY="0" shapeRadiiMapUnitScale="3x:0,0,0,0,0,0" shapeOpacity="1" shapeRotationType="0" shapeJoinStyle="64" shapeSVGFile="" shapeBorderWidthUnit="MM" shapeSizeMapUnitScale="3x:0,0,0,0,0,0" shapeSizeType="0">
+              <symbol type="marker" frame_rate="10" name="markerSymbol" force_rhr="0" is_animated="0" alpha="1" clip_to_extent="1">
+                <data_defined_properties>
+                  <Option type="Map">
+                    <Option type="QString" name="name" value=""/>
+                    <Option name="properties"/>
+                    <Option type="QString" name="type" value="collection"/>
+                  </Option>
+                </data_defined_properties>
+                <layer enabled="1" class="SimpleMarker" locked="0" id="" pass="0">
+                  <Option type="Map">
+                    <Option type="QString" name="angle" value="0"/>
+                    <Option type="QString" name="cap_style" value="square"/>
+                    <Option type="QString" name="color" value="231,113,72,255"/>
+                    <Option type="QString" name="horizontal_anchor_point" value="1"/>
+                    <Option type="QString" name="joinstyle" value="bevel"/>
+                    <Option type="QString" name="name" value="circle"/>
+                    <Option type="QString" name="offset" value="0,0"/>
+                    <Option type="QString" name="offset_map_unit_scale" value="3x:0,0,0,0,0,0"/>
+                    <Option type="QString" name="offset_unit" value="MM"/>
+                    <Option type="QString" name="outline_color" value="35,35,35,255"/>
+                    <Option type="QString" name="outline_style" value="solid"/>
+                    <Option type="QString" name="outline_width" value="0"/>
+                    <Option type="QString" name="outline_width_map_unit_scale" value="3x:0,0,0,0,0,0"/>
+                    <Option type="QString" name="outline_width_unit" value="MM"/>
+                    <Option type="QString" name="scale_method" value="diameter"/>
+                    <Option type="QString" name="size" value="2"/>
+                    <Option type="QString" name="size_map_unit_scale" value="3x:0,0,0,0,0,0"/>
+                    <Option type="QString" name="size_unit" value="MM"/>
+                    <Option type="QString" name="vertical_anchor_point" value="1"/>
+                  </Option>
+                  <data_defined_properties>
+                    <Option type="Map">
+                      <Option type="QString" name="name" value=""/>
+                      <Option name="properties"/>
+                      <Option type="QString" name="type" value="collection"/>
+                    </Option>
+                  </data_defined_properties>
+                </layer>
+              </symbol>
+              <symbol type="fill" frame_rate="10" name="fillSymbol" force_rhr="0" is_animated="0" alpha="1" clip_to_extent="1">
+                <data_defined_properties>
+                  <Option type="Map">
+                    <Option type="QString" name="name" value=""/>
+                    <Option name="properties"/>
+                    <Option type="QString" name="type" value="collection"/>
+                  </Option>
+                </data_defined_properties>
+                <layer enabled="1" class="SimpleFill" locked="0" id="" pass="0">
+                  <Option type="Map">
+                    <Option type="QString" name="border_width_map_unit_scale" value="3x:0,0,0,0,0,0"/>
+                    <Option type="QString" name="color" value="255,255,255,255"/>
+                    <Option type="QString" name="joinstyle" value="bevel"/>
+                    <Option type="QString" name="offset" value="0,0"/>
+                    <Option type="QString" name="offset_map_unit_scale" value="3x:0,0,0,0,0,0"/>
+                    <Option type="QString" name="offset_unit" value="MM"/>
+                    <Option type="QString" name="outline_color" value="128,128,128,255"/>
+                    <Option type="QString" name="outline_style" value="no"/>
+                    <Option type="QString" name="outline_width" value="0"/>
+                    <Option type="QString" name="outline_width_unit" value="MM"/>
+                    <Option type="QString" name="style" value="solid"/>
+                  </Option>
+                  <data_defined_properties>
+                    <Option type="Map">
+                      <Option type="QString" name="name" value=""/>
+                      <Option name="properties"/>
+                      <Option type="QString" name="type" value="collection"/>
+                    </Option>
+                  </data_defined_properties>
+                </layer>
+              </symbol>
+            </background>
+            <shadow shadowRadius="1.5" shadowScale="100" shadowOffsetGlobal="1" shadowRadiusMapUnitScale="3x:0,0,0,0,0,0" shadowOffsetAngle="135" shadowRadiusAlphaOnly="0" shadowRadiusUnit="MM" shadowUnder="0" shadowOffsetDist="1" shadowOffsetUnit="MM" shadowOffsetMapUnitScale="3x:0,0,0,0,0,0" shadowOpacity="0.69999999999999996" shadowDraw="0" shadowBlendMode="6" shadowColor="0,0,0,255"/>
+            <dd_properties>
+              <Option type="Map">
+                <Option type="QString" name="name" value=""/>
+                <Option name="properties"/>
+                <Option type="QString" name="type" value="collection"/>
+              </Option>
+            </dd_properties>
+            <substitutions/>
+          </text-style>
+          <text-format addDirectionSymbol="0" rightDirectionSymbol=">" placeDirectionSymbol="0" autoWrapLength="0" leftDirectionSymbol="&lt;" wrapChar="" plussign="0" multilineAlign="3" formatNumbers="0" useMaxLineLengthForAutoWrap="1" decimals="3" reverseDirectionSymbol="0"/>
+          <placement placement="6" overlapHandling="PreventOverlap" lineAnchorTextPoint="FollowPlacement" priority="5" offsetType="1" dist="0" lineAnchorPercent="0.5" polygonPlacementFlags="2" yOffset="0" offsetUnits="MM" labelOffsetMapUnitScale="3x:0,0,0,0,0,0" repeatDistanceMapUnitScale="3x:0,0,0,0,0,0" predefinedPositionOrder="TR,TL,BR,BL,R,L,TSR,BSR" placementFlags="10" rotationUnit="AngleDegrees" geometryGenerator="" repeatDistance="0" centroidWhole="0" distUnits="MM" lineAnchorClipping="0" centroidInside="0" rotationAngle="0" distMapUnitScale="3x:0,0,0,0,0,0" overrunDistance="0" overrunDistanceMapUnitScale="3x:0,0,0,0,0,0" fitInPolygonOnly="0" maxCurvedCharAngleIn="25" repeatDistanceUnits="MM" layerType="PointGeometry" preserveRotation="1" quadOffset="4" allowDegraded="0" geometryGeneratorType="PointGeometry" maxCurvedCharAngleOut="-25" geometryGeneratorEnabled="0" overrunDistanceUnit="MM" lineAnchorType="0" xOffset="0"/>
+          <rendering fontLimitPixelSize="0" labelPerPart="0" drawLabels="1" unplacedVisibility="0" zIndex="0" maxNumLabels="2000" upsidedownLabels="0" scaleMax="0" scaleMin="0" obstacleFactor="1" fontMinPixelSize="3" obstacle="1" fontMaxPixelSize="10000" obstacleType="1" mergeLines="0" limitNumLabels="0" minFeatureSize="0" scaleVisibility="0"/>
+          <dd_properties>
+            <Option type="Map">
+              <Option type="QString" name="name" value=""/>
+              <Option name="properties"/>
+              <Option type="QString" name="type" value="collection"/>
+            </Option>
+          </dd_properties>
+          <callout type="simple">
+            <Option type="Map">
+              <Option type="QString" name="anchorPoint" value="pole_of_inaccessibility"/>
+              <Option type="int" name="blendMode" value="0"/>
+              <Option type="Map" name="ddProperties">
+                <Option type="QString" name="name" value=""/>
+                <Option name="properties"/>
+                <Option type="QString" name="type" value="collection"/>
+              </Option>
+              <Option type="bool" name="drawToAllParts" value="false"/>
+              <Option type="QString" name="enabled" value="0"/>
+              <Option type="QString" name="labelAnchorPoint" value="point_on_exterior"/>
+              <Option type="QString" name="lineSymbol" value="&lt;symbol type=&quot;line&quot; frame_rate=&quot;10&quot; name=&quot;symbol&quot; force_rhr=&quot;0&quot; is_animated=&quot;0&quot; alpha=&quot;1&quot; clip_to_extent=&quot;1&quot;>&lt;data_defined_properties>&lt;Option type=&quot;Map&quot;>&lt;Option type=&quot;QString&quot; name=&quot;name&quot; value=&quot;&quot;/>&lt;Option name=&quot;properties&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;type&quot; value=&quot;collection&quot;/>&lt;/Option>&lt;/data_defined_properties>&lt;layer enabled=&quot;1&quot; class=&quot;SimpleLine&quot; locked=&quot;0&quot; id=&quot;{7c3293f9-0f24-464b-8ad8-e3afba410360}&quot; pass=&quot;0&quot;>&lt;Option type=&quot;Map&quot;>&lt;Option type=&quot;QString&quot; name=&quot;align_dash_pattern&quot; value=&quot;0&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;capstyle&quot; value=&quot;square&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;customdash&quot; value=&quot;5;2&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;customdash_map_unit_scale&quot; value=&quot;3x:0,0,0,0,0,0&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;customdash_unit&quot; value=&quot;MM&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;dash_pattern_offset&quot; value=&quot;0&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;dash_pattern_offset_map_unit_scale&quot; value=&quot;3x:0,0,0,0,0,0&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;dash_pattern_offset_unit&quot; value=&quot;MM&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;draw_inside_polygon&quot; value=&quot;0&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;joinstyle&quot; value=&quot;bevel&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;line_color&quot; value=&quot;60,60,60,255&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;line_style&quot; value=&quot;solid&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;line_width&quot; value=&quot;0.3&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;line_width_unit&quot; value=&quot;MM&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;offset&quot; value=&quot;0&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;offset_map_unit_scale&quot; value=&quot;3x:0,0,0,0,0,0&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;offset_unit&quot; value=&quot;MM&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;ring_filter&quot; value=&quot;0&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;trim_distance_end&quot; value=&quot;0&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;trim_distance_end_map_unit_scale&quot; value=&quot;3x:0,0,0,0,0,0&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;trim_distance_end_unit&quot; value=&quot;MM&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;trim_distance_start&quot; value=&quot;0&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;trim_distance_start_map_unit_scale&quot; value=&quot;3x:0,0,0,0,0,0&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;trim_distance_start_unit&quot; value=&quot;MM&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;tweak_dash_pattern_on_corners&quot; value=&quot;0&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;use_custom_dash&quot; value=&quot;0&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;width_map_unit_scale&quot; value=&quot;3x:0,0,0,0,0,0&quot;/>&lt;/Option>&lt;data_defined_properties>&lt;Option type=&quot;Map&quot;>&lt;Option type=&quot;QString&quot; name=&quot;name&quot; value=&quot;&quot;/>&lt;Option name=&quot;properties&quot;/>&lt;Option type=&quot;QString&quot; name=&quot;type&quot; value=&quot;collection&quot;/>&lt;/Option>&lt;/data_defined_properties>&lt;/layer>&lt;/symbol>"/>
+              <Option type="double" name="minLength" value="0"/>
+              <Option type="QString" name="minLengthMapUnitScale" value="3x:0,0,0,0,0,0"/>
+              <Option type="QString" name="minLengthUnit" value="MM"/>
+              <Option type="double" name="offsetFromAnchor" value="0"/>
+              <Option type="QString" name="offsetFromAnchorMapUnitScale" value="3x:0,0,0,0,0,0"/>
+              <Option type="QString" name="offsetFromAnchorUnit" value="MM"/>
+              <Option type="double" name="offsetFromLabel" value="0"/>
+              <Option type="QString" name="offsetFromLabelMapUnitScale" value="3x:0,0,0,0,0,0"/>
+              <Option type="QString" name="offsetFromLabelUnit" value="MM"/>
+            </Option>
+          </callout>
+        </settings>
+      </labeling>
       <customproperties>
         <Option type="Map">
           <Option type="List" name="dualview/previewExpressions">
@@ -22949,7 +23073,7 @@ def my_form_open(dialog, layer, feature):
   <Sensors/>
   <ProjectViewSettings rotation="0" UseProjectScales="0">
     <Scales/>
-    <DefaultViewExtent xmin="-0.26787500000000009" ymin="0.14692187499999942" ymax="8.13807812499999983" xmax="11.57087500000000091">
+    <DefaultViewExtent xmin="2.24960202702702716" ymin="0.26938625000000016" ymax="10.69100375000000014" xmax="12.76510797297297195">
       <spatialrefsys nativeFormat="Wkt">
         <wkt>GEOGCRS["WGS 84",ENSEMBLE["World Geodetic System 1984 ensemble",MEMBER["World Geodetic System 1984 (Transit)"],MEMBER["World Geodetic System 1984 (G730)"],MEMBER["World Geodetic System 1984 (G873)"],MEMBER["World Geodetic System 1984 (G1150)"],MEMBER["World Geodetic System 1984 (G1674)"],MEMBER["World Geodetic System 1984 (G1762)"],MEMBER["World Geodetic System 1984 (G2139)"],ELLIPSOID["WGS 84",6378137,298.257223563,LENGTHUNIT["metre",1]],ENSEMBLEACCURACY[2.0]],PRIMEM["Greenwich",0,ANGLEUNIT["degree",0.0174532925199433]],CS[ellipsoidal,2],AXIS["geodetic latitude (Lat)",north,ORDER[1],ANGLEUNIT["degree",0.0174532925199433]],AXIS["geodetic longitude (Lon)",east,ORDER[2],ANGLEUNIT["degree",0.0174532925199433]],USAGE[SCOPE["Horizontal component of 3D system."],AREA["World."],BBOX[-90,-180,90,180]],ID["EPSG",4326]]</wkt>
         <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
@@ -23014,7 +23138,7 @@ def my_form_open(dialog, layer, feature):
       </spatialrefsys>
     </CoordinateCustomCrs>
   </ProjectDisplaySettings>
-  <ProjectGpsSettings autoCommitFeatures="0" destinationFollowsActiveLayer="1" destinationLayerName="BoxesPSI" destinationLayerProvider="ogr" autoAddTrackVertices="0" destinationLayer="PSI1_Boxes_d30fbca9_0a3b_4620_87e8_ee4ee06437c2" destinationLayerSource="/home/and/Research/Meetings/22/figures/bands/bands/BoxesPSI.gpkg">
+  <ProjectGpsSettings autoCommitFeatures="0" destinationFollowsActiveLayer="1" autoAddTrackVertices="0" destinationLayer="">
     <timeStampFields/>
   </ProjectGpsSettings>
 </qgis>

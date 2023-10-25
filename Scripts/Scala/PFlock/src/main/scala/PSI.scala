@@ -91,7 +91,7 @@ object PSI {
             candidates.put(candidate.envelope, candidate) // getting candidates...
             val t1 = clocktime
 
-            val active_box = Box(band_for_pr, pr.oid)
+            val active_box = Box(band_for_pr)
 
             debug{
                 println(active_box.wkt)
@@ -161,6 +161,8 @@ object PSI {
     var pairs: ListBuffer[(STPoint, STPoint)] = ListBuffer()
     var nPairs = 0
     var nCenters = 0
+    var nCandidates = 0
+    var nBoxes = 0
     var tPairs = 0.0
     var tCenters = 0.0
     var tCandidates = 0.0
@@ -184,11 +186,11 @@ object PSI {
 
     debug{
       bands.zipWithIndex.foreach{ case(band, i) =>
-        println(G.toGeometry(band.envelope).toText + s"\t$i")
+        //println(G.toGeometry(band.envelope).toText + s"\t$i")
       }
     }
 
-    bands.foreach{ band =>
+    val active_boxes = bands.map{ band =>
       var candidates: ListBuffer[Disk] = new ListBuffer[Disk]
       val points = band.getAll[STPoint]
       val pr = band.pr
@@ -224,11 +226,38 @@ object PSI {
         } // foreach centres
       } // foreach pairs
 
-      candidates.toList.map{_.wkt + s"\tCANDIDATE\t${band.pr.oid}"}.foreach(println)
+      val C = candidates.toList
+      nCandidates += C.size
+
+      debug{
+        //C.map{_.wkt + s"\tCANDIDATE\t${band.pr.oid}"}.foreach(println)
+      }
+
+      val box = Box(band)
+      box.pr = pr
+      box.id = pr.oid
+      box.disks = C
+      box
+    }
+
+    println(s"Pairs:      $nPairs")
+    println(s"Centers:    $nCenters")
+    println(s"Candidates: $nCandidates")
+    println(s"Boxes       ${active_boxes.size}")
+
+    println("BOXES!")
+    debug{
+      save("/tmp/edgesB2.wkt"){
+        active_boxes.map { box =>
+          val candidates = box.disks
+          val n = candidates.size
+
+          s"${box.wkt}\tBOX\t$n\t${box.id}\n"
+        }
+      }
     }
 
     // feeding candidates and active boxes...
-    println("BEGIN...")
     pointset.foreach { pr: STPoint =>
       // feeding band with points inside 2-epsilon x 2-epsilon...
       val band_for_pr: RTree[STPoint] = RTree[STPoint]()
@@ -275,7 +304,9 @@ object PSI {
             candidates.put(candidate.envelope, candidate) // getting candidates...
             val t1 = clocktime
 
-            val active_box = Box(band_for_pr, pr.oid)
+            val active_box = Box(band_for_pr)
+            active_box.pr = pr
+            active_box.id = pr.oid
 
             val active_box_hood = boxes.searchIntersection(active_box.boundingBox)
 
@@ -387,37 +418,15 @@ object PSI {
   def insertDisk( C: ListBuffer[Disk], c: Disk)(implicit S: Settings): ListBuffer[Disk] = {
     var continue: Boolean = true
     for( d <- C if continue){
-
-      debug{
-        if (c.pidsText == "291 316 342 441 448 546 666 737" && d.pidsText == "291 316 342 441 448 546 737") {
-          println(s"c: ${c.pidsText}")
-          println(s"d: ${d.pidsText}")
-          println(s"c: ${c.toBinarySignature}")
-          println(s"d: ${d.toBinarySignature}")
-        }
-      }
-
-      (d, c) match {
-        case _ if {
-          c.signature == d.signature
-        } =>
-          if (c.isSubsetOf(d)) {
-            continue = false
-          } else if (d.isSubsetOf(c)) {
-            C -= d
+      (c, d) match {
+        case _ if { c.signature == d.signature } => // Manage especial case (hash conflict)...
+          (c, d) match {
+            case _ if c.isSubsetOf(d) => continue = false
+            case _ if d.isSubsetOf(c) => C -= d
+            case _ => /* Just continue */
           }
-        case _ if {
-          c & d && c.distance(d) <= S.epsilon
-        } =>
-          if (c.isSubsetOf(d)) {
-            continue = false
-          }
-        case _ if {
-          d & c && d.distance(c) <= S.epsilon
-        } =>
-          if (d.isSubsetOf(c)) {
-            C -= d
-          }
+        case _ if { c & d && c.distance(d) <= S.epsilon } => if (c.isSubsetOf(d)) continue = false
+        case _ if { d & c && d.distance(c) <= S.epsilon } => if (d.isSubsetOf(c)) C -= d
         case _ => /* Just continue... */
       }
     }

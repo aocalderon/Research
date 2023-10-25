@@ -61,9 +61,9 @@ object Utils {
   }
 
   case class STPoint(point: Point, cid: Int = 0){
-    val userData = point.getUserData.asInstanceOf[Data]
-    val oid = userData.id
-    val tid = userData.t
+    val userData = if(point.getUserData.isInstanceOf[Data]) point.getUserData.asInstanceOf[Data] else null
+    val oid = if(point.getUserData.isInstanceOf[Data]) userData.id else -1
+    val tid = if(point.getUserData.isInstanceOf[Data]) userData.t  else -1
     var count = 0
 
     def envelope: Envelope = point.getEnvelopeInternal
@@ -106,7 +106,10 @@ object Utils {
 
   }
 
-  def NullPoint(implicit G: GeometryFactory): STPoint = STPoint(G.createPoint())
+  def NullPoint: STPoint = {
+    val G: GeometryFactory = new GeometryFactory()
+    STPoint(G.createPoint())
+  }
 
   case class Data(id: Int, t: Int){
     override def toString = s"$id\t$t"
