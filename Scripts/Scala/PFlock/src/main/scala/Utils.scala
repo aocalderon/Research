@@ -359,11 +359,11 @@ object Utils {
     var nCandidates: Int = 0, var nMaximals: Int = 0,
     var nCliques: Int = 0, var nMBC: Int = 0, var nBoxes: Int = 0,
     var tCounts: Double = 0.0, var tRead: Double = 0.0, var tGrid: Double = 0.0,
-    var tBand: Double = 0.0,  var tBoxes: Double = 0.0, var tSort: Double = 0.0,  var tInsert: Double = 0.0,
     var tCliques: Double = 0.0, var tMBC: Double = 0.0,
+    var tBand: Double = 0.0, var tSort: Double = 0.0,
     var tPairs: Double = 0.0, var tCenters: Double = 0.0,
     var tCandidates: Double = 0.0, var tMaximals: Double = 0.0,
-    var tPS: Double = 0.0, var tFC: Double = 0.0){
+    var tBoxes: Double = 0.0, var tFilter: Double = 0.0){
 
     def print(printTotal: Boolean = true)(implicit logger: Logger, S: Settings): Unit = {
       log(s"Points     |${nPoints}")
@@ -393,23 +393,21 @@ object Utils {
     }
 
     def printPSI(printTotal: Boolean = true)(implicit logger: Logger, S: Settings): Unit = {
-      log(s"Points     |${nPoints}")
-      log(s"Pairs      |${nPairs}")
-      log(s"Centers    |${nCenters}")
-      log(s"Candidates |${nCandidates}")
-      log(s"Boxes      |${nBoxes}")
-      log(s"Maximals   |${nMaximals}")
-      logt(s"PS        |${tPS}")
-      logt(s"FC        |${tFC}")
-      logt(s"Band      |${tBand}")
-      logt(s"Pairs     |${tPairs}")
-      logt(s"Centers   |${tCenters}")
-      logt(s"Candidates|${tCandidates}")
-      logt(s"Boxes     |${tBoxes}")
-      logt(s"Sort      |${tSort}")
-      logt(s"Insert    |${tInsert}")
+      log(s"Points     |$nPoints")
+      log(s"Pairs      |$nPairs")
+      log(s"Centers    |$nCenters")
+      log(s"Candidates |$nCandidates")
+      log(s"Boxes      |$nBoxes")
+      log(s"Maximals   |$nMaximals")
+      logt(s"Band      |$tBand")
+      logt(s"Sort      |$tSort")
+      logt(s"Pairs     |$tPairs")
+      logt(s"Centers   |$tCenters")
+      logt(s"Candidates|$tCandidates")
+      logt(s"Boxes     |$tBoxes" )
+      logt(s"Filter    |$tFilter")
       if (printTotal) {
-        val tTotal = tPS + tFC
+        val tTotal = tBand + tSort + tPairs + tCenters + tCandidates + tBoxes + tFilter
         logt(s"Total     |${tTotal}")
       }
     }

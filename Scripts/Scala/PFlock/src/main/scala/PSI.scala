@@ -7,6 +7,7 @@ import org.locationtech.jts.geom._
 import org.locationtech.jts.index.strtree.STRtree
 import org.slf4j.{Logger, LoggerFactory}
 
+import scala.annotation.tailrec
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 
@@ -19,7 +20,7 @@ object PSI {
     * @param points the set of points.
     * @return list of candidates and list of boxes.
     **/
-  def planeSweeping(points: List[STPoint])
+  def planeSweeping2(points: List[STPoint])
     (implicit S: Settings, G: GeometryFactory, stats: Stats): (RTree[Disk], ArcheryRTree[Box]) = {
 
     // ordering by coordinate (it is first by x and then by y)...
@@ -127,7 +128,6 @@ object PSI {
     stats.tPairs = tPairs
     stats.tCenters = tCenters
     stats.tCandidates = tCandidates / 1e9
-    stats.tBoxes = tBoxes / 1e9
 
     debug{
       save("/tmp/edgesPairsPSI.wkt"){
@@ -141,32 +141,23 @@ object PSI {
     (candidates, boxes)
   }
 
-  def planeSweeping2(points: List[STPoint])
-                   (implicit S: Settings, G: GeometryFactory, stats: Stats): (RTree[Disk], ArcheryRTree[Box]) = {
+  def planeSweeping(points: List[STPoint])
+                   (implicit S: Settings, G: GeometryFactory, stats: Stats): List[Box] = {
 
     // ordering by coordinate (it is first by x and then by y)...
-    val pointset: List[STPoint] = points.sortBy(_.getCoord)
-
-    debug {
-      save("/tmp/edgesPointsPSI.wkt") {
-        pointset
-          .zipWithIndex
-          .map { case (point, order) => s"${point.wkt}\t$order\n" }
-      }
+    val (pointset, tSort) = timer{
+      points.sortBy(_.getCoord)
     }
+    stats.tSort = tSort
 
     // setting data structures to store candidates and boxes...
-    val candidates: RTree[Disk] = RTree[Disk]()
-    var boxes: ArcheryRTree[Box] = ArcheryRTree[Box]()
     var pairs: ListBuffer[(STPoint, STPoint)] = ListBuffer()
     var nPairs = 0
     var nCenters = 0
     var nCandidates = 0
-    var nBoxes = 0
     var tPairs = 0.0
     var tCenters = 0.0
     var tCandidates = 0.0
-    var tBoxes = 0.0
 
     // feeding bands with points inside 2-epsilon x 2-epsilon...
     val (bands, tBand) = timer {
@@ -183,13 +174,9 @@ object PSI {
         band_for_pr
       }.filter(_.size() >= S.mu)
     }
+    stats.tBand = tBand
 
-    debug{
-      bands.zipWithIndex.foreach{ case(band, i) =>
-        //println(G.toGeometry(band.envelope).toText + s"\t$i")
-      }
-    }
-
+    val t_prime = clocktime
     val active_boxes = bands.map{ band =>
       var candidates: ListBuffer[Disk] = new ListBuffer[Disk]
       val points = band.getAll[STPoint]
@@ -222,136 +209,87 @@ object PSI {
             val candidate = Disk(centre, hood.map(_.oid))
             candidates.append(candidate) // getting candidates...
           }
-          tCandidates += (clocktime - t0)
+          tCandidates += (clocktime - t0) / 1e9
         } // foreach centres
       } // foreach pairs
 
-      val C = candidates.toList
-      nCandidates += C.size
-
-      debug{
-        //C.map{_.wkt + s"\tCANDIDATE\t${band.pr.oid}"}.foreach(println)
-      }
+      nCandidates += candidates.size
 
       val box = Box(band)
       box.pr = pr
       box.id = pr.oid
-      box.disks = C
+      box.disks = candidates.toList
+
       box
     }
+    val tBoxes = (clocktime - t_prime) - tPairs - tCenters - tCandidates
 
-    println(s"Pairs:      $nPairs")
-    println(s"Centers:    $nCenters")
-    println(s"Candidates: $nCandidates")
-    println(s"Boxes       ${active_boxes.size}")
+    stats.tPairs      = tPairs
+    stats.tCenters    = tCenters
+    stats.tCandidates = tCandidates
 
-    println("BOXES!")
-    debug{
-      save("/tmp/edgesB2.wkt"){
-        active_boxes.map { box =>
-          val candidates = box.disks
-          val n = candidates.size
 
-          s"${box.wkt}\tBOX\t$n\t${box.id}\n"
+    stats.nPairs      = nPairs
+    stats.nCenters    = nCenters
+    stats.nCandidates = nCandidates
+    stats.nBoxes      = active_boxes.size
+
+    active_boxes
+  }
+
+  def filterCandidates(boxes: List[Box])
+                    (implicit S: Settings, G: GeometryFactory, stats: Stats): List[Disk] = {
+
+    @tailrec
+    def itBoxes(boxes: List[Box], final_candidates: ListBuffer[Disk]): List[Disk] = {
+      boxes match {
+        case box_i :: remain_boxes => {
+          val candidates = box_i.candidates
+          val final_candidates_prime = itRemain(box_i, boxes, candidates, final_candidates, false)
+          itBoxes(remain_boxes, final_candidates_prime)
         }
+        case Nil => final_candidates.toList
       }
     }
 
-    // feeding candidates and active boxes...
-    pointset.foreach { pr: STPoint =>
-      // feeding band with points inside 2-epsilon x 2-epsilon...
-      val band_for_pr: RTree[STPoint] = RTree[STPoint]()
-      val (_, tB) = timer {
-        pointset.filter { ps: STPoint =>
-          math.abs(ps.X - pr.X) <= S.epsilon && math.abs(ps.Y - pr.Y) <= S.epsilon
-        }.foreach { ps: STPoint =>
-          band_for_pr.put(ps.envelope, ps)
-        }
-      }
-
-      // finding pairs of points, centers, candidates and boxes...
-      val (band_pairs, tP) = timer {
-        band_for_pr.getAll[STPoint]
-          .filter { p =>
-            p.X >= pr.X && // those at the right...
-              p.oid != pr.oid && // prune duplicates...
-              p.distance(pr) <= S.epsilon // getting pairs...
-          }
-      }
-      //pairs.appendAll(band_pairs.map(p => (pr, p)))
-      //nPairs += band_pairs.size
-      //tPairs += tP
-
-      band_pairs.foreach { p =>
-        val (band_centres, tC) = timer {
-          computeCentres(pr, p) // gettings centres...
-        }
-        //nCenters += band_centres.size
-        //tCenters += tC
-
-        band_centres.foreach { centre =>
-          val t0 = clocktime
-          val envelope = centre.getEnvelopeInternal
-          envelope.expandBy(S.r)
-          val hood = band_for_pr
-            .get[STPoint](envelope)
-            .filter {
-              _.distanceToPoint(centre) <= S.r
-            }
-
-          val t1 = if (hood.size >= S.mu) {
-            val candidate = Disk(centre, hood.map(_.oid))
-            candidates.put(candidate.envelope, candidate) // getting candidates...
-            val t1 = clocktime
-
-            val active_box = Box(band_for_pr)
-            active_box.pr = pr
-            active_box.id = pr.oid
-
-            val active_box_hood = boxes.searchIntersection(active_box.boundingBox)
-
-            def coveredBy: Boolean = active_box_hood.exists(b => b.value.covers(active_box))
-
-            def covers: Boolean = active_box_hood.exists(b => active_box.covers(b.value))
-
-            if (coveredBy) {
-              // do nothing...
-            } else if (covers) {
-              // remove previous box and add the active one...
-              val box_prime = active_box_hood.find(b => active_box.covers(b.value)).get
-              boxes = boxes.remove(box_prime).insert(active_box.archeryEntry)
+    @tailrec
+    def itRemain(box_i: Box, boxes: List[Box], candidates: List[Disk], final_candidates: ListBuffer[Disk],
+                 was_processed: Boolean)(implicit S: Settings): ListBuffer[Disk] = {
+      boxes match {
+        case box_j :: more_boxes => {
+          if (math.abs(box_i.getCentroid.x - box_j.getCentroid.x) <= S.epsilon) { // boxes are close enough in X...
+            if (box_i.intersects(box_j)) { //boxes intersects...
+              val final_candidates_prime = itCandidates(candidates, final_candidates)
+              itRemain(box_i, List.empty[Box], candidates, final_candidates_prime, true)
             } else {
-              // otherwise add the active box...
-              boxes = boxes.insert(active_box.archeryEntry)
+              itRemain(box_i, more_boxes, candidates, final_candidates, false)
             }
-            t1
-          } else clocktime
-          val t2 = clocktime
-          tCandidates += (t1 - t0)
-          tBoxes += (t2 - t1)
+          } else {
+            itRemain(box_i, List.empty[Box], candidates, final_candidates, false)
+          }
         }
-      } // foreach pairs
-    } // foreach pointset
-    stats.nPairs = nPairs
-    stats.nCenters = nCenters
-    stats.nCandidates = candidates.size
-    stats.nBoxes = boxes.size
-    stats.tBand = tBand
-    stats.tPairs = tPairs
-    stats.tCenters = tCenters
-    stats.tCandidates = tCandidates / 1e9
-    stats.tBoxes = tBoxes / 1e9
-
-    debug {
-      save("/tmp/edgesPairsPSI.wkt") {
-        pairs.toList.map { case (pr, p) =>
-          val coords = Array(pr.getCoord, p.getCoord)
-          G.createLineString(coords).toText + "\n"
-        }
+        case Nil => if (was_processed)
+          itCandidates(candidates, final_candidates)
+        else
+          final_candidates
       }
     }
 
-    (candidates, boxes)
+    @tailrec
+    def itCandidates(candidates: List[Disk], final_candidates: ListBuffer[Disk]): ListBuffer[Disk] = {
+      candidates match {
+        case candidate :: remain_candidates => {
+          val final_candidates_prime = insertDisk(final_candidates, candidate)
+          itCandidates(remain_candidates, final_candidates_prime)
+        }
+        case Nil => final_candidates
+      }
+    }
+
+    val maximals = itBoxes(boxes, new ListBuffer[Disk]())
+    stats.nMaximals = maximals.size
+
+    maximals.toList
   }
 
   /**
@@ -360,7 +298,7 @@ object PSI {
     * @param boxes_prime  set of active boxes (previous sorting).
     * @return set of maximal disks.
     */
-  def filterCandidates(boxes_prime: ArcheryRTree[Box])(implicit S: Settings, stats: Stats): List[Disk] = {
+  def filterCandidates2(boxes_prime: ArcheryRTree[Box])(implicit S: Settings, stats: Stats): List[Disk] = {
     // Sort boxes by left-bottom corner...
     val (boxes, tS) = timer{
       boxes_prime.values.toList.sortBy {
@@ -403,7 +341,6 @@ object PSI {
         }
       }
     }
-    stats.tInsert = tI
 
     C.toList
   }
@@ -445,78 +382,13 @@ object PSI {
     stats.nPoints = points.size
 
     // Call plane sweeping technique algorithm...
-
-    val ((candidates, boxes), tPS) = timer{
-      PSI.planeSweeping2(points)
-    }
-    stats.tPS = tPS
-
-    val candidates_prime = new STRtree()
-    candidates.getAll[Disk]
-      .groupBy{ candidate =>
-        candidate.pidsText
-      }
-      .map{ case(_, disks) =>
-        disks.head
-      }
-      .foreach{ candidate =>
-        candidates_prime.insert(candidate.getExpandEnvelope(S.r), candidate)
-      }
-
-    // Feed each box with the disks it contains...
-    boxes.values.zipWithIndex.foreach{ case(box, id) =>
-      box.id = id
-      box.disks = candidates_prime.query(box).asScala
-        .map{_.asInstanceOf[Disk]}
-        .filter{_.center.distance(G.toGeometry(box)) <= S.r} // the disk intersects the box...
-        .toList
-      box.pidsSet = box.disks.map(_.pids).toSet
-    }
-
-    debug {
-      save("/tmp/edgesBoxesPSI.wkt") {
-        boxes.values.map { box =>
-          s"${box.wkt}\t${box.id}\t${box.pr}\t${box.diagonal}\t${box.pidsSet.map(_.mkString(" ")).mkString("; ")}\n"
-        }.toList
-      }
-      save(s"/tmp/boxes_${S.dataset_name}.tsv") {
-        boxes.values.flatMap { box =>
-          box.disks.map{ disk =>
-            s"${box.id}\t${disk.pidsText}\n"
-          }
-        }.toList
-      }
-      save(s"/tmp/pids.tsv") {
-        boxes.values.flatMap { box =>
-          val id = box.id
-          box.pidsSet.flatten.toList.map { pid =>
-            s"$pid\t$id\n"
-          }
-        }.toList
-      }
-      save(s"/tmp/samples.tsv") {
-        val pids = boxes.values.flatMap { box =>
-          val id = box.id
-          box.pidsSet.flatten.toList.map{ pid =>
-            (pid, id)
-          }.toSet
-        }.toList
-
-        for{
-          b <- pids
-          p <- points if b._1 == p.oid
-        } yield {
-          s"${p.oid}\t${p.point.getX}\t${p.point.getY}\t0\t${b._2}\n"
-        }
-      }
-    }
+    val boxes = PSI.planeSweeping(points)
 
     // Call filter candidates algorithm...
-    val (maximals, tFC) = timer{
+    val (maximals, tF) = timer{
       PSI.filterCandidates(boxes)
     }
-    stats.nMaximals = maximals.size
-    stats.tFC = tFC
+    stats.tFilter = tF
 
     (maximals, stats)
   }

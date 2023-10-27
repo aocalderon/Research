@@ -98,11 +98,15 @@ object PSI_Utils {
   case class Box(hood: RTree[STPoint]) extends Envelope(hood.envelope) {
     val points: List[STPoint] = hood.getAll[STPoint]
     val envelope: Envelope = hood.envelope
-    val left_bottom: Coordinate = new Coordinate(envelope.getMinX, envelope.getMinY)
+    val left_bottom: Coordinate = hood.left_bottom
     var disks: List[Disk] = _
     var pidsSet: Set[List[Int]] = _
     var id: Int = -1
     var pr: STPoint = NullPoint
+
+    def getCentroid: Coordinate = envelope.centre()
+
+    def candidates: List[Disk] = disks
 
     def diagonal(implicit G: GeometryFactory): String = {
       val right_top: Coordinate = new Coordinate(envelope.getMaxX, envelope.getMaxY)
