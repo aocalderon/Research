@@ -1,0 +1,23 @@
+#!/bin/bash
+
+
+N=$1
+
+
+ES=( 10 12 14 16 18 ) # epsilon
+MS=( 3 ) # mu
+
+for n in `seq 1 $N`
+do
+    for dataset in /home/and/Research/Datasets/LA/cells/*.tsv
+    do
+	for e in "${ES[@]}"
+	do
+		for m in "${MS[@]}"
+		do
+			echo "bash/checker_scala --dataset $dataset --epsilon $e --mu $m --tester"
+			bash/checker_scala --dataset $dataset --epsilon $e --mu $m --tester
+		done
+	done
+    done
+done
