@@ -79,6 +79,14 @@ object Tester {
         save(s"/tmp/cell${cid}.tsv"){ data.toList }
       }
 
+    save("/tmp/cells.tsv"){
+      cells.map{ case(cid, envelope) =>
+        val wkt = geofactory.toGeometry(envelope)
+
+        s"$wkt\t$cid\n"
+      }.toList
+    }
+
     /*******************************************************************************/
 
     spark.close()
