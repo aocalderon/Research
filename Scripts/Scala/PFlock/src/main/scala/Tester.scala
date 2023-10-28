@@ -52,7 +52,7 @@ object Tester {
     /*******************************************************************************/
     // Code here...
     val points = spark.read
-      .textFile("/home/and/Research/Datasets/LA_50K_T321.tsv")
+      .textFile("/home/and/Research/Datasets/LA_50K_T320.tsv")
       .rdd
       .map{ line =>
         val arr = line.split("\t")

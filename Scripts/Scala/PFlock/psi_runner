@@ -3,7 +3,7 @@
 
 N=$1
 
-ES=( 10 12 16 20 22 24) # epsilon
+ES=( 14 18 ) # epsilon
 MS=( 3 ) # mu
 
 for n in `seq 1 $N`
