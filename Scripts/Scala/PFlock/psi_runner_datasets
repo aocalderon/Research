@@ -4,12 +4,12 @@
 N=$1
 
 
-ES=( 10 12 14 16 18 ) # epsilon
+ES=( 10 12 14 16 18 20) # epsilon
 MS=( 3 ) # mu
 
-for n in `seq 1 $N`
+for dataset in /home/and/Research/Datasets/LA/cells/*.tsv
 do
-    for dataset in /home/and/Research/Datasets/LA/cells/*.tsv
+    for n in `seq 1 $N`
     do
 	for e in "${ES[@]}"
 	do

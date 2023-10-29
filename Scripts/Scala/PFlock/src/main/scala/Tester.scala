@@ -3,6 +3,7 @@ package edu.ucr.dblab.pflock
 import org.locationtech.jts.geom.{PrecisionModel, GeometryFactory}
 import org.locationtech.jts.geom.{Envelope, Coordinate, Point, LineString}
 import org.locationtech.jts.index.quadtree.{Quadtree => JTSQuadtree}
+import org.locationtech.jts.index.strtree.STRtree
 
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -24,7 +25,7 @@ object Tester {
   def main(args: Array[String]): Unit = {
     implicit val params = new BFEParams(args)
 
-    val spark = SparkSession.builder()
+    implicit val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .master(params.master())
       .appName("Tester").getOrCreate()
@@ -51,41 +52,64 @@ object Tester {
 
     /*******************************************************************************/
     // Code here...
-    val points = spark.read
-      .textFile("/home/and/Research/Datasets/LA_50K_T320.tsv")
-      .rdd
-      .map{ line =>
-        val arr = line.split("\t")
-        val x = arr(1).toDouble
-        val y = arr(2).toDouble
+    def readPoints(filename: String)
+      (implicit spark: SparkSession, geofactory: GeometryFactory): RDD[Point] = {
 
-        val point = geofactory.createPoint(new Coordinate(x, y))
-        point.setUserData(line)
-        point
-      }
+      spark.read
+        .textFile(filename)
+        .rdd
+        .map{ line =>
+          val arr = line.split("\t")
+          val x = arr(1).toDouble
+          val y = arr(2).toDouble
 
-    val (cells, tree, mbr) = Quadtree.build(points, fraction = 1, capacity = 250)
-
-    points.map{ point =>
-      val id = tree.query(point.getEnvelopeInternal)
-        .asScala.map(_.asInstanceOf[Int]).head
-      val line = point.getUserData.asInstanceOf[String]
-
-      (id, line)
+          val point = geofactory.createPoint(new Coordinate(x, y))
+          point.setUserData(line)
+          point
+        }
     }
-      .groupBy(_._1)
-      .map{ case(cid, list) => (cid, list.map(_._2 + "\n"))}
-      .foreach{ case(cid, data) =>
-        save(s"/tmp/cell${cid}.tsv"){ data.toList }
+
+    def savePoints(points: RDD[Point], tree: STRtree, tag: String = "T",
+      outpath: String = "/tmp/"): Map[Int, Int] = {
+
+      points.map{ point =>
+        val id = tree.query(point.getEnvelopeInternal).asScala.map(_.asInstanceOf[Int]).head
+        val line = point.getUserData.asInstanceOf[String]
+
+        (id, line)
       }
+        .groupBy(_._1)
+        .map{ case(cid, list) =>
+          val data = list.map(_._2 + "\n").toList
+          save(s"${outpath}${tag}_cell${cid}.tsv"){ data }
 
-    save("/tmp/cells.tsv"){
-      cells.map{ case(cid, envelope) =>
-        val wkt = geofactory.toGeometry(envelope)
-
-        s"$wkt\t$cid\n"
-      }.toList
+          (cid -> data.size)
+        }.collect.toMap
     }
+
+    val outpath = "/home/and/Research/Datasets/LA"
+
+    val points1 = readPoints("/home/and/Research/Datasets/LA_50K_T320.tsv")
+    val points2 = readPoints("/home/and/Research/Datasets/LA_50K_T321.tsv")
+
+    val (cells, tree, mbr) = Quadtree.build(points1 ++ points2, fraction = 1, capacity = 250)
+
+    val counts1 = savePoints(points1, tree, "T320", outpath + "/cells/")
+    val counts2 = savePoints(points2, tree, "T321", outpath + "/cells/")
+
+    val data = cells.map{ case(cid, envelope) =>
+      val polygon = geofactory.toGeometry(envelope)
+      val area = polygon.getArea
+      val wkt  = polygon.toText
+      val n1   = counts1.getOrElse(cid, 0)
+      val n2   = counts2.getOrElse(cid, 0)
+      val density1 = if(n1 > 0) n1.toDouble / area else 0
+      val density2 = if(n2 > 0) n2.toDouble / area else 0
+
+      s"$wkt\t$cid\t$area\t$n1\t$density1\t$n2\t$density2\n"
+    }.toList
+
+    save(s"${outpath}/cells.tsv"){ data }
 
     /*******************************************************************************/
 
