@@ -92,10 +92,10 @@ object Tester {
     val points1 = readPoints("/home/and/Research/Datasets/LA_50K_T320.tsv")
     val points2 = readPoints("/home/and/Research/Datasets/LA_50K_T321.tsv")
 
-    val (cells, tree, mbr) = Quadtree.build(points1 ++ points2, fraction = 1, capacity = 250)
+    val (cells, tree, mbr) = Quadtree.build(points1 ++ points2, fraction = 1, capacity = 2500)
 
-    val counts1 = savePoints(points1, tree, "T320", outpath + "/cells/")
-    val counts2 = savePoints(points2, tree, "T321", outpath + "/cells/")
+    val counts1 = savePoints(points1, tree, "T320", outpath + "/cells_coarser/")
+    val counts2 = savePoints(points2, tree, "T321", outpath + "/cells_coarser/")
 
     val data = cells.map{ case(cid, envelope) =>
       val polygon = geofactory.toGeometry(envelope)
@@ -109,7 +109,7 @@ object Tester {
       s"$wkt\t$cid\t$area\t$n1\t$density1\t$n2\t$density2\n"
     }.toList
 
-    save(s"${outpath}/cells.tsv"){ data }
+    save(s"${outpath}/cells_coarser.tsv"){ data }
 
     /*******************************************************************************/
 

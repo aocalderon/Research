@@ -3,11 +3,10 @@
 
 N=$1
 
-
 ES=( 10 12 14 16 18 20) # epsilon
 MS=( 3 ) # mu
 
-for dataset in $HOME/Research/Datasets/LA/cells/*.tsv
+for dataset in $HOME/Research/Datasets/LA/cells_coarser/*.tsv
 do
     for n in `seq 1 $N`
     do
@@ -21,8 +20,3 @@ do
 	done
     done
 done
-
-dir="$HOME/Research/Datasets/LA/cells/"
-while read -r f; do
-    echo "$f"
-done < <(find "$dir" -printf "%k KB %p\n" | sort -nr)
