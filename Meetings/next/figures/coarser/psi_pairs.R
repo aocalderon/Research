@@ -31,7 +31,7 @@ pairs <- enframe(read_lines( "pairs.txt" ), value = "line") |>
   group_by(tinstance, cellId, epsilon) |> 
   summarise(n = max(n)) 
 
-data <- times |> inner_join(pairs, by = join_by(tinstance, cellId, epsilon))
+data <- times |> inner_join(pairs, by = c("tinstance", "cellId", "epsilon"))
 
 p = ggplot(data, aes(x = n, y = time, shape = method, color = method)) +
   geom_point() +
@@ -45,3 +45,8 @@ plot(p)
 W = 18
 H = 12
 ggsave(paste0("psi_pairs.pdf"), width = W, height = H)
+
+pairs |> 
+  filter(epsilon == 20) |> 
+  select(tinstance, cellId, n) |>
+  write_tsv("npairs.tsv", col_names = F)
