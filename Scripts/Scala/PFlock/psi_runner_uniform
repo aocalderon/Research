@@ -1,0 +1,13 @@
+#!/bin/bash
+
+DS=( 25 50 75 100 ) # dataset
+CS=( 100 200 300 400 500 ) # capacity
+
+for d in "${DS[@]}"
+do
+    for c in "${CS[@]}"
+    do
+	echo "bash/uniform_spark --dataset $d --capacity $c"
+	bash/uniform_spark --dataset $d --capacity $c
+    done
+done
