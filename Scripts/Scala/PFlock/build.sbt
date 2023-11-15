@@ -5,6 +5,8 @@ crossScalaVersions := Seq("2.11.12", "2.12.17")
 
 val SparkVersion = "2.4.0"
 
+resolvers += Resolver.url("my-test-repo", url("https://repo.osgeo.org/repository/release/"))
+
 lazy val buildSettings = (project in file("."))
   .settings(
     name := "pflock",
@@ -12,6 +14,7 @@ lazy val buildSettings = (project in file("."))
     libraryDependencies += "org.apache.spark" %% "spark-sql" % SparkVersion,
 
     libraryDependencies += "org.locationtech.jts" % "jts-core" % "1.19.0",
+    libraryDependencies += "org.geotools" % "gt-main" % "30.0",
 
     libraryDependencies += "org.jgrapht" % "jgrapht-core" % "1.4.0",
 

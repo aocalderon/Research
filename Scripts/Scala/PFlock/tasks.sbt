@@ -22,7 +22,7 @@ sparkBash := {
   libJars_paths.map{_.getName}.foreach{println}
 
   val finder: PathFinder = (baseDirectory.value / "target") ** "*.jar"
-  val jar = finder.get.mkString(" ")
+  val jar = finder.get.last
 
   val log_file  = s"${System.getProperty("user.home")}/Spark/2.4/conf/log4j.properties "
   val files     = s"$log_file "
