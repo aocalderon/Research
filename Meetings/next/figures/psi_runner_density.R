@@ -4,17 +4,17 @@ library(latex2exp)
 TINSTANCE = 321
 fields <- c("ts","start","host", "tag", "z", "appId","partitions","dataset","epsilon","mu","delta","method","stage","time")  
 
-data0 <- enframe(read_lines( "psi_runner_datasets1.txt" ), value = "line") |>
+data0 <- enframe(read_lines( "psi_benchmark3_times.txt" ), value = "line") |>
   separate(col = line, into = fields, sep = "\\|") |>
   mutate(epsilon = as.numeric(epsilon), time = as.numeric(time)) |>
-  separate(col = dataset, into = c("tinstance", "cellId"), sep = "_") |>
-  select(tinstance, cellId, method, epsilon, time) |>
+  separate(col = dataset, into = c("tinstance", "cid"), sep = "_") |>
+  select(tinstance, cid, method, epsilon, time) |>
   separate(col = tinstance, into = c(NA, "tinstance"), sep = "T") |>
-  separate(col = cellId, into = c(NA, "cellId"), sep = "cell") |>
-  mutate(tinstance = as.numeric(tinstance), cellId = as.numeric(cellId)) |>
+  separate(col = cid, into = c(NA, "cid"), sep = "cell") |>
+  mutate(tinstance = as.numeric(tinstance), cid = as.numeric(cid)) |>
   filter(tinstance == TINSTANCE) |>
-  select(cellId, method, epsilon, time) |>
-  group_by(cellId, method, epsilon) |> 
+  select(cid, method, epsilon, time) |>
+  group_by(cid, method, epsilon) |> 
   summarise(time = mean(time)) 
 
 cells_prime <- read_tsv("psi_runner_datasets_cells.tsv", col_names = c("wkt", "cid", "area", "n1", "d1", "n2", "d2")) 
@@ -25,18 +25,18 @@ if(TINSTANCE == 320){
 }
 
 data <- data0 |> 
-  inner_join(cells, by = join_by(cellId == cid)) |>
-  select(cellId, method, n, d, epsilon, time) 
+  inner_join(cells, by = c("cid")) |>
+  select(cid, method, n, d, epsilon, time) 
 
 p = ggplot(data, aes(x = d, y = time, shape = method, color = method)) +
   geom_point() +
-  ylim(0, 12) +
+  ylim(0, 0.65) +
   ggtitle(paste("Density at different values of epsilon(m)\nTime instance: ", TINSTANCE)) + 
   labs(x=TeX("Density (points / $m^2$)"), y="Time(s)") +
   facet_wrap(~epsilon) +
   theme_bw() 
 plot(p)  
 
-W = 12
-H = 8
+W = 18
+H = 12
 ggsave(paste0("psi_density_", TINSTANCE, ".pdf"), width = W, height = H)
