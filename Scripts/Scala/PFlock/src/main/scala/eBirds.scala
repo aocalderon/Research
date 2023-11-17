@@ -19,6 +19,12 @@ import edu.ucr.dblab.pflock.sedona.quadtree.Quadtree
 import com.github.nscala_time.time.Imports._
 import org.joda.time.{DateTime => JodaDateTime}
 
+import org.locationtech.proj4j.CRSFactory;
+import org.locationtech.proj4j.CoordinateReferenceSystem;
+import org.locationtech.proj4j.CoordinateTransform;
+import org.locationtech.proj4j.CoordinateTransformFactory;
+import org.locationtech.proj4j.ProjCoordinate;
+
 object eBirds {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
@@ -39,17 +45,29 @@ object eBirds {
 
     data.show(truncate = false)
 
-    val sample = data.map{ rec =>
-      val x = rec.getString(0).toDouble
-      val y = rec.getString(1).toDouble
-      val i = rec.getString(2).split(":").last
-      val d = rec.getString(3)
-      val t = if(rec.getString(4) == null) "00:00:00" else rec.getString(4)
-      val datetime = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:SS").parseDateTime(s"${d} ${t}")
-      val millis = datetime.getMillis()
-      val joda_time = new JodaDateTime(millis)
+    val crsFactory = new CRSFactory();
+    val epsg4326 = crsFactory.createFromName("epsg:4326");
+    val epsg6423 = crsFactory.createFromName("epsg:6426");
 
-      s"$i\t$x\t$y\t$millis\t$d $t\t${joda_time}"
+    val sample = data.map{ rec =>
+      val lon = rec.getString(0).toDouble
+      val lat = rec.getString(1).toDouble
+      val pid = rec.getString(2).split(":").last
+      val did = rec.getString(3)
+      val tid = if(rec.getString(4) == null) "00:00:00" else rec.getString(4)
+
+      val ms = DateTimeFormat
+        .forPattern("YYYY-MM-dd HH:mm:SS")
+        .parseDateTime(s"${did} ${tid}")
+        .getMillis()
+
+      val ctFactory = new CoordinateTransformFactory().createTransform(epsg4326, epsg6423)
+      val coord = new ProjCoordinate()
+      ctFactory.transform(new ProjCoordinate(lon, lat), coord)
+      val x = coord.x
+      val y = coord.y
+
+      s"$pid\t$x\t$y\t$ms"
     }.distinct()
 
     sample.show(truncate = false)
