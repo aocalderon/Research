@@ -81,97 +81,57 @@
 %%% Finer quadtree
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Performance benchmark in finer quadtree (1045 cells)...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/points_per_cell}
+\begin{frame}{Uniform study area...}
+    \begin{itemize}
+        \item Uniform random generator\footnote{\href{https://dl.acm.org/doi/10.1145/3397536.3422351}{SpiderWeb: A Spatial Data Generator on the Web}}...
+        \item Number of points: 25K 50K 75K 100K...
+        \item Uniform distributed over a square of 1 unit...
+        \item Performace evaluated by different quadtree capacities (100, 200 and 300 points per cell)...
+    \end{itemize}
 \end{frame}
 
-\begin{frame}{Performance benchmark in finer quadtree (1045 cells)...}
+\begin{frame}{Uniform study area...}
     \centering
-    \includegraphics[width=0.95\textwidth]{figures/density}
+    \includegraphics[width=0.60\textwidth]{figures/uniform_study_area}
 \end{frame}
 
+\begin{frame}{Performance [Datasets vs Capacity vs Epsilon]...}
+    \centering
+    \includegraphics[width=0.95\textwidth]{scripts/uniform_benchmark_lt15}
+\end{frame}
+
+\begin{frame}{Performance [Datasets vs Capacity vs Epsilon]...}
+    \centering
+    \includegraphics[width=0.95\textwidth]{scripts/uniform_benchmark_lt10}
+\end{frame}
+
+\begin{frame}{Performance [Datasets vs Capacity vs Epsilon]...}
+    \centering
+    \includegraphics[width=0.95\textwidth]{scripts/uniform_benchmark_lt05}
+\end{frame}
+
+\begin{frame}{Uniform study area...}
+    \begin{itemize}
+        \item Full dataset size: 801M  observations...
+        \item California dataset: 59.8M ...
+    \end{itemize} \vspace{0.5cm}
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/ebird}
+\end{frame}
+
+\begin{frame}{eBirds 1\% sample dataset...}
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/ebirds_sample_1perc}
+\end{frame}
+\begin{frame}{eBirds unique spatial locations (450K)...}
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/ebirds_unique_spatial_location}
+\end{frame}
+\begin{frame}{eBirds unique spatiotemporal locations (3.1M)...}
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/ebirds_unique_spatiotemporal_location}
+\end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}{Performance benchmark in finer quadtree (1045 cells)...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/psi_count_320}
-\end{frame}
-
-\begin{frame}{Performance benchmark in finer quadtree (1045 cells)...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/psi_density_320}
-\end{frame}
-
-\begin{frame}{Performance benchmark in finer quadtree (1045 cells)...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/psi_count_321}
-\end{frame}
-
-\begin{frame}{Performance benchmark in finer quadtree (1045 cells)...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/psi_density_321}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}{Performance benchmark in finer quadtree (1045 cells)...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/pairs_per_cell}
-\end{frame}
-
-\begin{frame}{Performance benchmark in finer quadtree (1045 cells)...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/psi_pairs}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Coarser quadtree
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}{Performance benchmark in coarser quadtree (97 cells)...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/coarser/points_per_cell}
-\end{frame}
-
-\begin{frame}{Performance benchmark in coarser quadtree (97 cells)...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/coarser/density}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}{Performance benchmark in coarser quadtree (97 cells)...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/coarser/psi_count_320}
-\end{frame}
-
-\begin{frame}{Performance benchmark in coarser quadtree (97 cells)...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/coarser/psi_density_320}
-\end{frame}
-
-\begin{frame}{Performance benchmark in coarser quadtree (97 cells)...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/coarser/psi_count_321}
-\end{frame}
-
-\begin{frame}{Performance benchmark in coarser quadtree (97 cells)...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/coarser/psi_density_321}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}{Performance benchmark in coarser quadtree (97 cells)...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/coarser/pairs_per_cell}
-\end{frame}
-
-\begin{frame}{Performance benchmark in coarser quadtree (97 cells)...}
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/coarser/psi_pairs}
-\end{frame}
 
 \end{document}
 
