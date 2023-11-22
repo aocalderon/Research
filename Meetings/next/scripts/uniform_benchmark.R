@@ -4,7 +4,8 @@ library(latex2exp)
 fields <- c("ts","start","host", "tag", "z", "appId","partitions","dataset","epsilon","mu","delta","method","stage","time")  
 times <- enframe(read_lines( "uniform01_time.txt" ), value = "line") |>
   separate(col = line, into = fields, sep = "\\|") |>
-  mutate(stage = str_trim(stage), epsilon = as.numeric(epsilon), time = as.numeric(time)) |>
+  mutate(stage = str_trim(stage), epsilon = as.numeric(epsilon), 
+         time = as.numeric(time), dataset = as.numeric(dataset)) |>
   select(appId, dataset, method, epsilon, time) 
 
 fields <- c("ts","start","params","appId","tag","capacity")  
@@ -26,6 +27,6 @@ p = ggplot(data, aes(x = as.factor(epsilon), y = time, group = method)) +
   facet_grid(capacity ~ dataset)
 plot(p)  
 
-W = 20
-H = 6
-ggsave(paste0("~/Templates/psi_benchmark2.pdf"), width = W, height = H)
+W = 14
+H = 10
+ggsave(paste0("uniform_bechmark.pdf"), width = W, height = H)
