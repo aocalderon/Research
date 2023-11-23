@@ -25,7 +25,19 @@ import org.locationtech.proj4j.CoordinateTransform;
 import org.locationtech.proj4j.CoordinateTransformFactory;
 import org.locationtech.proj4j.ProjCoordinate;
 
-case class PointPrime(oid: Long, x: Double, y: Double, t: Long)
+case class PointPrime(oid: Long, x: Double, y: Double, t: Long){
+  var G: GeometryFactory = new GeometryFactory()
+  val coord: Coordinate = new Coordinate(x, y)
+  val text: String = s"$oid\t$x\t$y\t$t\n"
+
+  def asPoint: Point = {
+    val point = G.createPoint(coord)
+    point.setUserData(s"$oid\t$t")
+    point
+  }
+
+
+}
 
 object eBirds {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")

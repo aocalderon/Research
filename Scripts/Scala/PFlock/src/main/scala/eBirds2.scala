@@ -41,11 +41,13 @@ object eBirds2 {
       .option("sep", "\t")
       .csv("/home/acald013/Datasets/eBirds/ebirds.tsv")
 
+    val factor = 60 * 60 * 24
+
     val observations = data.map{ rec =>
       val oid = rec.getString(0).toLong
       val lon = rec.getString(1).toDouble
       val lat = rec.getString(2).toDouble
-      val tid = rec.getString(3).toLong
+      val tid = (rec.getString(3).toLong / factor).toLong
 
       PointPrime(oid, lon, lat, tid)
     }
@@ -53,19 +55,25 @@ object eBirds2 {
     val m = observations.count()
     logger.info(s"Number of observations: $m")
 
-    val unique = observations.rdd.map{ bird =>
-        val location = (bird.x, bird.y, bird.t)
 
-        (location, bird)
-    }.groupBy(_._1).map{ case(key, value) => value.map(_._2).head }.cache
+    /*
+    val pointsRDD = observations.rdd.cache
+    val trajs = pointsRDD.map{ point => (point.t, point) }
+      .groupBy(_._1)
+      .map{ case(key, value) => 
+        val points = value.map(_._2)
 
-    val n = unique.count()
-    logger.info(s"Number of observations without duplicates: $n")
+        s"$key\t${points.size}\n"
+      }
 
-    save("/home/acald013/Datasets/eBirds/ebirds_unique_spatiotemporal_location.tsv"){
-        unique.map{ bird =>
-            s"${bird.oid}\t${bird.x}\t${bird.y}\t${bird.t}\n"
-        }.collect
+    val n = trajs.count()
+    logger.info(s"Number of trajectories by Observer ID: $n")
+    */
+
+    save("/home/acald013/Datasets/eBirds/ebirds_sample_5perc.tsv"){
+      observations.sample(0.05, 42).map{ point =>
+        point.text  
+      }.collect
     }
     /*******************************************************************************/
 
