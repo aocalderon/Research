@@ -4,7 +4,8 @@ library(latex2exp)
 fields <- c("ts","start","host", "tag", "z", "appId","partitions","dataset","epsilon","mu","delta","method","stage","time")  
 times <- enframe(read_lines( "~/Datasets/uniform_datasets/uniform02_time.txt" ), value = "line") |>
   separate(col = line, into = fields, sep = "\\|") |>
-  mutate(stage = str_trim(stage), epsilon = as.numeric(epsilon)*100, time = as.numeric(time)) |>
+  mutate(stage = str_trim(stage), epsilon = as.numeric(epsilon), 
+         time = as.numeric(time), dataset = as.numeric(dataset)) |>
   select(appId, dataset, method, epsilon, time) 
 
 fields <- c("ts","start","params","appId","tag","capacity")  
