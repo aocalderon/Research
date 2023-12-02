@@ -126,7 +126,7 @@ object Quadtree {
     }
 
     val G = new GeometryFactory()
-    println(G.toGeometry(rectangle.getEnvelope).toText)
+    //println(G.toGeometry(rectangle.getEnvelope).toText)
 
     val quadtree = new StandardQuadTree[Point](rectangle, level, capacity, maxLevel)
 
