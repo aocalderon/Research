@@ -77,15 +77,21 @@ object PFlock {
 
     @tailrec
     def join(trajs: List[(Int, Iterable[STPoint])], flocks: List[Disk]): List[Disk] = {
+
       trajs match {
         case current_trajs :: remaining_trajs =>
-          val time = current_trajs
+          val time = current_trajs._1
           val points = current_trajs._2.toList
 
           val (new_flocks, stats) = PSI.run(points)
 
           println(s"Processing time: $time")
-          join(remaining_trajs, new_flocks)
+          println(s"Number of Maximals disks: ${new_flocks.size}")
+          debug{
+            new_flocks.foreach{println}
+          }
+
+          join(remaining_trajs, flocks ++ new_flocks)
 
         case Nil => flocks
       }
