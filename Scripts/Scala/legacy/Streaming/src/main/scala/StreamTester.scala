@@ -1,3 +1,5 @@
+package edu.ucr.dblab.streaming
+
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.functions._
@@ -13,9 +15,7 @@ object StreamTester {
 
   def main(args: Array[String]){
     val spark = SparkSession.builder()
-      .config("spark.default.parallelism", 3 * 12 * 10)
-      .config("spark.scheduler.mode", "FAIR")
-      .appName("PatternEnumerator")
+      .appName("Streaming")
       .getOrCreate()
     import spark.implicits._
 
@@ -27,14 +27,14 @@ object StreamTester {
       .add("ts", TimestampType, false)
     val SSDF = spark.readStream.schema(schema)
       .option("delimiter","\t")
-      .csv("/home/acald013/Datasets/ICPE/Demo/out")
+      .csv("file:///home/acald013/Datasets/ICPE/Demo/out")
     logger.info(s"Is pointsSSDF streaming... ${SSDF.isStreaming}")
 
     val stream = SSDF.as[(Int, Double, Double, String, Timestamp)]
 
     val count = stream.withWatermark("ts", "0 seconds")
       .groupBy(
-        window($"ts", "4 seconds", "1 seconds"), 
+        window($"ts", "1 seconds", "1 seconds"), 
         $"t"
       )
       .count()
