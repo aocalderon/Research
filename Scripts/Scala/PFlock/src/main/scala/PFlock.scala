@@ -87,11 +87,22 @@ object PFlock {
 
           println(s"Processing time: $time")
           println(s"Number of Maximals disks: ${new_flocks.size}")
+
+          val candidates = (for{
+            old_flock <- flocks
+            new_flock <- new_flocks
+          } yield {
+            val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
+            val flock = Disk(new_flock.center, pids, old_flock.start, time)
+
+            (old_flock.pidsText,new_flock.pidsText, flock)
+          }).filter(_._3.pids.size >= S.mu).map(_._3)
+
           debug{
-            new_flocks.foreach{println}
+            candidates.foreach{println}
           }
 
-          join(remaining_trajs, flocks ++ new_flocks)
+          join(remaining_trajs, new_flocks)
 
         case Nil => flocks
       }
