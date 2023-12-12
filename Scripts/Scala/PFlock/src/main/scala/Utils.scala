@@ -132,7 +132,7 @@ object Utils {
   }
 
   case class Disk(center: Point, pids: List[Int],
-    support: List[Int] = List.empty[Int]) extends Ordered [Disk]{
+    start: Int = 0, end: Int = 0) extends Ordered [Disk]{
 
     var did: Int = -1
     var subset: Boolean = false
@@ -212,7 +212,7 @@ object Utils {
 
     def isSubsetOf(other: Disk): Boolean = pidsSet.subsetOf(other.pidsSet)
 
-    override def toString: String = s"${did}\t${pids.sorted.mkString(" ")}\t${X}\t${Y}"
+    override def toString: String = s"$start\t$end\t${pids.sorted.mkString(" ")}"
 
     def wkt: String = s"${center.toText}\t${pidsText}"
 
@@ -453,7 +453,7 @@ object Utils {
     val maximals1 = maximals_prime.map{ mbc =>
       val pids = mbc.points.map(_.getUserData.asInstanceOf[Data].id)
       
-      Disk(mbc.center, pids, List.empty)
+      Disk(mbc.center, pids)
     }.toList
 
     // returning remaining points in MBCs greater than epsilon as list of points (points_prime)...
@@ -708,7 +708,7 @@ object Utils {
       .map{ m =>
         val pids = m.getItems.toList.map(_.toInt).sorted
         val center = m.getCenter
-        Disk(center, pids, center.getUserData.asInstanceOf[List[Int]])
+        Disk(center, pids)
       }.toList
   }
 
