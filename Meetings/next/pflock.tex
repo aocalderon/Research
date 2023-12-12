@@ -81,54 +81,48 @@
 %%% Slides...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Issues with eBird dataset...}
+\begin{frame}{Testing BFE and PSI...}
     \begin{itemize}
-        \item For California:
-        \begin{itemize}
-            \item Number of observations: 59'807.295
-            \item Number of unique spatio-temporal observations: 3'098.425
-            \item Number of unique spatial observations: 450.434
-        \end{itemize}
-        \item Grouped by time:
-        \begin{itemize}
-            \item per hour: More crowed intervals $\longrightarrow$ 2916, 2871, 2839.
-            \item per day : More crowed intervals $\longrightarrow$ 2966, 2901, 2886.
-        \end{itemize}
-        \item Grouped by Entity Id: all distinct! The Id is the observation Id not the observer Id =(
+        \item Scala implementations for BFE and PSI (join between consecutives time instant and using inverted index).
+        \item Some issues debugging special cases.
+        \item Dealing with performance issues.
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Checking C++ BFE and PSI implementation...}
+\begin{frame}{Testing BFE and PSI...}
     \begin{itemize}
-        \item Using a relatively small dataset:
-        \begin{itemize}
-            \item Berlin dataset
-            \item Created using Brinkhoff\footnote{\url{https://iapg.jade-hs.de/en/members/brinkhoff/generator}} Trajectory Generator
-            \item ~20K points per time instant, 10 consecutive time instants...
-        \end{itemize}
+        \item Need to use dummy data to debug special cases...
     \end{itemize}
+
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/dummy.jpg}
 \end{frame}
 
-\begin{frame}{Checking C++ BFE and PSI implementation using Berlin dataset...}
+\begin{frame}{Testing BFE and PSI...}
+    \begin{itemize}
+        \item Using intermediate dataset for scaling and testing...
+        \item Berlin dataset: 10 time instants, ~10K points per time instant...
+    \end{itemize}
+
     \centering
-    \includegraphics[width=0.8\textwidth]{scripts/epsilon_benchmark}
-\end{frame}
-\begin{frame}{Checking C++ BFE and PSI implementation using Berlin dataset...}
-    \centering
-    \includegraphics[width=0.8\textwidth]{scripts/mu_benchmark}
-\end{frame}
-\begin{frame}{Checking C++ BFE and PSI implementation using Berlin dataset...}
-    \centering
-    \includegraphics[width=0.8\textwidth]{scripts/delta_benchmark}
+    \includegraphics[width=0.65\textwidth]{figures/berlin.png}
 \end{frame}
 
+\begin{frame}{Testing BFE and PSI...}
+    \begin{itemize}
+        \item Using intermediate dataset for scaling and testing...
+        \item Berlin dataset: 10 time instants, ~10K points per time instant...
+    \end{itemize}
+
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/sample.png}
+\end{frame}
 
 \begin{frame}{What is next?...}
     \begin{itemize}
-        \item Scala implementation of BFE was updated and is already done.
-        \item Currently working on Scala implementation of the Inverted Index proposal in PSI...
-        \item Expecting run tests using Berlin dataset and compare with C++ implementation...
-        \item Then running performance experiments over L.A. dataset...
+        \item Currently debugging some errors (missing flocks) in Berlin dataset...
+        \item Break down performance in Berlin dataset...
+        \item Running performance experiments over L.A. dataset...
     \end{itemize}
 \end{frame}
 
