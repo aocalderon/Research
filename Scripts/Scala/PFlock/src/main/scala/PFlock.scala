@@ -76,6 +76,19 @@ object PFlock {
       }.groupByKey().sortByKey().collect.toList
 
     @tailrec
+    def prune(M: List[Disk], N: List[Disk], N_prime: List[Disk]): List[Disk] = {
+      N match {
+        case n::tail =>
+          if( M.exists(m => n.pids.size == n.pidsSet.intersect(m.pidsSet).size) ){
+            prune(M, tail, N_prime)
+          } else {
+            prune(M, tail, N_prime :+ n)
+          }
+        case Nil => N_prime
+      }
+    }
+
+    @tailrec
     def join(trajs: List[(Int, Iterable[STPoint])], flocks: List[Disk]): List[Disk] = {
 
       trajs match {
@@ -88,21 +101,35 @@ object PFlock {
           println(s"Processing time: $time")
           println(s"Number of Maximals disks: ${new_flocks.size}")
 
-          val candidates = (for{
+          val merged_ones = (for{
             old_flock <- flocks
             new_flock <- new_flocks
           } yield {
             val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
             val flock = Disk(new_flock.center, pids, old_flock.start, time)
 
-            (old_flock.pidsText,new_flock.pidsText, flock)
-          }).filter(_._3.pids.size >= S.mu).map(_._3)
+            if(pids == new_flock.pids) new_flock.subset = true
+
+            flock
+          }).filter(_.pids.size >= S.mu)
+
+          /************************************************************
+           *  Still have to solve redundant flock in previous flocks !!!
+           ************************************************************/
+
+          //val merged_ones = prune(M, M, List.empty[Disk])
+
+          val new_ones = new_flocks.filterNot(_.subset).map{ flock =>
+            Disk(flock.center, flock.pids, time, time)
+          }
+
+          val candidates = merged_ones ++ prune(merged_ones, new_ones, List.empty[Disk])
 
           debug{
             candidates.foreach{println}
           }
 
-          join(remaining_trajs, new_flocks)
+          join(remaining_trajs, candidates)
 
         case Nil => flocks
       }
