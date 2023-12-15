@@ -37,6 +37,7 @@ object PFlock {
       dataset = params.dataset(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
+      delta = params.delta(),
       method = "PFlock",
       capacity = params.capacity(),
       fraction = params.fraction(),
@@ -76,13 +77,50 @@ object PFlock {
       }.groupByKey().sortByKey().collect.toList
 
     @tailrec
-    def prune(M: List[Disk], N: List[Disk], N_prime: List[Disk]): List[Disk] = {
+    def pruneM(M: List[Disk], M_prime: List[Disk]): List[Disk] = {
+      M match {
+        case new_flock::tail =>
+          var stop = false
+          for{old_flock <- tail if !stop}{
+            val count = old_flock.pidsSet.intersect(new_flock.pidsSet).size
+
+            count match {
+              case count if new_flock.pids.size == count =>
+                if(old_flock.start <= new_flock.start){
+                  stop = true // new is contained by a previous old...
+                } else if(old_flock.pids.size > count){
+                  // old and new do not have the same points.  We iterate next...
+                } else {
+                  old_flock.subset = true // old is a subset of the new one.  We need to remove it...
+                }
+              case count if old_flock.pids.size == count =>
+                if(old_flock.start < new_flock.start){
+                  // old is not a subset of new one...
+                } else {
+                  old_flock.subset = true // old is a subset of the new one.  We need to remove it...
+                }
+              case _ =>
+                // old and new have different points.  We iterate next...
+            }
+          }
+
+          if(!stop)
+            pruneM(tail, M_prime :+ new_flock)
+          else
+            pruneM(tail, M_prime)
+
+        case Nil => M_prime
+      }
+    }
+
+    @tailrec
+    def pruneN(M: List[Disk], N: List[Disk], N_prime: List[Disk]): List[Disk] = {
       N match {
         case n::tail =>
           if( M.exists(m => n.pids.size == n.pidsSet.intersect(m.pidsSet).size) ){
-            prune(M, tail, N_prime)
+            pruneN(M, tail, N_prime)
           } else {
-            prune(M, tail, N_prime :+ n)
+            pruneN(M, tail, N_prime :+ n)
           }
         case Nil => N_prime
       }
@@ -98,8 +136,8 @@ object PFlock {
 
           val (new_flocks, stats) = PSI.run(points)
 
-          println(s"Processing time: $time")
-          println(s"Number of Maximals disks: ${new_flocks.size}")
+          //println(s"Processing time: $time")
+          //println(s"Number of Maximals disks: ${new_flocks.size}")
 
           val merged_ones = (for{
             old_flock <- flocks
@@ -113,20 +151,23 @@ object PFlock {
             flock
           }).filter(_.pids.size >= S.mu)
 
-          /************************************************************
-           *  Still have to solve redundant flock in previous flocks !!!
-           ************************************************************/
+          val M = pruneM(merged_ones, List.empty[Disk]).filterNot(_.subset)
 
-          //val merged_ones = prune(M, M, List.empty[Disk])
-
-          val new_ones = new_flocks.filterNot(_.subset).map{ flock =>
+          val N = new_flocks.filterNot(_.subset).map{ flock =>
             Disk(flock.center, flock.pids, time, time)
           }
 
-          val candidates = merged_ones ++ prune(merged_ones, new_ones, List.empty[Disk])
+          val candidates = M ++ pruneN(M, N, List.empty[Disk])
 
           debug{
-            candidates.foreach{println}
+            candidates
+              .filter{ flock =>
+                val a = flock.end - flock.start
+                val b = S.delta - 1
+
+                a >= b 
+              }.map{ flock => flock.copy(start = time - (S.delta - 1)) }
+              .foreach{println}
           }
 
           join(remaining_trajs, candidates)
