@@ -165,13 +165,20 @@ object PFlock {
                 val a = flock.end - flock.start
                 val b = S.delta - 1
 
-                a >= b 
-              }.map{ flock => flock.copy(start = time - (S.delta - 1)) }
+                a >= b
+              }
               .foreach{println}
           }
 
-          join(remaining_trajs, candidates)
+          val F = candidates
+            .map{ flock =>
+              val a = flock.end - flock.start
+              val b = S.delta - 1
 
+              if(a >= b) flock.copy(start = flock.start + 1) else flock
+            }
+
+          join(remaining_trajs, F)
         case Nil => flocks
       }
     }
