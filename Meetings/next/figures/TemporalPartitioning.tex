@@ -1,0 +1,152 @@
+\documentclass[border=0.5cm]{standalone}
+\usepackage{calculator}
+\usepackage{tikz}
+\usetikzlibrary{arrows, arrows.meta, positioning}
+
+\tikzset{    
+    disk/.style={ thick },
+    traj/.style={ thin, dotted, -Latex },
+    point/.style={ color=black, circle, scale=0.3, fill },
+    partition/.style={ right, scale=0.75 },
+    label/.style={ scale=0.5, black, below = 0.5mm },
+    time/.style={ scale=0.75, above left }
+}
+
+\definecolor{light-gray}{gray}{0.45}
+
+\def\xMin{0}
+\def\xMax{3}
+\def\yMin{0}
+\def\yMax{3}
+\def\xWidth{1}
+\def\oPacity{0.75}
+\def\ySlant{0.5}
+\def\xSlant{-0.9}
+\def\z{50}
+\def\speed{0.1}
+\def\R{0.05}
+
+\newcommand{\drawFrame}[3]{
+    \fill[orange, opacity=0.15] (#1*\xWidth-#3,#1*\xWidth-#3) rectangle (#2*\xWidth+#3,#2*\xWidth+#3);
+    \draw[orange, dashed] (#1*\xWidth-#3,#1*\xWidth-#3) rectangle (#2*\xWidth+#3,#2*\xWidth+#3);
+}
+\newcommand{\drawBlueFrame}[5]{
+    \fill[blue, opacity=0.15] (#1*\xWidth-#5,#2*\xWidth-#5) rectangle (#3*\xWidth+#5,#4*\xWidth+#5);
+    \draw[blue, dashed] (#1*\xWidth-#5,#2*\xWidth-#5) rectangle (#3*\xWidth+#5,#4*\xWidth+#5);
+}
+\newcommand{\drawGrid}{
+    \fill[white,fill opacity=\oPacity] (\xMin,\yMin) rectangle (\xMax,\yMax);
+    \draw[step=\xWidth, very thin, light-gray] (\xMin,\yMin) grid (\xMax,\yMax);
+}
+\newcommand{\drawFlocks}[1]{
+    \draw [fill=lime   ](A#1) circle (\R) ;
+    \draw [fill=magenta](B#1) circle (\R) ;
+    \draw [fill=teal](C#1) circle (\R) ;
+}
+\newcommand{\drawLabels}[1]{
+    \node[label] at (A#1) {$a$};
+    \node[label] at (B#1) {$b$};
+    \node[label] at (C#1) {$c$};
+}
+\newcommand{\drawTrajs}[1]{
+        \def\i{}
+        \ADD{#1}{-1}{\i}
+        \draw[traj] (A\i) -- (A#1);
+        \draw[traj] (B\i) -- (B#1);
+        \draw[traj] (C\i) -- (C#1);
+}
+
+\begin{document}
+\begin{tikzpicture}    
+    \fill[white] (0,0) rectangle (6.5,10.5);
+    \def\t{0};
+    \begin{scope}
+        [yshift=0*\z, every node/.append style={yslant=\ySlant,xslant=\xSlant},yslant=\ySlant,xslant=\xSlant]
+        \coordinate (T) at (\xMin, \xMax);
+        \coordinate (A0) at (1.90, 1.60);
+        \coordinate (B0) at (1.25, 1.75);
+        \coordinate (C0) at (1.40, 0.90);
+
+        \drawGrid
+        \drawFrame{1}{2}{0*\speed};
+        \drawBlueFrame{1}{0}{2}{1}{\t*\speed};
+        \drawFlocks{0}
+        \drawLabels{0}
+    \end{scope}
+    \node[time] at (T) {$t_\t$};
+
+    \def\t{1};
+    \begin{scope}
+        [yshift=1*\z, every node/.append style={yslant=\ySlant,xslant=\xSlant},yslant=\ySlant,xslant=\xSlant]
+        \coordinate (T) at (\xMin, \xMax);
+        \coordinate (InfoPointer) at (2.05,-0.05);\coordinate (InfoText) at (3.5,-0.5);
+        \coordinate (A\t) at (2.00, 1.50);
+        \coordinate (B\t) at (1.35, 1.65);
+        \coordinate (C\t) at (1.30, 1.00);
+
+        \drawTrajs{1}
+        \drawGrid
+        \drawFrame{1}{2}{1*\speed};
+        \drawBlueFrame{1}{0}{2}{1}{\t*\speed};
+        \drawFlocks{1}
+    \end{scope}
+    \node[time] at (T) {$t_\t$};
+    \draw[-latex,thick] (InfoText) node[scale=0.75,right,text width=3cm]{Expansion depends on $speed$ parameter} to[out=180,in=90] (InfoPointer);
+    
+    \def\t{2};
+    \begin{scope}
+        [yshift=2*\z, every node/.append style={yslant=\ySlant,xslant=\xSlant},yslant=\ySlant,xslant=\xSlant]
+        \coordinate (T) at (\xMin, \xMax);
+        \coordinate (A\t) at (2.10, 1.40);
+        \coordinate (B\t) at (1.45, 1.75);
+        \coordinate (C\t) at (1.20, 0.90);
+
+        \drawTrajs{2}
+        \drawGrid
+        \drawFrame{1}{2}{2*\speed};
+        \drawBlueFrame{1}{0}{2}{1}{\t*\speed};
+        \drawFlocks{2}
+    \end{scope}
+    \node[time] at (T) {$t_\t$};
+
+    \def\t{3};
+    \begin{scope}
+        [yshift=3*\z, every node/.append style={yslant=\ySlant,xslant=\xSlant},yslant=\ySlant,xslant=\xSlant]
+        \coordinate (T) at (\xMin, \xMax);
+        \coordinate (A\t) at (2.15, 1.30);
+        \coordinate (B\t) at (1.50, 1.65);
+        \coordinate (C\t) at (1.10, 0.80);
+        \coordinate (D\t) at (1.90, 1.85);
+
+        \drawTrajs{3}
+        \drawGrid
+        \drawFrame{1}{2}{3*\speed};
+        \drawBlueFrame{1}{0}{2}{1}{\t*\speed};
+        \drawFlocks{3}
+        \draw [fill=olive](D\t) circle (\R) ;
+        \node[label] at (D\t) {$d$};
+    \end{scope}
+    \node[time] at (T) {$t_\t$};
+    
+    \def\t{4};
+    \begin{scope}
+        [yshift=4*\z, every node/.append style={yslant=\ySlant,xslant=\xSlant},yslant=\ySlant,xslant=\xSlant]
+        \coordinate (T) at (\xMin, \xMax);
+        \coordinate (A\t) at (2.20, 1.20);
+        \coordinate (B\t) at (1.60, 1.75);
+        \coordinate (C\t) at (1.00, 0.70);
+        \coordinate (D\t) at (1.90, 1.75);
+
+        \drawTrajs{4}
+        \def\i{};\ADD{\t}{-1}{\i};
+        \draw[traj] (D\i) -- (D\t);
+        \drawGrid
+        \drawFrame{1}{2}{4*\speed};
+        \drawBlueFrame{1}{0}{2}{1}{\t*\speed};
+        \drawFlocks{4}
+        \draw [fill=olive](D\t) circle (\R) ;
+        \node[label] at (D\t) {$d$};
+    \end{scope}
+    \node[time] at (T) {$t_\t$};
+\end{tikzpicture}
+\end{document} 

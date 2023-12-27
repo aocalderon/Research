@@ -1,0 +1,132 @@
+\documentclass{beamer}
+
+\usefonttheme{professionalfonts} % using non standard fonts for beamer
+\usefonttheme{serif} % default family is serif
+
+\usepackage{enumitem}
+\setitemize{label=\usebeamerfont*{itemize item}%
+  \usebeamercolor[fg]{itemize item}
+  \usebeamertemplate{itemize item}}
+
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{xfp}
+\usepackage{graphicx}
+\def\Put(#1,#2)#3{\leavevmode\makebox(0,0){\put(#1,#2){#3}}}
+\usepackage{colortbl}
+\usepackage{tikz}
+\usepackage{amssymb}
+\usepackage{enumerate}
+\usepackage{arydshln}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{subcaption} %to have subfigures available
+
+\usepackage[absolute,overlay]{textpos}
+
+\colorlet{lightred}{red!25}
+\colorlet{lightgreen}{green!25}
+\beamertemplatenavigationsymbolsempty
+
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+\makeatletter
+
+%% Textclass specific LaTeX commands.
+\newcommand\makebeamertitle{\frame{\maketitle}}%
+\AtBeginDocument{%
+  \let\origtableofcontents=\tableofcontents
+  \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+  \def\gobbletableofcontents#1{\origtableofcontents}
+}
+%% User specified LaTeX commands.
+\usetheme{Malmoe}
+\useoutertheme{infolines}
+\addtobeamertemplate{headline}{}{\vskip2pt}
+\setbeamercovered{transparent}
+
+\title[PFlock report]{PFLOCK Report}
+\author[AC]{Andres Calderon}
+\institute[UCR]{University of California, Riverside}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Main document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\makebeamertitle
+\newif\iflattersubsect
+
+\AtBeginSection[] {
+    \begin{frame}<beamer>
+    \frametitle{Outline} 
+    \tableofcontents[currentsection]  
+    \end{frame}
+    \lattersubsectfalse
+}
+
+\AtBeginSubsection[] {
+    \begin{frame}<beamer>
+    \frametitle{Outline} 
+    \tableofcontents[currentsubsection]  
+    \end{frame}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Slides...
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Testing BFE and PSI...}
+    \begin{itemize}
+        \item Scala implementations for BFE and PSI (join between consecutives time instant and using inverted index).
+        \item Some issues debugging special cases.
+        \item Dealing with performance issues.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Testing BFE and PSI...}
+    \begin{itemize}
+        \item Need to use dummy data to debug special cases...
+    \end{itemize}
+
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/dummy.jpg}
+\end{frame}
+
+\begin{frame}{Testing BFE and PSI...}
+    \begin{itemize}
+        \item Using intermediate dataset for scaling and testing...
+        \item Berlin dataset: 10 time instants, ~10K points per time instant...
+    \end{itemize}
+
+    \centering
+    \includegraphics[width=0.65\textwidth]{figures/berlin.png}
+\end{frame}
+
+\begin{frame}{Testing BFE and PSI...}
+    \begin{itemize}
+        \item Using intermediate dataset for scaling and testing...
+        \item Berlin dataset: 10 time instants, ~10K points per time instant...
+    \end{itemize}
+
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/sample.png}
+\end{frame}
+
+\begin{frame}{What is next?...}
+    \begin{itemize}
+        \item Currently debugging some errors (missing flocks) in Berlin dataset...
+        \item Break down performance in Berlin dataset...
+        \item Running performance experiments over L.A. dataset...
+    \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
+

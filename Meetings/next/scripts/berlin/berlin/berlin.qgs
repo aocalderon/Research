@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis saveDateTime="2023-12-12T15:16:47" projectname="" saveUser="acald013" saveUserFull="" version="3.22.4-Białowieża">
+<qgis saveDateTime="2023-12-12T15:36:59" projectname="" saveUser="acald013" saveUserFull="" version="3.22.4-Białowieża">
   <homePath path=""/>
   <title></title>
   <autotransaction active="0"/>
@@ -22,6 +22,11 @@
     <customproperties>
       <Option/>
     </customproperties>
+    <layer-tree-layer source="../../../../../Datasets/Berlin/sample0-10.tsv?type=csv&amp;delimiter=\t&amp;useHeader=No&amp;maxFields=10000&amp;detectTypes=yes&amp;xField=field_2&amp;yField=field_3&amp;crs=EPSG:3068&amp;spatialIndex=no&amp;subsetIndex=no&amp;watchFile=no" id="sample0_10_0d3d7f88_6a40_4afc_ab9e_d077d3d70cdb" legend_exp="" expanded="1" patch_size="-1,-1" providerKey="delimitedtext" legend_split_behavior="0" name="sample0-10" checked="Qt::Checked">
+      <customproperties>
+        <Option/>
+      </customproperties>
+    </layer-tree-layer>
     <layer-tree-layer source="./berlin0-10.gpkg" id="berlin0_10_9398349b_8d06_47eb_8b6c_9c528124875c" legend_exp="" expanded="1" patch_size="-1,-1" providerKey="ogr" legend_split_behavior="0" name="berlin0-10" checked="Qt::Checked">
       <customproperties>
         <Option/>
@@ -35,11 +40,13 @@
     <custom-order enabled="0">
       <item>berlin0_10_9398349b_8d06_47eb_8b6c_9c528124875c</item>
       <item>Google_Satellite_Hybrid_f197c3cd_1822_4314_ac34_48db2165717b</item>
+      <item>sample0_10_0d3d7f88_6a40_4afc_ab9e_d077d3d70cdb</item>
     </custom-order>
   </layer-tree-group>
   <snapping-settings intersection-snapping="0" enabled="0" unit="1" scaleDependencyMode="0" self-snapping="0" maxScale="0" type="1" mode="2" tolerance="12" minScale="0">
     <individual-layer-settings>
       <layer-setting id="berlin0_10_9398349b_8d06_47eb_8b6c_9c528124875c" enabled="0" maxScale="0" type="1" tolerance="12" units="1" minScale="0"/>
+      <layer-setting id="sample0_10_0d3d7f88_6a40_4afc_ab9e_d077d3d70cdb" enabled="0" maxScale="0" type="1" tolerance="12" units="1" minScale="0"/>
     </individual-layer-settings>
   </snapping-settings>
   <relations/>
@@ -47,10 +54,10 @@
   <mapcanvas annotationsVisible="1" name="theMapCanvas">
     <units>meters</units>
     <extent>
-      <xmin>11665.5112749999971129</xmin>
-      <ymin>10841.09744999999747961</ymin>
-      <xmax>38388.29372499999590218</xmax>
-      <ymax>30433.32255000000077416</ymax>
+      <xmin>20726.27152500000011059</xmin>
+      <ymin>21185.76817499999742722</ymin>
+      <xmax>20813.10547500000029686</xmax>
+      <ymax>21282.36082500000338769</ymax>
     </extent>
     <rotation>0</rotation>
     <destinationsrs>
@@ -71,6 +78,11 @@
   </mapcanvas>
   <projectModels/>
   <legend updateDrawingOrder="true">
+    <legendlayer drawingOrder="-1" open="true" showFeatureCount="0" checked="Qt::Checked" name="sample0-10">
+      <filegroup open="true" hidden="false">
+        <legendlayerfile isInOverview="0" visible="1" layerid="sample0_10_0d3d7f88_6a40_4afc_ab9e_d077d3d70cdb"/>
+      </filegroup>
+    </legendlayer>
     <legendlayer drawingOrder="-1" open="true" showFeatureCount="0" checked="Qt::Checked" name="berlin0-10">
       <filegroup open="true" hidden="false">
         <legendlayerfile isInOverview="0" visible="1" layerid="berlin0_10_9398349b_8d06_47eb_8b6c_9c528124875c"/>
@@ -686,10 +698,395 @@ def my_form_open(dialog, layer, feature):
       <previewExpression>"field_1"</previewExpression>
       <mapTip></mapTip>
     </maplayer>
+    <maplayer symbologyReferenceScale="-1" autoRefreshTime="0" geometry="Point" simplifyMaxScale="1" refreshOnNotifyMessage="" styleCategories="AllStyleCategories" refreshOnNotifyEnabled="0" legendPlaceholderImage="" simplifyDrawingHints="0" autoRefreshEnabled="0" readOnly="0" maxScale="0" simplifyDrawingTol="1" type="vector" labelsEnabled="0" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" minScale="100000000" wkbType="Point" simplifyAlgorithm="0">
+      <extent>
+        <xmin>20728.33899999999994179</xmin>
+        <ymin>21188.06799999999930151</ymin>
+        <xmax>20811.03800000000046566</xmax>
+        <ymax>21280.0610000000015134</ymax>
+      </extent>
+      <wgs84extent>
+        <xmin>13.3415252608838717</xmin>
+        <ymin>52.5174540148277984</ymin>
+        <xmax>13.34274885064400529</xmax>
+        <ymax>52.51828362971085795</ymax>
+      </wgs84extent>
+      <id>sample0_10_0d3d7f88_6a40_4afc_ab9e_d077d3d70cdb</id>
+      <datasource>file:../../../../../Datasets/Berlin/sample0-10.tsv?type=csv&amp;delimiter=%5Ct&amp;useHeader=No&amp;maxFields=10000&amp;detectTypes=yes&amp;xField=field_2&amp;yField=field_3&amp;crs=EPSG:3068&amp;spatialIndex=no&amp;subsetIndex=no&amp;watchFile=no</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>sample0-10</layername>
+      <srs>
+        <spatialrefsys>
+          <wkt>PROJCRS["DHDN / Soldner Berlin",BASEGEOGCRS["DHDN",DATUM["Deutsches Hauptdreiecksnetz",ELLIPSOID["Bessel 1841",6377397.155,299.1528128,LENGTHUNIT["metre",1]]],PRIMEM["Greenwich",0,ANGLEUNIT["degree",0.0174532925199433]],ID["EPSG",4314]],CONVERSION["Soldner Berlin",METHOD["Cassini-Soldner",ID["EPSG",9806]],PARAMETER["Latitude of natural origin",52.4186482777778,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8801]],PARAMETER["Longitude of natural origin",13.6272036666667,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8802]],PARAMETER["False easting",40000,LENGTHUNIT["metre",1],ID["EPSG",8806]],PARAMETER["False northing",10000,LENGTHUNIT["metre",1],ID["EPSG",8807]]],CS[Cartesian,2],AXIS["northing (x)",north,ORDER[1],LENGTHUNIT["metre",1]],AXIS["easting (y)",east,ORDER[2],LENGTHUNIT["metre",1]],USAGE[SCOPE["Cadastre, engineering survey, topographic mapping (large scale)."],AREA["Germany - Berlin."],BBOX[52.33,13.09,52.65,13.76]],ID["EPSG",3068]]</wkt>
+          <proj4>+proj=cass +lat_0=52.4186482777778 +lon_0=13.6272036666667 +x_0=40000 +y_0=10000 +ellps=bessel +units=m +no_defs</proj4>
+          <srsid>1031</srsid>
+          <srid>3068</srid>
+          <authid>EPSG:3068</authid>
+          <description>DHDN / Soldner Berlin</description>
+          <projectionacronym>cass</projectionacronym>
+          <ellipsoidacronym>EPSG:7004</ellipsoidacronym>
+          <geographicflag>false</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <resourceMetadata>
+        <identifier></identifier>
+        <parentidentifier></parentidentifier>
+        <language></language>
+        <type></type>
+        <title></title>
+        <abstract></abstract>
+        <contact>
+          <name></name>
+          <organization></organization>
+          <position></position>
+          <voice></voice>
+          <fax></fax>
+          <email></email>
+          <role></role>
+        </contact>
+        <links/>
+        <fees></fees>
+        <encoding></encoding>
+        <crs>
+          <spatialrefsys>
+            <wkt></wkt>
+            <proj4></proj4>
+            <srsid>0</srsid>
+            <srid>0</srid>
+            <authid></authid>
+            <description></description>
+            <projectionacronym></projectionacronym>
+            <ellipsoidacronym></ellipsoidacronym>
+            <geographicflag>false</geographicflag>
+          </spatialrefsys>
+        </crs>
+        <extent>
+          <spatial dimensions="2" minx="0" maxx="0" minz="0" crs="" maxz="0" miny="0" maxy="0"/>
+          <temporal>
+            <period>
+              <start></start>
+              <end></end>
+            </period>
+          </temporal>
+        </extent>
+      </resourceMetadata>
+      <provider encoding="">delimitedtext</provider>
+      <vectorjoins/>
+      <layerDependencies/>
+      <dataDependencies/>
+      <expressionfields/>
+      <map-layer-style-manager current="default">
+        <map-layer-style name="default"/>
+      </map-layer-style-manager>
+      <auxiliaryLayer/>
+      <metadataUrls/>
+      <flags>
+        <Identifiable>1</Identifiable>
+        <Removable>1</Removable>
+        <Searchable>1</Searchable>
+        <Private>0</Private>
+      </flags>
+      <temporal limitMode="0" durationUnit="min" enabled="0" endField="" mode="0" durationField="" fixedDuration="0" endExpression="" startField="" startExpression="" accumulate="0">
+        <fixedRange>
+          <start></start>
+          <end></end>
+        </fixedRange>
+      </temporal>
+      <renderer-v2 symbollevels="0" referencescale="-1" type="singleSymbol" enableorderby="0" forceraster="0">
+        <symbols>
+          <symbol type="marker" alpha="1" force_rhr="0" clip_to_extent="1" name="0">
+            <data_defined_properties>
+              <Option type="Map">
+                <Option value="" type="QString" name="name"/>
+                <Option name="properties"/>
+                <Option value="collection" type="QString" name="type"/>
+              </Option>
+            </data_defined_properties>
+            <layer locked="0" enabled="1" pass="0" class="SimpleMarker">
+              <Option type="Map">
+                <Option value="0" type="QString" name="angle"/>
+                <Option value="square" type="QString" name="cap_style"/>
+                <Option value="255,173,41,255" type="QString" name="color"/>
+                <Option value="1" type="QString" name="horizontal_anchor_point"/>
+                <Option value="bevel" type="QString" name="joinstyle"/>
+                <Option value="circle" type="QString" name="name"/>
+                <Option value="0,0" type="QString" name="offset"/>
+                <Option value="3x:0,0,0,0,0,0" type="QString" name="offset_map_unit_scale"/>
+                <Option value="MM" type="QString" name="offset_unit"/>
+                <Option value="35,35,35,255" type="QString" name="outline_color"/>
+                <Option value="solid" type="QString" name="outline_style"/>
+                <Option value="0" type="QString" name="outline_width"/>
+                <Option value="3x:0,0,0,0,0,0" type="QString" name="outline_width_map_unit_scale"/>
+                <Option value="MM" type="QString" name="outline_width_unit"/>
+                <Option value="diameter" type="QString" name="scale_method"/>
+                <Option value="2" type="QString" name="size"/>
+                <Option value="3x:0,0,0,0,0,0" type="QString" name="size_map_unit_scale"/>
+                <Option value="MM" type="QString" name="size_unit"/>
+                <Option value="1" type="QString" name="vertical_anchor_point"/>
+              </Option>
+              <prop k="angle" v="0"/>
+              <prop k="cap_style" v="square"/>
+              <prop k="color" v="255,173,41,255"/>
+              <prop k="horizontal_anchor_point" v="1"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="name" v="circle"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="35,35,35,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0"/>
+              <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="scale_method" v="diameter"/>
+              <prop k="size" v="2"/>
+              <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MM"/>
+              <prop k="vertical_anchor_point" v="1"/>
+              <data_defined_properties>
+                <Option type="Map">
+                  <Option value="" type="QString" name="name"/>
+                  <Option name="properties"/>
+                  <Option value="collection" type="QString" name="type"/>
+                </Option>
+              </data_defined_properties>
+            </layer>
+          </symbol>
+        </symbols>
+        <rotation/>
+        <sizescale/>
+      </renderer-v2>
+      <customproperties>
+        <Option type="Map">
+          <Option value="0" type="int" name="embeddedWidgets/count"/>
+          <Option name="variableNames"/>
+          <Option name="variableValues"/>
+        </Option>
+      </customproperties>
+      <blendMode>0</blendMode>
+      <featureBlendMode>0</featureBlendMode>
+      <layerOpacity>1</layerOpacity>
+      <SingleCategoryDiagramRenderer attributeLegend="1" diagramType="Histogram">
+        <DiagramCategory sizeScale="3x:0,0,0,0,0,0" scaleDependency="Area" penAlpha="255" lineSizeType="MM" spacingUnitScale="3x:0,0,0,0,0,0" showAxis="1" spacing="5" scaleBasedVisibility="0" backgroundAlpha="255" labelPlacementMethod="XHeight" penColor="#000000" barWidth="5" rotationOffset="270" backgroundColor="#ffffff" sizeType="MM" width="15" opacity="1" minScaleDenominator="0" penWidth="0" minimumSize="0" maxScaleDenominator="1e+08" enabled="0" spacingUnit="MM" diagramOrientation="Up" height="15" lineSizeScale="3x:0,0,0,0,0,0" direction="0">
+          <fontProperties description="Ubuntu,11,-1,5,50,0,0,0,0,0" style=""/>
+          <axisSymbol>
+            <symbol type="line" alpha="1" force_rhr="0" clip_to_extent="1" name="">
+              <data_defined_properties>
+                <Option type="Map">
+                  <Option value="" type="QString" name="name"/>
+                  <Option name="properties"/>
+                  <Option value="collection" type="QString" name="type"/>
+                </Option>
+              </data_defined_properties>
+              <layer locked="0" enabled="1" pass="0" class="SimpleLine">
+                <Option type="Map">
+                  <Option value="0" type="QString" name="align_dash_pattern"/>
+                  <Option value="square" type="QString" name="capstyle"/>
+                  <Option value="5;2" type="QString" name="customdash"/>
+                  <Option value="3x:0,0,0,0,0,0" type="QString" name="customdash_map_unit_scale"/>
+                  <Option value="MM" type="QString" name="customdash_unit"/>
+                  <Option value="0" type="QString" name="dash_pattern_offset"/>
+                  <Option value="3x:0,0,0,0,0,0" type="QString" name="dash_pattern_offset_map_unit_scale"/>
+                  <Option value="MM" type="QString" name="dash_pattern_offset_unit"/>
+                  <Option value="0" type="QString" name="draw_inside_polygon"/>
+                  <Option value="bevel" type="QString" name="joinstyle"/>
+                  <Option value="35,35,35,255" type="QString" name="line_color"/>
+                  <Option value="solid" type="QString" name="line_style"/>
+                  <Option value="0.26" type="QString" name="line_width"/>
+                  <Option value="MM" type="QString" name="line_width_unit"/>
+                  <Option value="0" type="QString" name="offset"/>
+                  <Option value="3x:0,0,0,0,0,0" type="QString" name="offset_map_unit_scale"/>
+                  <Option value="MM" type="QString" name="offset_unit"/>
+                  <Option value="0" type="QString" name="ring_filter"/>
+                  <Option value="0" type="QString" name="trim_distance_end"/>
+                  <Option value="3x:0,0,0,0,0,0" type="QString" name="trim_distance_end_map_unit_scale"/>
+                  <Option value="MM" type="QString" name="trim_distance_end_unit"/>
+                  <Option value="0" type="QString" name="trim_distance_start"/>
+                  <Option value="3x:0,0,0,0,0,0" type="QString" name="trim_distance_start_map_unit_scale"/>
+                  <Option value="MM" type="QString" name="trim_distance_start_unit"/>
+                  <Option value="0" type="QString" name="tweak_dash_pattern_on_corners"/>
+                  <Option value="0" type="QString" name="use_custom_dash"/>
+                  <Option value="3x:0,0,0,0,0,0" type="QString" name="width_map_unit_scale"/>
+                </Option>
+                <prop k="align_dash_pattern" v="0"/>
+                <prop k="capstyle" v="square"/>
+                <prop k="customdash" v="5;2"/>
+                <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+                <prop k="customdash_unit" v="MM"/>
+                <prop k="dash_pattern_offset" v="0"/>
+                <prop k="dash_pattern_offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+                <prop k="dash_pattern_offset_unit" v="MM"/>
+                <prop k="draw_inside_polygon" v="0"/>
+                <prop k="joinstyle" v="bevel"/>
+                <prop k="line_color" v="35,35,35,255"/>
+                <prop k="line_style" v="solid"/>
+                <prop k="line_width" v="0.26"/>
+                <prop k="line_width_unit" v="MM"/>
+                <prop k="offset" v="0"/>
+                <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+                <prop k="offset_unit" v="MM"/>
+                <prop k="ring_filter" v="0"/>
+                <prop k="trim_distance_end" v="0"/>
+                <prop k="trim_distance_end_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+                <prop k="trim_distance_end_unit" v="MM"/>
+                <prop k="trim_distance_start" v="0"/>
+                <prop k="trim_distance_start_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+                <prop k="trim_distance_start_unit" v="MM"/>
+                <prop k="tweak_dash_pattern_on_corners" v="0"/>
+                <prop k="use_custom_dash" v="0"/>
+                <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+                <data_defined_properties>
+                  <Option type="Map">
+                    <Option value="" type="QString" name="name"/>
+                    <Option name="properties"/>
+                    <Option value="collection" type="QString" name="type"/>
+                  </Option>
+                </data_defined_properties>
+              </layer>
+            </symbol>
+          </axisSymbol>
+        </DiagramCategory>
+      </SingleCategoryDiagramRenderer>
+      <DiagramLayerSettings dist="0" linePlacementFlags="18" zIndex="0" obstacle="0" placement="0" priority="0" showAll="1">
+        <properties>
+          <Option type="Map">
+            <Option value="" type="QString" name="name"/>
+            <Option name="properties"/>
+            <Option value="collection" type="QString" name="type"/>
+          </Option>
+        </properties>
+      </DiagramLayerSettings>
+      <geometryOptions geometryPrecision="0" removeDuplicateNodes="0">
+        <activeChecks/>
+        <checkConfiguration/>
+      </geometryOptions>
+      <legend showLabelLegend="0" type="default-vector"/>
+      <referencedLayers/>
+      <fieldConfiguration>
+        <field name="field_1" configurationFlags="None">
+          <editWidget type="Range">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="field_2" configurationFlags="None">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="field_3" configurationFlags="None">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="field_4" configurationFlags="None">
+          <editWidget type="Range">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+      </fieldConfiguration>
+      <aliases>
+        <alias field="field_1" index="0" name=""/>
+        <alias field="field_2" index="1" name=""/>
+        <alias field="field_3" index="2" name=""/>
+        <alias field="field_4" index="3" name=""/>
+      </aliases>
+      <defaults>
+        <default field="field_1" applyOnUpdate="0" expression=""/>
+        <default field="field_2" applyOnUpdate="0" expression=""/>
+        <default field="field_3" applyOnUpdate="0" expression=""/>
+        <default field="field_4" applyOnUpdate="0" expression=""/>
+      </defaults>
+      <constraints>
+        <constraint unique_strength="0" field="field_1" exp_strength="0" constraints="0" notnull_strength="0"/>
+        <constraint unique_strength="0" field="field_2" exp_strength="0" constraints="0" notnull_strength="0"/>
+        <constraint unique_strength="0" field="field_3" exp_strength="0" constraints="0" notnull_strength="0"/>
+        <constraint unique_strength="0" field="field_4" exp_strength="0" constraints="0" notnull_strength="0"/>
+      </constraints>
+      <constraintExpressions>
+        <constraint field="field_1" desc="" exp=""/>
+        <constraint field="field_2" desc="" exp=""/>
+        <constraint field="field_3" desc="" exp=""/>
+        <constraint field="field_4" desc="" exp=""/>
+      </constraintExpressions>
+      <expressionfields/>
+      <attributeactions>
+        <defaultAction value="{00000000-0000-0000-0000-000000000000}" key="Canvas"/>
+      </attributeactions>
+      <attributetableconfig sortExpression="" actionWidgetStyle="dropDown" sortOrder="0">
+        <columns>
+          <column width="-1" hidden="0" type="field" name="field_1"/>
+          <column width="-1" hidden="0" type="field" name="field_2"/>
+          <column width="-1" hidden="0" type="field" name="field_3"/>
+          <column width="-1" hidden="0" type="field" name="field_4"/>
+          <column width="-1" hidden="1" type="actions"/>
+        </columns>
+      </attributetableconfig>
+      <conditionalstyles>
+        <rowstyles/>
+        <fieldstyles/>
+      </conditionalstyles>
+      <storedexpressions/>
+      <editform tolerant="1"></editform>
+      <editforminit/>
+      <editforminitcodesource>0</editforminitcodesource>
+      <editforminitfilepath></editforminitfilepath>
+      <editforminitcode><![CDATA[# -*- coding: utf-8 -*-
+"""
+QGIS forms can have a Python function that is called when the form is
+opened.
+
+Use this function to add extra logic to your forms.
+
+Enter the name of the function in the "Python Init function"
+field.
+An example follows:
+"""
+from qgis.PyQt.QtWidgets import QWidget
+
+def my_form_open(dialog, layer, feature):
+	geom = feature.geometry()
+	control = dialog.findChild(QWidget, "MyLineEdit")
+]]></editforminitcode>
+      <featformsuppress>0</featformsuppress>
+      <editorlayout>generatedlayout</editorlayout>
+      <editable>
+        <field editable="1" name="field_1"/>
+        <field editable="1" name="field_2"/>
+        <field editable="1" name="field_3"/>
+        <field editable="1" name="field_4"/>
+      </editable>
+      <labelOnTop>
+        <field labelOnTop="0" name="field_1"/>
+        <field labelOnTop="0" name="field_2"/>
+        <field labelOnTop="0" name="field_3"/>
+        <field labelOnTop="0" name="field_4"/>
+      </labelOnTop>
+      <reuseLastValue>
+        <field reuseLastValue="0" name="field_1"/>
+        <field reuseLastValue="0" name="field_2"/>
+        <field reuseLastValue="0" name="field_3"/>
+        <field reuseLastValue="0" name="field_4"/>
+      </reuseLastValue>
+      <dataDefinedFieldProperties/>
+      <widgets/>
+      <previewExpression>"field_1"</previewExpression>
+      <mapTip></mapTip>
+    </maplayer>
   </projectlayers>
   <layerorder>
     <layer id="berlin0_10_9398349b_8d06_47eb_8b6c_9c528124875c"/>
     <layer id="Google_Satellite_Hybrid_f197c3cd_1822_4314_ac34_48db2165717b"/>
+    <layer id="sample0_10_0d3d7f88_6a40_4afc_ab9e_d077d3d70cdb"/>
   </layerorder>
   <properties>
     <Digitizing>
@@ -820,6 +1217,19 @@ def my_form_open(dialog, layer, feature):
   <Bookmarks/>
   <ProjectViewSettings UseProjectScales="0">
     <Scales/>
+    <DefaultViewExtent xmax="20856.70315285457400023" xmin="20682.67384714542640722" ymax="21282.36082500000338769" ymin="21185.76817499999742722">
+      <spatialrefsys>
+        <wkt>PROJCRS["DHDN / Soldner Berlin",BASEGEOGCRS["DHDN",DATUM["Deutsches Hauptdreiecksnetz",ELLIPSOID["Bessel 1841",6377397.155,299.1528128,LENGTHUNIT["metre",1]]],PRIMEM["Greenwich",0,ANGLEUNIT["degree",0.0174532925199433]],ID["EPSG",4314]],CONVERSION["Soldner Berlin",METHOD["Cassini-Soldner",ID["EPSG",9806]],PARAMETER["Latitude of natural origin",52.4186482777778,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8801]],PARAMETER["Longitude of natural origin",13.6272036666667,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8802]],PARAMETER["False easting",40000,LENGTHUNIT["metre",1],ID["EPSG",8806]],PARAMETER["False northing",10000,LENGTHUNIT["metre",1],ID["EPSG",8807]]],CS[Cartesian,2],AXIS["northing (x)",north,ORDER[1],LENGTHUNIT["metre",1]],AXIS["easting (y)",east,ORDER[2],LENGTHUNIT["metre",1]],USAGE[SCOPE["Cadastre, engineering survey, topographic mapping (large scale)."],AREA["Germany - Berlin."],BBOX[52.33,13.09,52.65,13.76]],ID["EPSG",3068]]</wkt>
+        <proj4>+proj=cass +lat_0=52.4186482777778 +lon_0=13.6272036666667 +x_0=40000 +y_0=10000 +ellps=bessel +units=m +no_defs</proj4>
+        <srsid>1031</srsid>
+        <srid>3068</srid>
+        <authid>EPSG:3068</authid>
+        <description>DHDN / Soldner Berlin</description>
+        <projectionacronym>cass</projectionacronym>
+        <ellipsoidacronym>EPSG:7004</ellipsoidacronym>
+        <geographicflag>false</geographicflag>
+      </spatialrefsys>
+    </DefaultViewExtent>
   </ProjectViewSettings>
   <ProjectTimeSettings timeStepUnit="h" timeStep="1" cumulativeTemporalRange="0" frameRate="1"/>
   <ProjectDisplaySettings>
