@@ -1067,13 +1067,13 @@ object Utils {
 import org.rogach.scallop._
 
 class BFEParams(args: Seq[String]) extends ScallopConf(args) {
-  val default_dataset = s"/home/and/Research/Datasets/dummy.tsv"
+  val default_dataset = s"/home/acald013/Research/Datasets/Demo/temporal_pflock/temporal_pflock/dummy.tsv"
 
   val tolerance:  ScallopOption[Double]  = opt[Double]  (default = Some(1e-3))
   val dataset:    ScallopOption[String]  = opt[String]  (default = Some(default_dataset))
-  val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(2.0))
+  val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(1))
   val mu:         ScallopOption[Int]     = opt[Int]     (default = Some(3))
-  val delta:      ScallopOption[Int]     = opt[Int]     (default = Some(1))
+  val delta:      ScallopOption[Int]     = opt[Int]     (default = Some(3))
   val begin:      ScallopOption[Int]     = opt[Int]     (default = Some(0))
   val end:        ScallopOption[Int]     = opt[Int]     (default = Some(0))
   val capacity:   ScallopOption[Int]     = opt[Int]     (default = Some(250))
@@ -1086,7 +1086,7 @@ class BFEParams(args: Seq[String]) extends ScallopConf(args) {
   val tester:     ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val saves:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val method:     ScallopOption[String]  = opt[String]  (default = Some("PFlock"))
-  val master:     ScallopOption[String]  = opt[String]  (default = Some("local[10]"))
+  val master:     ScallopOption[String]  = opt[String]  (default = Some("local[1]"))
 
   verify()
 }

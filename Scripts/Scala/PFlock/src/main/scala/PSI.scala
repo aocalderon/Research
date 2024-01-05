@@ -384,6 +384,12 @@ object PSI {
     // Call plane sweeping technique algorithm...
     val boxes = PSI.planeSweeping(points)
 
+    debug{
+      boxes.foreach{ box =>
+        println(s"${box.wkt}\t${box.id}\t${box.disks}")
+      }
+    }
+
     // Call filter candidates algorithm...
     val (maximals, tF) = timer{
       PSI.filterCandidates(boxes)
@@ -414,13 +420,12 @@ object PSI {
     log(s"START")
 
     val (maximals, stats) = PSI.run(points)
+    stats.printPSI()
 
     if(S.debug){
       save("/tmp/edgesPointsPSI.wkt"){ points.map{ _.wkt + "\n" } }
       save("/tmp/edgesMaximalsPSI.wkt"){ maximals.map{ _.wkt + "\n" } }
       save("/tmp/edgesMaximalsPSI_prime.wkt"){ maximals.map{ _.getCircleWTK + "\n" } }
-
-      stats.printPSI()
     }
 
     log(s"END")

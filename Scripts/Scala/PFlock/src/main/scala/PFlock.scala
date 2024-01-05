@@ -62,7 +62,6 @@ object PFlock {
       .csv(S.dataset)
       .rdd
       .mapPartitions{ rows =>
-        val reader = new WKTReader(G)
         rows.map{ row =>
           val oid = row.getString(0).toInt
           val lon = row.getString(1).toDouble
@@ -75,6 +74,10 @@ object PFlock {
           (tid, STPoint(point))
         }
       }.groupByKey().sortByKey().collect.toList
+
+    debug{
+      trajs.foreach(println)
+    }
 
     @tailrec
     def pruneM(M: List[Disk], M_prime: List[Disk]): List[Disk] = {
@@ -135,7 +138,7 @@ object PFlock {
           val points = current_trajs._2.toList
 
           val (new_flocks, stats) = PSI.run(points)
-
+          stats.printPSI()
           //println(s"Processing time: $time")
           //println(s"Number of Maximals disks: ${new_flocks.size}")
 
