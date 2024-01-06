@@ -141,7 +141,7 @@ object PSI {
     (candidates, boxes)
   }
 
-  def planeSweeping(points: List[STPoint])
+  def planeSweeping(points: List[STPoint], time_instant: Int)
                    (implicit S: Settings, G: GeometryFactory, stats: Stats): List[Box] = {
 
     // ordering by coordinate (it is first by x and then by y)...
@@ -206,7 +206,7 @@ object PSI {
           val hood = band.get[STPoint](envelope).filter { _.distanceToPoint(centre) <= S.r }
 
           if (hood.size >= S.mu) {
-            val candidate = Disk(centre, hood.map(_.oid))
+            val candidate = Disk(centre, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
             candidates.append(candidate) // getting candidates...
           }
           tCandidates += (clocktime - t0) / 1e9
@@ -375,18 +375,18 @@ object PSI {
     * Run the PSI algorithm.
     * @param points list of points.
     **/
-  def run(points: List[STPoint])(implicit S: Settings, G: GeometryFactory): (List[Disk], Stats) = {
+  def run(points: List[STPoint], time_instant: Int = 0)(implicit S: Settings, G: GeometryFactory): (List[Disk], Stats) = {
 
     // For debugging purposes...
     implicit val stats: Stats = Stats()
     stats.nPoints = points.size
 
     // Call plane sweeping technique algorithm...
-    val boxes = PSI.planeSweeping(points)
+    val boxes = PSI.planeSweeping(points, time_instant)
 
     debug{
       boxes.foreach{ box =>
-        println(s"${box.wkt}\t${box.id}\t${box.disks}")
+        //println(s"${box.wkt}\t${box.id}\t${box.disks}")
       }
     }
 

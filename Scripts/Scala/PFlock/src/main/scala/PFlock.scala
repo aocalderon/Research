@@ -33,17 +33,17 @@ object PFlock {
       .appName("PFlock").getOrCreate()
     import spark.implicits._
 
-    implicit var S = Settings(
+    implicit val S = Settings(
       dataset = params.dataset(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
       delta = params.delta(),
-      method = "PFlock",
       capacity = params.capacity(),
       fraction = params.fraction(),
       tolerance = params.tolerance(),
       tag = params.tag(),
       debug = params.debug(),
+      print = params.print(),
       output = params.output(),
       appId = spark.sparkContext.applicationId
     )
@@ -130,17 +130,21 @@ object PFlock {
     }
 
     @tailrec
-    def join(trajs: List[(Int, Iterable[STPoint])], flocks: List[Disk]): List[Disk] = {
+    def join(trajs: List[(Int, Iterable[STPoint])], flocks: List[Disk], n: Int)(implicit S: Settings): Int = {
 
       trajs match {
         case current_trajs :: remaining_trajs =>
           val time = current_trajs._1
           val points = current_trajs._2.toList
 
-          val (new_flocks, stats) = PSI.run(points)
-          stats.printPSI()
-          //println(s"Processing time: $time")
-          //println(s"Number of Maximals disks: ${new_flocks.size}")
+          val (new_flocks, stats) = if(S.method == "BFE")
+            BFE.run(points)
+          else
+            PSI.run(points)
+
+          debug{
+            stats.printPSI()
+          }
 
           val merged_ones = (for{
             old_flock <- flocks
@@ -162,15 +166,20 @@ object PFlock {
 
           val candidates = M ++ pruneN(M, N, List.empty[Disk])
 
-          debug{
-            candidates
+          val count = if(S.print){
+            val reported = candidates
               .filter{ flock =>
                 val a = flock.end - flock.start
                 val b = S.delta - 1
 
                 a >= b
               }
-              .foreach{println}
+
+            reported.foreach{println}
+
+            n + reported.size
+          } else {
+            n
           }
 
           val F = candidates
@@ -181,15 +190,15 @@ object PFlock {
               if(a >= b) flock.copy(start = flock.start + 1) else flock
             }
 
-          join(remaining_trajs, F)
-        case Nil => flocks
+          join(remaining_trajs, F, count)
+        case Nil => n
       }
     }
 
-    val flocks = join(trajs, List.empty[Disk])
+    val flocks = join(trajs, List.empty[Disk], 0)
 
     log("Done!")
-    log(s"Number of flocks:\t${flocks.size}")
+    log(s"Number of flocks:\t${flocks}")
 
     /*******************************************************************************/
 
