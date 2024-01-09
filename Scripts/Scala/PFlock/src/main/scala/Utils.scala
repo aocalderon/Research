@@ -43,6 +43,7 @@ object Utils {
     tester: Boolean = false,
     saves: Boolean = false,
     print: Boolean = false,
+    iindex: Boolean = true,
     output: String = "/tmp/",
     appId: String = clocktime.toString
   ){
@@ -1089,6 +1090,7 @@ class BFEParams(args: Seq[String]) extends ScallopConf(args) {
   val tester:     ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val saves:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val print:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
+  val iindex:     ScallopOption[Boolean] = opt[Boolean] (default = Some(true))
 
   verify()
 }

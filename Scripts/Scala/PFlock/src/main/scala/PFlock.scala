@@ -45,6 +45,7 @@ object PFlock {
       debug = params.debug(),
       print = params.print(),
       output = params.output(),
+      iindex = params.iindex(),
       appId = spark.sparkContext.applicationId
     )
 
@@ -146,8 +147,30 @@ object PFlock {
             stats.printPSI()
           }
 
+          /***
+           * start: merging previous flocks with current flocks...
+           ***/
+          val old_flocks = if(S.iindex && flocks.nonEmpty) {
+            val inverted_index = flocks.flatMap { flock =>
+              flock.pids.map { pid =>
+                pid -> flock
+              }
+            }.groupBy(_._1).mapValues {
+              _.map(_._2)
+            }
+            val flocks_prime = for {new_flock <- new_flocks} yield {
+              val disks = new_flock.pids.filter{ pid => inverted_index.keySet.contains(pid) }.map { pid =>
+                inverted_index(pid).toSet
+              }
+              disks.reduce(_ intersect _).toList
+            }
+            flocks_prime.flatten
+          } else {
+            flocks
+          }
+
           val merged_ones = (for{
-            old_flock <- flocks
+            old_flock <- old_flocks
             new_flock <- new_flocks
           } yield {
             val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
@@ -156,8 +179,14 @@ object PFlock {
             if(pids == new_flock.pids) new_flock.subset = true
 
             flock
-          }).filter(_.pids.size >= S.mu)
+          }).filter(_.pids.size >= S.mu) // filtering by minimum number of entities (mu)...
+          /***
+           * end: merging previous flocks with current flocks...
+           ***/
 
+          /***
+           * start: pruning subset flocks...
+           ***/
           val M = pruneM(merged_ones, List.empty[Disk]).filterNot(_.subset)
 
           val N = new_flocks.filterNot(_.subset).map{ flock =>
@@ -165,32 +194,40 @@ object PFlock {
           }
 
           val candidates = M ++ pruneN(M, N, List.empty[Disk])
+          /***
+           * end: pruning subset flocks...
+           ***/
 
-          val count = if(S.print){
-            val reported = candidates
-              .filter{ flock =>
-                val a = flock.end - flock.start
-                val b = S.delta - 1
-
-                a >= b
-              }
-
-            reported.foreach{println}
-
-            n + reported.size
-          } else {
-            n
-          }
-
-          val F = candidates
+          /***
+           * start: reporting...
+           ***/
+          val F_prime = candidates
             .map{ flock =>
               val a = flock.end - flock.start
               val b = S.delta - 1
 
-              if(a >= b) flock.copy(start = flock.start + 1) else flock
+              (flock, a >= b)
+            }
+          val count = n + F_prime.count(_._2)
+          if(S.print){
+            F_prime.filter(_._2).map(_._1).foreach{println}
+          }
+          /***
+           * end: reporting...
+           ***/
+
+          /***
+           * start: recurse...
+           ***/
+          val F = F_prime
+            .map{ case(flock, mustUpdate) =>
+              if(mustUpdate) flock.copy(start = flock.start + 1) else flock
             }
 
           join(remaining_trajs, F, count)
+          /***
+           * start: recurse...
+           ***/
         case Nil => n
       }
     }
