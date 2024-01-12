@@ -1054,7 +1054,8 @@ object Utils {
       "--debug",
       "--tester",
       "--saves",
-      "--cached"
+      "--cached",
+      "--print"
     )
     val args = parser(booleans, args_prime)
     args.zip(args.tail).filter{ case(a, b) => a.startsWith("--")}
