@@ -1,0 +1,27 @@
+\documentclass[multi=page, border=5mm]{standalone}
+\usepackage{tikz}
+\usepackage{csvsimple}
+\usepackage{xfp}
+
+\newcommand*{\xMin}{0}%
+\newcommand*{\xMax}{100}%
+\newcommand*{\yMin}{0}%
+\newcommand*{\yMax}{100}%
+\begin{document}
+
+% Page 1
+\begin{page}
+  \begin{tikzpicture}
+    \draw[draw=black] (0, 0) rectangle ++(50, 50);
+    \draw[draw=black] (50, 0) rectangle ++(50, 50);
+    \draw[draw=black] (0, 50) rectangle ++(50, 50);
+    \draw[draw=black] (50, 50) rectangle ++(50, 50);
+    \csvreader[no head]%
+    {input.csv}
+    {2=\x,3=\y}
+    {%
+      \draw[black, fill] (\x, \y) circle (0.5);
+    }
+  \end{tikzpicture}
+\end{page}
+\end{document}
