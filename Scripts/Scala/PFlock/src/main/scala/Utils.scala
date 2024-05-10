@@ -1,27 +1,23 @@
 package edu.ucr.dblab.pflock
 
-import org.locationtech.jts.geom.{Geometry, GeometryFactory, PrecisionModel}
-import org.locationtech.jts.geom.{Coordinate, Envelope, Point, Polygon}
-import streaminer.SpookyHash32
+import archery._
+import edu.ucr.dblab.pflock.pbk.PBK.bk
+import edu.ucr.dblab.pflock.spmf.{AlgoLCM2, Transaction, Transactions}
+import edu.ucr.dblab.pflock.welzl.Welzl
+import org.apache.spark.TaskContext
+import org.locationtech.jts.geom.{Coordinate, Envelope, GeometryFactory, Point}
 import org.locationtech.jts.index.strtree.STRtree
 import org.locationtech.jts.io.WKTReader
-import org.apache.spark.TaskContext
-import edu.ucr.dblab.pflock.spmf.{AlgoLCM2, Transaction, Transactions}
-import streaminer.{MurmurHash3 => Murmur, SpookyHash32 => Spooky}
 import org.slf4j.{Logger, LoggerFactory}
-import archery._
+import streaminer.{MurmurHash3 => Murmur, SpookyHash32 => Spooky}
 
-import scala.collection.JavaConverters._
-import scala.collection.mutable.BitSet
 import java.net.InetAddress
-import scala.util.Random
-import scala.io.Source
-import sys.process._
-import edu.ucr.dblab.pflock.pbk.PBK.bk
-import edu.ucr.dblab.pflock.welzl.Welzl
-
-import scala.Byte
+import scala.collection.JavaConverters._
 import scala.collection.mutable
+import scala.collection.mutable.BitSet
+import scala.io.Source
+import scala.sys.process._
+import scala.util.Random
 
 object Utils {
   private val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -32,8 +28,9 @@ object Utils {
     epsilon_prime: Double = 10.0,
     mu: Int = 3,
     delta: Int = 5,
+    sdist: Double = 20.0,
     capacity: Int = 200,
-    fraction: Double = 0.1,
+    fraction: Double = 0.01,
     tolerance: Double = 1e-3,
     density: Double = 1000.0,
     tag: String = "",
@@ -136,6 +133,8 @@ object Utils {
   case class Disk(center: Point, pids: List[Int],
     start: Int = 0, end: Int = 0) extends Ordered [Disk]{
 
+    var locations: List[Coordinate] = List(center.getCoordinate)
+    var larger: Boolean = false
     var did: Int = -1
     var subset: Boolean = false
     val data: String = try { center.getUserData.toString }
@@ -1079,12 +1078,13 @@ class BFEParams(args: Seq[String]) extends ScallopConf(args) {
   val output:     ScallopOption[String]  = opt[String]  (default = Some("/tmp/"))
   val mu:         ScallopOption[Int]     = opt[Int]     (default = Some(3))
   val delta:      ScallopOption[Int]     = opt[Int]     (default = Some(3))
+  val sdist:      ScallopOption[Double]  = opt[Double]  (default = Some(20.0))
   val begin:      ScallopOption[Int]     = opt[Int]     (default = Some(0))
   val end:        ScallopOption[Int]     = opt[Int]     (default = Some(0))
   val capacity:   ScallopOption[Int]     = opt[Int]     (default = Some(250))
   val tolerance:  ScallopOption[Double]  = opt[Double]  (default = Some(1e-3))
   val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(1))
-  val fraction:   ScallopOption[Double]  = opt[Double]  (default = Some(1))
+  val fraction:   ScallopOption[Double]  = opt[Double]  (default = Some(0.01))
   val density:    ScallopOption[Double]  = opt[Double]  (default = Some(0))
   val debug:      ScallopOption[Boolean] = opt[Boolean] (default = Some(false))
   val cached:     ScallopOption[Boolean] = opt[Boolean] (default = Some(false))

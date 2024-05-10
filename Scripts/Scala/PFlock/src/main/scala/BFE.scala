@@ -1,15 +1,13 @@
 package edu.ucr.dblab.pflock
 
-import org.locationtech.jts.geom.{PrecisionModel, GeometryFactory}
+import archery._
+import edu.ucr.dblab.pflock.MF_Utils._
+import edu.ucr.dblab.pflock.Utils._
+import org.locationtech.jts.geom.{GeometryFactory, PrecisionModel}
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
-
-import edu.ucr.dblab.pflock.Utils._
-import edu.ucr.dblab.pflock.MF_Utils._
-
-import archery._
 
 object BFE {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -40,7 +38,7 @@ object BFE {
       debug{
         log(s"GridSize=${grid.index.size}")
         save("/tmp/edgesPointsBFE.wkt"){ grid.pointsToText }
-        //save("/tmp/edgesGridBFE.wkt"){ grid.wkt() }
+        save("/tmp/edgesGridBFE.wkt"){ grid.wkt() }
       }
 
       // for debugging purposes...

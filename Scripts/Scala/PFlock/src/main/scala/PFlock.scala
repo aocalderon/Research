@@ -66,23 +66,19 @@ object PFlock {
       trajs.foreach(println)
     }
 
-    //val trajs_list = trajs.collect().toList
-    //val flocks = join(trajs_list, List.empty[Disk], 0)
+    val trajs_list = trajs.collect().toList
+    val flocks = PF_Utils.join(trajs_list, List.empty[Disk], List.empty[Disk])
 
-    //log("Done!")
-    //log(s"Number of flocks:\t${flocks}")
+    log("Done!")
+    log(s"Number of flocks:\t${flocks.size}")
+    save("/home/acald013/tmp/flockss.tsv") {
+      flocks.map{ f =>
+        val s = f.start
+        val e = f.end
+        val p = f.pidsText
 
-    val times = trajs.map(_._1).collect().length
-    for( time <- 0 until times - S.delta){
-      val sample = trajs.filter{ case(t, _) => time <= t & t < time + S.delta  }
-      sample.map( x => x._1 ).collect().foreach(print)
-      println
-
-      val trajs_list = sample.collect().toList
-      val flocks = PF_Utils.join(trajs_list, List.empty[Disk], 0)
-
-      log("Done!")
-      log(s"Number of flocks:\t${flocks}")
+        s"$s\t$e\t$p\n"
+      }.sorted
     }
 
     /*******************************************************************************/
