@@ -68,10 +68,10 @@ object PFlock2 {
         }
       }
 
-    val sample = trajs.sample(withReplacement = false, fraction = 0.1, seed = 42).collect()
+    val sample = trajs.sample(withReplacement = false, fraction = params.fraction(), seed = 42).collect()
     val envelope = PF_Utils.getEnvelope(trajs)
     envelope.expandBy(S.epsilon)
-    val quadtree = new StandardQuadTree[Point](new QuadRectangle(envelope), 0, 2500, 16)
+    val quadtree = new StandardQuadTree[Point](new QuadRectangle(envelope), 0, params.capacity(), 16)
     sample.foreach { case (_, point) =>
       quadtree.insert(new QuadRectangle(point.getEnvelopeInternal), point)
     }
@@ -92,7 +92,7 @@ object PFlock2 {
       }.toList
     }
 
-    val trajs_partitioned = trajs.mapPartitions { rows =>
+    val trajs_partitioned0 = trajs.mapPartitions { rows =>
       rows.flatMap { case (_, point) =>
         val env = point.getEnvelopeInternal
         env.expandBy(S.epsilon)
@@ -101,15 +101,16 @@ object PFlock2 {
       }
     }.partitionBy(SimplePartitioner(quadtree.getLeafZones.size())).map(_._2).cache
 
-/*
+
     val trajs_partitioned = trajs_partitioned0.filter{ p =>
       val data = p.getUserData.asInstanceOf[Data]
       data.t <= 10
-    }.filter{ p =>
+    }
+ /*.filter{ p =>
       val data = p.getUserData.asInstanceOf[Data]
       val ids = Set(10153, 17624, 18995)
       ids.contains(data.id)
-    }
+ }
     save("/home/acald013/tmp/demo.tsv") {
       trajs_partitioned.map { p =>
         val data = p.getUserData.asInstanceOf[Data]
@@ -162,6 +163,7 @@ object PFlock2 {
     log(s"Reported flocks: ${safes.count}")
 
     val P_prime = flocksRDD.filter(_.did != -1).sortBy(_.start).collect()
+    log(s"For processing ${P_prime.size}")
     val P = P_prime.groupBy(_.start)
 
     val partials = collection.mutable.HashMap[Int, List[Disk]]()
