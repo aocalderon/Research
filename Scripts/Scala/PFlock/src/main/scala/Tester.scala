@@ -1,23 +1,15 @@
 package edu.ucr.dblab.pflock
 
-import org.locationtech.jts.geom.{PrecisionModel, GeometryFactory}
-import org.locationtech.jts.geom.{Envelope, Coordinate, Point, LineString}
-import org.locationtech.jts.index.quadtree.{Quadtree => JTSQuadtree}
-import org.locationtech.jts.index.strtree.STRtree
-
-import org.slf4j.{Logger, LoggerFactory}
-
-import scala.xml._
-import scala.collection.JavaConverters._
-import java.io.FileWriter
-
-import org.apache.spark.serializer.KryoSerializer
-import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{SparkSession, SaveMode}
-
 import edu.ucr.dblab.pflock.MF_Utils._
 import edu.ucr.dblab.pflock.Utils._
-import edu.ucr.dblab.pflock.sedona.quadtree.Quadtree
+import org.apache.spark.serializer.KryoSerializer
+import org.apache.spark.sql.SparkSession
+import org.locationtech.jts.geom.{GeometryFactory, PrecisionModel}
+import org.locationtech.jts.index.quadtree.{Quadtree => JTSQuadtree}
+import org.slf4j.{Logger, LoggerFactory}
+
+import scala.collection.JavaConverters._
+import scala.xml._
 
 object Tester {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -31,7 +23,7 @@ object Tester {
       .appName("Tester").getOrCreate()
     import spark.implicits._
 
-    implicit var settings = Settings(
+    implicit val S = Settings(
       dataset = params.dataset(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
@@ -45,71 +37,35 @@ object Tester {
       appId = spark.sparkContext.applicationId
     )
 
-    implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
+    implicit val geofactory = new GeometryFactory(new PrecisionModel(S.scale))
 
     printParams(args)
     log(s"START|")
 
     /*******************************************************************************/
     // Code here...
-    def readPoints(filename: String)
-      (implicit spark: SparkSession, geofactory: GeometryFactory): RDD[Point] = {
+    val trajs = spark.read
+      .option("header", false)
+      .option("delimiter", "\t")
+      .csv(S.dataset)
+      .mapPartitions{ rows =>
+        rows.map{ row =>
+          val oid = row.getString(0).toInt
+          val lon = row.getString(1).toDouble
+          val lat = row.getString(2).toDouble
+          val tid = row.getString(3).toInt
 
-      spark.read
-        .textFile(filename)
-        .rdd
-        .map{ line =>
-          val arr = line.split("\t")
-          val x = arr(1).toDouble
-          val y = arr(2).toDouble
-
-          val point = geofactory.createPoint(new Coordinate(x, y))
-          point.setUserData(line)
-          point
+          (oid, lon, lat, tid)
         }
-    }
+      }.toDF("oid", "lon", "lat", "tid")
+      .repartition($"tid").map{ row =>
+        val o = row.getInt(0)
+        val x = row.getDouble(1)
+        val y = row.getDouble(2)
+        val t = row.getInt(3)
 
-    def savePoints(points: RDD[Point], tree: STRtree, tag: String = "T",
-      outpath: String = "/tmp/"): Map[Int, Int] = {
-
-      points.map{ point =>
-        val id = tree.query(point.getEnvelopeInternal).asScala.map(_.asInstanceOf[Int]).head
-        val line = point.getUserData.asInstanceOf[String]
-
-        (id, line)
-      }
-        .groupBy(_._1)
-        .map{ case(cid, list) =>
-          val data = list.map(_._2 + "\n").toList
-          save(s"${outpath}${tag}_cell${cid}.tsv"){ data }
-
-          (cid -> data.size)
-        }.collect.toMap
-    }
-
-    val outpath = "/home/and/Research/Datasets/LA"
-
-    val points1 = readPoints("/home/and/Research/Datasets/LA_50K_T320.tsv")
-    val points2 = readPoints("/home/and/Research/Datasets/LA_50K_T321.tsv")
-
-    val (cells, tree, mbr) = Quadtree.build(points1 ++ points2, fraction = 1, capacity = 2500)
-
-    val counts1 = savePoints(points1, tree, "T320", outpath + "/cells_coarser/")
-    val counts2 = savePoints(points2, tree, "T321", outpath + "/cells_coarser/")
-
-    val data = cells.map{ case(cid, envelope) =>
-      val polygon = geofactory.toGeometry(envelope)
-      val area = polygon.getArea
-      val wkt  = polygon.toText
-      val n1   = counts1.getOrElse(cid, 0)
-      val n2   = counts2.getOrElse(cid, 0)
-      val density1 = if(n1 > 0) n1.toDouble / area else 0
-      val density2 = if(n2 > 0) n2.toDouble / area else 0
-
-      s"$wkt\t$cid\t$area\t$n1\t$density1\t$n2\t$density2\n"
-    }.toList
-
-    save(s"${outpath}/cells_coarser.tsv"){ data }
+        s"$o\t$x\t$y\t$t"}
+      .write.text("/tmp/berlin")
 
     /*******************************************************************************/
 
