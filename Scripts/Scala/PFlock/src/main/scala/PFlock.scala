@@ -42,7 +42,7 @@ object PFlock {
 
     /*******************************************************************************/
     // Code here...
-
+    var t0 = clocktime
     val trajs = spark.read
       .option("header", false)
       .option("delimiter", "\t")
@@ -68,9 +68,11 @@ object PFlock {
 
     val trajs_list = trajs.collect().toList
     val flocks = PF_Utils.join(trajs_list, List.empty[Disk], List.empty[Disk])
+    val t1 = clocktime
+    val time = (t1 - t0) / 1e9
 
-    log("Done!")
-    log(s"Number of flocks:\t${flocks.size}")
+    logt(s"$time")
+    log(s"${flocks.size}")
     save("/home/acald013/tmp/flockss.tsv") {
       flocks.map{ f =>
         val s = f.start
