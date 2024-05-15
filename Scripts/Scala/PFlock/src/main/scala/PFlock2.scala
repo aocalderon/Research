@@ -133,6 +133,7 @@ object PFlock2 {
     }
 
     log("Start.")
+    var t0 = clocktime
     val flocksRDD = trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
       val cell_test = new Envelope(cells(index).mbr)
       cell_test.expandBy(S.sdist * -1.0)
@@ -156,11 +157,15 @@ object PFlock2 {
       (flocks ++ partial).toIterator
     }.cache
     flocksRDD.count()
-    log(s"End Safe Flocks")
+    val tSafe = (clocktime - t0) / 1e9
+    log(s"TIME|Safe|$tSafe")
 
     val safes = flocksRDD.filter(_.did == -1)
-    val P = flocksRDD.filter(_.did != -1).sortBy(_.start).collect().groupBy(_.start)
+    val nSafe = safes.count()
+    log(s"INFO|Safe|$nSafe")
 
+    t0 = clocktime
+    val P = flocksRDD.filter(_.did != -1).sortBy(_.start).collect().groupBy(_.start)
     val partials = collection.mutable.HashMap[Int, List[Disk]]()
     P.toSeq.map{ case(time, candidates) =>
       partials(time) = candidates.toList
@@ -170,8 +175,10 @@ object PFlock2 {
     val times = (0 to 10).toList
     val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
     val FF = PF_Utils.prune2(R, safes.collect().toList, List.empty[Disk])
-
-    log("End Partial Flocks")
+    val tPartial = (clocktime - t0) / 1e9
+    log(s"TIME|Partial|$tPartial")
+    val nPartial = flocksRDD.filter(_.did != -1).count()
+    log(s"INFO|Partial|$nPartial")
 
     save("/home/acald013/tmp/flocksd.tsv") {
       FF.map{ f =>

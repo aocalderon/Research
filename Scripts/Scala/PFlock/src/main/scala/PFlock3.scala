@@ -135,6 +135,7 @@ object PFlock3 {
       }
     }
 
+    var t0 = clocktime
     val flocksRDD = trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
       val cell_test = new Envelope(cells(index).mbr)
       cell_test.expandBy(S.sdist * -1.0)
@@ -157,8 +158,22 @@ object PFlock3 {
       partial.foreach(_.did = index)
       (flocks ++ partial).toIterator
     }.cache
+    flocksRDD.count()
+    val tSafe = (clocktime - t0) / 1e9
+    log(s"TIME|Safe|$tSafe")
 
+    val safes = flocksRDD.filter(_.did == -1)
+    val nSafe = safes.count()
+    log(s"INFO|Safe|$nSafe")
+
+    t0 = clocktime
     val (e, _) = PF_Utils.process(flocksRDD, cells, params.step())
+    e.count()
+    val tPartial = (clocktime - t0) / 1e9
+    log(s"TIME|Partial|$tPartial")
+    val nPartial = flocksRDD.filter(_.did != -1).count()
+    log(s"INFO|Partial|$nPartial")
+
 
     save("/home/acald013/tmp/flocksd2.tsv") {
       e.collect().map{ f =>
