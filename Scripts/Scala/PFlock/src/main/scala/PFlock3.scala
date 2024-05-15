@@ -2,15 +2,13 @@ package edu.ucr.dblab.pflock
 
 import edu.ucr.dblab.pflock.MF_Utils.SimplePartitioner
 import edu.ucr.dblab.pflock.Utils._
+import edu.ucr.dblab.pflock.sedona.quadtree.{QuadRectangle, StandardQuadTree}
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.sql.SparkSession
-import org.locationtech.jts.geom.{Coordinate, GeometryFactory, PrecisionModel}
-import org.locationtech.jts.index.strtree.STRtree
-import org.locationtech.jts.io.WKTReader
+import org.locationtech.jts.geom._
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters.asScalaBufferConverter
-import scala.io.Source
 
 object PFlock3 {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -19,7 +17,7 @@ object PFlock3 {
     implicit val params: BFEParams = new BFEParams(args)
 
     implicit val spark: SparkSession = SparkSession.builder()
-      .config("spark.serializer",classOf[KryoSerializer].getName)
+      .config("spark.serializer", classOf[KryoSerializer].getName)
       .master(params.master())
       .appName("PFlock").getOrCreate()
 
@@ -28,6 +26,7 @@ object PFlock3 {
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
       delta = params.delta(),
+      step = params.step(),
       sdist = params.sdist(),
       capacity = params.capacity(),
       fraction = params.fraction(),
@@ -46,7 +45,7 @@ object PFlock3 {
     printParams(args)
     log(s"START|")
 
-    /*******************************************************************************/
+    /** **************************************************************************** */
     // Code here...
 
     val trajs = spark.read
@@ -54,8 +53,8 @@ object PFlock3 {
       .option("delimiter", "\t")
       .csv(S.dataset)
       .rdd
-      .mapPartitions{ rows =>
-        rows.map{ row =>
+      .mapPartitions { rows =>
+        rows.map { row =>
           val oid = row.getString(0).toInt
           val lon = row.getString(1).toDouble
           val lat = row.getString(2).toDouble
@@ -68,104 +67,108 @@ object PFlock3 {
         }
       }
 
-    val buffer = Source.fromFile("/home/acald013/Research/Meetings/next/figures/sample/cells.wkt")
-    val reader = new WKTReader(G)
-    val tree = new STRtree()
-    val cells = buffer.getLines().map{ line =>
-      val arr = line.split("\t")
-      val pid = arr(0).toInt
-      val env = reader.read(arr(1)).getEnvelopeInternal
+    val sample = trajs.sample(withReplacement = false, fraction = params.fraction(), seed = 42).collect()
+    val envelope = PF_Utils.getEnvelope(trajs)
+    envelope.expandBy(S.epsilon * 2.0)
+    val quadtree = new StandardQuadTree[Point](new QuadRectangle(envelope), 0, params.capacity(), 16)
+    sample.foreach { case (_, point) =>
+      quadtree.insert(new QuadRectangle(point.getEnvelopeInternal), point)
+    }
+    quadtree.assignPartitionIds()
+    quadtree.assignPartitionLineage()
+    quadtree.dropElements()
+    val cells = quadtree.getLeafZones.asScala.map { leaf =>
+      val envelope = leaf.getEnvelope
+      val id = leaf.partitionId.toInt
 
-
-      pid -> env
+      id -> Cell(envelope, id, leaf.lineage)
     }.toMap
-    cells.foreach{ case(pid, env) =>
-      tree.insert(env, pid)
+
+    save("/tmp/edgesCells.wkt") {
+      cells.map { case(id, cell) =>
+        val wkt = G.toGeometry(cell.mbr).toText
+        s"$wkt\tL${cell.lineage}\t$id\n"
+      }.toList
     }
 
-    debug {
-      save("/tmp/edgesCells.wkt") {
-        cells.map { case(id, envelope) =>
-          val wkt = G.toGeometry(envelope).toText
-          s"$wkt\t$id\n"
-        }.toList
+    val trajs_partitioned0 = trajs.mapPartitions { rows =>
+      rows.flatMap { case (_, point) =>
+        val env = point.getEnvelopeInternal
+        env.expandBy(S.epsilon)
+        quadtree.findZones(new QuadRectangle(env)).asScala
+          .map { x => (x.partitionId, point) }
       }
-    }
+    }.partitionBy(SimplePartitioner(quadtree.getLeafZones.size())).map(_._2).cache
 
-    val trajs_partitioned = trajs.mapPartitions{ rows =>
-      rows.flatMap{ case(_, point) =>
-        tree.query(point.getEnvelopeInternal).asScala
-          .map{ x => (x.asInstanceOf[Int], point) }
-      }
-    }.partitionBy( SimplePartitioner(cells.size) ).map(_._2).cache
+
+    val trajs_partitioned = trajs_partitioned0.filter{ p =>
+      val data = p.getUserData.asInstanceOf[Data]
+      data.t <= 10
+    }/*.filter{ p =>
+      val data = p.getUserData.asInstanceOf[Data]
+      val ids = Set(651, 2134, 7716, 8946, 12641, 15504, 15834)
+
+      ids.contains(data.id)
+ }
+    save("/home/acald013/tmp/demo.tsv") {
+      trajs_partitioned.map { p =>
+        val data = p.getUserData.asInstanceOf[Data]
+        val i = data.id
+        val x = p.getX
+        val y = p.getY
+        val t = data.t
+        s"$i\t$x\t$y\t$t\n"
+      }.collect()
+    }*/
 
     val nTrajs = trajs_partitioned.count()
     log(s"Number of trajectories: $nTrajs")
 
-    save("/tmp/edgesP.wkt") {
-      trajs_partitioned.mapPartitionsWithIndex { (pid, points) =>
-        points.map { point =>
-          s"${point.toText}\t$pid\n"
-        }
-      }.collect
+    debug {
+      save("/tmp/edgesS.wkt") {
+        trajs_partitioned.sample(withReplacement = false, 0.1, 42).mapPartitionsWithIndex { (i, points) =>
+          points.map { point =>
+            val wkt = point.toText
+            s"$wkt\t$i\n"
+          }
+        }.collect()
+      }
     }
 
-    val flocksRDD = trajs_partitioned.mapPartitionsWithIndex{ (index, points) =>
-      val cell = cells(index)
-      cell.expandBy(S.sdist * -1.0)
+    val flocksRDD = trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
+      val cell_test = new Envelope(cells(index).mbr)
+      cell_test.expandBy(S.sdist * -1.0)
+      val cell = if(cell_test.isNull){
+        new Envelope(cells(index).mbr.centre())
+      } else {
+        cell_test
+      }
+      val cell_prime = new Envelope(cells(index).mbr)
 
-      val ps = points.toList.map{ point =>
+      val ps = points.toList.map { point =>
         val data = point.getUserData.asInstanceOf[Data]
         (data.t, point)
-      }.groupBy(_._1).map{ case(time, points) =>
-        (time, points.map( p => STPoint(p._2) ))
+      }.groupBy(_._1).map { case (time, points) =>
+        (time, points.map(p => STPoint(p._2)))
       }.toList.sortBy(_._1)
 
-      val (flocks, partial) = PF_Utils.joinDisks(ps, List.empty[Disk], List.empty[Disk], cell, cell, List.empty[Disk])
+      val (flocks, partial) = PF_Utils.joinDisks(ps, List.empty[Disk], List.empty[Disk], cell, cell_prime, List.empty[Disk])
 
       partial.foreach(_.did = index)
-      partial.toIterator
+      (flocks ++ partial).toIterator
+    }.cache
+
+    val (e, _) = PF_Utils.process(flocksRDD, cells, params.step())
+
+    save("/home/acald013/tmp/flocksd2.tsv") {
+      e.collect().map{ f =>
+        val s = f.start
+        val e = f.end
+        val p = f.pidsText
+
+        s"$s\t$e\t$p\n"
+      }.sorted
     }
-
-    val fn = flocksRDD.count()
-    log(s"Reported flocks: $fn")
-
-    val P = flocksRDD.sortBy(_.start).collect()
-    val starts = P.groupBy(_.start)
-    val ends   = P.groupBy(_.end).toSeq.sortBy(_._1)
-
-    val J = ends.flatMap{ case(end, partial_end) =>
-      val partial_start = try {
-        starts(end + 1)
-      } catch {
-        case e: Exception => Array.empty[Disk]
-      }
-
-      for{
-        s <- partial_start
-        e <- partial_end if(s.did != e.did)
-      } yield {
-        (e, s)
-      }
-    }
-
-    val partial_flocks = J.filter{ case(s, e) =>
-      s.pidsSet.intersect(e.pidsSet).size >= S.mu
-    }.map{ case(s,e) =>
-      val pids = s.pidsSet.intersect(e.pidsSet)
-      val start = if (e.end - s.start >= S.delta)
-        e.end - S.delta + 1
-      else
-        s.start
-      val end = e.end
-      val locations = s.locations ++ e.locations
-
-      val flock = Disk(e.center, pids.toList.sorted, start, end)
-      flock.locations = locations
-      flock
-    }.filter{ f => (f.end - f.start) == (S.delta - 1) }.distinct
-
-    partial_flocks.foreach{println}
 
     spark.close
   }

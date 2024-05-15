@@ -4,7 +4,6 @@ import archery.{RTree => ArcheryRTree}
 import edu.ucr.dblab.pflock.PSI_Utils._
 import edu.ucr.dblab.pflock.Utils._
 import org.locationtech.jts.geom._
-import org.locationtech.jts.index.strtree.STRtree
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.annotation.tailrec
@@ -206,7 +205,8 @@ object PSI {
           val hood = band.get[STPoint](envelope).filter { _.distanceToPoint(centre) <= S.r }
 
           if (hood.size >= S.mu) {
-            val candidate = Disk(centre, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
+            val c = G.createMultiPoint(hood.map(_.point).toArray).getCentroid
+            val candidate = Disk(c, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
             candidates.append(candidate) // getting candidates...
           }
           tCandidates += (clocktime - t0) / 1e9
@@ -346,7 +346,7 @@ object PSI {
   }
 
   /**
-    * Prune list of candidate disks by iterating over their each of them and removing subsets and duplicates.
+    * Prune list of candidate disks by iterating over each of them and removing subsets and duplicates.
     *
     * @param C  list of current candidate disks.
     * @param c  candidate disk.

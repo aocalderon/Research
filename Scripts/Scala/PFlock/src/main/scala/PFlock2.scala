@@ -8,9 +8,7 @@ import org.apache.spark.sql.SparkSession
 import org.locationtech.jts.geom._
 import org.slf4j.{Logger, LoggerFactory}
 
-import scala.annotation.tailrec
 import scala.collection.JavaConverters.asScalaBufferConverter
-import scala.collection.mutable
 
 object PFlock2 {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -44,7 +42,6 @@ object PFlock2 {
     implicit val G: GeometryFactory = new GeometryFactory(new PrecisionModel(S.scale))
 
     printParams(args)
-    log(s"START|")
 
     /** **************************************************************************** */
     // Code here...
@@ -70,7 +67,7 @@ object PFlock2 {
 
     val sample = trajs.sample(withReplacement = false, fraction = params.fraction(), seed = 42).collect()
     val envelope = PF_Utils.getEnvelope(trajs)
-    envelope.expandBy(S.epsilon)
+    envelope.expandBy(S.epsilon * 2.0)
     val quadtree = new StandardQuadTree[Point](new QuadRectangle(envelope), 0, params.capacity(), 16)
     sample.foreach { case (_, point) =>
       quadtree.insert(new QuadRectangle(point.getEnvelopeInternal), point)
@@ -80,15 +77,15 @@ object PFlock2 {
     quadtree.dropElements()
     val cells = quadtree.getLeafZones.asScala.map { leaf =>
       val envelope = leaf.getEnvelope
-      val id = leaf.partitionId
+      val id = leaf.partitionId.toInt
 
-      id -> envelope
+      id -> Cell(envelope, id, leaf.lineage)
     }.toMap
 
     save("/tmp/edgesCells.wkt") {
-      cells.map { case (id, envelope) =>
-        val wkt = G.toGeometry(envelope).toText
-        s"$wkt\t$id\n"
+      cells.map { case(id, cell) =>
+        val wkt = G.toGeometry(cell.mbr).toText
+        s"$wkt\tL${cell.lineage}\t$id\n"
       }.toList
     }
 
@@ -101,14 +98,13 @@ object PFlock2 {
       }
     }.partitionBy(SimplePartitioner(quadtree.getLeafZones.size())).map(_._2).cache
 
-
     val trajs_partitioned = trajs_partitioned0.filter{ p =>
       val data = p.getUserData.asInstanceOf[Data]
       data.t <= 10
-    }
- /*.filter{ p =>
+    }/*.filter{ p =>
       val data = p.getUserData.asInstanceOf[Data]
-      val ids = Set(10153, 17624, 18995)
+      val ids = Set(651, 2134, 7716, 8946, 12641, 15504, 15834)
+
       ids.contains(data.id)
  }
     save("/home/acald013/tmp/demo.tsv") {
@@ -136,15 +132,16 @@ object PFlock2 {
       }
     }
 
+    log("Start.")
     val flocksRDD = trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
-      val cell_test = new Envelope(cells(index))
+      val cell_test = new Envelope(cells(index).mbr)
       cell_test.expandBy(S.sdist * -1.0)
       val cell = if(cell_test.isNull){
-        new Envelope(cells(index).centre())
+        new Envelope(cells(index).mbr.centre())
       } else {
         cell_test
       }
-      val cell_prime = new Envelope(cells(index))
+      val cell_prime = new Envelope(cells(index).mbr)
 
       val ps = points.toList.map { point =>
         val data = point.getUserData.asInstanceOf[Data]
@@ -158,13 +155,11 @@ object PFlock2 {
       partial.foreach(_.did = index)
       (flocks ++ partial).toIterator
     }.cache
+    flocksRDD.count()
+    log(s"End Safe Flocks")
 
     val safes = flocksRDD.filter(_.did == -1)
-    log(s"Reported flocks: ${safes.count}")
-
-    val P_prime = flocksRDD.filter(_.did != -1).sortBy(_.start).collect()
-    log(s"For processing ${P_prime.size}")
-    val P = P_prime.groupBy(_.start)
+    val P = flocksRDD.filter(_.did != -1).sortBy(_.start).collect().groupBy(_.start)
 
     val partials = collection.mutable.HashMap[Int, List[Disk]]()
     P.toSeq.map{ case(time, candidates) =>
@@ -173,31 +168,10 @@ object PFlock2 {
 
     //val times = partials.keys.toList.sorted
     val times = (0 to 10).toList
-
-    @tailrec
-    def processPartials(F: List[Disk], times: List[Int], partials: mutable.HashMap[Int, List[Disk]], R: List[Disk]): List[Disk] = {
-      times match {
-        case time::tail =>
-          val (f_prime, r_prime) = PF_Utils.funPartial(F, time, partials, R)
-          processPartials(f_prime, tail, partials, r_prime)
-        case Nil => R
-      }
-    }
-
-    val R = processPartials(List.empty[Disk], times, partials, List.empty[Disk])
-
-    log(s"Partial flocks: ${R.size}")
-    save("/home/acald013/tmp/flocks_border.tsv") {
-      R.map{ f =>
-        val s = f.start
-        val e = f.end
-        val p = f.pidsText
-
-        s"$s\t$e\t$p\n"
-      }.sorted
-    }
-
+    val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
     val FF = PF_Utils.prune2(R, safes.collect().toList, List.empty[Disk])
+
+    log("End Partial Flocks")
 
     save("/home/acald013/tmp/flocksd.tsv") {
       FF.map{ f =>
@@ -208,18 +182,6 @@ object PFlock2 {
         s"$s\t$e\t$p\n"
       }.sorted
     }
-    /*
-    val E = PF_Utils.funPartial(List.empty[Disk], 0, partials)
-    val J = PF_Utils.funPartial(E, 1,  partials)
-    val K = PF_Utils.funPartial(J, 2,  partials)
-    val L = PF_Utils.funPartial(K, 3,  partials)
-    val O = PF_Utils.funPartial(L, 4,  partials)
-    val Q = PF_Utils.funPartial(O, 5,  partials)
-    val U = PF_Utils.funPartial(Q, 6,  partials)
-    val V = PF_Utils.funPartial(U, 7,  partials)
-    val W = PF_Utils.funPartial(V, 8,  partials)
-    val X = PF_Utils.funPartial(W, 9,  partials)
-    val Z = PF_Utils.funPartial(X, 10,  partials)*/
 
     spark.close
   }

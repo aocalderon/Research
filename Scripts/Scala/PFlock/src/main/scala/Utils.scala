@@ -28,6 +28,7 @@ object Utils {
     epsilon_prime: Double = 10.0,
     mu: Int = 3,
     delta: Int = 5,
+    step: Int = 1,
     sdist: Double = 20.0,
     capacity: Int = 200,
     fraction: Double = 0.01,
@@ -117,6 +118,7 @@ object Utils {
   case class Cell(mbr: Envelope, cid: Int, lineage: String = "", dense: Boolean = false){
     var nPairs = 0
     var nCandidates = 0
+    val level: Int = lineage.length
 
     def isDense(implicit S: Settings): Boolean = this.nPairs >= S.density
 
@@ -127,7 +129,7 @@ object Utils {
 
     def toText(implicit G: GeometryFactory): String = G.toGeometry(mbr).toText
 
-    def wkt(implicit G: GeometryFactory): String = s"${toText}\t$cid\t$lineage\t$nPairs\t$nCandidates"
+    def wkt(implicit G: GeometryFactory): String = s"${toText}\t$cid\tL$lineage\t$nPairs\t$nCandidates"
   }
 
   case class Disk(center: Point, pids: List[Int],
@@ -215,7 +217,7 @@ object Utils {
 
     override def toString: String = s"$start\t$end\t${pids.sorted.mkString(" ")}"
 
-    def wkt: String = s"${center.toText}\t${pidsText}"
+    def wkt: String = s"${center.toText}\t$start\t$end\t$pidsText"
 
     def getCircleWTK(implicit S: Settings): String = s"${center.buffer(S.r).toText}\t$X\t$Y\t$data"
 
@@ -745,14 +747,14 @@ object Utils {
   }
 
   def getPointsAroundCenter(center: Point, points: List[STPoint])
-      (implicit settings:Settings): Disk = {
+      (implicit S: Settings, G: GeometryFactory): Disk = {
     val pids = for{
-      point <- points if { point.distanceToPoint(center) <= settings.r }
+      point <- points if { point.distanceToPoint(center) <= S.r }
     } yield {
-      point.oid
+      point
     }
-
-    Disk(center, pids)
+    val c = G.createMultiPoint(pids.map(_.point).toArray).getCentroid
+    Disk(c, pids.map(_.oid))
   }
 
   /*** Misc Functions ***/
@@ -1078,6 +1080,7 @@ class BFEParams(args: Seq[String]) extends ScallopConf(args) {
   val output:     ScallopOption[String]  = opt[String]  (default = Some("/tmp/"))
   val mu:         ScallopOption[Int]     = opt[Int]     (default = Some(3))
   val delta:      ScallopOption[Int]     = opt[Int]     (default = Some(3))
+  val step:       ScallopOption[Int]     = opt[Int]     (default = Some(1))
   val sdist:      ScallopOption[Double]  = opt[Double]  (default = Some(20.0))
   val begin:      ScallopOption[Int]     = opt[Int]     (default = Some(0))
   val end:        ScallopOption[Int]     = opt[Int]     (default = Some(0))

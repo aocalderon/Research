@@ -1,12 +1,15 @@
 package edu.ucr.dblab.pflock
 
-import edu.ucr.dblab.pflock.Utils.{Disk, STPoint, Settings, debug}
+import edu.ucr.dblab.pflock.MF_Utils.SimplePartitioner
+import edu.ucr.dblab.pflock.Utils.{Cell, Disk, STPoint, Settings, debug, save}
 import org.apache.spark.TaskContext
 import org.apache.spark.rdd.RDD
 import org.locationtech.jts.geom.{Envelope, GeometryFactory, Point}
+import org.locationtech.jts.index.strtree.STRtree
 import org.slf4j.Logger
 
 import scala.annotation.tailrec
+import scala.collection.JavaConverters.asScalaBufferConverter
 import scala.collection.mutable
 
 object PF_Utils {
@@ -386,6 +389,8 @@ object PF_Utils {
 
   def funPartial(f: List[Disk], time: Int, partials: mutable.HashMap[Int, List[Disk]], result: List[Disk])
                 (implicit S: Settings): (List[Disk], List[Disk]) = {
+    val pid = TaskContext.getPartitionId()
+
     val seeds = try {
       partials(time)
     } catch {
@@ -402,7 +407,7 @@ object PF_Utils {
       }
 
       partial_prime.filter{ flock2 =>
-        flock1.pidsSet.intersect(flock2.pidsSet).size >= S.mu //&& flock1.did != flock2.did
+        flock1.pidsSet.intersect(flock2.pidsSet).size >= S.mu
       }.map { flock2 =>
         val pids  = flock1.pidsSet.intersect(flock2.pidsSet).toList
         val start = flock1.start
@@ -439,13 +444,101 @@ object PF_Utils {
     (F, result ++ result_prime)
   }
 
-  def getPartials(F: List[Disk], cell: Envelope): List[Disk] = {
-      F.filter{ f =>
-        if(f.locations.size > 1)
-          !cell.contains(f.locations.last) || !cell.contains(f.locations.head)
-        else
-          !cell.contains(f.locations.head)
+  def processUpdates(flocksRDD: RDD[Disk], cells: Map[Int, Cell], n: Int = 1)
+                    (implicit S: Settings, G: GeometryFactory): (RDD[Disk], Map[Int, Cell]) = {
+    val cellsA = PF_Utils.updateCells(cells, n)
+    save("/tmp/edgesC1.wkt"){
+      cellsA.values.map{ cell =>
+        s"${cell.wkt}\n"
+      }.toList
+    }
+    val treeA = PF_Utils.buildTree(cellsA)
+    val ARDD = flocksRDD.mapPartitionsWithIndex{ (index, flocks) =>
+      val env = new Envelope(cells(index).mbr.centre())
+      val new_id = treeA.query(env).asScala.map(_.asInstanceOf[Int]).head
+      flocks.map( f => (new_id, f) )
+    }.partitionBy(SimplePartitioner(cellsA.size)).map(_._2).cache
+    val B = ARDD.mapPartitionsWithIndex{ (index, F) =>
+      val (flocks, partials_prime) = F.partition(_.did == -1)
+      val C = new Envelope(cellsA(index).mbr)
+      C.expandBy(S.sdist * -1.0)
+      val (p_prime, still_partials) = partials_prime.partition( f => C.contains(f.center.getCoordinate) )
+      val R = if(p_prime.isEmpty){
+        List.empty[Disk]
+      } else {
+        val P = p_prime.toList.sortBy(_.start).groupBy(_.start)
+        val partials = collection.mutable.HashMap[Int, List[Disk]]()
+        P.toSeq.map { case (time, candidates) =>
+          partials(time) = candidates
+        }
+
+        val times = (0 to 10).toList
+
+        val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
+        R.foreach(r => r.did = -1)
+        R
       }
+
+      prune2(R, flocks.toList, List.empty[Disk]).toIterator ++ still_partials
+    }.cache
+
+    (B, cellsA)
+  }
+  @tailrec
+  def processPartials(F: List[Disk], times: List[Int], partials: mutable.HashMap[Int, List[Disk]], R: List[Disk])
+                     (implicit S: Settings): List[Disk] = {
+    times match {
+      case time::tail =>
+        val (f_prime, r_prime) = PF_Utils.funPartial(F, time, partials, R)
+        processPartials(f_prime, tail, partials, r_prime)
+      case Nil => R
+    }
+  }
+
+  @tailrec
+  def process(flocks: RDD[Disk], cells: Map[Int, Cell], n: Int = 1)(implicit S: Settings, G: GeometryFactory): (RDD[Disk], Map[Int, Cell]) = {
+    if(cells.size > 1){
+      val (a, cellsa) = PF_Utils.processUpdates(flocks, cells, n)
+      process(a, cellsa, n)
+    } else {
+      (flocks, cells)
+    }
+  }
+  def updateCells(cells: Map[Int, Cell], e: Int): Map[Int, Cell] = updateCells2(cells, 0, e)
+
+  @tailrec
+  private def updateCells2(cells: Map[Int, Cell], i: Int, e: Int): Map[Int, Cell] = {
+    if(cells.size > 1 && i < e) {
+      val cellsA = PF_Utils.updateCellsSec(cells)
+      updateCells2(cellsA, i + 1, e)
+    } else {
+      cells
+    }
+  }
+
+  private def updateCellsSec(cells: Map[Int, Cell]): Map[Int, Cell] = {
+    cells.values.groupBy{ cell =>
+      val lid = cell.lineage.substring(0, cell.lineage.length - 1)
+      lid
+    }.flatMap{ case(lid, cells) =>
+      if(cells.size == 4){
+        val env = cells.map(c => new Envelope(c.mbr)).reduce{ (a, b) =>
+          a.expandToInclude(b)
+          a
+        }
+        List( Cell(env, -1, lid) )
+      } else {
+        cells.toList
+      }
+    }.zipWithIndex.map{ case(cell, id) => id -> cell.copy(cid = id) }.toMap
+  }
+
+  def buildTree(cells: Map[Int, Cell]): STRtree = {
+    val tree = new STRtree()
+    cells.values.foreach{ cell =>
+      tree.insert(cell.mbr, cell.cid)
+    }
+    tree
   }
 
   def getEnvelope(dataset: RDD[(Int, Point)]): Envelope = {
