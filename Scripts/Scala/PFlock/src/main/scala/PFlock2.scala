@@ -30,6 +30,7 @@ object PFlock2 {
       capacity = params.capacity(),
       fraction = params.fraction(),
       tolerance = params.tolerance(),
+      endtime = params.endtime(),
       tag = params.tag(),
       debug = params.debug(),
       print = params.print(),
@@ -103,7 +104,7 @@ object PFlock2 {
 
     val trajs_partitioned = trajs_partitioned0.filter{ p =>
       val data = p.getUserData.asInstanceOf[Data]
-      data.t <= 30
+      data.t <= S.endtime
     }/*.filter{ p =>
       val data = p.getUserData.asInstanceOf[Data]
       val ids = Set(651, 2134, 7716, 8946, 12641, 15504, 15834)
@@ -175,7 +176,7 @@ object PFlock2 {
     }
 
     //val times = partials.keys.toList.sorted
-    val times = (0 to 30).toList
+    val times = (0 to S.endtime).toList
     val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
     val FF = PF_Utils.prune2(R, safes.collect().toList, List.empty[Disk])
     val tPartial = (clocktime - t0) / 1e9

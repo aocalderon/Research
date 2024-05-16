@@ -30,6 +30,7 @@ object Utils {
     delta: Int = 5,
     step: Int = 1,
     sdist: Double = 20.0,
+    endtime: Int = 10,
     capacity: Int = 200,
     fraction: Double = 0.01,
     tolerance: Double = 1e-3,
@@ -1085,6 +1086,7 @@ class BFEParams(args: Seq[String]) extends ScallopConf(args) {
   val begin:      ScallopOption[Int]     = opt[Int]     (default = Some(0))
   val end:        ScallopOption[Int]     = opt[Int]     (default = Some(0))
   val capacity:   ScallopOption[Int]     = opt[Int]     (default = Some(250))
+  val endtime:    ScallopOption[Int]     = opt[Int]     (default = Some(10))
   val tolerance:  ScallopOption[Double]  = opt[Double]  (default = Some(1e-3))
   val epsilon:    ScallopOption[Double]  = opt[Double]  (default = Some(1))
   val fraction:   ScallopOption[Double]  = opt[Double]  (default = Some(0.01))

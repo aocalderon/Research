@@ -28,6 +28,7 @@ object PFlock3 {
       delta = params.delta(),
       step = params.step(),
       sdist = params.sdist(),
+      endtime = params.endtime(),
       capacity = params.capacity(),
       fraction = params.fraction(),
       tolerance = params.tolerance(),
@@ -106,7 +107,7 @@ object PFlock3 {
 
     val trajs_partitioned = trajs_partitioned0.filter{ p =>
       val data = p.getUserData.asInstanceOf[Data]
-      data.t <= 30
+      data.t <= S.endtime
     }/*.filter{ p =>
       val data = p.getUserData.asInstanceOf[Data]
       val ids = Set(651, 2134, 7716, 8946, 12641, 15504, 15834)

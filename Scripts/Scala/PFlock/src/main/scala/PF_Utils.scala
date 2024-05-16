@@ -472,7 +472,7 @@ object PF_Utils {
           partials(time) = candidates
         }
 
-        val times = (0 to 30).toList
+        val times = (0 to S.endtime).toList
 
         val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
         R.foreach(r => r.did = -1)
