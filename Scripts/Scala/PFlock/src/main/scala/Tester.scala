@@ -65,7 +65,7 @@ object Tester {
         val t = row.getInt(3)
 
         s"$o\t$x\t$y\t$t"}
-      .write.text("/tmp/berlin")
+      .write.text("PFlock/LA/LA_25K")
 
     /*******************************************************************************/
 

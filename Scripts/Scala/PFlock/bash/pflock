@@ -1,0 +1,4 @@
+#!/bin/bash
+
+./pflock2.sh 3
+./pflock3.sh 3
