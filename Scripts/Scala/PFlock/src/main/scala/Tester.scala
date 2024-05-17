@@ -62,7 +62,12 @@ object Tester {
 
           point
         }
-      }
+      }.filter{ p =>
+      val data = p.getUserData.asInstanceOf[Data]
+      data.t == S.endtime
+    }
+    val nTrajs = trajs.count()
+    log(s"Number of trajectories: $nTrajs")
 
     val sample = trajs.sample(withReplacement = false, fraction = params.fraction(), seed = 42).collect()
     val envelope = PF_Utils.getEnvelope2(trajs)
@@ -89,20 +94,13 @@ object Tester {
     }
     val ncells = cells.size
 
-    val trajs0 = trajs.filter{ p =>
-      val data = p.getUserData.asInstanceOf[Data]
-      data.t == S.endtime
-    }
-    val nTrajs = trajs0.count()
-    log(s"Number of trajectories: $nTrajs")
-
-    val trajs_partitioned = trajs0.mapPartitions { rows =>
+    val trajs_partitioned = trajs.mapPartitions { rows =>
       rows.flatMap { point =>
         val env = point.getEnvelopeInternal
         env.expandBy(S.epsilon)
         quadtree.findZones(new QuadRectangle(env)).asScala.map{ x => (x.partitionId, point) }
       }
-    }.partitionBy( SimplePartitioner( ncells ) ).map(_._2).cache
+    }.partitionBy( SimplePartitioner( quadtree.getLeafZones.size() ) ).map(_._2).cache
 
     log("Start.")
     val t0 = clocktime
