@@ -552,4 +552,16 @@ object PF_Utils {
 
     new Envelope(minX, maxX, minY, maxY)
   }
+
+  def getEnvelope2(dataset: RDD[Point]): Envelope = {
+    val Xs = dataset.map(_.getX).cache
+    val Ys = dataset.map(_.getY).cache
+
+    val minX = Xs.min()
+    val maxX = Xs.max()
+    val minY = Ys.min()
+    val maxY = Ys.max()
+
+    new Envelope(minX, maxX, minY, maxY)
+  }
 }
