@@ -3,9 +3,9 @@
 
 N=$1
 
-DATASET="PFlock/Berlin/Berlin_10K"
-ENDTIME=5
-CS=( 50 75 100 200 500 1000 2000 3000 4000 ) # epsilon
+DATASET="PFlock/LA/LA_25K"
+ENDTIME=15
+CS=( 25 50 75 100 200 500 1000 2000 3000 ) # epsilon
 
 for n in `seq 1 $N`
 do
