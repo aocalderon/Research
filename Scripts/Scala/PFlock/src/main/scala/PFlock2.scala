@@ -6,6 +6,7 @@ import edu.ucr.dblab.pflock.sedona.quadtree.{QuadRectangle, StandardQuadTree}
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.sql.SparkSession
 import org.locationtech.jts.geom._
+import org.locationtech.jts.index.strtree.STRtree
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters.asScalaBufferConverter
@@ -169,10 +170,17 @@ object PFlock2 {
     log(s"$ncells|$sdist|$step|Safe|$nSafe")
 
     t0 = clocktime
+
     val P = flocksRDD.filter(_.did != -1).sortBy(_.start).collect().groupBy(_.start)
-    val partials = collection.mutable.HashMap[Int, List[Disk]]()
-    P.toSeq.map{ case(time, candidates) =>
-      partials(time) = candidates.toList
+    val partials = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()
+    P.toSeq.map{ case(time, candidates_prime) =>
+      val candidates = candidates_prime.toList
+      val tree = new STRtree()
+      candidates.foreach{ candidate =>
+        tree.insert(candidate.center.getEnvelopeInternal, candidate)
+      }
+
+      partials(time) = (candidates, tree)
     }
 
     //val times = partials.keys.toList.sorted

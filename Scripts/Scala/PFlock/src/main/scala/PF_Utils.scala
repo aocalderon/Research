@@ -157,8 +157,6 @@ object PF_Utils {
         val (new_flocks, stats) = if(S.method == "BFE")
           BFE.run(points)
         else {
-          //val (nf, stats) = PSI.run(points)
-          //(nf.map(_.copy(start = time, end = time)), stats)
           PSI.run(points)
 
         }
@@ -286,12 +284,7 @@ object PF_Utils {
         }
 
         debug{
-          //stats.printPSI()
-          new_flocks.map{ f =>
-            val wkt  = f.center.toText
-            val pids = f.pidsText
-            s"$wkt\t$pids\t$pid\t$time"
-          }.filter(_ => 2 <= time && time <= 5).foreach{println}
+          stats.printPSI()
         }
 
         /***
@@ -405,26 +398,27 @@ object PF_Utils {
     }
   }
 
-  def funPartial(f: List[Disk], time: Int, partials: mutable.HashMap[Int, List[Disk]], result: List[Disk])
+  def funPartial(f: List[Disk], time: Int, partials: mutable.HashMap[Int, (List[Disk], STRtree)], result: List[Disk])
                 (implicit S: Settings): (List[Disk], List[Disk]) = {
     val pid = TaskContext.getPartitionId()
 
-    val seeds = try {
+    val (seeds, _) = try {
       partials(time)
     } catch {
-      case e: Exception => List.empty[Disk]
+      case e: Exception => (List.empty[Disk], new STRtree())
     }
     val flocks = f ++ pruneP( seeds )
 
     val D = for(flock1 <- flocks) yield {
 
-      val partial_prime = try {
+      val (partial_prime, tree) = try {
         partials(flock1.end + 1)
       } catch {
-        case e: Exception => List.empty[Disk]
+        case e: Exception => (List.empty[Disk], new STRtree())
       }
 
-      partial_prime.filter{ flock2 =>
+      val zone = flock1.getExpandEnvelope(S.sdist)
+      tree.query(zone).asScala.map{_.asInstanceOf[Disk]}.filter{ flock2 =>
         flock1.pidsSet.intersect(flock2.pidsSet).size >= S.mu
       }.map { flock2 =>
         val pids  = flock1.pidsSet.intersect(flock2.pidsSet).toList
@@ -447,7 +441,6 @@ object PF_Utils {
       f.copy(end = time)
     }
     val result_prime = pruneP(r)
-    //result_prime.foreach{println}
 
     val F = F_prime
       .map{ case(flock, mustUpdate) =>
@@ -485,9 +478,15 @@ object PF_Utils {
         List.empty[Disk]
       } else {
         val P = p_prime.toList.sortBy(_.start).groupBy(_.start)
-        val partials = collection.mutable.HashMap[Int, List[Disk]]()
-        P.toSeq.map { case (time, candidates) =>
-          partials(time) = candidates
+        val partials = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()
+        P.toSeq.map{ case(time, candidates_prime) =>
+          val candidates = candidates_prime.toList
+          val tree = new STRtree()
+          candidates.foreach{ candidate =>
+            tree.insert(candidate.center.getEnvelopeInternal, candidate)
+          }
+
+          partials(time) = (candidates, tree)
         }
 
         val times = (0 to S.endtime).toList
@@ -503,7 +502,7 @@ object PF_Utils {
     (B, cellsA)
   }
   @tailrec
-  def processPartials(F: List[Disk], times: List[Int], partials: mutable.HashMap[Int, List[Disk]], R: List[Disk])
+  def processPartials(F: List[Disk], times: List[Int], partials: mutable.HashMap[Int, (List[Disk], STRtree)], R: List[Disk])
                      (implicit S: Settings): List[Disk] = {
     times match {
       case time::tail =>

@@ -196,7 +196,7 @@ object Utils {
     def envelope: Envelope = center.getEnvelopeInternal
 
     def getExpandEnvelope(r: Double): Envelope = {
-      val envelope = center.getEnvelopeInternal
+      val envelope = new Envelope(center.getEnvelopeInternal)
       envelope.expandBy(r)
       envelope
     }
