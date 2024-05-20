@@ -1,7 +1,7 @@
 package edu.ucr.dblab.pflock
 
 import edu.ucr.dblab.pflock.MF_Utils.SimplePartitioner
-import edu.ucr.dblab.pflock.Utils.{Cell, Disk, STPoint, Settings, debug, save}
+import edu.ucr.dblab.pflock.Utils._
 import org.apache.spark.TaskContext
 import org.apache.spark.rdd.RDD
 import org.locationtech.jts.geom.{Envelope, GeometryFactory, Point}
@@ -261,8 +261,7 @@ object PF_Utils {
   def joinDisks(trajs: List[(Int, Iterable[STPoint])], flocks: List[Disk], f: List[Disk], cell: Envelope, cell_prime: Envelope, partial: List[Disk])
                (implicit S: Settings, G: GeometryFactory, L: Logger): (List[Disk], List[Disk]) = {
     val pid = TaskContext.getPartitionId()
-    //if(pid == 53)
-      //println{s"Cell: $pid"}
+
     trajs match {
       case current_trajs :: remaining_trajs =>
         val time = current_trajs._1
@@ -290,8 +289,7 @@ object PF_Utils {
         /***
          * start: merging previous flocks with current flocks...
          ***/
-        val old_flocks = if(S.method != "BFE") {
-          //println(s"PSI")
+        val merged_ones = if(S.method != "BFE") {
           val inverted_index = flocks.flatMap { flock =>
             flock.pids.map { pid =>
               pid -> flock
@@ -304,28 +302,40 @@ object PF_Utils {
             val disks = new_flock.pids.filter{ pid => inverted_index.keySet.contains(pid) }.flatMap { pid =>
               inverted_index(pid)
             }.distinct
-            disks
+
+            disks.map{ old_flock =>
+              val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
+              val flock = Disk(new_flock.center, pids, old_flock.start, time)
+              flock.locations = old_flock.locations :+ new_flock.center.getCoordinate
+
+              if(pids == new_flock.pids) new_flock.subset = true
+
+              flock
+            }.filter(_.pids.size >= S.mu) // filtering by minimum number of entities (mu)...
+
           }
+
           flocks_prime.flatten
 
           //flocks
         } else {
-          //println(s"BFE")
-          flocks
+          //flocks
+          val merged_ones = (for{
+            old_flock <- flocks
+            new_flock <- new_flocks
+          } yield {
+            val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
+            val flock = Disk(new_flock.center, pids, old_flock.start, time)
+            flock.locations = old_flock.locations :+ new_flock.center.getCoordinate
+
+            if(pids == new_flock.pids) new_flock.subset = true
+
+            flock
+          }).filter(_.pids.size >= S.mu) // filtering by minimum number of entities (mu)...
+
+          merged_ones
         }
 
-        val merged_ones = (for{
-          old_flock <- old_flocks
-          new_flock <- new_flocks
-        } yield {
-          val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
-          val flock = Disk(new_flock.center, pids, old_flock.start, time)
-          flock.locations = old_flock.locations :+ new_flock.center.getCoordinate
-
-          if(pids == new_flock.pids) new_flock.subset = true
-
-          flock
-        }).filter(_.pids.size >= S.mu) // filtering by minimum number of entities (mu)...
         /***
          * end: merging previous flocks with current flocks...
          ***/

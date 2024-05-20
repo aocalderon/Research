@@ -28,7 +28,7 @@ object Tester {
       dataset = params.dataset(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
-      method = "PFlocks",
+      method = params.method(),
       capacity = params.capacity(),
       fraction = params.fraction(),
       tolerance = params.tolerance(),
@@ -113,8 +113,8 @@ object Tester {
     }
     val nMaximals = MaximalsRDD.count()
     val tMaximals = (clocktime - t0) / 1e9
-    logt(s"$ncells|$tMaximals")
-    log(s"$ncells|$nMaximals")
+    logt(s"$ncells|${S.capacity}|${S.fraction}|$tMaximals")
+    log(s"$ncells|${S.capacity}|${S.fraction}|$nMaximals")
 
     /*******************************************************************************/
 
