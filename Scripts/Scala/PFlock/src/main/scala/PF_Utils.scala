@@ -157,12 +157,12 @@ object PF_Utils {
         val (new_flocks, stats) = if(S.method == "BFE")
           BFE.run(points)
         else {
-          val (nf, stats) = PSI.run(points)
-          (nf.map(_.copy(start = time, end = time)), stats)
+          //val (nf, stats) = PSI.run(points)
+          //(nf.map(_.copy(start = time, end = time)), stats)
+          PSI.run(points)
 
-          //PSI.run(points)
         }
-
+        //stats.printPSI()
         debug{
           stats.printPSI()
         }
@@ -170,8 +170,7 @@ object PF_Utils {
         /***
          * start: merging previous flocks with current flocks...
          ***/
-        val old_flocks = if(S.method != "BFE") {
-          //println(s"PSI")
+        val merged_ones = if(S.method != "BFE") {
           val inverted_index = flocks.flatMap { flock =>
             flock.pids.map { pid =>
               pid -> flock
@@ -184,27 +183,36 @@ object PF_Utils {
             val disks = new_flock.pids.filter{ pid => inverted_index.keySet.contains(pid) }.flatMap { pid =>
               inverted_index(pid)
             }.distinct
-            disks
+
+            disks.map{ old_flock =>
+              val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
+              val flock = Disk(new_flock.center, pids, old_flock.start, time)
+              flock.locations = old_flock.locations :+ new_flock.center.getCoordinate
+
+              if(pids == new_flock.pids) new_flock.subset = true
+
+              flock
+            }.filter(_.pids.size >= S.mu) // filtering by minimum number of entities (mu)...
+
           }
+
           flocks_prime.flatten
-
-          //flocks
         } else {
-          //println(s"BFE")
-          flocks
+          val merged_ones = (for{
+            old_flock <- flocks
+            new_flock <- new_flocks
+          } yield {
+            val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
+            val flock = Disk(new_flock.center, pids, old_flock.start, time)
+            flock.locations = old_flock.locations :+ new_flock.center.getCoordinate
+
+            if(pids == new_flock.pids) new_flock.subset = true
+
+            flock
+          }).filter(_.pids.size >= S.mu) // filtering by minimum number of entities (mu)...
+
+          merged_ones
         }
-
-        val merged_ones = (for{
-          old_flock <- old_flocks
-          new_flock <- new_flocks
-        } yield {
-          val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
-          val flock = Disk(new_flock.center, pids, old_flock.start, time)
-
-          if(pids == new_flock.pids) new_flock.subset = true
-
-          flock
-        }).filter(_.pids.size >= S.mu) // filtering by minimum number of entities (mu)...
         /***
          * end: merging previous flocks with current flocks...
          ***/

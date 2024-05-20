@@ -4,6 +4,7 @@ import archery.{RTree => ArcheryRTree}
 import edu.ucr.dblab.pflock.PSI_Utils._
 import edu.ucr.dblab.pflock.Utils._
 import org.locationtech.jts.geom._
+import org.locationtech.jts.index.strtree.STRtree
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.annotation.tailrec
@@ -160,13 +161,17 @@ object PSI {
 
     // feeding bands with points inside 2-epsilon x 2-epsilon...
     val (bands, tBand) = timer {
+      val tree = new STRtree()
+      pointset.foreach{ P =>
+        tree.insert(P.point.getEnvelopeInternal, P)
+      }
       pointset.map { pr: STPoint =>
         val band_for_pr: RTree[STPoint] = RTree[STPoint]()
         band_for_pr.pr = pr
 
-        pointset.filter { ps: STPoint =>
-          math.abs(ps.X - pr.X) <= S.epsilon && math.abs(ps.Y - pr.Y) <= S.epsilon
-        }.foreach { ps: STPoint =>
+        val env = new Envelope(pr.envelope)
+        env.expandBy(S.epsilon)
+        tree.query(env).asScala.map{_.asInstanceOf[STPoint]}.foreach { ps: STPoint =>
           band_for_pr.put(ps.envelope, ps)
         }
 
@@ -383,7 +388,6 @@ object PSI {
 
     // Call plane sweeping technique algorithm...
     val boxes = PSI.planeSweeping(points, time_instant)
-
     debug{
       boxes.foreach{ box =>
         //println(s"${box.wkt}\t${box.id}\t${box.disks}")
