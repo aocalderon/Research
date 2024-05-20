@@ -57,24 +57,23 @@ object Tester {
           val lat = row.getString(2).toDouble
           val tid = row.getString(3).toInt
 
-          val point = G.createPoint(new Coordinate(lon, lat))
-          point.setUserData(Data(oid, tid))
+          (oid, lon, lat, tid)
 
-          point
         }
-      }.filter{ p =>
-      val data = p.getUserData.asInstanceOf[Data]
-      data.t == S.endtime
-    }
+      }.filter{ p => p._4 == S.endtime }.cache
+
     val nTrajs = trajs.count()
     log(s"Number of trajectories: $nTrajs")
 
-    val sample = trajs.sample(withReplacement = false, fraction = params.fraction(), seed = 42).collect()
-    val envelope = PF_Utils.getEnvelope2(trajs)
+    val sample = trajs.sample(withReplacement = false, fraction = params.fraction(), seed = 42)
+      .map{ case(_, x, y, _) =>
+        new Envelope(new Coordinate(x, y))
+      }.collect()
+    val envelope = PF_Utils.getEnvelope2(trajs.map(p => G.createPoint(new Coordinate(p._2, p._3))))
     envelope.expandBy(S.epsilon)
-    val quadtree = new StandardQuadTree[Point](new QuadRectangle(envelope), 0, params.capacity(), 16)
-    sample.foreach { point =>
-      quadtree.insert(new QuadRectangle(point.getEnvelopeInternal), point)
+    val quadtree = new StandardQuadTree[Int](new QuadRectangle(envelope), 0, params.capacity(), 16)
+    sample.foreach { env =>
+      quadtree.insert(new QuadRectangle(env), 1)
     }
     quadtree.assignPartitionIds()
     quadtree.assignPartitionLineage()
@@ -85,20 +84,20 @@ object Tester {
 
       id -> Cell(envelope, id, leaf.lineage)
     }.toMap
+    val ncells = cells.size
 
-    save("/tmp/edgesCells.wkt") {
+    save(s"/home/acald013/Research/local_path/${S.dataset}/Q_P${ncells}_C${S.capacity}_F${(S.fraction * 100).toInt}.wkt") {
       cells.map { case(id, cell) =>
         val wkt = G.toGeometry(cell.mbr).toText
         s"$wkt\tL${cell.lineage}\t$id\n"
       }.toList
     }
-    val ncells = cells.size
 
     val trajs_partitioned = trajs.mapPartitions { rows =>
-      rows.flatMap { point =>
-        val env = point.getEnvelopeInternal
+      rows.flatMap { p =>
+        val env = new Envelope(new Coordinate(p._2,p._3))
         env.expandBy(S.epsilon)
-        quadtree.findZones(new QuadRectangle(env)).asScala.map{ x => (x.partitionId, point) }
+        quadtree.findZones(new QuadRectangle(env)).asScala.map{ x => (x.partitionId, p) }
       }
     }.partitionBy( SimplePartitioner( quadtree.getLeafZones.size() ) ).map(_._2).cache
 
@@ -106,14 +105,19 @@ object Tester {
     val t0 = clocktime
     val MaximalsRDD = trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
       val cell = cells(index).mbr
-      val ps = points.toList.map { point => STPoint(point) }
+      val ps = points.toList.map { case(o,x,y,t) =>
+        val data = Data(o, t)
+        val point = G.createPoint(new Coordinate(x, y))
+        point.setUserData(data)
+        STPoint(point)
+      }
       val (maximals, _) = if( S.method == "BFE") BFE.run(ps) else PSI.run(ps)
 
       maximals.filter{ maximal => cell.contains(maximal.center.getCoordinate) }.toIterator
     }
     val nMaximals = MaximalsRDD.count()
     val tMaximals = (clocktime - t0) / 1e9
-    logt(s"$ncells|$tMaximals")
+    logt(s"$ncells|${S.capacity}|${S.fraction}|$tMaximals")
     log(s"$ncells|$nMaximals")
 
     /*******************************************************************************/
