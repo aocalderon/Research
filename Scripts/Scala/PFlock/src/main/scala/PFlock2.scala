@@ -186,8 +186,12 @@ object PFlock2 {
     //val times = partials.keys.toList.sorted
     val times = (0 to S.endtime).toList
     val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
+    val tR = (clocktime - t0) / 1e9
+    logt(s"$ncells|$sdist|$step|R|$tR")
+
+    val t1 = clocktime
     val FF = PF_Utils.prune2(R, safes.collect().toList, List.empty[Disk])
-    val tPartial = (clocktime - t0) / 1e9
+    val tPartial = (clocktime - t1) / 1e9
     logt(s"$ncells|$sdist|$step|Partial|$tPartial")
     val nPartial = flocksRDD.filter(_.did != -1).count()
     log(s"$ncells|$sdist|$step|Partial|$nPartial")

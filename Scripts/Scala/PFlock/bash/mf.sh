@@ -3,10 +3,10 @@
 
 N=$1
 
-DATASET="PFlock/LA/LA_50K"
-ENDTIME=30
-ES=( 4 6 8 ) # epsilon
-CS=( 75 100 200 500 1000 2000 3000 ) # capacity
+DATASET="PFlock/LA/LA_25K"
+ENDTIME=25
+ES=( 10 15 20 ) # epsilon
+CS=( 100 200 500 1000 2000 3000 4000 5000) # capacity
 
 for n in `seq 1 $N`
 do
