@@ -175,6 +175,7 @@ object PFlock3 {
     logt(s"$ncells|$sdist|$step|Partial|$tPartial")
     log(s"$ncells|$sdist|$step|Partial|${r}")
 
+    logt(s"$ncells|$sdist|$step|Total|${tSafe + tPartial}")
 
     save("/home/acald013/tmp/flocksd2.tsv") {
       e.collect().map{ f =>
