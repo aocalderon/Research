@@ -1,0 +1,1764 @@
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 1
+2024-05-15 11:41:44,003|15692|PARAMS|application_1713583699042_0085|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:41:44,004|15693|PARAMS|application_1713583699042_0085|sdist|40
+2024-05-15 11:41:44,004|15693|PARAMS|application_1713583699042_0085|epsilon|20
+2024-05-15 11:41:44,004|15693|PARAMS|application_1713583699042_0085|mu|3
+2024-05-15 11:41:44,004|15693|PARAMS|application_1713583699042_0085|delta|3
+2024-05-15 11:41:44,004|15693|PARAMS|application_1713583699042_0085|method|PSI
+2024-05-15 11:41:44,005|15694|PARAMS|application_1713583699042_0085|master|yarn
+2024-05-15 11:41:44,005|15694|PARAMS|application_1713583699042_0085|capacity|50
+2024-05-15 11:41:44,005|15694|PARAMS|application_1713583699042_0085|fraction|0.1
+2024-05-15 11:41:44,006|15695|PARAMS|application_1713583699042_0085|step|1
+2024-05-15 11:41:44,006|15695|PARAMS|application_1713583699042_0085|debug|false
+2024-05-15 11:41:44,006|15695|PARAMS|application_1713583699042_0085|tester|false
+2024-05-15 11:41:44,006|15695|PARAMS|application_1713583699042_0085|saves|false
+2024-05-15 11:41:44,006|15695|PARAMS|application_1713583699042_0085|cached|false
+2024-05-15 11:41:44,007|15696|PARAMS|application_1713583699042_0085|print|false
+2024-05-15 11:41:44,009|15698|mr-hn|INFO|0|application_1713583699042_0085|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 11:42:05,254|36943|mr-hn|INFO|0|application_1713583699042_0085|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 11:42:06,371|38060|mr-hn|TIME|0|application_1713583699042_0085|1|berlin0-10|20.0|3|3|PSI|937|40.0|1|Safe|1.114460254
+2024-05-15 11:42:07,087|38776|mr-hn|INFO|0|application_1713583699042_0085|1|berlin0-10|20.0|3|3|PSI|937|40.0|1|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[361 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[148 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[64 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:42:10,966|42655|mr-hn|TIME|0|application_1713583699042_0085|1|berlin0-10|20.0|3|3|PSI|937|40.0|1|Partial|3.877695062
+2024-05-15 11:42:11,646|43335|mr-hn|INFO|0|application_1713583699042_0085|1|berlin0-10|20.0|3|3|PSI|937|40.0|1|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 2
+2024-05-15 11:42:30,862|13878|PARAMS|application_1713583699042_0086|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:42:30,863|13879|PARAMS|application_1713583699042_0086|sdist|40
+2024-05-15 11:42:30,863|13879|PARAMS|application_1713583699042_0086|epsilon|20
+2024-05-15 11:42:30,863|13879|PARAMS|application_1713583699042_0086|mu|3
+2024-05-15 11:42:30,864|13880|PARAMS|application_1713583699042_0086|delta|3
+2024-05-15 11:42:30,864|13880|PARAMS|application_1713583699042_0086|method|PSI
+2024-05-15 11:42:30,864|13880|PARAMS|application_1713583699042_0086|master|yarn
+2024-05-15 11:42:30,864|13880|PARAMS|application_1713583699042_0086|capacity|50
+2024-05-15 11:42:30,865|13881|PARAMS|application_1713583699042_0086|fraction|0.1
+2024-05-15 11:42:30,865|13881|PARAMS|application_1713583699042_0086|step|2
+2024-05-15 11:42:30,866|13882|PARAMS|application_1713583699042_0086|debug|false
+2024-05-15 11:42:30,867|13883|PARAMS|application_1713583699042_0086|tester|false
+2024-05-15 11:42:30,868|13884|PARAMS|application_1713583699042_0086|saves|false
+2024-05-15 11:42:30,868|13884|PARAMS|application_1713583699042_0086|cached|false
+2024-05-15 11:42:30,868|13884|PARAMS|application_1713583699042_0086|print|false
+2024-05-15 11:42:30,871|13887|mr-hn|INFO|0|application_1713583699042_0086|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 11:42:54,700|37716|mr-hn|INFO|0|application_1713583699042_0086|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 11:42:55,916|38932|mr-hn|TIME|0|application_1713583699042_0086|1|berlin0-10|20.0|3|3|PSI|937|40.0|2|Safe|1.214086239
+2024-05-15 11:42:56,520|39536|mr-hn|INFO|0|application_1713583699042_0086|1|berlin0-10|20.0|3|3|PSI|937|40.0|2|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[148 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:42:59,328|42344|mr-hn|TIME|0|application_1713583699042_0086|1|berlin0-10|20.0|3|3|PSI|937|40.0|2|Partial|2.807389602
+2024-05-15 11:42:59,850|42866|mr-hn|INFO|0|application_1713583699042_0086|1|berlin0-10|20.0|3|3|PSI|937|40.0|2|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 3
+2024-05-15 11:43:19,201|13877|PARAMS|application_1713583699042_0087|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:43:19,202|13878|PARAMS|application_1713583699042_0087|sdist|40
+2024-05-15 11:43:19,202|13878|PARAMS|application_1713583699042_0087|epsilon|20
+2024-05-15 11:43:19,202|13878|PARAMS|application_1713583699042_0087|mu|3
+2024-05-15 11:43:19,202|13878|PARAMS|application_1713583699042_0087|delta|3
+2024-05-15 11:43:19,202|13878|PARAMS|application_1713583699042_0087|method|PSI
+2024-05-15 11:43:19,202|13878|PARAMS|application_1713583699042_0087|master|yarn
+2024-05-15 11:43:19,202|13878|PARAMS|application_1713583699042_0087|capacity|50
+2024-05-15 11:43:19,202|13878|PARAMS|application_1713583699042_0087|fraction|0.1
+2024-05-15 11:43:19,203|13879|PARAMS|application_1713583699042_0087|step|3
+2024-05-15 11:43:19,203|13879|PARAMS|application_1713583699042_0087|debug|false
+2024-05-15 11:43:19,203|13879|PARAMS|application_1713583699042_0087|tester|false
+2024-05-15 11:43:19,203|13879|PARAMS|application_1713583699042_0087|saves|false
+2024-05-15 11:43:19,203|13879|PARAMS|application_1713583699042_0087|cached|false
+2024-05-15 11:43:19,203|13879|PARAMS|application_1713583699042_0087|print|false
+2024-05-15 11:43:19,205|13881|mr-hn|INFO|0|application_1713583699042_0087|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 11:43:38,280|32956|mr-hn|INFO|0|application_1713583699042_0087|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 11:43:39,383|34059|mr-hn|TIME|0|application_1713583699042_0087|1|berlin0-10|20.0|3|3|PSI|937|40.0|3|Safe|1.100814166
+2024-05-15 11:43:40,216|34892|mr-hn|INFO|0|application_1713583699042_0087|1|berlin0-10|20.0|3|3|PSI|937|40.0|3|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[64 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:43:42,980|37656|mr-hn|TIME|0|application_1713583699042_0087|1|berlin0-10|20.0|3|3|PSI|937|40.0|3|Partial|2.763040949
+2024-05-15 11:43:43,497|38173|mr-hn|INFO|0|application_1713583699042_0087|1|berlin0-10|20.0|3|3|PSI|937|40.0|3|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 4
+2024-05-15 11:44:03,179|14223|PARAMS|application_1713583699042_0088|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:44:03,180|14224|PARAMS|application_1713583699042_0088|sdist|40
+2024-05-15 11:44:03,180|14224|PARAMS|application_1713583699042_0088|epsilon|20
+2024-05-15 11:44:03,180|14224|PARAMS|application_1713583699042_0088|mu|3
+2024-05-15 11:44:03,180|14224|PARAMS|application_1713583699042_0088|delta|3
+2024-05-15 11:44:03,180|14224|PARAMS|application_1713583699042_0088|method|PSI
+2024-05-15 11:44:03,181|14225|PARAMS|application_1713583699042_0088|master|yarn
+2024-05-15 11:44:03,181|14225|PARAMS|application_1713583699042_0088|capacity|50
+2024-05-15 11:44:03,181|14225|PARAMS|application_1713583699042_0088|fraction|0.1
+2024-05-15 11:44:03,181|14225|PARAMS|application_1713583699042_0088|step|4
+2024-05-15 11:44:03,181|14225|PARAMS|application_1713583699042_0088|debug|false
+2024-05-15 11:44:03,181|14225|PARAMS|application_1713583699042_0088|tester|false
+2024-05-15 11:44:03,181|14225|PARAMS|application_1713583699042_0088|saves|false
+2024-05-15 11:44:03,181|14225|PARAMS|application_1713583699042_0088|cached|false
+2024-05-15 11:44:03,182|14226|PARAMS|application_1713583699042_0088|print|false
+2024-05-15 11:44:03,183|14227|mr-hn|INFO|0|application_1713583699042_0088|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 11:44:26,297|37341|mr-hn|INFO|0|application_1713583699042_0088|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 11:44:27,214|38258|mr-hn|TIME|0|application_1713583699042_0088|1|berlin0-10|20.0|3|3|PSI|937|40.0|4|Safe|0.91533557
+2024-05-15 11:44:27,931|38975|mr-hn|INFO|0|application_1713583699042_0088|1|berlin0-10|20.0|3|3|PSI|937|40.0|4|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:44:30,535|41579|mr-hn|TIME|0|application_1713583699042_0088|1|berlin0-10|20.0|3|3|PSI|937|40.0|4|Partial|2.603100498
+2024-05-15 11:44:31,635|42679|mr-hn|INFO|0|application_1713583699042_0088|1|berlin0-10|20.0|3|3|PSI|937|40.0|4|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 5
+2024-05-15 11:44:51,480|14132|PARAMS|application_1713583699042_0089|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:44:51,480|14132|PARAMS|application_1713583699042_0089|sdist|40
+2024-05-15 11:44:51,480|14132|PARAMS|application_1713583699042_0089|epsilon|20
+2024-05-15 11:44:51,480|14132|PARAMS|application_1713583699042_0089|mu|3
+2024-05-15 11:44:51,480|14132|PARAMS|application_1713583699042_0089|delta|3
+2024-05-15 11:44:51,481|14133|PARAMS|application_1713583699042_0089|method|PSI
+2024-05-15 11:44:51,481|14133|PARAMS|application_1713583699042_0089|master|yarn
+2024-05-15 11:44:51,481|14133|PARAMS|application_1713583699042_0089|capacity|50
+2024-05-15 11:44:51,481|14133|PARAMS|application_1713583699042_0089|fraction|0.1
+2024-05-15 11:44:51,481|14133|PARAMS|application_1713583699042_0089|step|5
+2024-05-15 11:44:51,481|14133|PARAMS|application_1713583699042_0089|debug|false
+2024-05-15 11:44:51,481|14133|PARAMS|application_1713583699042_0089|tester|false
+2024-05-15 11:44:51,481|14133|PARAMS|application_1713583699042_0089|saves|false
+2024-05-15 11:44:51,481|14133|PARAMS|application_1713583699042_0089|cached|false
+2024-05-15 11:44:51,482|14134|PARAMS|application_1713583699042_0089|print|false
+2024-05-15 11:44:51,483|14135|mr-hn|INFO|0|application_1713583699042_0089|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 11:45:12,725|35377|mr-hn|INFO|0|application_1713583699042_0089|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 11:45:13,971|36623|mr-hn|TIME|0|application_1713583699042_0089|1|berlin0-10|20.0|3|3|PSI|937|40.0|5|Safe|1.244434997
+2024-05-15 11:45:14,649|37301|mr-hn|INFO|0|application_1713583699042_0089|1|berlin0-10|20.0|3|3|PSI|937|40.0|5|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:45:17,813|40465|mr-hn|TIME|0|application_1713583699042_0089|1|berlin0-10|20.0|3|3|PSI|937|40.0|5|Partial|3.163371747
+2024-05-15 11:45:18,403|41055|mr-hn|INFO|0|application_1713583699042_0089|1|berlin0-10|20.0|3|3|PSI|937|40.0|5|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 6
+2024-05-15 11:45:38,816|15012|PARAMS|application_1713583699042_0090|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:45:38,816|15012|PARAMS|application_1713583699042_0090|sdist|40
+2024-05-15 11:45:38,817|15013|PARAMS|application_1713583699042_0090|epsilon|20
+2024-05-15 11:45:38,817|15013|PARAMS|application_1713583699042_0090|mu|3
+2024-05-15 11:45:38,817|15013|PARAMS|application_1713583699042_0090|delta|3
+2024-05-15 11:45:38,817|15013|PARAMS|application_1713583699042_0090|method|PSI
+2024-05-15 11:45:38,817|15013|PARAMS|application_1713583699042_0090|master|yarn
+2024-05-15 11:45:38,818|15014|PARAMS|application_1713583699042_0090|capacity|50
+2024-05-15 11:45:38,818|15014|PARAMS|application_1713583699042_0090|fraction|0.1
+2024-05-15 11:45:38,818|15014|PARAMS|application_1713583699042_0090|step|6
+2024-05-15 11:45:38,818|15014|PARAMS|application_1713583699042_0090|debug|false
+2024-05-15 11:45:38,818|15014|PARAMS|application_1713583699042_0090|tester|false
+2024-05-15 11:45:38,818|15014|PARAMS|application_1713583699042_0090|saves|false
+2024-05-15 11:45:38,818|15014|PARAMS|application_1713583699042_0090|cached|false
+2024-05-15 11:45:38,819|15015|PARAMS|application_1713583699042_0090|print|false
+2024-05-15 11:45:38,820|15016|mr-hn|INFO|0|application_1713583699042_0090|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 11:46:00,116|36312|mr-hn|INFO|0|application_1713583699042_0090|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 11:46:01,065|37261|mr-hn|TIME|0|application_1713583699042_0090|1|berlin0-10|20.0|3|3|PSI|937|40.0|6|Safe|0.947476808
+2024-05-15 11:46:01,856|38052|mr-hn|INFO|0|application_1713583699042_0090|1|berlin0-10|20.0|3|3|PSI|937|40.0|6|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:46:05,016|41212|mr-hn|TIME|0|application_1713583699042_0090|1|berlin0-10|20.0|3|3|PSI|937|40.0|6|Partial|3.158933588
+2024-05-15 11:46:05,502|41698|mr-hn|INFO|0|application_1713583699042_0090|1|berlin0-10|20.0|3|3|PSI|937|40.0|6|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 7
+2024-05-15 11:46:25,112|14038|PARAMS|application_1713583699042_0091|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:46:25,113|14039|PARAMS|application_1713583699042_0091|sdist|40
+2024-05-15 11:46:25,113|14039|PARAMS|application_1713583699042_0091|epsilon|20
+2024-05-15 11:46:25,113|14039|PARAMS|application_1713583699042_0091|mu|3
+2024-05-15 11:46:25,114|14040|PARAMS|application_1713583699042_0091|delta|3
+2024-05-15 11:46:25,114|14040|PARAMS|application_1713583699042_0091|method|PSI
+2024-05-15 11:46:25,114|14040|PARAMS|application_1713583699042_0091|master|yarn
+2024-05-15 11:46:25,114|14040|PARAMS|application_1713583699042_0091|capacity|50
+2024-05-15 11:46:25,114|14040|PARAMS|application_1713583699042_0091|fraction|0.1
+2024-05-15 11:46:25,115|14041|PARAMS|application_1713583699042_0091|step|7
+2024-05-15 11:46:25,115|14041|PARAMS|application_1713583699042_0091|debug|false
+2024-05-15 11:46:25,115|14041|PARAMS|application_1713583699042_0091|tester|false
+2024-05-15 11:46:25,115|14041|PARAMS|application_1713583699042_0091|saves|false
+2024-05-15 11:46:25,115|14041|PARAMS|application_1713583699042_0091|cached|false
+2024-05-15 11:46:25,115|14041|PARAMS|application_1713583699042_0091|print|false
+2024-05-15 11:46:25,117|14043|mr-hn|INFO|0|application_1713583699042_0091|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 11:46:48,728|37654|mr-hn|INFO|0|application_1713583699042_0091|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 11:46:49,702|38628|mr-hn|TIME|0|application_1713583699042_0091|1|berlin0-10|20.0|3|3|PSI|937|40.0|7|Safe|0.971744354
+2024-05-15 11:46:50,434|39360|mr-hn|INFO|0|application_1713583699042_0091|1|berlin0-10|20.0|3|3|PSI|937|40.0|7|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:46:57,008|45934|mr-hn|TIME|0|application_1713583699042_0091|1|berlin0-10|20.0|3|3|PSI|937|40.0|7|Partial|6.572978323
+2024-05-15 11:46:57,545|46471|mr-hn|INFO|0|application_1713583699042_0091|1|berlin0-10|20.0|3|3|PSI|937|40.0|7|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 1
+2024-05-15 11:47:17,170|14184|PARAMS|application_1713583699042_0092|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:47:17,170|14184|PARAMS|application_1713583699042_0092|sdist|40
+2024-05-15 11:47:17,171|14185|PARAMS|application_1713583699042_0092|epsilon|30
+2024-05-15 11:47:17,171|14185|PARAMS|application_1713583699042_0092|mu|3
+2024-05-15 11:47:17,171|14185|PARAMS|application_1713583699042_0092|delta|3
+2024-05-15 11:47:17,171|14185|PARAMS|application_1713583699042_0092|method|PSI
+2024-05-15 11:47:17,171|14185|PARAMS|application_1713583699042_0092|master|yarn
+2024-05-15 11:47:17,171|14185|PARAMS|application_1713583699042_0092|capacity|50
+2024-05-15 11:47:17,171|14185|PARAMS|application_1713583699042_0092|fraction|0.1
+2024-05-15 11:47:17,171|14185|PARAMS|application_1713583699042_0092|step|1
+2024-05-15 11:47:17,172|14186|PARAMS|application_1713583699042_0092|debug|false
+2024-05-15 11:47:17,172|14186|PARAMS|application_1713583699042_0092|tester|false
+2024-05-15 11:47:17,172|14186|PARAMS|application_1713583699042_0092|saves|false
+2024-05-15 11:47:17,173|14187|PARAMS|application_1713583699042_0092|cached|false
+2024-05-15 11:47:17,173|14187|PARAMS|application_1713583699042_0092|print|false
+2024-05-15 11:47:17,174|14188|mr-hn|INFO|0|application_1713583699042_0092|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 11:47:40,851|37865|mr-hn|INFO|0|application_1713583699042_0092|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 11:47:43,287|40301|mr-hn|TIME|0|application_1713583699042_0092|1|berlin0-10|30.0|3|3|PSI|940|40.0|1|Safe|2.434102389
+2024-05-15 11:47:43,923|40937|mr-hn|INFO|0|application_1713583699042_0092|1|berlin0-10|30.0|3|3|PSI|940|40.0|1|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[358 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[145 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[61 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:47:50,641|47655|mr-hn|TIME|0|application_1713583699042_0092|1|berlin0-10|30.0|3|3|PSI|940|40.0|1|Partial|6.717373577
+2024-05-15 11:47:51,259|48273|mr-hn|INFO|0|application_1713583699042_0092|1|berlin0-10|30.0|3|3|PSI|940|40.0|1|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 2
+2024-05-15 11:48:11,418|14301|PARAMS|application_1713583699042_0093|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:48:11,419|14302|PARAMS|application_1713583699042_0093|sdist|40
+2024-05-15 11:48:11,419|14302|PARAMS|application_1713583699042_0093|epsilon|30
+2024-05-15 11:48:11,419|14302|PARAMS|application_1713583699042_0093|mu|3
+2024-05-15 11:48:11,419|14302|PARAMS|application_1713583699042_0093|delta|3
+2024-05-15 11:48:11,419|14302|PARAMS|application_1713583699042_0093|method|PSI
+2024-05-15 11:48:11,419|14302|PARAMS|application_1713583699042_0093|master|yarn
+2024-05-15 11:48:11,419|14302|PARAMS|application_1713583699042_0093|capacity|50
+2024-05-15 11:48:11,420|14303|PARAMS|application_1713583699042_0093|fraction|0.1
+2024-05-15 11:48:11,420|14303|PARAMS|application_1713583699042_0093|step|2
+2024-05-15 11:48:11,420|14303|PARAMS|application_1713583699042_0093|debug|false
+2024-05-15 11:48:11,420|14303|PARAMS|application_1713583699042_0093|tester|false
+2024-05-15 11:48:11,420|14303|PARAMS|application_1713583699042_0093|saves|false
+2024-05-15 11:48:11,420|14303|PARAMS|application_1713583699042_0093|cached|false
+2024-05-15 11:48:11,421|14304|PARAMS|application_1713583699042_0093|print|false
+2024-05-15 11:48:11,422|14305|mr-hn|INFO|0|application_1713583699042_0093|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 11:48:32,888|35771|mr-hn|INFO|0|application_1713583699042_0093|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 11:48:35,485|38368|mr-hn|TIME|0|application_1713583699042_0093|1|berlin0-10|30.0|3|3|PSI|940|40.0|2|Safe|2.594492058
+2024-05-15 11:48:36,156|39039|mr-hn|INFO|0|application_1713583699042_0093|1|berlin0-10|30.0|3|3|PSI|940|40.0|2|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[145 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:48:41,190|44073|mr-hn|TIME|0|application_1713583699042_0093|1|berlin0-10|30.0|3|3|PSI|940|40.0|2|Partial|5.033523273
+2024-05-15 11:48:41,780|44663|mr-hn|INFO|0|application_1713583699042_0093|1|berlin0-10|30.0|3|3|PSI|940|40.0|2|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 3
+2024-05-15 11:49:01,746|14014|PARAMS|application_1713583699042_0094|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:49:01,747|14015|PARAMS|application_1713583699042_0094|sdist|40
+2024-05-15 11:49:01,747|14015|PARAMS|application_1713583699042_0094|epsilon|30
+2024-05-15 11:49:01,747|14015|PARAMS|application_1713583699042_0094|mu|3
+2024-05-15 11:49:01,747|14015|PARAMS|application_1713583699042_0094|delta|3
+2024-05-15 11:49:01,747|14015|PARAMS|application_1713583699042_0094|method|PSI
+2024-05-15 11:49:01,747|14015|PARAMS|application_1713583699042_0094|master|yarn
+2024-05-15 11:49:01,748|14016|PARAMS|application_1713583699042_0094|capacity|50
+2024-05-15 11:49:01,748|14016|PARAMS|application_1713583699042_0094|fraction|0.1
+2024-05-15 11:49:01,748|14016|PARAMS|application_1713583699042_0094|step|3
+2024-05-15 11:49:01,748|14016|PARAMS|application_1713583699042_0094|debug|false
+2024-05-15 11:49:01,748|14016|PARAMS|application_1713583699042_0094|tester|false
+2024-05-15 11:49:01,748|14016|PARAMS|application_1713583699042_0094|saves|false
+2024-05-15 11:49:01,748|14016|PARAMS|application_1713583699042_0094|cached|false
+2024-05-15 11:49:01,748|14016|PARAMS|application_1713583699042_0094|print|false
+2024-05-15 11:49:01,750|14018|mr-hn|INFO|0|application_1713583699042_0094|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 11:49:49,625|61893|mr-hn|INFO|0|application_1713583699042_0094|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 11:49:52,064|64332|mr-hn|TIME|0|application_1713583699042_0094|1|berlin0-10|30.0|3|3|PSI|940|40.0|3|Safe|2.437307786
+2024-05-15 11:49:52,808|65076|mr-hn|INFO|0|application_1713583699042_0094|1|berlin0-10|30.0|3|3|PSI|940|40.0|3|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[61 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:49:57,476|69744|mr-hn|TIME|0|application_1713583699042_0094|1|berlin0-10|30.0|3|3|PSI|940|40.0|3|Partial|4.66741035
+2024-05-15 11:49:58,033|70301|mr-hn|INFO|0|application_1713583699042_0094|1|berlin0-10|30.0|3|3|PSI|940|40.0|3|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 4
+2024-05-15 11:50:17,789|13817|PARAMS|application_1713583699042_0095|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:50:17,790|13818|PARAMS|application_1713583699042_0095|sdist|40
+2024-05-15 11:50:17,790|13818|PARAMS|application_1713583699042_0095|epsilon|30
+2024-05-15 11:50:17,790|13818|PARAMS|application_1713583699042_0095|mu|3
+2024-05-15 11:50:17,790|13818|PARAMS|application_1713583699042_0095|delta|3
+2024-05-15 11:50:17,790|13818|PARAMS|application_1713583699042_0095|method|PSI
+2024-05-15 11:50:17,790|13818|PARAMS|application_1713583699042_0095|master|yarn
+2024-05-15 11:50:17,790|13818|PARAMS|application_1713583699042_0095|capacity|50
+2024-05-15 11:50:17,790|13818|PARAMS|application_1713583699042_0095|fraction|0.1
+2024-05-15 11:50:17,791|13819|PARAMS|application_1713583699042_0095|step|4
+2024-05-15 11:50:17,791|13819|PARAMS|application_1713583699042_0095|debug|false
+2024-05-15 11:50:17,791|13819|PARAMS|application_1713583699042_0095|tester|false
+2024-05-15 11:50:17,791|13819|PARAMS|application_1713583699042_0095|saves|false
+2024-05-15 11:50:17,791|13819|PARAMS|application_1713583699042_0095|cached|false
+2024-05-15 11:50:17,791|13819|PARAMS|application_1713583699042_0095|print|false
+2024-05-15 11:50:17,793|13821|mr-hn|INFO|0|application_1713583699042_0095|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 11:50:41,311|37339|mr-hn|INFO|0|application_1713583699042_0095|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 11:50:43,811|39839|mr-hn|TIME|0|application_1713583699042_0095|1|berlin0-10|30.0|3|3|PSI|940|40.0|4|Safe|2.498015564
+2024-05-15 11:50:44,597|40625|mr-hn|INFO|0|application_1713583699042_0095|1|berlin0-10|30.0|3|3|PSI|940|40.0|4|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:50:51,711|47739|mr-hn|TIME|0|application_1713583699042_0095|1|berlin0-10|30.0|3|3|PSI|940|40.0|4|Partial|7.113147304
+2024-05-15 11:50:52,310|48338|mr-hn|INFO|0|application_1713583699042_0095|1|berlin0-10|30.0|3|3|PSI|940|40.0|4|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 5
+2024-05-15 11:51:11,766|13836|PARAMS|application_1713583699042_0096|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:51:11,766|13836|PARAMS|application_1713583699042_0096|sdist|40
+2024-05-15 11:51:11,766|13836|PARAMS|application_1713583699042_0096|epsilon|30
+2024-05-15 11:51:11,766|13836|PARAMS|application_1713583699042_0096|mu|3
+2024-05-15 11:51:11,767|13837|PARAMS|application_1713583699042_0096|delta|3
+2024-05-15 11:51:11,767|13837|PARAMS|application_1713583699042_0096|method|PSI
+2024-05-15 11:51:11,767|13837|PARAMS|application_1713583699042_0096|master|yarn
+2024-05-15 11:51:11,767|13837|PARAMS|application_1713583699042_0096|capacity|50
+2024-05-15 11:51:11,767|13837|PARAMS|application_1713583699042_0096|fraction|0.1
+2024-05-15 11:51:11,767|13837|PARAMS|application_1713583699042_0096|step|5
+2024-05-15 11:51:11,767|13837|PARAMS|application_1713583699042_0096|debug|false
+2024-05-15 11:51:11,767|13837|PARAMS|application_1713583699042_0096|tester|false
+2024-05-15 11:51:11,768|13838|PARAMS|application_1713583699042_0096|saves|false
+2024-05-15 11:51:11,768|13838|PARAMS|application_1713583699042_0096|cached|false
+2024-05-15 11:51:11,768|13838|PARAMS|application_1713583699042_0096|print|false
+2024-05-15 11:51:11,769|13839|mr-hn|INFO|0|application_1713583699042_0096|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 11:51:30,926|32996|mr-hn|INFO|0|application_1713583699042_0096|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 11:51:33,773|35843|mr-hn|TIME|0|application_1713583699042_0096|1|berlin0-10|30.0|3|3|PSI|940|40.0|5|Safe|2.846081364
+2024-05-15 11:51:34,639|36709|mr-hn|INFO|0|application_1713583699042_0096|1|berlin0-10|30.0|3|3|PSI|940|40.0|5|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:51:43,057|45127|mr-hn|TIME|0|application_1713583699042_0096|1|berlin0-10|30.0|3|3|PSI|940|40.0|5|Partial|8.417480282
+2024-05-15 11:51:43,642|45712|mr-hn|INFO|0|application_1713583699042_0096|1|berlin0-10|30.0|3|3|PSI|940|40.0|5|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 6
+2024-05-15 11:52:03,306|13976|PARAMS|application_1713583699042_0097|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:52:03,307|13977|PARAMS|application_1713583699042_0097|sdist|40
+2024-05-15 11:52:03,307|13977|PARAMS|application_1713583699042_0097|epsilon|30
+2024-05-15 11:52:03,307|13977|PARAMS|application_1713583699042_0097|mu|3
+2024-05-15 11:52:03,307|13977|PARAMS|application_1713583699042_0097|delta|3
+2024-05-15 11:52:03,307|13977|PARAMS|application_1713583699042_0097|method|PSI
+2024-05-15 11:52:03,307|13977|PARAMS|application_1713583699042_0097|master|yarn
+2024-05-15 11:52:03,307|13977|PARAMS|application_1713583699042_0097|capacity|50
+2024-05-15 11:52:03,308|13978|PARAMS|application_1713583699042_0097|fraction|0.1
+2024-05-15 11:52:03,308|13978|PARAMS|application_1713583699042_0097|step|6
+2024-05-15 11:52:03,308|13978|PARAMS|application_1713583699042_0097|debug|false
+2024-05-15 11:52:03,308|13978|PARAMS|application_1713583699042_0097|tester|false
+2024-05-15 11:52:03,308|13978|PARAMS|application_1713583699042_0097|saves|false
+2024-05-15 11:52:03,308|13978|PARAMS|application_1713583699042_0097|cached|false
+2024-05-15 11:52:03,308|13978|PARAMS|application_1713583699042_0097|print|false
+2024-05-15 11:52:03,310|13980|mr-hn|INFO|0|application_1713583699042_0097|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 11:52:24,304|34974|mr-hn|INFO|0|application_1713583699042_0097|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 11:52:26,706|37376|mr-hn|TIME|0|application_1713583699042_0097|1|berlin0-10|30.0|3|3|PSI|940|40.0|6|Safe|2.400152235
+2024-05-15 11:52:27,314|37984|mr-hn|INFO|0|application_1713583699042_0097|1|berlin0-10|30.0|3|3|PSI|940|40.0|6|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:52:37,874|48544|mr-hn|TIME|0|application_1713583699042_0097|1|berlin0-10|30.0|3|3|PSI|940|40.0|6|Partial|10.559701951
+2024-05-15 11:52:38,508|49178|mr-hn|INFO|0|application_1713583699042_0097|1|berlin0-10|30.0|3|3|PSI|940|40.0|6|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 7
+2024-05-15 11:52:58,694|14513|PARAMS|application_1713583699042_0098|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:52:58,695|14514|PARAMS|application_1713583699042_0098|sdist|40
+2024-05-15 11:52:58,695|14514|PARAMS|application_1713583699042_0098|epsilon|30
+2024-05-15 11:52:58,695|14514|PARAMS|application_1713583699042_0098|mu|3
+2024-05-15 11:52:58,695|14514|PARAMS|application_1713583699042_0098|delta|3
+2024-05-15 11:52:58,695|14514|PARAMS|application_1713583699042_0098|method|PSI
+2024-05-15 11:52:58,695|14514|PARAMS|application_1713583699042_0098|master|yarn
+2024-05-15 11:52:58,695|14514|PARAMS|application_1713583699042_0098|capacity|50
+2024-05-15 11:52:58,696|14515|PARAMS|application_1713583699042_0098|fraction|0.1
+2024-05-15 11:52:58,696|14515|PARAMS|application_1713583699042_0098|step|7
+2024-05-15 11:52:58,696|14515|PARAMS|application_1713583699042_0098|debug|false
+2024-05-15 11:52:58,696|14515|PARAMS|application_1713583699042_0098|tester|false
+2024-05-15 11:52:58,696|14515|PARAMS|application_1713583699042_0098|saves|false
+2024-05-15 11:52:58,696|14515|PARAMS|application_1713583699042_0098|cached|false
+2024-05-15 11:52:58,696|14515|PARAMS|application_1713583699042_0098|print|false
+2024-05-15 11:52:58,698|14517|mr-hn|INFO|0|application_1713583699042_0098|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 11:53:22,063|37882|mr-hn|INFO|0|application_1713583699042_0098|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 11:53:24,897|40716|mr-hn|TIME|0|application_1713583699042_0098|1|berlin0-10|30.0|3|3|PSI|940|40.0|7|Safe|2.831660609
+2024-05-15 11:53:25,507|41326|mr-hn|INFO|0|application_1713583699042_0098|1|berlin0-10|30.0|3|3|PSI|940|40.0|7|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:53:52,303|68122|mr-hn|TIME|0|application_1713583699042_0098|1|berlin0-10|30.0|3|3|PSI|940|40.0|7|Partial|26.795150052
+2024-05-15 11:53:52,811|68630|mr-hn|INFO|0|application_1713583699042_0098|1|berlin0-10|30.0|3|3|PSI|940|40.0|7|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 1
+2024-05-15 11:54:12,671|14289|PARAMS|application_1713583699042_0099|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:54:12,671|14289|PARAMS|application_1713583699042_0099|sdist|40
+2024-05-15 11:54:12,671|14289|PARAMS|application_1713583699042_0099|epsilon|40
+2024-05-15 11:54:12,671|14289|PARAMS|application_1713583699042_0099|mu|3
+2024-05-15 11:54:12,671|14289|PARAMS|application_1713583699042_0099|delta|3
+2024-05-15 11:54:12,672|14290|PARAMS|application_1713583699042_0099|method|PSI
+2024-05-15 11:54:12,673|14291|PARAMS|application_1713583699042_0099|master|yarn
+2024-05-15 11:54:12,673|14291|PARAMS|application_1713583699042_0099|capacity|50
+2024-05-15 11:54:12,673|14291|PARAMS|application_1713583699042_0099|fraction|0.1
+2024-05-15 11:54:12,673|14291|PARAMS|application_1713583699042_0099|step|1
+2024-05-15 11:54:12,673|14291|PARAMS|application_1713583699042_0099|debug|false
+2024-05-15 11:54:12,673|14291|PARAMS|application_1713583699042_0099|tester|false
+2024-05-15 11:54:12,674|14292|PARAMS|application_1713583699042_0099|saves|false
+2024-05-15 11:54:12,674|14292|PARAMS|application_1713583699042_0099|cached|false
+2024-05-15 11:54:12,674|14292|PARAMS|application_1713583699042_0099|print|false
+2024-05-15 11:54:12,675|14293|mr-hn|INFO|0|application_1713583699042_0099|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 11:54:33,705|35323|mr-hn|INFO|0|application_1713583699042_0099|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 11:54:53,534|55152|mr-hn|TIME|0|application_1713583699042_0099|1|berlin0-10|40.0|3|3|PSI|949|40.0|1|Safe|19.826476572
+2024-05-15 11:54:54,480|56098|mr-hn|INFO|0|application_1713583699042_0099|1|berlin0-10|40.0|3|3|PSI|949|40.0|1|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[358 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[145 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[58 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:55:09,890|71508|mr-hn|TIME|0|application_1713583699042_0099|1|berlin0-10|40.0|3|3|PSI|949|40.0|1|Partial|15.409865062
+2024-05-15 11:55:10,517|72135|mr-hn|INFO|0|application_1713583699042_0099|1|berlin0-10|40.0|3|3|PSI|949|40.0|1|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[11344 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 2
+2024-05-15 11:55:29,930|13734|PARAMS|application_1713583699042_0100|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:55:29,931|13735|PARAMS|application_1713583699042_0100|sdist|40
+2024-05-15 11:55:29,931|13735|PARAMS|application_1713583699042_0100|epsilon|40
+2024-05-15 11:55:29,931|13735|PARAMS|application_1713583699042_0100|mu|3
+2024-05-15 11:55:29,931|13735|PARAMS|application_1713583699042_0100|delta|3
+2024-05-15 11:55:29,931|13735|PARAMS|application_1713583699042_0100|method|PSI
+2024-05-15 11:55:29,931|13735|PARAMS|application_1713583699042_0100|master|yarn
+2024-05-15 11:55:29,931|13735|PARAMS|application_1713583699042_0100|capacity|50
+2024-05-15 11:55:29,931|13735|PARAMS|application_1713583699042_0100|fraction|0.1
+2024-05-15 11:55:29,932|13736|PARAMS|application_1713583699042_0100|step|2
+2024-05-15 11:55:29,932|13736|PARAMS|application_1713583699042_0100|debug|false
+2024-05-15 11:55:29,932|13736|PARAMS|application_1713583699042_0100|tester|false
+2024-05-15 11:55:29,932|13736|PARAMS|application_1713583699042_0100|saves|false
+2024-05-15 11:55:29,932|13736|PARAMS|application_1713583699042_0100|cached|false
+2024-05-15 11:55:29,932|13736|PARAMS|application_1713583699042_0100|print|false
+2024-05-15 11:55:29,933|13737|mr-hn|INFO|0|application_1713583699042_0100|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 11:55:53,203|37007|mr-hn|INFO|0|application_1713583699042_0100|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 11:56:12,313|56117|mr-hn|TIME|0|application_1713583699042_0100|1|berlin0-10|40.0|3|3|PSI|949|40.0|2|Safe|19.106289329
+2024-05-15 11:56:13,017|56821|mr-hn|INFO|0|application_1713583699042_0100|1|berlin0-10|40.0|3|3|PSI|949|40.0|2|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[145 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:56:27,995|71799|mr-hn|TIME|0|application_1713583699042_0100|1|berlin0-10|40.0|3|3|PSI|949|40.0|2|Partial|14.977130511
+2024-05-15 11:56:28,530|72334|mr-hn|INFO|0|application_1713583699042_0100|1|berlin0-10|40.0|3|3|PSI|949|40.0|2|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[11344 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 3
+2024-05-15 11:56:48,687|14085|PARAMS|application_1713583699042_0101|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:56:48,688|14086|PARAMS|application_1713583699042_0101|sdist|40
+2024-05-15 11:56:48,688|14086|PARAMS|application_1713583699042_0101|epsilon|40
+2024-05-15 11:56:48,688|14086|PARAMS|application_1713583699042_0101|mu|3
+2024-05-15 11:56:48,689|14087|PARAMS|application_1713583699042_0101|delta|3
+2024-05-15 11:56:48,689|14087|PARAMS|application_1713583699042_0101|method|PSI
+2024-05-15 11:56:48,689|14087|PARAMS|application_1713583699042_0101|master|yarn
+2024-05-15 11:56:48,689|14087|PARAMS|application_1713583699042_0101|capacity|50
+2024-05-15 11:56:48,689|14087|PARAMS|application_1713583699042_0101|fraction|0.1
+2024-05-15 11:56:48,689|14087|PARAMS|application_1713583699042_0101|step|3
+2024-05-15 11:56:48,689|14087|PARAMS|application_1713583699042_0101|debug|false
+2024-05-15 11:56:48,689|14087|PARAMS|application_1713583699042_0101|tester|false
+2024-05-15 11:56:48,689|14087|PARAMS|application_1713583699042_0101|saves|false
+2024-05-15 11:56:48,690|14088|PARAMS|application_1713583699042_0101|cached|false
+2024-05-15 11:56:48,690|14088|PARAMS|application_1713583699042_0101|print|false
+2024-05-15 11:56:48,691|14089|mr-hn|INFO|0|application_1713583699042_0101|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 11:57:12,442|37840|mr-hn|INFO|0|application_1713583699042_0101|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 11:57:30,991|56389|mr-hn|TIME|0|application_1713583699042_0101|1|berlin0-10|40.0|3|3|PSI|949|40.0|3|Safe|18.547245229
+2024-05-15 11:57:32,059|57457|mr-hn|INFO|0|application_1713583699042_0101|1|berlin0-10|40.0|3|3|PSI|949|40.0|3|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[58 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:57:47,322|72720|mr-hn|TIME|0|application_1713583699042_0101|1|berlin0-10|40.0|3|3|PSI|949|40.0|3|Partial|15.263036224
+2024-05-15 11:57:47,914|73312|mr-hn|INFO|0|application_1713583699042_0101|1|berlin0-10|40.0|3|3|PSI|949|40.0|3|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[11344 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 4
+2024-05-15 11:58:07,724|14130|PARAMS|application_1713583699042_0102|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:58:07,725|14131|PARAMS|application_1713583699042_0102|sdist|40
+2024-05-15 11:58:07,725|14131|PARAMS|application_1713583699042_0102|epsilon|40
+2024-05-15 11:58:07,725|14131|PARAMS|application_1713583699042_0102|mu|3
+2024-05-15 11:58:07,725|14131|PARAMS|application_1713583699042_0102|delta|3
+2024-05-15 11:58:07,726|14132|PARAMS|application_1713583699042_0102|method|PSI
+2024-05-15 11:58:07,726|14132|PARAMS|application_1713583699042_0102|master|yarn
+2024-05-15 11:58:07,726|14132|PARAMS|application_1713583699042_0102|capacity|50
+2024-05-15 11:58:07,726|14132|PARAMS|application_1713583699042_0102|fraction|0.1
+2024-05-15 11:58:07,726|14132|PARAMS|application_1713583699042_0102|step|4
+2024-05-15 11:58:07,726|14132|PARAMS|application_1713583699042_0102|debug|false
+2024-05-15 11:58:07,726|14132|PARAMS|application_1713583699042_0102|tester|false
+2024-05-15 11:58:07,726|14132|PARAMS|application_1713583699042_0102|saves|false
+2024-05-15 11:58:07,727|14133|PARAMS|application_1713583699042_0102|cached|false
+2024-05-15 11:58:07,727|14133|PARAMS|application_1713583699042_0102|print|false
+2024-05-15 11:58:07,728|14134|mr-hn|INFO|0|application_1713583699042_0102|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 11:58:30,720|37126|mr-hn|INFO|0|application_1713583699042_0102|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 11:58:49,858|56264|mr-hn|TIME|0|application_1713583699042_0102|1|berlin0-10|40.0|3|3|PSI|949|40.0|4|Safe|19.134345983
+2024-05-15 11:58:50,671|57077|mr-hn|INFO|0|application_1713583699042_0102|1|berlin0-10|40.0|3|3|PSI|949|40.0|4|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 11:59:11,082|77488|mr-hn|TIME|0|application_1713583699042_0102|1|berlin0-10|40.0|3|3|PSI|949|40.0|4|Partial|20.410380231
+2024-05-15 11:59:11,668|78074|mr-hn|INFO|0|application_1713583699042_0102|1|berlin0-10|40.0|3|3|PSI|949|40.0|4|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[11344 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 5
+2024-05-15 11:59:32,586|15182|PARAMS|application_1713583699042_0103|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 11:59:32,587|15183|PARAMS|application_1713583699042_0103|sdist|40
+2024-05-15 11:59:32,587|15183|PARAMS|application_1713583699042_0103|epsilon|40
+2024-05-15 11:59:32,587|15183|PARAMS|application_1713583699042_0103|mu|3
+2024-05-15 11:59:32,587|15183|PARAMS|application_1713583699042_0103|delta|3
+2024-05-15 11:59:32,587|15183|PARAMS|application_1713583699042_0103|method|PSI
+2024-05-15 11:59:32,588|15184|PARAMS|application_1713583699042_0103|master|yarn
+2024-05-15 11:59:32,588|15184|PARAMS|application_1713583699042_0103|capacity|50
+2024-05-15 11:59:32,588|15184|PARAMS|application_1713583699042_0103|fraction|0.1
+2024-05-15 11:59:32,588|15184|PARAMS|application_1713583699042_0103|step|5
+2024-05-15 11:59:32,588|15184|PARAMS|application_1713583699042_0103|debug|false
+2024-05-15 11:59:32,588|15184|PARAMS|application_1713583699042_0103|tester|false
+2024-05-15 11:59:32,588|15184|PARAMS|application_1713583699042_0103|saves|false
+2024-05-15 11:59:32,588|15184|PARAMS|application_1713583699042_0103|cached|false
+2024-05-15 11:59:32,589|15185|PARAMS|application_1713583699042_0103|print|false
+2024-05-15 11:59:32,590|15186|mr-hn|INFO|0|application_1713583699042_0103|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 11:59:56,282|38878|mr-hn|INFO|0|application_1713583699042_0103|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:00:15,110|57706|mr-hn|TIME|0|application_1713583699042_0103|1|berlin0-10|40.0|3|3|PSI|949|40.0|5|Safe|18.82680991
+2024-05-15 12:00:15,926|58522|mr-hn|INFO|0|application_1713583699042_0103|1|berlin0-10|40.0|3|3|PSI|949|40.0|5|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:00:40,736|83332|mr-hn|TIME|0|application_1713583699042_0103|1|berlin0-10|40.0|3|3|PSI|949|40.0|5|Partial|24.807377994
+2024-05-15 12:00:41,274|83870|mr-hn|INFO|0|application_1713583699042_0103|1|berlin0-10|40.0|3|3|PSI|949|40.0|5|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[11344 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 6
+2024-05-15 12:01:01,625|14577|PARAMS|application_1713583699042_0104|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:01:01,625|14577|PARAMS|application_1713583699042_0104|sdist|40
+2024-05-15 12:01:01,625|14577|PARAMS|application_1713583699042_0104|epsilon|40
+2024-05-15 12:01:01,626|14578|PARAMS|application_1713583699042_0104|mu|3
+2024-05-15 12:01:01,626|14578|PARAMS|application_1713583699042_0104|delta|3
+2024-05-15 12:01:01,626|14578|PARAMS|application_1713583699042_0104|method|PSI
+2024-05-15 12:01:01,626|14578|PARAMS|application_1713583699042_0104|master|yarn
+2024-05-15 12:01:01,626|14578|PARAMS|application_1713583699042_0104|capacity|50
+2024-05-15 12:01:01,626|14578|PARAMS|application_1713583699042_0104|fraction|0.1
+2024-05-15 12:01:01,626|14578|PARAMS|application_1713583699042_0104|step|6
+2024-05-15 12:01:01,626|14578|PARAMS|application_1713583699042_0104|debug|false
+2024-05-15 12:01:01,626|14578|PARAMS|application_1713583699042_0104|tester|false
+2024-05-15 12:01:01,627|14579|PARAMS|application_1713583699042_0104|saves|false
+2024-05-15 12:01:01,627|14579|PARAMS|application_1713583699042_0104|cached|false
+2024-05-15 12:01:01,627|14579|PARAMS|application_1713583699042_0104|print|false
+2024-05-15 12:01:01,628|14580|mr-hn|INFO|0|application_1713583699042_0104|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 12:01:23,263|36215|mr-hn|INFO|0|application_1713583699042_0104|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:01:44,365|57317|mr-hn|TIME|0|application_1713583699042_0104|1|berlin0-10|40.0|3|3|PSI|949|40.0|6|Safe|21.099512635
+2024-05-15 12:01:45,171|58123|mr-hn|INFO|0|application_1713583699042_0104|1|berlin0-10|40.0|3|3|PSI|949|40.0|6|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:02:23,323|96275|mr-hn|TIME|0|application_1713583699042_0104|1|berlin0-10|40.0|3|3|PSI|949|40.0|6|Partial|38.15189348
+2024-05-15 12:02:23,861|96813|mr-hn|INFO|0|application_1713583699042_0104|1|berlin0-10|40.0|3|3|PSI|949|40.0|6|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[11344 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 7
+2024-05-15 12:02:43,458|13935|PARAMS|application_1713583699042_0105|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:02:43,458|13935|PARAMS|application_1713583699042_0105|sdist|40
+2024-05-15 12:02:43,458|13935|PARAMS|application_1713583699042_0105|epsilon|40
+2024-05-15 12:02:43,458|13935|PARAMS|application_1713583699042_0105|mu|3
+2024-05-15 12:02:43,459|13936|PARAMS|application_1713583699042_0105|delta|3
+2024-05-15 12:02:43,459|13936|PARAMS|application_1713583699042_0105|method|PSI
+2024-05-15 12:02:43,459|13936|PARAMS|application_1713583699042_0105|master|yarn
+2024-05-15 12:02:43,459|13936|PARAMS|application_1713583699042_0105|capacity|50
+2024-05-15 12:02:43,459|13936|PARAMS|application_1713583699042_0105|fraction|0.1
+2024-05-15 12:02:43,459|13936|PARAMS|application_1713583699042_0105|step|7
+2024-05-15 12:02:43,459|13936|PARAMS|application_1713583699042_0105|debug|false
+2024-05-15 12:02:43,460|13937|PARAMS|application_1713583699042_0105|tester|false
+2024-05-15 12:02:43,460|13937|PARAMS|application_1713583699042_0105|saves|false
+2024-05-15 12:02:43,460|13937|PARAMS|application_1713583699042_0105|cached|false
+2024-05-15 12:02:43,460|13937|PARAMS|application_1713583699042_0105|print|false
+2024-05-15 12:02:43,461|13938|mr-hn|INFO|0|application_1713583699042_0105|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 12:03:04,603|35080|mr-hn|INFO|0|application_1713583699042_0105|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:03:25,260|55737|mr-hn|TIME|0|application_1713583699042_0105|1|berlin0-10|40.0|3|3|PSI|949|40.0|7|Safe|20.65444572
+2024-05-15 12:03:26,084|56561|mr-hn|INFO|0|application_1713583699042_0105|1|berlin0-10|40.0|3|3|PSI|949|40.0|7|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:05:15,496|165973|mr-hn|TIME|0|application_1713583699042_0105|1|berlin0-10|40.0|3|3|PSI|949|40.0|7|Partial|109.411708686
+2024-05-15 12:05:16,015|166492|mr-hn|INFO|0|application_1713583699042_0105|1|berlin0-10|40.0|3|3|PSI|949|40.0|7|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[11344 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 1
+2024-05-15 12:06:37,111|14016|PARAMS|application_1713583699042_0106|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:06:37,111|14016|PARAMS|application_1713583699042_0106|sdist|40
+2024-05-15 12:06:37,112|14017|PARAMS|application_1713583699042_0106|epsilon|20
+2024-05-15 12:06:37,112|14017|PARAMS|application_1713583699042_0106|mu|3
+2024-05-15 12:06:37,112|14017|PARAMS|application_1713583699042_0106|delta|3
+2024-05-15 12:06:37,112|14017|PARAMS|application_1713583699042_0106|method|PSI
+2024-05-15 12:06:37,112|14017|PARAMS|application_1713583699042_0106|master|yarn
+2024-05-15 12:06:37,112|14017|PARAMS|application_1713583699042_0106|capacity|50
+2024-05-15 12:06:37,112|14017|PARAMS|application_1713583699042_0106|fraction|0.1
+2024-05-15 12:06:37,112|14017|PARAMS|application_1713583699042_0106|step|1
+2024-05-15 12:06:37,113|14018|PARAMS|application_1713583699042_0106|debug|false
+2024-05-15 12:06:37,113|14018|PARAMS|application_1713583699042_0106|tester|false
+2024-05-15 12:06:37,113|14018|PARAMS|application_1713583699042_0106|saves|false
+2024-05-15 12:06:37,113|14018|PARAMS|application_1713583699042_0106|cached|false
+2024-05-15 12:06:37,113|14018|PARAMS|application_1713583699042_0106|print|false
+2024-05-15 12:06:37,114|14019|mr-hn|INFO|0|application_1713583699042_0106|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 12:06:59,980|36885|mr-hn|INFO|0|application_1713583699042_0106|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 12:07:01,011|37916|mr-hn|TIME|0|application_1713583699042_0106|1|berlin0-10|20.0|3|3|PSI|937|40.0|1|Safe|1.029365295
+2024-05-15 12:07:01,755|38660|mr-hn|INFO|0|application_1713583699042_0106|1|berlin0-10|20.0|3|3|PSI|937|40.0|1|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[361 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[148 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[64 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:07:05,830|42735|mr-hn|TIME|0|application_1713583699042_0106|1|berlin0-10|20.0|3|3|PSI|937|40.0|1|Partial|4.074662391
+2024-05-15 12:07:06,455|43360|mr-hn|INFO|0|application_1713583699042_0106|1|berlin0-10|20.0|3|3|PSI|937|40.0|1|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 2
+2024-05-15 12:07:25,512|13694|PARAMS|application_1713583699042_0107|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:07:25,513|13695|PARAMS|application_1713583699042_0107|sdist|40
+2024-05-15 12:07:25,513|13695|PARAMS|application_1713583699042_0107|epsilon|20
+2024-05-15 12:07:25,513|13695|PARAMS|application_1713583699042_0107|mu|3
+2024-05-15 12:07:25,513|13695|PARAMS|application_1713583699042_0107|delta|3
+2024-05-15 12:07:25,513|13695|PARAMS|application_1713583699042_0107|method|PSI
+2024-05-15 12:07:25,513|13695|PARAMS|application_1713583699042_0107|master|yarn
+2024-05-15 12:07:25,514|13696|PARAMS|application_1713583699042_0107|capacity|50
+2024-05-15 12:07:25,514|13696|PARAMS|application_1713583699042_0107|fraction|0.1
+2024-05-15 12:07:25,514|13696|PARAMS|application_1713583699042_0107|step|2
+2024-05-15 12:07:25,514|13696|PARAMS|application_1713583699042_0107|debug|false
+2024-05-15 12:07:25,514|13696|PARAMS|application_1713583699042_0107|tester|false
+2024-05-15 12:07:25,514|13696|PARAMS|application_1713583699042_0107|saves|false
+2024-05-15 12:07:25,514|13696|PARAMS|application_1713583699042_0107|cached|false
+2024-05-15 12:07:25,514|13696|PARAMS|application_1713583699042_0107|print|false
+2024-05-15 12:07:25,515|13697|mr-hn|INFO|0|application_1713583699042_0107|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 12:07:46,441|34623|mr-hn|INFO|0|application_1713583699042_0107|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 12:07:47,769|35951|mr-hn|TIME|0|application_1713583699042_0107|1|berlin0-10|20.0|3|3|PSI|937|40.0|2|Safe|1.326975247
+2024-05-15 12:07:48,629|36811|mr-hn|INFO|0|application_1713583699042_0107|1|berlin0-10|20.0|3|3|PSI|937|40.0|2|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[148 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:07:51,581|39763|mr-hn|TIME|0|application_1713583699042_0107|1|berlin0-10|20.0|3|3|PSI|937|40.0|2|Partial|2.951800739
+2024-05-15 12:07:52,114|40296|mr-hn|INFO|0|application_1713583699042_0107|1|berlin0-10|20.0|3|3|PSI|937|40.0|2|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 3
+2024-05-15 12:08:12,311|14539|PARAMS|application_1713583699042_0108|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:08:12,311|14539|PARAMS|application_1713583699042_0108|sdist|40
+2024-05-15 12:08:12,311|14539|PARAMS|application_1713583699042_0108|epsilon|20
+2024-05-15 12:08:12,312|14540|PARAMS|application_1713583699042_0108|mu|3
+2024-05-15 12:08:12,312|14540|PARAMS|application_1713583699042_0108|delta|3
+2024-05-15 12:08:12,312|14540|PARAMS|application_1713583699042_0108|method|PSI
+2024-05-15 12:08:12,312|14540|PARAMS|application_1713583699042_0108|master|yarn
+2024-05-15 12:08:12,312|14540|PARAMS|application_1713583699042_0108|capacity|50
+2024-05-15 12:08:12,312|14540|PARAMS|application_1713583699042_0108|fraction|0.1
+2024-05-15 12:08:12,312|14540|PARAMS|application_1713583699042_0108|step|3
+2024-05-15 12:08:12,312|14540|PARAMS|application_1713583699042_0108|debug|false
+2024-05-15 12:08:12,313|14541|PARAMS|application_1713583699042_0108|tester|false
+2024-05-15 12:08:12,313|14541|PARAMS|application_1713583699042_0108|saves|false
+2024-05-15 12:08:12,313|14541|PARAMS|application_1713583699042_0108|cached|false
+2024-05-15 12:08:12,313|14541|PARAMS|application_1713583699042_0108|print|false
+2024-05-15 12:08:12,314|14542|mr-hn|INFO|0|application_1713583699042_0108|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 12:08:35,935|38163|mr-hn|INFO|0|application_1713583699042_0108|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 12:08:37,086|39314|mr-hn|TIME|0|application_1713583699042_0108|1|berlin0-10|20.0|3|3|PSI|937|40.0|3|Safe|1.14946252
+2024-05-15 12:08:37,862|40090|mr-hn|INFO|0|application_1713583699042_0108|1|berlin0-10|20.0|3|3|PSI|937|40.0|3|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[64 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:08:40,572|42800|mr-hn|TIME|0|application_1713583699042_0108|1|berlin0-10|20.0|3|3|PSI|937|40.0|3|Partial|2.709785439
+2024-05-15 12:08:41,200|43428|mr-hn|INFO|0|application_1713583699042_0108|1|berlin0-10|20.0|3|3|PSI|937|40.0|3|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 4
+2024-05-15 12:09:00,614|14022|PARAMS|application_1713583699042_0109|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:09:00,614|14022|PARAMS|application_1713583699042_0109|sdist|40
+2024-05-15 12:09:00,615|14023|PARAMS|application_1713583699042_0109|epsilon|20
+2024-05-15 12:09:00,615|14023|PARAMS|application_1713583699042_0109|mu|3
+2024-05-15 12:09:00,616|14024|PARAMS|application_1713583699042_0109|delta|3
+2024-05-15 12:09:00,616|14024|PARAMS|application_1713583699042_0109|method|PSI
+2024-05-15 12:09:00,616|14024|PARAMS|application_1713583699042_0109|master|yarn
+2024-05-15 12:09:00,617|14025|PARAMS|application_1713583699042_0109|capacity|50
+2024-05-15 12:09:00,618|14026|PARAMS|application_1713583699042_0109|fraction|0.1
+2024-05-15 12:09:00,618|14026|PARAMS|application_1713583699042_0109|step|4
+2024-05-15 12:09:00,618|14026|PARAMS|application_1713583699042_0109|debug|false
+2024-05-15 12:09:00,619|14027|PARAMS|application_1713583699042_0109|tester|false
+2024-05-15 12:09:00,619|14027|PARAMS|application_1713583699042_0109|saves|false
+2024-05-15 12:09:00,620|14028|PARAMS|application_1713583699042_0109|cached|false
+2024-05-15 12:09:00,620|14028|PARAMS|application_1713583699042_0109|print|false
+2024-05-15 12:09:00,622|14030|mr-hn|INFO|0|application_1713583699042_0109|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 12:09:23,870|37278|mr-hn|INFO|0|application_1713583699042_0109|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 12:09:24,872|38280|mr-hn|TIME|0|application_1713583699042_0109|1|berlin0-10|20.0|3|3|PSI|937|40.0|4|Safe|1.000117269
+2024-05-15 12:09:25,712|39120|mr-hn|INFO|0|application_1713583699042_0109|1|berlin0-10|20.0|3|3|PSI|937|40.0|4|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:09:28,265|41673|mr-hn|TIME|0|application_1713583699042_0109|1|berlin0-10|20.0|3|3|PSI|937|40.0|4|Partial|2.552278301
+2024-05-15 12:09:28,825|42233|mr-hn|INFO|0|application_1713583699042_0109|1|berlin0-10|20.0|3|3|PSI|937|40.0|4|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 5
+2024-05-15 12:09:48,317|13953|PARAMS|application_1713583699042_0110|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:09:48,318|13954|PARAMS|application_1713583699042_0110|sdist|40
+2024-05-15 12:09:48,318|13954|PARAMS|application_1713583699042_0110|epsilon|20
+2024-05-15 12:09:48,318|13954|PARAMS|application_1713583699042_0110|mu|3
+2024-05-15 12:09:48,318|13954|PARAMS|application_1713583699042_0110|delta|3
+2024-05-15 12:09:48,318|13954|PARAMS|application_1713583699042_0110|method|PSI
+2024-05-15 12:09:48,318|13954|PARAMS|application_1713583699042_0110|master|yarn
+2024-05-15 12:09:48,318|13954|PARAMS|application_1713583699042_0110|capacity|50
+2024-05-15 12:09:48,318|13954|PARAMS|application_1713583699042_0110|fraction|0.1
+2024-05-15 12:09:48,319|13955|PARAMS|application_1713583699042_0110|step|5
+2024-05-15 12:09:48,319|13955|PARAMS|application_1713583699042_0110|debug|false
+2024-05-15 12:09:48,319|13955|PARAMS|application_1713583699042_0110|tester|false
+2024-05-15 12:09:48,319|13955|PARAMS|application_1713583699042_0110|saves|false
+2024-05-15 12:09:48,319|13955|PARAMS|application_1713583699042_0110|cached|false
+2024-05-15 12:09:48,319|13955|PARAMS|application_1713583699042_0110|print|false
+2024-05-15 12:09:48,320|13956|mr-hn|INFO|0|application_1713583699042_0110|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 12:10:07,125|32761|mr-hn|INFO|0|application_1713583699042_0110|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 12:10:08,451|34087|mr-hn|TIME|0|application_1713583699042_0110|1|berlin0-10|20.0|3|3|PSI|937|40.0|5|Safe|1.324493593
+2024-05-15 12:10:09,163|34799|mr-hn|INFO|0|application_1713583699042_0110|1|berlin0-10|20.0|3|3|PSI|937|40.0|5|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:10:12,177|37813|mr-hn|TIME|0|application_1713583699042_0110|1|berlin0-10|20.0|3|3|PSI|937|40.0|5|Partial|3.012084969
+2024-05-15 12:10:12,855|38491|mr-hn|INFO|0|application_1713583699042_0110|1|berlin0-10|20.0|3|3|PSI|937|40.0|5|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 6
+2024-05-15 12:10:32,577|14250|PARAMS|application_1713583699042_0111|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:10:32,577|14250|PARAMS|application_1713583699042_0111|sdist|40
+2024-05-15 12:10:32,577|14250|PARAMS|application_1713583699042_0111|epsilon|20
+2024-05-15 12:10:32,577|14250|PARAMS|application_1713583699042_0111|mu|3
+2024-05-15 12:10:32,577|14250|PARAMS|application_1713583699042_0111|delta|3
+2024-05-15 12:10:32,578|14251|PARAMS|application_1713583699042_0111|method|PSI
+2024-05-15 12:10:32,578|14251|PARAMS|application_1713583699042_0111|master|yarn
+2024-05-15 12:10:32,578|14251|PARAMS|application_1713583699042_0111|capacity|50
+2024-05-15 12:10:32,578|14251|PARAMS|application_1713583699042_0111|fraction|0.1
+2024-05-15 12:10:32,578|14251|PARAMS|application_1713583699042_0111|step|6
+2024-05-15 12:10:32,578|14251|PARAMS|application_1713583699042_0111|debug|false
+2024-05-15 12:10:32,578|14251|PARAMS|application_1713583699042_0111|tester|false
+2024-05-15 12:10:32,578|14251|PARAMS|application_1713583699042_0111|saves|false
+2024-05-15 12:10:32,579|14252|PARAMS|application_1713583699042_0111|cached|false
+2024-05-15 12:10:32,579|14252|PARAMS|application_1713583699042_0111|print|false
+2024-05-15 12:10:32,580|14253|mr-hn|INFO|0|application_1713583699042_0111|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 12:10:54,537|36210|mr-hn|INFO|0|application_1713583699042_0111|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 12:10:55,589|37262|mr-hn|TIME|0|application_1713583699042_0111|1|berlin0-10|20.0|3|3|PSI|937|40.0|6|Safe|1.050150461
+2024-05-15 12:10:56,168|37841|mr-hn|INFO|0|application_1713583699042_0111|1|berlin0-10|20.0|3|3|PSI|937|40.0|6|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:10:59,753|41426|mr-hn|TIME|0|application_1713583699042_0111|1|berlin0-10|20.0|3|3|PSI|937|40.0|6|Partial|3.58398289
+2024-05-15 12:11:00,337|42010|mr-hn|INFO|0|application_1713583699042_0111|1|berlin0-10|20.0|3|3|PSI|937|40.0|6|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 7
+2024-05-15 12:11:19,809|14090|PARAMS|application_1713583699042_0112|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:11:19,809|14090|PARAMS|application_1713583699042_0112|sdist|40
+2024-05-15 12:11:19,810|14091|PARAMS|application_1713583699042_0112|epsilon|20
+2024-05-15 12:11:19,810|14091|PARAMS|application_1713583699042_0112|mu|3
+2024-05-15 12:11:19,810|14091|PARAMS|application_1713583699042_0112|delta|3
+2024-05-15 12:11:19,810|14091|PARAMS|application_1713583699042_0112|method|PSI
+2024-05-15 12:11:19,810|14091|PARAMS|application_1713583699042_0112|master|yarn
+2024-05-15 12:11:19,810|14091|PARAMS|application_1713583699042_0112|capacity|50
+2024-05-15 12:11:19,810|14091|PARAMS|application_1713583699042_0112|fraction|0.1
+2024-05-15 12:11:19,810|14091|PARAMS|application_1713583699042_0112|step|7
+2024-05-15 12:11:19,811|14092|PARAMS|application_1713583699042_0112|debug|false
+2024-05-15 12:11:19,811|14092|PARAMS|application_1713583699042_0112|tester|false
+2024-05-15 12:11:19,811|14092|PARAMS|application_1713583699042_0112|saves|false
+2024-05-15 12:11:19,811|14092|PARAMS|application_1713583699042_0112|cached|false
+2024-05-15 12:11:19,811|14092|PARAMS|application_1713583699042_0112|print|false
+2024-05-15 12:11:19,812|14093|mr-hn|INFO|0|application_1713583699042_0112|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 12:11:43,096|37377|mr-hn|INFO|0|application_1713583699042_0112|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 12:11:44,037|38318|mr-hn|TIME|0|application_1713583699042_0112|1|berlin0-10|20.0|3|3|PSI|937|40.0|7|Safe|0.939854626
+2024-05-15 12:11:44,914|39195|mr-hn|INFO|0|application_1713583699042_0112|1|berlin0-10|20.0|3|3|PSI|937|40.0|7|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:11:52,045|46326|mr-hn|TIME|0|application_1713583699042_0112|1|berlin0-10|20.0|3|3|PSI|937|40.0|7|Partial|7.130956912
+2024-05-15 12:11:52,645|46926|mr-hn|INFO|0|application_1713583699042_0112|1|berlin0-10|20.0|3|3|PSI|937|40.0|7|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 1
+2024-05-15 12:12:12,949|14784|PARAMS|application_1713583699042_0113|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:12:12,949|14784|PARAMS|application_1713583699042_0113|sdist|40
+2024-05-15 12:12:12,950|14785|PARAMS|application_1713583699042_0113|epsilon|30
+2024-05-15 12:12:12,950|14785|PARAMS|application_1713583699042_0113|mu|3
+2024-05-15 12:12:12,950|14785|PARAMS|application_1713583699042_0113|delta|3
+2024-05-15 12:12:12,950|14785|PARAMS|application_1713583699042_0113|method|PSI
+2024-05-15 12:12:12,950|14785|PARAMS|application_1713583699042_0113|master|yarn
+2024-05-15 12:12:12,951|14786|PARAMS|application_1713583699042_0113|capacity|50
+2024-05-15 12:12:12,951|14786|PARAMS|application_1713583699042_0113|fraction|0.1
+2024-05-15 12:12:12,951|14786|PARAMS|application_1713583699042_0113|step|1
+2024-05-15 12:12:12,951|14786|PARAMS|application_1713583699042_0113|debug|false
+2024-05-15 12:12:12,951|14786|PARAMS|application_1713583699042_0113|tester|false
+2024-05-15 12:12:12,951|14786|PARAMS|application_1713583699042_0113|saves|false
+2024-05-15 12:12:12,952|14787|PARAMS|application_1713583699042_0113|cached|false
+2024-05-15 12:12:12,952|14787|PARAMS|application_1713583699042_0113|print|false
+2024-05-15 12:12:12,953|14788|mr-hn|INFO|0|application_1713583699042_0113|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 12:12:36,376|38211|mr-hn|INFO|0|application_1713583699042_0113|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 12:12:38,641|40476|mr-hn|TIME|0|application_1713583699042_0113|1|berlin0-10|30.0|3|3|PSI|940|40.0|1|Safe|2.262849039
+2024-05-15 12:12:39,349|41184|mr-hn|INFO|0|application_1713583699042_0113|1|berlin0-10|30.0|3|3|PSI|940|40.0|1|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[358 records].
+Saved /tmp/edgesC1.wkt	in	0.29s	[145 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[61 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:12:46,148|47983|mr-hn|TIME|0|application_1713583699042_0113|1|berlin0-10|30.0|3|3|PSI|940|40.0|1|Partial|6.797756383
+2024-05-15 12:12:46,802|48637|mr-hn|INFO|0|application_1713583699042_0113|1|berlin0-10|30.0|3|3|PSI|940|40.0|1|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 2
+2024-05-15 12:13:06,073|13716|PARAMS|application_1713583699042_0114|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:13:06,074|13717|PARAMS|application_1713583699042_0114|sdist|40
+2024-05-15 12:13:06,074|13717|PARAMS|application_1713583699042_0114|epsilon|30
+2024-05-15 12:13:06,074|13717|PARAMS|application_1713583699042_0114|mu|3
+2024-05-15 12:13:06,074|13717|PARAMS|application_1713583699042_0114|delta|3
+2024-05-15 12:13:06,074|13717|PARAMS|application_1713583699042_0114|method|PSI
+2024-05-15 12:13:06,075|13718|PARAMS|application_1713583699042_0114|master|yarn
+2024-05-15 12:13:06,075|13718|PARAMS|application_1713583699042_0114|capacity|50
+2024-05-15 12:13:06,075|13718|PARAMS|application_1713583699042_0114|fraction|0.1
+2024-05-15 12:13:06,075|13718|PARAMS|application_1713583699042_0114|step|2
+2024-05-15 12:13:06,075|13718|PARAMS|application_1713583699042_0114|debug|false
+2024-05-15 12:13:06,075|13718|PARAMS|application_1713583699042_0114|tester|false
+2024-05-15 12:13:06,075|13718|PARAMS|application_1713583699042_0114|saves|false
+2024-05-15 12:13:06,075|13718|PARAMS|application_1713583699042_0114|cached|false
+2024-05-15 12:13:06,076|13719|PARAMS|application_1713583699042_0114|print|false
+2024-05-15 12:13:06,077|13720|mr-hn|INFO|0|application_1713583699042_0114|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 12:13:29,692|37335|mr-hn|INFO|0|application_1713583699042_0114|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 12:13:32,089|39732|mr-hn|TIME|0|application_1713583699042_0114|1|berlin0-10|30.0|3|3|PSI|940|40.0|2|Safe|2.395585416
+2024-05-15 12:13:33,017|40660|mr-hn|INFO|0|application_1713583699042_0114|1|berlin0-10|30.0|3|3|PSI|940|40.0|2|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[145 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:13:38,454|46097|mr-hn|TIME|0|application_1713583699042_0114|1|berlin0-10|30.0|3|3|PSI|940|40.0|2|Partial|5.436124972
+2024-05-15 12:13:39,105|46748|mr-hn|INFO|0|application_1713583699042_0114|1|berlin0-10|30.0|3|3|PSI|940|40.0|2|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 3
+2024-05-15 12:13:58,432|13783|PARAMS|application_1713583699042_0115|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:13:58,432|13783|PARAMS|application_1713583699042_0115|sdist|40
+2024-05-15 12:13:58,432|13783|PARAMS|application_1713583699042_0115|epsilon|30
+2024-05-15 12:13:58,432|13783|PARAMS|application_1713583699042_0115|mu|3
+2024-05-15 12:13:58,432|13783|PARAMS|application_1713583699042_0115|delta|3
+2024-05-15 12:13:58,433|13784|PARAMS|application_1713583699042_0115|method|PSI
+2024-05-15 12:13:58,433|13784|PARAMS|application_1713583699042_0115|master|yarn
+2024-05-15 12:13:58,433|13784|PARAMS|application_1713583699042_0115|capacity|50
+2024-05-15 12:13:58,433|13784|PARAMS|application_1713583699042_0115|fraction|0.1
+2024-05-15 12:13:58,433|13784|PARAMS|application_1713583699042_0115|step|3
+2024-05-15 12:13:58,433|13784|PARAMS|application_1713583699042_0115|debug|false
+2024-05-15 12:13:58,433|13784|PARAMS|application_1713583699042_0115|tester|false
+2024-05-15 12:13:58,433|13784|PARAMS|application_1713583699042_0115|saves|false
+2024-05-15 12:13:58,434|13785|PARAMS|application_1713583699042_0115|cached|false
+2024-05-15 12:13:58,434|13785|PARAMS|application_1713583699042_0115|print|false
+2024-05-15 12:13:58,435|13786|mr-hn|INFO|0|application_1713583699042_0115|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 12:14:22,507|37858|mr-hn|INFO|0|application_1713583699042_0115|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 12:14:24,695|40046|mr-hn|TIME|0|application_1713583699042_0115|1|berlin0-10|30.0|3|3|PSI|940|40.0|3|Safe|2.186117881
+2024-05-15 12:14:25,239|40590|mr-hn|INFO|0|application_1713583699042_0115|1|berlin0-10|30.0|3|3|PSI|940|40.0|3|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[61 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:14:30,121|45472|mr-hn|TIME|0|application_1713583699042_0115|1|berlin0-10|30.0|3|3|PSI|940|40.0|3|Partial|4.881339902
+2024-05-15 12:14:30,995|46346|mr-hn|INFO|0|application_1713583699042_0115|1|berlin0-10|30.0|3|3|PSI|940|40.0|3|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 4
+2024-05-15 12:14:51,007|14395|PARAMS|application_1713583699042_0116|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:14:51,008|14396|PARAMS|application_1713583699042_0116|sdist|40
+2024-05-15 12:14:51,008|14396|PARAMS|application_1713583699042_0116|epsilon|30
+2024-05-15 12:14:51,008|14396|PARAMS|application_1713583699042_0116|mu|3
+2024-05-15 12:14:51,008|14396|PARAMS|application_1713583699042_0116|delta|3
+2024-05-15 12:14:51,008|14396|PARAMS|application_1713583699042_0116|method|PSI
+2024-05-15 12:14:51,009|14397|PARAMS|application_1713583699042_0116|master|yarn
+2024-05-15 12:14:51,009|14397|PARAMS|application_1713583699042_0116|capacity|50
+2024-05-15 12:14:51,009|14397|PARAMS|application_1713583699042_0116|fraction|0.1
+2024-05-15 12:14:51,009|14397|PARAMS|application_1713583699042_0116|step|4
+2024-05-15 12:14:51,009|14397|PARAMS|application_1713583699042_0116|debug|false
+2024-05-15 12:14:51,009|14397|PARAMS|application_1713583699042_0116|tester|false
+2024-05-15 12:14:51,009|14397|PARAMS|application_1713583699042_0116|saves|false
+2024-05-15 12:14:51,009|14397|PARAMS|application_1713583699042_0116|cached|false
+2024-05-15 12:14:51,010|14398|PARAMS|application_1713583699042_0116|print|false
+2024-05-15 12:14:51,011|14399|mr-hn|INFO|0|application_1713583699042_0116|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 12:15:14,759|38147|mr-hn|INFO|0|application_1713583699042_0116|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 12:15:16,950|40338|mr-hn|TIME|0|application_1713583699042_0116|1|berlin0-10|30.0|3|3|PSI|940|40.0|4|Safe|2.18908837
+2024-05-15 12:15:17,639|41027|mr-hn|INFO|0|application_1713583699042_0116|1|berlin0-10|30.0|3|3|PSI|940|40.0|4|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:15:24,511|47899|mr-hn|TIME|0|application_1713583699042_0116|1|berlin0-10|30.0|3|3|PSI|940|40.0|4|Partial|6.871499652
+2024-05-15 12:15:25,171|48559|mr-hn|INFO|0|application_1713583699042_0116|1|berlin0-10|30.0|3|3|PSI|940|40.0|4|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 5
+2024-05-15 12:15:45,213|14382|PARAMS|application_1713583699042_0117|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:15:45,213|14382|PARAMS|application_1713583699042_0117|sdist|40
+2024-05-15 12:15:45,213|14382|PARAMS|application_1713583699042_0117|epsilon|30
+2024-05-15 12:15:45,213|14382|PARAMS|application_1713583699042_0117|mu|3
+2024-05-15 12:15:45,214|14383|PARAMS|application_1713583699042_0117|delta|3
+2024-05-15 12:15:45,214|14383|PARAMS|application_1713583699042_0117|method|PSI
+2024-05-15 12:15:45,214|14383|PARAMS|application_1713583699042_0117|master|yarn
+2024-05-15 12:15:45,214|14383|PARAMS|application_1713583699042_0117|capacity|50
+2024-05-15 12:15:45,214|14383|PARAMS|application_1713583699042_0117|fraction|0.1
+2024-05-15 12:15:45,214|14383|PARAMS|application_1713583699042_0117|step|5
+2024-05-15 12:15:45,215|14384|PARAMS|application_1713583699042_0117|debug|false
+2024-05-15 12:15:45,215|14384|PARAMS|application_1713583699042_0117|tester|false
+2024-05-15 12:15:45,215|14384|PARAMS|application_1713583699042_0117|saves|false
+2024-05-15 12:15:45,215|14384|PARAMS|application_1713583699042_0117|cached|false
+2024-05-15 12:15:45,215|14384|PARAMS|application_1713583699042_0117|print|false
+2024-05-15 12:15:45,216|14385|mr-hn|INFO|0|application_1713583699042_0117|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 12:16:06,245|35414|mr-hn|INFO|0|application_1713583699042_0117|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 12:16:08,773|37942|mr-hn|TIME|0|application_1713583699042_0117|1|berlin0-10|30.0|3|3|PSI|940|40.0|5|Safe|2.526430643
+2024-05-15 12:16:09,640|38809|mr-hn|INFO|0|application_1713583699042_0117|1|berlin0-10|30.0|3|3|PSI|940|40.0|5|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:16:17,347|46516|mr-hn|TIME|0|application_1713583699042_0117|1|berlin0-10|30.0|3|3|PSI|940|40.0|5|Partial|7.706459718
+2024-05-15 12:16:17,903|47072|mr-hn|INFO|0|application_1713583699042_0117|1|berlin0-10|30.0|3|3|PSI|940|40.0|5|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 6
+2024-05-15 12:16:37,899|14366|PARAMS|application_1713583699042_0118|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:16:37,899|14366|PARAMS|application_1713583699042_0118|sdist|40
+2024-05-15 12:16:37,899|14366|PARAMS|application_1713583699042_0118|epsilon|30
+2024-05-15 12:16:37,899|14366|PARAMS|application_1713583699042_0118|mu|3
+2024-05-15 12:16:37,899|14366|PARAMS|application_1713583699042_0118|delta|3
+2024-05-15 12:16:37,900|14367|PARAMS|application_1713583699042_0118|method|PSI
+2024-05-15 12:16:37,900|14367|PARAMS|application_1713583699042_0118|master|yarn
+2024-05-15 12:16:37,900|14367|PARAMS|application_1713583699042_0118|capacity|50
+2024-05-15 12:16:37,900|14367|PARAMS|application_1713583699042_0118|fraction|0.1
+2024-05-15 12:16:37,900|14367|PARAMS|application_1713583699042_0118|step|6
+2024-05-15 12:16:37,900|14367|PARAMS|application_1713583699042_0118|debug|false
+2024-05-15 12:16:37,900|14367|PARAMS|application_1713583699042_0118|tester|false
+2024-05-15 12:16:37,900|14367|PARAMS|application_1713583699042_0118|saves|false
+2024-05-15 12:16:37,900|14367|PARAMS|application_1713583699042_0118|cached|false
+2024-05-15 12:16:37,901|14368|PARAMS|application_1713583699042_0118|print|false
+2024-05-15 12:16:37,902|14369|mr-hn|INFO|0|application_1713583699042_0118|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 12:17:01,383|37850|mr-hn|INFO|0|application_1713583699042_0118|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 12:17:03,710|40177|mr-hn|TIME|0|application_1713583699042_0118|1|berlin0-10|30.0|3|3|PSI|940|40.0|6|Safe|2.35522999
+2024-05-15 12:17:04,399|40866|mr-hn|INFO|0|application_1713583699042_0118|1|berlin0-10|30.0|3|3|PSI|940|40.0|6|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:17:15,467|51934|mr-hn|TIME|0|application_1713583699042_0118|1|berlin0-10|30.0|3|3|PSI|940|40.0|6|Partial|11.067913542
+2024-05-15 12:17:15,997|52464|mr-hn|INFO|0|application_1713583699042_0118|1|berlin0-10|30.0|3|3|PSI|940|40.0|6|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 7
+2024-05-15 12:17:35,661|13906|PARAMS|application_1713583699042_0119|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:17:35,662|13907|PARAMS|application_1713583699042_0119|sdist|40
+2024-05-15 12:17:35,662|13907|PARAMS|application_1713583699042_0119|epsilon|30
+2024-05-15 12:17:35,662|13907|PARAMS|application_1713583699042_0119|mu|3
+2024-05-15 12:17:35,662|13907|PARAMS|application_1713583699042_0119|delta|3
+2024-05-15 12:17:35,662|13907|PARAMS|application_1713583699042_0119|method|PSI
+2024-05-15 12:17:35,662|13907|PARAMS|application_1713583699042_0119|master|yarn
+2024-05-15 12:17:35,662|13907|PARAMS|application_1713583699042_0119|capacity|50
+2024-05-15 12:17:35,662|13907|PARAMS|application_1713583699042_0119|fraction|0.1
+2024-05-15 12:17:35,662|13907|PARAMS|application_1713583699042_0119|step|7
+2024-05-15 12:17:35,663|13908|PARAMS|application_1713583699042_0119|debug|false
+2024-05-15 12:17:35,663|13908|PARAMS|application_1713583699042_0119|tester|false
+2024-05-15 12:17:35,663|13908|PARAMS|application_1713583699042_0119|saves|false
+2024-05-15 12:17:35,663|13908|PARAMS|application_1713583699042_0119|cached|false
+2024-05-15 12:17:35,663|13908|PARAMS|application_1713583699042_0119|print|false
+2024-05-15 12:17:35,664|13909|mr-hn|INFO|0|application_1713583699042_0119|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 12:17:59,257|37502|mr-hn|INFO|0|application_1713583699042_0119|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 12:18:01,736|39981|mr-hn|TIME|0|application_1713583699042_0119|1|berlin0-10|30.0|3|3|PSI|940|40.0|7|Safe|2.477895134
+2024-05-15 12:18:02,362|40607|mr-hn|INFO|0|application_1713583699042_0119|1|berlin0-10|30.0|3|3|PSI|940|40.0|7|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:18:29,875|68120|mr-hn|TIME|0|application_1713583699042_0119|1|berlin0-10|30.0|3|3|PSI|940|40.0|7|Partial|27.512122141
+2024-05-15 12:18:30,419|68664|mr-hn|INFO|0|application_1713583699042_0119|1|berlin0-10|30.0|3|3|PSI|940|40.0|7|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 1
+2024-05-15 12:18:50,701|14513|PARAMS|application_1713583699042_0120|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:18:50,702|14514|PARAMS|application_1713583699042_0120|sdist|40
+2024-05-15 12:18:50,702|14514|PARAMS|application_1713583699042_0120|epsilon|40
+2024-05-15 12:18:50,702|14514|PARAMS|application_1713583699042_0120|mu|3
+2024-05-15 12:18:50,702|14514|PARAMS|application_1713583699042_0120|delta|3
+2024-05-15 12:18:50,702|14514|PARAMS|application_1713583699042_0120|method|PSI
+2024-05-15 12:18:50,703|14515|PARAMS|application_1713583699042_0120|master|yarn
+2024-05-15 12:18:50,703|14515|PARAMS|application_1713583699042_0120|capacity|50
+2024-05-15 12:18:50,703|14515|PARAMS|application_1713583699042_0120|fraction|0.1
+2024-05-15 12:18:50,703|14515|PARAMS|application_1713583699042_0120|step|1
+2024-05-15 12:18:50,703|14515|PARAMS|application_1713583699042_0120|debug|false
+2024-05-15 12:18:50,703|14515|PARAMS|application_1713583699042_0120|tester|false
+2024-05-15 12:18:50,703|14515|PARAMS|application_1713583699042_0120|saves|false
+2024-05-15 12:18:50,703|14515|PARAMS|application_1713583699042_0120|cached|false
+2024-05-15 12:18:50,704|14516|PARAMS|application_1713583699042_0120|print|false
+2024-05-15 12:18:50,705|14517|mr-hn|INFO|0|application_1713583699042_0120|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 12:19:12,035|35847|mr-hn|INFO|0|application_1713583699042_0120|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:19:32,766|56578|mr-hn|TIME|0|application_1713583699042_0120|1|berlin0-10|40.0|3|3|PSI|949|40.0|1|Safe|20.728936999
+2024-05-15 12:19:33,497|57309|mr-hn|INFO|0|application_1713583699042_0120|1|berlin0-10|40.0|3|3|PSI|949|40.0|1|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[358 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[145 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[58 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:19:49,202|73014|mr-hn|TIME|0|application_1713583699042_0120|1|berlin0-10|40.0|3|3|PSI|949|40.0|1|Partial|15.70426232
+2024-05-15 12:19:49,780|73592|mr-hn|INFO|0|application_1713583699042_0120|1|berlin0-10|40.0|3|3|PSI|949|40.0|1|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[11344 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 2
+2024-05-15 12:20:09,282|13914|PARAMS|application_1713583699042_0121|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:20:09,283|13915|PARAMS|application_1713583699042_0121|sdist|40
+2024-05-15 12:20:09,283|13915|PARAMS|application_1713583699042_0121|epsilon|40
+2024-05-15 12:20:09,283|13915|PARAMS|application_1713583699042_0121|mu|3
+2024-05-15 12:20:09,283|13915|PARAMS|application_1713583699042_0121|delta|3
+2024-05-15 12:20:09,283|13915|PARAMS|application_1713583699042_0121|method|PSI
+2024-05-15 12:20:09,284|13916|PARAMS|application_1713583699042_0121|master|yarn
+2024-05-15 12:20:09,284|13916|PARAMS|application_1713583699042_0121|capacity|50
+2024-05-15 12:20:09,284|13916|PARAMS|application_1713583699042_0121|fraction|0.1
+2024-05-15 12:20:09,284|13916|PARAMS|application_1713583699042_0121|step|2
+2024-05-15 12:20:09,284|13916|PARAMS|application_1713583699042_0121|debug|false
+2024-05-15 12:20:09,284|13916|PARAMS|application_1713583699042_0121|tester|false
+2024-05-15 12:20:09,284|13916|PARAMS|application_1713583699042_0121|saves|false
+2024-05-15 12:20:09,284|13916|PARAMS|application_1713583699042_0121|cached|false
+2024-05-15 12:20:09,285|13917|PARAMS|application_1713583699042_0121|print|false
+2024-05-15 12:20:09,286|13918|mr-hn|INFO|0|application_1713583699042_0121|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 12:20:28,817|33449|mr-hn|INFO|0|application_1713583699042_0121|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:20:47,761|52393|mr-hn|TIME|0|application_1713583699042_0121|1|berlin0-10|40.0|3|3|PSI|949|40.0|2|Safe|18.942443498
+2024-05-15 12:20:48,536|53168|mr-hn|INFO|0|application_1713583699042_0121|1|berlin0-10|40.0|3|3|PSI|949|40.0|2|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[145 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:21:03,027|67659|mr-hn|TIME|0|application_1713583699042_0121|1|berlin0-10|40.0|3|3|PSI|949|40.0|2|Partial|14.490966347
+2024-05-15 12:21:03,571|68203|mr-hn|INFO|0|application_1713583699042_0121|1|berlin0-10|40.0|3|3|PSI|949|40.0|2|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[11344 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 3
+2024-05-15 12:21:23,600|14072|PARAMS|application_1713583699042_0122|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:21:23,601|14073|PARAMS|application_1713583699042_0122|sdist|40
+2024-05-15 12:21:23,601|14073|PARAMS|application_1713583699042_0122|epsilon|40
+2024-05-15 12:21:23,601|14073|PARAMS|application_1713583699042_0122|mu|3
+2024-05-15 12:21:23,601|14073|PARAMS|application_1713583699042_0122|delta|3
+2024-05-15 12:21:23,601|14073|PARAMS|application_1713583699042_0122|method|PSI
+2024-05-15 12:21:23,601|14073|PARAMS|application_1713583699042_0122|master|yarn
+2024-05-15 12:21:23,601|14073|PARAMS|application_1713583699042_0122|capacity|50
+2024-05-15 12:21:23,602|14074|PARAMS|application_1713583699042_0122|fraction|0.1
+2024-05-15 12:21:23,602|14074|PARAMS|application_1713583699042_0122|step|3
+2024-05-15 12:21:23,602|14074|PARAMS|application_1713583699042_0122|debug|false
+2024-05-15 12:21:23,602|14074|PARAMS|application_1713583699042_0122|tester|false
+2024-05-15 12:21:23,602|14074|PARAMS|application_1713583699042_0122|saves|false
+2024-05-15 12:21:23,602|14074|PARAMS|application_1713583699042_0122|cached|false
+2024-05-15 12:21:23,602|14074|PARAMS|application_1713583699042_0122|print|false
+2024-05-15 12:21:23,604|14076|mr-hn|INFO|0|application_1713583699042_0122|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 12:21:45,093|35565|mr-hn|INFO|0|application_1713583699042_0122|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:22:04,420|54892|mr-hn|TIME|0|application_1713583699042_0122|1|berlin0-10|40.0|3|3|PSI|949|40.0|3|Safe|19.325385881
+2024-05-15 12:22:05,278|55750|mr-hn|INFO|0|application_1713583699042_0122|1|berlin0-10|40.0|3|3|PSI|949|40.0|3|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[58 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:22:20,309|70781|mr-hn|TIME|0|application_1713583699042_0122|1|berlin0-10|40.0|3|3|PSI|949|40.0|3|Partial|15.030750188
+2024-05-15 12:22:20,813|71285|mr-hn|INFO|0|application_1713583699042_0122|1|berlin0-10|40.0|3|3|PSI|949|40.0|3|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[11344 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 4
+2024-05-15 12:22:40,768|14226|PARAMS|application_1713583699042_0123|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:22:40,768|14226|PARAMS|application_1713583699042_0123|sdist|40
+2024-05-15 12:22:40,768|14226|PARAMS|application_1713583699042_0123|epsilon|40
+2024-05-15 12:22:40,768|14226|PARAMS|application_1713583699042_0123|mu|3
+2024-05-15 12:22:40,769|14227|PARAMS|application_1713583699042_0123|delta|3
+2024-05-15 12:22:40,769|14227|PARAMS|application_1713583699042_0123|method|PSI
+2024-05-15 12:22:40,769|14227|PARAMS|application_1713583699042_0123|master|yarn
+2024-05-15 12:22:40,769|14227|PARAMS|application_1713583699042_0123|capacity|50
+2024-05-15 12:22:40,769|14227|PARAMS|application_1713583699042_0123|fraction|0.1
+2024-05-15 12:22:40,769|14227|PARAMS|application_1713583699042_0123|step|4
+2024-05-15 12:22:40,770|14228|PARAMS|application_1713583699042_0123|debug|false
+2024-05-15 12:22:40,770|14228|PARAMS|application_1713583699042_0123|tester|false
+2024-05-15 12:22:40,770|14228|PARAMS|application_1713583699042_0123|saves|false
+2024-05-15 12:22:40,770|14228|PARAMS|application_1713583699042_0123|cached|false
+2024-05-15 12:22:40,770|14228|PARAMS|application_1713583699042_0123|print|false
+2024-05-15 12:22:40,772|14230|mr-hn|INFO|0|application_1713583699042_0123|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 12:23:03,659|37117|mr-hn|INFO|0|application_1713583699042_0123|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:23:22,977|56435|mr-hn|TIME|0|application_1713583699042_0123|1|berlin0-10|40.0|3|3|PSI|949|40.0|4|Safe|19.31612127
+2024-05-15 12:23:23,890|57348|mr-hn|INFO|0|application_1713583699042_0123|1|berlin0-10|40.0|3|3|PSI|949|40.0|4|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:23:44,860|78318|mr-hn|TIME|0|application_1713583699042_0123|1|berlin0-10|40.0|3|3|PSI|949|40.0|4|Partial|20.968457035
+2024-05-15 12:23:45,292|78750|mr-hn|INFO|0|application_1713583699042_0123|1|berlin0-10|40.0|3|3|PSI|949|40.0|4|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[11344 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 5
+2024-05-15 12:24:04,853|13847|PARAMS|application_1713583699042_0124|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:24:04,853|13847|PARAMS|application_1713583699042_0124|sdist|40
+2024-05-15 12:24:04,854|13848|PARAMS|application_1713583699042_0124|epsilon|40
+2024-05-15 12:24:04,854|13848|PARAMS|application_1713583699042_0124|mu|3
+2024-05-15 12:24:04,854|13848|PARAMS|application_1713583699042_0124|delta|3
+2024-05-15 12:24:04,854|13848|PARAMS|application_1713583699042_0124|method|PSI
+2024-05-15 12:24:04,854|13848|PARAMS|application_1713583699042_0124|master|yarn
+2024-05-15 12:24:04,854|13848|PARAMS|application_1713583699042_0124|capacity|50
+2024-05-15 12:24:04,854|13848|PARAMS|application_1713583699042_0124|fraction|0.1
+2024-05-15 12:24:04,854|13848|PARAMS|application_1713583699042_0124|step|5
+2024-05-15 12:24:04,855|13849|PARAMS|application_1713583699042_0124|debug|false
+2024-05-15 12:24:04,855|13849|PARAMS|application_1713583699042_0124|tester|false
+2024-05-15 12:24:04,855|13849|PARAMS|application_1713583699042_0124|saves|false
+2024-05-15 12:24:04,855|13849|PARAMS|application_1713583699042_0124|cached|false
+2024-05-15 12:24:04,855|13849|PARAMS|application_1713583699042_0124|print|false
+2024-05-15 12:24:04,856|13850|mr-hn|INFO|0|application_1713583699042_0124|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 12:24:25,701|34695|mr-hn|INFO|0|application_1713583699042_0124|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:24:44,879|53873|mr-hn|TIME|0|application_1713583699042_0124|1|berlin0-10|40.0|3|3|PSI|949|40.0|5|Safe|19.175839664
+2024-05-15 12:24:45,613|54607|mr-hn|INFO|0|application_1713583699042_0124|1|berlin0-10|40.0|3|3|PSI|949|40.0|5|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:25:12,111|81105|mr-hn|TIME|0|application_1713583699042_0124|1|berlin0-10|40.0|3|3|PSI|949|40.0|5|Partial|26.496593511
+2024-05-15 12:25:12,648|81642|mr-hn|INFO|0|application_1713583699042_0124|1|berlin0-10|40.0|3|3|PSI|949|40.0|5|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[11344 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 6
+2024-05-15 12:25:32,160|13942|PARAMS|application_1713583699042_0125|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:25:32,160|13942|PARAMS|application_1713583699042_0125|sdist|40
+2024-05-15 12:25:32,160|13942|PARAMS|application_1713583699042_0125|epsilon|40
+2024-05-15 12:25:32,160|13942|PARAMS|application_1713583699042_0125|mu|3
+2024-05-15 12:25:32,160|13942|PARAMS|application_1713583699042_0125|delta|3
+2024-05-15 12:25:32,161|13943|PARAMS|application_1713583699042_0125|method|PSI
+2024-05-15 12:25:32,161|13943|PARAMS|application_1713583699042_0125|master|yarn
+2024-05-15 12:25:32,161|13943|PARAMS|application_1713583699042_0125|capacity|50
+2024-05-15 12:25:32,161|13943|PARAMS|application_1713583699042_0125|fraction|0.1
+2024-05-15 12:25:32,161|13943|PARAMS|application_1713583699042_0125|step|6
+2024-05-15 12:25:32,161|13943|PARAMS|application_1713583699042_0125|debug|false
+2024-05-15 12:25:32,161|13943|PARAMS|application_1713583699042_0125|tester|false
+2024-05-15 12:25:32,161|13943|PARAMS|application_1713583699042_0125|saves|false
+2024-05-15 12:25:32,162|13944|PARAMS|application_1713583699042_0125|cached|false
+2024-05-15 12:25:32,162|13944|PARAMS|application_1713583699042_0125|print|false
+2024-05-15 12:25:32,163|13945|mr-hn|INFO|0|application_1713583699042_0125|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 12:25:54,036|35818|mr-hn|INFO|0|application_1713583699042_0125|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:26:13,578|55360|mr-hn|TIME|0|application_1713583699042_0125|1|berlin0-10|40.0|3|3|PSI|949|40.0|6|Safe|19.538932284
+2024-05-15 12:26:14,350|56132|mr-hn|INFO|0|application_1713583699042_0125|1|berlin0-10|40.0|3|3|PSI|949|40.0|6|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:26:48,998|90780|mr-hn|TIME|0|application_1713583699042_0125|1|berlin0-10|40.0|3|3|PSI|949|40.0|6|Partial|34.647451781
+2024-05-15 12:26:49,505|91287|mr-hn|INFO|0|application_1713583699042_0125|1|berlin0-10|40.0|3|3|PSI|949|40.0|6|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[11344 records].
+Running... 1
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 7
+2024-05-15 12:27:09,754|14487|PARAMS|application_1713583699042_0126|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:27:09,754|14487|PARAMS|application_1713583699042_0126|sdist|40
+2024-05-15 12:27:09,754|14487|PARAMS|application_1713583699042_0126|epsilon|40
+2024-05-15 12:27:09,754|14487|PARAMS|application_1713583699042_0126|mu|3
+2024-05-15 12:27:09,755|14488|PARAMS|application_1713583699042_0126|delta|3
+2024-05-15 12:27:09,755|14488|PARAMS|application_1713583699042_0126|method|PSI
+2024-05-15 12:27:09,755|14488|PARAMS|application_1713583699042_0126|master|yarn
+2024-05-15 12:27:09,755|14488|PARAMS|application_1713583699042_0126|capacity|50
+2024-05-15 12:27:09,755|14488|PARAMS|application_1713583699042_0126|fraction|0.1
+2024-05-15 12:27:09,755|14488|PARAMS|application_1713583699042_0126|step|7
+2024-05-15 12:27:09,755|14488|PARAMS|application_1713583699042_0126|debug|false
+2024-05-15 12:27:09,756|14489|PARAMS|application_1713583699042_0126|tester|false
+2024-05-15 12:27:09,756|14489|PARAMS|application_1713583699042_0126|saves|false
+2024-05-15 12:27:09,756|14489|PARAMS|application_1713583699042_0126|cached|false
+2024-05-15 12:27:09,756|14489|PARAMS|application_1713583699042_0126|print|false
+2024-05-15 12:27:09,757|14490|mr-hn|INFO|0|application_1713583699042_0126|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 12:27:33,518|38251|mr-hn|INFO|0|application_1713583699042_0126|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:27:53,383|58116|mr-hn|TIME|0|application_1713583699042_0126|1|berlin0-10|40.0|3|3|PSI|949|40.0|7|Safe|19.863963399
+2024-05-15 12:27:54,203|58936|mr-hn|INFO|0|application_1713583699042_0126|1|berlin0-10|40.0|3|3|PSI|949|40.0|7|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:29:34,240|158973|mr-hn|TIME|0|application_1713583699042_0126|1|berlin0-10|40.0|3|3|PSI|949|40.0|7|Partial|100.036839991
+2024-05-15 12:29:34,786|159519|mr-hn|INFO|0|application_1713583699042_0126|1|berlin0-10|40.0|3|3|PSI|949|40.0|7|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[11344 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 1
+2024-05-15 12:29:54,574|14026|PARAMS|application_1713583699042_0127|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:29:54,574|14026|PARAMS|application_1713583699042_0127|sdist|40
+2024-05-15 12:29:54,575|14027|PARAMS|application_1713583699042_0127|epsilon|20
+2024-05-15 12:29:54,575|14027|PARAMS|application_1713583699042_0127|mu|3
+2024-05-15 12:29:54,575|14027|PARAMS|application_1713583699042_0127|delta|3
+2024-05-15 12:29:54,575|14027|PARAMS|application_1713583699042_0127|method|PSI
+2024-05-15 12:29:54,575|14027|PARAMS|application_1713583699042_0127|master|yarn
+2024-05-15 12:29:54,575|14027|PARAMS|application_1713583699042_0127|capacity|50
+2024-05-15 12:29:54,575|14027|PARAMS|application_1713583699042_0127|fraction|0.1
+2024-05-15 12:29:54,575|14027|PARAMS|application_1713583699042_0127|step|1
+2024-05-15 12:29:54,576|14028|PARAMS|application_1713583699042_0127|debug|false
+2024-05-15 12:29:54,576|14028|PARAMS|application_1713583699042_0127|tester|false
+2024-05-15 12:29:54,576|14028|PARAMS|application_1713583699042_0127|saves|false
+2024-05-15 12:29:54,576|14028|PARAMS|application_1713583699042_0127|cached|false
+2024-05-15 12:29:54,576|14028|PARAMS|application_1713583699042_0127|print|false
+2024-05-15 12:29:54,577|14029|mr-hn|INFO|0|application_1713583699042_0127|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 12:30:17,303|36755|mr-hn|INFO|0|application_1713583699042_0127|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 12:30:18,368|37820|mr-hn|TIME|0|application_1713583699042_0127|1|berlin0-10|20.0|3|3|PSI|937|40.0|1|Safe|1.063976822
+2024-05-15 12:30:19,056|38508|mr-hn|INFO|0|application_1713583699042_0127|1|berlin0-10|20.0|3|3|PSI|937|40.0|1|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[361 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[148 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[64 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:30:22,985|42437|mr-hn|TIME|0|application_1713583699042_0127|1|berlin0-10|20.0|3|3|PSI|937|40.0|1|Partial|3.928154956
+2024-05-15 12:30:23,612|43064|mr-hn|INFO|0|application_1713583699042_0127|1|berlin0-10|20.0|3|3|PSI|937|40.0|1|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 2
+2024-05-15 12:30:43,408|14402|PARAMS|application_1713583699042_0128|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:30:43,408|14402|PARAMS|application_1713583699042_0128|sdist|40
+2024-05-15 12:30:43,409|14403|PARAMS|application_1713583699042_0128|epsilon|20
+2024-05-15 12:30:43,409|14403|PARAMS|application_1713583699042_0128|mu|3
+2024-05-15 12:30:43,409|14403|PARAMS|application_1713583699042_0128|delta|3
+2024-05-15 12:30:43,409|14403|PARAMS|application_1713583699042_0128|method|PSI
+2024-05-15 12:30:43,409|14403|PARAMS|application_1713583699042_0128|master|yarn
+2024-05-15 12:30:43,409|14403|PARAMS|application_1713583699042_0128|capacity|50
+2024-05-15 12:30:43,409|14403|PARAMS|application_1713583699042_0128|fraction|0.1
+2024-05-15 12:30:43,409|14403|PARAMS|application_1713583699042_0128|step|2
+2024-05-15 12:30:43,410|14404|PARAMS|application_1713583699042_0128|debug|false
+2024-05-15 12:30:43,410|14404|PARAMS|application_1713583699042_0128|tester|false
+2024-05-15 12:30:43,410|14404|PARAMS|application_1713583699042_0128|saves|false
+2024-05-15 12:30:43,410|14404|PARAMS|application_1713583699042_0128|cached|false
+2024-05-15 12:30:43,410|14404|PARAMS|application_1713583699042_0128|print|false
+2024-05-15 12:30:43,411|14405|mr-hn|INFO|0|application_1713583699042_0128|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 12:31:06,801|37795|mr-hn|INFO|0|application_1713583699042_0128|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 12:31:07,887|38881|mr-hn|TIME|0|application_1713583699042_0128|1|berlin0-10|20.0|3|3|PSI|937|40.0|2|Safe|1.084118419
+2024-05-15 12:31:08,723|39717|mr-hn|INFO|0|application_1713583699042_0128|1|berlin0-10|20.0|3|3|PSI|937|40.0|2|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[148 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:31:11,685|42679|mr-hn|TIME|0|application_1713583699042_0128|1|berlin0-10|20.0|3|3|PSI|937|40.0|2|Partial|2.961516576
+2024-05-15 12:31:12,310|43304|mr-hn|INFO|0|application_1713583699042_0128|1|berlin0-10|20.0|3|3|PSI|937|40.0|2|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 3
+2024-05-15 12:31:31,964|14214|PARAMS|application_1713583699042_0129|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:31:31,964|14214|PARAMS|application_1713583699042_0129|sdist|40
+2024-05-15 12:31:31,965|14215|PARAMS|application_1713583699042_0129|epsilon|20
+2024-05-15 12:31:31,965|14215|PARAMS|application_1713583699042_0129|mu|3
+2024-05-15 12:31:31,965|14215|PARAMS|application_1713583699042_0129|delta|3
+2024-05-15 12:31:31,965|14215|PARAMS|application_1713583699042_0129|method|PSI
+2024-05-15 12:31:31,965|14215|PARAMS|application_1713583699042_0129|master|yarn
+2024-05-15 12:31:31,965|14215|PARAMS|application_1713583699042_0129|capacity|50
+2024-05-15 12:31:31,965|14215|PARAMS|application_1713583699042_0129|fraction|0.1
+2024-05-15 12:31:31,966|14216|PARAMS|application_1713583699042_0129|step|3
+2024-05-15 12:31:31,966|14216|PARAMS|application_1713583699042_0129|debug|false
+2024-05-15 12:31:31,966|14216|PARAMS|application_1713583699042_0129|tester|false
+2024-05-15 12:31:31,966|14216|PARAMS|application_1713583699042_0129|saves|false
+2024-05-15 12:31:31,966|14216|PARAMS|application_1713583699042_0129|cached|false
+2024-05-15 12:31:31,966|14216|PARAMS|application_1713583699042_0129|print|false
+2024-05-15 12:31:31,969|14219|mr-hn|INFO|0|application_1713583699042_0129|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 12:31:53,537|35787|mr-hn|INFO|0|application_1713583699042_0129|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 12:31:54,770|37020|mr-hn|TIME|0|application_1713583699042_0129|1|berlin0-10|20.0|3|3|PSI|937|40.0|3|Safe|1.231682688
+2024-05-15 12:31:55,593|37843|mr-hn|INFO|0|application_1713583699042_0129|1|berlin0-10|20.0|3|3|PSI|937|40.0|3|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[64 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:31:58,152|40402|mr-hn|TIME|0|application_1713583699042_0129|1|berlin0-10|20.0|3|3|PSI|937|40.0|3|Partial|2.558649627
+2024-05-15 12:31:58,724|40974|mr-hn|INFO|0|application_1713583699042_0129|1|berlin0-10|20.0|3|3|PSI|937|40.0|3|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 4
+2024-05-15 12:32:18,199|14099|PARAMS|application_1713583699042_0130|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:32:18,200|14100|PARAMS|application_1713583699042_0130|sdist|40
+2024-05-15 12:32:18,200|14100|PARAMS|application_1713583699042_0130|epsilon|20
+2024-05-15 12:32:18,200|14100|PARAMS|application_1713583699042_0130|mu|3
+2024-05-15 12:32:18,200|14100|PARAMS|application_1713583699042_0130|delta|3
+2024-05-15 12:32:18,201|14101|PARAMS|application_1713583699042_0130|method|PSI
+2024-05-15 12:32:18,201|14101|PARAMS|application_1713583699042_0130|master|yarn
+2024-05-15 12:32:18,201|14101|PARAMS|application_1713583699042_0130|capacity|50
+2024-05-15 12:32:18,201|14101|PARAMS|application_1713583699042_0130|fraction|0.1
+2024-05-15 12:32:18,201|14101|PARAMS|application_1713583699042_0130|step|4
+2024-05-15 12:32:18,201|14101|PARAMS|application_1713583699042_0130|debug|false
+2024-05-15 12:32:18,201|14101|PARAMS|application_1713583699042_0130|tester|false
+2024-05-15 12:32:18,201|14101|PARAMS|application_1713583699042_0130|saves|false
+2024-05-15 12:32:18,201|14101|PARAMS|application_1713583699042_0130|cached|false
+2024-05-15 12:32:18,202|14102|PARAMS|application_1713583699042_0130|print|false
+2024-05-15 12:32:18,203|14103|mr-hn|INFO|0|application_1713583699042_0130|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 12:32:41,118|37018|mr-hn|INFO|0|application_1713583699042_0130|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 12:32:42,140|38040|mr-hn|TIME|0|application_1713583699042_0130|1|berlin0-10|20.0|3|3|PSI|937|40.0|4|Safe|1.020266497
+2024-05-15 12:32:42,824|38724|mr-hn|INFO|0|application_1713583699042_0130|1|berlin0-10|20.0|3|3|PSI|937|40.0|4|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.04s	[1 records].
+2024-05-15 12:32:45,412|41312|mr-hn|TIME|0|application_1713583699042_0130|1|berlin0-10|20.0|3|3|PSI|937|40.0|4|Partial|2.587077676
+2024-05-15 12:32:45,941|41841|mr-hn|INFO|0|application_1713583699042_0130|1|berlin0-10|20.0|3|3|PSI|937|40.0|4|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 5
+2024-05-15 12:33:06,244|14719|PARAMS|application_1713583699042_0131|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:33:06,245|14720|PARAMS|application_1713583699042_0131|sdist|40
+2024-05-15 12:33:06,245|14720|PARAMS|application_1713583699042_0131|epsilon|20
+2024-05-15 12:33:06,245|14720|PARAMS|application_1713583699042_0131|mu|3
+2024-05-15 12:33:06,245|14720|PARAMS|application_1713583699042_0131|delta|3
+2024-05-15 12:33:06,245|14720|PARAMS|application_1713583699042_0131|method|PSI
+2024-05-15 12:33:06,245|14720|PARAMS|application_1713583699042_0131|master|yarn
+2024-05-15 12:33:06,245|14720|PARAMS|application_1713583699042_0131|capacity|50
+2024-05-15 12:33:06,246|14721|PARAMS|application_1713583699042_0131|fraction|0.1
+2024-05-15 12:33:06,246|14721|PARAMS|application_1713583699042_0131|step|5
+2024-05-15 12:33:06,246|14721|PARAMS|application_1713583699042_0131|debug|false
+2024-05-15 12:33:06,246|14721|PARAMS|application_1713583699042_0131|tester|false
+2024-05-15 12:33:06,246|14721|PARAMS|application_1713583699042_0131|saves|false
+2024-05-15 12:33:06,246|14721|PARAMS|application_1713583699042_0131|cached|false
+2024-05-15 12:33:06,246|14721|PARAMS|application_1713583699042_0131|print|false
+2024-05-15 12:33:06,248|14723|mr-hn|INFO|0|application_1713583699042_0131|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 12:33:28,126|36601|mr-hn|INFO|0|application_1713583699042_0131|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 12:33:29,278|37753|mr-hn|TIME|0|application_1713583699042_0131|1|berlin0-10|20.0|3|3|PSI|937|40.0|5|Safe|1.150064264
+2024-05-15 12:33:30,025|38500|mr-hn|INFO|0|application_1713583699042_0131|1|berlin0-10|20.0|3|3|PSI|937|40.0|5|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:33:33,524|41999|mr-hn|TIME|0|application_1713583699042_0131|1|berlin0-10|20.0|3|3|PSI|937|40.0|5|Partial|3.497295038
+2024-05-15 12:33:34,829|43304|mr-hn|INFO|0|application_1713583699042_0131|1|berlin0-10|20.0|3|3|PSI|937|40.0|5|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 6
+2024-05-15 12:33:54,359|14114|PARAMS|application_1713583699042_0132|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:33:54,359|14114|PARAMS|application_1713583699042_0132|sdist|40
+2024-05-15 12:33:54,359|14114|PARAMS|application_1713583699042_0132|epsilon|20
+2024-05-15 12:33:54,360|14115|PARAMS|application_1713583699042_0132|mu|3
+2024-05-15 12:33:54,360|14115|PARAMS|application_1713583699042_0132|delta|3
+2024-05-15 12:33:54,360|14115|PARAMS|application_1713583699042_0132|method|PSI
+2024-05-15 12:33:54,360|14115|PARAMS|application_1713583699042_0132|master|yarn
+2024-05-15 12:33:54,360|14115|PARAMS|application_1713583699042_0132|capacity|50
+2024-05-15 12:33:54,360|14115|PARAMS|application_1713583699042_0132|fraction|0.1
+2024-05-15 12:33:54,361|14116|PARAMS|application_1713583699042_0132|step|6
+2024-05-15 12:33:54,361|14116|PARAMS|application_1713583699042_0132|debug|false
+2024-05-15 12:33:54,361|14116|PARAMS|application_1713583699042_0132|tester|false
+2024-05-15 12:33:54,361|14116|PARAMS|application_1713583699042_0132|saves|false
+2024-05-15 12:33:54,361|14116|PARAMS|application_1713583699042_0132|cached|false
+2024-05-15 12:33:54,361|14116|PARAMS|application_1713583699042_0132|print|false
+2024-05-15 12:33:54,362|14117|mr-hn|INFO|0|application_1713583699042_0132|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 12:34:15,389|35144|mr-hn|INFO|0|application_1713583699042_0132|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 12:34:16,735|36490|mr-hn|TIME|0|application_1713583699042_0132|1|berlin0-10|20.0|3|3|PSI|937|40.0|6|Safe|1.344760554
+2024-05-15 12:34:17,562|37317|mr-hn|INFO|0|application_1713583699042_0132|1|berlin0-10|20.0|3|3|PSI|937|40.0|6|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:34:21,053|40808|mr-hn|TIME|0|application_1713583699042_0132|1|berlin0-10|20.0|3|3|PSI|937|40.0|6|Partial|3.48993377
+2024-05-15 12:34:21,722|41477|mr-hn|INFO|0|application_1713583699042_0132|1|berlin0-10|20.0|3|3|PSI|937|40.0|6|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[2953 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 7
+2024-05-15 12:34:41,305|14079|PARAMS|application_1713583699042_0133|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:34:41,306|14080|PARAMS|application_1713583699042_0133|sdist|40
+2024-05-15 12:34:41,306|14080|PARAMS|application_1713583699042_0133|epsilon|20
+2024-05-15 12:34:41,306|14080|PARAMS|application_1713583699042_0133|mu|3
+2024-05-15 12:34:41,306|14080|PARAMS|application_1713583699042_0133|delta|3
+2024-05-15 12:34:41,306|14080|PARAMS|application_1713583699042_0133|method|PSI
+2024-05-15 12:34:41,306|14080|PARAMS|application_1713583699042_0133|master|yarn
+2024-05-15 12:34:41,306|14080|PARAMS|application_1713583699042_0133|capacity|50
+2024-05-15 12:34:41,307|14081|PARAMS|application_1713583699042_0133|fraction|0.1
+2024-05-15 12:34:41,307|14081|PARAMS|application_1713583699042_0133|step|7
+2024-05-15 12:34:41,307|14081|PARAMS|application_1713583699042_0133|debug|false
+2024-05-15 12:34:41,307|14081|PARAMS|application_1713583699042_0133|tester|false
+2024-05-15 12:34:41,307|14081|PARAMS|application_1713583699042_0133|saves|false
+2024-05-15 12:34:41,307|14081|PARAMS|application_1713583699042_0133|cached|false
+2024-05-15 12:34:41,307|14081|PARAMS|application_1713583699042_0133|print|false
+2024-05-15 12:34:41,309|14083|mr-hn|INFO|0|application_1713583699042_0133|1|berlin0-10|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[937 records].
+2024-05-15 12:35:02,552|35326|mr-hn|INFO|0|application_1713583699042_0133|1|berlin0-10|20.0|3|3|PSI|Number of trajectories: 234278
+2024-05-15 12:35:03,683|36457|mr-hn|TIME|0|application_1713583699042_0133|1|berlin0-10|20.0|3|3|PSI|937|40.0|7|Safe|1.128907316
+2024-05-15 12:35:04,416|37190|mr-hn|INFO|0|application_1713583699042_0133|1|berlin0-10|20.0|3|3|PSI|937|40.0|7|Safe|1849
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:35:11,373|44147|mr-hn|TIME|0|application_1713583699042_0133|1|berlin0-10|20.0|3|3|PSI|937|40.0|7|Partial|6.956947154
+2024-05-15 12:35:12,022|44796|mr-hn|INFO|0|application_1713583699042_0133|1|berlin0-10|20.0|3|3|PSI|937|40.0|7|Partial|1630
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[2953 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 1
+2024-05-15 12:35:31,668|14194|PARAMS|application_1713583699042_0134|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:35:31,669|14195|PARAMS|application_1713583699042_0134|sdist|40
+2024-05-15 12:35:31,669|14195|PARAMS|application_1713583699042_0134|epsilon|30
+2024-05-15 12:35:31,669|14195|PARAMS|application_1713583699042_0134|mu|3
+2024-05-15 12:35:31,670|14196|PARAMS|application_1713583699042_0134|delta|3
+2024-05-15 12:35:31,670|14196|PARAMS|application_1713583699042_0134|method|PSI
+2024-05-15 12:35:31,670|14196|PARAMS|application_1713583699042_0134|master|yarn
+2024-05-15 12:35:31,670|14196|PARAMS|application_1713583699042_0134|capacity|50
+2024-05-15 12:35:31,670|14196|PARAMS|application_1713583699042_0134|fraction|0.1
+2024-05-15 12:35:31,670|14196|PARAMS|application_1713583699042_0134|step|1
+2024-05-15 12:35:31,670|14196|PARAMS|application_1713583699042_0134|debug|false
+2024-05-15 12:35:31,670|14196|PARAMS|application_1713583699042_0134|tester|false
+2024-05-15 12:35:31,671|14197|PARAMS|application_1713583699042_0134|saves|false
+2024-05-15 12:35:31,671|14197|PARAMS|application_1713583699042_0134|cached|false
+2024-05-15 12:35:31,671|14197|PARAMS|application_1713583699042_0134|print|false
+2024-05-15 12:35:31,672|14198|mr-hn|INFO|0|application_1713583699042_0134|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 12:35:54,874|37400|mr-hn|INFO|0|application_1713583699042_0134|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 12:35:57,268|39794|mr-hn|TIME|0|application_1713583699042_0134|1|berlin0-10|30.0|3|3|PSI|940|40.0|1|Safe|2.392411769
+2024-05-15 12:35:58,037|40563|mr-hn|INFO|0|application_1713583699042_0134|1|berlin0-10|30.0|3|3|PSI|940|40.0|1|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[358 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[145 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[61 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:36:04,568|47094|mr-hn|TIME|0|application_1713583699042_0134|1|berlin0-10|30.0|3|3|PSI|940|40.0|1|Partial|6.529848664
+2024-05-15 12:36:05,323|47849|mr-hn|INFO|0|application_1713583699042_0134|1|berlin0-10|30.0|3|3|PSI|940|40.0|1|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 2
+2024-05-15 12:36:24,473|13567|PARAMS|application_1713583699042_0135|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:36:24,474|13568|PARAMS|application_1713583699042_0135|sdist|40
+2024-05-15 12:36:24,474|13568|PARAMS|application_1713583699042_0135|epsilon|30
+2024-05-15 12:36:24,474|13568|PARAMS|application_1713583699042_0135|mu|3
+2024-05-15 12:36:24,474|13568|PARAMS|application_1713583699042_0135|delta|3
+2024-05-15 12:36:24,474|13568|PARAMS|application_1713583699042_0135|method|PSI
+2024-05-15 12:36:24,475|13569|PARAMS|application_1713583699042_0135|master|yarn
+2024-05-15 12:36:24,475|13569|PARAMS|application_1713583699042_0135|capacity|50
+2024-05-15 12:36:24,475|13569|PARAMS|application_1713583699042_0135|fraction|0.1
+2024-05-15 12:36:24,475|13569|PARAMS|application_1713583699042_0135|step|2
+2024-05-15 12:36:24,475|13569|PARAMS|application_1713583699042_0135|debug|false
+2024-05-15 12:36:24,475|13569|PARAMS|application_1713583699042_0135|tester|false
+2024-05-15 12:36:24,475|13569|PARAMS|application_1713583699042_0135|saves|false
+2024-05-15 12:36:24,475|13569|PARAMS|application_1713583699042_0135|cached|false
+2024-05-15 12:36:24,476|13570|PARAMS|application_1713583699042_0135|print|false
+2024-05-15 12:36:24,477|13571|mr-hn|INFO|0|application_1713583699042_0135|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 12:36:47,777|36871|mr-hn|INFO|0|application_1713583699042_0135|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 12:36:50,082|39176|mr-hn|TIME|0|application_1713583699042_0135|1|berlin0-10|30.0|3|3|PSI|940|40.0|2|Safe|2.30336069
+2024-05-15 12:36:50,858|39952|mr-hn|INFO|0|application_1713583699042_0135|1|berlin0-10|30.0|3|3|PSI|940|40.0|2|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[145 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:36:56,137|45231|mr-hn|TIME|0|application_1713583699042_0135|1|berlin0-10|30.0|3|3|PSI|940|40.0|2|Partial|5.278066751
+2024-05-15 12:36:56,655|45749|mr-hn|INFO|0|application_1713583699042_0135|1|berlin0-10|30.0|3|3|PSI|940|40.0|2|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 3
+2024-05-15 12:37:16,861|14522|PARAMS|application_1713583699042_0136|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:37:16,862|14523|PARAMS|application_1713583699042_0136|sdist|40
+2024-05-15 12:37:16,862|14523|PARAMS|application_1713583699042_0136|epsilon|30
+2024-05-15 12:37:16,862|14523|PARAMS|application_1713583699042_0136|mu|3
+2024-05-15 12:37:16,862|14523|PARAMS|application_1713583699042_0136|delta|3
+2024-05-15 12:37:16,862|14523|PARAMS|application_1713583699042_0136|method|PSI
+2024-05-15 12:37:16,862|14523|PARAMS|application_1713583699042_0136|master|yarn
+2024-05-15 12:37:16,862|14523|PARAMS|application_1713583699042_0136|capacity|50
+2024-05-15 12:37:16,862|14523|PARAMS|application_1713583699042_0136|fraction|0.1
+2024-05-15 12:37:16,863|14524|PARAMS|application_1713583699042_0136|step|3
+2024-05-15 12:37:16,863|14524|PARAMS|application_1713583699042_0136|debug|false
+2024-05-15 12:37:16,863|14524|PARAMS|application_1713583699042_0136|tester|false
+2024-05-15 12:37:16,863|14524|PARAMS|application_1713583699042_0136|saves|false
+2024-05-15 12:37:16,863|14524|PARAMS|application_1713583699042_0136|cached|false
+2024-05-15 12:37:16,863|14524|PARAMS|application_1713583699042_0136|print|false
+2024-05-15 12:37:16,865|14526|mr-hn|INFO|0|application_1713583699042_0136|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 12:37:38,320|35981|mr-hn|INFO|0|application_1713583699042_0136|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 12:37:40,846|38507|mr-hn|TIME|0|application_1713583699042_0136|1|berlin0-10|30.0|3|3|PSI|940|40.0|3|Safe|2.52454445
+2024-05-15 12:37:41,673|39334|mr-hn|INFO|0|application_1713583699042_0136|1|berlin0-10|30.0|3|3|PSI|940|40.0|3|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[61 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:37:46,772|44433|mr-hn|TIME|0|application_1713583699042_0136|1|berlin0-10|30.0|3|3|PSI|940|40.0|3|Partial|5.098743709
+2024-05-15 12:37:47,328|44989|mr-hn|INFO|0|application_1713583699042_0136|1|berlin0-10|30.0|3|3|PSI|940|40.0|3|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 4
+2024-05-15 12:38:07,564|14369|PARAMS|application_1713583699042_0137|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:38:07,565|14370|PARAMS|application_1713583699042_0137|sdist|40
+2024-05-15 12:38:07,565|14370|PARAMS|application_1713583699042_0137|epsilon|30
+2024-05-15 12:38:07,565|14370|PARAMS|application_1713583699042_0137|mu|3
+2024-05-15 12:38:07,565|14370|PARAMS|application_1713583699042_0137|delta|3
+2024-05-15 12:38:07,565|14370|PARAMS|application_1713583699042_0137|method|PSI
+2024-05-15 12:38:07,565|14370|PARAMS|application_1713583699042_0137|master|yarn
+2024-05-15 12:38:07,565|14370|PARAMS|application_1713583699042_0137|capacity|50
+2024-05-15 12:38:07,566|14371|PARAMS|application_1713583699042_0137|fraction|0.1
+2024-05-15 12:38:07,566|14371|PARAMS|application_1713583699042_0137|step|4
+2024-05-15 12:38:07,566|14371|PARAMS|application_1713583699042_0137|debug|false
+2024-05-15 12:38:07,566|14371|PARAMS|application_1713583699042_0137|tester|false
+2024-05-15 12:38:07,566|14371|PARAMS|application_1713583699042_0137|saves|false
+2024-05-15 12:38:07,566|14371|PARAMS|application_1713583699042_0137|cached|false
+2024-05-15 12:38:07,566|14371|PARAMS|application_1713583699042_0137|print|false
+2024-05-15 12:38:07,567|14372|mr-hn|INFO|0|application_1713583699042_0137|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 12:38:30,312|37117|mr-hn|INFO|0|application_1713583699042_0137|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 12:38:32,806|39611|mr-hn|TIME|0|application_1713583699042_0137|1|berlin0-10|30.0|3|3|PSI|940|40.0|4|Safe|2.492290402
+2024-05-15 12:38:33,560|40365|mr-hn|INFO|0|application_1713583699042_0137|1|berlin0-10|30.0|3|3|PSI|940|40.0|4|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:38:40,053|46858|mr-hn|TIME|0|application_1713583699042_0137|1|berlin0-10|30.0|3|3|PSI|940|40.0|4|Partial|6.492638276
+2024-05-15 12:38:40,558|47363|mr-hn|INFO|0|application_1713583699042_0137|1|berlin0-10|30.0|3|3|PSI|940|40.0|4|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 5
+2024-05-15 12:38:59,995|13696|PARAMS|application_1713583699042_0138|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:38:59,995|13696|PARAMS|application_1713583699042_0138|sdist|40
+2024-05-15 12:38:59,995|13696|PARAMS|application_1713583699042_0138|epsilon|30
+2024-05-15 12:38:59,996|13697|PARAMS|application_1713583699042_0138|mu|3
+2024-05-15 12:38:59,996|13697|PARAMS|application_1713583699042_0138|delta|3
+2024-05-15 12:38:59,996|13697|PARAMS|application_1713583699042_0138|method|PSI
+2024-05-15 12:38:59,996|13697|PARAMS|application_1713583699042_0138|master|yarn
+2024-05-15 12:38:59,996|13697|PARAMS|application_1713583699042_0138|capacity|50
+2024-05-15 12:38:59,996|13697|PARAMS|application_1713583699042_0138|fraction|0.1
+2024-05-15 12:38:59,996|13697|PARAMS|application_1713583699042_0138|step|5
+2024-05-15 12:38:59,996|13697|PARAMS|application_1713583699042_0138|debug|false
+2024-05-15 12:38:59,997|13698|PARAMS|application_1713583699042_0138|tester|false
+2024-05-15 12:38:59,997|13698|PARAMS|application_1713583699042_0138|saves|false
+2024-05-15 12:38:59,997|13698|PARAMS|application_1713583699042_0138|cached|false
+2024-05-15 12:38:59,997|13698|PARAMS|application_1713583699042_0138|print|false
+2024-05-15 12:38:59,998|13699|mr-hn|INFO|0|application_1713583699042_0138|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 12:39:22,817|36518|mr-hn|INFO|0|application_1713583699042_0138|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 12:39:25,237|38938|mr-hn|TIME|0|application_1713583699042_0138|1|berlin0-10|30.0|3|3|PSI|940|40.0|5|Safe|2.418164424
+2024-05-15 12:39:26,049|39750|mr-hn|INFO|0|application_1713583699042_0138|1|berlin0-10|30.0|3|3|PSI|940|40.0|5|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:39:34,709|48410|mr-hn|TIME|0|application_1713583699042_0138|1|berlin0-10|30.0|3|3|PSI|940|40.0|5|Partial|8.659523242
+2024-05-15 12:39:35,358|49059|mr-hn|INFO|0|application_1713583699042_0138|1|berlin0-10|30.0|3|3|PSI|940|40.0|5|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 6
+2024-05-15 12:39:55,455|14351|PARAMS|application_1713583699042_0139|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:39:55,456|14352|PARAMS|application_1713583699042_0139|sdist|40
+2024-05-15 12:39:55,456|14352|PARAMS|application_1713583699042_0139|epsilon|30
+2024-05-15 12:39:55,456|14352|PARAMS|application_1713583699042_0139|mu|3
+2024-05-15 12:39:55,456|14352|PARAMS|application_1713583699042_0139|delta|3
+2024-05-15 12:39:55,456|14352|PARAMS|application_1713583699042_0139|method|PSI
+2024-05-15 12:39:55,456|14352|PARAMS|application_1713583699042_0139|master|yarn
+2024-05-15 12:39:55,456|14352|PARAMS|application_1713583699042_0139|capacity|50
+2024-05-15 12:39:55,457|14353|PARAMS|application_1713583699042_0139|fraction|0.1
+2024-05-15 12:39:55,457|14353|PARAMS|application_1713583699042_0139|step|6
+2024-05-15 12:39:55,457|14353|PARAMS|application_1713583699042_0139|debug|false
+2024-05-15 12:39:55,457|14353|PARAMS|application_1713583699042_0139|tester|false
+2024-05-15 12:39:55,457|14353|PARAMS|application_1713583699042_0139|saves|false
+2024-05-15 12:39:55,457|14353|PARAMS|application_1713583699042_0139|cached|false
+2024-05-15 12:39:55,457|14353|PARAMS|application_1713583699042_0139|print|false
+2024-05-15 12:39:55,459|14355|mr-hn|INFO|0|application_1713583699042_0139|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 12:40:18,223|37119|mr-hn|INFO|0|application_1713583699042_0139|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 12:40:20,411|39307|mr-hn|TIME|0|application_1713583699042_0139|1|berlin0-10|30.0|3|3|PSI|940|40.0|6|Safe|2.186508234
+2024-05-15 12:40:21,107|40003|mr-hn|INFO|0|application_1713583699042_0139|1|berlin0-10|30.0|3|3|PSI|940|40.0|6|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:40:31,492|50388|mr-hn|TIME|0|application_1713583699042_0139|1|berlin0-10|30.0|3|3|PSI|940|40.0|6|Partial|10.384398801
+2024-05-15 12:40:32,158|51054|mr-hn|INFO|0|application_1713583699042_0139|1|berlin0-10|30.0|3|3|PSI|940|40.0|6|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 30 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 7
+2024-05-15 12:40:51,775|13874|PARAMS|application_1713583699042_0140|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:40:51,775|13874|PARAMS|application_1713583699042_0140|sdist|40
+2024-05-15 12:40:51,775|13874|PARAMS|application_1713583699042_0140|epsilon|30
+2024-05-15 12:40:51,776|13875|PARAMS|application_1713583699042_0140|mu|3
+2024-05-15 12:40:51,776|13875|PARAMS|application_1713583699042_0140|delta|3
+2024-05-15 12:40:51,776|13875|PARAMS|application_1713583699042_0140|method|PSI
+2024-05-15 12:40:51,776|13875|PARAMS|application_1713583699042_0140|master|yarn
+2024-05-15 12:40:51,776|13875|PARAMS|application_1713583699042_0140|capacity|50
+2024-05-15 12:40:51,776|13875|PARAMS|application_1713583699042_0140|fraction|0.1
+2024-05-15 12:40:51,776|13875|PARAMS|application_1713583699042_0140|step|7
+2024-05-15 12:40:51,777|13876|PARAMS|application_1713583699042_0140|debug|false
+2024-05-15 12:40:51,777|13876|PARAMS|application_1713583699042_0140|tester|false
+2024-05-15 12:40:51,777|13876|PARAMS|application_1713583699042_0140|saves|false
+2024-05-15 12:40:51,777|13876|PARAMS|application_1713583699042_0140|cached|false
+2024-05-15 12:40:51,777|13876|PARAMS|application_1713583699042_0140|print|false
+2024-05-15 12:40:51,778|13877|mr-hn|INFO|0|application_1713583699042_0140|1|berlin0-10|30.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[940 records].
+2024-05-15 12:41:11,215|33314|mr-hn|INFO|0|application_1713583699042_0140|1|berlin0-10|30.0|3|3|PSI|Number of trajectories: 250837
+2024-05-15 12:41:13,558|35657|mr-hn|TIME|0|application_1713583699042_0140|1|berlin0-10|30.0|3|3|PSI|940|40.0|7|Safe|2.341427268
+2024-05-15 12:41:14,329|36428|mr-hn|INFO|0|application_1713583699042_0140|1|berlin0-10|30.0|3|3|PSI|940|40.0|7|Safe|4099
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:41:44,116|66215|mr-hn|TIME|0|application_1713583699042_0140|1|berlin0-10|30.0|3|3|PSI|940|40.0|7|Partial|29.786574779
+2024-05-15 12:41:44,674|66773|mr-hn|INFO|0|application_1713583699042_0140|1|berlin0-10|30.0|3|3|PSI|940|40.0|7|Partial|3541
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[6550 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 1
+2024-05-15 12:42:04,020|13726|PARAMS|application_1713583699042_0141|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:42:04,020|13726|PARAMS|application_1713583699042_0141|sdist|40
+2024-05-15 12:42:04,021|13727|PARAMS|application_1713583699042_0141|epsilon|40
+2024-05-15 12:42:04,021|13727|PARAMS|application_1713583699042_0141|mu|3
+2024-05-15 12:42:04,021|13727|PARAMS|application_1713583699042_0141|delta|3
+2024-05-15 12:42:04,021|13727|PARAMS|application_1713583699042_0141|method|PSI
+2024-05-15 12:42:04,021|13727|PARAMS|application_1713583699042_0141|master|yarn
+2024-05-15 12:42:04,021|13727|PARAMS|application_1713583699042_0141|capacity|50
+2024-05-15 12:42:04,021|13727|PARAMS|application_1713583699042_0141|fraction|0.1
+2024-05-15 12:42:04,021|13727|PARAMS|application_1713583699042_0141|step|1
+2024-05-15 12:42:04,022|13728|PARAMS|application_1713583699042_0141|debug|false
+2024-05-15 12:42:04,022|13728|PARAMS|application_1713583699042_0141|tester|false
+2024-05-15 12:42:04,022|13728|PARAMS|application_1713583699042_0141|saves|false
+2024-05-15 12:42:04,022|13728|PARAMS|application_1713583699042_0141|cached|false
+2024-05-15 12:42:04,022|13728|PARAMS|application_1713583699042_0141|print|false
+2024-05-15 12:42:04,023|13729|mr-hn|INFO|0|application_1713583699042_0141|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 12:42:25,593|35299|mr-hn|INFO|0|application_1713583699042_0141|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:42:44,458|54164|mr-hn|TIME|0|application_1713583699042_0141|1|berlin0-10|40.0|3|3|PSI|949|40.0|1|Safe|18.862426145
+2024-05-15 12:42:45,300|55006|mr-hn|INFO|0|application_1713583699042_0141|1|berlin0-10|40.0|3|3|PSI|949|40.0|1|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[358 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[145 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[58 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:43:00,696|70402|mr-hn|TIME|0|application_1713583699042_0141|1|berlin0-10|40.0|3|3|PSI|949|40.0|1|Partial|15.394638515
+2024-05-15 12:43:01,409|71115|mr-hn|INFO|0|application_1713583699042_0141|1|berlin0-10|40.0|3|3|PSI|949|40.0|1|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[11344 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 2
+2024-05-15 12:43:21,311|14049|PARAMS|application_1713583699042_0142|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:43:21,312|14050|PARAMS|application_1713583699042_0142|sdist|40
+2024-05-15 12:43:21,312|14050|PARAMS|application_1713583699042_0142|epsilon|40
+2024-05-15 12:43:21,312|14050|PARAMS|application_1713583699042_0142|mu|3
+2024-05-15 12:43:21,312|14050|PARAMS|application_1713583699042_0142|delta|3
+2024-05-15 12:43:21,312|14050|PARAMS|application_1713583699042_0142|method|PSI
+2024-05-15 12:43:21,313|14051|PARAMS|application_1713583699042_0142|master|yarn
+2024-05-15 12:43:21,313|14051|PARAMS|application_1713583699042_0142|capacity|50
+2024-05-15 12:43:21,313|14051|PARAMS|application_1713583699042_0142|fraction|0.1
+2024-05-15 12:43:21,313|14051|PARAMS|application_1713583699042_0142|step|2
+2024-05-15 12:43:21,313|14051|PARAMS|application_1713583699042_0142|debug|false
+2024-05-15 12:43:21,313|14051|PARAMS|application_1713583699042_0142|tester|false
+2024-05-15 12:43:21,313|14051|PARAMS|application_1713583699042_0142|saves|false
+2024-05-15 12:43:21,313|14051|PARAMS|application_1713583699042_0142|cached|false
+2024-05-15 12:43:21,314|14052|PARAMS|application_1713583699042_0142|print|false
+2024-05-15 12:43:21,315|14053|mr-hn|INFO|0|application_1713583699042_0142|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 12:43:43,057|35795|mr-hn|INFO|0|application_1713583699042_0142|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:44:02,972|55710|mr-hn|TIME|0|application_1713583699042_0142|1|berlin0-10|40.0|3|3|PSI|949|40.0|2|Safe|19.913270524
+2024-05-15 12:44:03,810|56548|mr-hn|INFO|0|application_1713583699042_0142|1|berlin0-10|40.0|3|3|PSI|949|40.0|2|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[145 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:44:17,856|70594|mr-hn|TIME|0|application_1713583699042_0142|1|berlin0-10|40.0|3|3|PSI|949|40.0|2|Partial|14.045224032
+2024-05-15 12:44:18,403|71141|mr-hn|INFO|0|application_1713583699042_0142|1|berlin0-10|40.0|3|3|PSI|949|40.0|2|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.02s	[11344 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 3
+2024-05-15 12:44:38,844|14242|PARAMS|application_1713583699042_0143|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:44:38,845|14243|PARAMS|application_1713583699042_0143|sdist|40
+2024-05-15 12:44:38,845|14243|PARAMS|application_1713583699042_0143|epsilon|40
+2024-05-15 12:44:38,845|14243|PARAMS|application_1713583699042_0143|mu|3
+2024-05-15 12:44:38,845|14243|PARAMS|application_1713583699042_0143|delta|3
+2024-05-15 12:44:38,846|14244|PARAMS|application_1713583699042_0143|method|PSI
+2024-05-15 12:44:38,846|14244|PARAMS|application_1713583699042_0143|master|yarn
+2024-05-15 12:44:38,846|14244|PARAMS|application_1713583699042_0143|capacity|50
+2024-05-15 12:44:38,846|14244|PARAMS|application_1713583699042_0143|fraction|0.1
+2024-05-15 12:44:38,846|14244|PARAMS|application_1713583699042_0143|step|3
+2024-05-15 12:44:38,846|14244|PARAMS|application_1713583699042_0143|debug|false
+2024-05-15 12:44:38,846|14244|PARAMS|application_1713583699042_0143|tester|false
+2024-05-15 12:44:38,847|14245|PARAMS|application_1713583699042_0143|saves|false
+2024-05-15 12:44:38,847|14245|PARAMS|application_1713583699042_0143|cached|false
+2024-05-15 12:44:38,847|14245|PARAMS|application_1713583699042_0143|print|false
+2024-05-15 12:44:38,848|14246|mr-hn|INFO|0|application_1713583699042_0143|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 12:45:00,094|35492|mr-hn|INFO|0|application_1713583699042_0143|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:45:18,884|54282|mr-hn|TIME|0|application_1713583699042_0143|1|berlin0-10|40.0|3|3|PSI|949|40.0|3|Safe|18.789112246
+2024-05-15 12:45:19,637|55035|mr-hn|INFO|0|application_1713583699042_0143|1|berlin0-10|40.0|3|3|PSI|949|40.0|3|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[58 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:45:35,044|70442|mr-hn|TIME|0|application_1713583699042_0143|1|berlin0-10|40.0|3|3|PSI|949|40.0|3|Partial|15.40606759
+2024-05-15 12:45:35,753|71151|mr-hn|INFO|0|application_1713583699042_0143|1|berlin0-10|40.0|3|3|PSI|949|40.0|3|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[11344 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 4
+2024-05-15 12:45:55,932|14316|PARAMS|application_1713583699042_0144|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:45:55,932|14316|PARAMS|application_1713583699042_0144|sdist|40
+2024-05-15 12:45:55,932|14316|PARAMS|application_1713583699042_0144|epsilon|40
+2024-05-15 12:45:55,932|14316|PARAMS|application_1713583699042_0144|mu|3
+2024-05-15 12:45:55,933|14317|PARAMS|application_1713583699042_0144|delta|3
+2024-05-15 12:45:55,933|14317|PARAMS|application_1713583699042_0144|method|PSI
+2024-05-15 12:45:55,933|14317|PARAMS|application_1713583699042_0144|master|yarn
+2024-05-15 12:45:55,933|14317|PARAMS|application_1713583699042_0144|capacity|50
+2024-05-15 12:45:55,933|14317|PARAMS|application_1713583699042_0144|fraction|0.1
+2024-05-15 12:45:55,933|14317|PARAMS|application_1713583699042_0144|step|4
+2024-05-15 12:45:55,933|14317|PARAMS|application_1713583699042_0144|debug|false
+2024-05-15 12:45:55,933|14317|PARAMS|application_1713583699042_0144|tester|false
+2024-05-15 12:45:55,934|14318|PARAMS|application_1713583699042_0144|saves|false
+2024-05-15 12:45:55,934|14318|PARAMS|application_1713583699042_0144|cached|false
+2024-05-15 12:45:55,934|14318|PARAMS|application_1713583699042_0144|print|false
+2024-05-15 12:45:55,935|14319|mr-hn|INFO|0|application_1713583699042_0144|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 12:46:17,492|35876|mr-hn|INFO|0|application_1713583699042_0144|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:46:36,723|55107|mr-hn|TIME|0|application_1713583699042_0144|1|berlin0-10|40.0|3|3|PSI|949|40.0|4|Safe|19.228893174
+2024-05-15 12:46:37,534|55918|mr-hn|INFO|0|application_1713583699042_0144|1|berlin0-10|40.0|3|3|PSI|949|40.0|4|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:46:58,142|76526|mr-hn|TIME|0|application_1713583699042_0144|1|berlin0-10|40.0|3|3|PSI|949|40.0|4|Partial|20.607252922
+2024-05-15 12:46:58,650|77034|mr-hn|INFO|0|application_1713583699042_0144|1|berlin0-10|40.0|3|3|PSI|949|40.0|4|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[11344 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 5
+2024-05-15 12:47:18,341|13993|PARAMS|application_1713583699042_0145|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:47:18,341|13993|PARAMS|application_1713583699042_0145|sdist|40
+2024-05-15 12:47:18,342|13994|PARAMS|application_1713583699042_0145|epsilon|40
+2024-05-15 12:47:18,342|13994|PARAMS|application_1713583699042_0145|mu|3
+2024-05-15 12:47:18,342|13994|PARAMS|application_1713583699042_0145|delta|3
+2024-05-15 12:47:18,342|13994|PARAMS|application_1713583699042_0145|method|PSI
+2024-05-15 12:47:18,342|13994|PARAMS|application_1713583699042_0145|master|yarn
+2024-05-15 12:47:18,342|13994|PARAMS|application_1713583699042_0145|capacity|50
+2024-05-15 12:47:18,342|13994|PARAMS|application_1713583699042_0145|fraction|0.1
+2024-05-15 12:47:18,342|13994|PARAMS|application_1713583699042_0145|step|5
+2024-05-15 12:47:18,343|13995|PARAMS|application_1713583699042_0145|debug|false
+2024-05-15 12:47:18,343|13995|PARAMS|application_1713583699042_0145|tester|false
+2024-05-15 12:47:18,343|13995|PARAMS|application_1713583699042_0145|saves|false
+2024-05-15 12:47:18,343|13995|PARAMS|application_1713583699042_0145|cached|false
+2024-05-15 12:47:18,343|13995|PARAMS|application_1713583699042_0145|print|false
+2024-05-15 12:47:18,344|13996|mr-hn|INFO|0|application_1713583699042_0145|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 12:47:42,069|37721|mr-hn|INFO|0|application_1713583699042_0145|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:48:01,439|57091|mr-hn|TIME|0|application_1713583699042_0145|1|berlin0-10|40.0|3|3|PSI|949|40.0|5|Safe|19.367999409
+2024-05-15 12:48:02,240|57892|mr-hn|INFO|0|application_1713583699042_0145|1|berlin0-10|40.0|3|3|PSI|949|40.0|5|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[13 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:48:28,171|83823|mr-hn|TIME|0|application_1713583699042_0145|1|berlin0-10|40.0|3|3|PSI|949|40.0|5|Partial|25.930266816
+2024-05-15 12:48:28,709|84361|mr-hn|INFO|0|application_1713583699042_0145|1|berlin0-10|40.0|3|3|PSI|949|40.0|5|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[11344 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 6
+2024-05-15 12:48:49,112|14143|PARAMS|application_1713583699042_0146|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:48:49,113|14144|PARAMS|application_1713583699042_0146|sdist|40
+2024-05-15 12:48:49,113|14144|PARAMS|application_1713583699042_0146|epsilon|40
+2024-05-15 12:48:49,113|14144|PARAMS|application_1713583699042_0146|mu|3
+2024-05-15 12:48:49,113|14144|PARAMS|application_1713583699042_0146|delta|3
+2024-05-15 12:48:49,113|14144|PARAMS|application_1713583699042_0146|method|PSI
+2024-05-15 12:48:49,113|14144|PARAMS|application_1713583699042_0146|master|yarn
+2024-05-15 12:48:49,114|14145|PARAMS|application_1713583699042_0146|capacity|50
+2024-05-15 12:48:49,114|14145|PARAMS|application_1713583699042_0146|fraction|0.1
+2024-05-15 12:48:49,114|14145|PARAMS|application_1713583699042_0146|step|6
+2024-05-15 12:48:49,114|14145|PARAMS|application_1713583699042_0146|debug|false
+2024-05-15 12:48:49,114|14145|PARAMS|application_1713583699042_0146|tester|false
+2024-05-15 12:48:49,114|14145|PARAMS|application_1713583699042_0146|saves|false
+2024-05-15 12:48:49,115|14146|PARAMS|application_1713583699042_0146|cached|false
+2024-05-15 12:48:49,115|14146|PARAMS|application_1713583699042_0146|print|false
+2024-05-15 12:48:49,116|14147|mr-hn|INFO|0|application_1713583699042_0146|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 12:49:12,199|37230|mr-hn|INFO|0|application_1713583699042_0146|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:49:30,956|55987|mr-hn|TIME|0|application_1713583699042_0146|1|berlin0-10|40.0|3|3|PSI|949|40.0|6|Safe|18.754419373
+2024-05-15 12:49:31,736|56767|mr-hn|INFO|0|application_1713583699042_0146|1|berlin0-10|40.0|3|3|PSI|949|40.0|6|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:50:08,085|93116|mr-hn|TIME|0|application_1713583699042_0146|1|berlin0-10|40.0|3|3|PSI|949|40.0|6|Partial|36.348064269
+2024-05-15 12:50:08,619|93650|mr-hn|INFO|0|application_1713583699042_0146|1|berlin0-10|40.0|3|3|PSI|949|40.0|6|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[11344 records].
+Running... 2
+./pflock3_spark --dataset PFlock/Berlin/berlin0-10.tsv --sdist 40 --epsilon 40 --mu 3 --delta 3 --method PSI --master yarn --capacity 50 --fraction 0.1 --step 7
+2024-05-15 12:50:28,419|14152|PARAMS|application_1713583699042_0147|dataset|PFlock/Berlin/berlin0-10.tsv
+2024-05-15 12:50:28,419|14152|PARAMS|application_1713583699042_0147|sdist|40
+2024-05-15 12:50:28,420|14153|PARAMS|application_1713583699042_0147|epsilon|40
+2024-05-15 12:50:28,420|14153|PARAMS|application_1713583699042_0147|mu|3
+2024-05-15 12:50:28,420|14153|PARAMS|application_1713583699042_0147|delta|3
+2024-05-15 12:50:28,420|14153|PARAMS|application_1713583699042_0147|method|PSI
+2024-05-15 12:50:28,420|14153|PARAMS|application_1713583699042_0147|master|yarn
+2024-05-15 12:50:28,420|14153|PARAMS|application_1713583699042_0147|capacity|50
+2024-05-15 12:50:28,420|14153|PARAMS|application_1713583699042_0147|fraction|0.1
+2024-05-15 12:50:28,420|14153|PARAMS|application_1713583699042_0147|step|7
+2024-05-15 12:50:28,421|14154|PARAMS|application_1713583699042_0147|debug|false
+2024-05-15 12:50:28,421|14154|PARAMS|application_1713583699042_0147|tester|false
+2024-05-15 12:50:28,421|14154|PARAMS|application_1713583699042_0147|saves|false
+2024-05-15 12:50:28,421|14154|PARAMS|application_1713583699042_0147|cached|false
+2024-05-15 12:50:28,421|14154|PARAMS|application_1713583699042_0147|print|false
+2024-05-15 12:50:28,422|14155|mr-hn|INFO|0|application_1713583699042_0147|1|berlin0-10|40.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[949 records].
+2024-05-15 12:50:52,008|37741|mr-hn|INFO|0|application_1713583699042_0147|1|berlin0-10|40.0|3|3|PSI|Number of trajectories: 268073
+2024-05-15 12:51:12,603|58336|mr-hn|TIME|0|application_1713583699042_0147|1|berlin0-10|40.0|3|3|PSI|949|40.0|7|Safe|20.593406702
+2024-05-15 12:51:13,409|59142|mr-hn|INFO|0|application_1713583699042_0147|1|berlin0-10|40.0|3|3|PSI|949|40.0|7|Safe|7323
+Saved /tmp/edgesC1.wkt	in	0.00s	[1 records].
+2024-05-15 12:52:57,494|163227|mr-hn|TIME|0|application_1713583699042_0147|1|berlin0-10|40.0|3|3|PSI|949|40.0|7|Partial|104.084555526
+2024-05-15 12:52:58,023|163756|mr-hn|INFO|0|application_1713583699042_0147|1|berlin0-10|40.0|3|3|PSI|949|40.0|7|Partial|5708
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.00s	[11344 records].
