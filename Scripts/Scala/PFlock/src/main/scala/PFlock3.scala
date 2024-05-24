@@ -162,21 +162,18 @@ object PFlock3 {
       partial.foreach(_.did = index)
       (flocks ++ partial).toIterator
     }.cache
-    flocksRDD.count()
+    val flocksLocal = flocksRDD.collect()
+    val safes = flocksLocal.filter(_.did == -1)
     val tSafe = (clocktime - t0) / 1e9
     logt(s"$ncells|$sdist|$step|Safe|$tSafe")
-
-    val safes = flocksRDD.filter(_.did == -1)
-    val nSafe = safes.count()
-    log(s"$ncells|$sdist|$step|Safe|$nSafe")
+    log(s"$ncells|$sdist|$step|Safe|${safes.length}")
 
     t0 = clocktime
     val (e, _) = PF_Utils.process(flocksRDD, cells, params.step())
-    e.count()
+    val r = e.count()
     val tPartial = (clocktime - t0) / 1e9
     logt(s"$ncells|$sdist|$step|Partial|$tPartial")
-    val nPartial = flocksRDD.filter(_.did != -1).count()
-    log(s"$ncells|$sdist|$step|Partial|$nPartial")
+    log(s"$ncells|$sdist|$step|Partial|${r}")
 
 
     save("/home/acald013/tmp/flocksd2.tsv") {

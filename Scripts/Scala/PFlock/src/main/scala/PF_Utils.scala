@@ -1,5 +1,6 @@
 package edu.ucr.dblab.pflock
 
+import archery.RTree
 import edu.ucr.dblab.pflock.MF_Utils.SimplePartitioner
 import edu.ucr.dblab.pflock.Utils._
 import org.apache.spark.TaskContext
@@ -105,6 +106,131 @@ object PF_Utils {
   }
 
   def pruneP(P: List[Disk]): List[Disk] = pruneQ(P, List.empty[Disk])
+
+  def pruneByArchery(flocks: List[Disk])(implicit S: Settings): List[Disk] = {
+    var tree = archery.RTree[Disk]()
+    val f = flocks.sortBy(_.start).zipWithIndex.map{ case(flock, id) =>
+      flock.id = id
+      tree = tree.insert(flock.pointEntry)
+
+      flock
+    }
+
+    pruneByArcheryRec(f, List.empty[Disk], tree, S)
+  }
+  def pruneByLocation(flocks: List[Disk])(implicit S: Settings): List[Disk] = {
+    val tree = new STRtree()
+    val f = flocks.sortBy(_.start).zipWithIndex.map{ case(flock, id) =>
+      flock.id = id
+      tree.insert(flock.envelope, flock)
+
+      flock
+    }
+
+    pruneByLocationRec(f, List.empty[Disk], tree, S)
+  }
+
+  def pruneByLocation(flocks1: List[Disk], flocks2: List[Disk])(implicit S: Settings): List[Disk] = {
+    val tree = new STRtree()
+    flocks2.foreach{ flock =>
+      tree.insert(flock.envelope, flock)
+    }
+
+    pruneByLocationRec(flocks1, List.empty[Disk], tree, S)
+  }
+  @tailrec
+  def pruneByLocationRec(Q: List[Disk], Q_prime: List[Disk], tree: STRtree, S: Settings): List[Disk] = {
+    Q match {
+      case flock1::tail =>
+        var stop = false
+        val zone = tree.query(flock1.getExpandEnvelope(S.epsilon)).asScala.map(_.asInstanceOf[Disk])
+        for{flock2 <- zone if !stop}{
+          val count = flock2.pidsSet.intersect(flock1.pidsSet).size
+
+          count match {
+            case count if flock1.pids.size == count =>
+              if(flock2.start <= flock1.start && flock1.end <= flock2.end){
+                stop = true // flock1 is contained by flock2...
+              } else if(flock2.pids.size > count){
+                // flock1 and flock2 do not have the same points.  We iterate next...
+              } else {
+                if(flock2.start < flock1.start || flock1.end < flock2.end){
+                  // flock2 is not a subset of flock1 (they have same pids but differ in time).  We iterate next..
+                } else {
+                  flock2.subset = true // flock2 is a subset of flock1.  We need to remove it...
+                }
+              }
+            case count if flock2.pids.size == count =>
+              if(flock2.start < flock1.start || flock1.end < flock2.end){
+                // flock2 is not a subset of flock1.  We iterate next..
+              } else {
+                flock2.subset = true // flock2 is a subset of flock1.  We need to remove it...
+              }
+            case _ =>
+            // flock1 and flock2 have different points.  We iterate next...
+          }
+        }
+
+        if(!stop)
+          pruneByLocationRec(tail, Q_prime :+ flock1, tree, S)
+        else
+          pruneByLocationRec(tail, Q_prime, tree, S)
+
+      case Nil => Q_prime
+    }
+  }
+
+  @tailrec
+  private def pruneByArcheryRec(Q: List[Disk], Q_prime: List[Disk], tree_prime: RTree[Disk], S: Settings): List[Disk] = {
+    tree_prime.entries.toList match {
+      case flock_entry::tail =>
+        var stop = false
+        val flock1 = flock_entry.value
+        var tree = tree_prime.remove(flock_entry)
+        val zone = tree.search(flock1.bbox(S.epsilon.toFloat)).toList
+        for{flock2_entry <- zone if !stop}{
+          val flock2 = flock2_entry.value
+          val count = flock2.pidsSet.intersect(flock1.pidsSet).size
+
+          tree = count match {
+            case count if flock1.pids.size == count =>
+              if(flock2.start <= flock1.start && flock1.end <= flock2.end && flock1.id != flock2.id){
+                stop = true // flock1 is contained by flock2...
+                tree
+              } else if(flock2.pids.size > count){
+                // flock1 and flock2 do not have the same points.  We iterate next...
+                tree
+              } else {
+                if(flock2.start < flock1.start || flock1.end < flock2.end){
+                  // flock2 is not a subset of flock1 (they have same pids but differ in time).  We iterate next..
+                  tree
+                } else {
+                  flock2.subset = true // flock2 is a subset of flock1.  We need to remove it...
+                  tree.remove(flock2_entry)
+                }
+              }
+            case count if flock2.pids.size == count =>
+              if(flock2.start < flock1.start || flock1.end < flock2.end){
+                // flock2 is not a subset of flock1.  We iterate next..
+                tree
+              } else {
+                flock2.subset = true // flock2 is a subset of flock1.  We need to remove it...
+                tree.remove(flock2_entry)
+              }
+            case _ =>
+            // flock1 and flock2 have different points.  We iterate next...
+            tree
+          }
+        }
+
+        if(!stop)
+          pruneByArcheryRec(List.empty[Disk], Q_prime :+ flock1, tree, S)
+        else
+          pruneByArcheryRec(List.empty[Disk], Q_prime, tree, S)
+
+      case Nil => Q_prime
+    }
+  }
 
   def prune2(Q: List[Disk], R: List[Disk], Q_prime: List[Disk]): List[Disk] = {
     Q match {
@@ -258,7 +384,7 @@ object PF_Utils {
 
         join(remaining_trajs, F, f ++ r)
       /***
-       * start: recurse...
+       * end: recurse...
        ***/
       case Nil => f
     }
@@ -398,6 +524,140 @@ object PF_Utils {
     }
   }
 
+  def joinDisks2(trajs: List[(Int, Iterable[STPoint])], flocks: List[Disk], f: List[Disk], cell: Envelope, cell_prime: Envelope, partial: List[Disk])
+               (implicit S: Settings, G: GeometryFactory, L: Logger): (List[Disk], List[Disk]) = {
+    val pid = TaskContext.getPartitionId()
+
+    trajs match {
+      case current_trajs :: remaining_trajs =>
+        val time = current_trajs._1
+        val points = current_trajs._2.toList
+
+        val (new_flocks, stats) = if (S.method == "BFE") {
+          val (nf, stats) = BFE.run(points)
+          (nf.map(_.copy(start = time, end = time)).filter(d => cell_prime.contains(d.center.getCoordinate)), stats)
+          //(nf.map(_.copy(start = time, end = time)), stats)
+        } else {
+          val (nf, stats) = PSI.run(points)
+          (nf.map(_.copy(start = time, end = time)).filter(d => cell_prime.contains(d.center.getCoordinate)), stats)
+          //(nf.map(_.copy(start = time, end = time)), stats)
+        }
+
+        debug{
+          stats.printPSI()
+        }
+
+        /***
+         * start: merging previous flocks with current flocks...
+         ***/
+        val merged_ones = if(S.method != "BFE") {
+          val inverted_index = flocks.flatMap { flock =>
+            flock.pids.map { pid =>
+              pid -> flock
+            }
+          }.groupBy(_._1).mapValues {
+            _.map(_._2)
+          }
+
+          val flocks_prime = for {new_flock <- new_flocks} yield {
+            val disks = new_flock.pids.filter{ pid => inverted_index.keySet.contains(pid) }.flatMap { pid =>
+              inverted_index(pid)
+            }.distinct
+
+            disks.map{ old_flock =>
+              val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
+              val flock = Disk(new_flock.center, pids, old_flock.start, time)
+              flock.locations = old_flock.locations :+ new_flock.center.getCoordinate
+
+              if(pids == new_flock.pids) new_flock.subset = true
+
+              flock
+            }.filter(_.pids.size >= S.mu) // filtering by minimum number of entities (mu)...
+
+          }
+
+          flocks_prime.flatten
+
+          //flocks
+        } else {
+          //flocks
+          val merged_ones = (for{
+            old_flock <- flocks
+            new_flock <- new_flocks
+          } yield {
+            val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
+            val flock = Disk(new_flock.center, pids, old_flock.start, time)
+            flock.locations = old_flock.locations :+ new_flock.center.getCoordinate
+
+            if(pids == new_flock.pids) new_flock.subset = true
+
+            flock
+          }).filter(_.pids.size >= S.mu) // filtering by minimum number of entities (mu)...
+
+          merged_ones
+        }
+
+        /***
+         * end: merging previous flocks with current flocks...
+         ***/
+
+        /***
+         * start: pruning subset flocks...
+         ***/
+        val M = pruneM(merged_ones, List.empty[Disk]).filterNot(_.subset)
+
+        val N = new_flocks.filterNot(_.subset).map{ flock =>
+          Disk(flock.center, flock.pids, time, time)
+        }
+
+        val candidates = M ++ pruneN(M, N, List.empty[Disk])
+        /***
+         * end: pruning subset flocks...
+         ***/
+
+        /***
+         * start: reporting...
+         ***/
+        val F_prime = candidates
+          .map{ flock =>
+            val safe_delta = flock.end - flock.start >= S.delta - 1
+            val safe_area  = flock.locations.exists(c => cell.contains(c)) // report if a flock location is in safe area
+
+            (flock, safe_delta, safe_area)
+          }
+
+        val r = F_prime.filter(f => f._2).map(_._1)
+        if(S.print){
+          r.foreach{println}
+        }
+        /***
+         * end: reporting...
+         ***/
+
+        /***
+         * start: recurse...
+         ***/
+
+        val F = F_prime
+          .map{ case(flock, safe_delta, _) =>
+            if(safe_delta) {
+              val f = flock.copy(start = flock.start + 1)
+              f.locations = flock.locations.tail
+              f
+            } else flock
+          }
+
+
+        val F_partial = new_flocks.filterNot(f => cell.contains(f.center.getCoordinate))
+
+        joinDisks2(remaining_trajs, F, f ++ r, cell, cell_prime, partial ++ F_partial)
+      /***
+       * start: recurse...
+       ***/
+      case Nil => (f, partial)
+    }
+  }
+
   def funPartial(f: List[Disk], time: Int, partials: mutable.HashMap[Int, (List[Disk], STRtree)], result: List[Disk])
                 (implicit S: Settings): (List[Disk], List[Disk]) = {
     val pid = TaskContext.getPartitionId()
@@ -407,8 +667,12 @@ object PF_Utils {
     } catch {
       case e: Exception => (List.empty[Disk], new STRtree())
     }
-    val flocks = f ++ pruneP( seeds )
 
+    val t1 = clocktime
+    val flocks = f ++ pruneByArchery( seeds )
+    //println(s"prune 1: ${(clocktime - t1)/1e9}")
+
+    val t2 = clocktime
     val D = for(flock1 <- flocks) yield {
 
       val (partial_prime, tree) = try {
@@ -431,8 +695,17 @@ object PF_Utils {
         d
       }
     }
-    val candidates = pruneP(flocks ++ D.flatten)
+    //println(s"merge: ${(clocktime - t2)/1e9}")
 
+    val t3 = clocktime
+    //val candidates = pruneP(flocks ++ D.flatten)
+    val D_prime = D.flatMap{ d =>
+      pruneByArchery(d.toList)
+    }
+    val candidates = pruneByArchery(flocks) ++ D_prime
+    //println(s"prune 2: ${(clocktime - t3)/1e9}")
+
+    val t4 = clocktime
     val F_prime = candidates.map{ f =>
       val a = f.start == time - (S.delta - 1)
       (f, a)
@@ -440,8 +713,14 @@ object PF_Utils {
     val r = F_prime.filter(_._2).map{ case(f, _) =>
       f.copy(end = time)
     }
-    val result_prime = pruneP(r)
+    //println(s"reporting: ${(clocktime - t4)/1e9}")
 
+    val t5 = clocktime
+    val result_prime = pruneByArchery(r)
+    //println(s"Time: $time \t ${r.size} \t ${result_prime.size}")
+    //println(s"prune 3: ${(clocktime - t5)/1e9}")
+
+    val t6 = clocktime
     val F = F_prime
       .map{ case(flock, mustUpdate) =>
         if(mustUpdate) {
@@ -451,8 +730,115 @@ object PF_Utils {
           f
         } else flock
       }.filter( _.end > time)
+    //println(s"update: ${(clocktime - t6)/1e9}")
 
     (F, result ++ result_prime)
+  }
+
+  def funPartial2(f: List[Disk], time: Int, partials: mutable.HashMap[Int, (List[Disk], STRtree)], result: List[Disk])
+                (implicit S: Settings): (List[Disk], List[Disk]) = {
+    val pid = TaskContext.getPartitionId()
+
+    val new_flocks = partials(time)._1
+    val flocks = f
+    val merged_ones = if(S.method != "BFE") {
+      val inverted_index = flocks.flatMap { flock =>
+        flock.pids.map { pid =>
+          pid -> flock
+        }
+      }.groupBy(_._1).mapValues {
+        _.map(_._2)
+      }
+
+      val flocks_prime = for {new_flock <- new_flocks} yield {
+        val disks = new_flock.pids.filter{ pid => inverted_index.keySet.contains(pid) }.flatMap { pid =>
+          inverted_index(pid)
+        }.distinct
+
+        disks.map{ old_flock =>
+          val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
+          val flock = Disk(new_flock.center, pids, old_flock.start, time)
+          flock.locations = old_flock.locations :+ new_flock.center.getCoordinate
+          flock.dids = old_flock.dids :+ new_flock.did
+
+          if(pids == new_flock.pids) new_flock.subset = true
+
+          flock
+        }.filter(_.pids.size >= S.mu) // filtering by minimum number of entities (mu)...
+
+      }
+
+      flocks_prime.flatten
+    } else {
+      val merged_ones = (for{
+        old_flock <- flocks
+        new_flock <- new_flocks
+      } yield {
+        val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
+        val flock = Disk(new_flock.center, pids, old_flock.start, time)
+        flock.locations = old_flock.locations :+ new_flock.center.getCoordinate
+        flock.dids = old_flock.dids :+ new_flock.did
+
+        if(pids == new_flock.pids) new_flock.subset = true
+
+        flock
+      }).filter(_.pids.size >= S.mu) // filtering by minimum number of entities (mu)...
+
+      merged_ones
+    }
+    /***
+     * end: merging previous flocks with current flocks...
+     ***/
+
+    /***
+     * start: pruning subset flocks...
+     ***/
+    val M = pruneM(merged_ones, List.empty[Disk]).filterNot(_.subset)
+
+    val N = new_flocks.filterNot(_.subset).map{ flock =>
+      Disk(flock.center, flock.pids, time, time)
+    }
+
+    val candidates = M ++ pruneN(M, N, List.empty[Disk])
+    /***
+     * end: pruning subset flocks...
+     ***/
+
+    /***
+     * start: reporting...
+     ***/
+    val F_prime = candidates
+      .map{ flock =>
+        val a = flock.end - flock.start
+        val b = S.delta - 1
+        val same_cell: Boolean = !flock.dids.zip(flock.dids.tail).forall { case (a, b) => a == b }
+
+        (flock, a >= b, same_cell)
+      }
+    //val count = n + F_prime.count(_._2)
+    val r = F_prime.filter(f => f._2).map(_._1)
+    if(S.print){
+      r.foreach{println}
+    }
+    /***
+     * end: reporting...
+     ***/
+
+    /***
+     * start: recurse...
+     ***/
+    val F = F_prime
+      .map{ case(flock, mustUpdate, _) =>
+        if(mustUpdate) {
+          val f = flock.copy(start = flock.start + 1)
+          f.locations = flock.locations.tail
+          f.did = flock.did
+          f.dids = flock.dids.tail
+          f
+        } else flock
+      }
+
+    (F, result ++ r)
   }
 
   def processUpdates(flocksRDD: RDD[Disk], cells: Map[Int, Cell], n: Int = 1)
@@ -496,7 +882,9 @@ object PF_Utils {
         R
       }
 
-      prune2(R, flocks.toList, List.empty[Disk]).toIterator ++ still_partials
+      //prune2(R, flocks.toList, List.empty[Disk]).toIterator ++ still_partials
+      val flocks_prime = flocks.toList
+      (flocks_prime ++ pruneByLocation(R, flocks_prime)).toIterator ++ still_partials
     }.cache
 
     (B, cellsA)
@@ -508,6 +896,17 @@ object PF_Utils {
       case time::tail =>
         val (f_prime, r_prime) = PF_Utils.funPartial(F, time, partials, R)
         processPartials(f_prime, tail, partials, r_prime)
+      case Nil => R
+    }
+  }
+
+  @tailrec
+  def processPartials2(F: List[Disk], times: List[Int], partials: mutable.HashMap[Int, (List[Disk], STRtree)], R: List[Disk])
+                     (implicit S: Settings): List[Disk] = {
+    times match {
+      case time::tail =>
+        val (f_prime, r_prime) = PF_Utils.funPartial2(F, time, partials, R)
+        processPartials2(f_prime, tail, partials, r_prime)
       case Nil => R
     }
   }

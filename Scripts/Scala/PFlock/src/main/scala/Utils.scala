@@ -136,9 +136,11 @@ object Utils {
   case class Disk(center: Point, pids: List[Int],
     start: Int = 0, end: Int = 0) extends Ordered [Disk]{
 
+    var id = -1
     var locations: List[Coordinate] = List(center.getCoordinate)
     var larger: Boolean = false
     var did: Int = -1
+    var dids: List[Int] = List(-1)
     var subset: Boolean = false
     val data: String = try { center.getUserData.toString }
     catch { case e: java.lang.NullPointerException => "NoData" }
@@ -193,7 +195,7 @@ object Utils {
       r == this.signature
     }
 
-    def envelope: Envelope = center.getEnvelopeInternal
+    def envelope: Envelope = new Envelope(center.getEnvelopeInternal)
 
     def getExpandEnvelope(r: Double): Envelope = {
       val envelope = new Envelope(center.getEnvelopeInternal)

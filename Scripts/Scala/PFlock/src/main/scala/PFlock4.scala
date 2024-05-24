@@ -11,7 +11,7 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters.asScalaBufferConverter
 
-object PFlock2 {
+object PFlock4 {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   def main(args: Array[String]): Unit = {
@@ -108,7 +108,7 @@ object PFlock2 {
       data.t <= S.endtime
     }/*.filter{ p =>
       val data = p.getUserData.asInstanceOf[Data]
-      val ids = Set(651, 2134, 7716, 8946, 12641, 15504, 15834)
+      val ids = Set(838, 1619, 7124, 14590, 19287)
 
       ids.contains(data.id)
  }
@@ -125,17 +125,6 @@ object PFlock2 {
 
     val nTrajs = trajs_partitioned.count()
     log(s"Number of trajectories: $nTrajs")
-
-    debug {
-      save("/tmp/edgesS.wkt") {
-        trajs_partitioned.sample(withReplacement = false, 0.1, 42).mapPartitionsWithIndex { (i, points) =>
-          points.map { point =>
-            val wkt = point.toText
-            s"$wkt\t$i\n"
-          }
-        }.collect()
-      }
-    }
 
     log("Start.")
     var t0 = clocktime
@@ -156,19 +145,26 @@ object PFlock2 {
         (time, points.map(p => STPoint(p._2)))
       }.toList.sortBy(_._1)
 
-      val (flocks, partial) = PF_Utils.joinDisks(ps, List.empty[Disk], List.empty[Disk], cell, cell_prime, List.empty[Disk])
+      val (flocks, partial) = PF_Utils.joinDisks2(ps, List.empty[Disk], List.empty[Disk], cell, cell_prime, List.empty[Disk])
 
-      partial.foreach(_.did = index)
+      partial.foreach{ f =>
+        f.did = index
+        f.dids = List(index)
+      }
+
       (flocks ++ partial).toIterator
     }.cache
-    val flocksLocal = flocksRDD.collect()
-    val safes = flocksLocal.filter(_.did == -1)
+    flocksRDD.count()
     val tSafe = (clocktime - t0) / 1e9
     logt(s"$ncells|$sdist|$step|Safe|$tSafe")
-    log(s"$ncells|$sdist|$step|Safe|${safes.length}")
+
+    val safes = flocksRDD.filter(_.did == -1)
+    val nSafe = safes.count()
+    log(s"$ncells|$sdist|$step|Safe|$nSafe")
+
 
     t0 = clocktime
-    val P = flocksLocal.filter(_.did != -1).sortBy(_.start).groupBy(_.start)
+    val P = flocksRDD.filter(_.did != -1).sortBy(_.start).collect().groupBy(_.start)
     val partials = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()
     P.toSeq.map{ case(time, candidates_prime) =>
       val candidates = candidates_prime.toList
@@ -182,14 +178,20 @@ object PFlock2 {
 
     //val times = partials.keys.toList.sorted
     val times = (0 to S.endtime).toList
-    val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
-    val FF = PF_Utils.pruneByLocation(R, safes.toList)
-    val tPartial = (clocktime - t0) / 1e9
+    val R = PF_Utils.processPartials2(List.empty[Disk], times, partials, List.empty[Disk])
+    val tR = (clocktime - t0) / 1e9
+    logt(s"$ncells|$sdist|$step|R|$tR")
+    log(s"$ncells|$sdist|$step|R|${R.size}")
+
+    val safes_prime = safes.collect().toList
+    val t1 = clocktime
+    val FF = PF_Utils.pruneByLocation(R, safes_prime)
+    val tPartial = (clocktime - t1) / 1e9
     logt(s"$ncells|$sdist|$step|Partial|$tPartial")
     log(s"$ncells|$sdist|$step|Partial|${FF.size}")
 
     save("/home/acald013/tmp/flocksd.tsv") {
-      (FF ++ safes).map{ f =>
+      (FF ++ safes_prime).map{ f =>
         val s = f.start
         val e = f.end
         val p = f.pidsText
