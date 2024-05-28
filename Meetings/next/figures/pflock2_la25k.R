@@ -26,4 +26,18 @@ p = ggplot(LA25K_E20, aes(x = factor(partitions), y = time, fill = stage)) +
   geom_col(width = 0.7, position="dodge") + 
   labs(x="Number of cells", y="Time (s)") 
 plot(p)
-ggsave(paste0("la25k_partitions.pdf"), width = W, height = H)
+ggsave(paste0("la25kE20_partitions.pdf"), width = W, height = H)
+
+LA25K_E15 <- pflock2 |> filter(epsilon == 15)
+p = ggplot(LA25K_E15, aes(x = factor(partitions), y = time, fill = stage)) + 
+  geom_col(width = 0.7, position="dodge") + 
+  labs(x="Number of cells", y="Time (s)") 
+plot(p)
+ggsave(paste0("la25kE15_partitions.pdf"), width = W, height = H)
+
+LA25K_E10 <- pflock2 |> filter(epsilon == 10)
+p = ggplot(LA25K_E10, aes(x = factor(partitions), y = time, fill = stage)) + 
+  geom_col(width = 0.7, position="dodge") + 
+  labs(x="Number of cells", y="Time (s)") 
+plot(p)
+ggsave(paste0("la25kE10_partitions.pdf"), width = W, height = H)

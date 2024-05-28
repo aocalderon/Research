@@ -26,4 +26,18 @@ p = ggplot(Berlin_E50, aes(x = factor(partitions), y = time, fill = stage)) +
   geom_col(width = 0.7, position="dodge") + 
   labs(x="Number of cells", y="Time (s)") 
 plot(p)
-ggsave(paste0("berlin_partitions.pdf"), width = W, height = H)
+ggsave(paste0("berlinE50_partitions.pdf"), width = W, height = H)
+
+Berlin_E40 <- pflock2 |> filter(epsilon == 40)
+p = ggplot(Berlin_E40, aes(x = factor(partitions), y = time, fill = stage)) + 
+  geom_col(width = 0.7, position="dodge") + 
+  labs(x="Number of cells", y="Time (s)") 
+plot(p)
+ggsave(paste0("berlinE40_partitions.pdf"), width = W, height = H)
+
+Berlin_E30 <- pflock2 |> filter(epsilon == 30)
+p = ggplot(Berlin_E30, aes(x = factor(partitions), y = time, fill = stage)) + 
+  geom_col(width = 0.7, position="dodge") + 
+  labs(x="Number of cells", y="Time (s)") 
+plot(p)
+ggsave(paste0("berlinE30_partitions.pdf"), width = W, height = H)
