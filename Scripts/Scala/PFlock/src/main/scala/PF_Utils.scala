@@ -842,19 +842,36 @@ object PF_Utils {
   }
 
   def processUpdates(flocksRDD: RDD[Disk], cells: Map[Int, Cell], n: Int = 1)
-                    (implicit S: Settings, G: GeometryFactory): (RDD[Disk], Map[Int, Cell]) = {
+    (implicit S: Settings, G: GeometryFactory, L: Logger):
+      (RDD[Disk], Map[Int, Cell]) = {
+
+    //var t0 = clocktime
     val cellsA = PF_Utils.updateCells(cells, n)
+    //var t1 = (clocktime - t0) / 1e9
+    //L.info(s"updateCells|$t1")
+
     save("/tmp/edgesC1.wkt"){
       cellsA.values.map{ cell =>
         s"${cell.wkt}\n"
       }.toList
     }
+
+    //t0 = clocktime
     val treeA = PF_Utils.buildTree(cellsA)
+    //t1 = (clocktime - t0) / 1e9
+    //L.info(s"buildTree|$t1")
+
+    //t0 = clocktime
     val ARDD = flocksRDD.mapPartitionsWithIndex{ (index, flocks) =>
       val env = new Envelope(cells(index).mbr.centre())
       val new_id = treeA.query(env).asScala.map(_.asInstanceOf[Int]).head
       flocks.map( f => (new_id, f) )
     }.partitionBy(SimplePartitioner(cellsA.size)).map(_._2).cache
+    //ARDD.count
+    //t1 = (clocktime - t0) / 1e9
+    //L.info(s"partitionBy|$t1")
+
+    //t0 = clocktime
     val B = ARDD.mapPartitionsWithIndex{ (index, F) =>
       val (flocks, partials_prime) = F.partition(_.did == -1)
       val C = new Envelope(cellsA(index).mbr)
@@ -882,13 +899,18 @@ object PF_Utils {
         R
       }
 
-      //prune2(R, flocks.toList, List.empty[Disk]).toIterator ++ still_partials
       val flocks_prime = flocks.toList
-      (flocks_prime ++ pruneByLocation(R, flocks_prime)).toIterator ++ still_partials
+      val Q = (flocks_prime ++ pruneByLocation(R, flocks_prime)).toIterator ++ still_partials
+
+      Q
     }.cache
+    //B.count
+    //t1 = (clocktime - t0) / 1e9
+    //L.info(s"processPartials|$t1")
 
     (B, cellsA)
   }
+
   @tailrec
   def processPartials(F: List[Disk], times: List[Int], partials: mutable.HashMap[Int, (List[Disk], STRtree)], R: List[Disk])
                      (implicit S: Settings): List[Disk] = {
@@ -912,7 +934,8 @@ object PF_Utils {
   }
 
   @tailrec
-  def process(flocks: RDD[Disk], cells: Map[Int, Cell], n: Int = 1)(implicit S: Settings, G: GeometryFactory): (RDD[Disk], Map[Int, Cell]) = {
+  def process(flocks: RDD[Disk], cells: Map[Int, Cell], n: Int = 1)
+    (implicit S: Settings, G: GeometryFactory, L: Logger): (RDD[Disk], Map[Int, Cell]) = {
     if(cells.size > 1){
       val (a, cellsa) = PF_Utils.processUpdates(flocks, cells, n)
       process(a, cellsa, n)
