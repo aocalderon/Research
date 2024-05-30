@@ -45,7 +45,7 @@ object Tester {
 
     /*******************************************************************************/
     // Code here...
-    val trajs = spark.read
+    val base = spark.read
       .option("header", value = false)
       .option("delimiter", "\t")
       .csv(S.dataset)
@@ -60,65 +60,50 @@ object Tester {
           (oid, lon, lat, tid)
 
         }
-      }.filter{ p => p._4 == S.endtime }.cache
+      }.cache
+
+    val trajs = base.filter{ p => p._4 == S.endtime }.cache
 
     val nTrajs = trajs.count()
     log(s"Number of trajectories: $nTrajs")
 
-    val sample = trajs.sample(withReplacement = false, fraction = params.fraction(), seed = 42)
-      .map{ case(_, x, y, _) =>
-        new Envelope(new Coordinate(x, y))
+    save("/tmp/edgesLA.wkt"){
+      trajs.map{ case(o,x,y,t) =>
+        val wkt = G.createPoint(new Coordinate(x,y)).toText
+        s"$wkt\t$o\t$t\n"
       }.collect()
-    val envelope = PF_Utils.getEnvelope2(trajs.map(p => G.createPoint(new Coordinate(p._2, p._3))))
-    envelope.expandBy(S.epsilon)
-    val quadtree = new StandardQuadTree[Int](new QuadRectangle(envelope), 0, params.capacity(), 16)
-    sample.foreach { env =>
-      quadtree.insert(new QuadRectangle(env), 1)
-    }
-    quadtree.assignPartitionIds()
-    quadtree.assignPartitionLineage()
-    quadtree.dropElements()
-    val cells = quadtree.getLeafZones.asScala.map { leaf =>
-      val envelope = leaf.getEnvelope
-      val id = leaf.partitionId.toInt
-
-      id -> Cell(envelope, id, leaf.lineage)
-    }.toMap
-    val ncells = cells.size
-
-    save(s"/home/acald013/Research/local_path/${S.dataset}/Q_P${ncells}_C${S.capacity}_F${(S.fraction * 100).toInt}.wkt") {
-      cells.map { case(id, cell) =>
-        val wkt = G.toGeometry(cell.mbr).toText
-        s"$wkt\tL${cell.lineage}\t$id\n"
-      }.toList
     }
 
-    val trajs_partitioned = trajs.mapPartitions { rows =>
-      rows.flatMap { p =>
-        val env = new Envelope(new Coordinate(p._2,p._3))
-        env.expandBy(S.epsilon)
-        quadtree.findZones(new QuadRectangle(env)).asScala.map{ x => (x.partitionId, p) }
-      }
-    }.partitionBy( SimplePartitioner( quadtree.getLeafZones.size() ) ).map(_._2).cache
+    val center = G.createPoint(new Coordinate(1982002.286, 561972.289))
+    val env = center.getEnvelopeInternal
+    env.expandBy(255)
 
-    log("Start.")
-    val t0 = clocktime
-    val MaximalsRDD = trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
-      val cell = cells(index).mbr
-      val ps = points.toList.map { case(o,x,y,t) =>
-        val data = Data(o, t)
-        val point = G.createPoint(new Coordinate(x, y))
-        point.setUserData(data)
-        STPoint(point)
-      }
-      val (maximals, _) = if( S.method == "BFE") BFE.run(ps) else PSI.run(ps)
+    val trajs2 = trajs.map{ case(o,x,y,t) =>
+      val p = G.createPoint(new Coordinate(x,y))
+      p.setUserData(o)
+      (o, p)
+    }.filter{ case (o, p) => env.contains(p.getEnvelopeInternal) }
 
-      maximals.filter{ maximal => cell.contains(maximal.center.getCoordinate) }.toIterator
+    val trajs3 = trajs2.map{ case(o, p) =>
+        val wkt = p.toText
+        s"$wkt\t$o\n"
     }
-    val nMaximals = MaximalsRDD.count()
-    val tMaximals = (clocktime - t0) / 1e9
-    logt(s"$ncells|${S.capacity}|${S.fraction}|$tMaximals")
-    log(s"$ncells|${S.capacity}|${S.fraction}|$nMaximals")
+    save("/tmp/edgesS.wkt"){
+      trajs3.collect
+    }
+
+    val ids = trajs2.map{ case(o, p) => o }.sample(withReplacement = false, fraction = 0.85, seed = 42).collect.toSet
+    println(ids.size)
+
+    val base_prime = base.map{ case(o,x,y,t) =>
+      if(!ids.contains(o))
+        s"$o\t$x\t$y\t$t"
+      else
+        ""
+    }.filter(_ != "").cache
+    println(base_prime.count())
+
+    base_prime.toDF().repartition(1024).write.text("PFlock/LA_50K")
 
     /*******************************************************************************/
 

@@ -94,6 +94,7 @@ object PFlock3 {
     val ncells = cells.size
     val sdist = params.sdist()
     val step  = params.step()
+    val capa  = params.capacity()
 
     val trajs_partitioned0 = trajs.mapPartitions { rows =>
       rows.flatMap { case (_, point) =>
@@ -165,17 +166,20 @@ object PFlock3 {
     val flocksLocal = flocksRDD.collect()
     val safes = flocksLocal.filter(_.did == -1)
     val tSafe = (clocktime - t0) / 1e9
-    logt(s"$ncells|$sdist|$step|Safe|$tSafe")
-    log(s"$ncells|$sdist|$step|Safe|${safes.length}")
+    logt(s"$capa|$ncells|$sdist|$step|Safe|$tSafe")
+    log(s"$capa|$ncells|$sdist|$step|Safe|${safes.length}")
 
     t0 = clocktime
     val (e, _) = PF_Utils.process(flocksRDD, cells, params.step())
     val r = e.count()
     val tPartial = (clocktime - t0) / 1e9
-    logt(s"$ncells|$sdist|$step|Partial|$tPartial")
-    log(s"$ncells|$sdist|$step|Partial|${r}")
+    logt(s"$capa|$ncells|$sdist|$step|Partial|$tPartial")
+    val npartials = flocksLocal.filter(_.did != -1).size
+    log(s"$capa|$ncells|$sdist|$step|npartials|$npartials")
+    log(s"$capa|$ncells|$sdist|$step|Partial|$r")
 
-    logt(s"$ncells|$sdist|$step|Total|${tSafe + tPartial}")
+    logt(s"$capa|$ncells|$sdist|$step|Total|${tSafe + tPartial}")
+
 
     save("/home/acald013/tmp/flocksd2.tsv") {
       e.collect().map{ f =>
