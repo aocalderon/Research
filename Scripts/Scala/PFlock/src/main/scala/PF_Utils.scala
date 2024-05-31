@@ -841,45 +841,75 @@ object PF_Utils {
     (F, result ++ r)
   }
 
-  def processUpdates(flocksRDD: RDD[Disk], cells: Map[Int, Cell], n: Int = 1)
+  def processUpdates(flocksRDD: RDD[Disk], cells: Map[Int, Cell], n: Int = 1, i: Int = 1)
     (implicit S: Settings, G: GeometryFactory, L: Logger):
       (RDD[Disk], Map[Int, Cell]) = {
 
-    //var t0 = clocktime
+    var t0 = clocktime
     val cellsA = PF_Utils.updateCells(cells, n)
-    //var t1 = (clocktime - t0) / 1e9
-    //L.info(s"updateCells|$t1")
+    var t1 = (clocktime - t0) / 1e9
+    val ncells = cellsA.size
+    logt(s"PROCESS|$ncells|$i|data|$t1")
 
-    save("/tmp/edgesC1.wkt"){
+    save(s"/tmp/edgesC${i}.wkt"){
       cellsA.values.map{ cell =>
         s"${cell.wkt}\n"
       }.toList
     }
 
-    //t0 = clocktime
+    t0 = clocktime
     val treeA = PF_Utils.buildTree(cellsA)
-    //t1 = (clocktime - t0) / 1e9
-    //L.info(s"buildTree|$t1")
+    t1 = (clocktime - t0) / 1e9
+    logt(s"PROCESS|$ncells|$i|tree|$t1")
 
-    //t0 = clocktime
+    t0 = clocktime
     val ARDD = flocksRDD.mapPartitionsWithIndex{ (index, flocks) =>
       val env = new Envelope(cells(index).mbr.centre())
       val new_id = treeA.query(env).asScala.map(_.asInstanceOf[Int]).head
       flocks.map( f => (new_id, f) )
-    }.partitionBy(SimplePartitioner(cellsA.size)).map(_._2).cache
-    //ARDD.count
-    //t1 = (clocktime - t0) / 1e9
-    //L.info(s"partitionBy|$t1")
+    }.partitionBy(SimplePartitioner(ncells)).map(_._2).cache
+    ARDD.count
+    t1 = (clocktime - t0) / 1e9
+    logt(s"PROCESS|$ncells|$i|part|$t1")
 
-    //t0 = clocktime
-    val B = ARDD.mapPartitionsWithIndex{ (index, F) =>
+    t0 = clocktime
+    val B = ARDD.mapPartitionsWithIndex{ (index, F_prime) =>
+      val F = F_prime.toList
+      var q0 = clocktime
       val (flocks, partials_prime) = F.partition(_.did == -1)
       val C = new Envelope(cellsA(index).mbr)
       C.expandBy(S.sdist * -1.0)
       val (p_prime, still_partials) = partials_prime.partition( f => C.contains(f.center.getCoordinate) )
+      var q1 = (clocktime - q0) / 1e9
+      logt(s"STEP|$ncells|$i|$index|data|$q1")
+      val f1 = flocks.toList
+      save(s"/tmp/edgesF_C${i}_I${index}.wkt"){
+        f1.map{ f =>
+          s"${f.wkt}\n"
+        }
+      }
+      val p1 = p_prime.toList
+      save(s"/tmp/edgesP_C${i}_I${index}.wkt"){
+        p1.map{ f =>
+          s"${f.wkt}\n"
+        }
+      }
+      val s1 = still_partials.toList
+      save(s"/tmp/edgesS_C${i}_I${index}.wkt"){
+        s1.map{ f =>
+          s"${f.wkt}\n"
+        }
+      }
+      log(s"STEP|$ncells|$i|$index|flocks|${f1.size}")
+      log(s"STEP|$ncells|$i|$index|Ppartial|${p1.size}")
+      log(s"STEP|$ncells|$i|$index|Spartial|${s1.size}")
+
       val R = if(p_prime.isEmpty){
+        logt(s"STEP|$ncells|$i|$index|sort|0.0")
+        logt(s"STEP|$ncells|$i|$index|process|0.0")
         List.empty[Disk]
       } else {
+        q0 = clocktime
         val P = p_prime.toList.sortBy(_.start).groupBy(_.start)
         val partials = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()
         P.toSeq.map{ case(time, candidates_prime) =>
@@ -891,22 +921,30 @@ object PF_Utils {
 
           partials(time) = (candidates, tree)
         }
-
         val times = (0 to S.endtime).toList
+        q1 = (clocktime - q0) / 1e9
+        logt(s"STEP|$ncells|$i|$index|sort|$q1")
 
+        q0 = clocktime
         val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
         R.foreach(r => r.did = -1)
+        q1 = (clocktime - q0) / 1e9
+        logt(s"STEP|$ncells|$i|$index|process|$q1")
+
         R
       }
 
+      q0 = clocktime
       val flocks_prime = flocks.toList
       val Q = (flocks_prime ++ pruneByLocation(R, flocks_prime)).toIterator ++ still_partials
+      q1 = (clocktime - q0) / 1e9
+      logt(s"STEP|$ncells|$i|$index|prune|$q1")
 
       Q
     }.cache
-    //B.count
-    //t1 = (clocktime - t0) / 1e9
-    //L.info(s"processPartials|$t1")
+    B.count
+    t1 = (clocktime - t0) / 1e9
+    logt(s"PROCESS|$ncells|$i|process|$t1")
 
     (B, cellsA)
   }
@@ -934,11 +972,11 @@ object PF_Utils {
   }
 
   @tailrec
-  def process(flocks: RDD[Disk], cells: Map[Int, Cell], n: Int = 1)
+  def process(flocks: RDD[Disk], cells: Map[Int, Cell], n: Int = 1, i: Int = 1)
     (implicit S: Settings, G: GeometryFactory, L: Logger): (RDD[Disk], Map[Int, Cell]) = {
     if(cells.size > 1){
-      val (a, cellsa) = PF_Utils.processUpdates(flocks, cells, n)
-      process(a, cellsa, n)
+      val (a, cellsa) = PF_Utils.processUpdates(flocks, cells, n, i)
+      process(a, cellsa, n, i + 1)
     } else {
       (flocks, cells)
     }
