@@ -138,12 +138,16 @@ object Utils {
 
     var id = -1
     var locations: List[Coordinate] = List(center.getCoordinate)
-    var larger: Boolean = false
+    var lineage: String = ""
     var did: Int = -1
     var dids: List[Int] = List(-1)
     var subset: Boolean = false
-    val data: String = try { center.getUserData.toString }
-    catch { case e: java.lang.NullPointerException => "NoData" }
+    var data: String = try {
+      center.getUserData.toString
+    }
+    catch {
+      case e: java.lang.NullPointerException => "NoData"
+    }
 
     val X: Float = center.getX.toFloat
     val Y: Float = center.getY.toFloat

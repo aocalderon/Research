@@ -6,6 +6,7 @@ import edu.ucr.dblab.pflock.sedona.quadtree.{QuadRectangle, StandardQuadTree}
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.sql.SparkSession
 import org.locationtech.jts.geom._
+import org.locationtech.jts.index.strtree.STRtree
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters.asScalaBufferConverter
@@ -169,6 +170,73 @@ object PFlock3 {
     logt(s"$capa|$ncells|$sdist|$step|Safe|$tSafe")
     log(s"$capa|$ncells|$sdist|$step|Safe|${safes.length}")
 
+    /****
+     * DEBUG
+     */
+    save("/tmp/edgesP.wkt"){
+      flocksLocal.filter(_.did != -1).map{ f =>
+        s"${f.wkt}\n"
+      }
+    }
+    def mca(l1: String, l2: String): String = {
+      val i = l1.zip(l2).map{ case(a, b) => a == b }.indexOf(false)
+      l1.substring(0, i)
+    }
+    val partialsRDD = flocksRDD.mapPartitionsWithIndex{ (index, flocks) =>
+      val cell = cells(index)
+      flocks.filter(_.did != -1).flatMap{ partial =>
+        val parents = quadtree.findZones( new QuadRectangle(partial.getExpandEnvelope(S.sdist + S.tolerance)) ).asScala
+          .filter( zone => zone.partitionId != cell.cid)
+          .map{ zone =>
+          val lin = mca(zone.lineage, cell.lineage)
+          partial.lineage = lin
+          partial.did = index
+          (lin, partial)
+        }.toList
+        parents
+      }
+    }.cache
+    val lins = partialsRDD.map(_._1).distinct().collect().zipWithIndex.toMap
+    println(lins.size)
+    val R = partialsRDD.map{ case(lin, partial) =>
+      (lins(lin), partial)
+    }.partitionBy(SimplePartitioner(lins.size)).cache
+    save("/tmp/edgesQ.wkt"){
+      R.mapPartitionsWithIndex { case(index, flocks) =>
+        flocks.map { case (id, flock) =>
+          s"${flock.wkt}\t${flock.lineage}\t$id\t$index\n"
+        }
+      }.collect()
+    }
+    val Q = R.mapPartitionsWithIndex{ (_, p_prime) =>
+      val pp = p_prime.map{ case(_, partial) => partial }.toList
+
+      val P = pp.sortBy(_.start).groupBy(_.start)
+      val partials = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()
+      P.toSeq.map{ case(time, candidates) =>
+        val tree = new STRtree()
+        candidates.foreach{ candidate =>
+          tree.insert(new Envelope(candidate.locations.head), candidate)
+        }
+
+        partials(time) = (candidates, tree)
+      }
+
+      //val times = partials.keys.toList.sorted
+      val times = (0 to S.endtime).toList
+      val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
+
+      R.toIterator
+    }.cache
+    val RR = PF_Utils.pruneByArchery(Q.collect().toList)
+    val FF = PF_Utils.pruneByLocation(RR, safes.toList)
+
+    log(s"$capa|$ncells|$sdist|$step|Partials|${FF.size}")
+    /****
+     * DEBUG
+     */
+
+    /*
     t0 = clocktime
     val (e, _) = PF_Utils.process(flocksRDD, cells, params.step())
     val r = e.count()
@@ -181,8 +249,9 @@ object PFlock3 {
     logt(s"$capa|$ncells|$sdist|$step|Total|${tSafe + tPartial}")
 
 
+*/
     save("/home/acald013/tmp/flocksd2.tsv") {
-      e.collect().map{ f =>
+      (FF ++ safes).map{ f =>
         val s = f.start
         val e = f.end
         val p = f.pidsText
@@ -190,7 +259,6 @@ object PFlock3 {
         s"$s\t$e\t$p\n"
       }.sorted
     }
-
     spark.close
   }
 }
