@@ -219,10 +219,19 @@ object PFlock3 {
 
       R.toIterator
     }.cache
+
+    var q0 = clocktime
     val RR = PF_Utils.pruneByArchery(Q.collect().toList)
+    val q1 = (clocktime - q0) / 1e9
+    logt(s"$capa|$ncells|$sdist|$step|prune1|$q1")
+
+    q0 = clocktime
     val FF = PF_Utils.pruneByLocation(RR, safes.toList)
+    val q2 = (clocktime - q0) / 1e9
+    logt(s"$capa|$ncells|$sdist|$step|prune2|$q2")
 
     val tPartial = (clocktime - t0) / 1e9
+    logt(s"$capa|$ncells|$sdist|$step|MCA|${tPartial-q1-q2}")
     logt(s"$capa|$ncells|$sdist|$step|Partial|$tPartial")
     val npartials = flocksLocal.filter(_.did != -1).size
     log(s"$capa|$ncells|$sdist|$step|npartials|$npartials")
