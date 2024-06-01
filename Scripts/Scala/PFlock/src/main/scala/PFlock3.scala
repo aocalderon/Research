@@ -219,9 +219,10 @@ object PFlock3 {
 
       R.toIterator
     }.cache
+    val T = Q.collect().toList
 
     var q0 = clocktime
-    val RR = PF_Utils.pruneByArchery(Q.collect().toList)
+    val RR = PF_Utils.pruneByArchery(T)
     val q1 = (clocktime - q0) / 1e9
     logt(s"$capa|$ncells|$sdist|$step|prune1|$q1")
 
