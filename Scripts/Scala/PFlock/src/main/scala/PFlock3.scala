@@ -182,6 +182,7 @@ object PFlock3 {
       val i = l1.zip(l2).map{ case(a, b) => a == b }.indexOf(false)
       l1.substring(0, i)
     }
+    t0 = clocktime
     val partialsRDD = flocksRDD.mapPartitionsWithIndex{ (index, flocks) =>
       val cell = cells(index)
       flocks.filter(_.did != -1).flatMap{ partial =>
@@ -201,16 +202,8 @@ object PFlock3 {
     val R = partialsRDD.map{ case(lin, partial) =>
       (lins(lin), partial)
     }.partitionBy(SimplePartitioner(lins.size)).cache
-    save("/tmp/edgesQ.wkt"){
-      R.mapPartitionsWithIndex { case(index, flocks) =>
-        flocks.map { case (id, flock) =>
-          s"${flock.wkt}\t${flock.lineage}\t$id\t$index\n"
-        }
-      }.collect()
-    }
     val Q = R.mapPartitionsWithIndex{ (_, p_prime) =>
       val pp = p_prime.map{ case(_, partial) => partial }.toList
-
       val P = pp.sortBy(_.start).groupBy(_.start)
       val partials = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()
       P.toSeq.map{ case(time, candidates) =>
@@ -218,10 +211,8 @@ object PFlock3 {
         candidates.foreach{ candidate =>
           tree.insert(new Envelope(candidate.locations.head), candidate)
         }
-
         partials(time) = (candidates, tree)
       }
-
       //val times = partials.keys.toList.sorted
       val times = (0 to S.endtime).toList
       val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
@@ -231,11 +222,24 @@ object PFlock3 {
     val RR = PF_Utils.pruneByArchery(Q.collect().toList)
     val FF = PF_Utils.pruneByLocation(RR, safes.toList)
 
+    val tPartial = (clocktime - t0) / 1e9
+    logt(s"$capa|$ncells|$sdist|$step|Partial|$tPartial")
+    val npartials = flocksLocal.filter(_.did != -1).size
+    log(s"$capa|$ncells|$sdist|$step|npartials|$npartials")
     log(s"$capa|$ncells|$sdist|$step|Partials|${FF.size}")
+
+    logt(s"$capa|$ncells|$sdist|$step|Total|${tSafe + tPartial}")
     /****
      * DEBUG
      */
 
+    save("/tmp/edgesQ.wkt"){
+      R.mapPartitionsWithIndex { case(index, flocks) =>
+        flocks.map { case (id, flock) =>
+          s"${flock.wkt}\t${flock.lineage}\t$id\t$index\n"
+        }
+      }.collect()
+    }
     /*
     t0 = clocktime
     val (e, _) = PF_Utils.process(flocksRDD, cells, params.step())
