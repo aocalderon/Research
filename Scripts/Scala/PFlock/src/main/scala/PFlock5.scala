@@ -11,7 +11,7 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters.asScalaBufferConverter
 
-object PFlock4 {
+object PFlock5 {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   def main(args: Array[String]): Unit = {
@@ -27,12 +27,11 @@ object PFlock4 {
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
       delta = params.delta(),
-      step = params.step(),
       sdist = params.sdist(),
-      endtime = params.endtime(),
       capacity = params.capacity(),
       fraction = params.fraction(),
       tolerance = params.tolerance(),
+      endtime = params.endtime(),
       tag = params.tag(),
       debug = params.debug(),
       print = params.print(),
@@ -45,7 +44,6 @@ object PFlock4 {
     implicit val G: GeometryFactory = new GeometryFactory(new PrecisionModel(S.scale))
 
     printParams(args)
-    log(s"START|")
 
     /** **************************************************************************** */
     // Code here...
@@ -106,13 +104,12 @@ object PFlock4 {
       }
     }.partitionBy(SimplePartitioner(quadtree.getLeafZones.size())).map(_._2).cache
 
-
     val trajs_partitioned = trajs_partitioned0.filter{ p =>
       val data = p.getUserData.asInstanceOf[Data]
       data.t <= S.endtime
     }/*.filter{ p =>
       val data = p.getUserData.asInstanceOf[Data]
-      val ids = Set(651, 2134, 7716, 8946, 12641, 15504, 15834)
+      val ids = Set(838, 1619, 7124, 14590, 19287)
 
       ids.contains(data.id)
  }
@@ -130,17 +127,7 @@ object PFlock4 {
     val nTrajs = trajs_partitioned.count()
     log(s"Number of trajectories: $nTrajs")
 
-    debug {
-      save("/tmp/edgesS.wkt") {
-        trajs_partitioned.sample(withReplacement = false, 0.1, 42).mapPartitionsWithIndex { (i, points) =>
-          points.map { point =>
-            val wkt = point.toText
-            s"$wkt\t$i\n"
-          }
-        }.collect()
-      }
-    }
-
+    log("Start.")
     var t0 = clocktime
     val flocksRDD = trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
       val cell_test = new Envelope(cells(index).mbr)
@@ -159,9 +146,13 @@ object PFlock4 {
         (time, points.map(p => STPoint(p._2)))
       }.toList.sortBy(_._1)
 
-      val (flocks, partial) = PF_Utils.joinDisks(ps, List.empty[Disk], List.empty[Disk], cell, cell_prime, List.empty[Disk])
+      val (flocks, partial) = PF_Utils.joinDisks2(ps, List.empty[Disk], List.empty[Disk], cell, cell_prime, List.empty[Disk])
 
-      partial.foreach(_.did = index)
+      partial.foreach{ f =>
+        f.did = index
+        f.dids = List(index)
+      }
+
       (flocks ++ partial).toIterator
     }.cache
     val flocksLocal = flocksRDD.collect()
@@ -170,14 +161,6 @@ object PFlock4 {
     logt(s"$capa|$ncells|$sdist|$step|Safe|$tSafe")
     log(s"$capa|$ncells|$sdist|$step|Safe|${safes.length}")
 
-    /****
-     * DEBUG
-     */
-    save("/tmp/edgesP.wkt"){
-      flocksLocal.filter(_.did != -1).map{ f =>
-        s"${f.wkt}\n"
-      }
-    }
     def mca(l1: String, l2: String): String = {
       val i = l1.zip(l2).map{ case(a, b) => a == b }.indexOf(false)
       l1.substring(0, i)
@@ -253,31 +236,7 @@ object PFlock4 {
     log(s"$capa|$ncells|$sdist|$step|Partials|${FF.size}")
 
     logt(s"$capa|$ncells|$sdist|$step|Total|${tSafe + tPartial}")
-    /****
-     * DEBUG
-     */
 
-    save("/tmp/edgesQ.wkt"){
-      R.mapPartitionsWithIndex { case(index, flocks) =>
-        flocks.map { case (id, flock) =>
-          s"${flock.wkt}\t${flock.lineage}\t$id\t$index\n"
-        }
-      }.collect()
-    }
-    /*
-    t0 = clocktime
-    val (e, _) = PF_Utils.process(flocksRDD, cells, params.step())
-    val r = e.count()
-    val tPartial = (clocktime - t0) / 1e9
-    logt(s"$capa|$ncells|$sdist|$step|Partial|$tPartial")
-    val npartials = flocksLocal.filter(_.did != -1).size
-    log(s"$capa|$ncells|$sdist|$step|npartials|$npartials")
-    log(s"$capa|$ncells|$sdist|$step|Partial|$r")
-
-    logt(s"$capa|$ncells|$sdist|$step|Total|${tSafe + tPartial}")
-
-
-*/
     save("/home/acald013/tmp/flocksd2.tsv") {
       (FF ++ safes).map{ f =>
         val s = f.start
@@ -287,6 +246,7 @@ object PFlock4 {
         s"$s\t$e\t$p\n"
       }.sorted
     }
+
     spark.close
   }
 }

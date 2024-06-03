@@ -6,7 +6,6 @@ import edu.ucr.dblab.pflock.sedona.quadtree.{QuadRectangle, StandardQuadTree}
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.sql.SparkSession
 import org.locationtech.jts.geom._
-import org.locationtech.jts.index.strtree.STRtree
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters.asScalaBufferConverter
@@ -170,101 +169,6 @@ object PFlock3 {
     logt(s"$capa|$ncells|$sdist|$step|Safe|$tSafe")
     log(s"$capa|$ncells|$sdist|$step|Safe|${safes.length}")
 
-    /****
-     * DEBUG
-     */
-    save("/tmp/edgesP.wkt"){
-      flocksLocal.filter(_.did != -1).map{ f =>
-        s"${f.wkt}\n"
-      }
-    }
-    def mca(l1: String, l2: String): String = {
-      val i = l1.zip(l2).map{ case(a, b) => a == b }.indexOf(false)
-      l1.substring(0, i)
-    }
-    t0 = clocktime
-    val partialsRDD = flocksRDD.mapPartitionsWithIndex{ (index, flocks) =>
-      val cell = cells(index)
-      flocks.filter(_.did != -1).flatMap{ partial =>
-        val parents = quadtree
-          .findZones( new QuadRectangle(partial.getExpandEnvelope(S.sdist + S.tolerance)) )
-          .asScala
-          .filter( zone => zone.partitionId != cell.cid).toList
-          .map{ zone =>
-            val lin = mca(zone.lineage, cell.lineage)
-            partial.lineage = lin
-            partial.did = index
-            partial.corner = true
-            (lin, partial)
-          }
-        parents
-      }
-    }.cache
-    val lins = partialsRDD.map(_._1).distinct().collect().zipWithIndex.toMap
-    val R = partialsRDD.map{ case(lin, partial) =>
-      (lins(lin), partial)
-    }.partitionBy(SimplePartitioner(lins.size)).cache
-    val Q = R.mapPartitionsWithIndex{ (_, p_prime) =>
-      val pp = p_prime.map{ case(_, partial) => partial }.toList
-      val P = pp.sortBy(_.start).groupBy(_.start)
-      val partials = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()
-      P.toSeq.map{ case(time, candidates) =>
-        val tree = new STRtree()
-        candidates.foreach{ candidate =>
-          tree.insert(new Envelope(candidate.locations.head), candidate)
-        }
-        partials(time) = (candidates, tree)
-      }
-      //val times = partials.keys.toList.sorted
-      val times = (0 to S.endtime).toList
-      val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
-
-      R.toIterator
-    }.cache
-    val T = Q.collect().toList
-
-    var q0 = clocktime
-    val (r1, r2) = T.partition{ partial =>
-      val r = quadtree
-        .findZones( new QuadRectangle(partial.getExpandEnvelope(S.sdist + S.r + S.tolerance)) )
-
-      r.size > 2
-    }
-    val RR = r2 ++ PF_Utils.pruneByArchery(r1)
-    val q1 = (clocktime - q0) / 1e9
-    logt(s"$capa|$ncells|$sdist|$step|prune1|$q1")
-
-    q0 = clocktime
-    val SS = safes.filter{ flock =>
-      val r = quadtree
-        .findZones( new QuadRectangle(flock.getExpandEnvelope(S.sdist + S.r + S.tolerance)) )
-
-      r.size > 1
-    }
-    val FF = PF_Utils.pruneByLocation(RR, SS.toList)
-    val q2 = (clocktime - q0) / 1e9
-    logt(s"$capa|$ncells|$sdist|$step|prune2|$q2")
-
-    val tPartial = (clocktime - t0) / 1e9
-    logt(s"$capa|$ncells|$sdist|$step|MCA|${tPartial-q1-q2}")
-    logt(s"$capa|$ncells|$sdist|$step|Partial|$tPartial")
-    val npartials = flocksLocal.filter(_.did != -1).size
-    log(s"$capa|$ncells|$sdist|$step|npartials|$npartials")
-    log(s"$capa|$ncells|$sdist|$step|Partials|${FF.size}")
-
-    logt(s"$capa|$ncells|$sdist|$step|Total|${tSafe + tPartial}")
-    /****
-     * DEBUG
-     */
-
-    save("/tmp/edgesQ.wkt"){
-      R.mapPartitionsWithIndex { case(index, flocks) =>
-        flocks.map { case (id, flock) =>
-          s"${flock.wkt}\t${flock.lineage}\t$id\t$index\n"
-        }
-      }.collect()
-    }
-    /*
     t0 = clocktime
     val (e, _) = PF_Utils.process(flocksRDD, cells, params.step())
     val r = e.count()
@@ -276,10 +180,8 @@ object PFlock3 {
 
     logt(s"$capa|$ncells|$sdist|$step|Total|${tSafe + tPartial}")
 
-
-*/
     save("/home/acald013/tmp/flocksd2.tsv") {
-      (FF ++ safes).map{ f =>
+      e.collect().map{ f =>
         val s = f.start
         val e = f.end
         val p = f.pidsText
