@@ -142,6 +142,7 @@ object Utils {
     var did: Int = -1
     var dids: List[Int] = List(-1)
     var subset: Boolean = false
+    var corner: Boolean = false
     var data: String = try {
       center.getUserData.toString
     }

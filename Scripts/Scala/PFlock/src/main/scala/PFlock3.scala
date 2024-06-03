@@ -186,19 +186,21 @@ object PFlock3 {
     val partialsRDD = flocksRDD.mapPartitionsWithIndex{ (index, flocks) =>
       val cell = cells(index)
       flocks.filter(_.did != -1).flatMap{ partial =>
-        val parents = quadtree.findZones( new QuadRectangle(partial.getExpandEnvelope(S.sdist + S.tolerance)) ).asScala
-          .filter( zone => zone.partitionId != cell.cid)
+        val parents = quadtree
+          .findZones( new QuadRectangle(partial.getExpandEnvelope(S.sdist + S.tolerance)) )
+          .asScala
+          .filter( zone => zone.partitionId != cell.cid).toList
           .map{ zone =>
-          val lin = mca(zone.lineage, cell.lineage)
-          partial.lineage = lin
-          partial.did = index
-          (lin, partial)
-        }.toList
+            val lin = mca(zone.lineage, cell.lineage)
+            partial.lineage = lin
+            partial.did = index
+            partial.corner = true
+            (lin, partial)
+          }
         parents
       }
     }.cache
     val lins = partialsRDD.map(_._1).distinct().collect().zipWithIndex.toMap
-    println(lins.size)
     val R = partialsRDD.map{ case(lin, partial) =>
       (lins(lin), partial)
     }.partitionBy(SimplePartitioner(lins.size)).cache
@@ -222,12 +224,24 @@ object PFlock3 {
     val T = Q.collect().toList
 
     var q0 = clocktime
-    val RR = PF_Utils.pruneByArchery(T)
+    val (r1, r2) = T.partition{ partial =>
+      val r = quadtree
+        .findZones( new QuadRectangle(partial.getExpandEnvelope(S.sdist + S.r + S.tolerance)) )
+
+      r.size > 2
+    }
+    val RR = r2 ++ PF_Utils.pruneByArchery(r1)
     val q1 = (clocktime - q0) / 1e9
     logt(s"$capa|$ncells|$sdist|$step|prune1|$q1")
 
     q0 = clocktime
-    val FF = PF_Utils.pruneByLocation(RR, safes.toList)
+    val SS = safes.filter{ flock =>
+      val r = quadtree
+        .findZones( new QuadRectangle(flock.getExpandEnvelope(S.sdist + S.r + S.tolerance)) )
+
+      r.size > 1
+    }
+    val FF = PF_Utils.pruneByLocation(RR, SS.toList)
     val q2 = (clocktime - q0) / 1e9
     logt(s"$capa|$ncells|$sdist|$step|prune2|$q2")
 

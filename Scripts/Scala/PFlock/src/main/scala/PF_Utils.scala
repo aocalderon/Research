@@ -194,7 +194,7 @@ object PF_Utils {
 
           tree = count match {
             case count if flock1.pids.size == count =>
-              if(flock2.start <= flock1.start && flock1.end <= flock2.end && flock1.id != flock2.id){
+              if(flock2.start <= flock1.start && flock1.end <= flock2.end){
                 stop = true // flock1 is contained by flock2...
                 tree
               } else if(flock2.pids.size > count){
