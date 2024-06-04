@@ -26,6 +26,7 @@ object PFlock {
       capacity = params.capacity(),
       fraction = params.fraction(),
       tolerance = params.tolerance(),
+      endtime = params.endtime(),
       tag = params.tag(),
       debug = params.debug(),
       print = params.print(),
@@ -60,11 +61,7 @@ object PFlock {
 
           (tid, STPoint(point))
         }
-      }.groupByKey().sortByKey()
-
-    debug{
-      trajs.foreach(println)
-    }
+      }.filter(_._1 <= S.endtime).groupByKey().sortByKey()
 
     val trajs_list = trajs.collect().toList
     val flocks = PF_Utils.join(trajs_list, List.empty[Disk], List.empty[Disk])
