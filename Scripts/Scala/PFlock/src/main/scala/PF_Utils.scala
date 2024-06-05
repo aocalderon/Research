@@ -1032,6 +1032,25 @@ object PF_Utils {
     new Envelope(minX, maxX, minY, maxY)
   }
 
+  def cut[A](xs: Seq[A], n: Int, k: Int = 0): Map[A, Int] = {
+    val m = xs.length
+    val targets = (0 to n).map{ x => math.round( (x.toDouble * m) / n ).toInt }
+    @tailrec
+    def snip(xs: Seq[A], ns: Seq[Int], got: Vector[Seq[A]]): Vector[Seq[A]] = {
+      if (ns.length < 2) got
+      else {
+        val (i,j) = (ns.head, ns.tail.head)
+        snip(xs.drop(j - i), ns.tail, got :+ xs.take(j - i))
+      }
+    }
+    val intervals = snip(xs, targets, Vector.empty)
+    intervals.zipWithIndex.flatMap{ case(interval, id) =>
+      interval.map{ x => (x, id) }
+    }.toMap
+  }
+
+  def getTime(p: Point): Int = p.getUserData.asInstanceOf[Data].t
+
   def getEnvelope2(dataset: RDD[Point]): Envelope = {
     val Xs = dataset.map(_.getX).cache
     val Ys = dataset.map(_.getY).cache
