@@ -165,10 +165,16 @@ object PFlock6 {
         (time, points.map(p => STPoint(p._2)))
       }.toList.sortBy(_._1)
 
-      val (flocks, partial) = PF_Utils.joinDisks(ps, List.empty[Disk], List.empty[Disk], cell, cell_prime, List.empty[Disk])
+      val tt = ps.map{_._1}
+      val time_start = tt.head
+      val time_end   = tt.last
+
+      val (flocks, partial, tpartial) = PF_Utils.joinDisksCachingPartials(ps, List.empty[Disk], List.empty[Disk], cell, cell_prime, List.empty[Disk], time_start, time_end, List.empty[Disk])
 
       partial.foreach(_.did = index)
-      (flocks ++ partial).toIterator
+      tpartial.foreach(_.did = index)
+      tpartial.foreach(_.tpartial = true)
+      (flocks ++ partial ++ tpartial).toIterator
     }.cache
     val flocksLocal = flocksRDD.collect()
     val safes = flocksLocal.filter(_.did == -1)
@@ -181,7 +187,10 @@ object PFlock6 {
      */
     def mca(l1: String, l2: String): String = {
       val i = l1.zip(l2).map{ case(a, b) => a == b }.indexOf(false)
-      l1.substring(0, i)
+      if(i >= 0)
+        l1.substring(0, i)
+      else
+        l1
     }
     t0 = clocktime
     val partialsRDD = flocksRDD.mapPartitionsWithIndex{ (index, flocks) =>
@@ -193,12 +202,12 @@ object PFlock6 {
         val parents = quadtree
           .findZones( new QuadRectangle(partial.getExpandEnvelope(S.sdist + S.tolerance)) )
           .asScala
-          .filter( zone => zone.partitionId != cell.cid).toList
+          .toList
           .map{ zone =>
             val lin = mca(zone.lineage, cell.lineage)
             partial.lineage = lin
             partial.did = index
-            ((lin, time_id), partial)
+            (lin, partial)
           }
         parents
       }
@@ -231,7 +240,7 @@ object PFlock6 {
       val r = quadtree
         .findZones( new QuadRectangle(partial.getExpandEnvelope(S.sdist + S.r + S.tolerance)) )
 
-      r.size > 2
+      r.size > 1
     }
     val RR = r2 ++ PF_Utils.pruneByArchery(r1)
     val q1 = (clocktime - q0) / 1e9
@@ -256,6 +265,7 @@ object PFlock6 {
     log(s"$capa|$ncells|$sdist|$step|Partials|${FF.size}")
 
     logt(s"$capa|$ncells|$sdist|$step|Total|${tSafe + tPartial}")
+    log(s"$capa|$ncells|$sdist|$step|Total|${FF.size + safes.size}")
     /****
      * DEBUG
      */

@@ -390,6 +390,8 @@ object PF_Utils {
     }
   }
 
+
+  @tailrec
   def joinDisks(trajs: List[(Int, Iterable[STPoint])], flocks: List[Disk], f: List[Disk], cell: Envelope, cell_prime: Envelope, partial: List[Disk])
                (implicit S: Settings, G: GeometryFactory, L: Logger): (List[Disk], List[Disk]) = {
     val pid = TaskContext.getPartitionId()
@@ -523,6 +525,156 @@ object PF_Utils {
       case Nil => (f, partial)
     }
   }
+  @tailrec
+  def joinDisksCachingPartials(trajs: List[(Int, Iterable[STPoint])], flocks: List[Disk], f: List[Disk],
+                               cell: Envelope, cell_prime: Envelope, partial: List[Disk],
+                               time_start: Int, time_end: Int, partial2: List[Disk])
+               (implicit S: Settings, G: GeometryFactory, L: Logger): (List[Disk], List[Disk], List[Disk]) = {
+    val pid = TaskContext.getPartitionId()
+
+    trajs match {
+      case current_trajs :: remaining_trajs =>
+        val time = current_trajs._1
+        val points = current_trajs._2.toList
+
+        val (new_flocks, stats) = if (S.method == "BFE") {
+          val (nf, stats) = BFE.run(points)
+          (nf.map(_.copy(start = time, end = time)).filter(d => cell_prime.contains(d.center.getCoordinate)), stats)
+          //(nf.map(_.copy(start = time, end = time)), stats)
+        } else {
+          val (nf, stats) = PSI.run(points)
+          (nf.map(_.copy(start = time, end = time)).filter(d => cell_prime.contains(d.center.getCoordinate)), stats)
+          //(nf.map(_.copy(start = time, end = time)), stats)
+        }
+
+        debug{
+          stats.printPSI()
+        }
+
+        /***
+         * start: merging previous flocks with current flocks...
+         ***/
+        val merged_ones = if(S.method != "BFE") {
+          val inverted_index = flocks.flatMap { flock =>
+            flock.pids.map { pid =>
+              pid -> flock
+            }
+          }.groupBy(_._1).mapValues {
+            _.map(_._2)
+          }
+
+          val flocks_prime = for {new_flock <- new_flocks} yield {
+            val disks = new_flock.pids.filter{ pid => inverted_index.keySet.contains(pid) }.flatMap { pid =>
+              inverted_index(pid)
+            }.distinct
+
+            disks.map{ old_flock =>
+              val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
+              val flock = Disk(new_flock.center, pids, old_flock.start, time)
+              flock.locations = old_flock.locations :+ new_flock.center.getCoordinate
+
+              if(pids == new_flock.pids) new_flock.subset = true
+
+              flock
+            }.filter(_.pids.size >= S.mu) // filtering by minimum number of entities (mu)...
+
+          }
+
+          flocks_prime.flatten
+
+          //flocks
+        } else {
+          //flocks
+          val merged_ones = (for{
+            old_flock <- flocks
+            new_flock <- new_flocks
+          } yield {
+            val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
+            val flock = Disk(new_flock.center, pids, old_flock.start, time)
+            flock.locations = old_flock.locations :+ new_flock.center.getCoordinate
+
+            if(pids == new_flock.pids) new_flock.subset = true
+
+            flock
+          }).filter(_.pids.size >= S.mu) // filtering by minimum number of entities (mu)...
+
+          merged_ones
+        }
+
+        /***
+         * end: merging previous flocks with current flocks...
+         ***/
+
+        /***
+         * start: pruning subset flocks...
+         ***/
+        val M = pruneM(merged_ones, List.empty[Disk]).filterNot(_.subset)
+
+        val N = new_flocks.filterNot(_.subset).map{ flock =>
+          Disk(flock.center, flock.pids, time, time)
+        }
+
+        val candidates = M ++ pruneN(M, N, List.empty[Disk])
+        /***
+         * end: pruning subset flocks...
+         ***/
+
+        /***
+         * start: reporting...
+         ***/
+        val F_prime = candidates
+          .map{ flock =>
+            val safe_delta = flock.end - flock.start >= S.delta - 1
+            val safe_area  = cell.contains(flock.locations.head) || cell.contains(flock.locations.last) // report if flock is in safe area...
+
+            (flock, safe_delta, safe_area)
+          }
+
+        val r = F_prime.filter(f => f._2 && f._3).map(_._1)
+        if(S.print){
+          r.foreach{println}
+        }
+        /***
+         * end: reporting...
+         ***/
+
+        /***
+         * start: recurse...
+         ***/
+
+        val F = F_prime
+          .map{ case(flock, safe_delta, _) =>
+            if(safe_delta) {
+              val f = flock.copy(start = flock.start + 1)
+              f.locations = flock.locations.tail
+              f
+            } else flock
+          }
+
+        //val F_partial = getPartials(F, cell)
+        val F_partial = F_prime.filterNot(_._3).map(_._1)
+
+        // Getting partial flocks in time partitions...
+        val T_partial_start = if(time < time_start + S.delta - 1){
+          val prime = candidates.filter{ candidate => candidate.start == time_start }
+          PF_Utils.pruneByArchery(prime ++ partial2)
+        } else {
+          partial2
+        }
+        val T_partial_end = if (time == time_end) {
+          candidates.filter { candidate => candidate.end == time_end }
+        } else {
+          List.empty[Disk]
+        }
+        val new_partial2 = T_partial_start ++ T_partial_end
+        joinDisksCachingPartials(remaining_trajs, F, f ++ r, cell, cell_prime, partial ++ F_partial, time_start, time_end, new_partial2)
+      /***
+       * start: recurse...
+       ***/
+      case Nil => (f, partial, partial2)
+    }
+  }
+
 
   def joinDisks2(trajs: List[(Int, Iterable[STPoint])], flocks: List[Disk], f: List[Disk], cell: Envelope, cell_prime: Envelope, partial: List[Disk])
                (implicit S: Settings, G: GeometryFactory, L: Logger): (List[Disk], List[Disk]) = {
