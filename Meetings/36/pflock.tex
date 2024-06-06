@@ -81,15 +81,27 @@
 %%% Slides...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Common Ancestor approach...}
-  \centering
-  \includegraphics[width=0.8\textwidth]{figures/la25k_steps.pdf}
+\begin{frame}{Partial flocks processing...}
+    \begin{itemize}
+        \item Collect  in risky area during parallel processing...
+        \item Store partial flocks by start time...
+        \item Traverse by start time merging each partial flocks with partial flocks in its end time + 1...
+        \item Prune any subset or duplicate...
+        \item Report flocks which fit $\delta$ in the current time and update them...
+        \item Pass remaining partial flocks to the next time...
+    \end{itemize}
 \end{frame}
 
-\begin{frame}{Cubes partitioning...}
-  \centering
-  \includegraphics[width=0.9\textwidth]{figures/TCubes.pdf}
+\begin{frame}{Improvements in code...}
+    \begin{itemize}
+        \item Fix bug in inverted index (time from ~20s to ~2s)...
+        \item Implementing spatial indexing in the prunning routine...
+        \item Removing unnecesary RDD calls...
+        \item Time improves from ~120s to ~8s
+        \item Reducing number of cells also improves a lot the time
+    \end{itemize}
 \end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \end{document}
