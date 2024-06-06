@@ -70,8 +70,8 @@ object PFlock6 {
 
     // Time partitions...
     val times_prime = (0 to S.endtime).toList
-    val time_partitions = PF_Utils.cut(times_prime, 3)
-    time_partitions.toSeq.sortBy(_._1).foreach{println}
+    val time_partitions = PF_Utils.cut(times_prime, params.step())
+    //time_partitions.toSeq.sortBy(_._1).foreach{println}
 
     val sample = trajs.sample(withReplacement = false, fraction = params.fraction(), seed = 42).collect()
     val envelope = PF_Utils.getEnvelope(trajs)
@@ -102,7 +102,7 @@ object PFlock6 {
     val capa  = params.capacity()
 
     var t0 = clocktime
-    val trajs_prime = trajs.mapPartitions { rows =>
+    val trajs_prime = trajs.filter(_._1 < S.endtime).mapPartitions { rows =>
       rows.flatMap { case (_, point) =>
         val tpart = time_partitions(PF_Utils.getTime(point))
         val env = point.getEnvelopeInternal
