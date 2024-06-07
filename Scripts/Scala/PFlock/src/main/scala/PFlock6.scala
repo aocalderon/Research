@@ -121,7 +121,6 @@ object PFlock6 {
     log(s"$capa|$ncells|$sdist|$step|Part|${trajs_partitioned0.count()}")
     val tPart = (clocktime - t0) / 1e9
     logt(s"$capa|$ncells|$sdist|$step|Part|$tPart")
-    println(cubes_ids.size)
 
     val trajs_partitioned = trajs_partitioned0.filter{ p =>
       val data = p.getUserData.asInstanceOf[Data]
@@ -165,14 +164,18 @@ object PFlock6 {
       }.groupBy(_._1).map { case (time, points) =>
         (time, points.map(p => STPoint(p._2)))
       }.toList.sortBy(_._1)
+      val times_prime = ps.map(_._1)
+      val time_start  = times_prime.head
+      val time_end    = times_prime.last
 
-      val (flocks, partial) = PF_Utils.joinDisks(ps, List.empty[Disk], List.empty[Disk], cell, cell_prime, List.empty[Disk])
+      val flocks_and_partials = PF_Utils.joinDisksCachingPartials(ps, List.empty[Disk], List.empty[Disk],
+        cell, cell_prime, List.empty[Disk],
+        time_start, time_end, List.empty[Disk])
 
-      partial.foreach(_.did = index)
-      (flocks ++ partial).toIterator
+      Iterator(flocks_and_partials)
     }.cache
     val flocksLocal = flocksRDD.collect()
-    val safes = flocksLocal.filter(_.did == -1)
+    val safes = flocksLocal.flatMap(_._1)
     val tSafe = (clocktime - t0) / 1e9
     logt(s"$capa|$ncells|$sdist|$step|Safe|$tSafe")
     log(s"$capa|$ncells|$sdist|$step|SafeF|${safes.length}")
@@ -190,7 +193,7 @@ object PFlock6 {
       val cell_id = cube_id._1
       val time_id = cube_id._2
       val cell = cells(cell_id)
-      flocks.filter(f => f.did != -1 && !f.tpartial).flatMap{ partial =>
+      flocks.flatMap(_._2).flatMap{ partial =>
         val parents = quadtree
           .findZones( new QuadRectangle(partial.getExpandEnvelope(S.sdist + S.tolerance)) )
           .asScala
@@ -252,7 +255,7 @@ object PFlock6 {
     val tPartial = (clocktime - t0) / 1e9
     logt(s"$capa|$ncells|$sdist|$step|MCA|${tPartial-q1-q2}")
     logt(s"$capa|$ncells|$sdist|$step|Partial|$tPartial")
-    val npartials = flocksLocal.filter(_.did != -1).size
+    val npartials = flocksLocal.flatMap(_._2).size
     log(s"$capa|$ncells|$sdist|$step|npartials|$npartials")
     log(s"$capa|$ncells|$sdist|$step|Partials|${FF.size}")
 
@@ -261,7 +264,7 @@ object PFlock6 {
     /****
      * DEBUG
      */
-    
+
     spark.close
   }
 }

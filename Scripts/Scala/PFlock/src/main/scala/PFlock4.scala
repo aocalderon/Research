@@ -159,13 +159,12 @@ object PFlock4 {
         (time, points.map(p => STPoint(p._2)))
       }.toList.sortBy(_._1)
 
-      val (flocks, partial) = PF_Utils.joinDisks(ps, List.empty[Disk], List.empty[Disk], cell, cell_prime, List.empty[Disk])
+      val f = PF_Utils.joinDisks(ps, List.empty[Disk], List.empty[Disk], cell, cell_prime, List.empty[Disk])
 
-      partial.foreach(_.did = index)
-      (flocks ++ partial).toIterator
+      Iterator(f)
     }.cache
     val flocksLocal = flocksRDD.collect()
-    val safes = flocksLocal.filter(_.did == -1)
+    val safes = flocksLocal.flatMap(_._1)
     val tSafe = (clocktime - t0) / 1e9
     logt(s"$capa|$ncells|$sdist|$step|Safe|$tSafe")
     log(s"$capa|$ncells|$sdist|$step|Safe|${safes.length}")
@@ -174,7 +173,7 @@ object PFlock4 {
      * DEBUG
      */
     save("/tmp/edgesP.wkt"){
-      flocksLocal.filter(_.did != -1).map{ f =>
+      flocksLocal.flatMap(_._2).map{ f =>
         s"${f.wkt}\n"
       }
     }
@@ -185,7 +184,7 @@ object PFlock4 {
     t0 = clocktime
     val partialsRDD = flocksRDD.mapPartitionsWithIndex{ (index, flocks) =>
       val cell = cells(index)
-      flocks.filter(_.did != -1).flatMap{ partial =>
+      flocks.flatMap(_._2).flatMap{ partial =>
         val parents = quadtree
           .findZones( new QuadRectangle(partial.getExpandEnvelope(S.sdist + S.tolerance)) )
           .asScala
@@ -247,7 +246,7 @@ object PFlock4 {
     val tPartial = (clocktime - t0) / 1e9
     logt(s"$capa|$ncells|$sdist|$step|MCA|${tPartial-q1-q2}")
     logt(s"$capa|$ncells|$sdist|$step|Partial|$tPartial")
-    val npartials = flocksLocal.filter(_.did != -1).size
+    val npartials = flocksLocal.flatMap(_._2).size
     log(s"$capa|$ncells|$sdist|$step|npartials|$npartials")
     log(s"$capa|$ncells|$sdist|$step|Partials|${FF.size}")
 
