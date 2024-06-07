@@ -3,8 +3,10 @@ package edu.ucr.dblab.pflock
 import archery.RTree
 import edu.ucr.dblab.pflock.MF_Utils.SimplePartitioner
 import edu.ucr.dblab.pflock.Utils._
+import edu.ucr.dblab.pflock.sedona.quadtree.{QuadRectangle, StandardQuadTree}
 import org.apache.spark.TaskContext
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.SparkSession
 import org.locationtech.jts.geom.{Envelope, GeometryFactory, Point}
 import org.locationtech.jts.index.strtree.STRtree
 import org.slf4j.Logger
@@ -107,6 +109,22 @@ object PF_Utils {
 
   def pruneP(P: List[Disk]): List[Disk] = pruneQ(P, List.empty[Disk])
 
+  def parPrune(flocks: List[Disk])
+              (implicit spark: SparkSession, S: Settings, cells: Map[Int, Cell], tree: StandardQuadTree[Point]): List[Disk] = {
+    val n = tree.getLeafZones.size()
+    spark.sparkContext.parallelize(flocks).flatMap{ flock =>
+      val envelope = flock.getExpandEnvelope(S.epsilon)
+      tree.findZones(new QuadRectangle(envelope)).asScala.map { zone =>
+        (zone.partitionId.toInt, flock)
+      }
+    }.partitionBy(SimplePartitioner(n)).mapPartitionsWithIndex{ (index, it) =>
+      val cell = cells(index)
+      val flocks = it.map(_._2).toList
+      pruneByArchery(flocks).filter{ f =>
+        cell.contains(f)
+      }.toIterator
+    }.collect().toList
+  }
   def pruneByArchery(flocks: List[Disk])(implicit S: Settings): List[Disk] = {
     var tree = archery.RTree[Disk]()
     val f = flocks.sortBy(_.start).zipWithIndex.map{ case(flock, id) =>

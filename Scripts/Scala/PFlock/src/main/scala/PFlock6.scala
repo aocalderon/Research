@@ -76,14 +76,14 @@ object PFlock6 {
     val sample = trajs.sample(withReplacement = false, fraction = params.fraction(), seed = 42).collect()
     val envelope = PF_Utils.getEnvelope(trajs)
     envelope.expandBy(S.epsilon * 2.0)
-    val quadtree = new StandardQuadTree[Point](new QuadRectangle(envelope), 0, params.capacity(), 16)
+    implicit val quadtree: StandardQuadTree[Point] = new StandardQuadTree[Point](new QuadRectangle(envelope), 0, params.capacity(), 16)
     sample.foreach { case (_, point) =>
       quadtree.insert(new QuadRectangle(point.getEnvelopeInternal), point)
     }
     quadtree.assignPartitionIds()
     quadtree.assignPartitionLineage()
     quadtree.dropElements()
-    val cells = quadtree.getLeafZones.asScala.map { leaf =>
+    implicit val cells: Map[Int, Cell] = quadtree.getLeafZones.asScala.map { leaf =>
       val envelope = leaf.getEnvelope
       val id = leaf.partitionId.toInt
 
@@ -280,8 +280,7 @@ object PFlock6 {
 
     val times = (0 to S.endtime).toList
     val R2 = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
-    val R3 = PF_Utils.pruneByArchery(R2)
-    val FF2 = PF_Utils.pruneByLocation(R3, safes.toList ++ FF)
+    val FF2 = PF_Utils.parPrune(R2 ++ FF ++ safes)
     val tPartial2 = (clocktime - t0) / 1e9
     val npartials2 = flocksLocal.flatMap(_._3).length
     logt(s"$capa|$ncells|$sdist|$step|Partial2|$tPartial2")
@@ -289,10 +288,13 @@ object PFlock6 {
     log(s"$capa|$ncells|$sdist|$step|PartialF2|${FF2.size}")
 
     logt(s"$capa|$ncells|$sdist|$step|Total|${tSafe + tPartial + tPartial2}")
-    logt(s"$capa|$ncells|$sdist|$step|Total|${FF2.size + FF.size + safes.length}")
+    logt(s"$capa|$ncells|$sdist|$step|Total|${FF2.size}")
 
-    val N = PF_Utils.pruneByArchery(FF ++ FF2 ++ safes )
-    println(N.size)
+    t0 = clocktime
+    val N = PF_Utils.parPrune(FF ++ FF2 ++ safes)
+    val tParPrune = (clocktime - t0) / 1e9
+    logt(s"$capa|$ncells|$sdist|$step|parPrune|$tParPrune")
+    log(s"$capa|$ncells|$sdist|$step|parPrune|${N.size}")
 
     spark.close
   }
