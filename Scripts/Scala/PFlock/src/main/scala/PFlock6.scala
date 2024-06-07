@@ -256,6 +256,7 @@ object PFlock6 {
     log(s"$capa|$ncells|$sdist|$step|Partials|${FF.size}")
 
     logt(s"$capa|$ncells|$sdist|$step|Total|${tSafe + tPartial}")
+    log(s"$capa|$ncells|$sdist|$step|Total|${FF.size + safes.size}")
     /****
      * DEBUG
      */
