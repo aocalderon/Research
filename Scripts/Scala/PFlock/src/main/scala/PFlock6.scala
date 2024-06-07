@@ -207,7 +207,7 @@ object PFlock6 {
             val lin = mca(zone.lineage, cell.lineage)
             partial.lineage = lin
             partial.did = index
-            (lin, partial)
+            ((lin, time_id), partial)
           }
         parents
       }
@@ -240,7 +240,7 @@ object PFlock6 {
       val r = quadtree
         .findZones( new QuadRectangle(partial.getExpandEnvelope(S.sdist + S.r + S.tolerance)) )
 
-      r.size > 1
+      r.size > 2
     }
     val RR = r2 ++ PF_Utils.pruneByArchery(r1)
     val q1 = (clocktime - q0) / 1e9
