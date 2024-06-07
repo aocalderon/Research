@@ -280,7 +280,7 @@ object PFlock6 {
 
     val times = (0 to S.endtime).toList
     val R2 = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
-    val FF2 = PF_Utils.parPrune(R2 ++ FF ++ safes)
+    val FF2 = PF_Utils.parPrune(R2 ++ T ++ safes)
     val tPartial2 = (clocktime - t0) / 1e9
     val npartials2 = flocksLocal.flatMap(_._3).length
     logt(s"$capa|$ncells|$sdist|$step|Partial2|$tPartial2")
@@ -291,7 +291,7 @@ object PFlock6 {
     logt(s"$capa|$ncells|$sdist|$step|Total|${FF2.size}")
 
     t0 = clocktime
-    val N = PF_Utils.parPrune(FF ++ FF2 ++ safes)
+    val N = PF_Utils.parPrune(R2 ++ T ++ safes )
     val tParPrune = (clocktime - t0) / 1e9
     logt(s"$capa|$ncells|$sdist|$step|parPrune|$tParPrune")
     log(s"$capa|$ncells|$sdist|$step|parPrune|${N.size}")

@@ -126,7 +126,7 @@ object Utils {
     val bbox: Box = Box(mbr.getMinX.toFloat, mbr.getMinY.toFloat,
       mbr.getMaxX.toFloat, mbr.getMaxY.toFloat)
 
-    def contains(disk: Disk): Boolean = mbr.contains(disk.X, disk.Y)
+    def contains(disk: Disk): Boolean = mbr.contains(disk.center.getCoordinate)
 
     def toText(implicit G: GeometryFactory): String = G.toGeometry(mbr).toText
 
