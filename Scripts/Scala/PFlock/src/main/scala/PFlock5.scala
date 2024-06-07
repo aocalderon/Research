@@ -177,7 +177,6 @@ object PFlock5 {
             val lin = mca(zone.lineage, cell.lineage)
             partial.lineage = lin
             partial.did = index
-            partial.corner = true
             (lin, partial)
           }
         parents
