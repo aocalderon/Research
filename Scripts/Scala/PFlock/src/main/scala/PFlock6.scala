@@ -102,7 +102,7 @@ object PFlock6 {
     val capa  = params.capacity()
 
     var t0 = clocktime
-    val trajs_prime = trajs.filter(_._1 < S.endtime).mapPartitions { rows =>
+    val trajs_prime = trajs.filter(_._1 <= S.endtime).mapPartitions { rows =>
       rows.flatMap { case (_, point) =>
         val tpart = time_partitions(PF_Utils.getTime(point))
         val env = point.getEnvelopeInternal
@@ -121,6 +121,7 @@ object PFlock6 {
     log(s"$capa|$ncells|$sdist|$step|Part|${trajs_partitioned0.count()}")
     val tPart = (clocktime - t0) / 1e9
     logt(s"$capa|$ncells|$sdist|$step|Part|$tPart")
+    println(cubes_ids.size)
 
     val trajs_partitioned = trajs_partitioned0.filter{ p =>
       val data = p.getUserData.asInstanceOf[Data]
@@ -260,21 +261,7 @@ object PFlock6 {
     /****
      * DEBUG
      */
-
-    save("/tmp/edgesP.wkt") {
-      trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
-        points.map { p =>
-          val wkt = p.toText
-          val dat = p.getUserData.asInstanceOf[Data]
-          val o = dat.id
-          val t = dat.t
-          val part = cubes_ids_inverse(index)
-
-          s"$wkt\t$o\t$t\t$index\t$part\n"
-        }
-      }.collect()
-    }
-
+    
     spark.close
   }
 }
