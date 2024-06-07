@@ -265,6 +265,35 @@ object PFlock6 {
      * DEBUG
      */
 
+    t0 = clocktime
+    val P = flocksLocal.flatMap(_._3).sortBy(_.start).groupBy(_.start)
+    val partials = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()
+    P.toSeq.map{ case(time, candidates_prime) =>
+      val candidates = candidates_prime.toList
+      val tree = new STRtree()
+      candidates.foreach{ candidate =>
+        tree.insert(new Envelope(candidate.locations.head), candidate)
+      }
+
+      partials(time) = (candidates, tree)
+    }
+
+    val times = (0 to S.endtime).toList
+    val R2 = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
+    val R3 = PF_Utils.pruneByArchery(R2)
+    val FF2 = PF_Utils.pruneByLocation(R3, safes.toList ++ FF)
+    val tPartial2 = (clocktime - t0) / 1e9
+    val npartials2 = flocksLocal.flatMap(_._3).length
+    logt(s"$capa|$ncells|$sdist|$step|Partial2|$tPartial2")
+    log(s"$capa|$ncells|$sdist|$step|npartials2|$npartials2")
+    log(s"$capa|$ncells|$sdist|$step|PartialF2|${FF2.size}")
+
+    logt(s"$capa|$ncells|$sdist|$step|Total|${tSafe + tPartial + tPartial2}")
+    logt(s"$capa|$ncells|$sdist|$step|Total|${FF2.size + FF.size + safes.length}")
+
+    val N = PF_Utils.pruneByArchery(FF ++ FF2 ++ safes )
+    println(N.size)
+
     spark.close
   }
 }

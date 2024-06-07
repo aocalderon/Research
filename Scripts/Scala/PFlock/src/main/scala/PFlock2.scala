@@ -191,6 +191,7 @@ object PFlock2 {
     log(s"$capa|$ncells|$sdist|$step|PartialF|${FF.size}")
 
     logt(s"$capa|$ncells|$sdist|$step|Total|${tSafe + tPartial}")
+    logt(s"$capa|$ncells|$sdist|$step|Total|${FF.size + safes.length}")
 
     save("/home/acald013/tmp/flocksd.tsv") {
       (FF ++ safes).map{ f =>
