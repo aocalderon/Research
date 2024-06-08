@@ -240,10 +240,14 @@ object PFlock6 {
 
     t0 = clocktime
     val tpartialsRDD = flocksRDD.mapPartitionsWithIndex { (index, flocks) =>
-      val cube_id = cubes_ids_inverse(index)
-      val cell_id = cube_id._1
-      flocks.flatMap(_._3).map{ tpartial => (cell_id, tpartial) }
+      flocks.flatMap(_._3).flatMap { tpartial =>
+        val envelope = tpartial.getExpandEnvelope(S.sdist + S.tolerance)
+        quadtree.findZones(new QuadRectangle(envelope)).asScala.map { zone =>
+          (zone.partitionId.toInt, tpartial)
+        }
+      }
     }.partitionBy(SimplePartitioner(ncells)).mapPartitionsWithIndex{ (index, prime) =>
+      val cell = cells(index)
       val tpartial = prime.map(_._2).toList
       val P = tpartial.sortBy(_.start).groupBy(_.start)
       val partials = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()
@@ -256,7 +260,7 @@ object PFlock6 {
       }
       //val times = partials.keys.toList.sorted
       val times = (0 to S.endtime).toList
-      val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
+      val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk]).filter{ f => cell.contains(f) }
 
       R.toIterator
     }.cache
