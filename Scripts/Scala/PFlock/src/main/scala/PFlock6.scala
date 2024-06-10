@@ -279,6 +279,15 @@ object PFlock6 {
     logt(s"$capa|$ncells|$sdist|$step|parPrune|$tParPrune")
     log(s"$capa|$ncells|$sdist|$step|parPrune|${N.size}")
 
+    save("/tmp/pflockd6.tsv"){
+      N.map{ n =>
+        val s = n.start
+        val e = n.end
+        val m = n.pidsText
+        s"$s\t$e\t$m\n"
+      }
+    }
+
     spark.close
   }
 }
