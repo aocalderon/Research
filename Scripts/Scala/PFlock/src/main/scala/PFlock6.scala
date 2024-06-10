@@ -285,7 +285,7 @@ object PFlock6 {
         val e = n.end
         val m = n.pidsText
         s"$s\t$e\t$m\n"
-      }
+      }.sorted
     }
 
     spark.close
