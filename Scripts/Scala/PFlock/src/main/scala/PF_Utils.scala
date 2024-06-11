@@ -211,40 +211,102 @@ object PF_Utils {
           val count = flock2.pidsSet.intersect(flock1.pidsSet).size
 
           tree = count match {
-            case count if flock1.pids.size == count =>
-              if(flock2.start <= flock1.start && flock1.end <= flock2.end){
-                stop = true // flock1 is contained by flock2...
-                tree
-              } else if(flock2.pids.size > count){
-                // flock1 and flock2 do not have the same points.  We iterate next...
-                tree
-              } else {
+              case count if flock1.pids.size == count =>
+                if(flock2.start <= flock1.start && flock1.end <= flock2.end){
+                  stop = true // flock1 is contained by flock2...
+                  tree
+                } else if(flock2.pids.size > count){
+                  // flock1 and flock2 do not have the same points.  We iterate next...
+                  tree
+                } else {
+                  if(flock2.start < flock1.start || flock1.end < flock2.end){
+                    // flock2 is not a subset of flock1 (they have same pids but differ in time).  We iterate next..
+                    tree
+                  } else {
+                    flock2.subset = true // flock2 is a subset of flock1.  We need to remove it...
+                    tree.remove(flock2_entry)
+                  }
+                }
+              case count if flock2.pids.size == count =>
                 if(flock2.start < flock1.start || flock1.end < flock2.end){
-                  // flock2 is not a subset of flock1 (they have same pids but differ in time).  We iterate next..
+                  // flock2 is not a subset of flock1.  We iterate next..
                   tree
                 } else {
                   flock2.subset = true // flock2 is a subset of flock1.  We need to remove it...
                   tree.remove(flock2_entry)
                 }
-              }
-            case count if flock2.pids.size == count =>
-              if(flock2.start < flock1.start || flock1.end < flock2.end){
-                // flock2 is not a subset of flock1.  We iterate next..
+              case _ =>
+                // flock1 and flock2 have different points.  We iterate next...
                 tree
-              } else {
-                flock2.subset = true // flock2 is a subset of flock1.  We need to remove it...
-                tree.remove(flock2_entry)
-              }
-            case _ =>
-            // flock1 and flock2 have different points.  We iterate next...
-            tree
-          }
+            }
+
         }
 
         if(!stop)
           pruneByArcheryRec(List.empty[Disk], Q_prime :+ flock1, tree, S)
         else
           pruneByArcheryRec(List.empty[Disk], Q_prime, tree, S)
+
+      case Nil => Q_prime
+    }
+  }
+  @tailrec
+  private def pruneByArcheryRec2(Q: List[Disk], Q_prime: List[Disk], tree_prime: RTree[Disk], S: Settings): List[Disk] = {
+    tree_prime.entries.toList match {
+      case flock_entry::tail =>
+        var stop = false
+        var flock1 = flock_entry.value
+        var tree = tree_prime.remove(flock_entry)
+        val zone = tree.search(flock1.bbox(S.epsilon.toFloat)).toList
+        for{flock2_entry <- zone if !stop}{
+          val flock2 = flock2_entry.value
+          val count = flock2.pidsSet.intersect(flock1.pidsSet).size
+
+          tree = if(flock1.start == flock2.start && flock1.end == flock2.end && flock1.pidsText == flock2.pidsText){
+            stop = true
+            if (flock1 < flock2){
+              tree
+            } else {
+              flock1 = flock2
+              tree.remove(flock2_entry)
+            }
+          } else {
+            count match {
+              case count if flock1.pids.size == count =>
+                if(flock2.start <= flock1.start && flock1.end <= flock2.end){
+                  stop = true // flock1 is contained by flock2...
+                  tree
+                } else if(flock2.pids.size > count){
+                  // flock1 and flock2 do not have the same points.  We iterate next...
+                  tree
+                } else {
+                  if(flock2.start < flock1.start || flock1.end < flock2.end){
+                    // flock2 is not a subset of flock1 (they have same pids but differ in time).  We iterate next..
+                    tree
+                  } else {
+                    flock2.subset = true // flock2 is a subset of flock1.  We need to remove it...
+                    tree.remove(flock2_entry)
+                  }
+                }
+              case count if flock2.pids.size == count =>
+                if(flock2.start < flock1.start || flock1.end < flock2.end){
+                  // flock2 is not a subset of flock1.  We iterate next..
+                  tree
+                } else {
+                  flock2.subset = true // flock2 is a subset of flock1.  We need to remove it...
+                  tree.remove(flock2_entry)
+                }
+              case _ =>
+                // flock1 and flock2 have different points.  We iterate next...
+                tree
+            }
+          }
+        }
+
+        if(!stop)
+          pruneByArcheryRec2(List.empty[Disk], Q_prime :+ flock1, tree, S)
+        else
+          pruneByArcheryRec2(List.empty[Disk], Q_prime, tree, S)
 
       case Nil => Q_prime
     }
@@ -546,9 +608,11 @@ object PF_Utils {
   @tailrec
   def joinDisksCachingPartials(trajs: List[(Int, Iterable[STPoint])], flocks: List[Disk], f: List[Disk],
                                cell: Envelope, cell_prime: Envelope, partial: List[Disk],
-                               time_start: Int, time_end: Int, partial2: List[Disk])
-               (implicit S: Settings, G: GeometryFactory, L: Logger): (List[Disk], List[Disk], List[Disk]) = {
+                               time_start: Int, time_end: Int, partial2: List[Disk], partial3: List[Disk])
+               (implicit S: Settings, G: GeometryFactory, L: Logger, C: Map[Int, (Int, Int)]): (List[Disk], List[Disk], List[Disk]) = {
     val pid = TaskContext.getPartitionId()
+    //if(pid == 284)
+    //  println("Here")
 
     trajs match {
       case current_trajs :: remaining_trajs =>
@@ -673,23 +737,35 @@ object PF_Utils {
         val F_partial = F_prime.filterNot(_._3).map(_._1)
 
         // Getting partial flocks in time partitions...
-        val T_partial_start = if(time < time_start + S.delta - 1){
+        val T_partial_start = if(time < time_start + (S.delta - 1)){
           val prime = candidates.filter{ candidate => candidate.start == time_start }
-          PF_Utils.pruneByArchery(prime ++ partial2)
+          PF_Utils.pruneByArchery(prime ++ new_flocks ++ partial2)
         } else {
           partial2
         }
-        val T_partial_end = if (time == time_end) {
-          candidates.filter { candidate => candidate.end == time_end }
+        val T_partial_end = if(time > time_end - (S.delta - 1)){
+          val prime = candidates.filter{ candidate => candidate.end == time }.map{ f =>
+            if(f.start < time){
+              val f_prime = f.copy(start = time)
+              f_prime.did = f.did
+              f_prime.locations = f.locations
+              f_prime
+            } else {
+              f
+            }
+          }
+          PF_Utils.pruneByArchery(prime ++ partial3)
         } else {
-          List.empty[Disk]
+          partial3
         }
-        val new_partial2 = T_partial_start ++ T_partial_end
-        joinDisksCachingPartials(remaining_trajs, F, f ++ r, cell, cell_prime, partial ++ F_partial, time_start, time_end, new_partial2)
+
+
+        joinDisksCachingPartials(remaining_trajs, F, f ++ r, cell, cell_prime, partial ++ F_partial,
+          time_start, time_end, T_partial_start, T_partial_end)
       /***
        * start: recurse...
        ***/
-      case Nil => (f, partial, partial2)
+      case Nil => (f, partial, partial2 ++ partial3)
     }
   }
 
@@ -829,7 +905,7 @@ object PF_Utils {
   }
 
   def funPartial(f: List[Disk], time: Int, partials: mutable.HashMap[Int, (List[Disk], STRtree)], result: List[Disk])
-                (implicit S: Settings): (List[Disk], List[Disk]) = {
+                (implicit S: Settings, G: GeometryFactory): (List[Disk], List[Disk]) = {
     val pid = TaskContext.getPartitionId()
 
     val (seeds, _) = try {
@@ -845,13 +921,13 @@ object PF_Utils {
     val t2 = clocktime
     val D = for(flock1 <- flocks) yield {
 
-      val (partial_prime, tree) = try {
+      val (_, tree) = try {
         partials(flock1.end + 1)
       } catch {
         case e: Exception => (List.empty[Disk], new STRtree())
       }
 
-      val zone = flock1.getExpandEnvelope(S.sdist)
+      val zone = flock1.getExpandEnvelope(S.sdist + S.tolerance)
       tree.query(zone).asScala.map{_.asInstanceOf[Disk]}.filter{ flock2 =>
         flock1.pidsSet.intersect(flock2.pidsSet).size >= S.mu
       }.map { flock2 =>
@@ -881,7 +957,10 @@ object PF_Utils {
       (f, a)
     }
     val r = F_prime.filter(_._2).map{ case(f, _) =>
-      f.copy(end = time)
+      val loc = f.locations.slice(0, S.delta - 1)
+      val f_prime = f.copy(center = G.createPoint(loc.last), end = time)
+      f_prime.locations = loc
+      f_prime
     }
     //println(s"reporting: ${(clocktime - t4)/1e9}")
 
@@ -1123,7 +1202,7 @@ object PF_Utils {
 
   @tailrec
   def processPartials(F: List[Disk], times: List[Int], partials: mutable.HashMap[Int, (List[Disk], STRtree)], R: List[Disk])
-                     (implicit S: Settings): List[Disk] = {
+                     (implicit S: Settings, G: GeometryFactory): List[Disk] = {
     times match {
       case time::tail =>
         val (f_prime, r_prime) = PF_Utils.funPartial(F, time, partials, R)
