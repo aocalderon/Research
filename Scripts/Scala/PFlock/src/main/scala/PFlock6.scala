@@ -286,7 +286,7 @@ object PFlock6 {
     log(s"$capa|$ncells|$sdist|$step|parPrune|${N.size}")
 
     logt(s"$capa|$ncells|$sdist|$step|Total|${tSafe + tSPartials + tTPartials + tParPrune}")
-    log(s"$capa|$ncells|$sdist|$step|Total|${safes.length + spartials.length + tpartials.length}")
+    log(s"$capa|$ncells|$sdist|$step|Total|${N.size}")
 
     if(S.debug) {
       save("/tmp/pflockd6.tsv") {
