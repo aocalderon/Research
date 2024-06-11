@@ -71,7 +71,12 @@ object PFlock6 {
     // Time partitions...
     val times_prime = (0 to S.endtime).toList
     val time_partitions = PF_Utils.cut(times_prime, params.step())
-    time_partitions.toSeq.sortBy(_._1).foreach{println}
+
+    debug {
+      time_partitions.toSeq.sortBy(_._1).foreach {
+        println
+      }
+    }
 
     val sample = trajs.sample(withReplacement = false, fraction = params.fraction(), seed = 42).collect()
     val envelope = PF_Utils.getEnvelope(trajs)
@@ -186,7 +191,7 @@ object PFlock6 {
     log(s"$capa|$ncells|$sdist|$step|Safe|${safes.length}")
 
     /****
-     * DEBUG
+     * Spatial partitioning...
      */
     def mca(l1: String, l2: String): String = {
       val i = l1.zip(l2).map{ case(a, b) => a == b }.indexOf(false)
@@ -238,14 +243,12 @@ object PFlock6 {
     val tSPartials = (clocktime - t0) / 1e9
     logt(s"$capa|$ncells|$sdist|$step|SPartial|$tSPartials")
     log(s"$capa|$ncells|$sdist|$step|SPartial|${spartials.length}")
-    //spartials.foreach(println)
 
     /****
-     * DEBUG
+     * Temporal partitioning
      */
-
     t0 = clocktime
-    val tpartialsRDD = flocksRDD.mapPartitionsWithIndex { (index,flocks) =>
+    val tpartialsRDD = flocksRDD.mapPartitionsWithIndex { (_, flocks) =>
       flocks.flatMap(_._3).flatMap { tpartial =>
         val envelope = tpartial.getExpandEnvelope(S.sdist + S.tolerance)
         quadtree.findZones(new QuadRectangle(envelope)).asScala.map { zone =>
@@ -255,7 +258,6 @@ object PFlock6 {
     }.partitionBy(SimplePartitioner(ncells)).mapPartitionsWithIndex{ (index, prime) =>
       val cell = cells(index)
       val tpartial = prime.map(_._2).toList
-      //tpartial.map{ f => s"${f.wkt}\t$index" }.foreach{println}
       val P = tpartial.sortBy(_.start).groupBy(_.start)
       val partials = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()
       P.toSeq.map{ case(time, candidates) =>
@@ -276,18 +278,6 @@ object PFlock6 {
 
     logt(s"$capa|$ncells|$sdist|$step|TPartial|$tTPartials")
     log(s"$capa|$ncells|$sdist|$step|TPartial|${tpartials.length}")
-    save("/tmp/tpartials.tsv"){
-      tpartials.map{ n =>
-        val s = n.start
-        val e = n.end
-        val m = n.pidsText
-        val w = n.center.toText
-        s"$s\t$e\t$m\t$w\n"
-      }.sorted
-    }
-
-    logt(s"$capa|$ncells|$sdist|$step|Total|${tSafe + tSPartials + tTPartials}")
-    logt(s"$capa|$ncells|$sdist|$step|Total|${safes.length + spartials.length + tpartials.length}")
 
     t0 = clocktime
     val N = PF_Utils.parPrune(safes.toList ++ spartials.toList ++ tpartials.toList)
@@ -295,22 +285,18 @@ object PFlock6 {
     logt(s"$capa|$ncells|$sdist|$step|parPrune|$tParPrune")
     log(s"$capa|$ncells|$sdist|$step|parPrune|${N.size}")
 
-    save("/tmp/preprune6.tsv"){
-      (safes.toList ++ spartials.toList ++ tpartials.toList).map{ n =>
-        val s = n.start
-        val e = n.end
-        val m = n.pidsText
-        val w = n.center.toText
-        s"$s\t$e\t$m\t$w\n"
-      }.sorted
-    }
-    save("/tmp/pflockd6.tsv"){
-      N.map{ n =>
-        val s = n.start
-        val e = n.end
-        val m = n.pidsText
-        s"$s\t$e\t$m\n"
-      }.sorted
+    logt(s"$capa|$ncells|$sdist|$step|Total|${tSafe + tSPartials + tTPartials + tParPrune}")
+    log(s"$capa|$ncells|$sdist|$step|Total|${safes.length + spartials.length + tpartials.length}")
+
+    if(S.debug) {
+      save("/tmp/pflockd6.tsv") {
+        N.map { n =>
+          val s = n.start
+          val e = n.end
+          val m = n.pidsText
+          s"$s\t$e\t$m\n"
+        }.sorted
+      }
     }
 
     spark.close
