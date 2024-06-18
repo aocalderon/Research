@@ -1,0 +1,925 @@
+PFlock3 Running... 1
+./pflock3_spark --dataset PFlock/LA_50K --sdist 2 --epsilon 4 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 15:46:16,202|13763|PARAMS|application_1713583699042_3248|dataset|PFlock/LA_50K
+2024-06-14 15:46:16,202|13763|PARAMS|application_1713583699042_3248|sdist|2
+2024-06-14 15:46:16,203|13764|PARAMS|application_1713583699042_3248|epsilon|4
+2024-06-14 15:46:16,203|13764|PARAMS|application_1713583699042_3248|mu|3
+2024-06-14 15:46:16,203|13764|PARAMS|application_1713583699042_3248|delta|3
+2024-06-14 15:46:16,203|13764|PARAMS|application_1713583699042_3248|method|PSI
+2024-06-14 15:46:16,203|13764|PARAMS|application_1713583699042_3248|master|yarn
+2024-06-14 15:46:16,203|13764|PARAMS|application_1713583699042_3248|capacity|7535
+2024-06-14 15:46:16,203|13764|PARAMS|application_1713583699042_3248|fraction|0.05
+2024-06-14 15:46:16,203|13764|PARAMS|application_1713583699042_3248|endtime|60
+2024-06-14 15:46:16,204|13765|PARAMS|application_1713583699042_3248|step|1
+2024-06-14 15:46:16,204|13765|PARAMS|application_1713583699042_3248|debug|false
+2024-06-14 15:46:16,204|13765|PARAMS|application_1713583699042_3248|tester|false
+2024-06-14 15:46:16,204|13765|PARAMS|application_1713583699042_3248|saves|false
+2024-06-14 15:46:16,204|13765|PARAMS|application_1713583699042_3248|cached|false
+2024-06-14 15:46:16,204|13765|PARAMS|application_1713583699042_3248|print|false
+2024-06-14 15:46:16,205|13766|mr-hn|INFO|0|application_1713583699042_3248|1|LA_50K|4.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[403 records].
+2024-06-14 15:46:51,800|49361|mr-hn|INFO|0|application_1713583699042_3248|1|LA_50K|4.0|3|3|PSI|Number of trajectories: 2993517
+2024-06-14 15:47:03,416|60977|mr-hn|TIME|0|application_1713583699042_3248|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Safe|11.612690639
+2024-06-14 15:47:03,417|60978|mr-hn|INFO|0|application_1713583699042_3248|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Safe|19778
+Saved /tmp/edgesC1.wkt	in	0.00s	[184 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[91 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 15:47:13,039|70600|mr-hn|TIME|0|application_1713583699042_3248|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Partial|9.621258022
+2024-06-14 15:47:13,048|70609|mr-hn|INFO|0|application_1713583699042_3248|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|npartials|680
+2024-06-14 15:47:13,049|70610|mr-hn|INFO|0|application_1713583699042_3248|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Partial|20187
+2024-06-14 15:47:13,049|70610|mr-hn|TIME|0|application_1713583699042_3248|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Total|21.233948661
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[20187 records].
+PFlock3 Running... 1
+./pflock3_spark --dataset PFlock/LA_50K --sdist 4 --epsilon 8 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 15:47:32,792|13821|PARAMS|application_1713583699042_3249|dataset|PFlock/LA_50K
+2024-06-14 15:47:32,793|13822|PARAMS|application_1713583699042_3249|sdist|4
+2024-06-14 15:47:32,793|13822|PARAMS|application_1713583699042_3249|epsilon|8
+2024-06-14 15:47:32,793|13822|PARAMS|application_1713583699042_3249|mu|3
+2024-06-14 15:47:32,793|13822|PARAMS|application_1713583699042_3249|delta|3
+2024-06-14 15:47:32,793|13822|PARAMS|application_1713583699042_3249|method|PSI
+2024-06-14 15:47:32,793|13822|PARAMS|application_1713583699042_3249|master|yarn
+2024-06-14 15:47:32,794|13823|PARAMS|application_1713583699042_3249|capacity|7535
+2024-06-14 15:47:32,794|13823|PARAMS|application_1713583699042_3249|fraction|0.05
+2024-06-14 15:47:32,794|13823|PARAMS|application_1713583699042_3249|endtime|60
+2024-06-14 15:47:32,794|13823|PARAMS|application_1713583699042_3249|step|1
+2024-06-14 15:47:32,794|13823|PARAMS|application_1713583699042_3249|debug|false
+2024-06-14 15:47:32,794|13823|PARAMS|application_1713583699042_3249|tester|false
+2024-06-14 15:47:32,794|13823|PARAMS|application_1713583699042_3249|saves|false
+2024-06-14 15:47:32,794|13823|PARAMS|application_1713583699042_3249|cached|false
+2024-06-14 15:47:32,795|13824|PARAMS|application_1713583699042_3249|print|false
+2024-06-14 15:47:32,796|13825|mr-hn|INFO|0|application_1713583699042_3249|1|LA_50K|8.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[406 records].
+2024-06-14 15:48:07,420|48449|mr-hn|INFO|0|application_1713583699042_3249|1|LA_50K|8.0|3|3|PSI|Number of trajectories: 3032418
+2024-06-14 15:48:15,422|56451|mr-hn|TIME|0|application_1713583699042_3249|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Safe|7.991171933
+2024-06-14 15:48:15,422|56451|mr-hn|INFO|0|application_1713583699042_3249|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Safe|54019
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 15:48:30,809|71838|mr-hn|TIME|0|application_1713583699042_3249|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Partial|15.385649476
+2024-06-14 15:48:30,839|71868|mr-hn|INFO|0|application_1713583699042_3249|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|npartials|2695
+2024-06-14 15:48:30,840|71869|mr-hn|INFO|0|application_1713583699042_3249|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Partial|55708
+2024-06-14 15:48:30,842|71871|mr-hn|TIME|0|application_1713583699042_3249|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Total|23.376821409
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.03s	[55708 records].
+PFlock3 Running... 1
+./pflock3_spark --dataset PFlock/LA_50K --sdist 6 --epsilon 12 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 15:48:52,723|14195|PARAMS|application_1713583699042_3250|dataset|PFlock/LA_50K
+2024-06-14 15:48:52,723|14195|PARAMS|application_1713583699042_3250|sdist|6
+2024-06-14 15:48:52,724|14196|PARAMS|application_1713583699042_3250|epsilon|12
+2024-06-14 15:48:52,724|14196|PARAMS|application_1713583699042_3250|mu|3
+2024-06-14 15:48:52,724|14196|PARAMS|application_1713583699042_3250|delta|3
+2024-06-14 15:48:52,724|14196|PARAMS|application_1713583699042_3250|method|PSI
+2024-06-14 15:48:52,724|14196|PARAMS|application_1713583699042_3250|master|yarn
+2024-06-14 15:48:52,724|14196|PARAMS|application_1713583699042_3250|capacity|7535
+2024-06-14 15:48:52,725|14197|PARAMS|application_1713583699042_3250|fraction|0.05
+2024-06-14 15:48:52,725|14197|PARAMS|application_1713583699042_3250|endtime|60
+2024-06-14 15:48:52,725|14197|PARAMS|application_1713583699042_3250|step|1
+2024-06-14 15:48:52,725|14197|PARAMS|application_1713583699042_3250|debug|false
+2024-06-14 15:48:52,725|14197|PARAMS|application_1713583699042_3250|tester|false
+2024-06-14 15:48:52,725|14197|PARAMS|application_1713583699042_3250|saves|false
+2024-06-14 15:48:52,725|14197|PARAMS|application_1713583699042_3250|cached|false
+2024-06-14 15:48:52,726|14198|PARAMS|application_1713583699042_3250|print|false
+2024-06-14 15:48:52,727|14199|mr-hn|INFO|0|application_1713583699042_3250|1|LA_50K|12.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[406 records].
+2024-06-14 15:49:27,930|49402|mr-hn|INFO|0|application_1713583699042_3250|1|LA_50K|12.0|3|3|PSI|Number of trajectories: 3068305
+2024-06-14 15:49:34,925|56397|mr-hn|TIME|0|application_1713583699042_3250|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Safe|6.990371639
+2024-06-14 15:49:34,925|56397|mr-hn|INFO|0|application_1713583699042_3250|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Safe|95080
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 15:49:56,584|78056|mr-hn|TIME|0|application_1713583699042_3250|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Partial|21.657473336
+2024-06-14 15:49:56,648|78120|mr-hn|INFO|0|application_1713583699042_3250|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|npartials|5893
+2024-06-14 15:49:56,649|78121|mr-hn|INFO|0|application_1713583699042_3250|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Partial|98758
+2024-06-14 15:49:56,649|78121|mr-hn|TIME|0|application_1713583699042_3250|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Total|28.647844974999998
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.05s	[98758 records].
+PFlock3 Running... 1
+./pflock3_spark --dataset PFlock/LA_50K --sdist 8 --epsilon 16 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 15:50:19,965|14766|PARAMS|application_1713583699042_3251|dataset|PFlock/LA_50K
+2024-06-14 15:50:19,965|14766|PARAMS|application_1713583699042_3251|sdist|8
+2024-06-14 15:50:19,965|14766|PARAMS|application_1713583699042_3251|epsilon|16
+2024-06-14 15:50:19,965|14766|PARAMS|application_1713583699042_3251|mu|3
+2024-06-14 15:50:19,966|14767|PARAMS|application_1713583699042_3251|delta|3
+2024-06-14 15:50:19,966|14767|PARAMS|application_1713583699042_3251|method|PSI
+2024-06-14 15:50:19,966|14767|PARAMS|application_1713583699042_3251|master|yarn
+2024-06-14 15:50:19,966|14767|PARAMS|application_1713583699042_3251|capacity|7535
+2024-06-14 15:50:19,966|14767|PARAMS|application_1713583699042_3251|fraction|0.05
+2024-06-14 15:50:19,966|14767|PARAMS|application_1713583699042_3251|endtime|60
+2024-06-14 15:50:19,966|14767|PARAMS|application_1713583699042_3251|step|1
+2024-06-14 15:50:19,967|14768|PARAMS|application_1713583699042_3251|debug|false
+2024-06-14 15:50:19,967|14768|PARAMS|application_1713583699042_3251|tester|false
+2024-06-14 15:50:19,967|14768|PARAMS|application_1713583699042_3251|saves|false
+2024-06-14 15:50:19,967|14768|PARAMS|application_1713583699042_3251|cached|false
+2024-06-14 15:50:19,967|14768|PARAMS|application_1713583699042_3251|print|false
+2024-06-14 15:50:19,968|14769|mr-hn|INFO|0|application_1713583699042_3251|1|LA_50K|16.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[403 records].
+2024-06-14 15:50:56,879|51680|mr-hn|INFO|0|application_1713583699042_3251|1|LA_50K|16.0|3|3|PSI|Number of trajectories: 3108305
+2024-06-14 15:51:08,140|62941|mr-hn|TIME|0|application_1713583699042_3251|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Safe|11.257233701
+2024-06-14 15:51:08,140|62941|mr-hn|INFO|0|application_1713583699042_3251|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Safe|142526
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 15:51:42,420|97221|mr-hn|TIME|0|application_1713583699042_3251|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Partial|34.278818768
+2024-06-14 15:51:42,510|97311|mr-hn|INFO|0|application_1713583699042_3251|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|npartials|11730
+2024-06-14 15:51:42,511|97312|mr-hn|INFO|0|application_1713583699042_3251|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Partial|149956
+2024-06-14 15:51:42,511|97312|mr-hn|TIME|0|application_1713583699042_3251|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Total|45.536052469
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.08s	[149956 records].
+PFlock3 Running... 1
+./pflock3_spark --dataset PFlock/LA_50K --sdist 10 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 15:52:06,774|14097|PARAMS|application_1713583699042_3252|dataset|PFlock/LA_50K
+2024-06-14 15:52:06,774|14097|PARAMS|application_1713583699042_3252|sdist|10
+2024-06-14 15:52:06,774|14097|PARAMS|application_1713583699042_3252|epsilon|20
+2024-06-14 15:52:06,774|14097|PARAMS|application_1713583699042_3252|mu|3
+2024-06-14 15:52:06,775|14098|PARAMS|application_1713583699042_3252|delta|3
+2024-06-14 15:52:06,775|14098|PARAMS|application_1713583699042_3252|method|PSI
+2024-06-14 15:52:06,775|14098|PARAMS|application_1713583699042_3252|master|yarn
+2024-06-14 15:52:06,775|14098|PARAMS|application_1713583699042_3252|capacity|7535
+2024-06-14 15:52:06,775|14098|PARAMS|application_1713583699042_3252|fraction|0.05
+2024-06-14 15:52:06,775|14098|PARAMS|application_1713583699042_3252|endtime|60
+2024-06-14 15:52:06,775|14098|PARAMS|application_1713583699042_3252|step|1
+2024-06-14 15:52:06,776|14099|PARAMS|application_1713583699042_3252|debug|false
+2024-06-14 15:52:06,776|14099|PARAMS|application_1713583699042_3252|tester|false
+2024-06-14 15:52:06,776|14099|PARAMS|application_1713583699042_3252|saves|false
+2024-06-14 15:52:06,776|14099|PARAMS|application_1713583699042_3252|cached|false
+2024-06-14 15:52:06,776|14099|PARAMS|application_1713583699042_3252|print|false
+2024-06-14 15:52:06,777|14100|mr-hn|INFO|0|application_1713583699042_3252|1|LA_50K|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[400 records].
+2024-06-14 15:52:43,276|50599|mr-hn|INFO|0|application_1713583699042_3252|1|LA_50K|20.0|3|3|PSI|Number of trajectories: 3148239
+2024-06-14 15:53:03,345|70668|mr-hn|TIME|0|application_1713583699042_3252|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Safe|20.066335593
+2024-06-14 15:53:03,345|70668|mr-hn|INFO|0|application_1713583699042_3252|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Safe|200081
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 15:55:20,649|207972|mr-hn|TIME|0|application_1713583699042_3252|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Partial|137.30303775
+2024-06-14 15:55:20,762|208085|mr-hn|INFO|0|application_1713583699042_3252|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|npartials|20916
+2024-06-14 15:55:20,763|208086|mr-hn|INFO|0|application_1713583699042_3252|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Partial|213092
+2024-06-14 15:55:20,763|208086|mr-hn|TIME|0|application_1713583699042_3252|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Total|157.36937334299998
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.12s	[213092 records].
+PFlock3 Running... 2
+./pflock3_spark --dataset PFlock/LA_50K --sdist 2 --epsilon 4 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 15:55:47,064|14107|PARAMS|application_1713583699042_3253|dataset|PFlock/LA_50K
+2024-06-14 15:55:47,065|14108|PARAMS|application_1713583699042_3253|sdist|2
+2024-06-14 15:55:47,065|14108|PARAMS|application_1713583699042_3253|epsilon|4
+2024-06-14 15:55:47,065|14108|PARAMS|application_1713583699042_3253|mu|3
+2024-06-14 15:55:47,065|14108|PARAMS|application_1713583699042_3253|delta|3
+2024-06-14 15:55:47,065|14108|PARAMS|application_1713583699042_3253|method|PSI
+2024-06-14 15:55:47,065|14108|PARAMS|application_1713583699042_3253|master|yarn
+2024-06-14 15:55:47,065|14108|PARAMS|application_1713583699042_3253|capacity|7535
+2024-06-14 15:55:47,066|14109|PARAMS|application_1713583699042_3253|fraction|0.05
+2024-06-14 15:55:47,066|14109|PARAMS|application_1713583699042_3253|endtime|60
+2024-06-14 15:55:47,066|14109|PARAMS|application_1713583699042_3253|step|1
+2024-06-14 15:55:47,066|14109|PARAMS|application_1713583699042_3253|debug|false
+2024-06-14 15:55:47,066|14109|PARAMS|application_1713583699042_3253|tester|false
+2024-06-14 15:55:47,066|14109|PARAMS|application_1713583699042_3253|saves|false
+2024-06-14 15:55:47,066|14109|PARAMS|application_1713583699042_3253|cached|false
+2024-06-14 15:55:47,066|14109|PARAMS|application_1713583699042_3253|print|false
+2024-06-14 15:55:47,068|14111|mr-hn|INFO|0|application_1713583699042_3253|1|LA_50K|4.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[403 records].
+2024-06-14 15:56:22,542|49585|mr-hn|INFO|0|application_1713583699042_3253|1|LA_50K|4.0|3|3|PSI|Number of trajectories: 2993517
+2024-06-14 15:56:28,570|55613|mr-hn|TIME|0|application_1713583699042_3253|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Safe|6.025767502
+2024-06-14 15:56:28,571|55614|mr-hn|INFO|0|application_1713583699042_3253|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Safe|19778
+Saved /tmp/edgesC1.wkt	in	0.00s	[184 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[91 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 15:56:39,295|66338|mr-hn|TIME|0|application_1713583699042_3253|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Partial|10.723619583
+2024-06-14 15:56:39,308|66351|mr-hn|INFO|0|application_1713583699042_3253|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|npartials|680
+2024-06-14 15:56:39,308|66351|mr-hn|INFO|0|application_1713583699042_3253|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Partial|20187
+2024-06-14 15:56:39,309|66352|mr-hn|TIME|0|application_1713583699042_3253|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Total|16.749387085
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[20187 records].
+PFlock3 Running... 2
+./pflock3_spark --dataset PFlock/LA_50K --sdist 4 --epsilon 8 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 15:56:59,225|13801|PARAMS|application_1713583699042_3254|dataset|PFlock/LA_50K
+2024-06-14 15:56:59,226|13802|PARAMS|application_1713583699042_3254|sdist|4
+2024-06-14 15:56:59,226|13802|PARAMS|application_1713583699042_3254|epsilon|8
+2024-06-14 15:56:59,226|13802|PARAMS|application_1713583699042_3254|mu|3
+2024-06-14 15:56:59,226|13802|PARAMS|application_1713583699042_3254|delta|3
+2024-06-14 15:56:59,226|13802|PARAMS|application_1713583699042_3254|method|PSI
+2024-06-14 15:56:59,226|13802|PARAMS|application_1713583699042_3254|master|yarn
+2024-06-14 15:56:59,226|13802|PARAMS|application_1713583699042_3254|capacity|7535
+2024-06-14 15:56:59,227|13803|PARAMS|application_1713583699042_3254|fraction|0.05
+2024-06-14 15:56:59,227|13803|PARAMS|application_1713583699042_3254|endtime|60
+2024-06-14 15:56:59,227|13803|PARAMS|application_1713583699042_3254|step|1
+2024-06-14 15:56:59,227|13803|PARAMS|application_1713583699042_3254|debug|false
+2024-06-14 15:56:59,227|13803|PARAMS|application_1713583699042_3254|tester|false
+2024-06-14 15:56:59,227|13803|PARAMS|application_1713583699042_3254|saves|false
+2024-06-14 15:56:59,227|13803|PARAMS|application_1713583699042_3254|cached|false
+2024-06-14 15:56:59,228|13804|PARAMS|application_1713583699042_3254|print|false
+2024-06-14 15:56:59,229|13805|mr-hn|INFO|0|application_1713583699042_3254|1|LA_50K|8.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[406 records].
+2024-06-14 15:57:34,428|49004|mr-hn|INFO|0|application_1713583699042_3254|1|LA_50K|8.0|3|3|PSI|Number of trajectories: 3032418
+2024-06-14 15:57:42,996|57572|mr-hn|TIME|0|application_1713583699042_3254|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Safe|8.564907039
+2024-06-14 15:57:42,996|57572|mr-hn|INFO|0|application_1713583699042_3254|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Safe|54019
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 15:57:58,475|73051|mr-hn|TIME|0|application_1713583699042_3254|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Partial|15.478067058
+2024-06-14 15:57:58,501|73077|mr-hn|INFO|0|application_1713583699042_3254|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|npartials|2695
+2024-06-14 15:57:58,501|73077|mr-hn|INFO|0|application_1713583699042_3254|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Partial|55708
+2024-06-14 15:57:58,501|73077|mr-hn|TIME|0|application_1713583699042_3254|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Total|24.042974097
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.02s	[55708 records].
+PFlock3 Running... 2
+./pflock3_spark --dataset PFlock/LA_50K --sdist 6 --epsilon 12 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 15:58:19,647|13971|PARAMS|application_1713583699042_3255|dataset|PFlock/LA_50K
+2024-06-14 15:58:19,648|13972|PARAMS|application_1713583699042_3255|sdist|6
+2024-06-14 15:58:19,648|13972|PARAMS|application_1713583699042_3255|epsilon|12
+2024-06-14 15:58:19,648|13972|PARAMS|application_1713583699042_3255|mu|3
+2024-06-14 15:58:19,648|13972|PARAMS|application_1713583699042_3255|delta|3
+2024-06-14 15:58:19,648|13972|PARAMS|application_1713583699042_3255|method|PSI
+2024-06-14 15:58:19,648|13972|PARAMS|application_1713583699042_3255|master|yarn
+2024-06-14 15:58:19,649|13973|PARAMS|application_1713583699042_3255|capacity|7535
+2024-06-14 15:58:19,649|13973|PARAMS|application_1713583699042_3255|fraction|0.05
+2024-06-14 15:58:19,649|13973|PARAMS|application_1713583699042_3255|endtime|60
+2024-06-14 15:58:19,649|13973|PARAMS|application_1713583699042_3255|step|1
+2024-06-14 15:58:19,649|13973|PARAMS|application_1713583699042_3255|debug|false
+2024-06-14 15:58:19,649|13973|PARAMS|application_1713583699042_3255|tester|false
+2024-06-14 15:58:19,649|13973|PARAMS|application_1713583699042_3255|saves|false
+2024-06-14 15:58:19,650|13974|PARAMS|application_1713583699042_3255|cached|false
+2024-06-14 15:58:19,650|13974|PARAMS|application_1713583699042_3255|print|false
+2024-06-14 15:58:19,651|13975|mr-hn|INFO|0|application_1713583699042_3255|1|LA_50K|12.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[406 records].
+2024-06-14 15:58:55,286|49610|mr-hn|INFO|0|application_1713583699042_3255|1|LA_50K|12.0|3|3|PSI|Number of trajectories: 3068305
+2024-06-14 15:59:00,371|54695|mr-hn|TIME|0|application_1713583699042_3255|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Safe|5.080630264
+2024-06-14 15:59:00,371|54695|mr-hn|INFO|0|application_1713583699042_3255|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Safe|95080
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 15:59:26,910|81234|mr-hn|TIME|0|application_1713583699042_3255|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Partial|26.537942515
+2024-06-14 15:59:26,978|81302|mr-hn|INFO|0|application_1713583699042_3255|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|npartials|5893
+2024-06-14 15:59:26,979|81303|mr-hn|INFO|0|application_1713583699042_3255|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Partial|98758
+2024-06-14 15:59:26,979|81303|mr-hn|TIME|0|application_1713583699042_3255|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Total|31.618572779
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.25s	[98758 records].
+PFlock3 Running... 2
+./pflock3_spark --dataset PFlock/LA_50K --sdist 8 --epsilon 16 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 15:59:49,510|13838|PARAMS|application_1713583699042_3256|dataset|PFlock/LA_50K
+2024-06-14 15:59:49,510|13838|PARAMS|application_1713583699042_3256|sdist|8
+2024-06-14 15:59:49,510|13838|PARAMS|application_1713583699042_3256|epsilon|16
+2024-06-14 15:59:49,510|13838|PARAMS|application_1713583699042_3256|mu|3
+2024-06-14 15:59:49,510|13838|PARAMS|application_1713583699042_3256|delta|3
+2024-06-14 15:59:49,511|13839|PARAMS|application_1713583699042_3256|method|PSI
+2024-06-14 15:59:49,511|13839|PARAMS|application_1713583699042_3256|master|yarn
+2024-06-14 15:59:49,511|13839|PARAMS|application_1713583699042_3256|capacity|7535
+2024-06-14 15:59:49,511|13839|PARAMS|application_1713583699042_3256|fraction|0.05
+2024-06-14 15:59:49,511|13839|PARAMS|application_1713583699042_3256|endtime|60
+2024-06-14 15:59:49,511|13839|PARAMS|application_1713583699042_3256|step|1
+2024-06-14 15:59:49,511|13839|PARAMS|application_1713583699042_3256|debug|false
+2024-06-14 15:59:49,511|13839|PARAMS|application_1713583699042_3256|tester|false
+2024-06-14 15:59:49,511|13839|PARAMS|application_1713583699042_3256|saves|false
+2024-06-14 15:59:49,512|13840|PARAMS|application_1713583699042_3256|cached|false
+2024-06-14 15:59:49,512|13840|PARAMS|application_1713583699042_3256|print|false
+2024-06-14 15:59:49,513|13841|mr-hn|INFO|0|application_1713583699042_3256|1|LA_50K|16.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[403 records].
+2024-06-14 16:00:24,494|48822|mr-hn|INFO|0|application_1713583699042_3256|1|LA_50K|16.0|3|3|PSI|Number of trajectories: 3108305
+2024-06-14 16:00:36,070|60398|mr-hn|TIME|0|application_1713583699042_3256|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Safe|11.572357007
+2024-06-14 16:00:36,071|60399|mr-hn|INFO|0|application_1713583699042_3256|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Safe|142526
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:01:06,995|91323|mr-hn|TIME|0|application_1713583699042_3256|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Partial|30.924179982
+2024-06-14 16:01:07,088|91416|mr-hn|INFO|0|application_1713583699042_3256|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|npartials|11730
+2024-06-14 16:01:07,089|91417|mr-hn|INFO|0|application_1713583699042_3256|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Partial|149956
+2024-06-14 16:01:07,090|91418|mr-hn|TIME|0|application_1713583699042_3256|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Total|42.496536989
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.08s	[149956 records].
+PFlock3 Running... 2
+./pflock3_spark --dataset PFlock/LA_50K --sdist 10 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 16:01:31,000|13828|PARAMS|application_1713583699042_3257|dataset|PFlock/LA_50K
+2024-06-14 16:01:31,001|13829|PARAMS|application_1713583699042_3257|sdist|10
+2024-06-14 16:01:31,001|13829|PARAMS|application_1713583699042_3257|epsilon|20
+2024-06-14 16:01:31,002|13830|PARAMS|application_1713583699042_3257|mu|3
+2024-06-14 16:01:31,002|13830|PARAMS|application_1713583699042_3257|delta|3
+2024-06-14 16:01:31,002|13830|PARAMS|application_1713583699042_3257|method|PSI
+2024-06-14 16:01:31,002|13830|PARAMS|application_1713583699042_3257|master|yarn
+2024-06-14 16:01:31,003|13831|PARAMS|application_1713583699042_3257|capacity|7535
+2024-06-14 16:01:31,003|13831|PARAMS|application_1713583699042_3257|fraction|0.05
+2024-06-14 16:01:31,003|13831|PARAMS|application_1713583699042_3257|endtime|60
+2024-06-14 16:01:31,003|13831|PARAMS|application_1713583699042_3257|step|1
+2024-06-14 16:01:31,003|13831|PARAMS|application_1713583699042_3257|debug|false
+2024-06-14 16:01:31,003|13831|PARAMS|application_1713583699042_3257|tester|false
+2024-06-14 16:01:31,003|13831|PARAMS|application_1713583699042_3257|saves|false
+2024-06-14 16:01:31,004|13832|PARAMS|application_1713583699042_3257|cached|false
+2024-06-14 16:01:31,004|13832|PARAMS|application_1713583699042_3257|print|false
+2024-06-14 16:01:31,006|13834|mr-hn|INFO|0|application_1713583699042_3257|1|LA_50K|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[400 records].
+2024-06-14 16:02:08,319|51147|mr-hn|INFO|0|application_1713583699042_3257|1|LA_50K|20.0|3|3|PSI|Number of trajectories: 3148239
+2024-06-14 16:02:28,728|71556|mr-hn|TIME|0|application_1713583699042_3257|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Safe|20.406377618
+2024-06-14 16:02:28,729|71557|mr-hn|INFO|0|application_1713583699042_3257|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Safe|200081
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:04:44,287|207115|mr-hn|TIME|0|application_1713583699042_3257|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Partial|135.5568947
+2024-06-14 16:04:44,407|207235|mr-hn|INFO|0|application_1713583699042_3257|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|npartials|20916
+2024-06-14 16:04:44,408|207236|mr-hn|INFO|0|application_1713583699042_3257|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Partial|213092
+2024-06-14 16:04:44,408|207236|mr-hn|TIME|0|application_1713583699042_3257|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Total|155.96327231799998
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.12s	[213092 records].
+PFlock3 Running... 3
+./pflock3_spark --dataset PFlock/LA_50K --sdist 2 --epsilon 4 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 16:05:10,491|13904|PARAMS|application_1713583699042_3258|dataset|PFlock/LA_50K
+2024-06-14 16:05:10,491|13904|PARAMS|application_1713583699042_3258|sdist|2
+2024-06-14 16:05:10,491|13904|PARAMS|application_1713583699042_3258|epsilon|4
+2024-06-14 16:05:10,491|13904|PARAMS|application_1713583699042_3258|mu|3
+2024-06-14 16:05:10,492|13905|PARAMS|application_1713583699042_3258|delta|3
+2024-06-14 16:05:10,492|13905|PARAMS|application_1713583699042_3258|method|PSI
+2024-06-14 16:05:10,492|13905|PARAMS|application_1713583699042_3258|master|yarn
+2024-06-14 16:05:10,492|13905|PARAMS|application_1713583699042_3258|capacity|7535
+2024-06-14 16:05:10,492|13905|PARAMS|application_1713583699042_3258|fraction|0.05
+2024-06-14 16:05:10,492|13905|PARAMS|application_1713583699042_3258|endtime|60
+2024-06-14 16:05:10,492|13905|PARAMS|application_1713583699042_3258|step|1
+2024-06-14 16:05:10,492|13905|PARAMS|application_1713583699042_3258|debug|false
+2024-06-14 16:05:10,493|13906|PARAMS|application_1713583699042_3258|tester|false
+2024-06-14 16:05:10,493|13906|PARAMS|application_1713583699042_3258|saves|false
+2024-06-14 16:05:10,493|13906|PARAMS|application_1713583699042_3258|cached|false
+2024-06-14 16:05:10,493|13906|PARAMS|application_1713583699042_3258|print|false
+2024-06-14 16:05:10,494|13907|mr-hn|INFO|0|application_1713583699042_3258|1|LA_50K|4.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[403 records].
+2024-06-14 16:05:44,449|47862|mr-hn|INFO|0|application_1713583699042_3258|1|LA_50K|4.0|3|3|PSI|Number of trajectories: 2993517
+2024-06-14 16:05:53,326|56739|mr-hn|TIME|0|application_1713583699042_3258|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Safe|8.872087133
+2024-06-14 16:05:53,326|56739|mr-hn|INFO|0|application_1713583699042_3258|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Safe|19778
+Saved /tmp/edgesC1.wkt	in	0.00s	[184 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[91 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:06:02,839|66252|mr-hn|TIME|0|application_1713583699042_3258|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Partial|9.512403092
+2024-06-14 16:06:02,863|66276|mr-hn|INFO|0|application_1713583699042_3258|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|npartials|680
+2024-06-14 16:06:02,863|66276|mr-hn|INFO|0|application_1713583699042_3258|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Partial|20187
+2024-06-14 16:06:02,864|66277|mr-hn|TIME|0|application_1713583699042_3258|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Total|18.384490225
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[20187 records].
+PFlock3 Running... 3
+./pflock3_spark --dataset PFlock/LA_50K --sdist 4 --epsilon 8 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 16:06:22,927|14043|PARAMS|application_1713583699042_3259|dataset|PFlock/LA_50K
+2024-06-14 16:06:22,927|14043|PARAMS|application_1713583699042_3259|sdist|4
+2024-06-14 16:06:22,927|14043|PARAMS|application_1713583699042_3259|epsilon|8
+2024-06-14 16:06:22,927|14043|PARAMS|application_1713583699042_3259|mu|3
+2024-06-14 16:06:22,928|14044|PARAMS|application_1713583699042_3259|delta|3
+2024-06-14 16:06:22,928|14044|PARAMS|application_1713583699042_3259|method|PSI
+2024-06-14 16:06:22,928|14044|PARAMS|application_1713583699042_3259|master|yarn
+2024-06-14 16:06:22,928|14044|PARAMS|application_1713583699042_3259|capacity|7535
+2024-06-14 16:06:22,928|14044|PARAMS|application_1713583699042_3259|fraction|0.05
+2024-06-14 16:06:22,928|14044|PARAMS|application_1713583699042_3259|endtime|60
+2024-06-14 16:06:22,929|14045|PARAMS|application_1713583699042_3259|step|1
+2024-06-14 16:06:22,929|14045|PARAMS|application_1713583699042_3259|debug|false
+2024-06-14 16:06:22,929|14045|PARAMS|application_1713583699042_3259|tester|false
+2024-06-14 16:06:22,929|14045|PARAMS|application_1713583699042_3259|saves|false
+2024-06-14 16:06:22,929|14045|PARAMS|application_1713583699042_3259|cached|false
+2024-06-14 16:06:22,929|14045|PARAMS|application_1713583699042_3259|print|false
+2024-06-14 16:06:22,931|14047|mr-hn|INFO|0|application_1713583699042_3259|1|LA_50K|8.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[406 records].
+2024-06-14 16:06:59,140|50256|mr-hn|INFO|0|application_1713583699042_3259|1|LA_50K|8.0|3|3|PSI|Number of trajectories: 3032418
+2024-06-14 16:07:09,008|60124|mr-hn|TIME|0|application_1713583699042_3259|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Safe|9.862806872
+2024-06-14 16:07:09,009|60125|mr-hn|INFO|0|application_1713583699042_3259|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Safe|54019
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:07:24,761|75877|mr-hn|TIME|0|application_1713583699042_3259|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Partial|15.751764284
+2024-06-14 16:07:24,791|75907|mr-hn|INFO|0|application_1713583699042_3259|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|npartials|2695
+2024-06-14 16:07:24,792|75908|mr-hn|INFO|0|application_1713583699042_3259|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Partial|55708
+2024-06-14 16:07:24,792|75908|mr-hn|TIME|0|application_1713583699042_3259|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Total|25.614571156
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.02s	[55708 records].
+PFlock3 Running... 3
+./pflock3_spark --dataset PFlock/LA_50K --sdist 6 --epsilon 12 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 16:07:46,136|14132|PARAMS|application_1713583699042_3260|dataset|PFlock/LA_50K
+2024-06-14 16:07:46,136|14132|PARAMS|application_1713583699042_3260|sdist|6
+2024-06-14 16:07:46,137|14133|PARAMS|application_1713583699042_3260|epsilon|12
+2024-06-14 16:07:46,137|14133|PARAMS|application_1713583699042_3260|mu|3
+2024-06-14 16:07:46,137|14133|PARAMS|application_1713583699042_3260|delta|3
+2024-06-14 16:07:46,137|14133|PARAMS|application_1713583699042_3260|method|PSI
+2024-06-14 16:07:46,137|14133|PARAMS|application_1713583699042_3260|master|yarn
+2024-06-14 16:07:46,137|14133|PARAMS|application_1713583699042_3260|capacity|7535
+2024-06-14 16:07:46,137|14133|PARAMS|application_1713583699042_3260|fraction|0.05
+2024-06-14 16:07:46,137|14133|PARAMS|application_1713583699042_3260|endtime|60
+2024-06-14 16:07:46,138|14134|PARAMS|application_1713583699042_3260|step|1
+2024-06-14 16:07:46,138|14134|PARAMS|application_1713583699042_3260|debug|false
+2024-06-14 16:07:46,138|14134|PARAMS|application_1713583699042_3260|tester|false
+2024-06-14 16:07:46,138|14134|PARAMS|application_1713583699042_3260|saves|false
+2024-06-14 16:07:46,138|14134|PARAMS|application_1713583699042_3260|cached|false
+2024-06-14 16:07:46,138|14134|PARAMS|application_1713583699042_3260|print|false
+2024-06-14 16:07:46,139|14135|mr-hn|INFO|0|application_1713583699042_3260|1|LA_50K|12.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[406 records].
+2024-06-14 16:08:21,435|49431|mr-hn|INFO|0|application_1713583699042_3260|1|LA_50K|12.0|3|3|PSI|Number of trajectories: 3068305
+2024-06-14 16:08:31,705|59701|mr-hn|TIME|0|application_1713583699042_3260|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Safe|10.255914484
+2024-06-14 16:08:31,706|59702|mr-hn|INFO|0|application_1713583699042_3260|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Safe|95080
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:08:52,735|80731|mr-hn|TIME|0|application_1713583699042_3260|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Partial|21.028284645
+2024-06-14 16:08:52,784|80780|mr-hn|INFO|0|application_1713583699042_3260|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|npartials|5893
+2024-06-14 16:08:52,784|80780|mr-hn|INFO|0|application_1713583699042_3260|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Partial|98758
+2024-06-14 16:08:52,784|80780|mr-hn|TIME|0|application_1713583699042_3260|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Total|31.284199129
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.06s	[98758 records].
+PFlock3 Running... 3
+./pflock3_spark --dataset PFlock/LA_50K --sdist 8 --epsilon 16 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 16:09:17,281|15829|PARAMS|application_1713583699042_3261|dataset|PFlock/LA_50K
+2024-06-14 16:09:17,281|15829|PARAMS|application_1713583699042_3261|sdist|8
+2024-06-14 16:09:17,282|15830|PARAMS|application_1713583699042_3261|epsilon|16
+2024-06-14 16:09:17,282|15830|PARAMS|application_1713583699042_3261|mu|3
+2024-06-14 16:09:17,282|15830|PARAMS|application_1713583699042_3261|delta|3
+2024-06-14 16:09:17,282|15830|PARAMS|application_1713583699042_3261|method|PSI
+2024-06-14 16:09:17,282|15830|PARAMS|application_1713583699042_3261|master|yarn
+2024-06-14 16:09:17,282|15830|PARAMS|application_1713583699042_3261|capacity|7535
+2024-06-14 16:09:17,283|15831|PARAMS|application_1713583699042_3261|fraction|0.05
+2024-06-14 16:09:17,283|15831|PARAMS|application_1713583699042_3261|endtime|60
+2024-06-14 16:09:17,283|15831|PARAMS|application_1713583699042_3261|step|1
+2024-06-14 16:09:17,283|15831|PARAMS|application_1713583699042_3261|debug|false
+2024-06-14 16:09:17,283|15831|PARAMS|application_1713583699042_3261|tester|false
+2024-06-14 16:09:17,283|15831|PARAMS|application_1713583699042_3261|saves|false
+2024-06-14 16:09:17,283|15831|PARAMS|application_1713583699042_3261|cached|false
+2024-06-14 16:09:17,284|15832|PARAMS|application_1713583699042_3261|print|false
+2024-06-14 16:09:17,285|15833|mr-hn|INFO|0|application_1713583699042_3261|1|LA_50K|16.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[403 records].
+2024-06-14 16:09:52,804|51352|mr-hn|INFO|0|application_1713583699042_3261|1|LA_50K|16.0|3|3|PSI|Number of trajectories: 3108305
+2024-06-14 16:10:02,890|61438|mr-hn|TIME|0|application_1713583699042_3261|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Safe|10.081213861
+2024-06-14 16:10:02,890|61438|mr-hn|INFO|0|application_1713583699042_3261|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Safe|142526
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:10:37,729|96277|mr-hn|TIME|0|application_1713583699042_3261|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Partial|34.838104319
+2024-06-14 16:10:37,793|96341|mr-hn|INFO|0|application_1713583699042_3261|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|npartials|11730
+2024-06-14 16:10:37,795|96343|mr-hn|INFO|0|application_1713583699042_3261|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Partial|149956
+2024-06-14 16:10:37,795|96343|mr-hn|TIME|0|application_1713583699042_3261|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Total|44.919318180000005
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.09s	[149956 records].
+PFlock3 Running... 3
+./pflock3_spark --dataset PFlock/LA_50K --sdist 10 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 16:11:04,059|15896|PARAMS|application_1713583699042_3262|dataset|PFlock/LA_50K
+2024-06-14 16:11:04,059|15896|PARAMS|application_1713583699042_3262|sdist|10
+2024-06-14 16:11:04,059|15896|PARAMS|application_1713583699042_3262|epsilon|20
+2024-06-14 16:11:04,059|15896|PARAMS|application_1713583699042_3262|mu|3
+2024-06-14 16:11:04,060|15897|PARAMS|application_1713583699042_3262|delta|3
+2024-06-14 16:11:04,060|15897|PARAMS|application_1713583699042_3262|method|PSI
+2024-06-14 16:11:04,060|15897|PARAMS|application_1713583699042_3262|master|yarn
+2024-06-14 16:11:04,060|15897|PARAMS|application_1713583699042_3262|capacity|7535
+2024-06-14 16:11:04,060|15897|PARAMS|application_1713583699042_3262|fraction|0.05
+2024-06-14 16:11:04,060|15897|PARAMS|application_1713583699042_3262|endtime|60
+2024-06-14 16:11:04,060|15897|PARAMS|application_1713583699042_3262|step|1
+2024-06-14 16:11:04,060|15897|PARAMS|application_1713583699042_3262|debug|false
+2024-06-14 16:11:04,061|15898|PARAMS|application_1713583699042_3262|tester|false
+2024-06-14 16:11:04,061|15898|PARAMS|application_1713583699042_3262|saves|false
+2024-06-14 16:11:04,061|15898|PARAMS|application_1713583699042_3262|cached|false
+2024-06-14 16:11:04,061|15898|PARAMS|application_1713583699042_3262|print|false
+2024-06-14 16:11:04,062|15899|mr-hn|INFO|0|application_1713583699042_3262|1|LA_50K|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[400 records].
+2024-06-14 16:11:39,951|51788|mr-hn|INFO|0|application_1713583699042_3262|1|LA_50K|20.0|3|3|PSI|Number of trajectories: 3148239
+2024-06-14 16:11:58,982|70819|mr-hn|TIME|0|application_1713583699042_3262|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Safe|19.022232973
+2024-06-14 16:11:58,982|70819|mr-hn|INFO|0|application_1713583699042_3262|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Safe|200081
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:14:12,719|204556|mr-hn|TIME|0|application_1713583699042_3262|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Partial|133.735710875
+2024-06-14 16:14:12,884|204721|mr-hn|INFO|0|application_1713583699042_3262|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|npartials|20916
+2024-06-14 16:14:12,885|204722|mr-hn|INFO|0|application_1713583699042_3262|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Partial|213092
+2024-06-14 16:14:12,885|204722|mr-hn|TIME|0|application_1713583699042_3262|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Total|152.757943848
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.12s	[213092 records].
+PFlock3 Running... 4
+./pflock3_spark --dataset PFlock/LA_50K --sdist 2 --epsilon 4 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 16:14:39,265|13851|PARAMS|application_1713583699042_3263|dataset|PFlock/LA_50K
+2024-06-14 16:14:39,265|13851|PARAMS|application_1713583699042_3263|sdist|2
+2024-06-14 16:14:39,266|13852|PARAMS|application_1713583699042_3263|epsilon|4
+2024-06-14 16:14:39,266|13852|PARAMS|application_1713583699042_3263|mu|3
+2024-06-14 16:14:39,266|13852|PARAMS|application_1713583699042_3263|delta|3
+2024-06-14 16:14:39,266|13852|PARAMS|application_1713583699042_3263|method|PSI
+2024-06-14 16:14:39,266|13852|PARAMS|application_1713583699042_3263|master|yarn
+2024-06-14 16:14:39,266|13852|PARAMS|application_1713583699042_3263|capacity|7535
+2024-06-14 16:14:39,266|13852|PARAMS|application_1713583699042_3263|fraction|0.05
+2024-06-14 16:14:39,266|13852|PARAMS|application_1713583699042_3263|endtime|60
+2024-06-14 16:14:39,267|13853|PARAMS|application_1713583699042_3263|step|1
+2024-06-14 16:14:39,267|13853|PARAMS|application_1713583699042_3263|debug|false
+2024-06-14 16:14:39,267|13853|PARAMS|application_1713583699042_3263|tester|false
+2024-06-14 16:14:39,267|13853|PARAMS|application_1713583699042_3263|saves|false
+2024-06-14 16:14:39,267|13853|PARAMS|application_1713583699042_3263|cached|false
+2024-06-14 16:14:39,267|13853|PARAMS|application_1713583699042_3263|print|false
+2024-06-14 16:14:39,269|13855|mr-hn|INFO|0|application_1713583699042_3263|1|LA_50K|4.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[403 records].
+2024-06-14 16:15:15,339|49925|mr-hn|INFO|0|application_1713583699042_3263|1|LA_50K|4.0|3|3|PSI|Number of trajectories: 2993517
+2024-06-14 16:15:25,913|60499|mr-hn|TIME|0|application_1713583699042_3263|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Safe|10.570194497
+2024-06-14 16:15:25,914|60500|mr-hn|INFO|0|application_1713583699042_3263|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Safe|19778
+Saved /tmp/edgesC1.wkt	in	0.00s	[184 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[91 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:15:35,013|69599|mr-hn|TIME|0|application_1713583699042_3263|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Partial|9.098628618
+2024-06-14 16:15:35,025|69611|mr-hn|INFO|0|application_1713583699042_3263|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|npartials|680
+2024-06-14 16:15:35,025|69611|mr-hn|INFO|0|application_1713583699042_3263|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Partial|20187
+2024-06-14 16:15:35,025|69611|mr-hn|TIME|0|application_1713583699042_3263|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Total|19.668823115
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[20187 records].
+PFlock3 Running... 4
+./pflock3_spark --dataset PFlock/LA_50K --sdist 4 --epsilon 8 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 16:15:56,438|15347|PARAMS|application_1713583699042_3264|dataset|PFlock/LA_50K
+2024-06-14 16:15:56,439|15348|PARAMS|application_1713583699042_3264|sdist|4
+2024-06-14 16:15:56,439|15348|PARAMS|application_1713583699042_3264|epsilon|8
+2024-06-14 16:15:56,439|15348|PARAMS|application_1713583699042_3264|mu|3
+2024-06-14 16:15:56,439|15348|PARAMS|application_1713583699042_3264|delta|3
+2024-06-14 16:15:56,439|15348|PARAMS|application_1713583699042_3264|method|PSI
+2024-06-14 16:15:56,439|15348|PARAMS|application_1713583699042_3264|master|yarn
+2024-06-14 16:15:56,440|15349|PARAMS|application_1713583699042_3264|capacity|7535
+2024-06-14 16:15:56,440|15349|PARAMS|application_1713583699042_3264|fraction|0.05
+2024-06-14 16:15:56,440|15349|PARAMS|application_1713583699042_3264|endtime|60
+2024-06-14 16:15:56,440|15349|PARAMS|application_1713583699042_3264|step|1
+2024-06-14 16:15:56,440|15349|PARAMS|application_1713583699042_3264|debug|false
+2024-06-14 16:15:56,440|15349|PARAMS|application_1713583699042_3264|tester|false
+2024-06-14 16:15:56,440|15349|PARAMS|application_1713583699042_3264|saves|false
+2024-06-14 16:15:56,440|15349|PARAMS|application_1713583699042_3264|cached|false
+2024-06-14 16:15:56,441|15350|PARAMS|application_1713583699042_3264|print|false
+2024-06-14 16:15:56,442|15351|mr-hn|INFO|0|application_1713583699042_3264|1|LA_50K|8.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[406 records].
+2024-06-14 16:16:31,843|50752|mr-hn|INFO|0|application_1713583699042_3264|1|LA_50K|8.0|3|3|PSI|Number of trajectories: 3032418
+2024-06-14 16:16:37,305|56214|mr-hn|TIME|0|application_1713583699042_3264|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Safe|5.460020187
+2024-06-14 16:16:37,306|56215|mr-hn|INFO|0|application_1713583699042_3264|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Safe|54019
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:16:54,041|72950|mr-hn|TIME|0|application_1713583699042_3264|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Partial|16.735179123
+2024-06-14 16:16:54,069|72978|mr-hn|INFO|0|application_1713583699042_3264|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|npartials|2695
+2024-06-14 16:16:54,070|72979|mr-hn|INFO|0|application_1713583699042_3264|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Partial|55708
+2024-06-14 16:16:54,071|72980|mr-hn|TIME|0|application_1713583699042_3264|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Total|22.19519931
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.03s	[55708 records].
+PFlock3 Running... 4
+./pflock3_spark --dataset PFlock/LA_50K --sdist 6 --epsilon 12 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 16:17:15,673|14571|PARAMS|application_1713583699042_3265|dataset|PFlock/LA_50K
+2024-06-14 16:17:15,673|14571|PARAMS|application_1713583699042_3265|sdist|6
+2024-06-14 16:17:15,673|14571|PARAMS|application_1713583699042_3265|epsilon|12
+2024-06-14 16:17:15,674|14572|PARAMS|application_1713583699042_3265|mu|3
+2024-06-14 16:17:15,674|14572|PARAMS|application_1713583699042_3265|delta|3
+2024-06-14 16:17:15,674|14572|PARAMS|application_1713583699042_3265|method|PSI
+2024-06-14 16:17:15,674|14572|PARAMS|application_1713583699042_3265|master|yarn
+2024-06-14 16:17:15,674|14572|PARAMS|application_1713583699042_3265|capacity|7535
+2024-06-14 16:17:15,674|14572|PARAMS|application_1713583699042_3265|fraction|0.05
+2024-06-14 16:17:15,674|14572|PARAMS|application_1713583699042_3265|endtime|60
+2024-06-14 16:17:15,674|14572|PARAMS|application_1713583699042_3265|step|1
+2024-06-14 16:17:15,675|14573|PARAMS|application_1713583699042_3265|debug|false
+2024-06-14 16:17:15,675|14573|PARAMS|application_1713583699042_3265|tester|false
+2024-06-14 16:17:15,675|14573|PARAMS|application_1713583699042_3265|saves|false
+2024-06-14 16:17:15,675|14573|PARAMS|application_1713583699042_3265|cached|false
+2024-06-14 16:17:15,675|14573|PARAMS|application_1713583699042_3265|print|false
+2024-06-14 16:17:15,676|14574|mr-hn|INFO|0|application_1713583699042_3265|1|LA_50K|12.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[406 records].
+2024-06-14 16:17:51,632|50530|mr-hn|INFO|0|application_1713583699042_3265|1|LA_50K|12.0|3|3|PSI|Number of trajectories: 3068305
+2024-06-14 16:18:02,187|61085|mr-hn|TIME|0|application_1713583699042_3265|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Safe|10.550894476
+2024-06-14 16:18:02,188|61086|mr-hn|INFO|0|application_1713583699042_3265|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Safe|95080
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:18:24,772|83670|mr-hn|TIME|0|application_1713583699042_3265|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Partial|22.583758945
+2024-06-14 16:18:24,825|83723|mr-hn|INFO|0|application_1713583699042_3265|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|npartials|5893
+2024-06-14 16:18:24,826|83724|mr-hn|INFO|0|application_1713583699042_3265|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Partial|98758
+2024-06-14 16:18:24,826|83724|mr-hn|TIME|0|application_1713583699042_3265|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Total|33.134653420999996
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.30s	[98758 records].
+PFlock3 Running... 4
+./pflock3_spark --dataset PFlock/LA_50K --sdist 8 --epsilon 16 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 16:18:47,656|14094|PARAMS|application_1713583699042_3266|dataset|PFlock/LA_50K
+2024-06-14 16:18:47,657|14095|PARAMS|application_1713583699042_3266|sdist|8
+2024-06-14 16:18:47,657|14095|PARAMS|application_1713583699042_3266|epsilon|16
+2024-06-14 16:18:47,657|14095|PARAMS|application_1713583699042_3266|mu|3
+2024-06-14 16:18:47,657|14095|PARAMS|application_1713583699042_3266|delta|3
+2024-06-14 16:18:47,657|14095|PARAMS|application_1713583699042_3266|method|PSI
+2024-06-14 16:18:47,658|14096|PARAMS|application_1713583699042_3266|master|yarn
+2024-06-14 16:18:47,658|14096|PARAMS|application_1713583699042_3266|capacity|7535
+2024-06-14 16:18:47,658|14096|PARAMS|application_1713583699042_3266|fraction|0.05
+2024-06-14 16:18:47,658|14096|PARAMS|application_1713583699042_3266|endtime|60
+2024-06-14 16:18:47,658|14096|PARAMS|application_1713583699042_3266|step|1
+2024-06-14 16:18:47,658|14096|PARAMS|application_1713583699042_3266|debug|false
+2024-06-14 16:18:47,658|14096|PARAMS|application_1713583699042_3266|tester|false
+2024-06-14 16:18:47,658|14096|PARAMS|application_1713583699042_3266|saves|false
+2024-06-14 16:18:47,659|14097|PARAMS|application_1713583699042_3266|cached|false
+2024-06-14 16:18:47,659|14097|PARAMS|application_1713583699042_3266|print|false
+2024-06-14 16:18:47,660|14098|mr-hn|INFO|0|application_1713583699042_3266|1|LA_50K|16.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[403 records].
+2024-06-14 16:19:23,577|50015|mr-hn|INFO|0|application_1713583699042_3266|1|LA_50K|16.0|3|3|PSI|Number of trajectories: 3108305
+2024-06-14 16:19:33,973|60411|mr-hn|TIME|0|application_1713583699042_3266|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Safe|10.391862209
+2024-06-14 16:19:33,974|60412|mr-hn|INFO|0|application_1713583699042_3266|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Safe|142526
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:20:12,009|98447|mr-hn|TIME|0|application_1713583699042_3266|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Partial|38.033963645
+2024-06-14 16:20:12,120|98558|mr-hn|INFO|0|application_1713583699042_3266|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|npartials|11730
+2024-06-14 16:20:12,121|98559|mr-hn|INFO|0|application_1713583699042_3266|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Partial|149956
+2024-06-14 16:20:12,121|98559|mr-hn|TIME|0|application_1713583699042_3266|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Total|48.425825853999996
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.09s	[149956 records].
+PFlock3 Running... 4
+./pflock3_spark --dataset PFlock/LA_50K --sdist 10 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 16:20:36,759|13873|PARAMS|application_1713583699042_3267|dataset|PFlock/LA_50K
+2024-06-14 16:20:36,760|13874|PARAMS|application_1713583699042_3267|sdist|10
+2024-06-14 16:20:36,760|13874|PARAMS|application_1713583699042_3267|epsilon|20
+2024-06-14 16:20:36,760|13874|PARAMS|application_1713583699042_3267|mu|3
+2024-06-14 16:20:36,760|13874|PARAMS|application_1713583699042_3267|delta|3
+2024-06-14 16:20:36,760|13874|PARAMS|application_1713583699042_3267|method|PSI
+2024-06-14 16:20:36,760|13874|PARAMS|application_1713583699042_3267|master|yarn
+2024-06-14 16:20:36,761|13875|PARAMS|application_1713583699042_3267|capacity|7535
+2024-06-14 16:20:36,761|13875|PARAMS|application_1713583699042_3267|fraction|0.05
+2024-06-14 16:20:36,761|13875|PARAMS|application_1713583699042_3267|endtime|60
+2024-06-14 16:20:36,761|13875|PARAMS|application_1713583699042_3267|step|1
+2024-06-14 16:20:36,761|13875|PARAMS|application_1713583699042_3267|debug|false
+2024-06-14 16:20:36,761|13875|PARAMS|application_1713583699042_3267|tester|false
+2024-06-14 16:20:36,761|13875|PARAMS|application_1713583699042_3267|saves|false
+2024-06-14 16:20:36,761|13875|PARAMS|application_1713583699042_3267|cached|false
+2024-06-14 16:20:36,762|13876|PARAMS|application_1713583699042_3267|print|false
+2024-06-14 16:20:36,763|13877|mr-hn|INFO|0|application_1713583699042_3267|1|LA_50K|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[400 records].
+2024-06-14 16:21:12,264|49378|mr-hn|INFO|0|application_1713583699042_3267|1|LA_50K|20.0|3|3|PSI|Number of trajectories: 3148239
+2024-06-14 16:21:31,875|68989|mr-hn|TIME|0|application_1713583699042_3267|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Safe|19.607478584
+2024-06-14 16:21:31,876|68990|mr-hn|INFO|0|application_1713583699042_3267|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Safe|200081
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:23:42,599|199713|mr-hn|TIME|0|application_1713583699042_3267|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Partial|130.72252148
+2024-06-14 16:23:42,712|199826|mr-hn|INFO|0|application_1713583699042_3267|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|npartials|20916
+2024-06-14 16:23:42,712|199826|mr-hn|INFO|0|application_1713583699042_3267|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Partial|213092
+2024-06-14 16:23:42,713|199827|mr-hn|TIME|0|application_1713583699042_3267|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Total|150.33000006400002
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.10s	[213092 records].
+PFlock3 Running... 5
+./pflock3_spark --dataset PFlock/LA_50K --sdist 2 --epsilon 4 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 16:24:11,775|15982|PARAMS|application_1713583699042_3268|dataset|PFlock/LA_50K
+2024-06-14 16:24:11,775|15982|PARAMS|application_1713583699042_3268|sdist|2
+2024-06-14 16:24:11,775|15982|PARAMS|application_1713583699042_3268|epsilon|4
+2024-06-14 16:24:11,775|15982|PARAMS|application_1713583699042_3268|mu|3
+2024-06-14 16:24:11,775|15982|PARAMS|application_1713583699042_3268|delta|3
+2024-06-14 16:24:11,776|15983|PARAMS|application_1713583699042_3268|method|PSI
+2024-06-14 16:24:11,776|15983|PARAMS|application_1713583699042_3268|master|yarn
+2024-06-14 16:24:11,776|15983|PARAMS|application_1713583699042_3268|capacity|7535
+2024-06-14 16:24:11,776|15983|PARAMS|application_1713583699042_3268|fraction|0.05
+2024-06-14 16:24:11,776|15983|PARAMS|application_1713583699042_3268|endtime|60
+2024-06-14 16:24:11,776|15983|PARAMS|application_1713583699042_3268|step|1
+2024-06-14 16:24:11,777|15984|PARAMS|application_1713583699042_3268|debug|false
+2024-06-14 16:24:11,777|15984|PARAMS|application_1713583699042_3268|tester|false
+2024-06-14 16:24:11,777|15984|PARAMS|application_1713583699042_3268|saves|false
+2024-06-14 16:24:11,777|15984|PARAMS|application_1713583699042_3268|cached|false
+2024-06-14 16:24:11,777|15984|PARAMS|application_1713583699042_3268|print|false
+2024-06-14 16:24:11,778|15985|mr-hn|INFO|0|application_1713583699042_3268|1|LA_50K|4.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[403 records].
+2024-06-14 16:24:46,843|51050|mr-hn|INFO|0|application_1713583699042_3268|1|LA_50K|4.0|3|3|PSI|Number of trajectories: 2993517
+2024-06-14 16:24:55,217|59424|mr-hn|TIME|0|application_1713583699042_3268|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Safe|8.368788373
+2024-06-14 16:24:55,217|59424|mr-hn|INFO|0|application_1713583699042_3268|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Safe|19778
+Saved /tmp/edgesC1.wkt	in	0.00s	[184 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[91 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:25:07,183|71390|mr-hn|TIME|0|application_1713583699042_3268|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Partial|11.965065434
+2024-06-14 16:25:07,198|71405|mr-hn|INFO|0|application_1713583699042_3268|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|npartials|680
+2024-06-14 16:25:07,199|71406|mr-hn|INFO|0|application_1713583699042_3268|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Partial|20187
+2024-06-14 16:25:07,199|71406|mr-hn|TIME|0|application_1713583699042_3268|1|LA_50K|4.0|3|3|PSI|7535|403|2.0|1|Total|20.333853806999997
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.01s	[20187 records].
+PFlock3 Running... 5
+./pflock3_spark --dataset PFlock/LA_50K --sdist 4 --epsilon 8 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 16:25:27,130|13929|PARAMS|application_1713583699042_3269|dataset|PFlock/LA_50K
+2024-06-14 16:25:27,131|13930|PARAMS|application_1713583699042_3269|sdist|4
+2024-06-14 16:25:27,131|13930|PARAMS|application_1713583699042_3269|epsilon|8
+2024-06-14 16:25:27,131|13930|PARAMS|application_1713583699042_3269|mu|3
+2024-06-14 16:25:27,131|13930|PARAMS|application_1713583699042_3269|delta|3
+2024-06-14 16:25:27,131|13930|PARAMS|application_1713583699042_3269|method|PSI
+2024-06-14 16:25:27,132|13931|PARAMS|application_1713583699042_3269|master|yarn
+2024-06-14 16:25:27,132|13931|PARAMS|application_1713583699042_3269|capacity|7535
+2024-06-14 16:25:27,132|13931|PARAMS|application_1713583699042_3269|fraction|0.05
+2024-06-14 16:25:27,132|13931|PARAMS|application_1713583699042_3269|endtime|60
+2024-06-14 16:25:27,132|13931|PARAMS|application_1713583699042_3269|step|1
+2024-06-14 16:25:27,132|13931|PARAMS|application_1713583699042_3269|debug|false
+2024-06-14 16:25:27,132|13931|PARAMS|application_1713583699042_3269|tester|false
+2024-06-14 16:25:27,132|13931|PARAMS|application_1713583699042_3269|saves|false
+2024-06-14 16:25:27,133|13932|PARAMS|application_1713583699042_3269|cached|false
+2024-06-14 16:25:27,133|13932|PARAMS|application_1713583699042_3269|print|false
+2024-06-14 16:25:27,134|13933|mr-hn|INFO|0|application_1713583699042_3269|1|LA_50K|8.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[406 records].
+2024-06-14 16:26:03,457|50256|mr-hn|INFO|0|application_1713583699042_3269|1|LA_50K|8.0|3|3|PSI|Number of trajectories: 3032418
+2024-06-14 16:26:11,278|58077|mr-hn|TIME|0|application_1713583699042_3269|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Safe|7.817452017
+2024-06-14 16:26:11,279|58078|mr-hn|INFO|0|application_1713583699042_3269|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Safe|54019
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:26:25,741|72540|mr-hn|TIME|0|application_1713583699042_3269|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Partial|14.461490071
+2024-06-14 16:26:25,788|72587|mr-hn|INFO|0|application_1713583699042_3269|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|npartials|2695
+2024-06-14 16:26:25,789|72588|mr-hn|INFO|0|application_1713583699042_3269|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Partial|55708
+2024-06-14 16:26:25,789|72588|mr-hn|TIME|0|application_1713583699042_3269|1|LA_50K|8.0|3|3|PSI|7535|406|4.0|1|Total|22.278942088
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.03s	[55708 records].
+PFlock3 Running... 5
+./pflock3_spark --dataset PFlock/LA_50K --sdist 6 --epsilon 12 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 16:26:47,199|13883|PARAMS|application_1713583699042_3270|dataset|PFlock/LA_50K
+2024-06-14 16:26:47,199|13883|PARAMS|application_1713583699042_3270|sdist|6
+2024-06-14 16:26:47,199|13883|PARAMS|application_1713583699042_3270|epsilon|12
+2024-06-14 16:26:47,199|13883|PARAMS|application_1713583699042_3270|mu|3
+2024-06-14 16:26:47,200|13884|PARAMS|application_1713583699042_3270|delta|3
+2024-06-14 16:26:47,200|13884|PARAMS|application_1713583699042_3270|method|PSI
+2024-06-14 16:26:47,200|13884|PARAMS|application_1713583699042_3270|master|yarn
+2024-06-14 16:26:47,200|13884|PARAMS|application_1713583699042_3270|capacity|7535
+2024-06-14 16:26:47,200|13884|PARAMS|application_1713583699042_3270|fraction|0.05
+2024-06-14 16:26:47,200|13884|PARAMS|application_1713583699042_3270|endtime|60
+2024-06-14 16:26:47,200|13884|PARAMS|application_1713583699042_3270|step|1
+2024-06-14 16:26:47,200|13884|PARAMS|application_1713583699042_3270|debug|false
+2024-06-14 16:26:47,201|13885|PARAMS|application_1713583699042_3270|tester|false
+2024-06-14 16:26:47,201|13885|PARAMS|application_1713583699042_3270|saves|false
+2024-06-14 16:26:47,201|13885|PARAMS|application_1713583699042_3270|cached|false
+2024-06-14 16:26:47,201|13885|PARAMS|application_1713583699042_3270|print|false
+2024-06-14 16:26:47,202|13886|mr-hn|INFO|0|application_1713583699042_3270|1|LA_50K|12.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[406 records].
+2024-06-14 16:27:22,132|48816|mr-hn|INFO|0|application_1713583699042_3270|1|LA_50K|12.0|3|3|PSI|Number of trajectories: 3068305
+2024-06-14 16:27:29,120|55804|mr-hn|TIME|0|application_1713583699042_3270|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Safe|6.984143169
+2024-06-14 16:27:29,121|55805|mr-hn|INFO|0|application_1713583699042_3270|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Safe|95080
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:27:52,707|79391|mr-hn|TIME|0|application_1713583699042_3270|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Partial|23.585379042
+2024-06-14 16:27:52,801|79485|mr-hn|INFO|0|application_1713583699042_3270|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|npartials|5893
+2024-06-14 16:27:52,802|79486|mr-hn|INFO|0|application_1713583699042_3270|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Partial|98758
+2024-06-14 16:27:52,802|79486|mr-hn|TIME|0|application_1713583699042_3270|1|LA_50K|12.0|3|3|PSI|7535|406|6.0|1|Total|30.569522211
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.33s	[98758 records].
+PFlock3 Running... 5
+./pflock3_spark --dataset PFlock/LA_50K --sdist 8 --epsilon 16 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 16:28:15,261|13950|PARAMS|application_1713583699042_3271|dataset|PFlock/LA_50K
+2024-06-14 16:28:15,262|13951|PARAMS|application_1713583699042_3271|sdist|8
+2024-06-14 16:28:15,262|13951|PARAMS|application_1713583699042_3271|epsilon|16
+2024-06-14 16:28:15,262|13951|PARAMS|application_1713583699042_3271|mu|3
+2024-06-14 16:28:15,262|13951|PARAMS|application_1713583699042_3271|delta|3
+2024-06-14 16:28:15,263|13952|PARAMS|application_1713583699042_3271|method|PSI
+2024-06-14 16:28:15,263|13952|PARAMS|application_1713583699042_3271|master|yarn
+2024-06-14 16:28:15,263|13952|PARAMS|application_1713583699042_3271|capacity|7535
+2024-06-14 16:28:15,263|13952|PARAMS|application_1713583699042_3271|fraction|0.05
+2024-06-14 16:28:15,263|13952|PARAMS|application_1713583699042_3271|endtime|60
+2024-06-14 16:28:15,263|13952|PARAMS|application_1713583699042_3271|step|1
+2024-06-14 16:28:15,263|13952|PARAMS|application_1713583699042_3271|debug|false
+2024-06-14 16:28:15,264|13953|PARAMS|application_1713583699042_3271|tester|false
+2024-06-14 16:28:15,264|13953|PARAMS|application_1713583699042_3271|saves|false
+2024-06-14 16:28:15,264|13953|PARAMS|application_1713583699042_3271|cached|false
+2024-06-14 16:28:15,264|13953|PARAMS|application_1713583699042_3271|print|false
+2024-06-14 16:28:15,265|13954|mr-hn|INFO|0|application_1713583699042_3271|1|LA_50K|16.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[403 records].
+2024-06-14 16:28:50,544|49233|mr-hn|INFO|0|application_1713583699042_3271|1|LA_50K|16.0|3|3|PSI|Number of trajectories: 3108305
+2024-06-14 16:29:02,221|60910|mr-hn|TIME|0|application_1713583699042_3271|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Safe|11.673328661
+2024-06-14 16:29:02,222|60911|mr-hn|INFO|0|application_1713583699042_3271|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Safe|142526
+Saved /tmp/edgesC1.wkt	in	0.00s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:29:33,663|92352|mr-hn|TIME|0|application_1713583699042_3271|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Partial|31.43985886
+2024-06-14 16:29:33,765|92454|mr-hn|INFO|0|application_1713583699042_3271|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|npartials|11730
+2024-06-14 16:29:33,766|92455|mr-hn|INFO|0|application_1713583699042_3271|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Partial|149956
+2024-06-14 16:29:33,766|92455|mr-hn|TIME|0|application_1713583699042_3271|1|LA_50K|16.0|3|3|PSI|7535|403|8.0|1|Total|43.113187521
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.09s	[149956 records].
+PFlock3 Running... 5
+./pflock3_spark --dataset PFlock/LA_50K --sdist 10 --epsilon 20 --mu 3 --delta 3 --method PSI --master yarn --capacity 7535 --fraction 0.05 --endtime 60 --step 1
+2024-06-14 16:29:58,122|14004|PARAMS|application_1713583699042_3272|dataset|PFlock/LA_50K
+2024-06-14 16:29:58,123|14005|PARAMS|application_1713583699042_3272|sdist|10
+2024-06-14 16:29:58,123|14005|PARAMS|application_1713583699042_3272|epsilon|20
+2024-06-14 16:29:58,123|14005|PARAMS|application_1713583699042_3272|mu|3
+2024-06-14 16:29:58,123|14005|PARAMS|application_1713583699042_3272|delta|3
+2024-06-14 16:29:58,123|14005|PARAMS|application_1713583699042_3272|method|PSI
+2024-06-14 16:29:58,124|14006|PARAMS|application_1713583699042_3272|master|yarn
+2024-06-14 16:29:58,124|14006|PARAMS|application_1713583699042_3272|capacity|7535
+2024-06-14 16:29:58,124|14006|PARAMS|application_1713583699042_3272|fraction|0.05
+2024-06-14 16:29:58,124|14006|PARAMS|application_1713583699042_3272|endtime|60
+2024-06-14 16:29:58,124|14006|PARAMS|application_1713583699042_3272|step|1
+2024-06-14 16:29:58,124|14006|PARAMS|application_1713583699042_3272|debug|false
+2024-06-14 16:29:58,124|14006|PARAMS|application_1713583699042_3272|tester|false
+2024-06-14 16:29:58,124|14006|PARAMS|application_1713583699042_3272|saves|false
+2024-06-14 16:29:58,125|14007|PARAMS|application_1713583699042_3272|cached|false
+2024-06-14 16:29:58,125|14007|PARAMS|application_1713583699042_3272|print|false
+2024-06-14 16:29:58,126|14008|mr-hn|INFO|0|application_1713583699042_3272|1|LA_50K|20.0|3|3|PSI|START|
+Saved /tmp/edgesCells.wkt	in	0.00s	[400 records].
+2024-06-14 16:30:34,094|49976|mr-hn|INFO|0|application_1713583699042_3272|1|LA_50K|20.0|3|3|PSI|Number of trajectories: 3148239
+2024-06-14 16:30:53,187|69069|mr-hn|TIME|0|application_1713583699042_3272|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Safe|19.089109156
+2024-06-14 16:30:53,188|69070|mr-hn|INFO|0|application_1713583699042_3272|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Safe|200081
+Saved /tmp/edgesC1.wkt	in	0.02s	[181 records].
+Saved /tmp/edgesC2.wkt	in	0.00s	[88 records].
+Saved /tmp/edgesC3.wkt	in	0.00s	[46 records].
+Saved /tmp/edgesC4.wkt	in	0.00s	[28 records].
+Saved /tmp/edgesC5.wkt	in	0.00s	[16 records].
+Saved /tmp/edgesC6.wkt	in	0.00s	[10 records].
+Saved /tmp/edgesC7.wkt	in	0.00s	[7 records].
+Saved /tmp/edgesC8.wkt	in	0.00s	[4 records].
+Saved /tmp/edgesC9.wkt	in	0.00s	[1 records].
+2024-06-14 16:33:09,226|205108|mr-hn|TIME|0|application_1713583699042_3272|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Partial|136.037184848
+2024-06-14 16:33:09,319|205201|mr-hn|INFO|0|application_1713583699042_3272|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|npartials|20916
+2024-06-14 16:33:09,320|205202|mr-hn|INFO|0|application_1713583699042_3272|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Partial|213092
+2024-06-14 16:33:09,320|205202|mr-hn|TIME|0|application_1713583699042_3272|1|LA_50K|20.0|3|3|PSI|7535|400|10.0|1|Total|155.12629400400002
+Saved /home/acald013/tmp/flocksd2.tsv	in	0.11s	[213092 records].

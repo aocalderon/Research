@@ -6,10 +6,10 @@ N=$1
 DATASET="PFlock/LA_25K"
 FRACTION=0.1
 ENDTIME=60
-CS=( 2300 3000 5000 ) 
-ES=( 30 ) # epsilon
-SD=( 15 ) # speed distance
-SS=( 8 ) # step
+CS=( 4750 ) 
+ES=( 5 10 15 20 25 30 ) # epsilon
+SD=( 2.5 5 7.5 10 12.5 15 ) # speed distance
+SS=( 4 ) # step
 
 for n in `seq 1 $N`
 do
