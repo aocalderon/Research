@@ -5,7 +5,7 @@ N=$1
 
 DATASET="PFlock/LA_25K"
 ENDTIME=60
-ES=( 5 10 15 ) # epsilon
+ES=( 5 10 15 20 25 30 ) # epsilon
 
 for n in `seq 1 $N`
 do
