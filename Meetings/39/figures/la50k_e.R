@@ -54,3 +54,4 @@ plot(p)
 W = 8
 H = 6
 ggsave(paste0("la50k_e.pdf"), width = W, height = H)
+
