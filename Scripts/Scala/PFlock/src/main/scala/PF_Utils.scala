@@ -110,7 +110,7 @@ object PF_Utils {
   def pruneP(P: List[Disk]): List[Disk] = pruneQ(P, List.empty[Disk])
 
   def parPrune(flocks: List[Disk])
-              (implicit spark: SparkSession, S: Settings, cells: Map[Int, Cell], tree: StandardQuadTree[Point]): List[Disk] = {
+              (implicit spark: SparkSession, S: Settings, cells: Map[Int, Cell], tree: StandardQuadTree[Point], L: Logger): List[Disk] = {
     val n = tree.getLeafZones.size()
     spark.sparkContext.parallelize(flocks).flatMap{ flock =>
       val envelope = flock.getExpandEnvelope(S.epsilon)
@@ -118,11 +118,16 @@ object PF_Utils {
         (zone.partitionId.toInt, flock)
       }
     }.partitionBy(SimplePartitioner(n)).mapPartitionsWithIndex{ (index, it) =>
+      val t0 = clocktime
       val cell = cells(index)
       val flocks = it.map(_._2).toList
-      pruneByArchery(flocks).filter{ f =>
+      val r = pruneByArchery(flocks).filter{ f =>
         cell.contains(f)
       }.toIterator
+      val t1 = (clocktime - t0) / 1e9
+      logt(s"-1|-1|-1|-1|$index|PerCell|parPrune|$t1")
+
+      r
     }.collect().toList
   }
   def pruneByArchery(flocks: List[Disk])(implicit S: Settings): List[Disk] = {
