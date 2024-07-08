@@ -119,6 +119,12 @@ object PFlock6 {
     implicit val cubes_ids: Map[(Int, Int), Int] = trajs_prime.map{ _._1 }.distinct().collect().sortBy(_._1).sortBy(_._2).zipWithIndex.toMap
     implicit val cubes_ids_inverse: Map[Int, (Int, Int)] = cubes_ids.map{ case(key, value) => value -> key }
 
+    save("/tmp/cubes_ids.tsv"){
+      cubes_ids.map{ case(k, v) =>
+        s"$v\t${k._1}\t${k._2}\n"
+      }.toList
+    }
+
     val trajs_partitioned0 = trajs_prime.map{ case(tuple_id, point) =>
       val cube_id = cubes_ids(tuple_id)
       (cube_id, point)
@@ -153,6 +159,7 @@ object PFlock6 {
     log("Start.")
     t0 = clocktime
     val flocksRDD = trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
+      val t0 = clocktime
       val cell_id = cubes_ids_inverse(index)._1
       val cell_test = new Envelope(cells(cell_id).mbr)
       cell_test.expandBy(S.sdist * -1.0)
@@ -170,7 +177,7 @@ object PFlock6 {
         (time, points.map(p => STPoint(p._2)))
       }.toList.sortBy(_._1)
       val times_prime = ps.map(_._1)
-      if(times_prime.isEmpty){
+      val r = if(times_prime.isEmpty){
         val r = (List.empty[Disk],List.empty[Disk],List.empty[Disk])
         Iterator(r)
       } else {
@@ -183,6 +190,10 @@ object PFlock6 {
 
         Iterator(flocks_and_partials)
       }
+      val t1 = (clocktime - t0) / 1e9
+      logt(s"$capa|$ncells|$sdist|$step|$index|PerCell|Safe|$t1")
+
+      r
     }.cache
     val flocksLocal = flocksRDD.collect()
     val safes = flocksLocal.flatMap(_._1)
@@ -199,11 +210,12 @@ object PFlock6 {
     }
     t0 = clocktime
     val spartialsRDD_prime = flocksRDD.mapPartitionsWithIndex{ (index, flocks) =>
+      val t0 = clocktime
       val cube_id = cubes_ids_inverse(index)
       val cell_id = cube_id._1
       val time_id = cube_id._2
       val cell = cells(cell_id)
-      flocks.flatMap(_._2).flatMap{ partial =>
+      val R = flocks.flatMap(_._2).flatMap{ partial =>
         val parents = quadtree
           .findZones( new QuadRectangle(partial.getExpandEnvelope(S.sdist + S.tolerance)) )
           .asScala
@@ -216,28 +228,35 @@ object PFlock6 {
           }
         parents
       }
+      val t1 = (clocktime - t0) / 1e9
+      logt(s"$capa|$ncells|$sdist|$step|$index|PerCell|SPartial1|$t1")
+
+      R
     }.cache
     val cids = spartialsRDD_prime.map(_._1).distinct().collect().zipWithIndex.toMap
     val spartialsRDD = spartialsRDD_prime.map{ case(cid, partial) =>
       (cids(cid), partial)
     }
       .partitionBy(SimplePartitioner(cids.size))
-      .mapPartitionsWithIndex{ (_, p_prime) =>
-      val pp = p_prime.map{ case(_, partial) => partial }.toList
-      val P = pp.sortBy(_.start).groupBy(_.start)
-      val partials = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()
-      P.toSeq.map{ case(time, candidates) =>
-        val tree = new STRtree()
-        candidates.foreach{ candidate =>
-          tree.insert(new Envelope(candidate.locations.head), candidate)
+      .mapPartitionsWithIndex{ (index, p_prime) =>
+        val t0 = clocktime
+        val pp = p_prime.map{ case(_, partial) => partial }.toList
+        val P = pp.sortBy(_.start).groupBy(_.start)
+        val partials = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()
+        P.toSeq.map{ case(time, candidates) =>
+          val tree = new STRtree()
+          candidates.foreach{ candidate =>
+            tree.insert(new Envelope(candidate.locations.head), candidate)
+          }
+          partials(time) = (candidates, tree)
         }
-        partials(time) = (candidates, tree)
-      }
-      //val times = partials.keys.toList.sorted
-      val times = (0 to S.endtime).toList
-      val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
+        //val times = partials.keys.toList.sorted
+        val times = (0 to S.endtime).toList
+        val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
+        val t1 = (clocktime - t0) / 1e9
+        logt(s"$capa|$ncells|$sdist|$step|$index|PerCell|SPartial2|$t1")
 
-      R.toIterator
+        R.toIterator
     }
     val spartials = spartialsRDD.collect()
     val tSPartials = (clocktime - t0) / 1e9
@@ -256,6 +275,7 @@ object PFlock6 {
         }
       }
     }.partitionBy(SimplePartitioner(ncells)).mapPartitionsWithIndex{ (index, prime) =>
+      val t0 = clocktime
       val cell = cells(index)
       val tpartial = prime.map(_._2).toList
       val P = tpartial.sortBy(_.start).groupBy(_.start)
@@ -270,12 +290,13 @@ object PFlock6 {
       //val times = partials.keys.toList.sorted
       val times = (0 to S.endtime).toList
       val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk]).filter{ f => cell.contains(f) }
+      val t1 = (clocktime - t0) / 1e9
+      logt(s"$capa|$ncells|$sdist|$step|$index|PerCell|TPartial|$t1")
 
       R.toIterator
     }.cache
     val tpartials = tpartialsRDD.collect()
     val tTPartials = (clocktime - t0) / 1e9
-
     logt(s"$capa|$ncells|$sdist|$step|TPartial|$tTPartials")
     log(s"$capa|$ncells|$sdist|$step|TPartial|${tpartials.length}")
 

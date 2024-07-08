@@ -7,9 +7,11 @@ DATASET="PFlock/LA_50K"
 FRACTION=0.05
 ENDTIME=60
 CS=( 7535 ) 
-ES=( 4 8 12 16 20 ) # epsilon
-SD=( 2 4 6 8 10 ) # speed distance
-SS=( 8  ) # step
+ES=( 20 ) # epsilon
+SD=( 10 ) # speed distance
+#ES=( 4 8 12 16 20 ) # epsilon
+#SD=( 2 4 6 8 10 ) # speed distance
+SS=( 8 ) # step
 
 for n in `seq 1 $N`
 do
