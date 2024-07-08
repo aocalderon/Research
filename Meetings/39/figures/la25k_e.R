@@ -83,4 +83,4 @@ p = ggplot(data, aes(x = factor(epsilon), y = time, group = method)) +
   scale_shape_discrete("Method") +
   guides(linetype = "none") 
 plot(p)
-ggsave(paste0("la25k_e_psi.pdf"), width = W, height = H)
+ggsave(paste0("la25k_e_psi_bfe.pdf"), width = W, height = H)
