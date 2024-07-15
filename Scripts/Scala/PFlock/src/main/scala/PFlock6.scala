@@ -151,7 +151,23 @@ object PFlock6 {
         val t = data.t
         s"$i\t$x\t$y\t$t\n"
       }.collect()
-    }*/
+      }*/
+
+    val cids2 = Set(82,78,149,157,141,79,2941,43,95,2957)
+    save("/tmp/edgesP.wkt"){
+      trajs_partitioned0.mapPartitionsWithIndex{ (index, points) =>
+        if(cids2.contains(index)){
+          points.map{ point =>
+            val wkt = point.toText
+            val dat = point.getUserData.asInstanceOf[Data]
+
+            s"$wkt\t$dat\n"
+          }
+        } else {
+          List.empty[String].toIterator
+        }
+      }.collect
+    }
 
     val nTrajs = trajs_partitioned.count()
     log(s"Number of trajectories: $nTrajs")
