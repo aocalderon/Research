@@ -25,4 +25,4 @@ data4 <- data3 |> group_by(index) |> summarise(time = sum(time)) |> ungroup()
 
 cells <- read_tsv("cubes_ids.tsv", col_names = c("cube_id", "cell_id", "time_id"))
 
-data5 <- data4 |> left_join(cells, by = join_by(index == cube_id)) |> arrange(desc(time))
+data5 <- data4 |> left_join(cells, by = c("index" = "cube_id")) |> arrange(desc(time))

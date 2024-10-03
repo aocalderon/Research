@@ -5,12 +5,13 @@ import edu.ucr.dblab.pflock.Utils._
 import edu.ucr.dblab.pflock.sedona.quadtree.{QuadRectangle, StandardQuadTree}
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.sql.SparkSession
+import org.locationtech.jts.geom
 import org.locationtech.jts.geom._
 import org.locationtech.jts.index.quadtree.{Quadtree => JTSQuadtree}
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
-import scala.xml._
+import scala.io.Source
 
 object Tester {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -45,65 +46,33 @@ object Tester {
 
     /*******************************************************************************/
     // Code here...
-    val base = spark.read
-      .option("header", value = false)
-      .option("delimiter", "\t")
-      .csv(S.dataset)
-      .rdd
-      .mapPartitions { rows =>
-        rows.map { row =>
-          val oid = row.getString(0).toInt
-          val lon = row.getString(1).toDouble
-          val lat = row.getString(2).toDouble
-          val tid = row.getString(3).toInt
+    import java.nio.file.{FileSystems, Files}
+    val path = "/home/and/Datasets/PFlocks/cells/"
+    val dir = FileSystems.getDefault.getPath(path)
+    val grids = Files.list(dir).iterator().asScala.filter(Files.isRegularFile(_)).map{ file =>
+      val filename = s"$path/${file.getFileName.toString}"
+      val i = file.getFileName.toString.split("\\.")(0).split("cell")(1)
 
-          (oid, lon, lat, tid)
+      val buffer = Source.fromFile(filename)
+      val points = buffer.getLines().map{ line =>
+        val arr = line.split("\\t")
+        val x = arr(1).toDouble
+        val y = arr(2).toDouble
+        G.createPoint(new Coordinate(x, y))
+      }.toArray
+      val envelope = G.createMultiPoint(points).getEnvelopeInternal
+      val area = envelope.getArea
+      val n = points.length.toDouble
+      val d = n / area
+      val wkt = G.toGeometry(envelope).toText
+      buffer.close()
 
-        }
-      }.cache
-
-    val trajs = base.filter{ p => p._4 == S.endtime }.cache
-
-    val nTrajs = trajs.count()
-    log(s"Number of trajectories: $nTrajs")
-
-    save("/tmp/edgesLA.wkt"){
-      trajs.map{ case(o,x,y,t) =>
-        val wkt = G.createPoint(new Coordinate(x,y)).toText
-        s"$wkt\t$o\t$t\n"
-      }.collect()
+      s"$wkt\t$i\t$n\t$area\t$d\n"
     }
 
-    val center = G.createPoint(new Coordinate(1982002.286, 561972.289))
-    val env = center.getEnvelopeInternal
-    env.expandBy(255)
-
-    val trajs2 = trajs.map{ case(o,x,y,t) =>
-      val p = G.createPoint(new Coordinate(x,y))
-      p.setUserData(o)
-      (o, p)
-    }.filter{ case (o, p) => env.contains(p.getEnvelopeInternal) }
-
-    val trajs3 = trajs2.map{ case(o, p) =>
-        val wkt = p.toText
-        s"$wkt\t$o\n"
+    save("/tmp/edgesL.wkt"){
+      grids.toList
     }
-    save("/tmp/edgesS.wkt"){
-      trajs3.collect
-    }
-
-    val ids = trajs2.map{ case(o, p) => o }.sample(withReplacement = false, fraction = 0.85, seed = 42).collect.toSet
-    println(ids.size)
-
-    val base_prime = base.map{ case(o,x,y,t) =>
-      if(!ids.contains(o))
-        s"$o\t$x\t$y\t$t"
-      else
-        ""
-    }.filter(_ != "").cache
-    println(base_prime.count())
-
-    base_prime.toDF().repartition(1024).write.text("PFlock/LA_50K")
 
     /*******************************************************************************/
 
