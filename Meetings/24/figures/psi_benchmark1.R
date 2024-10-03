@@ -2,7 +2,7 @@ library(tidyverse)
 library(latex2exp)
 
 fields <- c("ts","start","host", "tag", "z", "appId","partitions","dataset","epsilon","mu","delta","method","stage","time")  
-data0 <- enframe(read_lines( "Research/Meetings/24/figures/psi_benchmark2.txt" ), value = "line") |>
+data0 <- enframe(read_lines( "psi_benchmark2.txt" ), value = "line") |>
   filter(str_detect(line, 'TIME')) |>
   separate(col = line, into = fields, sep = "\\|") |>
   mutate(stage = str_trim(stage), epsilon = as.numeric(epsilon), time = as.numeric(time)) |>
@@ -13,14 +13,17 @@ data0 <- enframe(read_lines( "Research/Meetings/24/figures/psi_benchmark2.txt" )
 data1 <- data0 |> 
   group_by(dataset, method, epsilon) |> summarise(time = mean(time)) 
 
-density <- read_csv("Research/Meetings/24/figures/density_per_cell.csv") |>
+density <- read_csv("density_per_cell.csv") |>
   #arrange(desc(density)) |>
   arrange(density) |>
   mutate(dataset = paste0("cell", field_2)) |>
   select(dataset, density) |>
-  top_n(15, wt = desc(density))
+  #top_n(15, wt = desc(density))
+  top_n(9, wt = density)
 
 data <- data1 |> inner_join(density, by = "dataset")
+
+data |> write_tsv("top_time_partitions")
 
 p = ggplot(data, aes(x = as.factor(epsilon), y = time, group = method)) +
   geom_line(aes(linetype = method, color = method)) + 
@@ -35,4 +38,4 @@ plot(p)
 
 W = 20
 H = 6
-ggsave(paste0("~/Templates/psi_benchmark2.pdf"), width = W, height = H)
+ggsave(paste0("psi_benchmark11.pdf"), width = W, height = H)

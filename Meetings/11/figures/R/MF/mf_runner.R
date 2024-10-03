@@ -23,6 +23,8 @@ mf = times |> select(epsilon, capacity, partitions, time) |>
   group_by(epsilon, capacity, partitions) |> summarise(time = mean(time)) |>
   filter(partitions != 1)   # remove sequential
 
+mf |> write_tsv("data.tsv")
+
 W = 6
 H = 4
 for(e in as.numeric(levels(as.factor(mf$epsilon)))) {

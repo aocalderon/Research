@@ -402,6 +402,9 @@ object Utils {
       }
     }
 
+    def bfe_total(): Double = tMaximals + tCandidates + tCenters + tPairs + tCliques + tRead + tGrid + tCounts
+    def psi_total(): Double = tBand + tSort + tPairs + tCenters + tCandidates + tBoxes + tFilter
+
     def printPSI(printTotal: Boolean = true)(implicit logger: Logger, S: Settings): Unit = {
       log(s"Points     |$nPoints")
       log(s"Pairs      |$nPairs")
