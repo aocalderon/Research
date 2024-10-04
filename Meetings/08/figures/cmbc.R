@@ -2,7 +2,10 @@ library(tidyverse)
 library(latex2exp)
 
 cmbc <- read_tsv("cmbc.tsv")  
-p = ggplot(data = cmbc, aes(x = factor(epsilon), y = time, fill = Variant)) +
+p = ggplot(data = cmbc, aes(x = factor(epsilon), y = time*6.5, fill = Variant)) +
   geom_bar(stat="identity", position=position_dodge(width = 0.75), width = 0.7) + 
   labs(x=TeX("$\\epsilon$(m)"), y="Time(s)")
 plot(p)
+
+e10 <- cmbc |> filter(epsilon == 10) |>
+  mutate(time = scale(time, center = 0, scale = max(time) - min(time)))
