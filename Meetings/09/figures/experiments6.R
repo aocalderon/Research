@@ -1,6 +1,6 @@
 library(tidyverse)
 
-data0 = enframe(readLines("~/Datasets/PFlocks/experiments6.txt"))
+data0 = enframe(readLines("variants2.txt"))
 
 getParams <- function(command, pattern){
   params = str_trim(str_split(command, "--")[[1]])
@@ -74,13 +74,13 @@ hashsTime1 = hashs %>% filter(tag == "TIME2") %>%
 
 hashsTime2 = hashsTime1 %>% group_by(appId) %>% summarise(avg_time = sum(avg_time), tot_time = sum(tot_time))
 
-#variants = data0 %>% filter(grepl("TIME2", value)) %>%
-#  separate(value, into = fields, sep = "\\|") %>%
-#  select(appId, variant, epsilon, mu, value, duration) %>%
-#  mutate(time = as.numeric(duration),
-#        epsilon = as.numeric(epsilon),
-#        mu = as.numeric(mu),
-#        stage = value)
+variants = data0 %>% filter(grepl("TIME2", value)) %>%
+  separate(value, into = fields, sep = "\\|") %>%
+  select(appId, variant, epsilon, mu, value, duration) %>%
+  mutate(time = as.numeric(duration),
+        epsilon = as.numeric(epsilon),
+        mu = as.numeric(mu),
+        stage = value)
  
 #data = variants %>% inner_join(scala) %>%
 #  select(variant, epsilon, mu, cell, stage, time) %>%
