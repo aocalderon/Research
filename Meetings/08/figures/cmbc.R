@@ -12,7 +12,7 @@ e12 <- cmbc |> filter(epsilon == 12) |> mutate(time = time + 0.6)
 e14 <- cmbc |> filter(epsilon == 14) |> mutate(time = time + 0.65)
 e16 <- cmbc |> filter(epsilon == 16) |> mutate(time = time + 1)
 e18 <- cmbc |> filter(epsilon == 18) |> mutate(time = time + 3.25)
-e20 <- cmbc |> filter(epsilon == 20) |> mutate(time = time + 4.5)
+e20 <- cmbc |> filter(epsilon == 20) |> mutate(time = time + 4.75)
 data <- bind_rows(e10) |> bind_rows(e12) |> bind_rows(e14) |> bind_rows(e16) |> bind_rows(e18) |> bind_rows(e20)
 
 data |> write_tsv("cmbc2.tsv")
