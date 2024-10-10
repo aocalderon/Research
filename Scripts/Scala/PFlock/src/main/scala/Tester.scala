@@ -52,15 +52,15 @@ object Tester {
 
     /*******************************************************************************/
     // Code here...
-    //val path = "file:///home/acald013/Datasets/GeoInformatica/gadm/"
-    val path = "gadm/l3vsl2"
+    val path = "file:///home/acald013/Datasets/GeoInformatica/mainus/"
+    //val path = "gadm/l3vsl2"
     val A = read(s"$path/A.wkt").cache
     println(A.count)
-    val B = read(s"$path/B.wkt").cache
+    //val B = read(s"$path/B.wkt").cache
 
     case class Cell(mbr: Envelope, id: Int)
     val reader = new WKTReader(G)
-    val buffer = Source.fromFile(s"/home/acald013/Datasets/GeoInformatica/gadm/quadtree.wkt")
+    val buffer = Source.fromFile(s"/home/acald013/Datasets/GeoInformatica/mainus/quadtree.wkt")
     val cells = buffer.getLines().map{ line =>
       val arr = line.split("\\t")
       val mbr = reader.read(arr(2)).getEnvelopeInternal
@@ -185,16 +185,15 @@ object Tester {
       }
   }
 
-  //import org.locationtech.jts.algorithm.CGAlgorithms
+  import org.locationtech.jts.algorithm.CGAlgorithms
   private def getRings(polygon: Polygon): List[Array[Coordinate]] = {
-    val outerRing = polygon.getExteriorRing.getCoordinateSequence.toCoordinateArray
-    //val outerRing = if(!CGAlgorithms.isCCW(exterior_coordinates)) { exterior_coordinates.reverse } else { exterior_coordinates }
+    val exterior_coordinates = polygon.getExteriorRing.getCoordinateSequence.toCoordinateArray
+    val outerRing = if(!CGAlgorithms.isCCW(exterior_coordinates)) { exterior_coordinates.reverse } else { exterior_coordinates }
 
     val nInteriorRings = polygon.getNumInteriorRing
     val innerRings = (0 until nInteriorRings).map{ i =>
       val interior_coordinates = polygon.getInteriorRingN(i).getCoordinateSequence.toCoordinateArray
-      //if(CGAlgorithms.isCCW(interior_coordinates)) { interior_coordinates.reverse } else { interior_coordinates }
-      interior_coordinates
+      if(CGAlgorithms.isCCW(interior_coordinates)) { interior_coordinates.reverse } else { interior_coordinates }
     }.toList
 
     outerRing +: innerRings
