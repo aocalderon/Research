@@ -16,13 +16,13 @@
 \begin{document}
     \begin{tikzpicture}[node distance = 2cm, auto]
         % Place nodes
-        \node [block] (graph) {Build graph};
+        \node [block] (graph) {Find pairs};
         \node [cloud, left of=graph, node distance=3cm] (input) {$\mathcal{P}oints$, $\varepsilon$, $\mu$};
         \node [block, below of=graph] (cliques) {Compute cliques};
         \node [block, below of=cliques, ] (filter) {Remove cliques $< \mu$};
         \node [decision, below of=filter] (decide) {Filter by $MBC.r < \frac{\varepsilon}{2}$};
         \node [io, below right of=decide, node distance=3cm, text width=3em] (disks1) {found disks};
-        \node [block, below left of=decide, node distance=3cm, text width=6em] (traditional) {Apply pruning procedure on cliques not enclosed};
+        \node [block, below left of=decide, node distance=3cm, text width=6em] (traditional) {Prune cliques};
         %\node [io, below of=traditional] (disks2) {disks2};
         %\node [io, below of=decide, node distance=4cm] (disks) {disks1 + disks2};
         %\node [block, below of=disks] (prune) {Prune disks};

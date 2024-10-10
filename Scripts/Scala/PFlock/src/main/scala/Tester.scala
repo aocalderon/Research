@@ -56,7 +56,6 @@ object Tester {
     val path = "file:///home/acald013/Datasets/GeoInformatica/mainus/"
     //val path = "gadm/l3vsl2"
 
-
     val A = countHoles(s"$path/A.wkt")
     println(A)
     //val B = read(s"$path/B.wkt").cache
@@ -64,7 +63,7 @@ object Tester {
     /*
     case class Cell(mbr: Envelope, id: Int)
     val reader = new WKTReader(G)
-    val buffer = Source.fromFile(s"/home/acald013/Datasets/GeoInformatica/gadm/quadtree.wkt")
+    val buffer = Source.fromFile(s"/home/acald013/Datasets/GeoInformatica/mainus/quadtree.wkt")
     val cells = buffer.getLines().map{ line =>
       val arr = line.split("\\t")
       val mbr = reader.read(arr(2)).getEnvelopeInternal
