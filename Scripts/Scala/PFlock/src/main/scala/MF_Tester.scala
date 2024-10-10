@@ -59,7 +59,7 @@ object MF_Tester {
           (oid, lon, lat, tid)
 
         }
-      }.cache
+      }.filter(_._4 == 15).cache
 
     case class Cell(mbr: Envelope, id: Int)
     val reader = new WKTReader(G)
@@ -91,6 +91,16 @@ object MF_Tester {
       }
     }.partitionBy(SimplePartitioner(cells.size)).map(_._2).cache()
 
+    save("/tmp/edgesP.wkt"){
+      pointsRDD.mapPartitionsWithIndex{ (index, points) =>
+        val P = points.toList
+        val n = P.length
+        P.map{ point =>
+          s"${point.wkt}\t$index\t$n\n"
+        }.toIterator
+      }.collect
+    }
+
     val stats = pointsRDD.mapPartitionsWithIndex{ (index, points) =>
       val wkt = G.toGeometry(cell_mbrs(index).mbr).toText
       var t0 = clocktime
@@ -103,10 +113,11 @@ object MF_Tester {
       Iterator(s"$wkt\t$index\t${t1/4.0}\t$t2\n")
     }
 
-    save("/tmp/edgesLA.wkt") {
-      stats.collect().sortBy{ line =>
-        val arr = line.split("\\t")
-        -arr(2).toDouble
+    save("/tmp/edgesCells.wkt") {
+      cells.map{ cell =>
+        val wkt = G.toGeometry(cell.mbr).toText
+        val id = cell.id
+        s"$wkt\t$id\n"
       }
     }
     /*******************************************************************************/

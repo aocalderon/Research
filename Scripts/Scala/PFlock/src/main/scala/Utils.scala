@@ -97,7 +97,7 @@ object Utils {
       envelope
     }
 
-    override def toString: String = s"$oid\t${point.getX}\t${point.getY}\t$tid\t$cid\t$count"
+    override def toString: String = s"$oid\t${point.getX}\t${point.getY}\t$tid\t$cid\t$count\n"
 
     def archeryEntry: archery.Entry[STPoint] = {
       val x: Float = X.toFloat
@@ -442,6 +442,25 @@ object Utils {
     // finding cliques...
     val (cliques, tCli) = timer{ bk(vertices, edges).iterator.filter(_.size >= S.mu).toList }
     val nCli = cliques.size
+
+    if(S.debug){
+      save("/tmp/edgesCliques.wkt") {
+        cliques.zipWithIndex.map { case (points, id) =>
+          val wkt = G.createMultiPoint(points.toArray).toText
+          s"$wkt\t$id\n"
+        }
+      }
+      save("/tmp/edgesMBC.wkt") {
+        cliques.zipWithIndex.map { case (points, id) =>
+          val mbc = Welzl.mbc(points)
+          val radius = round(mbc.getRadius)
+          val center = G.createPoint(new Coordinate(mbc.getCenter.getX,
+            mbc.getCenter.getY))
+          val wkt = center.buffer(radius, 25).toText
+          s"$wkt\t$id\t$radius\n"
+        }
+      }
+    }
 
     // finding MBC in each clique...
     val (mbcs, tMBC) = timer{

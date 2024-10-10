@@ -1,20 +1,12 @@
 package edu.ucr.dblab.pflock
 
-import org.locationtech.jts.geom.{PrecisionModel, GeometryFactory}
-import org.locationtech.jts.geom.{Envelope, Coordinate, Point}
-
-import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.serializer.KryoSerializer
-
+import archery._
+import edu.ucr.dblab.pflock.Utils._
+import edu.ucr.dblab.pflock.sedona.quadtree._
+import org.locationtech.jts.geom.{GeometryFactory, PrecisionModel}
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.JavaConverters._
-
-import edu.ucr.dblab.pflock.sedona.quadtree._
-import edu.ucr.dblab.pflock.Utils._
-
-import archery._
 
 object BFE_CMBC {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -231,6 +223,7 @@ object BFE_CMBC {
     val (maximals, stats1) = BFE_CMBC.runAtBegining(points)
     stats1.print()
 
+    /*
     settings = settings.copy(method="BFE_CMBC2")
     val (_, stats2) = BFE_CMBC.runByGrid(points)
     stats2.print()
@@ -238,11 +231,12 @@ object BFE_CMBC {
     settings = settings.copy(method="BFE")
     val (_, stats3) = BFE.run(points)
     stats3.print()
+     */
 
     debug{
       save("/tmp/edgesMaximals.wkt"){ maximals.map(_.wkt + "\n") }
-      settings = settings.copy(method="BFE0")
-      checkMaximals(points)
+      //settings = settings.copy(method="BFE0")
+      //checkMaximals(points)
     }
 
     log(s"Done.|END")
