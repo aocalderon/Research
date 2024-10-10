@@ -22,6 +22,7 @@ object Tester {
     implicit val spark = SparkSession.builder()
       .config("spark.serializer",classOf[KryoSerializer].getName)
       .config("spark.driver.memory","35g")
+      .config("deploy.moce","client")
       .config("spark.executor.memory","20g")
       .config("spark.memory.offHeap.enabled",true)
       .config("spark.memory.offHeap.size","16g")
@@ -52,12 +53,15 @@ object Tester {
 
     /*******************************************************************************/
     // Code here...
-    //val path = "file:///home/acald013/Datasets/GeoInformatica/gadm/"
-    val path = "gadm/l3vsl2"
-    val A = read(s"$path/A.wkt").cache
-    println(A.count)
-    val B = read(s"$path/B.wkt").cache
+    val path = "file:///home/acald013/Datasets/GeoInformatica/mainus/"
+    //val path = "gadm/l3vsl2"
 
+
+    val A = countHoles(s"$path/A.wkt")
+    println(A)
+    //val B = read(s"$path/B.wkt").cache
+
+    /*
     case class Cell(mbr: Envelope, id: Int)
     val reader = new WKTReader(G)
     val buffer = Source.fromFile(s"/home/acald013/Datasets/GeoInformatica/gadm/quadtree.wkt")
@@ -106,12 +110,48 @@ object Tester {
     println(nA)
     println(cells.length - n)
     println(n)
-
+     */
     /*******************************************************************************/
 
     spark.close()
 
     log(s"END|")
+  }
+
+  def countHoles(input: String)(implicit spark: SparkSession, G: GeometryFactory, S: Settings): Int = {
+
+    val polys = spark.read.textFile(input).rdd.cache()
+    debug{
+      val nPolys = polys.count
+      log(s"INFO|npolys=$nPolys")
+    }
+    val edgesRaw = polys.mapPartitions{ lines =>
+      val reader = new WKTReader(G)
+      lines.map{ line =>
+        val arr = line.split("\t")
+        val wkt = arr(0)
+        val id  = arr(1)
+        val geom = reader.read(wkt)
+
+        geom match {
+          case _: MultiPolygon =>
+            (0 until geom.getNumGeometries).map { i =>
+              val polygon = geom.getGeometryN(i).asInstanceOf[Polygon]
+              polygon.getNumInteriorRing()
+            }.reduce(_ + _)
+          case _: Polygon =>
+            val polygon = geom.getGeometryN(0).asInstanceOf[Polygon]
+            polygon.getNumInteriorRing()
+
+          case _ =>
+            println(s"$id\tNot a valid geometry")
+            0
+        }
+      }
+    }
+    edgesRaw.reduce(_ + _)
+
+    
   }
 
   def read(input: String)(implicit spark: SparkSession, G: GeometryFactory, S: Settings): RDD[LineString] = {
@@ -185,16 +225,15 @@ object Tester {
       }
   }
 
-  //import org.locationtech.jts.algorithm.CGAlgorithms
+  import org.locationtech.jts.algorithm.CGAlgorithms
   private def getRings(polygon: Polygon): List[Array[Coordinate]] = {
-    val outerRing = polygon.getExteriorRing.getCoordinateSequence.toCoordinateArray
-    //val outerRing = if(!CGAlgorithms.isCCW(exterior_coordinates)) { exterior_coordinates.reverse } else { exterior_coordinates }
+    val exterior_coordinates = polygon.getExteriorRing.getCoordinateSequence.toCoordinateArray
+    val outerRing = if(!CGAlgorithms.isCCW(exterior_coordinates)) { exterior_coordinates.reverse } else { exterior_coordinates }
 
     val nInteriorRings = polygon.getNumInteriorRing
     val innerRings = (0 until nInteriorRings).map{ i =>
       val interior_coordinates = polygon.getInteriorRingN(i).getCoordinateSequence.toCoordinateArray
-      //if(CGAlgorithms.isCCW(interior_coordinates)) { interior_coordinates.reverse } else { interior_coordinates }
-      interior_coordinates
+      if(CGAlgorithms.isCCW(interior_coordinates)) { interior_coordinates.reverse } else { interior_coordinates }
     }.toList
 
     outerRing +: innerRings
