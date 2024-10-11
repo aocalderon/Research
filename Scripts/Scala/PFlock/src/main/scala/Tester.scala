@@ -53,17 +53,14 @@ object Tester {
 
     /*******************************************************************************/
     // Code here...
-    val path = "file:///home/acald013/Datasets/GeoInformatica/mainus/"
-    //val path = "gadm/l3vsl2"
+    val path = "file:///home/acald013/Datasets/GeoInformatica/gadm/"
 
-    val A = countHoles(s"$path/A.wkt")
-    println(A)
-    //val B = read(s"$path/B.wkt").cache
+    val A = read(s"$path/A.wkt")
+    logger.info(s"${A.count()}")
 
-    /*
     case class Cell(mbr: Envelope, id: Int)
     val reader = new WKTReader(G)
-    val buffer = Source.fromFile(s"/home/acald013/Datasets/GeoInformatica/mainus/quadtree.wkt")
+    val buffer = Source.fromFile(s"/home/acald013/Datasets/GeoInformatica/gadm/quadtree.wkt")
     val cells = buffer.getLines().map{ line =>
       val arr = line.split("\\t")
       val mbr = reader.read(arr(2)).getEnvelopeInternal
@@ -89,7 +86,9 @@ object Tester {
     }.partitionBy(SimplePartitioner(cells.size)).map(_._2).cache()
 
     val nA = ARDD.count()
-
+    logger.info(s"${nA}")
+    
+    /*
     def getBorders(mbr: Envelope): LineString = {
       val p1 = new Coordinate(mbr.getMinX, mbr.getMinY)
       val p2 = new Coordinate(mbr.getMaxX, mbr.getMinY)
@@ -106,10 +105,17 @@ object Tester {
       Iterator(n)
     }.filter(_ > 0).count
 
-    println(nA)
     println(cells.length - n)
     println(n)
      */
+
+    save("/tmp/ca.tsv"){
+      ARDD.mapPartitionsWithIndex{ (index, edges) =>
+        val n = edges.length
+        Iterator(s"$n\n")
+      }.collect
+    }
+
     /*******************************************************************************/
 
     spark.close()
