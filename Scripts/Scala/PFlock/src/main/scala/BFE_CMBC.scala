@@ -2,7 +2,6 @@ package edu.ucr.dblab.pflock
 
 import archery._
 import edu.ucr.dblab.pflock.Utils._
-import edu.ucr.dblab.pflock.sedona.quadtree._
 import org.locationtech.jts.geom.{GeometryFactory, PrecisionModel}
 import org.slf4j.{Logger, LoggerFactory}
 

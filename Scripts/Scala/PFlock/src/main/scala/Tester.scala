@@ -53,14 +53,14 @@ object Tester {
 
     /*******************************************************************************/
     // Code here...
-    val path = "file:///home/acald013/Datasets/GeoInformatica/gadm/"
+    val path = "file:///home/acald013/Datasets/GeoInformatica/CA/"
 
     val A = read(s"$path/A.wkt")
     logger.info(s"${A.count()}")
 
     case class Cell(mbr: Envelope, id: Int)
     val reader = new WKTReader(G)
-    val buffer = Source.fromFile(s"/home/acald013/Datasets/GeoInformatica/gadm/quadtree.wkt")
+    val buffer = Source.fromFile(s"/home/acald013/Datasets/GeoInformatica/CA/quadtree.wkt")
     val cells = buffer.getLines().map{ line =>
       val arr = line.split("\\t")
       val mbr = reader.read(arr(2)).getEnvelopeInternal
