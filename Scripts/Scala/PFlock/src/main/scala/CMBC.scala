@@ -32,11 +32,6 @@ object CMBC {
     val points = readPoints(params.dataset())
     val (maximals, stats) = PSI.run(points)
     stats.printPSI()
-    maximals.map{ maximal =>
-      val wkt = maximal.center.toText
-      val pids = maximal.pidsText
-      s"$wkt\t$pids\n"
-    }.foreach(print)
 
     val vertices = points.map{_.point}
     val edges = getEdges(points)
@@ -56,7 +51,7 @@ object CMBC {
     if(S.debug){
       cliques.foreach{ clique =>
         val id = clique.id
-        save(s"/tmp/sample${id}.tsv"){ clique.text }
+        //save(s"/tmp/sample${id}.tsv"){ clique.text }
       }
     }
 
@@ -71,12 +66,10 @@ object CMBC {
         case clique :: tail =>
           val mbc = Welzl.mbc(clique.points)
           if(mbc.getRadius <= S.r){
-            //println("END")
-            println(s"${getCircleMBC(mbc)}\t${mbc.getRadius}")
+            //println(s"${getCircleMBC(mbc)}\t${mbc.getRadius}")
             val center = G.createPoint(new Coordinate(mbc.getCenter.getX, mbc.getCenter.getY))
             center.setUserData(mbc.getRadius)
-            //getEpsilonMBC(tail, r :+ center)
-            r
+            getEpsilonMBC(tail, r :+ center)
           } else {
             val x = mbc.getSupport.asScala.map { v =>
               G.createPoint(new Coordinate(v.getX, v.getY))
