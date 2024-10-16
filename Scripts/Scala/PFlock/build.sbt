@@ -22,7 +22,7 @@ lazy val buildSettings = (project in file("."))
     libraryDependencies += "org.apache.commons" % "commons-geometry-euclidean" % "1.0-beta1",
     libraryDependencies += "org.apache.commons" % "commons-numbers-parent" % "1.0-beta1",
 
-    //libraryDependencies += "org.rogach" % "scallop_2.11" % "2.1.3",
+    libraryDependencies += "org.rogach" % "scallop_2.11" % "2.1.3",
     libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25",
 
     libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "2.32.0",

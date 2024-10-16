@@ -5,9 +5,10 @@ import edu.ucr.dblab.pflock.pbk.PBK.bk
 import edu.ucr.dblab.pflock.welzl.Welzl
 import org.apache.commons.geometry.enclosing.EnclosingBall
 import org.apache.commons.geometry.euclidean.twod.Vector2D
-import org.locationtech.jts.geom.{Coordinate, GeometryFactory, Point, PrecisionModel}
+import org.locationtech.jts.geom.{Coordinate, GeometryFactory, Point, Polygon, PrecisionModel}
 import org.slf4j.{Logger, LoggerFactory}
 
+import scala.annotation.tailrec
 import scala.collection.JavaConverters.asScalaBufferConverter
 
 object CMBC {
@@ -51,7 +52,7 @@ object CMBC {
     if(S.debug){
       cliques.foreach{ clique =>
         val id = clique.id
-        //save(s"/tmp/sample${id}.tsv"){ clique.text }
+        save(s"/tmp/sample${id}.tsv"){ clique.text }
       }
     }
 
@@ -60,28 +61,53 @@ object CMBC {
       center.buffer(mbc.getRadius, 25).toText
     }
 
-    def getEpsilonMBC(cliques: List[Clique], r: List[Point]): List[Point] = {
+    @tailrec
+    def getEpsilonMBCs(cliques: List[Clique], r: List[Point]): List[Point] = {
       cliques match {
         case Nil => r
         case clique :: tail =>
           val mbc = Welzl.mbc(clique.points)
           if(mbc.getRadius <= S.r){
-            //println(s"${getCircleMBC(mbc)}\t${mbc.getRadius}")
             val center = G.createPoint(new Coordinate(mbc.getCenter.getX, mbc.getCenter.getY))
             center.setUserData(mbc.getRadius)
-            getEpsilonMBC(tail, r :+ center)
+            getEpsilonMBCs(tail, r :+ center)
           } else {
             val x = mbc.getSupport.asScala.map { v =>
               G.createPoint(new Coordinate(v.getX, v.getY))
             }.minBy{ p => (p.getX, p.getY)}
             val P = clique.points.filterNot{p => math.abs(p.getX - x.getX) < S.tolerance & math.abs(p.getY - x.getY) < S.tolerance}
             val clique_prime = Clique(P, clique.id)
-            getEpsilonMBC(clique_prime +: tail, r)
+            getEpsilonMBCs(clique_prime +: tail, r)
           }
       }
     }
 
-    val mbcs = getEpsilonMBC(cliques, List.empty[Point])
+    @tailrec
+    def getMBCs(cliques: List[Clique], r: List[Point]): List[Point] = {
+      cliques match {
+        case Nil => r
+        case clique :: tail =>
+          val mbc = Welzl.mbc(clique.points)
+          val center = G.createPoint(new Coordinate(mbc.getCenter.getX, mbc.getCenter.getY))
+          center.setUserData(mbc.getRadius)
+          getMBCs(tail, r :+ center)
+      }
+    }
+
+    @tailrec
+    def getConvexHulls(cliques: List[Clique], r: List[Polygon]): List[Polygon] = {
+      cliques match {
+        case Nil => r
+        case clique :: tail =>
+          val geom = G.createMultiPoint(clique.points.toArray)
+          val ch = geom.convexHull().asInstanceOf[Polygon]
+          getConvexHulls(tail, r :+ ch)
+      }
+    }
+
+    val embcs = getEpsilonMBCs(cliques, List.empty[Point])
+    val mbcs  = getMBCs(cliques, List.empty[Point])
+    val chs   = getConvexHulls(cliques, List.empty[Polygon])
 
     debug{
       save("/tmp/edgesCliques.wkt") {
@@ -96,6 +122,34 @@ object CMBC {
           val radius = round(mbc.getUserData.asInstanceOf[Double])
           val wkt = mbc.buffer(radius, 25).toText
           s"$wkt\t$radius\n"
+        }
+      }
+      save("/tmp/edgesEMBC.wkt") {
+        embcs.map { embc =>
+          val radius = round(embc.getUserData.asInstanceOf[Double])
+          val wkt = embc.buffer(radius, 25).toText
+          s"$wkt\t$radius\n"
+        }
+      }
+      save("/tmp/edgesCH.wkt") {
+        chs.map { ch =>
+          val wkt = ch.toText
+          val n   = ch.getCoordinates.length
+          s"$wkt\t$n\n"
+        }
+      }
+      save("/tmp/edgesMD.wkt") {
+        maximals.map { maximal =>
+          val wkt  = maximal.getCircleWTK
+          val pids = maximal.pidsText
+          s"$wkt\t$pids\n"
+        }
+      }
+      save("/tmp/edgesMC.wkt") {
+        maximals.map { maximal =>
+          val wkt  = maximal.center.toText
+          val pids = maximal.pidsText
+          s"$wkt\t$pids\n"
         }
       }
     }

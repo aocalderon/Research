@@ -203,6 +203,13 @@ object PSI {
         nCenters += band_centres.size
         tCenters += tC
 
+        if(S.debug){
+          band_centres.map { centre =>
+            val wkt = centre.toText
+            s"$wkt\t${S.epsilon}"
+          }//.foreach{println}
+        }
+
         band_centres.foreach { centre =>
           val t0 = clocktime
           val envelope = centre.getEnvelopeInternal
@@ -210,8 +217,9 @@ object PSI {
           val hood = band.get[STPoint](envelope).filter { _.distanceToPoint(centre) <= S.r }
 
           if (hood.size >= S.mu) {
-            val c = G.createMultiPoint(hood.map(_.point).toArray).getCentroid
-            val candidate = Disk(c, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
+            //val c = G.createMultiPoint(hood.map(_.point).toArray).getCentroid
+            //val candidate = Disk(c, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
+            val candidate = Disk(centre, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
             candidates.append(candidate) // getting candidates...
           }
           tCandidates += (clocktime - t0) / 1e9

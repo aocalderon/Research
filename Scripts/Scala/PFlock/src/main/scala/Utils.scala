@@ -226,7 +226,7 @@ object Utils {
 
     def wkt: String = s"${center.toText}\t$start\t$end\t$pidsText"
 
-    def getCircleWTK(implicit S: Settings): String = s"${center.buffer(S.r).toText}\t$X\t$Y\t$data"
+    def getCircleWTK(implicit S: Settings): String = s"${center.buffer(S.r, 25).toText}\t$X\t$Y\t$data"
 
     def equals(other: Disk): Boolean = this.pidsText == other.pidsText
 
@@ -1095,7 +1095,6 @@ object Utils {
       }
   }  
 }
-
 
 import org.rogach.scallop._
 
