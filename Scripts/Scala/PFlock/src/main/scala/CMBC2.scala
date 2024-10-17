@@ -52,7 +52,7 @@ object CMBC2 {
     }
 
     @tailrec
-    def getCentres(cliques: List[Clique], r: List[Disk]): List[Disk] = {
+    def getCentres(cliques: List[Clique], r: List[Point]): List[Point] = {
       cliques match {
         case Nil => r
         case clique :: tail =>
@@ -72,19 +72,51 @@ object CMBC2 {
               val dist = c.distance(pivot)
               (dist, c)
             }.minBy(_._1)._2
+            centre
+          }
+
+          getCentres(tail, r ++ centres)
+      }
+    }
+
+    @tailrec
+    def getDisks(cliques: List[Clique], r: List[Disk]): List[Disk] = {
+      cliques match {
+        case Nil => r
+        case clique :: tail =>
+          val mbc = Welzl.mbc(clique.points)
+          val pivot = G.createPoint(new Coordinate(mbc.getCenter.getX, mbc.getCenter.getY))
+          pivot.setUserData( Data(clique.id, mbc.getRadius) )
+          val centres_prime = for {
+            p1 <- clique.points
+            p2 <- clique.points
+            if{
+              val id1 = p1.getUserData.asInstanceOf[Utils.Data].id
+              val id2 = p2.getUserData.asInstanceOf[Utils.Data].id
+              id1 < id2
+            }
+          } yield {
+            val centre = computeCentres(STPoint(p1), STPoint(p2)).map{ c => // pick centre closest to pivot...
+              val dist = c.distance(pivot)
+              (dist, c)
+            }.minBy(_._1)._2
 
             val pids = clique.points.filter{ point => point.distance(centre) <= S.r }.map(_.getUserData.asInstanceOf[Utils.Data].id)
             Disk(centre, pids)
           }
 
+          val centres = centres_prime.filter(_.pids.length >= S.mu)
+
           val r_prime = itCandidates(r, centres.to[ListBuffer])
-          getCentres(tail, r_prime.toList)
+          getDisks(tail, r_prime.toList)
       }
     }
 
-    val centres  = itCandidates( getCentres(cliques, List.empty[Disk]), new ListBuffer[Disk]() )
+    val centres = getCentres(cliques, List.empty[Point])
+    println(centres.length)
 
-    Checker.checkMaximalDisks(centres.toList, maximals, "CMBC", "PSI", points)
+    //val disks  = itCandidates( getDisks(cliques, List.empty[Disk]), new ListBuffer[Disk]() ).toList
+    //Checker.checkMaximalDisks(disks, maximals, "CMBC", "PSI", points)
 
     debug{
       save("/tmp/edgesCliques.wkt") {
