@@ -7,14 +7,16 @@ Bron–Kerbosch Algorithm with pivot selection.
     and computational experiments.                                                    
 ******************************************************************************************/
 
-import org.jgrapht.graph.{SimpleGraph, DefaultEdge}
+import org.jgrapht.graph.{DefaultEdge, SimpleGraph}
 import org.jgrapht.Graphs
-import org.locationtech.jts.geom.{GeometryFactory, PrecisionModel, Point, Coordinate}
-import scala.collection.mutable.{ListBuffer, HashSet}
-import scala.collection.JavaConverters._
+import org.locationtech.jts.geom.{Coordinate, GeometryFactory, Point, PrecisionModel}
 
+import scala.collection.mutable.{HashSet, ListBuffer}
+import scala.collection.JavaConverters._
 import edu.ucr.dblab.pflock.pbk.PBK_Utils._
 import edu.ucr.dblab.pflock.Utils._
+
+import scala.annotation.tailrec
 
 object PBK {
 

@@ -37,6 +37,7 @@ object CMBC {
     val vertices = points.map{_.point}
     val edges = getEdges(points)
     log(s"Reading data|START")
+    case class Data(id: Int, radius: Double)
     case class Clique(points: List[Point], id: Int){
       val length = points.length
       def text: List[String] = {
@@ -52,7 +53,7 @@ object CMBC {
     if(S.debug){
       cliques.foreach{ clique =>
         val id = clique.id
-        save(s"/tmp/sample${id}.tsv"){ clique.text }
+        //save(s"/tmp/sample${id}.tsv"){ clique.text }
       }
     }
 
@@ -69,7 +70,7 @@ object CMBC {
           val mbc = Welzl.mbc(clique.points)
           if(mbc.getRadius <= S.r){
             val center = G.createPoint(new Coordinate(mbc.getCenter.getX, mbc.getCenter.getY))
-            center.setUserData(mbc.getRadius)
+            center.setUserData( Data(clique.id, mbc.getRadius))
             getEpsilonMBCs(tail, r :+ center)
           } else {
             val x = mbc.getSupport.asScala.map { v =>
@@ -89,7 +90,7 @@ object CMBC {
         case clique :: tail =>
           val mbc = Welzl.mbc(clique.points)
           val center = G.createPoint(new Coordinate(mbc.getCenter.getX, mbc.getCenter.getY))
-          center.setUserData(mbc.getRadius)
+          center.setUserData( Data(clique.id, mbc.getRadius))
           getMBCs(tail, r :+ center)
       }
     }
@@ -109,6 +110,40 @@ object CMBC {
     val mbcs  = getMBCs(cliques, List.empty[Point])
     val chs   = getConvexHulls(cliques, List.empty[Polygon])
 
+    val mbcs_map = mbcs.filter{ mbc =>
+      val r = mbc.getUserData.asInstanceOf[Data].radius
+      r > S.r
+    }.map{ mbc =>
+      val id = mbc.getUserData.asInstanceOf[Data].id
+      id -> mbc
+    }.toMap
+
+
+    /*
+  mbcs_map.keys.map{ i =>
+    val path = s"/tmp/sample${i}.tsv"
+    val points = readPoints(path)
+    val (maximals1, stats1) = PSI.run(points)
+    val n1 = maximals1.length
+    val mbc = mbcs_map(i)
+    val (maximals2, stats2) = PSI.runByPivot(points, mbc)
+    val n2 = maximals2.length
+    Checker.checkMaximalDisks(maximals1, maximals2, "PSI", "PSI_Pivot", points)
+
+    s"$i\t$n1\t$n2\t${n2-n1}"
+  }.foreach{println}
+
+    .groupBy(_._1).map{ case(id, dists_prime) =>
+    val dists = dists_prime.map(_._2).toList
+    val min = dists.min
+    val max = dists.max
+    val all = dists.sorted.mkString(" ")
+
+    s"$id\t$min\t$max\t$all"
+  }.foreach{println}
+*/
+
+
     debug{
       save("/tmp/edgesCliques.wkt") {
         cliques.map { clique =>
@@ -119,14 +154,14 @@ object CMBC {
       }
       save("/tmp/edgesMBC.wkt") {
         mbcs.map { mbc =>
-          val radius = round(mbc.getUserData.asInstanceOf[Double])
+          val radius = round(mbc.getUserData.asInstanceOf[Data].radius)
           val wkt = mbc.buffer(radius, 25).toText
           s"$wkt\t$radius\n"
         }
       }
       save("/tmp/edgesEMBC.wkt") {
         embcs.map { embc =>
-          val radius = round(embc.getUserData.asInstanceOf[Double])
+          val radius = round(embc.getUserData.asInstanceOf[Data].radius)
           val wkt = embc.buffer(radius, 25).toText
           s"$wkt\t$radius\n"
         }

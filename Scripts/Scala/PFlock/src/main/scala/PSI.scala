@@ -250,6 +250,119 @@ object PSI {
     active_boxes
   }
 
+  def planeSweepingByPivot(points: List[STPoint], pivot: Point, time_instant: Int)
+                   (implicit S: Settings, G: GeometryFactory, stats: Stats): List[Box] = {
+
+    // ordering by coordinate (it is first by x and then by y)...
+    val (pointset, tSort) = timer{
+      points.sortBy(_.getCoord)
+    }
+    stats.tSort = tSort
+
+    // setting data structures to store candidates and boxes...
+    var pairs: ListBuffer[(STPoint, STPoint)] = ListBuffer()
+    var nPairs = 0
+    var nCenters = 0
+    var nCandidates = 0
+    var tPairs = 0.0
+    var tCenters = 0.0
+    var tCandidates = 0.0
+
+    // feeding bands with points inside 2-epsilon x 2-epsilon...
+    val (bands, tBand) = timer {
+      val tree = new STRtree()
+      pointset.foreach{ P =>
+        tree.insert(P.point.getEnvelopeInternal, P)
+      }
+      pointset.map { pr: STPoint =>
+        val band_for_pr: RTree[STPoint] = RTree[STPoint]()
+        band_for_pr.pr = pr
+
+        val env = new Envelope(pr.envelope)
+        env.expandBy(S.epsilon)
+        tree.query(env).asScala.map{_.asInstanceOf[STPoint]}.foreach { ps: STPoint =>
+          band_for_pr.put(ps.envelope, ps)
+        }
+
+        band_for_pr
+      }.filter(_.size() >= S.mu)
+    }
+    stats.tBand = tBand
+
+    val t_prime = clocktime
+    val active_boxes = bands.map{ band =>
+      var candidates: ListBuffer[Disk] = new ListBuffer[Disk]
+      val points = band.getAll[STPoint]
+      val pr = band.pr
+      val (band_pairs, tP) = timer {
+        points.filter { p =>
+          p.X >= pr.X && // those at the right...
+            p.oid != pr.oid && // prune duplicates...
+            p.distance(pr) <= S.epsilon // getting pairs...
+        }
+      }
+      pairs.appendAll(band_pairs.map(p => (pr, p)))
+      nPairs += band_pairs.size
+      tPairs += tP
+
+      band_pairs.foreach { p =>
+        val (band_centres, tC) = timer {
+          val centre = computeCentres(pr, p).map{ centre => // pick centre closest to pivot...
+            val dist = centre.distance(pivot)
+            (dist, centre)
+          }.minBy(_._1)
+          List(centre._2)// gettings centres...
+        }
+        nCenters += band_centres.size
+        tCenters += tC
+
+        if(S.debug){
+          band_centres.map { centre =>
+            val wkt = centre.toText
+            s"$wkt\t${S.epsilon}"
+          }//.foreach{println}
+        }
+
+        band_centres.foreach { centre =>
+          val t0 = clocktime
+          val envelope = centre.getEnvelopeInternal
+          envelope.expandBy(S.r)
+          val hood = band.get[STPoint](envelope).filter { _.distanceToPoint(centre) <= S.r }
+
+          if (hood.size >= S.mu) {
+            //val c = G.createMultiPoint(hood.map(_.point).toArray).getCentroid
+            //val candidate = Disk(c, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
+            val candidate = Disk(centre, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
+            candidates.append(candidate) // getting candidates...
+          }
+          tCandidates += (clocktime - t0) / 1e9
+        } // foreach centres
+      } // foreach pairs
+
+      nCandidates += candidates.size
+
+      val box = Box(band)
+      box.pr = pr
+      box.id = pr.oid
+      box.disks = candidates.toList
+
+      box
+    }
+    val tBoxes = (clocktime - t_prime) - tPairs - tCenters - tCandidates
+
+    stats.tPairs      = tPairs
+    stats.tCenters    = tCenters
+    stats.tCandidates = tCandidates
+
+
+    stats.nPairs      = nPairs
+    stats.nCenters    = nCenters
+    stats.nCandidates = nCandidates
+    stats.nBoxes      = active_boxes.size
+
+    active_boxes
+  }
+
   def filterCandidates(boxes: List[Box])
                     (implicit S: Settings, G: GeometryFactory, stats: Stats): List[Disk] = {
 
@@ -396,6 +509,29 @@ object PSI {
 
     // Call plane sweeping technique algorithm...
     val boxes = PSI.planeSweeping(points, time_instant)
+    debug{
+      boxes.foreach{ box =>
+        //println(s"${box.wkt}\t${box.id}\t${box.disks}")
+      }
+    }
+
+    // Call filter candidates algorithm...
+    val (maximals, tF) = timer{
+      PSI.filterCandidates(boxes)
+    }
+    stats.tFilter = tF
+
+    (maximals, stats)
+  }
+
+  def runByPivot(points: List[STPoint], pivot: Point, time_instant: Int = 0)(implicit S: Settings, G: GeometryFactory): (List[Disk], Stats) = {
+
+    // For debugging purposes...
+    implicit val stats: Stats = Stats()
+    stats.nPoints = points.size
+
+    // Call plane sweeping technique algorithm...
+    val boxes = PSI.planeSweepingByPivot(points, pivot, time_instant)
     debug{
       boxes.foreach{ box =>
         //println(s"${box.wkt}\t${box.id}\t${box.disks}")
