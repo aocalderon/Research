@@ -13,6 +13,18 @@ import scala.collection.JavaConverters.asScalaBufferConverter
 
 object CMBC {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
+  case class Data(id: Int, radius: Double)
+  case class Clique(points: List[Point], id: Int){
+    val length = points.length
+    def text: List[String] = {
+      points.zipWithIndex.map{ case(point, id) =>
+        val x = point.getX
+        val y = point.getY
+        val t = 0
+        s"$id\t$x\t$y\t$t\n"
+      }
+    }
+  }
 
   def main(args: Array[String]): Unit = {
     //generateData(10000, 1000, 1000, "/home/acald013/Research/Datasets/P10K_W1K_H1K.tsv")
@@ -37,18 +49,6 @@ object CMBC {
     val vertices = points.map{_.point}
     val edges = getEdges(points)
     log(s"Reading data|START")
-    case class Data(id: Int, radius: Double)
-    case class Clique(points: List[Point], id: Int){
-      val length = points.length
-      def text: List[String] = {
-        points.zipWithIndex.map{ case(point, id) =>
-          val x = point.getX
-          val y = point.getY
-          val t = 0
-          s"$id\t$x\t$y\t$t\n"
-        }
-      }
-    }
     val cliques = bk(vertices, edges).iterator.filter(_.size >= S.mu).toList.zipWithIndex.map{ case(clique, id) => Clique(clique, id)}
     if(S.debug){
       cliques.foreach{ clique =>
@@ -57,54 +57,6 @@ object CMBC {
       }
     }
 
-    def getCircleMBC(mbc: EnclosingBall[Vector2D]): String = {
-      val center = G.createPoint(new Coordinate(mbc.getCenter.getX, mbc.getCenter.getY))
-      center.buffer(mbc.getRadius, 25).toText
-    }
-
-    @tailrec
-    def getEpsilonMBCs(cliques: List[Clique], r: List[Point]): List[Point] = {
-      cliques match {
-        case Nil => r
-        case clique :: tail =>
-          val mbc = Welzl.mbc(clique.points)
-          if(mbc.getRadius <= S.r){
-            val center = G.createPoint(new Coordinate(mbc.getCenter.getX, mbc.getCenter.getY))
-            center.setUserData( Data(clique.id, mbc.getRadius))
-            getEpsilonMBCs(tail, r :+ center)
-          } else {
-            val x = mbc.getSupport.asScala.map { v =>
-              G.createPoint(new Coordinate(v.getX, v.getY))
-            }.minBy{ p => (p.getX, p.getY)}
-            val P = clique.points.filterNot{p => math.abs(p.getX - x.getX) < S.tolerance & math.abs(p.getY - x.getY) < S.tolerance}
-            val clique_prime = Clique(P, clique.id)
-            getEpsilonMBCs(clique_prime +: tail, r)
-          }
-      }
-    }
-
-    @tailrec
-    def getMBCs(cliques: List[Clique], r: List[Point]): List[Point] = {
-      cliques match {
-        case Nil => r
-        case clique :: tail =>
-          val mbc = Welzl.mbc(clique.points)
-          val center = G.createPoint(new Coordinate(mbc.getCenter.getX, mbc.getCenter.getY))
-          center.setUserData( Data(clique.id, mbc.getRadius))
-          getMBCs(tail, r :+ center)
-      }
-    }
-
-    @tailrec
-    def getConvexHulls(cliques: List[Clique], r: List[Polygon]): List[Polygon] = {
-      cliques match {
-        case Nil => r
-        case clique :: tail =>
-          val geom = G.createMultiPoint(clique.points.toArray)
-          val ch = geom.convexHull().asInstanceOf[Polygon]
-          getConvexHulls(tail, r :+ ch)
-      }
-    }
 
     val embcs = getEpsilonMBCs(cliques, List.empty[Point])
     val mbcs  = getMBCs(cliques, List.empty[Point])
@@ -190,5 +142,54 @@ object CMBC {
     }
 
     log(s"Done.|END")
+  }
+
+  def getCircleMBC(mbc: EnclosingBall[Vector2D])(implicit G: GeometryFactory): String = {
+    val center = G.createPoint(new Coordinate(mbc.getCenter.getX, mbc.getCenter.getY))
+    center.buffer(mbc.getRadius, 25).toText
+  }
+
+  @tailrec
+  def getEpsilonMBCs(cliques: List[Clique], r: List[Point])(implicit G: GeometryFactory, S: Settings): List[Point] = {
+    cliques match {
+      case Nil => r
+      case clique :: tail =>
+        val mbc = Welzl.mbc(clique.points)
+        if(mbc.getRadius <= S.r){
+          val center = G.createPoint(new Coordinate(mbc.getCenter.getX, mbc.getCenter.getY))
+          center.setUserData( Data(clique.id, mbc.getRadius))
+          getEpsilonMBCs(tail, r :+ center)
+        } else {
+          val x = mbc.getSupport.asScala.map { v =>
+            G.createPoint(new Coordinate(v.getX, v.getY))
+          }.minBy{ p => (p.getX, p.getY)}
+          val P = clique.points.filterNot{p => math.abs(p.getX - x.getX) < S.tolerance & math.abs(p.getY - x.getY) < S.tolerance}
+          val clique_prime = Clique(P, clique.id)
+          getEpsilonMBCs(clique_prime +: tail, r)
+        }
+    }
+  }
+
+  @tailrec
+  def getMBCs(cliques: List[Clique], r: List[Point])(implicit G: GeometryFactory, S: Settings): List[Point] = {
+    cliques match {
+      case Nil => r
+      case clique :: tail =>
+        val mbc = Welzl.mbc(clique.points)
+        val center = G.createPoint(new Coordinate(mbc.getCenter.getX, mbc.getCenter.getY))
+        center.setUserData( Data(clique.id, mbc.getRadius))
+        getMBCs(tail, r :+ center)
+    }
+  }
+
+  @tailrec
+  def getConvexHulls(cliques: List[Clique], r: List[Polygon])(implicit G: GeometryFactory, S: Settings): List[Polygon] = {
+    cliques match {
+      case Nil => r
+      case clique :: tail =>
+        val geom = G.createMultiPoint(clique.points.toArray)
+        val ch = geom.convexHull().asInstanceOf[Polygon]
+        getConvexHulls(tail, r :+ ch)
+    }
   }
 }

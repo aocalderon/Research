@@ -9,6 +9,7 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
+import edu.ucr.dblab.pflock.CMBC.{Clique, Data, getConvexHulls, getMBCs}
 
 object CMBC2 {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
@@ -35,8 +36,6 @@ object CMBC2 {
     val vertices = points.map{_.point}
     val edges = getEdges(points)
     log(s"Reading data|START")
-    case class Data(id: Int, radius: Double)
-    case class Clique(points: List[Point], id: Int)
 
     val cliques = bk(vertices, edges).iterator.filter(_.size >= S.mu).toList.zipWithIndex.map{ case(clique, id) => Clique(clique, id)}
 
@@ -68,14 +67,15 @@ object CMBC2 {
               id1 < id2
             }
           } yield {
-            val centre = computeCentres(STPoint(p1), STPoint(p2)).map{ c => // pick centre closest to pivot...
-              val dist = c.distance(pivot)
-              (dist, c)
-            }.minBy(_._1)._2
+            val centre = computeCentres(STPoint(p1), STPoint(p2))
+              //.map{ c => // pick centre closest to pivot...
+              //  val dist = c.distance(pivot)
+              //  (dist, c)
+              //}.minBy(_._1)._2
             centre
           }
-
-          getCentres(tail, r ++ centres)
+          val r_prime = (r ++ centres.flatten.filter( c => c.distance(pivot) <= S.r )).distinct
+          getCentres(tail, r_prime)
       }
     }
 
@@ -87,7 +87,7 @@ object CMBC2 {
           val mbc = Welzl.mbc(clique.points)
           val pivot = G.createPoint(new Coordinate(mbc.getCenter.getX, mbc.getCenter.getY))
           pivot.setUserData( Data(clique.id, mbc.getRadius) )
-          val centres_prime = for {
+          val disks_prime = for {
             p1 <- clique.points
             p2 <- clique.points
             if{
@@ -96,27 +96,36 @@ object CMBC2 {
               id1 < id2
             }
           } yield {
-            val centre = computeCentres(STPoint(p1), STPoint(p2)).map{ c => // pick centre closest to pivot...
-              val dist = c.distance(pivot)
-              (dist, c)
-            }.minBy(_._1)._2
+            val centres = computeCentres(STPoint(p1), STPoint(p2))
+              .filter( center => center.distance(pivot) <= S.r )
 
-            val pids = clique.points.filter{ point => point.distance(centre) <= S.r }.map(_.getUserData.asInstanceOf[Utils.Data].id)
-            Disk(centre, pids)
+            centres.map { centre =>
+              val pids = clique.points.filter { point => point.distance(centre) <= S.r }.map(_.getUserData.asInstanceOf[Utils.Data].id)
+              Disk(centre, pids)
+            }
           }
 
-          val centres = centres_prime.filter(_.pids.length >= S.mu)
+          val disks = disks_prime.flatten.filter(_.pids.length >= S.mu)
 
-          val r_prime = itCandidates(r, centres.to[ListBuffer])
+          val r_prime = itCandidates(r, disks.to[ListBuffer])
           getDisks(tail, r_prime.toList)
       }
     }
 
+    var t0 = clocktime
     val centres = getCentres(cliques, List.empty[Point])
-    println(centres.length)
+    var t  = (clocktime - t0) / 1e9
+    println(s"Centres:\t$t")
 
-    //val disks  = itCandidates( getDisks(cliques, List.empty[Disk]), new ListBuffer[Disk]() ).toList
-    //Checker.checkMaximalDisks(disks, maximals, "CMBC", "PSI", points)
+    println(centres.length)
+    println(centres.distinct.length)
+
+    t0 = clocktime
+    val disks  = itCandidates( getDisks(cliques, List.empty[Disk]), new ListBuffer[Disk]() ).toList
+    t  = (clocktime - t0) / 1e9
+    println(s"Disks:\t$t")
+
+    Checker.checkMaximalDisks(disks, maximals, "CMBC", "PSI", points)
 
     debug{
       save("/tmp/edgesCliques.wkt") {
@@ -126,11 +135,10 @@ object CMBC2 {
           s"$wkt\t$id\n"
         }
       }
-      save("/tmp/edgesMD.wkt") {
-        maximals.map { maximal =>
-          val wkt  = maximal.getCircleWTK
-          val pids = maximal.pidsText
-          s"$wkt\t$pids\n"
+      save("/tmp/edgesCentres.wkt") {
+        centres.map { centre =>
+          val wkt  = centre.toText
+          s"$wkt\n"
         }
       }
       save("/tmp/edgesMC.wkt") {
@@ -138,6 +146,22 @@ object CMBC2 {
           val wkt  = maximal.center.toText
           val pids = maximal.pidsText
           s"$wkt\t$pids\n"
+        }
+      }
+      save("/tmp/edgesMBC.wkt") {
+        val mbcs  = getMBCs(cliques, List.empty[Point])
+        mbcs.map { mbc =>
+          val radius = round(mbc.getUserData.asInstanceOf[Data].radius)
+          val wkt = mbc.buffer(radius, 25).toText
+          s"$wkt\t$radius\n"
+        }
+      }
+      save("/tmp/edgesCH.wkt") {
+        val chs   = getConvexHulls(cliques, List.empty[Polygon])
+        chs.map { ch =>
+          val wkt = ch.toText
+          val n   = ch.getCoordinates.length
+          s"$wkt\t$n\n"
         }
       }
     }
