@@ -15,6 +15,6 @@ p = ggplot(data, aes(x = as.factor(epsilon), y = time, group = method)) +
   theme_bw()
 plot(p)  
 
-W = 10
-H = 8
+W = 8
+H = 6
 ggsave(paste0("uniform_performance.pdf"), width = W, height = H)
