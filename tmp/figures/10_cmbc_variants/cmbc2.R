@@ -3,23 +3,23 @@ library(ggpubr)
 
 W = 6
 H = 4
-psi <- read_tsv("cmbc_psi_stages.tsv")
+psi <- read_tsv("cmbc_psi_stages.tsv") |> filter(variant != "HASH")
 
-labels = c("Collect","Each","Hash","MBC","Cliques","Maximals","Candidates","Centers","Pairs")
+labels = c("Collect","Each","MBC","Cliques","Maximals","Candidates","Centers","Pairs")
 q = ggplot(data = psi, aes(x = variant, y = time, fill = stage)) +
   geom_bar(stat="identity", position="stack") +
-  labs(x="Variant", y="Time(s)") +
+  labs(x="(b)", y="Time(s)") +
   theme_bw() + 
   scale_fill_brewer(name = "Stage", palette = "Paired", labels = labels) 
   
 plot(q)
 ggsave(paste0("cmbc_psi.pdf"), width = W, height = H)
 
-bfe <- read_tsv("cmbc_bfe_stages.tsv")
-bfe_levels <- c("COLLECT", "EACH", "HASH", "BFE")
+bfe <- read_tsv("cmbc_bfe_stages.tsv") |> filter(variant != "HASH")
+bfe_levels <- c("COLLECT", "EACH", "BFE")
 p = ggplot(data = bfe, aes(x = factor(variant, level = bfe_levels), y = time, fill = stage)) +
   geom_bar(stat="identity", position="stack") +
-  labs(x="Variant", y="Time(s)") +
+  labs(x="(a)", y="Time(s)") +
   theme_bw() + 
   scale_fill_brewer(name = "Stage", palette = "Paired", labels = labels) 
 

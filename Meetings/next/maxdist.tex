@@ -1,0 +1,80 @@
+\documentclass[multi=page, svgnames, border=0.1cm]{standalone}
+\usepackage[svgnames]{xcolor}
+\usepackage{tikz}
+
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{calc}
+
+\tikzset{
+  point/.style={ draw, scale=0.25, circle, fill },
+  label/.style={ scale=1.5, Gray, opacity=0.65 },
+  letter/.style={ scale=0.75, above },
+  center/.style={ draw, thin, scale=0.3, cross out }
+}
+\definecolor{light-gray}{gray}{0.925}
+
+\begin{document}
+\def\gap{0}
+\def\width{8}
+\def\x{1}
+\def\y{1}
+\def\delta{0.075}
+\def\epsilon{0.55}
+\def\maxdist{1}
+\def\opacity{0.25}
+
+\def\gap{3.1}
+\begin{page}
+  \begin{tikzpicture}
+    %\draw[step=1, ultra thin, light-gray, dashed] (\x - \epsilon, \y - \epsilon) grid (\x + \width + \gap + \width + \epsilon, \y + \width + \epsilon);
+
+    \draw[] (\x, \y) rectangle (\x + \width, \y + \width);
+
+    \draw[dashed, blue, fill=black!20,opacity=0.5] (\x + \maxdist, \y + \maxdist) rectangle
+    (\x + \width - \maxdist, \y + \width - \maxdist);
+
+
+    \draw[stealth-stealth] (8, 2.5) -- (9, 2.5);\node[letter] at (8.5,2.1) {$maxdist$};
+    \node[point] at (\x + 2, \y + 5) {};
+    \node[point] at (4.7, \y + 4) {};
+    \node[point] at (8.28, 4.9) {};
+
+    \draw[] (8.4, 7) circle (\epsilon / 2);
+    \coordinate (A1) at (8.28, 6.9);\node[point] at (A1) {};
+    \coordinate (B1) at (8.48, 7);\node[point] at (B1) {};
+    \coordinate (C1) at (8.38, 7.2);\node[point] at (C1) {};
+    \draw[] (7.4, 7.5) circle (\epsilon / 2);
+    \coordinate (A2) at (7.45, 7.35);\node[point] at (A2) {}; \draw[-stealth] (A1) -- (A2);
+    \coordinate (B2) at (7.45, 7.5);\node[point] at (B2) {}; \draw[-stealth] (B1) -- (B2);
+    \coordinate (C2) at (7.35, 7.65);\node[point] at (C2) {}; \draw[-stealth] (C1) -- (C2);
+    \draw[] (6, 7) circle (\epsilon / 2) ;
+    \coordinate (A3) at (6, 6.85);\node[point] at (A3) {}; \draw[-stealth] (A2) -- (A3);
+    \coordinate (B3) at (6.15, 7.05);\node[point] at (B3) {}; \draw[-stealth] (B2) -- (B3);
+    \coordinate (C3) at (6, 7.15);\node[point] at (C3) {}; \draw[-stealth] (C2) -- (C3);
+
+    \draw[] (8.4, 4) circle (\epsilon / 2);
+    \coordinate (D1) at (8.48, 4.2);\node[point] at (D1) {};
+    \coordinate (E1) at (8.38, 3.85);\node[point] at (E1) {};
+    \coordinate (F1) at (8.30, 4.05);\node[point] at (F1) {};
+    \draw[] (6.9, 4) circle (\epsilon / 2);
+    \coordinate (D2) at (6.9, 4.15);\node[point] at (D2) {};\draw[stealth-] (D1) -- (D2);
+    \coordinate (E2) at (7, 4);\node[point] at (E2) {};\draw[stealth-] (F1) -- (E2);
+    \coordinate (F2) at (6.9, 3.85);\node[point] at (F2) {};\draw[stealth-] (E1) -- (F2);
+    \draw[] (5.9, 3.5) circle (\epsilon / 2);
+    \coordinate (D3) at (5.95, 3.65);\node[point] at (D3) {};\draw[stealth-] (D2) -- (D3);
+    \coordinate (E3) at (5.85, 3.5);\node[point] at (E3) {};\draw[stealth-] (E2) -- (E3);
+    \coordinate (F3) at (5.9, 3.35);\node[point] at (F3) {};\draw[stealth-] (F2) -- (F3);
+
+    \draw[] (5, 1.5) circle (\epsilon / 2);
+    \coordinate (G1) at (5.15, 1.6);\node[point] at (G1) {};
+    \coordinate (H1) at (5, 1.5);\node[point] at (H1) {};
+    \coordinate (I1) at (4.85, 1.4);\node[point] at (I1) {};
+
+    \draw[] (4, 2.5) circle (\epsilon / 2);
+    \coordinate (G2) at (4.15, 2.6);\node[point] at (G2) {};\draw[-stealth] (G1) -- (G2);
+    \coordinate (H2) at (4, 2.5);\node[point] at (H2) {};\draw[-stealth] (H1) -- (H2);
+    \coordinate (I2) at (3.85, 2.4);\node[point] at (I2) {};\draw[-stealth] (I1) -- (I2);
+    \end{tikzpicture}
+\end{page}
+
+\end{document}

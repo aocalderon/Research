@@ -1,0 +1,72 @@
+\documentclass[border=0.25cm]{standalone}
+\usepackage{tikz}
+\usepackage{xcolor}
+\tikzset{
+    point/.style={ fill }
+}
+
+\begin{document}
+\newcommand{\Depth}{2}
+\newcommand{\Height}{2}
+\newcommand{\Width}{3.5}
+\begin{tikzpicture}
+\coordinate (O) at (0,0,0);
+\coordinate (X) at (5,0,0);
+\coordinate (Y) at (0,0,4);
+\coordinate (Z) at (0,4,0);
+\draw[-stealth] (O) -- (X);
+\draw[-stealth] (O) -- (Y);
+\draw[-stealth] (O) -- (Z);
+\node[] at (4.5,0.15,0) {x};
+\node[] at (0,0.15,3) {y};
+\node[] at (0.12,3.75,0) {t};
+
+\coordinate (A) at (0,\Width,0);
+\coordinate (B) at (0,\Width,\Height);
+\coordinate (C) at (0,0,\Height);
+\coordinate (D) at (\Depth,0,0);
+\coordinate (E) at (\Depth,\Width,0);
+\coordinate (F) at (\Depth,\Width,\Height);
+\coordinate (G) at (\Depth,0,\Height);
+
+\draw[] (O) -- (C) -- (G) -- (D) -- cycle;% Bottom Face
+\draw[] (O) -- (A) -- (E) -- (D) -- cycle;% Back Face
+\draw[] (O) -- (A) -- (B) -- (C) -- cycle;% Left Face
+\draw[fill=black!20,opacity=0.8] (A) -- (B) -- (F) -- (E) -- cycle;% Top Face
+\draw[fill=black!20,opacity=0.8] (D) -- (E) -- (F) -- (G) -- cycle;% Right Face
+\draw[fill=black!20,opacity=0.8] (C) -- (B) -- (F) -- (G) -- cycle;% Front Face
+
+\coordinate (AO) at (2.1,0,0);
+\coordinate (A1) at (2.1,\Width,0);
+\coordinate (B1) at (2.1,\Width,\Height);
+\coordinate (C1) at (2.1,0,\Height);
+\coordinate (D1) at (2.1+\Depth,0,0);
+\coordinate (E1) at (2.1+\Depth,\Width,0);
+\coordinate (F1) at (2.1+\Depth,\Width,\Height);
+\coordinate (G1) at (2.1+\Depth,0,\Height);
+\draw[] (AO) -- (C1) -- (G1) -- (D1) -- cycle;% Bottom Face
+\draw[] (AO) -- (A1) -- (E1) -- (D1) -- cycle;% Back Face
+\draw[] (AO) -- (A1) -- (B1) -- (C1) -- cycle;% Left Face
+\draw[fill=black!20,opacity=0.8] (A1) -- (B1) -- (F1) -- (E1) -- cycle;% Top Face
+\draw[fill=black!20,opacity=0.8] (D1) -- (E1) -- (F1) -- (G1) -- cycle;% Right Face
+\draw[fill=black!20,opacity=0.8] (C1) -- (B1) -- (F1) -- (G1) -- cycle;% Front Face
+
+\coordinate (P0) at (1,0,1); \draw[point] (P0) circle (0.05);
+\coordinate (P1) at (3,0.25,1); \draw[point] (P1) circle (0.05);
+\coordinate (P2) at (3.25,1.25,1); \draw[point] (P2) circle (0.05);
+\coordinate (P3) at (1.25,1.5,1); \draw[point] (P3) circle (0.05);
+\coordinate (P4) at (0.75,2.15,1); \draw[point] (P4) circle (0.05);
+\coordinate (P5) at (1.25,2.55,1); \draw[point] (P5) circle (0.05);
+\coordinate (P6) at (3.5,2.75,1); \draw[point] (P6) circle (0.05);
+
+\draw (P0) -- (P1) -- (P2) -- (P3) -- (P4) -- (P5) -- (P6);
+
+
+
+%% Following is for debugging purposes so you can see where the points are
+%% These are last so that they show up on top
+%\foreach \xy in {O, A, B, C, D, E, F, G}{
+%    \node at (\xy) {\xy};
+%}
+\end{tikzpicture}
+\end{document}

@@ -34,7 +34,7 @@ object CMBC2 {
     stats.printPSI()
 
     val vertices = points.map{_.point}
-    val edges = getEdges(points)
+    val edges = getEdgesByDistance(points, S.epsilon)
     log(s"Reading data|START")
 
     val cliques = bk(vertices, edges).iterator.filter(_.size >= S.mu).toList.zipWithIndex.map{ case(clique, id) => Clique(clique, id)}

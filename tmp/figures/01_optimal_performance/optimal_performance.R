@@ -14,7 +14,8 @@ for(e in as.numeric(levels(as.factor(mf$epsilon)))) {
   
   g = ggplot(d, aes(x = as.factor(capacity), y = time)) + 
     geom_col(width = 0.7, position="dodge") + 
-    labs(x="Capacity", y="Time(s)", title = paste("Epsilon=",e))
+    labs(x="Capacity", y="Time(s)", title = paste("Epsilon=",e)) +
+    theme_bw()
   plot(g)
   ggsave(paste0("pflockE", e,"_by_capacity.pdf"), width = W, height = H)
 }
