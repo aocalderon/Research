@@ -14,11 +14,10 @@ plot(q)
 ggsave(paste0("cmbc_psi.pdf"), width = W, height = H)
 
 bfe <- read_tsv("cmbc_bfe_stages.tsv") |> filter(variant != "HASH")
-
-bfe_levels <- c("COLLECT", "EACH", "HASH", "BFE")
+bfe_levels <- c("COLLECT", "EACH", "BFE")
 p = ggplot(data = bfe, aes(x = factor(variant, level = bfe_levels), y = time, fill = stage)) +
   geom_bar(stat="identity", position="stack") +
-  labs(title="(a)", x="Variant", y="Time(s)") +
+  labs(x="(a)", y="Time(s)") +
   theme_bw() + 
   scale_fill_brewer(name = "Stage", palette = "Paired", labels = labels) 
 

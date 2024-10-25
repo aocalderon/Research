@@ -586,6 +586,20 @@ object Utils {
     }
   }
 
+  def getEdgesByDistance(points_prime: List[STPoint], distance: Double): List[(Point, Point)] = {
+    val tree = new STRtree(200)
+    points_prime.foreach{ point => tree.insert(point.envelope, point) }
+
+    for {
+      a <- points_prime
+      b <- tree.query(a.expandEnvelope(distance)).asScala.map(_.asInstanceOf[STPoint])
+      if {
+        (a.oid < b.oid) && (a.distance(b) <= distance)
+      }
+    } yield {
+      (a.point, b.point)
+    }
+  }
   def insertMaximalLCM(maximals: List[Disk], candidate: Disk): List[Disk] = {
     if(maximals.isEmpty){
       maximals :+ candidate

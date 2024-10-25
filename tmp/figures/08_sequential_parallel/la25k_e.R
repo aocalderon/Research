@@ -10,7 +10,7 @@ cubes <- enframe(read_lines("e/pflock6_la25k_e.txt"), value = "line") |>
   mutate(time = as.numeric(time), epsilon = as.numeric(epsilon)) |>
   select(epsilon, time) |>
   group_by(epsilon) |> summarise(time = mean(time)) |> ungroup() |>
-  mutate(method = "Cubes")
+  mutate(method = "Cube-based")
 
 lca <- enframe(read_lines("e/pflock4_la25k_e.txt"), value = "line") |>
   filter(str_detect(line, 'TIME')) |>
@@ -28,7 +28,7 @@ level <- enframe(read_lines("e/pflock3_la25k_e.txt"), value = "line") |>
   mutate(time = as.numeric(time), epsilon = as.numeric(epsilon)) |>
   select(epsilon, time) |>
   group_by(epsilon) |> summarise(time = mean(time)) |> ungroup() |>
-  mutate(method = "By Level")
+  mutate(method = "By-Level")
 
 master <- enframe(read_lines("e/pflock2_la25k_e.txt"), value = "line") |>
   filter(str_detect(line, 'TIME')) |>
@@ -48,7 +48,8 @@ p = ggplot(data, aes(x = factor(epsilon), y = time, group = method)) +
   labs(x=TeX("$\\epsilon(m)$"), y="Time(s)") +
   scale_color_discrete("Method") +
   scale_shape_discrete("Method") +
-  guides(linetype = "none") 
+  guides(linetype = "none") +
+  theme_bw()
 plot(p)
 
 W = 8
