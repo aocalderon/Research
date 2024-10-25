@@ -52,7 +52,7 @@ p = ggplot(data, aes(x = factor(epsilon), y = time, group = method)) +
   theme_bw()
 plot(p)
 
-W = 8
-H = 6
+W = 6
+H = 4
 ggsave(paste0("la50k_e.pdf"), width = W, height = H)
 

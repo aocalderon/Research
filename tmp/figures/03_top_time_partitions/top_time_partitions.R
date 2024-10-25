@@ -15,6 +15,6 @@ p = ggplot(data, aes(x = as.factor(epsilon), y = time, group = method)) +
   facet_grid(~dataset)
 plot(p)  
 
-W = 11
-H = 6
+W = 9
+H = 5
 ggsave(paste0("top_time_partitions.pdf"), width = W, height = H)
