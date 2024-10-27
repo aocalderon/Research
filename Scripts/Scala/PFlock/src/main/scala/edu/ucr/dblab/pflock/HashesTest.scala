@@ -2,7 +2,6 @@ package edu.ucr.dblab.pflock
 
 import edu.ucr.dblab.pflock.Utils.Disk
 import org.locationtech.jts.geom.{Coordinate, GeometryFactory, PrecisionModel}
-import streaminer._
 
 object HashesTest {
   def run(oids_prime: String)(implicit G: GeometryFactory): String = {

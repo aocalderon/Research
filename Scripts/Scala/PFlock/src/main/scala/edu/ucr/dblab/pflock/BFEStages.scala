@@ -1,5 +1,6 @@
 package edu.ucr.dblab.pflock
 
+import edu.ucr.dblab.pflock.CMBC.{Clique, Data, getConvexHulls, getMBCs}
 import edu.ucr.dblab.pflock.PSI.insertDisk
 import edu.ucr.dblab.pflock.Utils._
 import edu.ucr.dblab.pflock.pbk.PBK.bk
@@ -9,9 +10,8 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
-import edu.ucr.dblab.pflock.CMBC.{Clique, Data, getConvexHulls, getMBCs}
 
-object CMBC2 {
+object BFEStages {
   implicit val logger: Logger = LoggerFactory.getLogger("myLogger")
 
   def main(args: Array[String]): Unit = {
@@ -39,6 +39,51 @@ object CMBC2 {
 
     val cliques = bk(vertices, edges).iterator.filter(_.size >= S.mu).toList.zipWithIndex.map{ case(clique, id) => Clique(clique, id)}
 
+
+    @tailrec
+    def getPairs(cliques: List[Clique], r: List[LineString]): List[LineString] = {
+      cliques match {
+        case Nil => r
+        case clique :: tail =>
+          val pairs = for {
+            p1 <- clique.points
+            p2 <- clique.points
+            if{
+              val id1 = p1.getUserData.asInstanceOf[Utils.Data].id
+              val id2 = p2.getUserData.asInstanceOf[Utils.Data].id
+              id1 < id2 & p1.distance(p2) <= S.epsilon
+            }
+          } yield {
+            val coords = Array(p1.getCoordinate, p2.getCoordinate)
+            G.createLineString(coords)
+          }
+          val r_prime = (r ++ pairs).distinct
+          getPairs(tail, r_prime)
+      }
+    }
+
+    @tailrec
+    def getCentres(cliques: List[Clique], r: List[Point]): List[Point] = {
+      cliques match {
+        case Nil => r
+        case clique :: tail =>
+          val centres = for {
+            p1 <- clique.points
+            p2 <- clique.points
+            if{
+              val id1 = p1.getUserData.asInstanceOf[Utils.Data].id
+              val id2 = p2.getUserData.asInstanceOf[Utils.Data].id
+              id1 < id2 & p1.distance(p2) <= S.epsilon
+            }
+          } yield {
+            val centre = computeCentres(STPoint(p1), STPoint(p2))
+            centre
+          }
+          val r_prime = (r ++ centres.flatten).distinct
+          getCentres(tail, r_prime)
+      }
+    }
+
     @tailrec
     def itCandidates(candidates: List[Disk], final_candidates: ListBuffer[Disk]): ListBuffer[Disk] = {
       candidates match {
@@ -51,45 +96,17 @@ object CMBC2 {
     }
 
     @tailrec
-    def getCentres(cliques: List[Clique], r: List[Point]): List[Point] = {
-      cliques match {
-        case Nil => r
-        case clique :: tail =>
-          val mbc = Welzl.mbc(clique.points)
-          val pivot = G.createPoint(new Coordinate(mbc.getCenter.getX, mbc.getCenter.getY))
-          pivot.setUserData( Data(clique.id, mbc.getRadius) )
-          val centres = for {
-            p1 <- clique.points
-            p2 <- clique.points
-            if{
-              val id1 = p1.getUserData.asInstanceOf[Utils.Data].id
-              val id2 = p2.getUserData.asInstanceOf[Utils.Data].id
-              id1 < id2
-            }
-          } yield {
-            val centre = computeCentres(STPoint(p1), STPoint(p2))
-            centre
-          }
-          val r_prime = (r ++ centres.flatten).distinct
-          getCentres(tail, r_prime)
-      }
-    }
-
-    @tailrec
     def getDisks(cliques: List[Clique], r: List[Disk]): List[Disk] = {
       cliques match {
         case Nil => r
         case clique :: tail =>
-          val mbc = Welzl.mbc(clique.points)
-          val pivot = G.createPoint(new Coordinate(mbc.getCenter.getX, mbc.getCenter.getY))
-          pivot.setUserData( Data(clique.id, mbc.getRadius) )
           val disks_prime = for {
             p1 <- clique.points
             p2 <- clique.points
             if{
               val id1 = p1.getUserData.asInstanceOf[Utils.Data].id
               val id2 = p2.getUserData.asInstanceOf[Utils.Data].id
-              id1 < id2
+              id1 < id2 & p1.distance(p2) <= S.epsilon
             }
           } yield {
             val centres = computeCentres(STPoint(p1), STPoint(p2))
@@ -108,12 +125,14 @@ object CMBC2 {
     }
 
     var t0 = clocktime
-    val centres = getCentres(cliques, List.empty[Point])
+    val pairs = getPairs(cliques, List.empty[LineString])
     var t  = (clocktime - t0) / 1e9
-    println(s"Centres:\t$t")
+    println(s"Pairs:\t$t")
 
-    println(centres.length)
-    println(centres.distinct.length)
+    t0 = clocktime
+    val centres  = getCentres(cliques, List.empty[Point])
+    t  = (clocktime - t0) / 1e9
+    println(s"Disks:\t$t")
 
     t0 = clocktime
     val disks  = itCandidates( getDisks(cliques, List.empty[Disk]), new ListBuffer[Disk]() ).toList
@@ -123,16 +142,15 @@ object CMBC2 {
     Checker.checkMaximalDisks(disks, maximals, "CMBC", "PSI", points)
 
     debug{
-      save("/tmp/edgesCliques.wkt") {
-        cliques.map { clique =>
-          val wkt = G.createMultiPoint(clique.points.toArray).toText
-          val id = clique.id
-          s"$wkt\t$id\n"
-        }
-      }
-      save("/tmp/edgesP.wkt") {
+      save("/tmp/edgesPP.wkt") {
         points.map{ point =>
           val wkt = point.point.toText
+          s"$wkt\n"
+        }
+      }
+      save("/tmp/edgesPL.wkt") {
+        pairs.map{ pair =>
+          val wkt = pair.toText
           s"$wkt\n"
         }
       }
@@ -146,22 +164,6 @@ object CMBC2 {
         maximals.map { maximal =>
           val wkt  = maximal.center.toText
           s"$wkt\t${S.r}\n"
-        }
-      }
-      save("/tmp/edgesMBC.wkt") {
-        val mbcs  = getMBCs(cliques, List.empty[Point])
-        mbcs.map { mbc =>
-          val radius = round3(mbc.getUserData.asInstanceOf[Data].radius)
-          val wkt = mbc.buffer(radius, 25).toText
-          s"$wkt\t$radius\n"
-        }
-      }
-      save("/tmp/edgesCH.wkt") {
-        val chs   = getConvexHulls(cliques, List.empty[Polygon])
-        chs.map { ch =>
-          val wkt = ch.toText
-          val n   = ch.getCoordinates.length
-          s"$wkt\t$n\n"
         }
       }
     }

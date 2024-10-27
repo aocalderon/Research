@@ -453,7 +453,7 @@ object Utils {
       save("/tmp/edgesMBC.wkt") {
         cliques.zipWithIndex.map { case (points, id) =>
           val mbc = Welzl.mbc(points)
-          val radius = round(mbc.getRadius)
+          val radius = round3(mbc.getRadius)
           val center = G.createPoint(new Coordinate(mbc.getCenter.getX,
             mbc.getCenter.getY))
           val wkt = center.buffer(radius, 25).toText
@@ -466,7 +466,7 @@ object Utils {
     val (mbcs, tMBC) = timer{
       cliques.map{ points_per_clique =>
         val mbc = Welzl.mbc(points_per_clique)
-        val radius = round(mbc.getRadius)
+        val radius = round3(mbc.getRadius)
         val center = G.createPoint(new Coordinate(mbc.getCenter.getX,
           mbc.getCenter.getY))
         MBC(center, radius, points_per_clique)
@@ -1107,7 +1107,17 @@ object Utils {
       .foreach{ param =>
         logger.info(s"PARAMS|${S.appId}|${param}")
       }
-  }  
+  }
+
+  def round(number: Double)(implicit geofactory: GeometryFactory): Double = {
+    val scale = geofactory.getPrecisionModel.getScale
+    Math.round(number * scale) / scale
+  }
+
+  def round(number: Double, decimals: Int): Double = {
+    val scale = Math.pow(10, decimals)
+    Math.round(number * scale) / scale
+  }
 }
 
 import org.rogach.scallop._

@@ -106,14 +106,14 @@ object CMBC {
       }
       save("/tmp/edgesMBC.wkt") {
         mbcs.map { mbc =>
-          val radius = round(mbc.getUserData.asInstanceOf[Data].radius)
+          val radius = round3(mbc.getUserData.asInstanceOf[Data].radius)
           val wkt = mbc.buffer(radius, 25).toText
           s"$wkt\t$radius\n"
         }
       }
       save("/tmp/edgesEMBC.wkt") {
         embcs.map { embc =>
-          val radius = round(embc.getUserData.asInstanceOf[Data].radius)
+          val radius = round3(embc.getUserData.asInstanceOf[Data].radius)
           val wkt = embc.buffer(radius, 25).toText
           s"$wkt\t$radius\n"
         }
