@@ -4,16 +4,35 @@ import org.locationtech.jts.geom.{GeometryFactory, Point, PrecisionModel}
 import org.locationtech.jts.io.WKTReader
 import edu.ucr.dblab.pflock.Utils.{round, save}
 
+import scala.collection.mutable.ListBuffer
 import scala.io.Source
 
 object Points2Tikz {
-  case class TikzPoint(x: Double, y: Double, scale: Double = 0.25, units: String = "mm", color: String = "black"){
+  case class TikzPoint(x: Double, y: Double){
     override val toString: String = s"$x\t$y\n"
-    def options: String = List("fill", s"color=${color}", s"scale=${scale}").mkString(",")
-    val tex: String = s"\\node[draw,circle,${options}] at ($x, $y) {};\n"
+    val tex: String = s"\\node[point] at ($x, $y) {};\n"
   }
 
-  def run(epsilon: Double, color: String = "blue")(implicit P: TikzParams, G: GeometryFactory): (Double, Double) = {
+  def run(color: String = "blue", scale: String = "0.25")(implicit P: TikzParams, G: GeometryFactory): Unit = {
+
+    val name = P.filename().split("\\.")(0)
+    val main_file = new ListBuffer[String]()
+    main_file.append("\\documentclass[border=1]{standalone}\n")
+    main_file.append("\\usepackage{tikz}\n")
+    main_file.append("\n")
+    main_file.append("\\tikzset{\n")
+    main_file.append(s"    point/.style={ draw, scale=$scale, color=$color, circle, fill }\n")
+    main_file.append("}\n")
+    main_file.append("\n")
+    main_file.append("\\begin{document}\n")
+    main_file.append("    \\begin{tikzpicture}\n")
+    main_file.append(s"\\input{${name}_prime}\n")
+    main_file.append("    \\end{tikzpicture}\n")
+    main_file.append("\\end{document}\n")
+
+    save(s"${P.path()}/${P.output()}") {
+      main_file.toList
+    }
 
     val reader = new WKTReader(G)
     val buffer = Source.fromFile(s"${P.path()}/${P.filename()}")
@@ -22,34 +41,22 @@ object Points2Tikz {
       val center = reader.read(arr(0)).asInstanceOf[Point]
       val x = center.getX
       val y = center.getY
-      TikzPoint(x, y, color = color)
+      TikzPoint(x, y)
     }.toList
     buffer.close()
 
-    val minX = points.minBy(_.x).x
-    val minY = points.minBy(_.y).y
-    val maxX = points.maxBy(_.x).x
-    val maxY = points.maxBy(_.y).y
-
-    save(s"${P.path()}/${P.output()}"){
-      s"\\draw [draw=black, color=gray!15, dashed] (${-epsilon}, ${-epsilon}) rectangle (${maxX-minX+epsilon}, ${maxY-minY+epsilon});" +:
+    save(s"${P.path()}/${name}_prime.tex"){
       points.map{ p =>
-        val tex = p.copy(x = round(p.x - minX, 3), y = round(p.y - minY, 3)).tex
+        val tex = p.copy(x = round(p.x/10.0, 2), y = round(p.y/10.0, 2)).tex
         println(tex)
         tex
       }
     }
-
-    (minX, minY)
   }
   def main(args: Array[String]): Unit = {
     implicit val P: TikzParams = new TikzParams(args)
     implicit val G: GeometryFactory = new GeometryFactory(new PrecisionModel(1e3))
 
-    val (minX, minY) = Points2Tikz.run(10.0)
-    Lines2Tikz.run(P.path(), "edgesPL.wkt", "pl.tex", minX = minX, minY = minY)
-    Circles2Tikz.run(P.path(), "edgesCC.wkt", "cc.tex", minX = minX, minY = minY, color = "cyan!25")
-    Circles2Tikz.run(P.path(), "edgesMC.wkt", "mc.tex", minX = minX, minY = minY, color = "red")
-    Polygons2Tikz.run(P.path(), "edgesCH.wkt", "ch.tex", minX = minX, minY = minY)
+    Points2Tikz.run()
   }
 }
