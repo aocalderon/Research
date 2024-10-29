@@ -1,17 +1,20 @@
-\documentclass[border=1]{standalone}
+\documentclass[border=0]{standalone}
 \usepackage{tikz}
 
 \tikzset{
     point/.style={ draw, scale=0.25, color=blue, circle, fill },
-    line/.style={ draw, solid, color=red!25 },
+    line/.style={ draw, solid, color=orange!50 },
+    pointc/.style={ draw, scale=0.1, color=red, circle, fill },
     circlep/.style={ draw, dashed, color=black!25 },
     circlem/.style={ draw, solid, color=black }
 }
 
 \begin{document}
     \begin{tikzpicture}
+        %\draw[black!0] (3.35,3.45) rectangle (10.4,10.4);
         \input{cc_prime}
         \input{mc_prime}
+        \input{pc_prime}
         \input{pl_prime}
         \input{pp_prime}
     \end{tikzpicture}

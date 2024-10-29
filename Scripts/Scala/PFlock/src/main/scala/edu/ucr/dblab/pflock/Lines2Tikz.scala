@@ -59,7 +59,6 @@ object Lines2Tikz {
     save(s"${P.path()}/${name}_prime.tex"){
       lines.map{ line =>
         val tex = line.tex
-        println(tex)
         tex
       }
     }

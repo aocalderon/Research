@@ -20,7 +20,7 @@ object BFEStages {
       dataset = params.dataset(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
-      method = "CMBC",
+      method = "Test",
       capacity = params.capacity(),
       tolerance = params.tolerance(),
       tag = params.tag(),
@@ -32,54 +32,36 @@ object BFEStages {
     val (maximals, stats) = PSI.run(points)
     stats.printPSI()
 
-    val vertices = points.map{_.point}
-    val edges = getEdgesByDistance(points, S.epsilon)
-    log(s"Reading data|START")
-
-    val cliques = bk(vertices, edges).iterator.filter(_.size >= S.mu).toList.zipWithIndex.map{ case(clique, id) => Clique(clique, id)}
-
-    @tailrec
-    def getPairs(cliques: List[Clique], r: List[LineString]): List[LineString] = {
-      cliques match {
-        case Nil => r
-        case clique :: tail =>
-          val pairs = for {
-            p1 <- clique.points
-            p2 <- clique.points
-            if{
-              val id1 = p1.getUserData.asInstanceOf[Utils.Data].id
-              val id2 = p2.getUserData.asInstanceOf[Utils.Data].id
-              id1 < id2 & p1.distance(p2) <= S.epsilon
-            }
-          } yield {
-            val coords = Array(p1.getCoordinate, p2.getCoordinate)
-            G.createLineString(coords)
-          }
-          val r_prime = (r ++ pairs).distinct
-          getPairs(tail, r_prime)
+    def getPairs(points: List[Point]): List[LineString] = {
+      val pairs = for {
+        p1 <- points
+        p2 <- points
+        if{
+          val id1 = p1.getUserData.asInstanceOf[Utils.Data].id
+          val id2 = p2.getUserData.asInstanceOf[Utils.Data].id
+          id1 < id2 && p1.distance(p2) <= S.epsilon
+        }
+      } yield {
+        val coords = Array(p1.getCoordinate, p2.getCoordinate)
+        G.createLineString(coords)
       }
+      pairs.distinct
     }
 
-    @tailrec
-    def getCentres(cliques: List[Clique], r: List[Point]): List[Point] = {
-      cliques match {
-        case Nil => r
-        case clique :: tail =>
-          val centres = for {
-            p1 <- clique.points
-            p2 <- clique.points
-            if{
-              val id1 = p1.getUserData.asInstanceOf[Utils.Data].id
-              val id2 = p2.getUserData.asInstanceOf[Utils.Data].id
-              id1 < id2 & p1.distance(p2) <= S.epsilon
-            }
-          } yield {
-            val centre = computeCentres(STPoint(p1), STPoint(p2))
-            centre
-          }
-          val r_prime = (r ++ centres.flatten).distinct
-          getCentres(tail, r_prime)
+    def getCentres(points: List[Point]): List[Point] = {
+      val centres = for {
+        p1 <- points
+        p2 <- points
+        if{
+          val id1 = p1.getUserData.asInstanceOf[Utils.Data].id
+          val id2 = p2.getUserData.asInstanceOf[Utils.Data].id
+          id1 < id2 & p1.distance(p2) <= S.epsilon
+        }
+      } yield {
+        val centre = computeCentres(STPoint(p1), STPoint(p2))
+        centre
       }
+      centres.flatten.distinct
     }
 
     @tailrec
@@ -93,47 +75,41 @@ object BFEStages {
       }
     }
 
-    @tailrec
-    def getDisks(cliques: List[Clique], r: List[Disk]): List[Disk] = {
-      cliques match {
-        case Nil => r
-        case clique :: tail =>
-          val disks_prime = for {
-            p1 <- clique.points
-            p2 <- clique.points
-            if{
-              val id1 = p1.getUserData.asInstanceOf[Utils.Data].id
-              val id2 = p2.getUserData.asInstanceOf[Utils.Data].id
-              id1 < id2 & p1.distance(p2) <= S.epsilon
-            }
-          } yield {
-            val centres = computeCentres(STPoint(p1), STPoint(p2))
+    def getDisks(points: List[Point]): List[Disk] = {
+      val disks_prime = for {
+        p1 <- points
+        p2 <- points
+        if{
+          val id1 = p1.getUserData.asInstanceOf[Utils.Data].id
+          val id2 = p2.getUserData.asInstanceOf[Utils.Data].id
+          id1 < id2 & p1.distance(p2) <= S.epsilon
+        }
+      } yield {
+        val centres = computeCentres(STPoint(p1), STPoint(p2))
 
-            centres.map { centre =>
-              val pids = clique.points.filter { point => point.distance(centre) <= S.r }.map(_.getUserData.asInstanceOf[Utils.Data].id)
-              Disk(centre, pids)
-            }
-          }
-
-          val disks = disks_prime.flatten.filter(_.pids.length >= S.mu)
-
-          val r_prime = itCandidates(r, disks.to[ListBuffer])
-          getDisks(tail, r_prime.toList)
+        centres.map { centre =>
+          val pids = points.filter { point => point.distance(centre) <= S.r }.map(_.getUserData.asInstanceOf[Utils.Data].id)
+          Disk(centre, pids)
+        }
       }
+
+      val disks = disks_prime.flatten.filter(_.pids.length >= S.mu)
+      itCandidates(disks, List.empty[Disk].to[ListBuffer]).toList
     }
 
+    val P = points.map{_.point}
     var t0 = clocktime
-    val pairs = getPairs(cliques, List.empty[LineString])
+    val pairs = getPairs(P)
     var t  = (clocktime - t0) / 1e9
     println(s"Pairs:\t$t")
 
     t0 = clocktime
-    val centres  = getCentres(cliques, List.empty[Point])
+    val centres  = getCentres(P)
     t  = (clocktime - t0) / 1e9
     println(s"Centers:\t$t")
 
     t0 = clocktime
-    val disks  = itCandidates( getDisks(cliques, List.empty[Disk]), new ListBuffer[Disk]() ).toList
+    val disks  = getDisks(P)
     t  = (clocktime - t0) / 1e9
     println(s"Disks:\t$t")
 

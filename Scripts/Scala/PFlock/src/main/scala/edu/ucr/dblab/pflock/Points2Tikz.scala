@@ -48,7 +48,6 @@ object Points2Tikz {
     save(s"${P.path()}/${name}_prime.tex"){
       points.map{ p =>
         val tex = p.copy(x = round(p.x, 3), y = round(p.y, 3)).tex
-        println(tex)
         tex
       }
     }

@@ -50,7 +50,6 @@ object Circles2Tikz {
     save(s"${P.path()}/${name}_prime.tex"){
       centers.map{ c =>
         val tex = c.copy(x = round(c.x, 3), y = round(c.y, 3)).tex
-        println(tex)
         tex
       }
     }
