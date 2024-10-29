@@ -1,7 +1,7 @@
 package edu.ucr.dblab.pflock
 
 import edu.ucr.dblab.pflock.Utils.{round, save}
-import org.locationtech.jts.geom.{Coordinate, GeometryFactory, LineString, Point, PrecisionModel}
+import org.locationtech.jts.geom.{Coordinate, GeometryFactory, LineString, PrecisionModel}
 import org.locationtech.jts.io.WKTReader
 
 import scala.collection.mutable.ListBuffer
@@ -12,7 +12,7 @@ object Lines2Tikz {
     override val toString: String = line.toText
 
     def coords: String = line.getCoordinates.map{ coord =>
-      s"(${round(coord.x/10.0, 2)}, ${round(coord.y/10.0, 2)})"
+      s"(${round(coord.x, 3)}, ${round(coord.y, 3)})"
     }.mkString(" -- ")
 
     def minus(x: Double, y: Double)(implicit G: GeometryFactory): TikzLine = {
@@ -25,7 +25,7 @@ object Lines2Tikz {
     val tex: String = s"\\draw[line] $coords;\n"
   }
 
-  def run(scale: String = "1", color: String = "red", style: String = "solid")
+  def run(color: String = "red", style: String = "solid")
          (implicit P: TikzParams, G: GeometryFactory): Unit = {
 
     val name = P.filename().split("\\.")(0)
@@ -34,7 +34,7 @@ object Lines2Tikz {
     main_file.append("\\usepackage{tikz}\n")
     main_file.append("\n")
     main_file.append("\\tikzset{\n")
-    main_file.append(s"    line/.style={ draw, $style, scale=$scale, color=$color }\n")
+    main_file.append(s"    line/.style={ draw, $style, color=$color }\n")
     main_file.append("}\n")
     main_file.append("\n")
     main_file.append("\\begin{document}\n")
@@ -68,6 +68,6 @@ object Lines2Tikz {
     implicit val P: TikzParams = new TikzParams(args)
     implicit val G: GeometryFactory = new GeometryFactory(new PrecisionModel(1e3))
 
-    run()
+    Lines2Tikz.run()
   }
 }

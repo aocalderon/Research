@@ -1,10 +1,9 @@
 package edu.ucr.dblab.pflock
 
-import edu.ucr.dblab.pflock.CMBC.{Clique, Data, getConvexHulls, getMBCs}
+import edu.ucr.dblab.pflock.CMBC.Clique
 import edu.ucr.dblab.pflock.PSI.insertDisk
 import edu.ucr.dblab.pflock.Utils._
 import edu.ucr.dblab.pflock.pbk.PBK.bk
-import edu.ucr.dblab.pflock.welzl.Welzl
 import org.locationtech.jts.geom._
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -38,7 +37,6 @@ object BFEStages {
     log(s"Reading data|START")
 
     val cliques = bk(vertices, edges).iterator.filter(_.size >= S.mu).toList.zipWithIndex.map{ case(clique, id) => Clique(clique, id)}
-
 
     @tailrec
     def getPairs(cliques: List[Clique], r: List[LineString]): List[LineString] = {
@@ -132,38 +130,42 @@ object BFEStages {
     t0 = clocktime
     val centres  = getCentres(cliques, List.empty[Point])
     t  = (clocktime - t0) / 1e9
-    println(s"Disks:\t$t")
+    println(s"Centers:\t$t")
 
     t0 = clocktime
     val disks  = itCandidates( getDisks(cliques, List.empty[Disk]), new ListBuffer[Disk]() ).toList
     t  = (clocktime - t0) / 1e9
     println(s"Disks:\t$t")
 
-    Checker.checkMaximalDisks(disks, maximals, "CMBC", "PSI", points)
+    Checker.checkMaximalDisks(disks, maximals, "Test", "PSI", points)
 
+    val factor = 1.0
     debug{
       save("/tmp/edgesPP.wkt") {
         points.map{ point =>
-          val wkt = point.point.toText
+          val p = point.point
+          val wkt = G.createPoint(new Coordinate(p.getX/factor, p.getY/factor)).toText
           s"$wkt\n"
         }
       }
       save("/tmp/edgesPL.wkt") {
         pairs.map{ pair =>
-          val wkt = pair.toText
+          val coords = pair.getCoordinates.map{ coord => new Coordinate(coord.x/factor, coord.y/factor)}
+          val wkt = G.createLineString(coords).toText
           s"$wkt\n"
         }
       }
       save("/tmp/edgesCC.wkt") {
         centres.map { centre =>
-          val wkt  = centre.toText
-          s"$wkt\t${S.r}\n"
+          val wkt = G.createPoint(new Coordinate(centre.getX/factor, centre.getY/factor)).toText
+          s"$wkt\t${S.r/factor}\n"
         }.distinct
       }
       save("/tmp/edgesMC.wkt") {
         maximals.map { maximal =>
-          val wkt  = maximal.center.toText
-          s"$wkt\t${S.r}\n"
+          val p = maximal.center
+          val wkt = G.createPoint(new Coordinate(p.getX/factor, p.getY/factor)).toText
+          s"$wkt\t${S.r/factor}\n"
         }
       }
     }

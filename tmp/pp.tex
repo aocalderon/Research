@@ -1,43 +1,18 @@
-\draw [draw=black, color=gray!15, dashed] (-10.0, -10.0) rectangle (29.847000000067055, 29.85600000002887);\node[draw,circle,fill,color=blue,scale=0.25] at (5.429, 0.555) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (4.32, 0.225) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (4.968, 1.0) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (3.4, 1.668) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (1.184, 1.451) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (5.52, 0.0) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (5.151, 0.112) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (5.797, 0.0) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (6.445, 0.997) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (2.015, 1.782) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (2.386, 2.336) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (1.463, 2.781) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (1.002, 3.115) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (15.219, 2.644) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (15.497, 3.087) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (0.18, 7.554) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (17.345, 3.749) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (2.779, 14.869) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (5.09, 16.307) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (4.256, 14.756) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (3.981, 15.754) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (5.368, 16.861) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (3.521, 16.199) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (1.014, 8.994) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (0.458, 7.997) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (0.183, 8.774) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (16.702, 5.525) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (4.076, 17.085) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (17.072, 6.079) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (6.202, 18.301) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (0.461, 9.328) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (5.924, 17.858) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (18.182, 6.964) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (18.179, 5.522) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (18.277, 8.406) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (0.0, 9.883) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (4.632, 18.193) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (19.108, 8.626) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (5.834, 18.857) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (6.02, 19.411) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (6.297, 19.854) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (5.559, 19.856) {};
-\node[draw,circle,fill,color=blue,scale=0.25] at (19.847, 8.624) {};
+\documentclass[border=1]{standalone}
+\usepackage{tikz}
+
+\tikzset{
+    point/.style={ draw, scale=0.25, color=blue, circle, fill },
+    line/.style={ draw, solid, color=red!25 },
+    circlep/.style={ draw, dashed, color=black!25 },
+    circlem/.style={ draw, solid, color=black }
+}
+
+\begin{document}
+    \begin{tikzpicture}
+        \input{cc_prime}
+        \input{mc_prime}
+        \input{pl_prime}
+        \input{pp_prime}
+    \end{tikzpicture}
+\end{document}
