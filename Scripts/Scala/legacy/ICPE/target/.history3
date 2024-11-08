@@ -1,6 +1,0 @@
-1731101316765:runMain ICPE --input ~/Research/Datasets/LA/LA_10K.tsv --epsilon 10 --mu 3 --width 50
-1731101400172:runMain ICPE --input ~/Research/Datasets/LA/LA_10K.tsv --epsilon 1 --mu 3 --width 50
-1731101465532:runMain ICPE --input /home/acald013/Datasets/Brinkhoff/BO_0-1K/B_1.tsv --epsilon 3.77 --width 30
-1731101520339:runMain ICPETester --input /home/acald013/Datasets/Brinkhoff/BO_0-1K/B_1.tsv --epsilon 3.77 --width 30
-1731101729796:runMain ICPE --input --input /home/acald013/Research/Datasets/LA/LA_10K.tsv --epsilon 10 --mu 3 --width 800
-1731101751456:runMain ICPE --input /home/acald013/Research/Datasets/LA/LA_10K.tsv --epsilon 10 --mu 3 --width 800

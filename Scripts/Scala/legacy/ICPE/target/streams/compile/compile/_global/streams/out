@@ -1,4 +1,0 @@
-[0m[[0m[33mwarn[0m] [0m[0mthere were two deprecation warnings; re-run with -deprecation for details[0m
-[0m[[0m[33mwarn[0m] [0m[0mone warning found[0m
-[0m[[0m[0minfo[0m] [0m[0m/home/acald013/Research/Scripts/Scala/legacy/ICPE/src/main/scala/dbscan/AlgoDBSCAN.java: AlgoDBSCAN.java uses unchecked or unsafe operations.[0m
-[0m[[0m[0minfo[0m] [0m[0m/home/acald013/Research/Scripts/Scala/legacy/ICPE/src/main/scala/dbscan/AlgoDBSCAN.java: Recompile with -Xlint:unchecked for details.[0m
