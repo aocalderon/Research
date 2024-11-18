@@ -1,4 +1,4 @@
-package edu.ucr.dblab.pflock.spmf;
+package edu.ucr.dblab.dstester.spmf;
 
 /* This file is copyright (c) 2008-2012 Philippe Fournier-Viger
 * 
@@ -22,80 +22,77 @@ package edu.ucr.dblab.pflock.spmf;
 * 
  * @author Philippe Fournier-Viger
  */
-
-import org.locationtech.jts.geom.Point;
-        
 public class DoubleArray {
 
-    // the vector
-    public double[] data;
-    public Point point;
-    public String pids;
-	
-    /**
-     * Constructor
-     * @param data an array of double values
-     */
-    public DoubleArray(double [] data){
-	this.data = data;
-    }
-	
-    public DoubleArray(double [] data, Point point){
-	this.data = data;
-	this.point = point;
-    }
+	// the vector
+	public double[] data;
+	// attributes
+    Integer tid = -1;
+    Integer t = -1; 
+	boolean visited = false;
+	Cluster cluster = null;
 
-    public DoubleArray(Point point){
-	this.data = new double[2];
-	this.data[0] = (double) point.getX();
-	this.data[1] = (double) point.getY();
-	this.point = point;
-    }
-    
-    public DoubleArray(Point point, String pids){
-	this.data = new double[2];
-	this.data[0] = (double) point.getX();
-	this.data[1] = (double) point.getY();
-	this.point = point;
-	this.pids = pids;
-    }
-
-    /**
-     * Get a string representation of this double array.
-     * @return a string
-     */
-    public String toString(){
-	StringBuilder buffer = new StringBuilder();
-	for(int i=0; i<data.length; i++){
-	    buffer.append(data[i]);
-	    if(i < data.length -1){
-		buffer.append(",");
-	    }
+	
+	/**
+	 * Constructor
+	 * @param data an array of double values
+	 */
+	public DoubleArray(double [] data){
+		this.data = data;
 	}
-	return buffer.toString();
-    }
 	
-    /**
-     * Return a copy of this double array
-     */
-    public DoubleArray clone(){
-	return new DoubleArray(data.clone());
-    }
+	/**
+	 * Get a string representation of this double array.
+	 * @return a string
+	 */
+	public String toString(){
+		StringBuilder buffer = new StringBuilder();
+		for(int i=0; i<data.length; i++){
+			buffer.append(data[i]);
+			if(i < data.length -1){
+				buffer.append(",");
+			}
+		}
+		return buffer.toString();
+	}
 	
-    /**
-     * return the size of this double array
-     * @return the size (int)
-     */
-    public int size() {
-	return data.length;
-    }
+	/**
+	 * Return a copy of this double array
+	 */
+	public DoubleArray clone(){
+		return new DoubleArray(data.clone());
+	}
 	
-    /**
-     * Return the double at a given index position
-     * @param index the index
-     * @return the double value
-     */
-    public double get(int index) {
-	return data[index];
+	/**
+	 * return the size of this double array
+	 * @return the size (int)
+	 */
+	public int size() {
+		return data.length;
+	}
+	
+	/**
+	 * Return the double at a given index position
+	 * @param index the index
+	 * @return the double value
+	 */
+	public double get(int index) {
+		return data[index];
+	}
+
+    public void setTid(Integer tid){
+        this.tid = tid;
+    }
+
+    public Integer getTid(){
+        return this.tid;
+    }
+
+    public void setT(Integer t){
+        this.t = t;
+    }
+
+    public Integer getT(){
+        return this.t;
     }
 }

@@ -1,4 +1,4 @@
-package edu.ucr.dblab.pflock.spmf;
+package edu.ucr.dblab.dstester.spmf;
 
 /* This file is copyright (c) 2008-2013 Philippe Fournier-Viger
 * 

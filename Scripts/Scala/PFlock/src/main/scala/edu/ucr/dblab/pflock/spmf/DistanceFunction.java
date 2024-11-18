@@ -1,4 +1,4 @@
-package edu.ucr.dblab.pflock.spmf;
+package edu.ucr.dblab.dstester.spmf;
 
 /* This file is copyright (c) 2008-2015 Philippe Fournier-Viger
 * 
@@ -28,27 +28,8 @@ package edu.ucr.dblab.pflock.spmf;
  * @author Philippe Fournier-Viger
  */
 public abstract class DistanceFunction {
-	
-	/**
-	 * Calculate the  distance between two vectors of doubles.
-	 * @param vector1 the first vector
-	 * @param vector2 the second vector
-	 * @return the distance
-	 */
 	public abstract double calculateDistance(DoubleArray vector1, DoubleArray vector2);
-	
-	/**
-	 * Get the nam of this distance function
-	 * @return a string
-	 */
 	public  abstract String getName();
-	
-	
-	/**
-	 * This method returns the distance function having a given name
-	 * @param name the name  (euclidian, manathan, cosine, correlation,...)
-	 * @return the distance function
-	 */
 	public static DistanceFunction getDistanceFunctionByName(String name){
 		if(DistanceEuclidian.NAME.equals(name)) {
 			return new DistanceEuclidian();
