@@ -12,7 +12,7 @@ object Polygons2Tikz {
     override val toString: String = polygon.toText
 
     def coords: String = polygon.getCoordinates.map{ coord =>
-      s"(${round(coord.x/10.0, 3)}, ${round(coord.y/10.0, 3)})"
+      s"(${round(coord.x, 3)}, ${round(coord.y, 3)})"
     }.mkString(" -- ")
 
     def minus(x: Double, y: Double)(implicit G: GeometryFactory): TikzPolygon = {
