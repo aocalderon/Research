@@ -37,6 +37,18 @@ Scripts/Scala/PFlock/target/routing-graph-cache/*
 #/.bloop/
 #/.metals/
 
+Scripts/Scala/legacy/ICPE/target/*
+Scripts/Scala/legacy/ICPE/project/*
+Scripts/Scala/legacy/ICPE/.idea/*
+Scripts/Scala/legacy/ICPE/.idea/workspace.xml
+Scripts/Scala/legacy/ICPE/.ensime
+Scripts/Scala/legacy/ICPE/.ensime_cache/*
+Scripts/Scala/legacy/ICPE/.classpath
+Scripts/Scala/legacy/ICPE/.project
+Scripts/Scala/legacy/ICPE/.settings/*
+Scripts/Scala/legacy/ICPE/.bloop/
+Scripts/Scala/legacy/ICPE/.metals/
+
 Scripts/Scala/DSTester/target/*
 Scripts/Scala/DSTester/project/*
 Scripts/Scala/DSTester/.ensime
