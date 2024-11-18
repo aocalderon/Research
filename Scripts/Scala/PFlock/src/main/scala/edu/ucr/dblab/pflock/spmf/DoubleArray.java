@@ -24,18 +24,26 @@ package edu.ucr.dblab.pflock.spmf;
  */
 
 import org.locationtech.jts.geom.Point;
-        
+
 public class DoubleArray {
 
     // the vector
     public double[] data;
     public Point point;
     public String pids;
+    
+    // attributes
+    Integer tid = -1;
+    Integer t = -1; 
+    boolean visited = false;
+    Cluster cluster = null;
+
 	
     /**
      * Constructor
      * @param data an array of double values
      */
+    
     public DoubleArray(double [] data){
 	this.data = data;
     }
@@ -61,41 +69,57 @@ public class DoubleArray {
     }
 
     /**
-     * Get a string representation of this double array.
-     * @return a string
-     */
-    public String toString(){
-	StringBuilder buffer = new StringBuilder();
-	for(int i=0; i<data.length; i++){
-	    buffer.append(data[i]);
-	    if(i < data.length -1){
-		buffer.append(",");
-	    }
+	 * Get a string representation of this double array.
+	 * @return a string
+	 */
+	public String toString(){
+		StringBuilder buffer = new StringBuilder();
+		for(int i=0; i<data.length; i++){
+			buffer.append(data[i]);
+			if(i < data.length -1){
+				buffer.append(",");
+			}
+		}
+		return buffer.toString();
 	}
-	return buffer.toString();
-    }
 	
-    /**
-     * Return a copy of this double array
-     */
-    public DoubleArray clone(){
-	return new DoubleArray(data.clone());
-    }
+	/**
+	 * Return a copy of this double array
+	 */
+	public DoubleArray clone(){
+		return new DoubleArray(data.clone());
+	}
 	
-    /**
-     * return the size of this double array
-     * @return the size (int)
-     */
-    public int size() {
-	return data.length;
-    }
+	/**
+	 * return the size of this double array
+	 * @return the size (int)
+	 */
+	public int size() {
+		return data.length;
+	}
 	
-    /**
-     * Return the double at a given index position
-     * @param index the index
-     * @return the double value
-     */
-    public double get(int index) {
-	return data[index];
+	/**
+	 * Return the double at a given index position
+	 * @param index the index
+	 * @return the double value
+	 */
+	public double get(int index) {
+		return data[index];
+	}
+
+    public void setTid(Integer tid){
+        this.tid = tid;
+    }
+
+    public Integer getTid(){
+        return this.tid;
+    }
+
+    public void setT(Integer t){
+        this.t = t;
+    }
+
+    public Integer getT(){
+        return this.t;
     }
 }

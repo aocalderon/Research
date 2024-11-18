@@ -112,8 +112,8 @@ object Utils {
     STPoint(G.createPoint())
   }
 
-  case class Data(id: Int, t: Int){
-    override def toString = s"$id\t$t"
+  case class Data(id: Int, t: Int, riskZone: Boolean = false){
+    override def toString = s"$id\t$t\t$riskZone"
   }
 
   case class Cell(mbr: Envelope, cid: Int, lineage: String = "", dense: Boolean = false){
