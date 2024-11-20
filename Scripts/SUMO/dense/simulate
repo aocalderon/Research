@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sumo --configuration-file pasto.sumocfg

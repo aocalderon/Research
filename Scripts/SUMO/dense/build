@@ -1,0 +1,23 @@
+#!/bin/bash
+
+N=$1
+BEGIN=$2
+END=$3
+
+TIME=$((END - BEGIN))
+PERIOD=$(bc <<< "scale=5;$TIME/$N")
+
+echo $PERIOD
+
+## Pedestrian
+echo "Pedestrians..."
+python "$SUMO_HOME/tools/randomTrips.py" \
+       --pedestrians \
+       --net-file pasto.net.xml.gz --begin 0 --end 60 --period $PERIOD \
+       --output-trip-file pasto.pedestrian.trips.xml --route-file pasto.pedestrian.rou.xml \
+       --validate --remove-loops \
+       --vehicle-class pedestrian --prefix ped \
+       --min-distance 0 --max-distance 60 \
+       --random --seed 42 --duarouter-routing-threads 3 \
+       --verbose \
+       --via-edge-types highway.motorway,highway.motorway_link,highway.trunk_link,highway.primary_link,highway.secondary_link,highway.tertiary_link 

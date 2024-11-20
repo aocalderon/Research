@@ -1,0 +1,1030 @@
+<viewsettings>
+    <scheme name="pedestrians">
+        <opengl dither="0" fps="0" drawBoundaries="0" forceDrawPositionSelection="0" disableDottedContours="0" forceDrawRectangleSelection="0" geometryIndices_show="0" geometryIndices_size="50.000" geometryIndices_color="255,0,128" geometryIndices_bgColor="128,0,0,0" geometryIndices_constantSize="1" geometryIndices_onlySelected="0"/>
+        <background backgroundColor="51,128,51" showGrid="0" gridXSize="100.000" gridYSize="100.000"/>
+        <edges laneEdgeMode="0" scaleMode="0" laneShowBorders="1" showBikeMarkings="1" showLinkDecals="1" realisticLinkRules="0" showLinkRules="1" showRails="1" secondaryShape="0" hideConnectors="1" widthExaggeration="1.000" minSize="0.000" showDirection="0" showSublanes="0" spreadSuperposed="0" edgeParam="EDGE_KEY" laneParam="LANE_KEY" vehicleParam="PARAM_NUMERICAL" vehicleScaleParam="PARAM_NUMERICAL" vehicleTextParam="PARAM_TEXT" edgeData="speed" edgeDataID="" edgeDataScaling="" edgeValueHideCheck="0" edgeValueHideThreshold="0.000" edgeValueHideCheck2="0" edgeValueHideThreshold2="200.000"
+                edgeName_show="0" edgeName_size="60.000" edgeName_color="orange" edgeName_bgColor="128,0,0,0" edgeName_constantSize="1" edgeName_onlySelected="0"
+                internalEdgeName_show="0" internalEdgeName_size="45.000" internalEdgeName_color="128,64,0" internalEdgeName_bgColor="128,0,0,0" internalEdgeName_constantSize="1" internalEdgeName_onlySelected="0"
+                cwaEdgeName_show="0" cwaEdgeName_size="60.000" cwaEdgeName_color="magenta" cwaEdgeName_bgColor="128,0,0,0" cwaEdgeName_constantSize="1" cwaEdgeName_onlySelected="0"
+                streetName_show="0" streetName_size="60.000" streetName_color="yellow" streetName_bgColor="128,0,0,0" streetName_constantSize="1" streetName_onlySelected="0"
+                edgeValue_show="0" edgeValue_size="100.000" edgeValue_color="cyan" edgeValue_bgColor="128,0,0,0" edgeValue_constantSize="1" edgeValue_onlySelected="0" edgeScaleValue_show="0" edgeScaleValue_size="100.000" edgeScaleValue_color="blue" edgeScaleValue_bgColor="128,0,0,0" edgeScaleValue_constantSize="1" edgeScaleValue_onlySelected="0">
+            <colorScheme name="uniform">
+                <entry color="black" name="road"/>
+                <entry color="grey" name="sidewalk"/>
+                <entry color="192,66,44" name="bike lane"/>
+                <entry color="invisible" name="green verge"/>
+                <entry color="150,200,200" name="waterway"/>
+                <entry color="black" name="railway"/>
+                <entry color="64,0,64" name="rails on road"/>
+                <entry color="92,92,92" name="no passenger"/>
+                <entry color="red" name="closed"/>
+                <entry color="green" name="connector"/>
+                <entry color="orange" name="forbidden"/>
+            </colorScheme>
+            <colorScheme name="by selection">
+                <entry color="grey" name="unselected"/>
+                <entry color="0,80,180" name="selected"/>
+            </colorScheme>
+            <colorScheme name="by permission code" interpolated="1">
+                <entry color="240,240,240" threshold="0.000" name="nobody"/>
+                <entry color="grey" threshold="32.000" name="pedestrian"/>
+                <entry color="10,10,10" threshold="64.000" name="passenger"/>
+                <entry color="166,147,26" threshold="256.000" name="taxi"/>
+                <entry color="40,100,40" threshold="512.000" name="bus"/>
+                <entry color="80,80,80" threshold="2080.000" name="pedestrian_delivery"/>
+                <entry color="192,66,44" threshold="65536.000" name="bicycle"/>
+                <entry color="150,200,200" threshold="8388608.000" name="waterway"/>
+                <entry color="255,206,0" threshold="50495455.000" name="motorway"/>
+                <entry color="black" threshold="50593759.000" name="disallow_pedestrian"/>
+                <entry color="black" threshold="50593791.000" name="normal_road"/>
+                <entry color="green" threshold="67108863.000" name="all"/>
+            </colorScheme>
+            <colorScheme name="by allowed speed (lanewise)" interpolated="1">
+                <entry color="red" threshold="0.000"/>
+                <entry color="yellow" threshold="8.333"/>
+                <entry color="green" threshold="15.278"/>
+                <entry color="cyan" threshold="22.222"/>
+                <entry color="blue" threshold="33.333"/>
+                <entry color="magenta" threshold="41.667"/>
+            </colorScheme>
+            <colorScheme name="by current occupancy (lanewise, brutto)" interpolated="1">
+                <entry color="235,235,235" threshold="0.000"/>
+                <entry color="green" threshold="0.250"/>
+                <entry color="yellow" threshold="0.500"/>
+                <entry color="orange" threshold="0.750"/>
+                <entry color="red" threshold="1.000"/>
+            </colorScheme>
+            <colorScheme name="by current occupancy (lanewise, netto)" interpolated="1">
+                <entry color="235,235,235" threshold="0.000"/>
+                <entry color="green" threshold="0.250"/>
+                <entry color="yellow" threshold="0.500"/>
+                <entry color="orange" threshold="0.750"/>
+                <entry color="red" threshold="1.000"/>
+            </colorScheme>
+            <colorScheme name="by first vehicle waiting time (lanewise)" interpolated="1">
+                <entry color="235,235,235" threshold="0.000"/>
+                <entry color="cyan" threshold="30.000"/>
+                <entry color="green" threshold="100.000"/>
+                <entry color="yellow" threshold="200.000"/>
+                <entry color="red" threshold="300.000"/>
+            </colorScheme>
+            <colorScheme name="by lane number (streetwise)" interpolated="1">
+                <entry color="red" threshold="0.000"/>
+                <entry color="blue" threshold="5.000"/>
+            </colorScheme>
+            <colorScheme name="by CO2 emissions" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="cyan" threshold="450.000"/>
+                <entry color="green" threshold="900.000"/>
+                <entry color="yellow" threshold="1350.000"/>
+                <entry color="orange" threshold="1800.000"/>
+                <entry color="red" threshold="2250.000"/>
+                <entry color="magenta" threshold="3000.000"/>
+            </colorScheme>
+            <colorScheme name="by CO emissions" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="cyan" threshold="30.000"/>
+                <entry color="green" threshold="60.000"/>
+                <entry color="yellow" threshold="90.000"/>
+                <entry color="orange" threshold="120.000"/>
+                <entry color="red" threshold="150.000"/>
+                <entry color="magenta" threshold="200.000"/>
+            </colorScheme>
+            <colorScheme name="by PMx emissions" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="cyan" threshold="0.300"/>
+                <entry color="green" threshold="0.500"/>
+                <entry color="yellow" threshold="0.800"/>
+                <entry color="orange" threshold="1.000"/>
+                <entry color="red" threshold="1.300"/>
+                <entry color="magenta" threshold="1.600"/>
+            </colorScheme>
+            <colorScheme name="by NOx emissions" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="cyan" threshold="6.000"/>
+                <entry color="green" threshold="12.000"/>
+                <entry color="yellow" threshold="18.000"/>
+                <entry color="orange" threshold="24.000"/>
+                <entry color="red" threshold="30.000"/>
+                <entry color="magenta" threshold="40.000"/>
+            </colorScheme>
+            <colorScheme name="by HC emissions" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="cyan" threshold="8.000"/>
+                <entry color="green" threshold="16.000"/>
+                <entry color="yellow" threshold="24.000"/>
+                <entry color="orange" threshold="32.000"/>
+                <entry color="red" threshold="40.000"/>
+                <entry color="magenta" threshold="50.000"/>
+            </colorScheme>
+            <colorScheme name="by fuel consumption" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="cyan" threshold="0.200"/>
+                <entry color="green" threshold="0.400"/>
+                <entry color="yellow" threshold="0.600"/>
+                <entry color="orange" threshold="0.800"/>
+                <entry color="red" threshold="1.000"/>
+                <entry color="magenta" threshold="1.300"/>
+            </colorScheme>
+            <colorScheme name="by noise emissions (Harmonoise)" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="cyan" threshold="1.300"/>
+                <entry color="green" threshold="1.400"/>
+                <entry color="yellow" threshold="1.600"/>
+                <entry color="orange" threshold="1.700"/>
+                <entry color="red" threshold="1.900"/>
+                <entry color="magenta" threshold="2.400"/>
+            </colorScheme>
+            <colorScheme name="by global travel time" interpolated="1">
+                <entry color="green" threshold="0.000"/>
+                <entry color="red" threshold="100.000"/>
+            </colorScheme>
+            <colorScheme name="by global speed percentage" interpolated="1">
+                <entry color="red" threshold="0.000"/>
+                <entry color="yellow" threshold="50.000"/>
+                <entry color="green" threshold="100.000"/>
+            </colorScheme>
+            <colorScheme name="by given length/geometrical length" interpolated="1">
+                <entry color="red" threshold="0.000"/>
+                <entry color="orange" threshold="0.250"/>
+                <entry color="yellow" threshold="0.500"/>
+                <entry color="179,179,179" threshold="1.000"/>
+                <entry color="green" threshold="2.000"/>
+                <entry color="cyan" threshold="4.000"/>
+                <entry color="blue" threshold="100.000"/>
+            </colorScheme>
+            <colorScheme name="by angle">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="by loaded weight" interpolated="1">
+                <entry color="green" threshold="0.000"/>
+                <entry color="red" threshold="100.000"/>
+            </colorScheme>
+            <colorScheme name="by priority" interpolated="1">
+                <entry color="red" threshold="-20.000"/>
+                <entry color="yellow" threshold="0.000"/>
+                <entry color="green" threshold="20.000"/>
+            </colorScheme>
+            <colorScheme name="by height at start" interpolated="1">
+                <entry color="blue" threshold="-10.000"/>
+                <entry color="grey" threshold="0.000"/>
+                <entry color="red" threshold="10.000"/>
+                <entry color="yellow" threshold="50.000"/>
+                <entry color="green" threshold="100.000"/>
+                <entry color="magenta" threshold="200.000"/>
+            </colorScheme>
+            <colorScheme name="by height at geometry-segment start" interpolated="1">
+                <entry color="blue" threshold="-10.000"/>
+                <entry color="grey" threshold="0.000"/>
+                <entry color="red" threshold="10.000"/>
+                <entry color="yellow" threshold="50.000"/>
+                <entry color="green" threshold="100.000"/>
+                <entry color="magenta" threshold="200.000"/>
+            </colorScheme>
+            <colorScheme name="by inclination" interpolated="1">
+                <entry color="blue" threshold="-0.300"/>
+                <entry color="green" threshold="-0.100"/>
+                <entry color="grey" threshold="0.000"/>
+                <entry color="yellow" threshold="0.100"/>
+                <entry color="red" threshold="0.300"/>
+            </colorScheme>
+            <colorScheme name="by geometry-segment inclination" interpolated="1">
+                <entry color="blue" threshold="-0.300"/>
+                <entry color="green" threshold="-0.100"/>
+                <entry color="grey" threshold="0.000"/>
+                <entry color="yellow" threshold="0.100"/>
+                <entry color="red" threshold="0.300"/>
+            </colorScheme>
+            <colorScheme name="by average speed" interpolated="1">
+                <entry color="red" threshold="0.000"/>
+                <entry color="yellow" threshold="8.333"/>
+                <entry color="green" threshold="15.278"/>
+                <entry color="cyan" threshold="22.222"/>
+                <entry color="blue" threshold="33.333"/>
+                <entry color="magenta" threshold="41.667"/>
+            </colorScheme>
+            <colorScheme name="by average relative speed " interpolated="1">
+                <entry color="red" threshold="0.000"/>
+                <entry color="yellow" threshold="0.250"/>
+                <entry color="green" threshold="0.500"/>
+                <entry color="cyan" threshold="0.750"/>
+                <entry color="blue" threshold="1.000"/>
+                <entry color="magenta" threshold="1.250"/>
+            </colorScheme>
+            <colorScheme name="by routing device assumed speed " interpolated="1">
+                <entry color="red" threshold="0.000"/>
+                <entry color="yellow" threshold="8.333"/>
+                <entry color="green" threshold="15.278"/>
+                <entry color="cyan" threshold="22.222"/>
+                <entry color="blue" threshold="33.333"/>
+                <entry color="magenta" threshold="41.667"/>
+            </colorScheme>
+            <colorScheme name="by electricity consumption" interpolated="1">
+                <entry color="green" threshold="0.000"/>
+                <entry color="cyan" threshold="0.200"/>
+                <entry color="green" threshold="0.400"/>
+                <entry color="yellow" threshold="0.600"/>
+                <entry color="orange" threshold="0.800"/>
+                <entry color="red" threshold="1.000"/>
+                <entry color="magenta" threshold="2.000"/>
+            </colorScheme>
+            <colorScheme name="by insertion-backlog (streetwise)" interpolated="1">
+                <entry color="204,204,204" threshold="0.000"/>
+                <entry color="green" threshold="1.000"/>
+                <entry color="yellow" threshold="10.000"/>
+                <entry color="red" threshold="100.000"/>
+            </colorScheme>
+            <colorScheme name="by TAZ (streetwise)">
+                <entry color="204,204,204" name="no TAZ"/>
+            </colorScheme>
+            <colorScheme name="by param (numerical, streetwise)" interpolated="1">
+                <entry color="204,204,204" threshold="0.000"/>
+            </colorScheme>
+            <colorScheme name="by param (numerical, lanewise)" interpolated="1">
+                <entry color="204,204,204" threshold="0.000"/>
+            </colorScheme>
+            <colorScheme name="by edgeData (numerical, streetwise)" interpolated="1">
+                <entry color="225,225,225" name="missing data"/>
+            </colorScheme>
+            <colorScheme name="by distance (kilometrage)" interpolated="1">
+                <entry color="blue" threshold="-10000.000"/>
+                <entry color="204,204,255" threshold="-1.000"/>
+                <entry color="204,204,204" threshold="0.000"/>
+                <entry color="255,204,204" threshold="1.000"/>
+                <entry color="red" threshold="10000.000"/>
+            </colorScheme>
+            <colorScheme name="by abs distance (kilometrage)" interpolated="1">
+                <entry color="204,204,204" threshold="0.000"/>
+                <entry color="red" threshold="1.000"/>
+            </colorScheme>
+            <colorScheme name="by reachability (traveltime)" interpolated="1">
+                <entry color="red" threshold="0.000"/>
+                <entry color="grey" name="unreachable"/>
+            </colorScheme>
+            <colorScheme name="by thread index" interpolated="1">
+                <entry color="204,204,204" threshold="0.000"/>
+                <entry color="red" threshold="1.000"/>
+            </colorScheme>
+            <colorScheme name="free parking spaces" interpolated="1">
+                <entry color="204,204,204" threshold="0.000"/>
+                <entry color="red" threshold="1.000"/>
+                <entry color="yellow" threshold="10.000"/>
+                <entry color="green" threshold="100.000"/>
+                <entry color="blue" threshold="1000.000"/>
+            </colorScheme>
+            <colorScheme name="by live edgeData" interpolated="1">
+                <entry color="225,225,225" name="missing data"/>
+            </colorScheme>
+            <scalingScheme name="default">
+                <entry color="1.000" name="uniform"/>
+            </scalingScheme>
+            <scalingScheme name="by selection">
+                <entry color="0.500" name="unselected"/>
+                <entry color="5.000" name="selected"/>
+            </scalingScheme>
+            <scalingScheme name="by allowed speed (lanewise)" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="41.667"/>
+            </scalingScheme>
+            <scalingScheme name="by current occupancy (lanewise, brutto)" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="0.950"/>
+            </scalingScheme>
+            <scalingScheme name="by current occupancy (lanewise, netto)" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="0.950"/>
+            </scalingScheme>
+            <scalingScheme name="by first vehicle waiting time (lanewise)" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="300.000"/>
+            </scalingScheme>
+            <scalingScheme name="by lane number (streetwise)" interpolated="1">
+                <entry color="1.000" threshold="0.000"/>
+                <entry color="10.000" threshold="5.000"/>
+            </scalingScheme>
+            <scalingScheme name="by CO2 emissions" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="0.267"/>
+            </scalingScheme>
+            <scalingScheme name="by CO emissions" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="0.003"/>
+            </scalingScheme>
+            <scalingScheme name="by PMx emissions" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="0.000"/>
+            </scalingScheme>
+            <scalingScheme name="by NOx emissions" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="0.003"/>
+            </scalingScheme>
+            <scalingScheme name="by HC emissions" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="0.001"/>
+            </scalingScheme>
+            <scalingScheme name="by fuel consumption" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="0.067"/>
+            </scalingScheme>
+            <scalingScheme name="by noise emissions (Harmonoise)" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="100.000"/>
+            </scalingScheme>
+            <scalingScheme name="by global travel time" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="100.000"/>
+            </scalingScheme>
+            <scalingScheme name="by global speed percentage" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="100.000"/>
+            </scalingScheme>
+            <scalingScheme name="by given length/geometrical length" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="10.000"/>
+            </scalingScheme>
+            <scalingScheme name="by loaded weight" interpolated="1">
+                <entry color="-1000.000" threshold="-1000.000"/>
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="1000.000" threshold="1000.000"/>
+            </scalingScheme>
+            <scalingScheme name="by priority" interpolated="1">
+                <entry color="0.500" threshold="-20.000"/>
+                <entry color="1.000" threshold="0.000"/>
+                <entry color="5.000" threshold="20.000"/>
+            </scalingScheme>
+            <scalingScheme name="by average speed" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="41.667"/>
+            </scalingScheme>
+            <scalingScheme name="by average relative speed" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="0.500" threshold="0.500"/>
+                <entry color="2.000" threshold="1.000"/>
+                <entry color="10.000" threshold="2.000"/>
+            </scalingScheme>
+            <scalingScheme name="by electricity consumption" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="0.027"/>
+            </scalingScheme>
+            <scalingScheme name="by insertion-backlog (streetwise)" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="1.000" threshold="1.000"/>
+                <entry color="10.000" threshold="10.000"/>
+                <entry color="50.000" threshold="100.000"/>
+            </scalingScheme>
+            <scalingScheme name="by edgeData (numerical, streetwise)" interpolated="1">
+                <entry color="1.000" threshold="1.000"/>
+                <entry color="2.000" threshold="10.000"/>
+                <entry color="5.000" threshold="100.000"/>
+                <entry color="10.000" threshold="1000.000"/>
+                <entry color="0.100" name="missing data"/>
+            </scalingScheme>
+            <colorScheme name="meso:uniform">
+                <entry color="invisible"/>
+            </colorScheme>
+            <colorScheme name="meso:by selection">
+                <entry color="grey" name="unselected"/>
+                <entry color="0,80,180" name="selected"/>
+            </colorScheme>
+            <colorScheme name="meso:by purpose (streetwise)">
+                <entry color="invisible" name="normal"/>
+                <entry color="128,0,128" name="connector"/>
+                <entry color="blue" name="internal"/>
+            </colorScheme>
+            <colorScheme name="meso:by allowed speed (streetwise)" interpolated="1">
+                <entry color="red" threshold="0.000"/>
+                <entry color="yellow" threshold="8.333"/>
+                <entry color="green" threshold="15.278"/>
+                <entry color="cyan" threshold="22.222"/>
+                <entry color="blue" threshold="33.333"/>
+                <entry color="magenta" threshold="41.667"/>
+            </colorScheme>
+            <colorScheme name="meso:by current occupancy (streetwise, brutto)" interpolated="1">
+                <entry color="blue" threshold="0.000"/>
+                <entry color="red" threshold="0.950"/>
+            </colorScheme>
+            <colorScheme name="meso:by current speed (streetwise)" interpolated="1">
+                <entry color="red" threshold="0.000"/>
+                <entry color="yellow" threshold="8.333"/>
+                <entry color="green" threshold="15.278"/>
+                <entry color="cyan" threshold="22.222"/>
+                <entry color="blue" threshold="33.333"/>
+                <entry color="magenta" threshold="41.667"/>
+            </colorScheme>
+            <colorScheme name="meso:by current flow (streetwise)" interpolated="1">
+                <entry color="blue" threshold="0.000"/>
+                <entry color="red" threshold="5000.000"/>
+            </colorScheme>
+            <colorScheme name="meso:by relative speed (streetwise)" interpolated="1">
+                <entry color="red" threshold="0.000"/>
+                <entry color="yellow" threshold="0.250"/>
+                <entry color="green" threshold="0.500"/>
+                <entry color="cyan" threshold="0.750"/>
+                <entry color="blue" threshold="1.000"/>
+                <entry color="magenta" threshold="1.250"/>
+            </colorScheme>
+            <colorScheme name="meso:by routing device assumed speed" interpolated="1">
+                <entry color="red" threshold="0.000"/>
+                <entry color="yellow" threshold="8.333"/>
+                <entry color="green" threshold="15.278"/>
+                <entry color="cyan" threshold="22.222"/>
+                <entry color="blue" threshold="33.333"/>
+                <entry color="magenta" threshold="41.667"/>
+            </colorScheme>
+            <colorScheme name="meso:by angle">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="meso:by segments (alternating)">
+                <entry color="blue" name="odd"/>
+                <entry color="red" name="even"/>
+            </colorScheme>
+            <colorScheme name="meso:by jammed state (segmentwise)">
+                <entry color="green" name="free"/>
+                <entry color="yellow" name="limitedControl"/>
+                <entry color="red" name="jammed"/>
+            </colorScheme>
+            <colorScheme name="meso:by current occupancy (segmentwise, brutto)" interpolated="1">
+                <entry color="blue" threshold="0.000"/>
+                <entry color="red" threshold="0.950"/>
+            </colorScheme>
+            <colorScheme name="meso:by current speed (segmentwise)" interpolated="1">
+                <entry color="red" threshold="0.000"/>
+                <entry color="yellow" threshold="8.333"/>
+                <entry color="green" threshold="15.278"/>
+                <entry color="cyan" threshold="22.222"/>
+                <entry color="blue" threshold="33.333"/>
+                <entry color="magenta" threshold="41.667"/>
+            </colorScheme>
+            <colorScheme name="meso:by current flow (segmentwise)" interpolated="1">
+                <entry color="blue" threshold="0.000"/>
+                <entry color="red" threshold="5000.000"/>
+            </colorScheme>
+            <colorScheme name="meso:by relative speed (segmentwise)" interpolated="1">
+                <entry color="red" threshold="0.000"/>
+                <entry color="yellow" threshold="0.250"/>
+                <entry color="green" threshold="0.500"/>
+                <entry color="cyan" threshold="0.750"/>
+                <entry color="blue" threshold="1.000"/>
+                <entry color="magenta" threshold="1.250"/>
+            </colorScheme>
+            <colorScheme name="meso:by insertion-backlog (streetwise)" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="green" threshold="1.000"/>
+                <entry color="yellow" threshold="10.000"/>
+                <entry color="red" threshold="100.000"/>
+            </colorScheme>
+            <colorScheme name="meso:by TAZ (streetwise)">
+                <entry color="204,204,204" name="no TAZ"/>
+            </colorScheme>
+            <colorScheme name="meso:by param (numerical, streetwise)" interpolated="1">
+                <entry color="204,204,204" threshold="0.000"/>
+            </colorScheme>
+            <colorScheme name="meso:by edgeData (numerical, streetwise)" interpolated="1">
+                <entry color="225,225,225" name="missing data"/>
+            </colorScheme>
+            <scalingScheme name="uniform">
+                <entry color="1.000"/>
+            </scalingScheme>
+            <scalingScheme name="by selection">
+                <entry color="0.500" name="unselected"/>
+                <entry color="5.000" name="selected"/>
+            </scalingScheme>
+            <scalingScheme name="by allowed speed (streetwise)" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="41.667"/>
+            </scalingScheme>
+            <scalingScheme name="by current occupancy (streetwise, brutto)" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="0.950"/>
+            </scalingScheme>
+            <scalingScheme name="by current speed (streetwise)" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="10.000" threshold="41.667"/>
+            </scalingScheme>
+            <scalingScheme name="by current flow (streetwise)" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="20.000" threshold="5000.000"/>
+            </scalingScheme>
+            <scalingScheme name="by relative speed (streetwise)" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="20.000" threshold="1.000"/>
+            </scalingScheme>
+            <scalingScheme name="by insertion-backlog (streetwise)" interpolated="1">
+                <entry color="0.000" threshold="0.000"/>
+                <entry color="1.000" threshold="1.000"/>
+                <entry color="10.000" threshold="10.000"/>
+                <entry color="50.000" threshold="100.000"/>
+            </scalingScheme>
+            <scalingScheme name="by edgeData (numerical, streetwise)" interpolated="1">
+                <entry color="1.000" threshold="1.000"/>
+                <entry color="2.000" threshold="10.000"/>
+                <entry color="5.000" threshold="100.000"/>
+                <entry color="10.000" threshold="1000.000"/>
+                <entry color="0.100" name="missing data"/>
+            </scalingScheme>
+            <scalingScheme name="by edgeData (numerical, streetwise)" interpolated="1">
+                <entry color="1.000" threshold="1.000"/>
+                <entry color="2.000" threshold="10.000"/>
+                <entry color="5.000" threshold="100.000"/>
+                <entry color="10.000" threshold="1000.000"/>
+                <entry color="0.100" name="missing data"/>
+            </scalingScheme>
+        </edges>
+        <vehicles vehicleMode="0" vehicleScaleMode="0" vehicleQuality="2" vehicle_minSize="0.000" vehicle_exaggeration="1.000" vehicle_constantSize="0" vehicle_constantSizeSelected="0" showBlinker="1" drawMinGap="0" drawBrakeGap="0" showBTRange="0" showRouteIndex="0" scaleLength="1" drawReversed="0" showParkingInfo="0"
+                  vehicleName_show="0" vehicleName_size="60.000" vehicleName_color="204,153,0" vehicleName_bgColor="128,0,0,0" vehicleName_constantSize="1" vehicleName_onlySelected="0"
+                  vehicleValue_show="0" vehicleValue_size="80.000" vehicleValue_color="cyan" vehicleValue_bgColor="128,0,0,0" vehicleValue_constantSize="1" vehicleValue_onlySelected="0"
+                  vehicleScaleValue_show="0" vehicleScaleValue_size="80.000" vehicleScaleValue_color="grey" vehicleScaleValue_bgColor="128,0,0,0" vehicleScaleValue_constantSize="1" vehicleScaleValue_onlySelected="0"
+                  vehicleText_show="0" vehicleText_size="80.000" vehicleText_color="red" vehicleText_bgColor="128,0,0,0" vehicleText_constantSize="1" vehicleText_onlySelected="0">
+            <colorScheme name="given vehicle/type/route color">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="uniform">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="given/assigned vehicle color">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="given/assigned type color">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="given/assigned route color">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="depart position as HSV">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="arrival position as HSV">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="direction/distance as HSV">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="by speed" interpolated="1">
+                <entry color="grey" threshold="-2.000"/>
+                <entry color="red" threshold="-1.000"/>
+                <entry color="red" threshold="0.000"/>
+                <entry color="yellow" threshold="8.333"/>
+                <entry color="green" threshold="15.278"/>
+                <entry color="cyan" threshold="22.222"/>
+                <entry color="blue" threshold="33.333"/>
+                <entry color="magenta" threshold="41.667"/>
+            </colorScheme>
+            <colorScheme name="by action step">
+                <entry color="grey" name="no action"/>
+                <entry color="green" name="action in next step"/>
+                <entry color="80,160,80" name="had action step"/>
+            </colorScheme>
+            <colorScheme name="by waiting time" interpolated="1">
+                <entry color="blue" threshold="0.000"/>
+                <entry color="cyan" threshold="30.000"/>
+                <entry color="green" threshold="100.000"/>
+                <entry color="yellow" threshold="200.000"/>
+                <entry color="red" threshold="300.000"/>
+            </colorScheme>
+            <colorScheme name="by accumulated waiting time" interpolated="1">
+                <entry color="blue" threshold="0.000"/>
+                <entry color="cyan" threshold="25.000"/>
+                <entry color="green" threshold="50.000"/>
+                <entry color="yellow" threshold="75.000"/>
+                <entry color="red" threshold="100.000"/>
+            </colorScheme>
+            <colorScheme name="by time since lane change" interpolated="1">
+                <entry color="189,189,179" threshold="-180.000"/>
+                <entry color="yellow" threshold="-20.000"/>
+                <entry color="red" threshold="-0.010"/>
+                <entry color="179,179,179" threshold="0.000" name="0"/>
+                <entry color="blue" threshold="0.010"/>
+                <entry color="cyan" threshold="20.000"/>
+                <entry color="179,189,189" threshold="180.000"/>
+            </colorScheme>
+            <colorScheme name="by max speed" interpolated="1">
+                <entry color="red" threshold="0.000"/>
+                <entry color="yellow" threshold="8.333"/>
+                <entry color="green" threshold="15.278"/>
+                <entry color="cyan" threshold="22.222"/>
+                <entry color="blue" threshold="33.333"/>
+                <entry color="magenta" threshold="41.667"/>
+            </colorScheme>
+            <colorScheme name="by CO2 emissions" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="cyan" threshold="23000.000"/>
+                <entry color="green" threshold="46000.000"/>
+                <entry color="yellow" threshold="69000.000"/>
+                <entry color="orange" threshold="92000.000"/>
+                <entry color="red" threshold="115000.000"/>
+                <entry color="magenta" threshold="150000.000"/>
+            </colorScheme>
+            <colorScheme name="by CO emissions" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="cyan" threshold="1500.000"/>
+                <entry color="green" threshold="3000.000"/>
+                <entry color="yellow" threshold="4500.000"/>
+                <entry color="orange" threshold="6000.000"/>
+                <entry color="red" threshold="7500.000"/>
+                <entry color="magenta" threshold="10000.000"/>
+            </colorScheme>
+            <colorScheme name="by PMx emissions" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="cyan" threshold="12.000"/>
+                <entry color="green" threshold="24.000"/>
+                <entry color="yellow" threshold="36.000"/>
+                <entry color="orange" threshold="48.000"/>
+                <entry color="red" threshold="60.000"/>
+                <entry color="magenta" threshold="80.000"/>
+            </colorScheme>
+            <colorScheme name="by NOx emissions" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="cyan" threshold="300.000"/>
+                <entry color="green" threshold="600.000"/>
+                <entry color="yellow" threshold="900.000"/>
+                <entry color="orange" threshold="1200.000"/>
+                <entry color="red" threshold="1500.000"/>
+                <entry color="magenta" threshold="2000.000"/>
+            </colorScheme>
+            <colorScheme name="by HC emissions" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="cyan" threshold="400.000"/>
+                <entry color="green" threshold="800.000"/>
+                <entry color="yellow" threshold="1200.000"/>
+                <entry color="orange" threshold="1600.000"/>
+                <entry color="red" threshold="2000.000"/>
+                <entry color="magenta" threshold="2500.000"/>
+            </colorScheme>
+            <colorScheme name="by fuel consumption" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="cyan" threshold="10.000"/>
+                <entry color="green" threshold="20.000"/>
+                <entry color="yellow" threshold="30.000"/>
+                <entry color="orange" threshold="40.000"/>
+                <entry color="red" threshold="50.000"/>
+                <entry color="magenta" threshold="60.000"/>
+            </colorScheme>
+            <colorScheme name="by noise emissions (Harmonoise)" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="cyan" threshold="60.000"/>
+                <entry color="green" threshold="70.000"/>
+                <entry color="yellow" threshold="80.000"/>
+                <entry color="orange" threshold="90.000"/>
+                <entry color="red" threshold="100.000"/>
+                <entry color="magenta" threshold="120.000"/>
+            </colorScheme>
+            <colorScheme name="by reroute number" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="yellow" threshold="1.000"/>
+                <entry color="red" threshold="10.000"/>
+            </colorScheme>
+            <colorScheme name="by selection">
+                <entry color="179,179,179" name="unselected"/>
+                <entry color="0,102,204" name="selected"/>
+            </colorScheme>
+            <colorScheme name="by offset from best lane" interpolated="1">
+                <entry color="magenta" threshold="-100.000" name="opposite lane"/>
+                <entry color="red" threshold="-3.000" name="-3"/>
+                <entry color="yellow" threshold="-1.000" name="-1"/>
+                <entry color="179,179,179" threshold="0.000" name="0"/>
+                <entry color="cyan" threshold="1.000" name="1"/>
+                <entry color="blue" threshold="3.000" name="3"/>
+            </colorScheme>
+            <colorScheme name="by acceleration" interpolated="1">
+                <entry color="64,0,0" threshold="-9.000"/>
+                <entry color="red" threshold="-4.500"/>
+                <entry color="yellow" threshold="-0.100"/>
+                <entry color="179,179,179" threshold="0.000" name="0"/>
+                <entry color="cyan" threshold="0.100"/>
+                <entry color="blue" threshold="2.600"/>
+                <entry color="magenta" threshold="5.200"/>
+            </colorScheme>
+            <colorScheme name="by time gap on lane" interpolated="1">
+                <entry color="179,179,179" threshold="-1.000"/>
+                <entry color="yellow" threshold="0.000" name="0"/>
+                <entry color="cyan" threshold="1.000"/>
+                <entry color="blue" threshold="2.000"/>
+            </colorScheme>
+            <colorScheme name="by depart delay" interpolated="1">
+                <entry color="blue" threshold="0.000"/>
+                <entry color="cyan" threshold="30.000"/>
+                <entry color="green" threshold="100.000"/>
+                <entry color="yellow" threshold="200.000"/>
+                <entry color="red" threshold="300.000"/>
+            </colorScheme>
+            <colorScheme name="by electricity consumption" interpolated="1">
+                <entry color="grey" threshold="0.000"/>
+                <entry color="cyan" threshold="10.000"/>
+                <entry color="green" threshold="20.000"/>
+                <entry color="yellow" threshold="30.000"/>
+                <entry color="orange" threshold="40.000"/>
+                <entry color="red" threshold="60.000"/>
+                <entry color="magenta" threshold="100.000"/>
+            </colorScheme>
+            <colorScheme name="by time loss" interpolated="1">
+                <entry color="blue" threshold="0.000"/>
+                <entry color="cyan" threshold="10.000"/>
+                <entry color="green" threshold="60.000"/>
+                <entry color="yellow" threshold="180.000"/>
+                <entry color="red" threshold="900.000"/>
+            </colorScheme>
+            <colorScheme name="by stop delay" interpolated="1">
+                <entry color="grey" threshold="-1.000"/>
+                <entry color="blue" threshold="0.000"/>
+                <entry color="cyan" threshold="10.000"/>
+                <entry color="green" threshold="60.000"/>
+                <entry color="yellow" threshold="120.000"/>
+                <entry color="orange" threshold="300.000"/>
+                <entry color="red" threshold="900.000"/>
+            </colorScheme>
+            <colorScheme name="by stop arrival delay" interpolated="1">
+                <entry color="magenta" threshold="-10.000"/>
+                <entry color="blue" threshold="0.000"/>
+                <entry color="cyan" threshold="10.000"/>
+                <entry color="green" threshold="60.000"/>
+                <entry color="yellow" threshold="120.000"/>
+                <entry color="orange" threshold="300.000"/>
+                <entry color="red" threshold="900.000"/>
+                <entry color="grey"/>
+            </colorScheme>
+            <colorScheme name="by lateral speed" interpolated="1">
+                <entry color="red" threshold="-3.000" name="-1.5"/>
+                <entry color="yellow" threshold="-1.000" name="-0.5"/>
+                <entry color="179,179,179" threshold="0.000" name="0"/>
+                <entry color="cyan" threshold="1.000" name="0.5"/>
+                <entry color="blue" threshold="3.000" name="1.5"/>
+            </colorScheme>
+            <colorScheme name="by param (numerical)" interpolated="1">
+                <entry color="204,204,204" threshold="0.000"/>
+            </colorScheme>
+            <colorScheme name="random">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="by angle">
+                <entry color="yellow"/>
+            </colorScheme>
+            <scalingScheme name="uniform">
+                <entry color="1.000"/>
+            </scalingScheme>
+            <scalingScheme name="by selection">
+                <entry color="1.000" name="unselected"/>
+                <entry color="5.000" name="selected"/>
+            </scalingScheme>
+            <scalingScheme name="by speed" interpolated="1">
+                <entry color="0.500" threshold="-2.000"/>
+                <entry color="1.000" threshold="-1.000"/>
+                <entry color="1.000" threshold="1.000"/>
+                <entry color="5.000" threshold="41.667"/>
+            </scalingScheme>
+            <scalingScheme name="by waiting time" interpolated="1">
+                <entry color="1.000" threshold="1.000"/>
+                <entry color="1.000" threshold="30.000"/>
+                <entry color="2.000" threshold="100.000"/>
+                <entry color="4.000" threshold="200.000"/>
+                <entry color="10.000" threshold="300.000"/>
+            </scalingScheme>
+            <scalingScheme name="by accumulated waiting time" interpolated="1">
+                <entry color="1.000" threshold="1.000"/>
+                <entry color="5.000" threshold="100.000"/>
+            </scalingScheme>
+            <scalingScheme name="by max speed" interpolated="1">
+                <entry color="1.000" threshold="0.000"/>
+                <entry color="1.000" threshold="8.333"/>
+                <entry color="1.000" threshold="15.278"/>
+                <entry color="1.000" threshold="22.222"/>
+                <entry color="1.000" threshold="33.333"/>
+                <entry color="1.000" threshold="41.667"/>
+            </scalingScheme>
+            <scalingScheme name="by reroute number" interpolated="1">
+                <entry color="1.000" threshold="0.000"/>
+                <entry color="1.000" threshold="1.000"/>
+                <entry color="5.000" threshold="10.000"/>
+            </scalingScheme>
+            <scalingScheme name="by offset from best lane" interpolated="1">
+                <entry color="5.000" threshold="-100.000" name="opposite lane"/>
+                <entry color="3.000" threshold="-3.000" name="-3"/>
+                <entry color="1.500" threshold="-1.000" name="-1"/>
+                <entry color="0.800" threshold="0.000" name="0"/>
+                <entry color="1.500" threshold="1.000" name="1"/>
+                <entry color="3.000" threshold="3.000" name="3"/>
+            </scalingScheme>
+            <scalingScheme name="by acceleration" interpolated="1">
+                <entry color="4.000" threshold="-9.000"/>
+                <entry color="2.000" threshold="-4.500"/>
+                <entry color="1.000" threshold="-0.100"/>
+                <entry color="0.800" threshold="0.000" name="0"/>
+                <entry color="1.000" threshold="0.100"/>
+                <entry color="1.000" threshold="2.600"/>
+                <entry color="3.000" threshold="5.200"/>
+            </scalingScheme>
+            <scalingScheme name="by time gap on lane" interpolated="1">
+                <entry color="1.000" threshold="-1.000"/>
+                <entry color="5.000" threshold="0.000" name="0"/>
+                <entry color="1.000" threshold="1.000"/>
+                <entry color="0.500" threshold="2.000"/>
+            </scalingScheme>
+            <scalingScheme name="by depart delay" interpolated="1">
+                <entry color="0.800" threshold="0.000"/>
+                <entry color="1.000" threshold="10.000"/>
+                <entry color="2.000" threshold="100.000"/>
+                <entry color="3.000" threshold="200.000"/>
+                <entry color="5.000" threshold="300.000"/>
+            </scalingScheme>
+            <scalingScheme name="by time loss" interpolated="1">
+                <entry color="1.000" threshold="0.000"/>
+                <entry color="1.000" threshold="10.000"/>
+                <entry color="2.000" threshold="60.000"/>
+                <entry color="3.000" threshold="180.000"/>
+                <entry color="10.000" threshold="900.000"/>
+            </scalingScheme>
+            <scalingScheme name="by stop delay" interpolated="1">
+                <entry color="0.100" threshold="-1.000"/>
+                <entry color="1.000" threshold="0.000"/>
+                <entry color="2.000" threshold="10.000"/>
+                <entry color="3.000" threshold="60.000"/>
+                <entry color="4.000" threshold="120.000"/>
+                <entry color="5.000" threshold="300.000"/>
+                <entry color="10.000" threshold="900.000"/>
+            </scalingScheme>
+            <scalingScheme name="by stop arrival delay" interpolated="1">
+                <entry color="0.500" threshold="-10.000"/>
+                <entry color="1.000" threshold="0.000"/>
+                <entry color="2.000" threshold="10.000"/>
+                <entry color="3.000" threshold="60.000"/>
+                <entry color="4.000" threshold="120.000"/>
+                <entry color="5.000" threshold="300.000"/>
+                <entry color="10.000" threshold="900.000"/>
+                <entry color="0.100"/>
+            </scalingScheme>
+            <scalingScheme name="by param (numerical)" interpolated="1">
+                <entry color="1.000" threshold="0.000"/>
+            </scalingScheme>
+        </vehicles>
+        <persons personMode="0" personQuality="1" person_minSize="1.000" person_exaggeration="0.500" person_constantSize="1" person_constantSizeSelected="0"
+                 personName_show="1" personName_size="60.000" personName_color="0,153,204" personName_bgColor="128,0,0,0" personName_constantSize="1" personName_onlySelected="0"
+                  personValue_show="0" personValue_size="80.000" personValue_color="cyan" personValue_bgColor="128,0,0,0" personValue_constantSize="1" personValue_onlySelected="0">
+            <colorScheme name="given person/type color">
+                <entry color="blue"/>
+            </colorScheme>
+            <colorScheme name="uniform">
+                <entry color="blue"/>
+            </colorScheme>
+            <colorScheme name="given/assigned person color">
+                <entry color="blue"/>
+            </colorScheme>
+            <colorScheme name="given/assigned type color">
+                <entry color="blue"/>
+            </colorScheme>
+            <colorScheme name="by speed" interpolated="1">
+                <entry color="grey" threshold="-2.000"/>
+                <entry color="grey" threshold="-1.000"/>
+                <entry color="red" threshold="0.000"/>
+                <entry color="yellow" threshold="0.694"/>
+                <entry color="green" threshold="1.389"/>
+                <entry color="blue" threshold="2.778"/>
+            </colorScheme>
+            <colorScheme name="by mode">
+                <entry color="grey" name="waiting for insertion"/>
+                <entry color="red" name="stopped"/>
+                <entry color="green" name="walking"/>
+                <entry color="blue" name="riding"/>
+                <entry color="cyan" name="accessing trainStop"/>
+                <entry color="yellow" name="waiting for ride"/>
+            </colorScheme>
+            <colorScheme name="by waiting time" interpolated="1">
+                <entry color="blue" threshold="0.000"/>
+                <entry color="cyan" threshold="30.000"/>
+                <entry color="green" threshold="100.000"/>
+                <entry color="yellow" threshold="200.000"/>
+                <entry color="red" threshold="300.000"/>
+            </colorScheme>
+            <colorScheme name="by jammed state" interpolated="1">
+                <entry color="blue" threshold="0.000"/>
+                <entry color="red" threshold="1.000"/>
+            </colorScheme>
+            <colorScheme name="by selection">
+                <entry color="179,179,179" name="unselected"/>
+                <entry color="0,102,204" name="selected"/>
+            </colorScheme>
+            <colorScheme name="by angle">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="random">
+                <entry color="yellow"/>
+            </colorScheme>
+        </persons>
+        <containers containerMode="0" containerQuality="2" container_minSize="1.000" container_exaggeration="1.000" container_constantSize="0" container_constantSizeSelected="0"
+                 containerName_show="0" containerName_size="60.000" containerName_color="0,153,204" containerName_bgColor="128,0,0,0" containerName_constantSize="1" containerName_onlySelected="0">
+            <colorScheme name="given container/type color">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="uniform">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="given/assigned container color">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="given/assigned type color">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="by speed" interpolated="1">
+                <entry color="red" threshold="0.000"/>
+                <entry color="yellow" threshold="0.694"/>
+                <entry color="green" threshold="1.389"/>
+                <entry color="blue" threshold="2.778"/>
+            </colorScheme>
+            <colorScheme name="by mode">
+                <entry color="grey" name="waiting for insertion"/>
+                <entry color="red" name="stopped"/>
+                <entry color="blue" name="transport"/>
+                <entry color="cyan" name="accessing trainStop"/>
+                <entry color="yellow" name="waiting for transport"/>
+                <entry color="green" name="tranship"/>
+            </colorScheme>
+            <colorScheme name="by waiting time" interpolated="1">
+                <entry color="blue" threshold="0.000"/>
+                <entry color="cyan" threshold="30.000"/>
+                <entry color="green" threshold="100.000"/>
+                <entry color="yellow" threshold="200.000"/>
+                <entry color="red" threshold="300.000"/>
+            </colorScheme>
+            <colorScheme name="by selection">
+                <entry color="179,179,179" name="unselected"/>
+                <entry color="0,102,204" name="selected"/>
+            </colorScheme>
+            <colorScheme name="by angle">
+                <entry color="yellow"/>
+            </colorScheme>
+            <colorScheme name="random">
+                <entry color="yellow"/>
+            </colorScheme>
+        </containers>
+        <junctions junctionMode="0"
+                   drawLinkTLIndex_show="0" drawLinkTLIndex_size="65.000" drawLinkTLIndex_color="128,128,255" drawLinkTLIndex_bgColor="invisible" drawLinkTLIndex_constantSize="0" drawLinkTLIndex_onlySelected="0"
+                   drawLinkJunctionIndex_show="0" drawLinkJunctionIndex_size="65.000" drawLinkJunctionIndex_color="128,128,255" drawLinkJunctionIndex_bgColor="invisible" drawLinkJunctionIndex_constantSize="0" drawLinkJunctionIndex_onlySelected="0"
+                   junctionID_show="0" junctionID_size="60.000" junctionID_color="0,255,128" junctionID_bgColor="128,0,0,0" junctionID_constantSize="1" junctionID_onlySelected="0"
+                   junctionName_show="0" junctionName_size="60.000" junctionName_color="192,255,128" junctionName_bgColor="128,0,0,0" junctionName_constantSize="1" junctionName_onlySelected="0"
+                   internalJunctionName_show="0" internalJunctionName_size="50.000" internalJunctionName_color="0,204,128" internalJunctionName_bgColor="128,0,0,0" internalJunctionName_constantSize="1" internalJunctionName_onlySelected="0"
+                   tlsPhaseIndex_show="0" tlsPhaseIndex_size="150.000" tlsPhaseIndex_color="yellow" tlsPhaseIndex_bgColor="128,0,0,0" tlsPhaseIndex_constantSize="1" tlsPhaseIndex_onlySelected="0" tlsPhaseName_show="0" tlsPhaseName_size="150.000" tlsPhaseName_color="orange" tlsPhaseName_bgColor="128,0,0,0" tlsPhaseName_constantSize="1" tlsPhaseName_onlySelected="0"
+                   showLane2Lane="0" drawShape="1" drawCrossingsAndWalkingareas="1" junction_minSize="1.000" junction_exaggeration="1.000" junction_constantSize="0" junction_constantSizeSelected="0">
+            <colorScheme name="uniform">
+                <entry color="black"/>
+                <entry color="150,200,200" name="waterway"/>
+                <entry color="invisible" name="railway"/>
+            </colorScheme>
+            <colorScheme name="by selection">
+                <entry color="grey" name="unselected"/>
+                <entry color="0,80,180" name="selected"/>
+            </colorScheme>
+            <colorScheme name="by type">
+                <entry color="green" name="traffic_light"/>
+                <entry color="0,128,0" name="traffic_light_unregulated"/>
+                <entry color="yellow" name="priority"/>
+                <entry color="red" name="priority_stop"/>
+                <entry color="blue" name="right_before_left"/>
+                <entry color="cyan" name="allway_stop"/>
+                <entry color="grey" name="district"/>
+                <entry color="magenta" name="unregulated"/>
+                <entry color="black" name="dead_end"/>
+                <entry color="orange" name="rail_signal"/>
+                <entry color="172,108,44" name="zipper"/>
+                <entry color="192,255,192" name="traffic_light_right_on_red"/>
+                <entry color="128,0,128" name="rail_crossing"/>
+                <entry color="0,0,128" name="left_before_right"/>
+            </colorScheme>
+            <colorScheme name="by height" interpolated="1">
+                <entry color="blue" threshold="-10.000"/>
+                <entry color="grey" threshold="0.000"/>
+                <entry color="red" threshold="10.000"/>
+                <entry color="yellow" threshold="50.000"/>
+                <entry color="green" threshold="100.000"/>
+                <entry color="magenta" threshold="200.000"/>
+            </colorScheme>
+        </junctions>
+        <additionals addMode="0" add_minSize="1.000" add_exaggeration="1.000" add_constantSize="0" add_constantSizeSelected="0" addName_show="0" addName_size="60.000" addName_color="255,0,128" addName_bgColor="128,0,0,0" addName_constantSize="1" addName_onlySelected="0" addFullName_show="0" addFullName_size="60.000" addFullName_color="255,0,128" addFullName_bgColor="128,0,0,0" addFullName_constantSize="1" addFullName_onlySelected="0" busStopColor="76,170,50" busStopColorSign="255,235,0" chargingStationColor="114,210,252" chargingStationColorCharge="255,180,0" chargingStationColorSign="255,235,0" containerStopColor="83,89,172" containerStopColorSign="177,184,186,171" parkingAreaColor="83,89,172" parkingAreaColorSign="177,184,186" parkingSpaceColor="255,200,200" parkingSpaceColorContour="green" personTripColor="200,0,255" personTripWidth="0.250" rideColor="blue" rideWidth="0.250" selectedAdditionalColor="0,0,150" selectedConnectionColor="0,0,100" selectedContainerColor="0,0,120" selectedContainerPlanColor="0,0,130" selectedCrossingColor="0,100,196" selectedEdgeColor="0,0,204" selectedEdgeDataColor="0,0,150" selectedLaneColor="0,0,128" selectedPersonColor="0,0,120" selectedPersonPlanColor="0,0,130" selectedProhibitionColor="0,0,120" selectedRouteColor="0,0,150" selectedVehicleColor="0,0,100" selectionColor="0,0,204" stopColor="220,20,30" waypointColor="0,127,14" stopContainerColor="red" stopPersonColor="red" trainStopColor="76,170,50" trainStopColorSign="255,235,0" transhipColor="100,0,200" transhipWidth="0.250" transportColor="100,200,0" transportWidth="0.250" tripWidth="0.200" vehicleTripColor="200,0,255" walkColor="green" walkWidth="0.250"/>
+        <pois poiTextParam="PARAM_TEXT" poi_minSize="0.000" poi_exaggeration="1.000" poi_constantSize="0" poi_constantSizeSelected="0" poiDetail="16" poiName_show="0" poiName_size="50.000" poiName_color="255,0,128" poiName_bgColor="128,0,0,0" poiName_constantSize="1" poiName_onlySelected="0" poiType_show="0" poiType_size="60.000" poiType_color="255,0,128" poiType_bgColor="128,0,0,0" poiType_constantSize="1" poiType_onlySelected="0" poiText_show="0" poiText_size="80.000" poiText_color="140,0,255" poiText_bgColor="128,0,0,0" poiText_constantSize="1" poiText_onlySelected="0">
+            <colorScheme name="given POI color">
+                <entry color="red"/>
+            </colorScheme>
+            <colorScheme name="by selection">
+                <entry color="179,179,179" name="unselected"/>
+                <entry color="0,102,204" name="selected"/>
+            </colorScheme>
+            <colorScheme name="uniform">
+                <entry color="red"/>
+            </colorScheme>
+        </pois>
+        <polys poly_minSize="0.000" poly_exaggeration="1.000" poly_constantSize="0" poly_constantSizeSelected="0" polyName_show="0" polyName_size="50.000" polyName_color="255,0,128" polyName_bgColor="128,0,0,0" polyName_constantSize="1" polyName_onlySelected="0" polyType_show="0" polyType_size="60.000" polyType_color="255,0,128" polyType_bgColor="128,0,0,0" polyType_constantSize="1" polyType_onlySelected="0">
+            <colorScheme name="given polygon color">
+                <entry color="orange"/>
+            </colorScheme>
+            <colorScheme name="by selection">
+                <entry color="179,179,179" name="unselected"/>
+                <entry color="0,102,204" name="selected"/>
+            </colorScheme>
+            <colorScheme name="uniform">
+                <entry color="orange"/>
+            </colorScheme>
+            <colorScheme name="random">
+                <entry color="yellow"/>
+            </colorScheme>
+        </polys>
+        <view3D show3DTLSLinkMarkers="1" show3DTLSDomes="1" show3DHeadUpDisplay="1" generate3DTLSModels="0" ambient3DLight="32,32,32" diffuse3DLight="64,64,64"/>
+        <legend showSizeLegend="1" showColorLegend="0" showVehicleColorLegend="0"/>
+    </scheme>
+</viewsettings>
