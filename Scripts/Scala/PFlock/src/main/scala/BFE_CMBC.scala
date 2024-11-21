@@ -199,6 +199,14 @@ object BFE_CMBC {
     }
   }  
 
+  def test(disks: List[Disk]): List[String] = {
+    disks.map{ disk =>
+      val wkt = disk.wkt
+
+      s"$wkt\n"
+    }
+  }
+
   def main(args: Array[String]): Unit = {
     //generateData(10000, 1000, 1000, "/home/acald013/Research/Datasets/P10K_W1K_H1K.tsv")
     implicit val params = new BFEParams(args)
@@ -221,6 +229,8 @@ object BFE_CMBC {
     settings = settings.copy(method="BFE_CMBC1")
     val (maximals, stats1) = BFE_CMBC.runAtBegining(points)
     stats1.print()
+
+    BFE_CMBC.test(maximals).foreach{println}
 
     /*
     settings = settings.copy(method="BFE_CMBC2")

@@ -68,7 +68,7 @@ public class DoubleArray {
 	this.pids = pids;
     }
 
-	 * Get a string representation of this double array.
+	 /* Get a string representation of this double array.
 	 * @return a string
 	 */
 	public String toString(){
