@@ -11,7 +11,7 @@ Be sure [SUMO](https://eclipse.dev/sumo/) is installed and $SUMO_HOME is set cor
 
 -   Run `build` script to call [`randomTrips.py`](https://sumo.dlr.de/docs/Tools/Trip.html) and [`duarouter`](https://sumo.dlr.de/docs/duarouter.html) to create random origin and destination, and then generate routes using shortest path algorithms. It creates routes for pedestrians, bicycles, motorcycles, cars, buses and trucks...
 
-    `./build`
+    `./dense_randomTrips`
 
 -   Run [`simulate`] script which call [`sumo`](https://sumo.dlr.de/docs/sumo.html) to execute the simulation and save the trajectories to a XML file...
 
