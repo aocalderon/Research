@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # convert FCD trajectory data for pedestrians to TSV...
-python3 ${SUMO_HOME}/tools/xml/xml2csv.py -c pasto_pedestrians.tsvcfg
+python3 ${SUMO_HOME}/tools/xml/xml2csv.py -c dense_pedestrians.tsvcfg
 
 # prune possible empty lines...
 cat trajectories_pedestrians.tsv | grep -v $'\t'$'\t'$'\t' > trajectories.tsv

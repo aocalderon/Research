@@ -1,5 +1,0 @@
-<configuration>
-    <source value="trajectories.xml"/>
-    <output value="trajectories_vehicles"/>
-    <xsd value="fcd_vehicles.xsd"/>
-</configuration>
