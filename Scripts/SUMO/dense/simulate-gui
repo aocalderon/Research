@@ -1,6 +1,0 @@
-#!/bin/bash
-
-sumo-gui --configuration-file pasto.sumocfg
-	 
-
-

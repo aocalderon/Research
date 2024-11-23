@@ -1,7 +1,55 @@
-#!/bin/bash
+#!/bin/python3
 
-# convert FCD trajectory data for pedestrians to TSV...
-python3 ${SUMO_HOME}/tools/xml/xml2csv.py -c pasto_pedestrians.tsvcfg
+import subprocess
+import pandas as pd
+import geopandas as gpd
+from shapely.geometry import Point
+from pyproj import CRS
 
-# prune possible empty lines...
-cat trajectories_pedestrians.tsv | grep -v $'\t'$'\t'$'\t' > trajectories.tsv
+# Define the command as a list of strings
+command = ["python3", "${SUMO_HOME}/tools/xml/xml2csv.py", "-c", "dense_pedestrians.tsvcfg"]
+
+# Run the command
+result = subprocess.run(command, capture_output=True, text=True)
+
+# Define file paths
+input_file = "trajectories_pedestrians.csv"
+output_file = "trajectories_prime.tsv"
+with open(input_file, 'r') as infile, open(output_file, 'w') as outfile:
+    for line in infile:
+        outfile.write(line.replace(';', '\t'))
+
+# Input and output file paths
+input_file = "trajectories_prime.tsv"  # Replace with your input file name
+output_file = "trajectories.tsv"  # Replace with your desired output file name
+
+# Read the file into a Pandas DataFrame
+df = pd.read_csv(input_file, sep='\t')
+print(df.head())
+
+# Remove the first three characters from a specific string column, e.g., 'name'
+if 'person_id' in df.columns:  # Check if the column exists
+    df['person_id'] = df['person_id'].str[3:]  # Remove the first three characters
+
+# Assuming the columns for coordinates are 'longitude' and 'latitude'
+# Create WKT POINT geometry using the longitude and latitude
+df['geometry'] = df.apply(lambda row: Point(row['person_x'], row['person_y']), axis=1)
+
+# Convert the DataFrame into a GeoDataFrame
+gdf = gpd.GeoDataFrame(df, geometry='geometry', crs=CRS("EPSG:4326"))
+
+# Transform the coordinate system from EPSG:4326 to EPSG:3857
+gdf = gdf.to_crs(epsg=3857)
+
+# Extract the transformed x and y coordinates into new columns
+gdf['x'] = gdf.geometry.x
+gdf['y'] = gdf.geometry.y
+
+# Drop the geometry column if no longer needed
+gdf = gdf.drop(columns=['geometry'])
+
+# Save the result back to a CSV file
+gdf[['person_id', 'x', 'y', 'timestep_time']].to_csv(output_file, index=False, header=False, sep='\t')
+
+print(f"File saved successfully to {output_file}")
+

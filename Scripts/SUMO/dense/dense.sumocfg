@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2023-07-01 20:30:15 by Eclipse SUMO sumo Version v1_18_0+0023-ef591d47046
--->
+<!-- generated on 2023-07-01 20:30:15 by Eclipse SUMO sumo Version v1_18_0+0023-ef591d47046 -->
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="pasto.net.xml.gz"/>
-	<route-files value="pasto.pedestrian.rou.xml"/>
-        <additional-files value="pasto.poly.xml.gz"/>
+        <net-file value="dense.net.xml.gz"/>
+	    <route-files value="dense.pedestrian.rou.xml"/>
+        <additional-files value="dense.poly.xml.gz"/>
     </input>
 
     <output>
@@ -19,22 +18,22 @@
     </output>
     
     <time>
-	<step-length value="1"/>
+	    <step-length value="1"/>
     </time>
 
     <processing>
-        <threads value="8"/>
+        <threads value="4"/>
         <ignore-route-errors value="true"/>
     </processing>
 
     <routing>
         <device.rerouting.adaptation-steps value="18"/>
         <device.rerouting.adaptation-interval value="10"/>
-        <device.rerouting.threads value="8"/>
+        <device.rerouting.threads value="4"/>
     </routing>
 
     <report>
-        <log value="pasto.log"/>
+        <log value="dense.log"/>
         <verbose value="true"/>
         <no-warnings value="true"/>
         <duration-log.statistics value="true"/>
@@ -42,9 +41,9 @@
     </report>
 
     <gui_only>
-        <gui-settings-file value="pasto.view.xml"/>
+        <gui-settings-file value="dense.view.xml"/>
         <start value="true"/>
-        <delay value="250"/>
+        <delay value="100"/>
     </gui_only>
 
 </configuration>
