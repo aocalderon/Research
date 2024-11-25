@@ -10,11 +10,10 @@ WAIT="0s"
 
 PARAMS=(
  --files  /home/acald013/Spark/2.4/conf/log4j.properties   \
- --conf   spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties   \
+ --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties   \
  --conf spark.driver.maxResultSize=$MAX_RESULT_SIZE \
  --conf spark.kryoserializer.buffer.max=$KRYO_BUFFER_MAX \
  --conf spark.locality.wait=$WAIT \
- --conf   spark.driver.extraJavaOptions=-Dlog4j.configuration=file:/home/acald013/Spark/2.4/conf/log4j.properties   \
  --deploy-mode client \
  --num-executors $EXECUTORS --executor-cores $CORES \
  --executor-memory $EMEMORY --driver-memory $DMEMORY \
