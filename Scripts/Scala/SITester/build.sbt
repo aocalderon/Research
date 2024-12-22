@@ -1,15 +1,14 @@
-name := "sitester"
-organization := "edu.ucr.dblab"
-version := "0.1"
-scalaVersion in ThisBuild := "2.11.8"
+ThisBuild / version      := "0.1.0"
+ThisBuild / organization := "edu.ucr.dblab"
+ThisBuild / scalaVersion := "2.11.12"
 
-libraryDependencies += "org.rogach" %% "scallop" % "4.0.1"
-libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25"
-libraryDependencies += "org.locationtech.jts" % "jts-core" % "1.19.0"
+val SparkVersion = "2.4.0"
 
-val mySourceGenerator = taskKey[Seq[File]](...)
+lazy val buildSettings = (project in file("."))
+  .settings(
+    name := "sitester",
 
-Compile / mySourceGenerator :=
-  generate( (Compile / sourceManaged).value / "some_directory")
-
-Compile / sourceGenerators += (Compile / mySourceGenerator)
+    libraryDependencies += "org.rogach" %% "scallop" % "4.0.1",
+    libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25",
+    libraryDependencies += "org.locationtech.jts" % "jts-core" % "1.19.0"
+  )
