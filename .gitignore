@@ -49,6 +49,18 @@ Scripts/Scala/legacy/ICPE/.settings/*
 Scripts/Scala/legacy/ICPE/.bloop/
 Scripts/Scala/legacy/ICPE/.metals/
 
+Scripts/Scala/P3D/target/*
+Scripts/Scala/P3D/project/*
+Scripts/Scala/P3D/.idea/*
+Scripts/Scala/P3D/.idea/workspace.xml
+Scripts/Scala/P3D/.ensime
+Scripts/Scala/P3D/.ensime_cache/*
+Scripts/Scala/P3D/.classpath
+Scripts/Scala/P3D/.project
+Scripts/Scala/P3D/.settings/*
+Scripts/Scala/P3D/.bloop/
+Scripts/Scala/P3D/.metals/
+
 Scripts/Scala/DSTester/target/*
 Scripts/Scala/DSTester/project/*
 Scripts/Scala/DSTester/.ensime
