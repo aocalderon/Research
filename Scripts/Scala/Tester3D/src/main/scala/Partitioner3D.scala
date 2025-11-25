@@ -7,13 +7,17 @@ import tech.tablesaw.api._
 import tech.tablesaw.plotly.Plot
 import tech.tablesaw.plotly.api._
 
+import smile.neighbor.KDTree
+
 import scala.util.Random
+import scala.collection.JavaConverters._
 import java.io.PrintWriter
 
 object Partitioner3D {
   def main(args: Array[String]): Unit = {
     val limit = 500.0
-    val points = (0 to 1000).map{ i =>
+    val n: Int = 10000
+    val points = (0 to n).map{ i =>
       val x = Random.nextDouble() * limit
       val y = Random.nextDouble() * limit
       val z = Random.nextDouble() * limit
@@ -21,6 +25,7 @@ object Partitioner3D {
       new Point3D(x, y, z, false)
     }.toList
 
+    /*
     val tree_space = BoxEnvelope.apply(0.0, limit, 0.0, limit, 0.0, limit)
     val tree = new Octree(new BoxEnvelope(tree_space), 0, null, 250, 16)
 
@@ -40,7 +45,9 @@ object Partitioner3D {
     f.write("x,y,z,vid\n")
     f.write(out)
     f.close
+    */
 
+    /*
     val x  = DoubleColumn.create("x")
     val y  = DoubleColumn.create("y")
     val z  = DoubleColumn.create("z")
@@ -58,5 +65,21 @@ object Partitioner3D {
 
     val scatter2d = ScatterPlot.create("points", data, "x", "y")
     Plot.show(scatter2d, "scatter2d.png")
+    */
+
+    val keys = points.map{ point =>
+        Array(point.x, point.y, point.z)
+      }.toArray
+
+    val data = (0 to n).map(_.toString).toArray
+
+    val kdt = new KDTree[String](keys, data)
+
+    kdt.knn(Array(1.0, 2.0, 3.0), 10).map{ node => 
+      val k = node.key.mkString(", ")
+      val v = node.value.toString
+
+      s"$k\t$v"
+    }.foreach(println)
   }
 }

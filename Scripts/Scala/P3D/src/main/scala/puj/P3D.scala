@@ -7,6 +7,7 @@ import org.locationtech.jts.geom._
 import edu.ucr.dblab.pflock.sedona.quadtree.Quadtree
 
 import scala.collection.JavaConverters._
+import scala.util.Random
 
 object P3D {
     case class Data(oid: Int, tid: Int)
@@ -20,22 +21,36 @@ object P3D {
             .master(params.master())
             .appName("P3D").getOrCreate()
 
-        val pointsRDD = spark.read
-            .option("header", value = false)
-            .option("delimiter", "\t")
-            .csv(params.filename)
-            .rdd
-            .map{ row =>
-                val oid = row.getString(0).toInt
-                val lon = row.getString(1).toDouble
-                val lat = row.getString(2).toDouble
-                val tid = row.getString(3).toInt
+        // val pointsRDD = spark.read
+        //     .option("header", value = false)
+        //     .option("delimiter", "\t")
+        //     .csv(params.filename)
+        //     .rdd
+        //     .map{ row =>
+        //         val oid = row.getString(0).toInt
+        //         val lon = row.getString(1).toDouble
+        //         val lat = row.getString(2).toDouble
+        //         val tid = row.getString(3).toInt
 
-                val point = G.createPoint(new Coordinate(lon, lat))
+        //         val point = G.createPoint(new Coordinate(lon, lat))
+        //         point.setUserData(Data(oid, tid))
+        //         point
+        //     }.cache()
+        // val n = pointsRDD.count()
+        val n: Int = 10000
+        val sd: Double = 250.0
+        val x_limit: Double = 1000.0
+        val y_limit: Double = 1000.0
+        val t_limit: Int = 10
+        val Xs = gaussianSeries(n, n / 2.0, sd)
+        val Ys = gaussianSeries(n, n / 2.0, sd)
+        val points = Xs.zip(Ys).zipWithIndex.map{ case(tuple, oid) =>
+                val tid = Random.nextInt(t_limit)
+                val point = G.createPoint(new Coordinate(tuple._1, tuple._2))
                 point.setUserData(Data(oid, tid))
                 point
-            }.cache()
-        val n = pointsRDD.count()
+            }
+        val pointsRDD = spark.sparkContext.parallelize(points)
 
         val (quadtree, cells, universe) = Quadtree.build(pointsRDD, new Envelope(), capacity = 50, fraction = 0.5)
         quadtree.values.map{ cell =>
@@ -44,6 +59,12 @@ object P3D {
 
         spark.close
     }    
+
+    def gaussianSeries(size: Int = 1000, mean: Double = 500.0, stdDev: Double = 150): List[Double] = List.fill(size) {
+        // nextGaussian() generates numbers with mean=0.0 and stdDev=1.0
+        // Scale and shift the result
+        mean + stdDev * Random.nextGaussian()
+    }
 }
 
 import org.rogach.scallop._

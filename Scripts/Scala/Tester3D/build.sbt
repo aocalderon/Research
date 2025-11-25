@@ -1,6 +1,6 @@
 ThisBuild / version      := "0.1.0"
 ThisBuild / organization := "edu.ucr.dblab"
-ThisBuild / scalaVersion := "2.11.12"
+ThisBuild / scalaVersion := "2.12.20"
 
 val sparkVersion = "2.4.0"
 
@@ -19,5 +19,7 @@ lazy val buildSettings = (project in file("."))
     libraryDependencies += "tech.tablesaw" % "tablesaw-core" % "0.43.1",
     libraryDependencies += "tech.tablesaw" % "tablesaw-jsplot" % "0.43.1",
 
+    //libraryDependencies += "com.github.astrolabsoftware" %% "spark3d" % "0.3.1",
+    
     libraryDependencies += "net.openhft" % "zero-allocation-hashing" % "0.16"
   )
