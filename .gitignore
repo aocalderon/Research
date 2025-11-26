@@ -19,12 +19,6 @@ spark-warehouse
 *.pcl
 *~
 
-Scripts/Scala/.ipynb_checkpoints/*
-Scripts/Scala/notebooks/.ipynb_checkpoints/*
-Scripts/Scala/PFlock/bash/target/routing-graph-cache/*
-Scripts/Scala/PFlock/target/routing-graph-cache/*
-
-
 #/target/*
 #/project/*
 #/.idea/*
@@ -37,17 +31,10 @@ Scripts/Scala/PFlock/target/routing-graph-cache/*
 #/.bloop/
 #/.metals/
 
-Scripts/Scala/legacy/ICPE/target/*
-Scripts/Scala/legacy/ICPE/project/*
-Scripts/Scala/legacy/ICPE/.idea/*
-Scripts/Scala/legacy/ICPE/.idea/workspace.xml
-Scripts/Scala/legacy/ICPE/.ensime
-Scripts/Scala/legacy/ICPE/.ensime_cache/*
-Scripts/Scala/legacy/ICPE/.classpath
-Scripts/Scala/legacy/ICPE/.project
-Scripts/Scala/legacy/ICPE/.settings/*
-Scripts/Scala/legacy/ICPE/.bloop/
-Scripts/Scala/legacy/ICPE/.metals/
+Scripts/Scala/.ipynb_checkpoints/*
+Scripts/Scala/notebooks/.ipynb_checkpoints/*
+Scripts/Scala/PFlock/bash/target/routing-graph-cache/*
+Scripts/Scala/PFlock/target/routing-graph-cache/*
 
 Scripts/Scala/P3D/target/*
 Scripts/Scala/P3D/project/*
@@ -60,6 +47,18 @@ Scripts/Scala/P3D/.project
 Scripts/Scala/P3D/.settings/*
 Scripts/Scala/P3D/.bloop/
 Scripts/Scala/P3D/.metals/
+
+Scripts/Scala/legacy/ICPE/target/*
+Scripts/Scala/legacy/ICPE/project/*
+Scripts/Scala/legacy/ICPE/.idea/*
+Scripts/Scala/legacy/ICPE/.idea/workspace.xml
+Scripts/Scala/legacy/ICPE/.ensime
+Scripts/Scala/legacy/ICPE/.ensime_cache/*
+Scripts/Scala/legacy/ICPE/.classpath
+Scripts/Scala/legacy/ICPE/.project
+Scripts/Scala/legacy/ICPE/.settings/*
+Scripts/Scala/legacy/ICPE/.bloop/
+Scripts/Scala/legacy/ICPE/.metals/
 
 Scripts/Scala/DSTester/target/*
 Scripts/Scala/DSTester/project/*
