@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration packages="org.apache.logging.log4j.core">
   <Appenders>
-    <Console name="myConsoleAppender" target="SYSTEM_OUT">
+    <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout pattern="%d|%r|%m%n"/>
     </Console>
     
@@ -25,7 +25,7 @@
   <Loggers>
     <Logger name="myLogger" level="INFO" additivity="false">
       <AppenderRef ref="RollingAppenderU"/>
-      <AppenderRef ref="myConsoleAppender"/>
+      <AppenderRef ref="Console"/>
     </Logger>
     
     <Logger name="spark.storage" level="INFO" additivity="false">

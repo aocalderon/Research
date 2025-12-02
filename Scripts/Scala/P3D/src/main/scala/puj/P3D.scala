@@ -5,14 +5,18 @@ import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.sql.SparkSession
 import org.locationtech.jts.geom._
 import edu.ucr.dblab.pflock.sedona.quadtree.Quadtree
+import org.apache.logging.log4j.LogManager
 
 import scala.collection.JavaConverters._
 import scala.util.Random
 
 object P3D {
+    private val logger = LogManager.getLogger("MyLogger")
+    
     case class Data(oid: Int, tid: Int)
 
     def main(args: Array[String]): Unit = {
+        logger.info("Starting P3D application")
         implicit val params = new Params(args)
         implicit val G = new GeometryFactory(new PrecisionModel(1.0 / params.tolerance()))
 
@@ -58,6 +62,7 @@ object P3D {
             }.foreach(println)
 
         spark.close
+        logger.info("SparkSession closed")
     }    
 
     def gaussianSeries(size: Int = 1000, mean: Double = 500.0, stdDev: Double = 150): List[Double] = List.fill(size) {
