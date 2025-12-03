@@ -1,11 +1,14 @@
 package puj
 
-import edu.ucr.dblab.pflock.sedona.quadtree.{QuadRectangle, StandardQuadTree}
+import edu.ucr.dblab.pflock.sedona.quadtree.{QuadRectangle, StandardQuadTree, Quadtree}
+
+import org.apache.spark.{Partitioner, TaskContext}
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.sql.SparkSession
-import org.locationtech.jts.geom._
-import edu.ucr.dblab.pflock.sedona.quadtree.Quadtree
+import org.apache.spark.rdd.RDD
 import org.apache.logging.log4j.LogManager
+
+import org.locationtech.jts.geom._
 
 import scala.collection.JavaConverters._
 import scala.util.Random
@@ -54,12 +57,40 @@ object P3D {
                 point.setUserData(Data(oid, tid))
                 point
             }
-        val pointsRDD = spark.sparkContext.parallelize(points)
+        val pointsRDD: RDD[Point] = spark.sparkContext.parallelize(points)
 
         val (quadtree, cells, universe) = Quadtree.build(pointsRDD, new Envelope(), capacity = 50, fraction = 0.5)
-        quadtree.values.map{ cell =>
-                G.toGeometry(cell).toText()
-            }.foreach(println)
+
+        saveAsTSV("/tmp/Q.wkt",
+            quadtree.values.map{ cell =>
+                G.toGeometry(cell).toText() + "\n"
+            }.toList
+        )
+
+        val pointsSRDD = pointsRDD.mapPartitions{ iter => 
+            iter.map{ point =>
+                val cid = try {
+                    cells.query(point.getEnvelopeInternal()).asScala.head.asInstanceOf[Int]
+                } catch {
+                    case e: Exception => 
+                        logger.error(s"Error retrieving user data for point: ${point.toText()}", e)
+                        -1
+                }
+                (cid, point)
+            }
+        }.partitionBy(SimplePartitioner(quadtree.size)).map(_._2).cache()
+
+        val count = pointsSRDD.count()
+        logger.info(s"Total points after partitioning: $count")
+
+        pointsSRDD.mapPartitions{ it =>
+            val partitionId = TaskContext.getPartitionId()
+            it.map{ point =>
+                point.getUserData().asInstanceOf[Data].tid
+            }.toList.groupBy(tid => tid).map{ case(tid, list) =>
+                (tid, list.size)
+            }.toIterator
+        }.collect().foreach{println}
 
         spark.close
         logger.info("SparkSession closed")
@@ -69,6 +100,18 @@ object P3D {
         // nextGaussian() generates numbers with mean=0.0 and stdDev=1.0
         // Scale and shift the result
         mean + stdDev * Random.nextGaussian()
+    }
+
+    def saveAsTSV(filename: String, content: Seq[String]): Unit = {
+        import java.io._
+        val pw = new PrintWriter(new File(filename))
+        pw.write(content.mkString(""))
+        pw.close()
+    }
+
+    case class SimplePartitioner(partitions: Int) extends Partitioner {
+        override def numPartitions: Int = partitions
+        override def getPartition(key: Any): Int = key.asInstanceOf[Int]
     }
 }
 
