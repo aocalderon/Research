@@ -9,6 +9,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.logging.log4j.LogManager
 
 import org.locationtech.jts.geom._
+import org.locationtech.jts.index.strtree.GeometryItemDistance
 
 import scala.collection.JavaConverters._
 import scala.util.Random
@@ -44,19 +45,24 @@ object P3D {
         //         point
         //     }.cache()
         // val n = pointsRDD.count()
-        val n: Int = 10000
+        val n: Int = 100000
         val sd: Double = 250.0
         val x_limit: Double = 1000.0
         val y_limit: Double = 1000.0
-        val t_limit: Int = 10
+        val t_limit: Int = 100
         val Xs = gaussianSeries(n, n / 2.0, sd)
         val Ys = gaussianSeries(n, n / 2.0, sd)
+        val Ts = gaussianSeries(n, 50, 25)
         val points = Xs.zip(Ys).zipWithIndex.map{ case(tuple, oid) =>
-                val tid = Random.nextInt(t_limit)
                 val point = G.createPoint(new Coordinate(tuple._1, tuple._2))
-                point.setUserData(Data(oid, tid))
+                point.setUserData(Data(oid, Math.floor(Ts(oid)).toInt))
                 point
             }
+        saveAsTSV("/tmp/P.wkt",
+            points.map{ point =>
+                point.toText() + "\n"
+            }.toList
+        )
         val pointsRDD: RDD[Point] = spark.sparkContext.parallelize(points)
 
         val (quadtree, cells, universe) = Quadtree.build(pointsRDD, new Envelope(), capacity = 50, fraction = 0.5)
@@ -69,13 +75,7 @@ object P3D {
 
         val pointsSRDD = pointsRDD.mapPartitions{ iter => 
             iter.map{ point =>
-                val cid = try {
-                    cells.query(point.getEnvelopeInternal()).asScala.head.asInstanceOf[Int]
-                } catch {
-                    case e: Exception => 
-                        logger.error(s"Error retrieving user data for point: ${point.toText()}", e)
-                        -1
-                }
+                val cid = cells.query(point.getEnvelopeInternal()).asScala.head.asInstanceOf[Int]
                 (cid, point)
             }
         }.partitionBy(SimplePartitioner(quadtree.size)).map(_._2).cache()
@@ -90,7 +90,12 @@ object P3D {
             }.toList.groupBy(tid => tid).map{ case(tid, list) =>
                 (tid, list.size)
             }.toIterator
-        }.collect().foreach{println}
+        }.groupByKey().map{ case(tid, counts) =>
+            val total = counts.sum
+            (tid, total)
+        }.collect().foreach{ case(tid, total) =>
+            println(s"Type $tid has total $total points")
+        }
 
         spark.close
         logger.info("SparkSession closed")

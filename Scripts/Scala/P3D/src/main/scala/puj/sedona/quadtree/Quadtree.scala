@@ -121,10 +121,10 @@ object Quadtree {
     val rectangle = if(envelope.isNull){
       val Xs   = points.map(_.getX).cache
       val Ys   = points.map(_.getY).cache
-      val minX = Xs.min()
-      val maxX = Xs.max()
-      val minY = Ys.min()
-      val maxY = Ys.max()
+      val minX = Xs.min() - 1.0
+      val maxX = Xs.max() + 1.0
+      val minY = Ys.min() - 1.0
+      val maxY = Ys.max() + 1.0
       val envelope_prime = new Envelope(minX, maxX, minY, maxY)
       new QuadRectangle(envelope_prime)
     } else {
