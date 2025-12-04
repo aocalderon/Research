@@ -17,7 +17,7 @@ import scala.util.Random
 object P3D {
     private val logger = LogManager.getLogger("MyLogger")
     
-    case class Data(oid: Int, tid: Int)
+    case class Data(oid: Int, tid: Double)
 
     def main(args: Array[String]): Unit = {
         logger.info("Starting P3D application")
@@ -52,10 +52,11 @@ object P3D {
         val t_limit: Int = 100
         val Xs = gaussianSeries(n, n / 2.0, sd)
         val Ys = gaussianSeries(n, n / 2.0, sd)
-        val Ts = gaussianSeries(n, 50, 25)
+        val Ts = (0 to n).map(_ => Random.nextGaussian())
         val points = Xs.zip(Ys).zipWithIndex.map{ case(tuple, oid) =>
+                val tid = Ts(oid)
                 val point = G.createPoint(new Coordinate(tuple._1, tuple._2))
-                point.setUserData(Data(oid, Math.floor(Ts(oid)).toInt))
+                point.setUserData(Data(oid, tid))
                 point
             }
         saveAsTSV("/tmp/P.wkt",
@@ -101,11 +102,12 @@ object P3D {
         logger.info("SparkSession closed")
     }    
 
-    def gaussianSeries(size: Int = 1000, mean: Double = 500.0, stdDev: Double = 150): List[Double] = List.fill(size) {
-        // nextGaussian() generates numbers with mean=0.0 and stdDev=1.0
-        // Scale and shift the result
-        mean + stdDev * Random.nextGaussian()
-    }
+    def gaussianSeries(size: Int = 1000, mean: Double = 500.0, stdDev: Double = 150): List[Double] = 
+        List.fill(size) {
+            // nextGaussian() generates numbers with mean=0.0 and stdDev=1.0
+            // Scale and shift the result
+            mean + stdDev * Random.nextGaussian()
+        }
 
     def saveAsTSV(filename: String, content: Seq[String]): Unit = {
         import java.io._
