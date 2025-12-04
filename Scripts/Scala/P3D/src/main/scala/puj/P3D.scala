@@ -11,6 +11,7 @@ import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.rdd.RDD
 import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.scala.Logging
 
 import org.locationtech.jts.geom._
 import org.locationtech.jts.index.strtree.GeometryItemDistance
@@ -18,8 +19,8 @@ import org.locationtech.jts.index.strtree.GeometryItemDistance
 import scala.collection.JavaConverters._
 import scala.util.Random
 
-object P3D {
-  private val logger = LogManager.getLogger("MyLogger")
+object P3D extends Logging {
+  //private val logger = LogManager.getLogger("MyLogger")
 
   case class Data(oid: Int, tid: Int)
 

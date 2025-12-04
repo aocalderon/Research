@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration packages="org.apache.logging.log4j.core">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d|%r|%m%n"/>
+    </Console>
+    
+    <RollingFile name="RollingAppender" fileName="/opt/Research/Scripts/Scala/P3D/logs/Andres_Spark.log"
+                 filePattern="/opt/Research/Scripts/Scala/P3D/logs/Andres_Spark.%d{yyyy-MM-dd}.log">
+      <PatternLayout pattern="[%p] %d %c %M - %m%n"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+      </Policies>
+    </RollingFile>
+    
+    <RollingFile name="RollingAppenderU" fileName="/opt/Research/Scripts/Scala/P3D/logs/Andres_SparkU.log"
+                 filePattern="/opt/Research/Scripts/Scala/P3D/logs/Andres_SparkU.%d{yyyy-MM-dd}.log">
+      <PatternLayout pattern="%d|%m%n"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+      </Policies>
+    </RollingFile>
+  </Appenders>
+  
+  <Loggers>
+    <Logger name="myLogger" level="INFO" additivity="false">
+      <AppenderRef ref="RollingAppenderU"/>
+      <AppenderRef ref="Console"/>
+    </Logger>
+    
+    <Logger name="spark.storage" level="INFO" additivity="false">
+      <AppenderRef ref="RollingAppender"/>
+    </Logger>
+    <Logger name="spark.scheduler" level="INFO" additivity="false">
+      <AppenderRef ref="RollingAppender"/>
+    </Logger>
+    <Logger name="spark.CacheTracker" level="INFO" additivity="false">
+      <AppenderRef ref="RollingAppender"/>
+    </Logger>
+    <Logger name="spark.CacheTrackerActor" level="INFO" additivity="false">
+      <AppenderRef ref="RollingAppender"/>
+    </Logger>
+    <Logger name="spark.MapOutputTrackerActor" level="INFO" additivity="false">
+      <AppenderRef ref="RollingAppender"/>
+    </Logger>
+    <Logger name="spark.MapOutputTracker" level="INFO" additivity="false">
+      <AppenderRef ref="RollingAppender"/>
+    </Logger>
+    
+    <Root level="INFO">
+      <AppenderRef ref="RollingAppender"/>
+    </Root>
+  </Loggers>
+</Configuration>
