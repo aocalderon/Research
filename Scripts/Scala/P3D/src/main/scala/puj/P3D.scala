@@ -54,7 +54,7 @@ object P3D extends Logging {
     //         point
     //     }.cache()
     // val n = pointsRDD.count()
-    val n: Int = 1000
+    val n: Int = 10000
     val x_limit: Double = 1000.0
     val y_limit: Double = 1000.0
     val t_limit: Double = 100.0
@@ -69,17 +69,20 @@ object P3D extends Logging {
       point.setUserData(Data(i, t))
       point
     }
+
     saveAsTSV(
       "/tmp/P.wkt",
       points.map { point =>
         val x = point.getX
         val y = point.getY
         val t = point.getUserData().asInstanceOf[Data].tid
+        val i = point.getUserData().asInstanceOf[Data].oid
         val wkt = point.toText()
 
-        f"$wkt\t$x%.3f\t$y%.3f\t$t%d\n"
+        f"$i%d\t$x%.3f\t$y%.3f\t$t%d\t$wkt\n"
       }.toList
     )
+    
     val pointsRDD: RDD[Point] = spark.sparkContext.parallelize(points)
 
     val (quadtree, cells, universe) =
