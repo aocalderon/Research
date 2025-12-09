@@ -20,7 +20,7 @@ import scala.collection.JavaConverters._
 import scala.util.Random
 
 object P3D extends Logging {
-  //private val logger = LogManager.getLogger("MyLogger")
+  // private val logger = LogManager.getLogger("MyLogger")
 
   case class Data(oid: Int, tid: Int)
 
@@ -38,52 +38,23 @@ object P3D extends Logging {
       .appName("P3D")
       .getOrCreate()
 
-    // val pointsRDD = spark.read
-    //     .option("header", value = false)
-    //     .option("delimiter", "\t")
-    //     .csv(params.filename)
-    //     .rdd
-    //     .map{ row =>
-    //         val oid = row.getString(0).toInt
-    //         val lon = row.getString(1).toDouble
-    //         val lat = row.getString(2).toDouble
-    //         val tid = row.getString(3).toInt
+    val pointsRDD = spark.read
+      .option("header", value = false)
+      .option("delimiter", "\t")
+      .csv(params.filename)
+      .rdd
+      .map { row =>
+        val oid = row.getString(0).toInt
+        val lon = row.getString(1).toDouble
+        val lat = row.getString(2).toDouble
+        val tid = row.getString(3).toInt
 
-    //         val point = G.createPoint(new Coordinate(lon, lat))
-    //         point.setUserData(Data(oid, tid))
-    //         point
-    //     }.cache()
-    // val n = pointsRDD.count()
-    val n: Int = 10000
-    val x_limit: Double = 1000.0
-    val y_limit: Double = 1000.0
-    val t_limit: Double = 100.0
-    val Xs = gaussianSeries(n, 0.0, x_limit)
-    val Ys = gaussianSeries(n, 0.0, y_limit)
-    val Ts = gaussianSeries(n, 0.0, t_limit).map(_.toInt)
-    val points = (0 to n).map { i =>
-      val x = Xs(i)
-      val y = Ys(i)
-      val t = Ts(i)
-      val point = G.createPoint(new Coordinate(x, y))
-      point.setUserData(Data(i, t))
-      point
-    }
-
-    saveAsTSV(
-      "/tmp/P.wkt",
-      points.map { point =>
-        val x = point.getX
-        val y = point.getY
-        val t = point.getUserData().asInstanceOf[Data].tid
-        val i = point.getUserData().asInstanceOf[Data].oid
-        val wkt = point.toText()
-
-        f"$i%d\t$x%.3f\t$y%.3f\t$t%d\t$wkt\n"
-      }.toList
-    )
-    
-    val pointsRDD: RDD[Point] = spark.sparkContext.parallelize(points)
+        val point = G.createPoint(new Coordinate(lon, lat))
+        point.setUserData(Data(oid, tid))
+        point
+      }
+      .cache()
+    val n = pointsRDD.count()
 
     val (quadtree, cells, universe) =
       Quadtree.build(pointsRDD, new Envelope(), capacity = 50, fraction = 0.5)
@@ -161,6 +132,41 @@ object P3D extends Logging {
     }
   }
 
+  def generateGaussianPointset(
+      n: Int,
+      x_limit: Double = 1000.0,
+      y_limit: Double = 1000.0,
+      t_limit: Double = 200.0
+  )(implicit G: GeometryFactory, spark: SparkSession): RDD[Point] = {
+
+    val Xs = gaussianSeries(n, 0.0, x_limit)
+    val Ys = gaussianSeries(n, 0.0, y_limit)
+    val Ts = gaussianSeries(n, 0.0, t_limit).map(_.toInt)
+    val points = (0 to n).map { i =>
+      val x = Xs(i)
+      val y = Ys(i)
+      val t = Ts(i)
+      val point = G.createPoint(new Coordinate(x, y))
+      point.setUserData(Data(i, t))
+      point
+    }
+
+    saveAsTSV(
+      "/tmp/P.wkt",
+      points.map { point =>
+        val x = point.getX
+        val y = point.getY
+        val t = point.getUserData().asInstanceOf[Data].tid
+        val i = point.getUserData().asInstanceOf[Data].oid
+        val wkt = point.toText()
+
+        f"$i%d\t$x%.3f\t$y%.3f\t$t%d\t$wkt\n"
+      }.toList
+    )
+
+    spark.sparkContext.parallelize(points)
+  }
+
   def saveAsTSV(filename: String, content: Seq[String]): Unit = {
     import java.io._
     val pw = new PrintWriter(new File(filename))
@@ -177,7 +183,7 @@ object P3D extends Logging {
 import org.rogach.scallop._
 
 class Params(args: Seq[String]) extends ScallopConf(args) {
-  val filename = "/opt/Research/Datasets/dense2.tsv"
+  val filename = "/opt/Research/Datasets/gaussian/P10K.wkt"
   val input: ScallopOption[String] = opt[String](default = Some(filename))
   val master: ScallopOption[String] = opt[String](default = Some("local[3]"))
   val epsilon: ScallopOption[Double] = opt[Double](default = Some(10.0))

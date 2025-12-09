@@ -11,7 +11,8 @@ lazy val buildSettings = (project in file("."))
     libraryDependencies += "org.apache.spark" %% "spark-sql" % SparkVersion,
     libraryDependencies += "org.locationtech.jts" % "jts-core" % "1.20.0",
     libraryDependencies += "org.rogach" %% "scallop" % "5.3.0",
-    libraryDependencies += "org.apache.logging.log4j" % "log4j-slf4j2-impl" % "2.20.0",
+    libraryDependencies += "org.apache.logging.log4j" % "log4j-api" % "2.24.1",
+    libraryDependencies += "org.apache.logging.log4j" % "log4j-core" % "2.24.1",
     libraryDependencies += "org.apache.logging.log4j" %% "log4j-api-scala" % "13.1.0"
   )
 
