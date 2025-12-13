@@ -31,6 +31,9 @@ spark-warehouse
 #/.bloop/
 #/.metals/
 
+.scala-build/*
+.metals/
+
 Scripts/Scala/.ipynb_checkpoints/*
 Scripts/Scala/notebooks/.ipynb_checkpoints/*
 Scripts/Scala/PFlock/bash/target/routing-graph-cache/*
@@ -38,6 +41,8 @@ Scripts/Scala/PFlock/target/routing-graph-cache/*
 
 Scripts/Scala/P3D/target/*
 Scripts/Scala/P3D/project/*
+Scripts/Scala/P3D/.bsp/*
+Scripts/Scala/P3D/.bsp/sbt.json
 Scripts/Scala/P3D/.idea/*
 Scripts/Scala/P3D/.idea/workspace.xml
 Scripts/Scala/P3D/.ensime

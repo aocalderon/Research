@@ -8,9 +8,16 @@ import scala.collection.JavaConverters._
 import java.io.FileWriter
 import scala.io.Source
 
-//import edu.ucr.dblab.pflock.Utils.Cell
+object Quadtree {
 
-object Quadtree {  
+  case class Cell(id: Int, envelope: Envelope, lineage: String = "")(implicit G: GeometryFactory){
+    def wkt: String = G.toGeometry(envelope).toText
+
+    override def toString(): String = s"$wkt\t$id\t$lineage"
+
+    def toText: String = s"${toString()}\n"
+  }
+
   def create[T](boundary: Envelope, lineages: List[String]): StandardQuadTree[T] = {
     val quadtree = if(lineages.size < 4){  // If quadtree has only one level,
                                            // we just return a simplre quadtree with the boundary...
@@ -116,9 +123,9 @@ object Quadtree {
     maxLevel: Int = 16, 
     level: Int = 0, 
     seed: Int = 42
-  )(implicit G: GeometryFactory): (Map[Int, Envelope], STRtree, Envelope) = {
+  )(implicit G: GeometryFactory): (StandardQuadTree[Point], Map[Int, Cell], STRtree, Envelope) = {
 
-    val rectangle = if(envelope.isNull){
+    val universe = if(envelope.isNull){
       val Xs   = points.map(_.getX).cache
       val Ys   = points.map(_.getY).cache
       val minX = Xs.min() - 1.0
@@ -131,7 +138,7 @@ object Quadtree {
       new QuadRectangle(envelope)
     }
 
-    val quadtree = new StandardQuadTree[Point](rectangle, level, capacity, maxLevel)
+    val quadtree = new StandardQuadTree[Point](universe, level, capacity, maxLevel)
 
     points.sample(false, fraction, seed)
       .collect
@@ -143,17 +150,21 @@ object Quadtree {
     quadtree.assignPartitionLineage
     quadtree.dropElements
 
-    val tree = new STRtree()
+    val rtree = new STRtree()
     val cells = quadtree.getLeafZones
       .asScala
       .map{ leaf =>
         val id = leaf.partitionId.toInt
         val envelope = leaf.getEnvelope
-        tree.insert(envelope, id)
-        (id -> envelope)
+        val linage = leaf.lineage
+
+        val cell = Cell(id, envelope, linage)
+
+        rtree.insert(envelope, id)
+        (id -> cell)
       }.toMap
 
-    (cells, tree, rectangle.getEnvelope)
+    (quadtree, cells, rtree, universe.getEnvelope)
   }
 
   def read(cells_file: String, boundary_file: String)(implicit geofactory: GeometryFactory)

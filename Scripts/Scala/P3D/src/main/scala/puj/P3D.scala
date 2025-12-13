@@ -18,11 +18,9 @@ import org.locationtech.jts.index.strtree.GeometryItemDistance
 
 import scala.collection.JavaConverters._
 import scala.util.Random
+import org.apache.hadoop.yarn.webapp.hamlet.HamletSpec.TH
 
 object P3D extends Logging {
-  // private val logger = LogManager.getLogger("MyLogger")
-
-  case class Data(oid: Int, tid: Int)
 
   def main(args: Array[String]): Unit = {
     logger.info("Starting P3D application")
@@ -37,6 +35,8 @@ object P3D extends Logging {
       .master(params.master())
       .appName("P3D")
       .getOrCreate()
+    import spark.implicits._
+    logger.info("SparkSession created")
 
     val pointsRDD = spark.read
       .option("header", value = false)
@@ -55,21 +55,23 @@ object P3D extends Logging {
       }
       .cache()
     val n = pointsRDD.count()
+    logger.info(s"Total points loaded: $n")
 
-    val (quadtree, cells, universe) =
+    val (quadtree, cells, rtree, universe) =
       Quadtree.build(pointsRDD, new Envelope(), capacity = 50, fraction = 0.5)
+    logger.info(s"Quadtree built with ${cells.size} cells")
 
     saveAsTSV(
       "/tmp/Q.wkt",
-      quadtree.values.map { cell =>
-        G.toGeometry(cell).toText() + "\n"
+      cells.values.map { cell =>
+        cell.wkt + "\n"
       }.toList
     )
 
     val pointsSRDD = pointsRDD
       .mapPartitions { iter =>
         iter.map { point =>
-          val cid = cells
+          val cid = rtree
             .query(point.getEnvelopeInternal())
             .asScala
             .head
@@ -77,13 +79,12 @@ object P3D extends Logging {
           (cid, point)
         }
       }
-      .partitionBy(SimplePartitioner(quadtree.size))
+      .partitionBy(SimplePartitioner(cells.size))
       .map(_._2)
       .cache()
-
     val count = pointsSRDD.count()
-    logger.info(s"Total points after partitioning: $count")
-
+    logger.info(s"Points repartitioned into SRDD with $count points")
+    
     val THist = pointsSRDD
       .mapPartitions { it =>
         val partitionId = TaskContext.getPartitionId()
@@ -99,8 +100,122 @@ object P3D extends Logging {
       .groupByKey()
       .map { case (tid, counts) =>
         val total = counts.sum
-        (tid, total)
+        Bin(tid, total)
       }
+    logger.info("Temporal histogram (THist) computed")
+
+    saveAsTSV(
+      "/tmp/THist.tsv",
+      THist
+        .collect()
+        .sortBy(_.instant)
+        .map(bin => s"${bin.toString()}\n")
+        .toList
+    )
+
+    val intervals = groupInstants(THist.collect().sortBy(_.instant).toSeq, maxSum = 500.0)
+      .map{ group =>
+        val begin = group.head.instant
+        val end = group.last.instant
+        val number_of_times = group.map(_.count).sum
+        
+        (begin, end, number_of_times)
+      }
+      .zipWithIndex
+      .map{ case(interval_prime, index) =>
+        val begin = interval_prime._1
+        val end = interval_prime._2
+        val number_of_times = interval_prime._3
+
+        (index -> Interval(index, begin, end, number_of_times))
+      }.toMap
+    val temporal_bounds = intervals.values.map(interval => (interval.begin, interval.index)).toList.sortBy(_._1)
+    logger.info("Instants grouped based on maximum sum")
+
+    saveAsTSV(
+      "/tmp/intervals.tsv",
+      intervals.values.toList.sortBy(_.index).map{ interval =>
+        interval.toText
+      }
+    )
+
+    saveAsTSV(
+      "/tmp/cells.tsv",
+      cells.values.toList.sortBy(_.id).map{ cell =>
+        cell.toText
+      }
+    )
+
+    val pointsSTRDD_prime = pointsSRDD.mapPartitionsWithIndex{ (s_index, it) =>
+      it.map { point =>
+        val data = point.getUserData().asInstanceOf[Data]
+        val tid = data.tid
+        val oid = data.oid
+
+        val t_index = temporal_bounds
+          .filter{ case (instant, index) => instant <= tid }
+          .last
+          ._2
+        val st_index = BitwisePairing.encode(s_index, t_index)
+
+        (st_index, point)
+      }
+    }.cache()
+
+    val st_indexes = pointsSTRDD_prime
+      .map{ case (st_index, point) => st_index }
+      .distinct()
+      .collect()
+      .zipWithIndex.toMap
+    logger.info(s"Total distinct ST_Indexes: ${st_indexes.size}")
+    val st_indexes_reverse = for ((k,v) <- st_indexes) yield (v, k)
+    
+    val pointsSTRDD = pointsSTRDD_prime
+      .map{ case (st_index, point) => (st_indexes(st_index), point) }
+      .partitionBy(SimplePartitioner(st_indexes.size))
+      .map(_._2)
+      .cache()
+    val nPointsSTRDD = pointsSTRDD.count()
+    logger.info(s"Points repartitioned into STRDD with $nPointsSTRDD points")
+
+    saveAsTSV(
+      "/tmp/STP.wkt",
+      pointsSTRDD.mapPartitionsWithIndex{ (st_index, it) =>
+        it.map{ point =>
+          val data = point.getUserData.asInstanceOf[Data]
+          val i = data.oid
+          val t = data.tid
+          val x = point.getX
+          val y = point.getY
+          val wkt = point.toText
+
+          s"$i\t$x\t$y\t$t\t$st_index\t$wkt\n"
+        }
+      }.collect
+    )
+
+    saveAsTSV(
+      "/tmp/Boxes.wkt",
+      pointsSTRDD.mapPartitionsWithIndex{ (st_index_prime, it) =>
+        val st_index = st_indexes_reverse(st_index_prime)
+        val (s_index, t_index) = BitwisePairing.decode(st_index)
+        val cell = cells(s_index)
+        val interval =
+          try{
+            intervals(t_index)
+          } catch {
+            case e: java.util.NoSuchElementException => {
+              logger.error(s"st_index: $st_index\ts_index: $s_index\tt_index: $t_index")
+              intervals(0)
+            }
+          }
+        val wkt = cell.wkt
+        val beg = interval.begin
+        val dur = interval.duration
+
+        Iterator(s"$wkt\t$beg\t$dur\n")
+      }.collect
+    )
 
     spark.close
     logger.info("SparkSession closed")
@@ -134,9 +249,9 @@ object P3D extends Logging {
 
   def generateGaussianPointset(
       n: Int,
-      x_limit: Double = 1000.0,
-      y_limit: Double = 1000.0,
-      t_limit: Double = 200.0
+      x_limit: Double = 5000.0,
+      y_limit: Double = 5000.0,
+      t_limit: Double = 1000.0
   )(implicit G: GeometryFactory, spark: SparkSession): RDD[Point] = {
 
     val Xs = gaussianSeries(n, 0.0, x_limit)
@@ -172,6 +287,78 @@ object P3D extends Logging {
     val pw = new PrintWriter(new File(filename))
     pw.write(content.mkString(""))
     pw.close()
+    logger.info(s"Saved ${content.size} records to $filename") 
+  }
+
+  /**
+   * Groups a sequence of bins (instants and their counts) into sub-sequences from left to right, 
+   * such that the sum of each group does not exceed a maximum limit.  
+   * The process is greedy: it maximizes the size of the current group before starting a new one. 
+   * The relative order of elements is preserved.
+   *
+   * @param numbers The input sequence of integers.
+   * @param maxSum The maximum allowed sum for any group.
+   * @return A list of lists, where each inner list is a valid group (except for elements that 
+   * individually exceed the maxSum, which are handled with a warning).
+   */
+  def groupInstants(numbers: Seq[Bin], maxSum: Double): List[List[Bin]] = {
+    // We use a foldLeft to process the list sequentially and maintain state.
+    // The state (accumulator) is a tuple: (completedGroups, currentGroup, currentSum)
+    val initialState = (List.empty[List[Bin]], List.empty[Bin], 0)
+
+    val (completedGroups, finalGroup, _) = numbers.foldLeft(initialState) {
+      case ((groups, currentGroup, currentSum), bin) =>
+        
+        // 1. Sanity Check: If an individual number exceeds the maximum sum,
+        // it must form its own group. We complete the current group and start 
+        // a new one containing only the violating number.
+        val number = bin.count
+        if (number > maxSum) {
+           //println(s"Warning: Element $number exceeds maxSum $maxSum. It will be placed in a separate group.")
+           val updatedGroups = if (currentGroup.nonEmpty) groups :+ currentGroup else groups
+           // Start a new group with the single, violating number and immediately complete it.
+           (updatedGroups :+ List(bin), List.empty[Bin], 0)
+        }
+        
+        // 2. Standard case: Check if adding the number is within the limit
+        else if (currentSum + number <= maxSum) {
+          // If the sum is within the limit, add the number to the current group
+          // Note: using :+ on List for simple append is fine for small lists, 
+          // but for highly performance-critical code on very large lists, 
+          // one might prefer prepending and reversing at the end.
+          (groups, currentGroup :+ bin, currentSum + number)
+        } else {
+          // 3. Limit exceeded: The current group is complete.
+          // Start a new group with the current number.
+          (groups :+ currentGroup, List(bin), number)
+        }
+    }
+
+    // After folding, we must add the last group being built (finalGroup), if it's not empty.
+    if (finalGroup.nonEmpty) completedGroups :+ finalGroup else completedGroups
+  }
+
+  // Case Classes...
+
+  case class Data(oid: Int, tid: Int)
+
+  /**
+    * A bin of a histogram that count how many entries per instant in a sequence.
+    *
+    * @param instant A particular instant.
+    * @param count The count of entries in this instant.
+    */
+  case class Bin(instant: Int, count: Int){
+    override def toString(): String = s"[$instant, $count]"
+  }
+
+  case class Interval(index: Int, begin: Int, end: Int, capacity: Int = 0){
+    val duration: Int = end - begin
+
+    override def toString(): String = s"$index: [$begin $end] ($duration)"
+
+    val toText: String = s"${toString()}\n"
+
   }
 
   case class SimplePartitioner(partitions: Int) extends Partitioner {
