@@ -41,6 +41,7 @@ Scripts/Scala/PFlock/target/routing-graph-cache/*
 
 Scripts/Scala/P3D/target/*
 Scripts/Scala/P3D/project/*
+Scripts/Scala/P3D/.vscode/*
 Scripts/Scala/P3D/.bsp/*
 Scripts/Scala/P3D/.bsp/sbt.json
 Scripts/Scala/P3D/.idea/*
@@ -52,6 +53,7 @@ Scripts/Scala/P3D/.project
 Scripts/Scala/P3D/.settings/*
 Scripts/Scala/P3D/.bloop/
 Scripts/Scala/P3D/.metals/
+Scripts/Scala/P3D/.scalafmt.conf
 
 Scripts/Scala/legacy/ICPE/target/*
 Scripts/Scala/legacy/ICPE/project/*
