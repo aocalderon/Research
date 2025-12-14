@@ -18,7 +18,6 @@ import org.locationtech.jts.index.strtree.GeometryItemDistance
 
 import scala.collection.JavaConverters._
 import scala.util.Random
-import org.apache.hadoop.yarn.webapp.hamlet.HamletSpec.TH
 
 object P3D extends Logging {
 
@@ -41,7 +40,7 @@ object P3D extends Logging {
     val pointsRDD = spark.read
       .option("header", value = false)
       .option("delimiter", "\t")
-      .csv(params.filename)
+      .csv(params.input())
       .rdd
       .map { row =>
         val oid = row.getString(0).toInt
@@ -58,13 +57,16 @@ object P3D extends Logging {
     logger.info(s"Total points loaded: $n")
 
     val (quadtree, cells, rtree, universe) =
-      Quadtree.build(pointsRDD, new Envelope(), capacity = 50, fraction = 0.5)
+      Quadtree.build(pointsRDD, capacity = params.scapacity(), fraction = params.fraction())
     logger.info(s"Quadtree built with ${cells.size} cells")
 
     saveAsTSV(
       "/tmp/Q.wkt",
       cells.values.map { cell =>
-        cell.wkt + "\n"
+        val cid = cell.id
+        val wkt = cell.wkt
+
+        s"$wkt\t$cid\n"
       }.toList
     )
 
@@ -113,7 +115,7 @@ object P3D extends Logging {
         .toList
     )
 
-    val intervals = groupInstants(THist.collect().sortBy(_.instant).toSeq, maxSum = 500.0)
+    implicit val intervals = groupInstants(THist.collect().sortBy(_.instant).toSeq, capacity = params.tcapacity())
       .map{ group =>
         val begin = group.head.instant
         val end = group.last.instant
@@ -127,9 +129,10 @@ object P3D extends Logging {
         val end = interval_prime._2
         val number_of_times = interval_prime._3
 
-        (index -> Interval(index, begin, end, number_of_times))
+        index -> Interval(index, begin, end, number_of_times)
       }.toMap
-    val temporal_bounds = intervals.values.map(interval => (interval.begin, interval.index)).toList.sortBy(_._1)
+    //val temporal_bounds = intervals.values.map(interval => (interval.begin, interval.index)).toList.sortBy(_._1)
+    val temporal_bounds = intervals.values.map(_.begin).toArray.sorted
     logger.info("Instants grouped based on maximum sum")
 
     saveAsTSV(
@@ -152,10 +155,7 @@ object P3D extends Logging {
         val tid = data.tid
         val oid = data.oid
 
-        val t_index = temporal_bounds
-          .filter{ case (instant, index) => instant <= tid }
-          .last
-          ._2
+        val t_index = Interval.findInterval(temporal_bounds, tid).index
         val st_index = BitwisePairing.encode(s_index, t_index)
 
         (st_index, point)
@@ -178,44 +178,45 @@ object P3D extends Logging {
     val nPointsSTRDD = pointsSTRDD.count()
     logger.info(s"Points repartitioned into STRDD with $nPointsSTRDD points")
 
-    saveAsTSV(
-      "/tmp/STP.wkt",
-      pointsSTRDD.mapPartitionsWithIndex{ (st_index, it) =>
-        it.map{ point =>
-          val data = point.getUserData.asInstanceOf[Data]
-          val i = data.oid
-          val t = data.tid
-          val x = point.getX
-          val y = point.getY
-          val wkt = point.toText
+    pointsSTRDD.mapPartitions{ points =>
+      val st_index = st_indexes_reverse(TaskContext.getPartitionId)
+      val (s_index, t_index) = BitwisePairing.decode(st_index)
+      points.map{ point =>
+        val data = point.getUserData.asInstanceOf[Data]
+        val i = data.oid
+        val t = data.tid
+        val x = point.getX
+        val y = point.getY
+        val wkt = point.toText
 
-          s"$i\t$x\t$y\t$t\t$st_index\t$wkt\n"
-        }
-      }.collect
-    )
+        (s_index, s"$i\t$x\t$y\t$t\t$s_index\t$wkt\n")
+      }
+    }
+      .groupBy{_._1}.collect
+      .map{ case(s_index, it) =>
+        saveAsTSV(
+          s"/tmp/STP/P_${s_index}.wkt",
+          it.map(_._2).toList
+        )
+      }
+   
+    pointsSTRDD.mapPartitionsWithIndex{ (st_index_prime, it) =>
+      val st_index = st_indexes_reverse(st_index_prime)
+      val (s_index, t_index) = BitwisePairing.decode(st_index)
+      val cell = cells(s_index)
+      val interval = intervals(t_index)
+      val wkt = cell.wkt
+      val beg = interval.begin
+      val dur = interval.duration
 
-    saveAsTSV(
-      "/tmp/Boxes.wkt",
-      pointsSTRDD.mapPartitionsWithIndex{ (st_index_prime, it) =>
-        val st_index = st_indexes_reverse(st_index_prime)
-        val (s_index, t_index) = BitwisePairing.decode(st_index)
-        val cell = cells(s_index)
-        val interval =
-          try{
-            intervals(t_index)
-          } catch {
-            case e: java.util.NoSuchElementException => {
-              logger.error(s"st_index: $st_index\ts_index: $s_index\tt_index: $t_index")
-              intervals(0)
-            }
-          }
-        val wkt = cell.wkt
-        val beg = interval.begin
-        val dur = interval.duration
-
-        Iterator(s"$wkt\t$beg\t$dur\n")
-      }.collect
-    )
+      Iterator( (s_index, s"$wkt\t$beg\t$dur\n") )
+    }.groupBy{_._1}.collect
+    .map{ case(s_index, it) =>
+      saveAsTSV(
+        s"/tmp/STP/C_${s_index}.wkt",
+        it.map(_._2).toList
+      )
+    }
 
     spark.close
     logger.info("SparkSession closed")
@@ -297,11 +298,11 @@ object P3D extends Logging {
    * The relative order of elements is preserved.
    *
    * @param numbers The input sequence of integers.
-   * @param maxSum The maximum allowed sum for any group.
+   * @param capacity The maximum allowed sum for any group.
    * @return A list of lists, where each inner list is a valid group (except for elements that 
    * individually exceed the maxSum, which are handled with a warning).
    */
-  def groupInstants(numbers: Seq[Bin], maxSum: Double): List[List[Bin]] = {
+  def groupInstants(numbers: Seq[Bin], capacity: Double): List[List[Bin]] = {
     // We use a foldLeft to process the list sequentially and maintain state.
     // The state (accumulator) is a tuple: (completedGroups, currentGroup, currentSum)
     val initialState = (List.empty[List[Bin]], List.empty[Bin], 0)
@@ -313,7 +314,7 @@ object P3D extends Logging {
         // it must form its own group. We complete the current group and start 
         // a new one containing only the violating number.
         val number = bin.count
-        if (number > maxSum) {
+        if (number > capacity) {
            //println(s"Warning: Element $number exceeds maxSum $maxSum. It will be placed in a separate group.")
            val updatedGroups = if (currentGroup.nonEmpty) groups :+ currentGroup else groups
            // Start a new group with the single, violating number and immediately complete it.
@@ -321,7 +322,7 @@ object P3D extends Logging {
         }
         
         // 2. Standard case: Check if adding the number is within the limit
-        else if (currentSum + number <= maxSum) {
+        else if (currentSum + number <= capacity) {
           // If the sum is within the limit, add the number to the current group
           // Note: using :+ on List for simple append is fine for small lists, 
           // but for highly performance-critical code on very large lists, 
@@ -352,15 +353,6 @@ object P3D extends Logging {
     override def toString(): String = s"[$instant, $count]"
   }
 
-  case class Interval(index: Int, begin: Int, end: Int, capacity: Int = 0){
-    val duration: Int = end - begin
-
-    override def toString(): String = s"$index: [$begin $end] ($duration)"
-
-    val toText: String = s"${toString()}\n"
-
-  }
-
   case class SimplePartitioner(partitions: Int) extends Partitioner {
     override def numPartitions: Int = partitions
     override def getPartition(key: Any): Int = key.asInstanceOf[Int]
@@ -370,12 +362,15 @@ object P3D extends Logging {
 import org.rogach.scallop._
 
 class Params(args: Seq[String]) extends ScallopConf(args) {
-  val filename = "/opt/Research/Datasets/gaussian/P10K.wkt"
+  val filename = "/opt/Research/Datasets/gaussian/P25K.wkt"
   val input: ScallopOption[String] = opt[String](default = Some(filename))
   val master: ScallopOption[String] = opt[String](default = Some("local[3]"))
   val epsilon: ScallopOption[Double] = opt[Double](default = Some(10.0))
   val mu: ScallopOption[Int] = opt[Int](default = Some(3))
   val tolerance: ScallopOption[Double] = opt[Double](default = Some(1e-3))
+  val fraction: ScallopOption[Double] = opt[Double](default = Some(0.1))
+  val scapacity: ScallopOption[Int] = opt[Int](default = Some(200))
+  val tcapacity: ScallopOption[Int] = opt[Int](default = Some(2000))
 
   verify()
 }
