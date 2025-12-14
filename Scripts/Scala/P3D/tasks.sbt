@@ -2,27 +2,29 @@ import complete.DefaultParsers._
 import sys.process._
 import java.io.FileWriter
 import java.nio.file.{Files, Paths}
-  
+
 lazy val sparkBash = inputKey[Unit]("Create a spark bash script...")
 sparkBash := {
 
   val args: Seq[String] = spaceDelimited("<arg>").parsed
 
   val classpathJars: Seq[File] = (Runtime / fullClasspathAsJars).value.files
-  val modules = libraryDependencies.value.map(_.toString)
-    .filterNot(_.contains("spark")).filterNot(_.contains("scala-library"))
-  val cpJars_paths = for{
+  val modules                  = libraryDependencies.value
+    .map(_.toString)
+    .filterNot(_.contains("spark"))
+    .filterNot(_.contains("scala-library"))
+  val cpJars_paths = for {
     module <- modules.map(_.split(":")(1))
     path   <- classpathJars.map(_.toString)
     if { path.contains(module) }
   } yield { path }
-  cpJars_paths.map{_.toString.split("/").last}.foreach{println}
+  cpJars_paths.map { _.toString.split("/").last }.foreach { println }
 
   val libJars_paths: Seq[File] = (Runtime / unmanagedJars).value.files
-  libJars_paths.map{_.getName}.foreach{println}
+  libJars_paths.map { _.getName }.foreach { println }
 
   val finder: PathFinder = (baseDirectory.value / "target") ** "*.jar"
-  val jar = finder.get.last
+  val jar                = finder.get.last
 
   val log_file  = s"${System.getProperty("user.home")}/Spark/2.4/conf/log4j.properties "
   val files     = s"$log_file "
@@ -43,7 +45,7 @@ sparkBash := {
   ).mkString("\n")
 
   val script_name = classname.split("\\.").last.toLowerCase.trim
-  val script = new File(s"bash/${script_name}_spark")
+  val script      = new File(s"bash/${script_name}_spark")
   script.setExecutable(true, true)
   val f = new FileWriter(script)
   f.write("#/usr/bin/bash \n\n")
@@ -56,10 +58,10 @@ copyClasspath := {
 
   val args: Seq[String] = spaceDelimited("<arg>").parsed
 
-  val dir_output = Files.createDirectories(Paths.get(args(0)))
+  val dir_output    = Files.createDirectories(Paths.get(args(0)))
   val cp: Seq[File] = (Runtime / fullClasspathAsJars).value.files
-  val base = baseDirectory.value
-  cp.foreach{ c =>
+  val base          = baseDirectory.value
+  cp.foreach { c =>
     println(s"Copy $c ...")
     s"cp $c ${dir_output}" !
   }
@@ -70,15 +72,15 @@ scalaBash := {
 
   val args: Seq[String] = spaceDelimited("<arg>").parsed
 
-  val cp: Seq[File] = (Runtime / fullClasspathAsJars).value.files
-  val base = baseDirectory.value
-  val strCP = cp.map{ j => s"""\t"${j.toString}"""" }.mkString("\n")
+  val cp: Seq[File]      = (Runtime / fullClasspathAsJars).value.files
+  val base               = baseDirectory.value
+  val strCP              = cp.map { j => s"""\t"${j.toString}"""" }.mkString("\n")
   val finder: PathFinder = (base / "target") ** "*.jar"
-  val jar = finder.get.mkString(":")
-  val classname = args(0)
+  val jar                = finder.get.mkString(":")
+  val classname          = args(0)
 
   val script_name = classname.split("\\.").last.toLowerCase.trim
-  val script = new File(s"bash/${script_name}_scala")
+  val script      = new File(s"bash/${script_name}_scala")
   script.setExecutable(true, true)
   val f = new FileWriter(script)
   f.write(s"""#/usr/bin/bash \n\n""")
@@ -94,12 +96,12 @@ javaBash := {
 
   val args: Seq[String] = spaceDelimited("<arg>").parsed
 
-  val cp: Seq[File] = (Runtime / fullClasspathAsJars).value.files
-  val base = baseDirectory.value
-  val strCP = cp.map{ j => s"""\t"${j.toString}"""" }.mkString("\n")
+  val cp: Seq[File]      = (Runtime / fullClasspathAsJars).value.files
+  val base               = baseDirectory.value
+  val strCP              = cp.map { j => s"""\t"${j.toString}"""" }.mkString("\n")
   val finder: PathFinder = (base / "target") ** "*.jar"
-  val jar = finder.get.mkString(":")
-  val classname = args(0)
+  val jar                = finder.get.mkString(":")
+  val classname          = args(0)
 
   val bash = List(
     s"JARS=(",
@@ -111,7 +113,7 @@ javaBash := {
   ).mkString("\n")
 
   val script_name = classname.split("\\.").last.toLowerCase.trim
-  val script = new File(s"bash/${script_name}_java")
+  val script      = new File(s"bash/${script_name}_java")
   script.setExecutable(true, true)
   val f = new FileWriter(script)
   f.write("#/usr/bin/bash \n\n")
