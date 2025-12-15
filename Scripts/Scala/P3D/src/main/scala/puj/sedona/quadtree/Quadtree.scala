@@ -3,10 +3,14 @@ package edu.ucr.dblab.pflock.sedona.quadtree
 import org.locationtech.jts.geom.{GeometryFactory, Envelope, Coordinate, Polygon, Point}
 import org.locationtech.jts.index.strtree.STRtree
 import org.locationtech.jts.io.WKTReader
+
 import org.apache.spark.rdd.RDD
+
 import scala.collection.JavaConverters._
-import java.io.FileWriter
 import scala.io.Source
+import java.io.FileWriter
+
+import puj.Utils._
 
 object Quadtree {
 
@@ -16,6 +20,8 @@ object Quadtree {
     override def toString(): String = s"$wkt\t$id\t$lineage"
 
     def toText: String = s"${toString()}\n"
+
+    def contains(disk: Disk): Boolean = envelope.contains(disk.center.getCoordinate())
   }
 
   def create[T](boundary: Envelope, lineages: List[String]): StandardQuadTree[T] = {

@@ -1,7 +1,10 @@
 package puj.psi
 
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.scala.Logging
+
 import archery.{RTree => ArcheryRTree}
-import edu.ucr.dblab.pflock.PSI_Utils._
+
 import org.locationtech.jts.geom._
 import org.locationtech.jts.index.strtree.STRtree
 
@@ -9,16 +12,18 @@ import scala.annotation.tailrec
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 
+import puj._
+import puj.PSI_Utils._
 import puj.Utils._
 
-object PSI {
+object PSI extends Logging {
   /**
     * Find candidates disks and active boxes with plane sweeping technique.
     * @param points the set of points.
     * @return list of candidates and list of boxes.
     **/
   def planeSweeping2(points: List[STPoint])
-    (implicit S: Settings, G: GeometryFactory, stats: Stats): (RTree[Disk], ArcheryRTree[Box]) = {
+    (implicit P: Params, G: GeometryFactory, stats: Stats): (RTree[Disk], ArcheryRTree[Box]) = {
 
     // ordering by coordinate (it is first by x and then by y)...
     val pointset: List[STPoint] = points.sortBy(_.getCoord)
@@ -49,7 +54,7 @@ object PSI {
       val band_for_pr: RTree[STPoint] = RTree[STPoint]()
       val (_, tB) = timer {
         pointset.filter { ps: STPoint =>
-          math.abs(ps.X - pr.X) <= S.epsilon && math.abs(ps.Y - pr.Y) <= S.epsilon
+          math.abs(ps.X - pr.X) <= P.epsilon() && math.abs(ps.Y - pr.Y) <= P.epsilon()
         }.foreach { ps: STPoint =>
           band_for_pr.put(ps.envelope, ps)
         }
@@ -62,7 +67,7 @@ object PSI {
           .filter{ p =>
             p.X >= pr.X &&  // those at the right...
               p.oid != pr.oid && // prune duplicates...
-              p.distance(pr) <= S.epsilon // getting pairs...
+              p.distance(pr) <= P.epsilon() // getting pairs...
           }
       }
       pairs.appendAll(band_pairs.map(p => (pr, p)))
@@ -79,12 +84,12 @@ object PSI {
         band_centres.foreach{ centre =>
           val t0 = clocktime
           val envelope = centre.getEnvelopeInternal
-          envelope.expandBy(S.r)
+          envelope.expandBy(P.r)
           val hood = band_for_pr
             .get[STPoint](envelope)
-            .filter{ _.distanceToPoint(centre) <= S.r }
+            .filter{ _.distanceToPoint(centre) <= P.r }
 
-          val t1 = if(hood.size >= S.mu){
+          val t1 = if(hood.size >= P.mu()){
             val candidate = Disk(centre, hood.map(_.oid))
             candidates.put(candidate.envelope, candidate) // getting candidates...
             val t1 = clocktime
@@ -139,7 +144,7 @@ object PSI {
   }
 
   def planeSweeping(points: List[STPoint], time_instant: Int)
-                   (implicit S: Settings, G: GeometryFactory, stats: Stats): List[Box] = {
+                   (implicit P: Params, G: GeometryFactory, stats: Stats): List[Box] = {
 
     // ordering by coordinate (it is first by x and then by y)...
     val (pointset, tSort) = timer{
@@ -167,13 +172,13 @@ object PSI {
         band_for_pr.pr = pr
 
         val env = new Envelope(pr.envelope)
-        env.expandBy(S.epsilon)
+        env.expandBy(P.epsilon)
         tree.query(env).asScala.map{_.asInstanceOf[STPoint]}.foreach { ps: STPoint =>
           band_for_pr.put(ps.envelope, ps)
         }
 
         band_for_pr
-      }.filter(_.size() >= S.mu)
+      }.filter(_.size() >= P.mu())
     }
     stats.tBand = tBand
 
@@ -186,7 +191,7 @@ object PSI {
         points.filter { p =>
           p.X >= pr.X && // those at the right...
             p.oid != pr.oid && // prune duplicates...
-            p.distance(pr) <= S.epsilon // getting pairs...
+            p.distance(pr) <= P.epsilon // getting pairs...
         }
       }
       pairs.appendAll(band_pairs.map(p => (pr, p)))
@@ -200,20 +205,20 @@ object PSI {
         nCenters += band_centres.size
         tCenters += tC
 
-        if(S.debug){
+        debug{
           band_centres.map { centre =>
             val wkt = centre.toText
-            s"$wkt\t${S.epsilon}"
+            s"$wkt\t${P.epsilon}"
           }//.foreach{println}
         }
 
         band_centres.foreach { centre =>
           val t0 = clocktime
           val envelope = centre.getEnvelopeInternal
-          envelope.expandBy(S.r)
-          val hood = band.get[STPoint](envelope).filter { _.distanceToPoint(centre) <= S.r }
+          envelope.expandBy(P.r)
+          val hood = band.get[STPoint](envelope).filter { _.distanceToPoint(centre) <= P.r }
 
-          if (hood.size >= S.mu) {
+          if (hood.size >= P.mu()) {
             //val c = G.createMultiPoint(hood.map(_.point).toArray).getCentroid
             //val candidate = Disk(c, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
             val candidate = Disk(centre, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
@@ -248,7 +253,7 @@ object PSI {
   }
 
   def planeSweepingByPivot(points: List[STPoint], pivot: Point, time_instant: Int)
-                   (implicit S: Settings, G: GeometryFactory, stats: Stats): List[Box] = {
+                   (implicit P: Params, G: GeometryFactory, stats: Stats): List[Box] = {
 
     // ordering by coordinate (it is first by x and then by y)...
     val (pointset, tSort) = timer{
@@ -276,13 +281,13 @@ object PSI {
         band_for_pr.pr = pr
 
         val env = new Envelope(pr.envelope)
-        env.expandBy(S.epsilon)
+        env.expandBy(P.epsilon)
         tree.query(env).asScala.map{_.asInstanceOf[STPoint]}.foreach { ps: STPoint =>
           band_for_pr.put(ps.envelope, ps)
         }
 
         band_for_pr
-      }.filter(_.size() >= S.mu)
+      }.filter(_.size() >= P.mu())
     }
     stats.tBand = tBand
 
@@ -295,7 +300,7 @@ object PSI {
         points.filter { p =>
           p.X >= pr.X && // those at the right...
             p.oid != pr.oid && // prune duplicates...
-            p.distance(pr) <= S.epsilon // getting pairs...
+            p.distance(pr) <= P.epsilon // getting pairs...
         }
       }
       pairs.appendAll(band_pairs.map(p => (pr, p)))
@@ -313,20 +318,20 @@ object PSI {
         nCenters += band_centres.size
         tCenters += tC
 
-        if(S.debug){
+        debug{
           band_centres.map { centre =>
             val wkt = centre.toText
-            s"$wkt\t${S.epsilon}"
+            s"$wkt\t${P.epsilon}"
           }//.foreach{println}
         }
 
         band_centres.foreach { centre =>
           val t0 = clocktime
           val envelope = centre.getEnvelopeInternal
-          envelope.expandBy(S.r)
-          val hood = band.get[STPoint](envelope).filter { _.distanceToPoint(centre) <= S.r }
+          envelope.expandBy(P.r)
+          val hood = band.get[STPoint](envelope).filter { _.distanceToPoint(centre) <= P.r }
 
-          if (hood.size >= S.mu) {
+          if (hood.size >= P.mu()) {
             //val c = G.createMultiPoint(hood.map(_.point).toArray).getCentroid
             //val candidate = Disk(c, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
             val candidate = Disk(centre, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
@@ -361,7 +366,7 @@ object PSI {
   }
 
   def filterCandidates(boxes: List[Box])
-                    (implicit S: Settings, G: GeometryFactory, stats: Stats): List[Disk] = {
+                    (implicit P: Params, G: GeometryFactory, stats: Stats): List[Disk] = {
 
     @tailrec
     def itBoxes(boxes: List[Box], final_candidates: ListBuffer[Disk]): List[Disk] = {
@@ -377,10 +382,10 @@ object PSI {
 
     @tailrec
     def itRemain(box_i: Box, boxes: List[Box], candidates: List[Disk], final_candidates: ListBuffer[Disk],
-                 was_processed: Boolean)(implicit S: Settings): ListBuffer[Disk] = {
+                 was_processed: Boolean)(implicit P: Params): ListBuffer[Disk] = {
       boxes match {
         case box_j :: more_boxes => {
-          if (math.abs(box_i.getCentroid.x - box_j.getCentroid.x) <= S.epsilon) { // boxes are close enough in X...
+          if (math.abs(box_i.getCentroid.x - box_j.getCentroid.x) <= P.epsilon) { // boxes are close enough in X...
             if (box_i.intersects(box_j)) { //boxes intersects...
               val final_candidates_prime = itCandidates(candidates, final_candidates)
               itRemain(box_i, List.empty[Box], candidates, final_candidates_prime, true)
@@ -421,7 +426,7 @@ object PSI {
     * @param boxes_prime  set of active boxes (previous sorting).
     * @return set of maximal disks.
     */
-  def filterCandidates2(boxes_prime: ArcheryRTree[Box])(implicit S: Settings, stats: Stats): List[Disk] = {
+  def filterCandidates2(boxes_prime: ArcheryRTree[Box])(implicit P: Params, stats: Stats): List[Disk] = {
     // Sort boxes by left-bottom corner...
     val (boxes, tS) = timer{
       boxes_prime.values.toList.sortBy {
@@ -430,7 +435,7 @@ object PSI {
     }
     stats.tSort = tS
 
-    if (S.debug) {
+    debug{
       save("/tmp/edgesBCandidates.wkt") {
         boxes.flatMap { box =>
           val bid = box.id
@@ -475,7 +480,7 @@ object PSI {
     * @param c  candidate disk.
     * @return list of maximal disks.
     */
-  def insertDisk( C: ListBuffer[Disk], c: Disk)(implicit S: Settings): ListBuffer[Disk] = {
+  def insertDisk( C: ListBuffer[Disk], c: Disk)(implicit P: Params): ListBuffer[Disk] = {
     var continue: Boolean = true
     for( d <- C if continue){
       (c, d) match {
@@ -485,8 +490,8 @@ object PSI {
             case _ if d.isSubsetOf(c) => C -= d
             case _ => /* Just continue */
           }
-        case _ if { c & d && c.distance(d) <= S.epsilon } => if (c.isSubsetOf(d)) continue = false
-        case _ if { d & c && d.distance(c) <= S.epsilon } => if (d.isSubsetOf(c)) C -= d
+        case _ if { c & d && c.distance(d) <= P.epsilon } => if (c.isSubsetOf(d)) continue = false
+        case _ if { d & c && d.distance(c) <= P.epsilon } => if (d.isSubsetOf(c)) C -= d
         case _ => /* Just continue... */
       }
     }
@@ -498,7 +503,7 @@ object PSI {
     * Run the PSI algorithm.
     * @param points list of points.
     **/
-  def run(points: List[STPoint], time_instant: Int = 0)(implicit S: Settings, G: GeometryFactory): (List[Disk], Stats) = {
+  def run(points: List[STPoint], time_instant: Int = 0)(implicit P: Params, G: GeometryFactory): (List[Disk], Stats) = {
 
     // For debugging purposes...
     implicit val stats: Stats = Stats()
@@ -521,7 +526,7 @@ object PSI {
     (maximals, stats)
   }
 
-  def runByPivot(points: List[STPoint], pivot: Point, time_instant: Int = 0)(implicit S: Settings, G: GeometryFactory): (List[Disk], Stats) = {
+  def runByPivot(points: List[STPoint], pivot: Point, time_instant: Int = 0)(implicit P: Params, G: GeometryFactory): (List[Disk], Stats) = {
 
     // For debugging purposes...
     implicit val stats: Stats = Stats()
@@ -545,19 +550,15 @@ object PSI {
   }
 
   def main(args: Array[String]): Unit = {
-    implicit val params: BFEParams = new BFEParams(args)
+    implicit val params: Params = new Params(args)
 
     implicit val S: Settings = Settings(
-      dataset = params.dataset(),
+      dataset = params.input(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
-      method = params.method(),
-      capacity = params.capacity(),
+      capacity = params.scapacity(),
       tolerance = params.tolerance(),
-      tag = params.tag(),
-      debug = params.debug(),
-      tester = params.tester(),
-      appId = System.nanoTime().toString
+      debug = params.debug()
     )
     implicit val geofactory: GeometryFactory = new GeometryFactory(new PrecisionModel(S.scale))
 

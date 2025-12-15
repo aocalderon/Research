@@ -1,4 +1,7 @@
-package edu.ucr.dblab.pflock
+package puj
+
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.scala.Logging
 
 import org.locationtech.jts.geom._
 import org.locationtech.jts.index.strtree.STRtree
@@ -6,12 +9,13 @@ import org.locationtech.jts.index.strtree.STRtree
 import archery.{RTree => ArcheryRTree, Box => ArcheryBox}
 
 import scala.collection.JavaConverters._
-import edu.ucr.dblab.pflock.Utils._
+
+import puj._
+import puj.Utils._
 
 import streaminer.SpookyHash
-import PSI.logger
 
-object PSI_Utils {
+object PSI_Utils extends Logging {
   /**
     * Simple wrapper for the JTS STRtree implementation.
     * */
@@ -43,11 +47,11 @@ object PSI_Utils {
       * @param envelope envelope of the element.
       * @param element  the element to be stored.
       * */
-    def put[T](envelope: Envelope, element: T)(implicit S: Settings): Unit = {
-      if (envelope.getMinX < minx) minx = envelope.getMinX - S.tolerance // to fix precision issues...
-      if (envelope.getMinY < miny) miny = envelope.getMinY - S.tolerance
-      if (envelope.getMaxX > maxx) maxx = envelope.getMaxX + S.tolerance
-      if (envelope.getMaxY > maxy) maxy = envelope.getMaxY + S.tolerance
+    def put[T](envelope: Envelope, element: T)(implicit P: Params): Unit = {
+      if (envelope.getMinX < minx) minx = envelope.getMinX - P.tolerance() // to fix precision issues...
+      if (envelope.getMinY < miny) miny = envelope.getMinY - P.tolerance()
+      if (envelope.getMaxX > maxx) maxx = envelope.getMaxX + P.tolerance()
+      if (envelope.getMaxY > maxy) maxy = envelope.getMaxY + P.tolerance()
 
       super.insert(envelope, element)
     }
@@ -113,11 +117,11 @@ object PSI_Utils {
       G.createLineString(Array(left_bottom, right_top)).toString
     }
 
-    def boundingBox(implicit S: Settings): ArcheryBox = {
+    def boundingBox(implicit P: Params): ArcheryBox = {
       ArcheryBox(getMinX.toFloat, getMinY.toFloat, getMaxX.toFloat, getMaxY.toFloat)
     }
 
-    def archeryEntry(implicit S: Settings): archery.Entry[Box] = archery.Entry(this.boundingBox, this)
+    def archeryEntry(implicit P: Params): archery.Entry[Box] = archery.Entry(this.boundingBox, this)
 
     def wkt(implicit G: GeometryFactory): String = G.toGeometry(this).toText
 
@@ -148,28 +152,5 @@ object PSI_Utils {
 
     // the main call...
     get_envelope(tree.values.toList, new Envelope())
-  }
-
-  def main(args: Array[String]): Unit = {
-    implicit val params = new BFEParams(args)
-
-    implicit var settings = Settings(
-      dataset = params.dataset(),
-      epsilon_prime = params.epsilon(),
-      mu = params.mu(),
-      method = params.method(),
-      capacity = params.capacity(),
-      tolerance = params.tolerance(),
-      tag = params.tag(),
-      debug = params.debug(),
-      appId = System.nanoTime().toString()
-    )
-    implicit val geofactory = new GeometryFactory(new PrecisionModel(settings.scale))
-
-    log(s"START")
-
-    val spooky = SpookyHash.getInstance.hash("1235".getBytes)
-
-    log(s"END")
   }
 }

@@ -6,13 +6,20 @@ import org.apache.spark.sql.SparkSession
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.scala.Logging
 
+
+import archery.{RTree, Box}
 import streaminer.{MurmurHash3 => Murmur, SpookyHash32 => Spooky}
 
 import org.locationtech.jts.geom._
+import org.locationtech.jts.index.strtree.STRtree
+import org.locationtech.jts.io.WKTReader
 
+import scala.io.Source
 import scala.util.Random
 import scala.collection.mutable
 import scala.collection.mutable.BitSet
+
+import edu.ucr.dblab.pflock.sedona.quadtree.Quadtree.Cell
 
 object Utils extends Logging {
 
@@ -206,7 +213,7 @@ object Utils extends Logging {
 
     def wkt: String = s"${center.toText}\t$start\t$end\t$pidsText"
 
-    def getCircleWTK(implicit S: Settings): String = s"${center.buffer(S.r, 25).toText}\t$X\t$Y\t[$data]\t$pidsText"
+    def getCircleWTK(implicit P: Params): String = s"${center.buffer(P.r, 25).toText}\t$X\t$Y\t[$data]\t$pidsText"
 
     def equals(other: Disk): Boolean = this.pidsText == other.pidsText
 
@@ -216,6 +223,60 @@ object Utils extends Logging {
       .search(this.bbox(settings.epsilon.toFloat))
       .map(_.value)
       .filter(_.equals(this))
+  }
+
+
+case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 0,
+    var nCandidates: Int = 0, var nMaximals: Int = 0,
+    var nCliques: Int = 0, var nMBC: Int = 0, var nBoxes: Int = 0,
+    var tCounts: Double = 0.0, var tRead: Double = 0.0, var tGrid: Double = 0.0,
+    var tCliques: Double = 0.0, var tMBC: Double = 0.0,
+    var tBand: Double = 0.0, var tSort: Double = 0.0,
+    var tPairs: Double = 0.0, var tCenters: Double = 0.0,
+    var tCandidates: Double = 0.0, var tMaximals: Double = 0.0,
+    var tBoxes: Double = 0.0, var tFilter: Double = 0.0){
+
+    def print(printTotal: Boolean = true): Unit = {
+      log(s"Points     |${nPoints}")
+      log(s"Pairs      |${nPairs}")
+      log(s"Centers    |${nCenters}")
+      log(s"Candidates |${nCandidates}")
+      log(s"Maximals   |${nMaximals}")
+      logt(s"Count     |${tCounts}")
+      logt(s"Grid      |${tGrid}")
+      logt(s"Read      |${tRead}")
+      logt(s"Pairs     |${tPairs}")
+      logt(s"Centers   |${tCenters}")
+      logt(s"Candidates|${tCandidates}")
+      logt(s"Maximals  |${tMaximals}")
+      if(printTotal){
+        val tTotal = tMaximals + tCandidates + tCenters + tPairs + tCliques + tRead + tGrid + tCounts
+        logt(s"Total     |${tTotal}")
+      }
+    }
+
+    def bfe_total(): Double = tMaximals + tCandidates + tCenters + tPairs + tCliques + tRead + tGrid + tCounts
+    def psi_total(): Double = tBand + tSort + tPairs + tCenters + tCandidates + tBoxes + tFilter
+
+    def printPSI(printTotal: Boolean = true): Unit = {
+      log(s"Points     |$nPoints")
+      log(s"Pairs      |$nPairs")
+      log(s"Centers    |$nCenters")
+      log(s"Candidates |$nCandidates")
+      log(s"Boxes      |$nBoxes")
+      log(s"Maximals   |$nMaximals")
+      logt(s"Band      |$tBand")
+      logt(s"Sort      |$tSort")
+      logt(s"Pairs     |$tPairs")
+      logt(s"Centers   |$tCenters")
+      logt(s"Candidates|$tCandidates")
+      logt(s"Boxes     |$tBoxes" )
+      logt(s"Filter    |$tFilter")
+      if (printTotal) {
+        val tTotal = tBand + tSort + tPairs + tCenters + tCandidates + tBoxes + tFilter
+        logger.info(s"Total     |${tTotal}")
+      }
+    }
   }
 
   // Methods...
@@ -287,5 +348,104 @@ object Utils extends Logging {
     pw.write(content.mkString(""))
     pw.close()
     logger.info(s"Saved ${content.size} records to $filename")
+  }
+
+  def clocktime: Long = System.nanoTime()
+
+  def log(msg: String): Unit = {
+    logger.info(s"$msg")
+  }
+
+  def logt(msg: String): Unit = {
+    log(msg)
+  }
+
+  def debug[R](block: => R)(implicit P: Params): Unit = { if(P.debug()) block }
+
+  def save(filename: String)(content: Seq[String]): Unit = {
+    val start = clocktime
+    val f = new java.io.PrintWriter(filename)
+    f.write(content.mkString(""))
+    f.close
+    val end = clocktime
+    val time = "%.2f".format((end - start) / 1e9)
+    println(s"Saved ${filename}\tin\t${time}s\t[${content.size} records].")
+  }
+
+  def timer[R](msg: String)(block: => R): R = {
+    val t0 = clocktime
+    val result = block    // call-by-name
+    val t1 = clocktime
+    logger.info("TIME|%-30s|%6.2f".format(msg, (t1 - t0) / 1e9))
+    result
+  }
+
+  def timer[R](block: => R): (R, Double) = {
+    val t0 = clocktime
+    val result = block    // call-by-name
+    val t1 = clocktime
+    val time = (t1 - t0) / 1e9
+    (result, time)
+  }
+
+  def computeCentres(p1: STPoint, p2:STPoint)
+    (implicit G: GeometryFactory, P: Params): List[Point] = {
+
+    calculateCenterCoordinates(p1.point, p2.point).map{ centre =>
+      centre.setUserData(s"${p1.oid} ${p2.oid}")
+      centre
+    }
+  }
+
+  def calculateCenterCoordinates(p1: Point, p2: Point)
+    (implicit G: GeometryFactory, P: Params): List[Point] = {
+
+    val X: Double = p1.getX - p2.getX
+    val Y: Double = p1.getY - p2.getY
+    val D2: Double = math.pow(X, 2) + math.pow(Y, 2)
+    if (D2 != 0.0){
+      val root: Double = math.sqrt(math.abs(4.0 * (P.r2 / D2) - 1.0))
+      val h1: Double = ((X + Y * root) / 2) + p2.getX
+      val k1: Double = ((Y - X * root) / 2) + p2.getY
+      val h2: Double = ((X - Y * root) / 2) + p2.getX
+      val k2: Double = ((Y + X * root) / 2) + p2.getY
+      val h = G.createPoint(new Coordinate(h1,k1))
+      val k = G.createPoint(new Coordinate(h2,k2))
+
+      List(h, k)
+    } else {
+      val p2_prime = G.createPoint(new Coordinate(p2.getX + P.tolerance(), p2.getY))
+      calculateCenterCoordinates(p1, p2_prime)
+    }
+  }
+
+  def readPoints(input: String, isWKT: Boolean = false)
+    (implicit geofactory: GeometryFactory, P: Params): List[STPoint] = {
+
+    val buffer = Source.fromFile(input)
+    val points = buffer.getLines.zipWithIndex.toList
+      .map{ line =>
+        if(isWKT){
+          val reader = new WKTReader(geofactory)
+          val i = line._2.toInt
+          val t = 0
+          val point = reader.read(line._1).asInstanceOf[Point]
+
+          point.setUserData(Data(i, t))
+          STPoint(point)
+        } else {
+          val arr = line._1.split("\t")
+          val i = arr(0).toInt
+          val x = arr(1).toDouble
+          val y = arr(2).toDouble
+          val t = arr(3).toInt
+          val point = geofactory.createPoint(new Coordinate(x, y))
+
+          point.setUserData(Data(i, t))
+          STPoint(point)
+        }
+      }
+    buffer.close
+    points
   }
 }
