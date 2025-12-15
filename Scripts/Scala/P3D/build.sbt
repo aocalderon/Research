@@ -11,6 +11,7 @@ lazy val buildSettings = (project in file("."))
     libraryDependencies += "org.apache.spark"         %% "spark-sql"       % SparkVersion,
     libraryDependencies += "org.locationtech.jts"      % "jts-core"        % "1.20.0",
     libraryDependencies += "org.rogach"               %% "scallop"         % "5.3.0",
+    libraryDependencies += "org.spire-math"           %% "archery"         % "0.6.0",
     libraryDependencies += "org.apache.logging.log4j"  % "log4j-api"       % "2.24.1",
     libraryDependencies += "org.apache.logging.log4j"  % "log4j-core"      % "2.24.1",
     libraryDependencies += "org.apache.logging.log4j" %% "log4j-api-scala" % "13.1.0"
@@ -20,6 +21,8 @@ fork := true // enabling forking to apply JVM options to the app, not just the s
 
 // Adding the necessary JVM options
 javaOptions ++= Seq(
+  "-Xmx4G",
+  "-Xms2G",
   "--add-opens=java.base/java.lang=ALL-UNNAMED",
   "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
   "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",
