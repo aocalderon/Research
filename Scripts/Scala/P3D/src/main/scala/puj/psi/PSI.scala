@@ -144,7 +144,7 @@ object PSI extends Logging {
   }
 
   def planeSweeping(points: List[STPoint], time_instant: Int)
-                   (implicit P: Params, G: GeometryFactory, stats: Stats): List[Box] = {
+                   (implicit Params: Params, G: GeometryFactory, stats: Stats): List[Box] = {
 
     // ordering by coordinate (it is first by x and then by y)...
     val (pointset, tSort) = timer{
@@ -172,13 +172,13 @@ object PSI extends Logging {
         band_for_pr.pr = pr
 
         val env = new Envelope(pr.envelope)
-        env.expandBy(P.epsilon)
+        env.expandBy(Params.epsilon)
         tree.query(env).asScala.map{_.asInstanceOf[STPoint]}.foreach { ps: STPoint =>
           band_for_pr.put(ps.envelope, ps)
         }
 
         band_for_pr
-      }.filter(_.size() >= P.mu())
+      }.filter(_.size() >= Params.mu())
     }
     stats.tBand = tBand
 
@@ -191,9 +191,13 @@ object PSI extends Logging {
         points.filter { p =>
           p.X >= pr.X && // those at the right...
             p.oid != pr.oid && // prune duplicates...
-            p.distance(pr) <= P.epsilon // getting pairs...
+            p.distance(pr) <= Params.epsilon // getting pairs...
         }
       }
+      debug{
+        logger.info(f"pr: $pr\t points: ${points.mkString(" ")}")
+      }
+      
       pairs.appendAll(band_pairs.map(p => (pr, p)))
       nPairs += band_pairs.size
       tPairs += tP
@@ -208,17 +212,17 @@ object PSI extends Logging {
         debug{
           band_centres.map { centre =>
             val wkt = centre.toText
-            s"$wkt\t${P.epsilon}"
+            s"$wkt\t${Params.epsilon}"
           }//.foreach{println}
         }
 
         band_centres.foreach { centre =>
           val t0 = clocktime
           val envelope = centre.getEnvelopeInternal
-          envelope.expandBy(P.r)
-          val hood = band.get[STPoint](envelope).filter { _.distanceToPoint(centre) <= P.r }
+          envelope.expandBy(Params.r)
+          val hood = band.get[STPoint](envelope).filter { _.distanceToPoint(centre) <= Params.r }
 
-          if (hood.size >= P.mu()) {
+          if (hood.size >= Params.mu()) {
             //val c = G.createMultiPoint(hood.map(_.point).toArray).getCentroid
             //val candidate = Disk(c, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
             val candidate = Disk(centre, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
@@ -553,7 +557,7 @@ object PSI extends Logging {
     implicit val params: Params = new Params(args)
 
     implicit val S: Settings = Settings(
-      dataset = params.input(), //"/opt/Research/Datasets/Berlin/sample0-10.tsv"
+      dataset = params.input(), 
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
       capacity = params.scapacity(),
@@ -568,7 +572,7 @@ object PSI extends Logging {
     val (maximals, stats) = PSI.run(points)
     stats.printPSI()
 
-    if(S.debug){
+    debug{
       save("/tmp/edgesPointsPSI.wkt"){ points.map{ _.wkt + "\n" } }
       save("/tmp/edgesMaximalsPSI.wkt"){ maximals.map{ _.wkt + "\n" } }
       save("/tmp/edgesMaximalsPSI_prime.wkt"){ maximals.map{ _.getCircleWTK + "\n" } }

@@ -71,8 +71,8 @@ object Utils extends Logging {
 
   case class STPoint(point: Point, cid: Int = 0){
     val userData = if(point.getUserData.isInstanceOf[Data]) point.getUserData.asInstanceOf[Data] else null
-    val oid = -1
-    val tid = -1
+    val oid = if(point.getUserData.isInstanceOf[Data]) userData.oid else -1
+    val tid = if(point.getUserData.isInstanceOf[Data]) userData.tid else -1
     var count = 0
 
     def envelope: Envelope = point.getEnvelopeInternal
@@ -441,11 +441,13 @@ case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 
           val t = arr(3).toInt
           val point = geofactory.createPoint(new Coordinate(x, y))
 
-          point.setUserData(Data(i, t))
+          val data = Data(i, t)
+          point.setUserData(data)
           STPoint(point)
         }
       }
     buffer.close
+
     points
   }
 }
