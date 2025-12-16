@@ -85,9 +85,9 @@ object Utils extends Logging {
 
     def Y: Double = point.getY
 
-    def getNeighborhood(points: List[STPoint])(implicit settings: Settings): List[STPoint] = {
+    def getNeighborhood(points: List[STPoint])(implicit P: Params): List[STPoint] = {
       for{
-        point <- points if{ this.distance(point) <= settings.epsilon }
+        point <- points if{ this.distance(point) <= P.epsilon }
       } yield {
         point
       }
