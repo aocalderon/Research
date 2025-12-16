@@ -1,4 +1,4 @@
-package puj
+package puj.bfe
 
 import org.apache.spark.{Partitioner, TaskContext}
 import org.apache.spark.sql.SparkSession
@@ -14,6 +14,7 @@ import sys.process._
 
 import archery._
 
+import puj.Params
 import puj.Utils._
 
 object MF_Utils extends Logging {

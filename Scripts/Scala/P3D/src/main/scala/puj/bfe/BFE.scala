@@ -1,4 +1,4 @@
-package puj
+package puj.bfe
 
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.scala.Logging
@@ -10,15 +10,14 @@ import scala.collection.mutable.ListBuffer
 
 import archery._
 
-import puj.MF_Utils._
+import puj.Params
+import puj.bfe.MF_Utils._
 import puj.Utils._
-import puj.P3D._
 
 object BFE extends Logging {
 
   def run(points_prime: List[STPoint], maximals_found: RTree[Disk] = RTree.empty)
-    (implicit P: Params, G: GeometryFactory):
-      (List[Disk], Stats) = {
+    (implicit P: Params, G: GeometryFactory): (List[Disk], Stats) = {
 
     val stats = Stats()
     var Maximals: RTree[Disk] = maximals_found

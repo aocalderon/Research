@@ -14,6 +14,7 @@ import sys.process._
 import puj.P3D._
 import puj.Utils._
 import puj.psi._
+import puj.bfe._
 
 object Checker extends Logging {
 
@@ -88,7 +89,6 @@ object Checker extends Logging {
     val points = readPoints(S.dataset)
     log(s"START")
 
-    log(s"BFE")
     S = S.copy(method="BFE")
     val (maximalsBFE, stats1) = BFE.run(points)
     stats1.print()
@@ -96,7 +96,7 @@ object Checker extends Logging {
     val (maximalsPSI, stats2) = PSI.run(points)
     stats2.printPSI()
 
-    if(S.tester){
+    debug{
       println("Testing...")
       Checker.checkMaximalDisks(maximalsPSI, maximalsBFE, "PSI", "BFE", points)
     }
