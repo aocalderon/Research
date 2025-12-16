@@ -154,7 +154,6 @@ object BFE extends Logging {
   }
 
   def main(args: Array[String]): Unit = {
-    //generateData(10000, 1000, 1000, "/home/acald013/Research/Datasets/P10K_W1K_H1K.tsv")
     implicit val params = new Params(args)
 
     implicit var S= Settings(
@@ -171,8 +170,8 @@ object BFE extends Logging {
     val points = readPoints(S.dataset)
     log(s"START")
 
-    val (maximals, stats1) = BFE.run(points)
-    stats1.print()
+    val (maximals, stats) = BFE.run(points)
+    stats.printBFE()
 
     debug{
       save("/tmp/edgesMaximalsBFE.wkt"){ maximals.map(_.wkt + "\n") }

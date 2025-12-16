@@ -236,22 +236,22 @@ case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 
     var tCandidates: Double = 0.0, var tMaximals: Double = 0.0,
     var tBoxes: Double = 0.0, var tFilter: Double = 0.0){
 
-    def print(printTotal: Boolean = true): Unit = {
-      log(s"Points     |${nPoints}")
-      log(s"Pairs      |${nPairs}")
-      log(s"Centers    |${nCenters}")
-      log(s"Candidates |${nCandidates}")
-      log(s"Maximals   |${nMaximals}")
-      logt(s"Count     |${tCounts}")
-      logt(s"Grid      |${tGrid}")
-      logt(s"Read      |${tRead}")
-      logt(s"Pairs     |${tPairs}")
-      logt(s"Centers   |${tCenters}")
-      logt(s"Candidates|${tCandidates}")
-      logt(s"Maximals  |${tMaximals}")
+    def printBFE(printTotal: Boolean = true): Unit = {
+      log(s"BFE|Points     |${nPoints}")
+      log(s"BFE|Pairs      |${nPairs}")
+      log(s"BFE|Centers    |${nCenters}")
+      log(s"BFE|Candidates |${nCandidates}")
+      log(s"BFE|Maximals   |${nMaximals}")
+      logt(s"BFE|Count     |${tCounts}")
+      logt(s"BFE|Grid      |${tGrid}")
+      logt(s"BFE|Read      |${tRead}")
+      logt(s"BFE|Pairs     |${tPairs}")
+      logt(s"BFE|Centers   |${tCenters}")
+      logt(s"BFE|Candidates|${tCandidates}")
+      logt(s"BFE|Maximals  |${tMaximals}")
       if(printTotal){
         val tTotal = tMaximals + tCandidates + tCenters + tPairs + tCliques + tRead + tGrid + tCounts
-        logt(s"Total     |${tTotal}")
+        logt(s"BFE|Total     |${tTotal}")
       }
     }
 
@@ -259,22 +259,22 @@ case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 
     def psi_total(): Double = tBand + tSort + tPairs + tCenters + tCandidates + tBoxes + tFilter
 
     def printPSI(printTotal: Boolean = true): Unit = {
-      log(s"Points     |$nPoints")
-      log(s"Pairs      |$nPairs")
-      log(s"Centers    |$nCenters")
-      log(s"Candidates |$nCandidates")
-      log(s"Boxes      |$nBoxes")
-      log(s"Maximals   |$nMaximals")
-      logt(s"Band      |$tBand")
-      logt(s"Sort      |$tSort")
-      logt(s"Pairs     |$tPairs")
-      logt(s"Centers   |$tCenters")
-      logt(s"Candidates|$tCandidates")
-      logt(s"Boxes     |$tBoxes" )
-      logt(s"Filter    |$tFilter")
+      log(s"PSI|Points     |$nPoints")
+      log(s"PSI|Pairs      |$nPairs")
+      log(s"PSI|Centers    |$nCenters")
+      log(s"PSI|Candidates |$nCandidates")
+      log(s"PSI|Boxes      |$nBoxes")
+      log(s"PSI|Maximals   |$nMaximals")
+      logt(s"PSI|Band      |$tBand")
+      logt(s"PSI|Sort      |$tSort")
+      logt(s"PSI|Pairs     |$tPairs")
+      logt(s"PSI|Centers   |$tCenters")
+      logt(s"PSI|Candidates|$tCandidates")
+      logt(s"PSI|Boxes     |$tBoxes" )
+      logt(s"PSI|Filter    |$tFilter")
       if (printTotal) {
         val tTotal = tBand + tSort + tPairs + tCenters + tCandidates + tBoxes + tFilter
-        logger.info(s"Total     |${tTotal}")
+        logger.info(s"PSI|Total     |${tTotal}")
       }
     }
   }

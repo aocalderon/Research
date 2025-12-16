@@ -89,10 +89,8 @@ object Checker extends Logging {
     val points = readPoints(S.dataset)
     log(s"START")
 
-    S = S.copy(method="BFE")
     val (maximalsBFE, stats1) = BFE.run(points)
-    stats1.print()
-    S = S.copy(method="PSI")
+    stats1.printBFE()
     val (maximalsPSI, stats2) = PSI.run(points)
     stats2.printPSI()
 
