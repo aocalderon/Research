@@ -63,12 +63,17 @@ object P3D extends Logging {
       Quadtree.build(pointsRDD, new Envelope(), capacity = params.scapacity(), fraction = params.fraction())
     logger.info(s"Quadtree built with ${cells.size} cells")
 
-    saveAsTSV(
-      "/tmp/Q.wkt",
-      cells.values.map { cell =>
-        G.toGeometry(cell.envelope).toText() + "\n"
-      }.toList
-    )
+    debug{
+      saveAsTSV(
+        "/tmp/Q.wkt",
+        cells.values.map { cell =>
+          val wkt = G.toGeometry(cell.envelope).toText()
+          val cid = cell.id
+          s"$wkt\t$cid\n"
+        }.toList
+      )
+      logger.info("Quadtree WKT file saved for debugging")
+    }
 
     val pointsSRDD = pointsRDD
       .mapPartitions { iter =>
@@ -106,14 +111,17 @@ object P3D extends Logging {
       }
     logger.info("Temporal histogram (THist) computed")
 
-    saveAsTSV(
-      "/tmp/THist.tsv",
-      THist
-        .collect()
-        .sortBy(_.instant)
-        .map(bin => s"${bin.toString()}\n")
-        .toList
-    )
+    debug{
+      saveAsTSV(
+        "/tmp/THist.tsv",
+        THist
+          .collect()
+          .sortBy(_.instant)
+          .map(bin => s"${bin.toString()}\n")
+          .toList
+      )
+      logger.info("Temporal histogram TSV file saved for debugging")
+    }
 
     implicit val intervals = Interval.groupInstants(THist.collect().sortBy(_.instant).toSeq, capacity = params.tcapacity())
       .map{ group =>
@@ -126,6 +134,17 @@ object P3D extends Logging {
       .map{ case ((begin, end, number_of_times), index) =>
         (index, Interval(index, begin, end, number_of_times))
       }.toMap
+
+    debug{
+      saveAsTSV(
+        "/tmp/Intervals.tsv",
+        intervals.values
+          .toList
+          .sortBy(_.index)
+          .map(interval => interval.toText)
+      )
+      logger.info("Temporal intervals TSV file saved for debugging")
+    }
     logger.info(s"Total temporal intervals created: ${intervals.size}")
 
     val temporal_bounds = intervals.values.map(_.begin).toArray.sorted
@@ -146,6 +165,7 @@ object P3D extends Logging {
       .distinct()
       .collect()
       .zipWithIndex.toMap
+    val st_indexes_reverse = st_indexes.map{ case (k, v) => (v, k) }  
     logger.info(s"Total distinct ST_Indexes: ${st_indexes.size}")
     
     val pointsSTRDD = pointsSTRDD_prime
@@ -155,6 +175,39 @@ object P3D extends Logging {
       .cache()
     val nPointsSTRDD = pointsSTRDD.count()
     logger.info(s"Points repartitioned into STRDD with $nPointsSTRDD points")
+
+    debug{
+      saveAsTSV(
+        "/tmp/STRDD.wkt",
+        pointsSTRDD.mapPartitions{ points => 
+          val partitionId = TaskContext.getPartitionId()
+          val st_index = st_indexes_reverse(partitionId)
+          val (s_index, t_index) = BitwisePairing.decode(st_index)
+          points.map{ point => 
+            val i = point.getUserData().asInstanceOf[Data].oid
+            val x = point.getX 
+            val y = point.getY
+            val t = point.getUserData().asInstanceOf[Data].tid
+            val wkt = point.toText()
+            s"$i\t$x\t$y\t$t\t$s_index\t$t_index\t$st_index\t$wkt\n"
+          }
+        }.collect()    
+      )
+      logger.info("STRDD WKT file saved for debugging")
+
+      saveAsTSV(
+        "/tmp/Boxes.tsv",
+        pointsSTRDD.mapPartitions{ points => 
+          val partitionId = TaskContext.getPartitionId()
+          val st_index = st_indexes_reverse(partitionId)
+          val (s_index, t_index) = BitwisePairing.decode(st_index)
+          val cell = cells(s_index)
+          val interval = intervals(t_index)
+          val wkt = cell.wkt
+          Iterator(s"$wkt\t$st_index\t$s_index\t$t_index\t${interval.begin}\t${interval.duration}\n")
+        }.collect()
+      )
+    }
 
     logger.info("SparkSession closed")
   }

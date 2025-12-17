@@ -21,8 +21,8 @@ fork := true // enabling forking to apply JVM options to the app, not just the s
 
 // Adding the necessary JVM options
 javaOptions ++= Seq(
-  "-Xmx4G",
-  "-Xms2G",
+  "-Xmx16G",
+  "-Xms4G",
   "--add-opens=java.base/java.lang=ALL-UNNAMED",
   "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
   "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",
