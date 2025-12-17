@@ -7,10 +7,10 @@ from shapely.geometry import Point
 from pyproj import CRS
 
 # Define the command as a list of strings
-command = ["python3", "${SUMO_HOME}/tools/xml/xml2csv.py", "-c", "dense_pedestrians.tsvcfg"]
+# command = ["python3", "${SUMO_HOME}/tools/xml/xml2csv.py", "-c", "dense_pedestrians.tsvcfg"]
 
 # Run the command
-result = subprocess.run(command, capture_output=True, text=True)
+# result = subprocess.run(command, capture_output=True, text=True)
 
 # Define file paths
 input_file = "trajectories_pedestrians.csv"
