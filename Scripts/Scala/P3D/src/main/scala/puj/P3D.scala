@@ -49,7 +49,7 @@ object P3D extends Logging {
         val oid = row.getString(0).toInt
         val lon = row.getString(1).toDouble
         val lat = row.getString(2).toDouble
-        val tid = row.getString(3).toInt
+        val tid = row.getString(3).toDouble.toInt
 
         val point = G.createPoint(new Coordinate(lon, lat))
         point.setUserData(Data(oid, tid))
@@ -168,7 +168,7 @@ object P3D extends Logging {
     val st_indexes_reverse = st_indexes.map{ case (k, v) => (v, k) }  
     logger.info(s"Total distinct ST_Indexes: ${st_indexes.size}")
     
-    val pointsSTRDD = pointsSTRDD_prime
+    val pointsSTRDD = pointsSTRDD_prime.sample(withReplacement=false, fraction=0.01, seed=42)
       .map{ case (st_index, point) => (st_indexes(st_index), point) }
       .partitionBy(SimplePartitioner(st_indexes.size))
       .map(_._2)
@@ -197,7 +197,7 @@ object P3D extends Logging {
 
       saveAsTSV(
         "/tmp/Boxes.tsv",
-        pointsSTRDD.mapPartitions{ points => 
+        pointsSTRDD.sample(withReplacement=false, fraction=0.01, seed=42).mapPartitions{ points => 
           val partitionId = TaskContext.getPartitionId()
           val st_index = st_indexes_reverse(partitionId)
           val (s_index, t_index) = BitwisePairing.decode(st_index)
