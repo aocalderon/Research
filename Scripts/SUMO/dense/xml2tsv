@@ -31,6 +31,8 @@ print(df.head())
 if 'person_id' in df.columns:  # Check if the column exists
     df['person_id'] = df['person_id'].str[3:]  # Remove the first three characters
 
+df['timestep_time'] = df['timestep_time'].astype(int)
+
 # Assuming the columns for coordinates are 'longitude' and 'latitude'
 # Create WKT POINT geometry using the longitude and latitude
 df['geometry'] = df.apply(lambda row: Point(row['person_x'], row['person_y']), axis=1)
@@ -42,14 +44,16 @@ gdf = gpd.GeoDataFrame(df, geometry='geometry', crs=CRS("EPSG:4326"))
 gdf = gdf.to_crs(epsg=3857)
 
 # Extract the transformed x and y coordinates into new columns
-gdf['x'] = gdf.geometry.x
-gdf['y'] = gdf.geometry.y
+gdf['x'] = round(gdf.geometry.x, 3)
+gdf['y'] = round(gdf.geometry.y, 3)
 
 # Drop the geometry column if no longer needed
 gdf = gdf.drop(columns=['geometry'])
 
 # Save the result back to a CSV file
-gdf[['person_id', 'x', 'y', 'timestep_time']].to_csv(output_file, index=False, header=False, sep='\t')
+df = gdf[['person_id', 'x', 'y', 'timestep_time']]
+print(df.head())
+df.to_csv(output_file, index=False, header=False, sep='\t')
 
 print(f"File saved successfully to {output_file}")
 
