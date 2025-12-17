@@ -20,7 +20,7 @@ case class Bin(instant: Int, count: Int) {
 class Interval(val index: Int, val begin: Int, val end: Int, val capacity: Int = 0) extends Serializable {
   val duration: Int = end - begin
 
-  override def toString(): String = s"$index: [$begin $end] ($duration)"
+  override def toString(): String = s"$index -> [$begin $end]:$duration [$capacity]"
 
   val toText: String = s"${toString()}\n"
 }
