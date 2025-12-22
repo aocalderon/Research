@@ -189,11 +189,11 @@ object P3D extends Logging {
           val wkt = point.toText()
           s"$i\t$x\t$y\t$t\t$s_index\t$t_index\t$st_index\t$wkt\n"
         }.toList
-        Iterator( (partitionId, wkts) )
-      }.collect().foreach{ case (partitionId, wkts) =>
+        Iterator( (st_index, wkts) )
+      }.collect().groupBy(_._1).foreach{ case (s_index, wkts) =>
         saveAsTSV(
-          s"/tmp/STRDD_$partitionId.wkt",
-          wkts
+          s"/tmp/STRDD_$s_index.wkt",
+          wkts.map(_._2).toList
         )
       }
       logger.info("STRDD WKT file saved for debugging")
