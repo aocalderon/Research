@@ -189,7 +189,7 @@ object P3D extends Logging {
           val wkt = point.toText()
           s"$i\t$x\t$y\t$t\t$s_index\t$t_index\t$st_index\t$wkt\n"
         }.mkString("")
-        Iterator( (st_index, wkts) )
+        Iterator( (s_index, wkts) )
       }.collect().groupBy(_._1).foreach{ case (s_index, wkts) =>
         saveAsTSV(
           s"/tmp/STRDD_$s_index.wkt",
