@@ -177,7 +177,7 @@ object P3D extends Logging {
     logger.info(s"Points repartitioned into STRDD with $nPointsSTRDD points")
 
     debug{
-      pointsSTRDD.sample(withReplacement=false, fraction=params.fraction(), seed=42).mapPartitions{ points => 
+      pointsSTRDD.mapPartitions{ points => 
         val partitionId = TaskContext.getPartitionId()
         val st_index = st_indexes_reverse(partitionId)
         val (s_index, t_index) = BitwisePairing.decode(st_index)
