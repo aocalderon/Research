@@ -222,7 +222,7 @@ object P3D extends Logging {
 
 import org.rogach.scallop._
 
-class Params(args: Seq[String]) extends ScallopConf(args) {
+class Params(args: Seq[String]) extends ScallopConf(args), Serializable {
   val filename = "/opt/Research/Datasets/gaussian/P25K.wkt"
   val input: ScallopOption[String] = opt[String](default = Some(filename))
   val master: ScallopOption[String] = opt[String](default = Some("local[3]"))

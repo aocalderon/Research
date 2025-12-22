@@ -130,37 +130,6 @@ object PFlock6 extends Logging {
     val trajs_partitioned = trajs_partitioned0.filter{ p =>
       val data = p.getUserData.asInstanceOf[Data]
       data.tid <= S.endtime
-    }/*.filter{ p =>
-      val data = p.getUserData.asInstanceOf[Data]
-      val ids = Set(3191, 3962, 9435)
-
-      ids.contains(data.id)
- }
-    save("/home/acald013/tmp/demo.tsv") {
-      trajs_partitioned.map { p =>
-        val data = p.getUserData.asInstanceOf[Data]
-        val i = data.id
-        val x = p.getX
-        val y = p.getY
-        val t = data.t
-        s"$i\t$x\t$y\t$t\n"
-      }.collect()
-      }*/
-
-    val cids2 = Set(82,78,149,157,141,79,2941,43,95,2957)
-    save("/tmp/edgesP.wkt"){
-      trajs_partitioned0.mapPartitionsWithIndex{ (index, points) =>
-        if(cids2.contains(index)){
-          points.map{ point =>
-            val wkt = point.toText
-            val dat = point.getUserData.asInstanceOf[Data]
-
-            s"$wkt\t$dat\n"
-          }
-        } else {
-          List.empty[String].toIterator
-        }
-      }.collect
     }
 
     val nTrajs = trajs_partitioned.count()
@@ -217,6 +186,7 @@ object PFlock6 extends Logging {
       val i = l1.zip(l2).map{ case(a, b) => a == b }.indexOf(false)
       l1.substring(0, i)
     }
+
     t0 = clocktime
     val spartialsRDD_prime = flocksRDD.mapPartitionsWithIndex{ (index, flocks) =>
       val t0 = clocktime
