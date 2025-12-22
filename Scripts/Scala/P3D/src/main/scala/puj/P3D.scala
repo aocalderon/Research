@@ -228,6 +228,8 @@ class Params(args: Seq[String]) extends ScallopConf(args) {
   val master: ScallopOption[String] = opt[String](default = Some("local[3]"))
   val epsilon_prime: ScallopOption[Double] = opt[Double](default = Some(10.0))
   val mu: ScallopOption[Int] = opt[Int](default = Some(3))
+  val step: ScallopOption[Int] = opt[Int](default = Some(1))
+  val sdist: ScallopOption[Double] = opt[Double] (default = Some(20.0))
   val scapacity: ScallopOption[Int] = opt[Int](default = Some(200))
   val tcapacity: ScallopOption[Int] = opt[Int](default = Some(200))
   val fraction: ScallopOption[Double] = opt[Double](default = Some(0.1))
