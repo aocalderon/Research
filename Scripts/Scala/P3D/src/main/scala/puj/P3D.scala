@@ -188,7 +188,7 @@ object P3D extends Logging {
           val t = point.getUserData().asInstanceOf[Data].tid
           val wkt = point.toText()
           s"$i\t$x\t$y\t$t\t$s_index\t$t_index\t$st_index\t$wkt\n"
-        }.toList
+        }.mkString("")
         Iterator( (st_index, wkts) )
       }.collect().groupBy(_._1).foreach{ case (s_index, wkts) =>
         saveAsTSV(
