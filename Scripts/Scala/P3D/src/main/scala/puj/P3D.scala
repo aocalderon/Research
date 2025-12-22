@@ -177,36 +177,43 @@ object P3D extends Logging {
     logger.info(s"Points repartitioned into STRDD with $nPointsSTRDD points")
 
     debug{
-      saveAsTSV(
-        "/tmp/STRDD.wkt",
-        pointsSTRDD.mapPartitions{ points => 
-          val partitionId = TaskContext.getPartitionId()
-          val st_index = st_indexes_reverse(partitionId)
-          val (s_index, t_index) = BitwisePairing.decode(st_index)
-          points.map{ point => 
-            val i = point.getUserData().asInstanceOf[Data].oid
-            val x = point.getX 
-            val y = point.getY
-            val t = point.getUserData().asInstanceOf[Data].tid
-            val wkt = point.toText()
-            s"$i\t$x\t$y\t$t\t$s_index\t$t_index\t$st_index\t$wkt\n"
-          }
-        }.collect()    
-      )
+      pointsSTRDD.sample(withReplacement=false, fraction=params.fraction(), seed=42).mapPartitions{ points => 
+        val partitionId = TaskContext.getPartitionId()
+        val st_index = st_indexes_reverse(partitionId)
+        val (s_index, t_index) = BitwisePairing.decode(st_index)
+        val wkts = points.map{ point => 
+          val i = point.getUserData().asInstanceOf[Data].oid
+          val x = point.getX 
+          val y = point.getY
+          val t = point.getUserData().asInstanceOf[Data].tid
+          val wkt = point.toText()
+          s"$i\t$x\t$y\t$t\t$s_index\t$t_index\t$st_index\t$wkt\n"
+        }.toList
+        Iterator( (partitionId, wkts) )
+      }.collect().foreach{ case (partitionId, wkts) =>
+        saveAsTSV(
+          s"/tmp/STRDD_$partitionId.wkt",
+          wkts
+        )
+      }
       logger.info("STRDD WKT file saved for debugging")
 
-      saveAsTSV(
-        "/tmp/Boxes.tsv",
-        pointsSTRDD.sample(withReplacement=false, fraction=0.01, seed=42).mapPartitions{ points => 
-          val partitionId = TaskContext.getPartitionId()
-          val st_index = st_indexes_reverse(partitionId)
-          val (s_index, t_index) = BitwisePairing.decode(st_index)
-          val cell = cells(s_index)
-          val interval = intervals(t_index)
-          val wkt = cell.wkt
-          Iterator(s"$wkt\t$st_index\t$s_index\t$t_index\t${interval.begin}\t${interval.duration}\n")
-        }.collect()
-      )
+      pointsSTRDD.mapPartitions{ points => 
+        val partitionId = TaskContext.getPartitionId()
+        val st_index = st_indexes_reverse(partitionId)
+        val (s_index, t_index) = BitwisePairing.decode(st_index)
+        val cell = cells(s_index)
+        val interval = intervals(t_index)
+        
+        val wkt =s"${cell.wkt}\t$st_index\t$s_index\t$t_index\t${interval.begin}\t${interval.duration}\n"
+        Iterator( (s_index, wkt) )
+      }.collect().groupBy(_._1).foreach{ case (s_index, wkts) =>
+        saveAsTSV(
+          s"/tmp/Boxes_$s_index.wkt",
+          wkts.map(_._2).toList
+        )
+      }
+      logger.info("Boxes WKT file saved for debugging")
     }
 
     logger.info("SparkSession closed")
