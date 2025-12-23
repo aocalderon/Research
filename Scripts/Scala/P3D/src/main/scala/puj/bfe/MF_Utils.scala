@@ -47,14 +47,14 @@ object MF_Utils extends Logging {
   }
 
   def insertMaximal(maximals: archery.RTree[Disk], candidate: Disk)
-    (implicit P: Params): archery.RTree[Disk] = {
+    (implicit S: Settings): archery.RTree[Disk] = {
 
     if(maximals.entries.size == 0){
       val center = archery.Point(candidate.X, candidate.Y)
       val toInsert = Entry(center, candidate)
       maximals.insert(toInsert)
     } else {
-      val maximals_prime = maximals.search(candidate.bbox(P.epsilon.toFloat)).map(_.value)
+      val maximals_prime = maximals.search(candidate.bbox(S.epsilon.toFloat)).map(_.value)
 
       if( maximals_prime.exists( maximal => candidate.isSubsetOf(maximal) ) ){
         maximals
@@ -78,9 +78,9 @@ object MF_Utils extends Logging {
   }
 
   def getPointsAroundCenter(center: Point, points: List[STPoint])
-      (implicit P: Params, G: GeometryFactory): Disk = {
+      (implicit S: Settings, G: GeometryFactory): Disk = {
     val pids = for{
-      point <- points if { point.distanceToPoint(center) <= P.r }
+      point <- points if { point.distanceToPoint(center) <= S.r }
     } yield {
       point
     }
@@ -88,16 +88,16 @@ object MF_Utils extends Logging {
     Disk(c, pids.map(_.oid))
   }
 
-  def computeCounts(points_prime: List[STPoint])(implicit P: Params): List[STPoint] = {
+  def computeCounts(points_prime: List[STPoint])(implicit S: Settings): List[STPoint] = {
     val tree = new STRtree(200)
     points_prime.foreach{ point => tree.insert(point.envelope, point) }
 
     val join = points_prime.flatMap{ p1 =>
       val envelope = p1.envelope
-      envelope.expandBy(P.epsilon)
+      envelope.expandBy(S.epsilon)
       val hood = tree.query(envelope).asScala.map{_.asInstanceOf[STPoint]}
       for{
-        p2 <- hood if{ p1.distance(p2) <= P.epsilon }
+        p2 <- hood if{ p1.distance(p2) <= S.epsilon }
       } yield {
         (p1, 1)
       }
@@ -117,11 +117,11 @@ object MF_Utils extends Logging {
     var index: Map[Long, List[STPoint]] = Map.empty
     var expansion: Boolean = false
 
-    def buildGrid(implicit P: Params): Unit = {
-      val epsilon = if(expansion) P.expansion else P.epsilon_prime()
+    def buildGrid(implicit S: Settings): Unit = {
+      val epsilon = if(expansion) S.expansion else S.epsilon_prime
       minx = if(envelope.isNull()) points.minBy(_.X).X else envelope.getMinX
       miny = if(envelope.isNull()) points.minBy(_.Y).Y else envelope.getMinY
-      val grid = points.filter(_.count >= P.mu()).map{ point =>
+      val grid = points.filter(_.count >= S.mu).map{ point =>
         val i = math.floor( (point.X - minx) / epsilon ).toInt
         val j = math.floor( (point.Y - miny) / epsilon ).toInt
         (encode(i, j), point)
@@ -157,27 +157,27 @@ object MF_Utils extends Logging {
       }.toList
     }
 
-    def getRows(implicit P: Params): Int = {
+    def getRows(implicit S: Settings): Int = {
       if(!index.isEmpty){
         maxx = if(envelope.isNull) index.values.flatten.maxBy(_.X).X else envelope.getMaxX
-        val epsilon = if(expansion) P.expansion else P.epsilon_prime()
+        val epsilon = if(expansion) S.expansion else S.epsilon_prime
         math.ceil( (maxx - minx) / epsilon ).toInt
       } else {
         0
       }
     }
 
-    def getColumns(implicit P: Params): Int = {
+    def getColumns(implicit S: Settings): Int = {
       if(!index.isEmpty){
         maxy = if(envelope.isNull) index.values.flatten.maxBy(_.Y).Y else envelope.getMaxY
-        val epsilon = if(expansion) P.expansion else P.epsilon_prime()
+        val epsilon = if(expansion) S.expansion else S.epsilon_prime
         math.ceil( (maxy - miny) / epsilon ).toInt
       } else {
         0
       }
     }
 
-    def getEnvelope(implicit P: Params): Envelope = {
+    def getEnvelope(implicit S: Settings): Envelope = {
       if(!index.isEmpty){
         if(envelope.isNull){
           getRows
@@ -191,9 +191,9 @@ object MF_Utils extends Logging {
       }
     }
 
-    def wkt(limit: Int = 2000)(implicit P: Params, G: GeometryFactory): Seq[String] = {
+    def wkt(limit: Int = 2000)(implicit S: Settings, G: GeometryFactory): Seq[String] = {
       if(!index.isEmpty){
-        val epsilon = if(expansion) P.expansion else P.epsilon_prime()
+        val epsilon = if(expansion) S.expansion else S.epsilon_prime
         val (mbr, n, m) = if(envelope.isNull){
           buildGrid
           ( new Envelope(minx, maxx, miny, maxy), getRows, getColumns )

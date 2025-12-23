@@ -17,7 +17,7 @@ import puj.Utils._
 object BFE extends Logging {
 
   def run(points_prime: List[STPoint], maximals_found: RTree[Disk] = RTree.empty)
-    (implicit P: Params, G: GeometryFactory): (List[Disk], Stats) = {
+    (implicit S: Settings, G: GeometryFactory): (List[Disk], Stats) = {
 
     val stats = Stats()
     var Maximals: RTree[Disk] = maximals_found
@@ -83,7 +83,7 @@ object BFE extends Logging {
         var tMaximals = 0.0
 
         val (_, tPairs) = timer{
-          if(Ps.size >= P.mu()){
+          if(Ps.size >= S.mu){
             for{ pr <- Pr }{
               val H = pr.getNeighborhood(Ps) // get range around pr in Ps...
 
@@ -91,7 +91,7 @@ object BFE extends Logging {
                 if(key == the_key) println(s"Key=${key}\t${pr.oid}\tH.size=${H.size}")
               }
 
-              if(H.size >= P.mu()){ // if range as enough points...
+              if(H.size >= S.mu){ // if range as enough points...
 
                 for{
                   ps <- H if{ pr.oid < ps.oid }
@@ -115,7 +115,7 @@ object BFE extends Logging {
 
                   val (candidates, tD) = timer{
                     // getting candidate disks...
-                    disks.filter(_.count >= P.mu())
+                    disks.filter(_.count >= S.mu)
                   }
                   stats.nCandidates += candidates.size
                   tCandidates += tD

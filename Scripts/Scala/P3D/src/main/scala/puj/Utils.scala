@@ -85,9 +85,9 @@ object Utils extends Logging {
 
     def Y: Double = point.getY
 
-    def getNeighborhood(points: List[STPoint])(implicit P: Params): List[STPoint] = {
+    def getNeighborhood(points: List[STPoint])(implicit S: Settings): List[STPoint] = {
       for{
-        point <- points if{ this.distance(point) <= P.epsilon }
+        point <- points if{ this.distance(point) <= S.epsilon }
       } yield {
         point
       }
@@ -213,7 +213,7 @@ object Utils extends Logging {
 
     def wkt: String = s"${center.toText}\t$start\t$end\t$pidsText"
 
-    def getCircleWTK(implicit P: Params): String = s"${center.buffer(P.r, 25).toText}\t$X\t$Y\t[$data]\t$pidsText"
+    def getCircleWTK(implicit S: Settings): String = s"${center.buffer(P.r, 25).toText}\t$X\t$Y\t[$data]\t$pidsText"
 
     def equals(other: Disk): Boolean = this.pidsText == other.pidsText
 
@@ -360,7 +360,7 @@ case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 
     log(msg)
   }
 
-  def debug[R](block: => R)(implicit P: Params): Unit = { if(P.debug()) block }
+  def debug[R](block: => R)(implicit S: Settings): Unit = { if(S.debug) block }
 
   def save(filename: String)(content: Seq[String]): Unit = {
     val start = clocktime
@@ -389,7 +389,7 @@ case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 
   }
 
   def computeCentres(p1: STPoint, p2:STPoint)
-    (implicit G: GeometryFactory, P: Params): List[Point] = {
+    (implicit G: GeometryFactory, S: Settings): List[Point] = {
 
     calculateCenterCoordinates(p1.point, p2.point).map{ centre =>
       centre.setUserData(s"${p1.oid} ${p2.oid}")
@@ -398,13 +398,13 @@ case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 
   }
 
   def calculateCenterCoordinates(p1: Point, p2: Point)
-    (implicit G: GeometryFactory, P: Params): List[Point] = {
+    (implicit G: GeometryFactory, S: Settings): List[Point] = {
 
     val X: Double = p1.getX - p2.getX
     val Y: Double = p1.getY - p2.getY
     val D2: Double = math.pow(X, 2) + math.pow(Y, 2)
     if (D2 != 0.0){
-      val root: Double = math.sqrt(math.abs(4.0 * (P.r2 / D2) - 1.0))
+      val root: Double = math.sqrt(math.abs(4.0 * (S.r2 / D2) - 1.0))
       val h1: Double = ((X + Y * root) / 2) + p2.getX
       val k1: Double = ((Y - X * root) / 2) + p2.getY
       val h2: Double = ((X - Y * root) / 2) + p2.getX
@@ -414,7 +414,7 @@ case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 
 
       List(h, k)
     } else {
-      val p2_prime = G.createPoint(new Coordinate(p2.getX + P.tolerance(), p2.getY))
+      val p2_prime = G.createPoint(new Coordinate(p2.getX + S.tolerance, p2.getY))
       calculateCenterCoordinates(p1, p2_prime)
     }
   }
