@@ -20,7 +20,7 @@ object Checker extends Logging {
 
   def checkMaximalDisks(ours: List[Disk], theirs: List[Disk], ours_label: String = "ours",
     theirs_label: String = "theirs", points: List[STPoint])
-    (implicit G: GeometryFactory, P: Params): Unit = {
+    (implicit G: GeometryFactory, S: Settings): Unit = {
 
     val ours_pids = ours.map(_.pidsText)
     val ours_pids_file = s"/tmp/${ours_label}_pids.txt"

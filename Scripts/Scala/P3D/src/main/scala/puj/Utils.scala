@@ -213,7 +213,7 @@ object Utils extends Logging {
 
     def wkt: String = s"${center.toText}\t$start\t$end\t$pidsText"
 
-    def getCircleWTK(implicit S: Settings): String = s"${center.buffer(P.r, 25).toText}\t$X\t$Y\t[$data]\t$pidsText"
+    def getCircleWTK(implicit S: Settings): String = s"${center.buffer(S.r, 25).toText}\t$X\t$Y\t[$data]\t$pidsText"
 
     def equals(other: Disk): Boolean = this.pidsText == other.pidsText
 
@@ -224,7 +224,6 @@ object Utils extends Logging {
       .map(_.value)
       .filter(_.equals(this))
   }
-
 
 case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 0,
     var nCandidates: Int = 0, var nMaximals: Int = 0,
