@@ -625,15 +625,22 @@ object PF_Utils extends Logging{
       case Nil => (f, partial)
     }
   }
-  @tailrec
-  def joinDisksCachingPartials(trajs: List[(Int, Iterable[STPoint])], flocks: List[Disk], f: List[Disk],
-                               cell: Envelope, cell_prime: Envelope, partial: List[Disk],
-                               time_start: Int, time_end: Int, partial2: List[Disk], partial3: List[Disk])
-               (implicit S: Settings, G: GeometryFactory, C: Map[Int, (Int, Int)]): (List[Disk], List[Disk], List[Disk]) = {
-    val pid = TaskContext.getPartitionId()
-    //if(pid == 284)
-    //  println("Here")
 
+  @tailrec
+  def joinDisksCachingPartials(
+    trajs: List[(Int, Iterable[STPoint])], 
+    flocks: List[Disk], 
+    f: List[Disk],
+    cell: Envelope, 
+    cell_prime: Envelope, 
+    partial: List[Disk],
+    time_start: Int, 
+    time_end: Int, 
+    partial2: List[Disk], 
+    partial3: List[Disk]
+  )(implicit S: Settings, G: GeometryFactory, C: Map[Int, (Int, Int)]): (List[Disk], List[Disk], List[Disk]) = {
+
+    val pid = TaskContext.getPartitionId()
     trajs match {
       case current_trajs :: remaining_trajs =>
         val time = current_trajs._1
@@ -642,11 +649,9 @@ object PF_Utils extends Logging{
         val (new_flocks, stats) = if (S.method == "BFE") {
           val (nf, stats) = BFE.run(points)
           (nf.map(_.copy(start = time, end = time)).filter(d => cell_prime.contains(d.center.getCoordinate)), stats)
-          //(nf.map(_.copy(start = time, end = time)), stats)
         } else {
           val (nf, stats) = PSI.run(points)
           (nf.map(_.copy(start = time, end = time)).filter(d => cell_prime.contains(d.center.getCoordinate)), stats)
-          //(nf.map(_.copy(start = time, end = time)), stats)
         }
 
         debug{
@@ -683,24 +688,21 @@ object PF_Utils extends Logging{
           }
 
           flocks_prime.flatten
+        } else {  // PSI
+          {
+            for{
+              old_flock <- flocks
+              new_flock <- new_flocks
+            } yield {
+              val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
+              val flock = Disk(new_flock.center, pids, old_flock.start, time)
+              flock.locations = old_flock.locations :+ new_flock.center.getCoordinate
 
-          //flocks
-        } else {
-          //flocks
-          val merged_ones = (for{
-            old_flock <- flocks
-            new_flock <- new_flocks
-          } yield {
-            val pids = old_flock.pidsSet.intersect(new_flock.pidsSet).toList
-            val flock = Disk(new_flock.center, pids, old_flock.start, time)
-            flock.locations = old_flock.locations :+ new_flock.center.getCoordinate
+              if(pids == new_flock.pids) new_flock.subset = true
 
-            if(pids == new_flock.pids) new_flock.subset = true
-
-            flock
-          }).filter(_.pids.size >= S.mu) // filtering by minimum number of entities (mu)...
-
-          merged_ones
+              flock
+            }
+          }.filter(_.pids.size >= S.mu) // filtering by minimum number of entities (mu)...
         }
 
         /***
@@ -753,7 +755,6 @@ object PF_Utils extends Logging{
             } else flock
           }
 
-        //val F_partial = getPartials(F, cell)
         val F_partial = F_prime.filterNot(_._3).map(_._1)
 
         // Getting partial flocks in time partitions...
@@ -779,16 +780,26 @@ object PF_Utils extends Logging{
           partial3
         }
 
-
-        joinDisksCachingPartials(remaining_trajs, F, f ++ r, cell, cell_prime, partial ++ F_partial,
-          time_start, time_end, T_partial_start, T_partial_end)
+        // Recursion...
+        joinDisksCachingPartials(  
+          remaining_trajs, 
+          F, 
+          f ++ r, 
+          cell, 
+          cell_prime, 
+          partial ++ F_partial,
+          time_start, 
+          time_end, 
+          T_partial_start, 
+          T_partial_end
+        )
       /***
        * start: recurse...
        ***/
+
       case Nil => (f, partial, partial2 ++ partial3)
     }
   }
-
 
   def joinDisks2(trajs: List[(Int, Iterable[STPoint])], flocks: List[Disk], f: List[Disk], cell: Envelope, cell_prime: Envelope, partial: List[Disk])
                (implicit S: Settings, G: GeometryFactory, P: Params): (List[Disk], List[Disk]) = {

@@ -130,8 +130,8 @@ object MF_Utils extends Logging {
       index = grid.mapValues(_.map(_._2))
     }
 
-    def buildGrid1_5(minX: Double, minY: Double)(implicit P: Params): Map[Long, List[STPoint]] = {
-      val epsilon = (P.epsilon_prime() * 1.5) + P.tolerance()
+    def buildGrid1_5(minX: Double, minY: Double)(implicit S: Settings): Map[Long, List[STPoint]] = {
+      val epsilon = (S.epsilon_prime * 1.5) + S.tolerance
       val grid = points.map{ point =>
         val i = math.floor( (point.X - minX) / epsilon ).toInt
         val j = math.floor( (point.Y - minY) / epsilon ).toInt

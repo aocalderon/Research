@@ -19,9 +19,4 @@ class Params(args: Seq[String]) extends ScallopConf(args) {
   val debug: ScallopOption[Boolean] = opt[Boolean](short = 'd', default = Some(false), descr = "Enable debug mode")
 
   verify()
-
-  def epsilon(): Double = epsilon_prime() + tolerance()
-  val r: Double = (epsilon_prime() / 2.0) + tolerance()
-  val r2: Double = math.pow(epsilon_prime() / 2.0, 2) + tolerance()
-  val expansion: Double = epsilon_prime() * 1.5 + tolerance()
 }

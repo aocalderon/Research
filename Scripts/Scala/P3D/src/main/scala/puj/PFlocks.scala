@@ -25,18 +25,18 @@ object PFlocks extends Logging {
     /*************************************************************************
      * Settings...
      *************************************************************************/    
-    implicit val params: Params = new Params(args)
+    implicit val params: Params = new Params(args)  // Reading parameters...
 
-    implicit val spark: SparkSession = SparkSession.builder()
+    implicit val spark: SparkSession = SparkSession.builder()  // Starting Spark...
       .config("spark.serializer", classOf[KryoSerializer].getName)
       .master(params.master())
       .appName("PFlock").getOrCreate()
 
-    implicit var S = Settings(
+    implicit var S = Settings(  // Defining settings...
       dataset = params.input(),
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
-      method = "PFlocks",
+      method = "PSI",
       scapacity = params.scapacity(),
       tcapacity = params.tcapacity(),
       sdist = params.sdist(),
@@ -47,12 +47,14 @@ object PFlocks extends Logging {
       debug = params.debug()
     )
 
-    implicit val G: GeometryFactory = new GeometryFactory(new PrecisionModel(S.scale))
+    implicit val G: GeometryFactory = new GeometryFactory(new PrecisionModel(S.scale)) // Setting precision model and geofactory...
+
+    logger.info(s"Settings: $S")
 
     /*************************************************************************
      * Reading data...
      *************************************************************************/    
-    val trajs = spark.read
+    val trajs = spark.read // Reading trajectories...
       .option("header", value = false)
       .option("delimiter", "\t")
       .csv(S.dataset)
@@ -75,28 +77,33 @@ object PFlocks extends Logging {
     /*************************************************************************
      * Spatiotemporal partitioning...
      *************************************************************************/    
-    val t0 = clocktime
+    val t0 = clocktime // Starting timer...
     val times_prime = (0 to S.endtime).toList
-    val time_partitions = PF_Utils.cut(times_prime, S.step)
+    // Temporal partitions...
+    val time_partitions = PF_Utils.cut(times_prime, S.step) 
 
     val sample = trajs.sample(withReplacement = false, fraction = S.fraction, seed = 42).collect()
     val envelope = PF_Utils.getEnvelope(trajs)
     envelope.expandBy(S.epsilon * 2.0)
-    implicit val quadtree: StandardQuadTree[Point] = new StandardQuadTree[Point](new QuadRectangle(envelope), 0, S.scapacity, 16)
+    // Spatial partitions...
+    implicit val quadtree: StandardQuadTree[Point] = new StandardQuadTree[Point](new QuadRectangle(envelope), 0, S.scapacity, 16) 
     sample.foreach { case (_, point) =>
       quadtree.insert(new QuadRectangle(point.getEnvelopeInternal), point)
     }
     quadtree.assignPartitionIds()
     quadtree.assignPartitionLineage()
     quadtree.dropElements()
-    implicit val cells: Map[Int, Cell] = quadtree.getLeafZones.asScala.map { leaf =>
+    
+    // Getting quadtree cells...
+    implicit val cells: Map[Int, Cell] = quadtree.getLeafZones.asScala.map { leaf => 
       val envelope = leaf.getEnvelope
       val id = leaf.partitionId.toInt
 
       id -> Cell(id, envelope, leaf.lineage)
     }.toMap
 
-    val trajs_prime = trajs.filter(_._1 <= S.endtime).mapPartitions { rows =>
+    // Assigning points to spatiotemporal partitions...
+    val trajs_prime = trajs.filter(_._1 <= S.endtime).mapPartitions { rows => 
       rows.flatMap { case (_, point) =>
         val tpart = time_partitions(PF_Utils.getTime(point))
         val env = point.getEnvelopeInternal
@@ -107,9 +114,12 @@ object PFlocks extends Logging {
       }
     }.cache
     
+    // Assigning unique IDs to spatiotemporal partitions...
     implicit val cubes_ids: Map[(Int, Int), Int] = trajs_prime.map{ _._1 }.distinct().collect().sortBy(_._1).sortBy(_._2).zipWithIndex.toMap
+    // Inverse map for spatiotemporal partitions...
     implicit val cubes_ids_inverse: Map[Int, (Int, Int)] = cubes_ids.map{ case(key, value) => value -> key }
 
+    // Repartitioning trajectories according to spatiotemporal partitions...
     val trajs_partitioned = trajs_prime.map{ case(tuple_id, point) =>
       val cube_id = cubes_ids(tuple_id)
       (cube_id, point)
@@ -123,6 +133,7 @@ object PFlocks extends Logging {
     logger.info(s"TIME|STPart|$tTrajs")
     logger.info(s"INFO|STPart|$nTrajs")
 
+    // Debugging info...
     debug{
       save("/tmp/edgesCells.wkt") {
         cells.map { case(id, cell) =>
@@ -141,6 +152,7 @@ object PFlocks extends Logging {
      * Safe Flocks
      *************************************************************************/    
     val ( (flocksRDD, nFlocksRDD), tFlocksRDD ) = timer {
+      // Computing flocks in each spatiotemporal partition...
       val flocksRDD = trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
         val t0 = clocktime
         val cell_id = cubes_ids_inverse(index)._1
@@ -160,15 +172,24 @@ object PFlocks extends Logging {
         }.toList.sortBy(_._1)
         val times_prime = ps.map(_._1)
         val r = if(times_prime.isEmpty){
-          val r = (List.empty[Disk],List.empty[Disk],List.empty[Disk])
+          val r = (List.empty[Disk], List.empty[Disk], List.empty[Disk])
           Iterator(r)
         } else {
           val time_start = times_prime.head
           val time_end = times_prime.last
 
-          val flocks_and_partials = PF_Utils.joinDisksCachingPartials(ps, List.empty[Disk], List.empty[Disk],
-            cell, cell_prime, List.empty[Disk],
-            time_start, time_end, List.empty[Disk], List.empty[Disk])
+          val flocks_and_partials = PF_Utils.joinDisksCachingPartials(
+            ps, 
+            List.empty[Disk], 
+            List.empty[Disk],
+            cell, 
+            cell_prime, 
+            List.empty[Disk],
+            time_start, 
+            time_end, 
+            List.empty[Disk], 
+            List.empty[Disk]
+          )
 
           Iterator(flocks_and_partials)
         }
@@ -304,7 +325,7 @@ object PFlocks extends Logging {
       }
     }
 
-    logger.info("PFlocks computation ended.")
     spark.close
+    logger.info("PFlocks computation ended.")
   }
 }
