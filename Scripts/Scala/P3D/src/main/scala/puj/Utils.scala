@@ -48,9 +48,9 @@ object Utils extends Logging {
     tag: String = "",
     method: String = "PFlock",
     debug: Boolean = false,
+    print: Boolean = false,
     cached: Boolean = false,
     saves: Boolean = false,
-    print: Boolean = false,
     output: String = "/tmp/"
   ){
     val scale: Double = 1 / tolerance
@@ -58,13 +58,25 @@ object Utils extends Logging {
     val r: Double = (epsilon_prime / 2.0) + tolerance
     val r2: Double = math.pow(epsilon_prime / 2.0, 2) + tolerance
     val expansion: Double = epsilon_prime * 1.5 + tolerance
+    var partitions: Int = 1
     val dataset_name: String = {
       val d = dataset.split("/").last.split("\\.").head
       if(d.startsWith("part-")) d.split("-")(1) else d
     }
 
-    var partitions: Int = 1
-
+    def printer: Unit = {
+    	logger.info(s"SETTINGS|DATASET=$dataset")
+    	logger.info(s"SETTINGS|EPSILON=$epsilon")
+    	logger.info(s"SETTINGS|MU=$mu")
+    	logger.info(s"SETTINGS|DELTA=$delta")
+    	logger.info(s"SETTINGS|METHOD=$method")
+    	logger.info(s"SETTINGS|SCAPACITY=$scapacity")
+    	logger.info(s"SETTINGS|TCAPACITY=$tcapacity")
+    	logger.info(s"SETTINGS|TOLERANCE=$tolerance")
+    	logger.info(s"SETTINGS|STEP=$step")
+    	logger.info(s"SETTINGS|SDIST=$sdist")
+    }
+    
     override def toString: String = s"\nDATASET=$dataset\nEPSILON=$epsilon\nMU=$mu\nDELTA=$delta\nMETHOD=$method\nSCAPACITY=$scapacity\nTCAPACITY=$tcapacity\nTOLERANCE=$tolerance\n"
   }
 

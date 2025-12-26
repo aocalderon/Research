@@ -49,7 +49,7 @@ object PFlocks extends Logging {
 
     implicit val G: GeometryFactory = new GeometryFactory(new PrecisionModel(S.scale)) // Setting precision model and geofactory...
 
-    logger.info(s"Settings: $S")
+    S.printer
 
     /*************************************************************************
      * Reading data...
