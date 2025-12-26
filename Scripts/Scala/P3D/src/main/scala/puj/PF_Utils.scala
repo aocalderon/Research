@@ -24,6 +24,11 @@ import puj.psi._
 
 object PF_Utils extends Logging{
 
+  def mca(l1: String, l2: String): String = {
+    val i = l1.zip(l2).map{ case(a, b) => a == b }.indexOf(false)
+    l1.substring(0, i)
+  }
+
   @tailrec
   def pruneM(M: List[Disk], M_prime: List[Disk]): List[Disk] = {
     M match {
@@ -133,7 +138,9 @@ object PF_Utils extends Logging{
         cell.contains(f)
       }.toIterator
       val t1 = (clocktime - t0) / 1e9
-      logt(s"-1|-1|-1|-1|$index|PerCell|parPrune|$t1")
+      debug{
+        logger.info(s"$index|$t1")
+      }
 
       r
     }.collect().toList
@@ -622,7 +629,7 @@ object PF_Utils extends Logging{
   def joinDisksCachingPartials(trajs: List[(Int, Iterable[STPoint])], flocks: List[Disk], f: List[Disk],
                                cell: Envelope, cell_prime: Envelope, partial: List[Disk],
                                time_start: Int, time_end: Int, partial2: List[Disk], partial3: List[Disk])
-               (implicit S: Settings, G: GeometryFactory, P: Params, C: Map[Int, (Int, Int)]): (List[Disk], List[Disk], List[Disk]) = {
+               (implicit S: Settings, G: GeometryFactory, C: Map[Int, (Int, Int)]): (List[Disk], List[Disk], List[Disk]) = {
     val pid = TaskContext.getPartitionId()
     //if(pid == 284)
     //  println("Here")

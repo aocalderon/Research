@@ -161,7 +161,7 @@ object BFE extends Logging {
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
       method = "BFE",
-      capacity = params.scapacity(),
+      scapacity = params.scapacity(),
       tolerance = params.tolerance(),
       debug = params.debug()
     )

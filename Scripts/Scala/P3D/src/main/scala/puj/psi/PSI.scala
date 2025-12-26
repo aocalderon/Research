@@ -560,7 +560,7 @@ object PSI extends Logging {
       dataset = params.input(), 
       epsilon_prime = params.epsilon(),
       mu = params.mu(),
-      capacity = params.scapacity(),
+      scapacity = params.scapacity(),
       tolerance = params.tolerance(),
       debug = params.debug()
     )

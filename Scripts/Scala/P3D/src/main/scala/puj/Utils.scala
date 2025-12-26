@@ -36,11 +36,12 @@ object Utils extends Logging {
     dataset: String = "",
     epsilon_prime: Double = 10.0,
     mu: Int = 3,
-    delta: Int = 5,
+    delta: Int = 3,
     step: Int = 1,
     sdist: Double = 20.0,
     endtime: Int = 10,
-    capacity: Int = 200,
+    scapacity: Int = 200,
+    tcapacity: Int = 200,
     fraction: Double = 0.01,
     tolerance: Double = 1e-3,
     density: Double = 1000.0,
@@ -48,10 +49,8 @@ object Utils extends Logging {
     method: String = "PFlock",
     debug: Boolean = false,
     cached: Boolean = false,
-    tester: Boolean = false,
     saves: Boolean = false,
     print: Boolean = false,
-    iindex: Boolean = true,
     output: String = "/tmp/"
   ){
     val scale: Double = 1 / tolerance
@@ -66,7 +65,7 @@ object Utils extends Logging {
 
     var partitions: Int = 1
 
-    def info: String = s"$partitions|$dataset_name|$epsilon_prime|$mu|$delta|$method"
+    override def toString: String = s"\nDATASET=$dataset\nEPSILON=$epsilon\nMU=$mu\nDELTA=$delta\nMETHOD=$method\nSCAPACITY=$scapacity\nTCAPACITY=$tcapacity\nTOLERANCE=$tolerance\n"
   }
 
   case class STPoint(point: Point, cid: Int = 0){
