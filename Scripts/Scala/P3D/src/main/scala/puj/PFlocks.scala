@@ -10,7 +10,6 @@ import org.apache.logging.log4j.scala.Logging
 import org.locationtech.jts.geom._
 import org.locationtech.jts.index.strtree.STRtree
 
-
 import scala.collection.JavaConverters.asScalaBufferConverter
 
 import puj.Utils._
@@ -20,35 +19,20 @@ import puj.psi._
 object PFlocks extends Logging {
   
   def main(args: Array[String]): Unit = {
-    logger.info("Starting PFlocks computation")
 
     /*************************************************************************
      * Settings...
      *************************************************************************/    
-    implicit val params: Params = new Params(args)  // Reading parameters...
+    implicit var S: Settings = Setup.getSettings(args) // Initializing settings...
+    implicit val G: GeometryFactory = new GeometryFactory(new PrecisionModel(S.scale)) // Setting precision model and geofactory...
 
     implicit val spark: SparkSession = SparkSession.builder()  // Starting Spark...
       .config("spark.serializer", classOf[KryoSerializer].getName)
-      .master(params.master())
+      .master(S.master)
       .appName("PFlock").getOrCreate()
 
-    implicit var S = Settings(  // Defining settings...
-      dataset = params.input(),
-      epsilon_prime = params.epsilon(),
-      mu = params.mu(),
-      method = "PSI",
-      scapacity = params.scapacity(),
-      tcapacity = params.tcapacity(),
-      sdist = params.sdist(),
-      step = params.step(),
-      tolerance = params.tolerance(),
-      endtime = params.endtime(),
-      fraction = params.fraction(),
-      debug = params.debug()
-    )
-
-    implicit val G: GeometryFactory = new GeometryFactory(new PrecisionModel(S.scale)) // Setting precision model and geofactory...
-
+    S.appId = spark.sparkContext.applicationId
+    logger.info(s"${S.appId}|START|Starting PFlocks computation")
     S.printer
 
     /*************************************************************************
@@ -130,8 +114,8 @@ object PFlocks extends Logging {
     val nTrajs = trajs_partitioned.count()
     val tTrajs = (clocktime - t0) / 1e9
 
-    logger.info(s"TIME|STPart|$tTrajs")
-    logger.info(s"INFO|STPart|$nTrajs")
+    logger.info(s"${S.appId}|TIME|STPart|$tTrajs")
+    logger.info(s"${S.appId}|INFO|STPart|$nTrajs")
 
     // Debugging info...
     debug{
@@ -195,7 +179,7 @@ object PFlocks extends Logging {
         }
         val t1 = (clocktime - t0) / 1e9
         debug{
-          logger.info(s"${S.scapacity}|${cells.size}|${S.sdist}|${S.step}|$index|PerCell|Safe|$t1")
+          logger.info(s"${S.appId}|${S.scapacity}|${cells.size}|${S.sdist}|${S.step}|$index|PerCell|Safe|$t1")
         }
 
         r
@@ -204,8 +188,8 @@ object PFlocks extends Logging {
       (flocksRDD, nFlocksRDD)
     }
     val safes = flocksRDD.collect().flatMap(_._1)
-    logger.info(s"TIME|Safe|$tFlocksRDD")
-    logger.info(s"INFO|Safe|$nFlocksRDD")
+    logger.info(s"${S.appId}|TIME|Safe|$tFlocksRDD")
+    logger.info(s"${S.appId}|INFO|Safe|$nFlocksRDD")
 
 
     /*************************************************************************
@@ -233,7 +217,7 @@ object PFlocks extends Logging {
         }
         val t1 = (clocktime - t0) / 1e9
         debug{
-          logger.info(s"${S.scapacity}|${cells.size}|${S.sdist}|${S.step}|$index|PerCell|SPartial1|$t1")
+          logger.info(s"${S.appId}|${S.scapacity}|${cells.size}|${S.sdist}|${S.step}|$index|PerCell|SPartial1|$t1")
         }
 
         R
@@ -257,15 +241,15 @@ object PFlocks extends Logging {
           val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
           val t1 = (clocktime - t0) / 1e9
           debug{
-            logger.info(s"${S.scapacity}|${cells.size}|${S.sdist}|${S.step}|$index|PerCell|SPartial2|$t1")
+            logger.info(s"${S.appId}|${S.scapacity}|${cells.size}|${S.sdist}|${S.step}|$index|PerCell|SPartial2|$t1")
           }
 
           R.toIterator
       }
       spartialsRDD.collect()
     }
-    logger.info(s"TIME|SPartial|$tSpartials")
-    logger.info(s"INFO|SPartial|${spartials.length}")
+    logger.info(s"${S.appId}|TIME|SPartial|$tSpartials")
+    logger.info(s"${S.appId}|INFO|SPartial|${spartials.length}")
 
     /*************************************************************************
      * Temporal partitioning
@@ -295,24 +279,24 @@ object PFlocks extends Logging {
         val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk]).filter{ f => cell.contains(f) }
         val t1 = (clocktime - t0) / 1e9
         debug{
-          logger.info(s"${S.scapacity}|${cells.size}|${S.sdist}|${S.step}|$index|PerCell|TPartial|$t1")
+          logger.info(s"${S.appId}|${S.scapacity}|${cells.size}|${S.sdist}|${S.step}|$index|PerCell|TPartial|$t1")
         }
 
         R.toIterator
       }.cache
       tpartialsRDD.collect()
     }
-    logger.info(s"TIME|TPartial|$tTpartials")
-    logger.info(s"INFO|TPartial|${tpartials.length}")
+    logger.info(s"${S.appId}|TIME|TPartial|$tTpartials")
+    logger.info(s"${S.appId}|INFO|TPartial|${tpartials.length}")
 
     val (flocks, tPrune) = timer {
       PF_Utils.parPrune(safes.toList ++ spartials.toList ++ tpartials.toList)
     }
-    logger.info(s"TIME|Flocks|$tPrune")
-    logger.info(s"INFO|Flocks|${flocks.size}")
+    logger.info(s"${S.appId}|TIME|Flocks|$tPrune")
+    logger.info(s"${S.appId}|INFO|Flocks|${flocks.size}")
 
-    logger.info(s"TIME|Total|${tFlocksRDD + tSpartials + tTpartials + tPrune}")
-    logger.info(s"INFO|Total|${flocks.size}")
+    logger.info(s"${S.appId}|TIME|Total|${tFlocksRDD + tSpartials + tTpartials + tPrune}")
+    logger.info(s"${S.appId}|INFO|Total|${flocks.size}")
 
     debug{
       save("/tmp/flocks.tsv") {
@@ -326,6 +310,6 @@ object PFlocks extends Logging {
     }
 
     spark.close
-    logger.info("PFlocks computation ended.")
+    logger.info(s"${S.appId}|END|PFlocks computation ended.")
   }
 }

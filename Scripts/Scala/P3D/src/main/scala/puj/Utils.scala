@@ -3,9 +3,8 @@ package puj
 import org.apache.spark.Partitioner
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
-import org.apache.logging.log4j.LogManager
+//import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.scala.Logging
-
 
 import archery.{RTree, Box}
 import streaminer.{MurmurHash3 => Murmur, SpookyHash32 => Spooky}
@@ -18,8 +17,10 @@ import scala.io.Source
 import scala.util.Random
 import scala.collection.mutable
 import scala.collection.mutable.BitSet
+import java.time.Instant
 
 import edu.ucr.dblab.pflock.sedona.quadtree.Quadtree.Cell
+import scala.annotation.meta.param
 
 object Utils extends Logging {
 
@@ -33,48 +34,50 @@ object Utils extends Logging {
   }
 
   case class Settings(
-    dataset: String = "",
-    epsilon_prime: Double = 10.0,
-    mu: Int = 3,
-    delta: Int = 3,
-    step: Int = 1,
-    sdist: Double = 20.0,
-    endtime: Int = 10,
-    scapacity: Int = 200,
-    tcapacity: Int = 200,
-    fraction: Double = 0.01,
-    tolerance: Double = 1e-3,
-    density: Double = 1000.0,
-    tag: String = "",
-    method: String = "PFlock",
-    debug: Boolean = false,
-    print: Boolean = false,
-    cached: Boolean = false,
-    saves: Boolean = false,
-    output: String = "/tmp/"
+     dataset: String   = "",
+     tag: String       = "",
+     output: String    = "",
+     method: String    = "",
+     master: String    = "",
+     eprime: Double    = 0.0,
+     sdist: Double     = 0.0,
+     fraction: Double  = 0.0,
+     tolerance: Double = 1e-3,
+     mu: Int 	       = 0,
+     delta: Int        = 0,
+     step: Int 	       = 0,
+     endtime: Int      = 0,
+     scapacity: Int    = 0,
+     tcapacity: Int    = 0,
+     debug: Boolean    = false,
+     print: Boolean    = false,
+     cached: Boolean   = false,
+     saves: Boolean    = false
   ){
     val scale: Double = 1 / tolerance
-    val epsilon: Double = epsilon_prime + tolerance
-    val r: Double = (epsilon_prime / 2.0) + tolerance
-    val r2: Double = math.pow(epsilon_prime / 2.0, 2) + tolerance
-    val expansion: Double = epsilon_prime * 1.5 + tolerance
+    val epsilon: Double = eprime + tolerance
+    val r: Double = (eprime / 2.0) + tolerance
+    val r2: Double = math.pow(eprime / 2.0, 2) + tolerance
+    val expansion: Double = eprime * 1.5 + tolerance
     var partitions: Int = 1
+    var appId: String = s"${Instant.now()}"
     val dataset_name: String = {
       val d = dataset.split("/").last.split("\\.").head
       if(d.startsWith("part-")) d.split("-")(1) else d
     }
 
     def printer: Unit = {
-    	logger.info(s"SETTINGS|DATASET=$dataset")
-    	logger.info(s"SETTINGS|EPSILON=$epsilon")
-    	logger.info(s"SETTINGS|MU=$mu")
-    	logger.info(s"SETTINGS|DELTA=$delta")
-    	logger.info(s"SETTINGS|METHOD=$method")
-    	logger.info(s"SETTINGS|SCAPACITY=$scapacity")
-    	logger.info(s"SETTINGS|TCAPACITY=$tcapacity")
-    	logger.info(s"SETTINGS|TOLERANCE=$tolerance")
-    	logger.info(s"SETTINGS|STEP=$step")
-    	logger.info(s"SETTINGS|SDIST=$sdist")
+    	logger.info(s"${appId}|SETTINGS|DATASET=$dataset")
+    	logger.info(s"${appId}|SETTINGS|EPSILON=$epsilon")
+    	logger.info(s"${appId}|SETTINGS|MU=$mu")
+    	logger.info(s"${appId}|SETTINGS|DELTA=$delta")
+    	logger.info(s"${appId}|SETTINGS|METHOD=$method")
+    	logger.info(s"${appId}|SETTINGS|SCAPACITY=$scapacity")
+    	logger.info(s"${appId}|SETTINGS|TCAPACITY=$tcapacity")
+    	logger.info(s"${appId}|SETTINGS|TOLERANCE=$tolerance")
+    	logger.info(s"${appId}|SETTINGS|STEP=$step")
+    	logger.info(s"${appId}|SETTINGS|SDIST=$sdist")
+    	logger.info(s"${appId}|SETTINGS|DEBUG=$debug")
     }
     
     override def toString: String = s"\nDATASET=$dataset\nEPSILON=$epsilon\nMU=$mu\nDELTA=$delta\nMETHOD=$method\nSCAPACITY=$scapacity\nTCAPACITY=$tcapacity\nTOLERANCE=$tolerance\n"

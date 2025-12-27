@@ -26,15 +26,7 @@ object P3D extends Logging {
   def main(args: Array[String]): Unit = {
     logger.info("Starting P3D application")
     implicit val params = new Params(args)
-    implicit var S= Settings(
-      dataset = params.input(),
-      epsilon_prime = params.epsilon(),
-      mu = params.mu(),
-      method = "P3D",
-      scapacity = params.scapacity(),
-      tolerance = params.tolerance(),
-      debug = params.debug()
-    )
+    implicit var S: Settings = params.getSettings(args) // Initializing settings...
     implicit val G = new GeometryFactory(
       new PrecisionModel(1.0 / params.tolerance())
     )

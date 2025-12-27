@@ -555,15 +555,7 @@ object PSI extends Logging {
 
   def main(args: Array[String]): Unit = {
     implicit val params: Params = new Params(args)
-
-    implicit val S: Settings = Settings(
-      dataset = params.input(), 
-      epsilon_prime = params.epsilon(),
-      mu = params.mu(),
-      scapacity = params.scapacity(),
-      tolerance = params.tolerance(),
-      debug = params.debug()
-    )
+    implicit var S: Settings = params.getSettings(args) // Initializing settings...
     implicit val geofactory: GeometryFactory = new GeometryFactory(new PrecisionModel(S.scale))
 
     val points = readPoints(S.dataset)

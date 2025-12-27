@@ -118,7 +118,7 @@ object MF_Utils extends Logging {
     var expansion: Boolean = false
 
     def buildGrid(implicit S: Settings): Unit = {
-      val epsilon = if(expansion) S.expansion else S.epsilon_prime
+      val epsilon = if(expansion) S.expansion else S.eprime
       minx = if(envelope.isNull()) points.minBy(_.X).X else envelope.getMinX
       miny = if(envelope.isNull()) points.minBy(_.Y).Y else envelope.getMinY
       val grid = points.filter(_.count >= S.mu).map{ point =>
@@ -131,7 +131,7 @@ object MF_Utils extends Logging {
     }
 
     def buildGrid1_5(minX: Double, minY: Double)(implicit S: Settings): Map[Long, List[STPoint]] = {
-      val epsilon = (S.epsilon_prime * 1.5) + S.tolerance
+      val epsilon = (S.eprime * 1.5) + S.tolerance
       val grid = points.map{ point =>
         val i = math.floor( (point.X - minX) / epsilon ).toInt
         val j = math.floor( (point.Y - minY) / epsilon ).toInt
@@ -160,7 +160,7 @@ object MF_Utils extends Logging {
     def getRows(implicit S: Settings): Int = {
       if(!index.isEmpty){
         maxx = if(envelope.isNull) index.values.flatten.maxBy(_.X).X else envelope.getMaxX
-        val epsilon = if(expansion) S.expansion else S.epsilon_prime
+        val epsilon = if(expansion) S.expansion else S.eprime
         math.ceil( (maxx - minx) / epsilon ).toInt
       } else {
         0
@@ -170,7 +170,7 @@ object MF_Utils extends Logging {
     def getColumns(implicit S: Settings): Int = {
       if(!index.isEmpty){
         maxy = if(envelope.isNull) index.values.flatten.maxBy(_.Y).Y else envelope.getMaxY
-        val epsilon = if(expansion) S.expansion else S.epsilon_prime
+        val epsilon = if(expansion) S.expansion else S.eprime
         math.ceil( (maxy - miny) / epsilon ).toInt
       } else {
         0
@@ -193,7 +193,7 @@ object MF_Utils extends Logging {
 
     def wkt(limit: Int = 2000)(implicit S: Settings, G: GeometryFactory): Seq[String] = {
       if(!index.isEmpty){
-        val epsilon = if(expansion) S.expansion else S.epsilon_prime
+        val epsilon = if(expansion) S.expansion else S.eprime
         val (mbr, n, m) = if(envelope.isNull){
           buildGrid
           ( new Envelope(minx, maxx, miny, maxy), getRows, getColumns )

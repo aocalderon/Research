@@ -155,16 +155,7 @@ object BFE extends Logging {
 
   def main(args: Array[String]): Unit = {
     implicit val params = new Params(args)
-
-    implicit var S= Settings(
-      dataset = params.input(),
-      epsilon_prime = params.epsilon(),
-      mu = params.mu(),
-      method = "BFE",
-      scapacity = params.scapacity(),
-      tolerance = params.tolerance(),
-      debug = params.debug()
-    )
+    implicit var S: Settings = params.getSettings(args) // Initializing settings...
     implicit val geofactory = new GeometryFactory(new PrecisionModel(S.scale))
 
     val points = readPoints(S.dataset)
