@@ -177,9 +177,9 @@ object PFlocks extends Logging {
 
           Iterator(flocks_and_partials)
         }
-        val t1 = (clocktime - t0) / 1e9
-        debug{
-          logger.info(s"${S.appId}|${S.scapacity}|${cells.size}|${S.sdist}|${S.step}|$index|PerCell|Safe|$t1")
+        val tSafe = (clocktime - t0) / 1e9
+        experiments {
+          logger.info(s"TIME|PER_CELL|Safe|$index|$tSafe")
         }
 
         r
@@ -215,14 +215,19 @@ object PFlocks extends Logging {
             }
           parents
         }
-        val t1 = (clocktime - t0) / 1e9
-        debug{
-          logger.info(s"${S.appId}|${S.scapacity}|${cells.size}|${S.sdist}|${S.step}|$index|PerCell|SPartial1|$t1")
+        val tSpartial1 = (clocktime - t0) / 1e9
+        experiments {
+          logger.info(s"TIME|PER_CELL|SPartial1|$index|$tSpartial1")
         }
 
         R
       }.cache
-      val cids = spartialsRDD_prime.map(_._1).distinct().collect().zipWithIndex.toMap
+      val cids  = spartialsRDD_prime.map(_._1).distinct().collect().zipWithIndex.toMap
+      val nCids = cids.size 
+      debug{
+      	logger.info{s"INFO|CIDS|$nCids"}
+      }
+      
       val spartialsRDD = spartialsRDD_prime.map{ case(cid, partial) =>
         (cids(cid), partial)
       }.partitionBy(SimplePartitioner(cids.size)).mapPartitionsWithIndex{ (index, p_prime) =>
@@ -239,9 +244,9 @@ object PFlocks extends Logging {
           }
           val times = (0 to S.endtime).toList
           val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
-          val t1 = (clocktime - t0) / 1e9
-          debug{
-            logger.info(s"${S.appId}|${S.scapacity}|${cells.size}|${S.sdist}|${S.step}|$index|PerCell|SPartial2|$t1")
+          val tSpartial2 = (clocktime - t0) / 1e9
+          experiments {
+            logger.info(s"TIME|PER_CELL|SPartial2|$index|$tSpartial2")
           }
 
           R.toIterator
@@ -277,9 +282,9 @@ object PFlocks extends Logging {
         }
         val times = (0 to S.endtime).toList
         val R = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk]).filter{ f => cell.contains(f) }
-        val t1 = (clocktime - t0) / 1e9
-        debug{
-          logger.info(s"${S.appId}|${S.scapacity}|${cells.size}|${S.sdist}|${S.step}|$index|PerCell|TPartial|$t1")
+        val tTpartial = (clocktime - t0) / 1e9
+        experiments {
+            logger.info(s"TIME|PER_CELL|TPartial|$index|$tTpartial")
         }
 
         R.toIterator

@@ -323,6 +323,8 @@ case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 
 
   def debug[R](block: => R)(implicit S: Settings): Unit = { if(S.debug) block }
 
+  def experiments[R](block: => R)(implicit S: Settings): Unit = { if(S.experi) block }
+
   def save(filename: String)(content: Seq[String]): Unit = {
     val start = clocktime
     val f = new java.io.PrintWriter(filename)
