@@ -31,25 +31,25 @@ object Utils extends Logging {
     override def getPartition(key: Any): Int = key.asInstanceOf[Int]
   }
 
-  case class STPoint(point: Point, cid: Int = 0){
-    val userData = if(point.getUserData.isInstanceOf[Data]) point.getUserData.asInstanceOf[Data] else null
-    val oid = if(point.getUserData.isInstanceOf[Data]) userData.oid else -1
-    val tid = if(point.getUserData.isInstanceOf[Data]) userData.tid else -1
-    var count = 0
+  case class STPoint(point: Point, cid: Int = 0) {
+    val userData = if (point.getUserData.isInstanceOf[Data]) point.getUserData.asInstanceOf[Data] else null
+    val oid      = if (point.getUserData.isInstanceOf[Data]) userData.oid else -1
+    val tid      = if (point.getUserData.isInstanceOf[Data]) userData.tid else -1
+    var count    = 0
 
     def envelope: Envelope = point.getEnvelopeInternal
 
     def distance(other: STPoint): Double = point.distance(other.point)
 
     def distanceToPoint(p: Point): Double = point.distance(p)
-    
+
     def X: Double = point.getX
 
     def Y: Double = point.getY
 
     def getNeighborhood(points: List[STPoint])(implicit S: Settings): List[STPoint] = {
-      for{
-        point <- points if{ this.distance(point) <= S.epsilon }
+      for {
+        point <- points if { this.distance(point) <= S.epsilon }
       } yield {
         point
       }
@@ -82,31 +82,30 @@ object Utils extends Logging {
     STPoint(G.createPoint())
   }
 
-  case class Disk(center: Point, pids: List[Int],
-    start: Int = 0, end: Int = 0) extends Ordered [Disk]{
+  case class Disk(center: Point, pids: List[Int], start: Int = 0, end: Int = 0) extends Ordered[Disk] {
 
-    var id = -1
+    var id                          = -1
     var locations: List[Coordinate] = List(center.getCoordinate)
-    var lineage: String = ""
-    var did: Int = -1
-    var dids: List[Int] = List(-1)
-    var subset: Boolean = false
-    var data: String = try {
-      center.getUserData.toString
-    }
-    catch {
-      case e: java.lang.NullPointerException => "NoData"
-    }
+    var lineage: String             = ""
+    var did: Int                    = -1
+    var dids: List[Int]             = List(-1)
+    var subset: Boolean             = false
+    var data: String                =
+      try {
+        center.getUserData.toString
+      } catch {
+        case e: java.lang.NullPointerException => "NoData"
+      }
 
-    val X: Float = center.getX.toFloat
-    val Y: Float = center.getY.toFloat
+    val X: Float   = center.getX.toFloat
+    val Y: Float   = center.getY.toFloat
     val count: Int = pids.size
-    val pidsText = pids.sorted.mkString(" ")
-    val SIG_SIZE = 128
+    val pidsText   = pids.sorted.mkString(" ")
+    val SIG_SIZE   = 128
 
     val signature: BitSet = {
       val signature_prime: BitSet = new BitSet
-      pids.foreach{ oid =>
+      pids.foreach { oid =>
         pureHash(signature_prime, oid)
       }
       signature_prime
@@ -120,11 +119,11 @@ object Utils extends Logging {
     }
 
     private def pureHash(signature: BitSet, oid: Int, size: Int = SIG_SIZE, seed: Int = 0, debug: Boolean = false): Unit = {
-      val murmur_value = math.abs( Murmur.hashInt2(oid, seed) )
-      val spooky_value = math.abs( Spooky.hash32(oid, seed) )
-      val murmur_pos = murmur_value % size
-      val spooky_pos = spooky_value % size
-      if(debug){
+      val murmur_value = math.abs(Murmur.hashInt2(oid, seed))
+      val spooky_value = math.abs(Spooky.hash32(oid, seed))
+      val murmur_pos   = murmur_value % size
+      val spooky_pos   = spooky_value % size
+      if (debug) {
         printHashInfo("murmur", oid, murmur_value, murmur_pos)
         printHashInfo("spooky", oid, spooky_value, spooky_pos)
       }
@@ -135,7 +134,7 @@ object Utils extends Logging {
     private def toBinaryString(bs: BitSet) = {
       val sb = new mutable.StringBuilder(SIG_SIZE)
       for (i <- SIG_SIZE - 1 to 0 by -1) {
-        val bit = if( bs(i) ) 1 else 0
+        val bit = if (bs(i)) 1 else 0
         sb.append(bit)
       }
       sb.reverse.toString
@@ -163,7 +162,7 @@ object Utils extends Logging {
     def bbox(r: Float): Box = Box(X - r, Y - r, X + r, Y + r)
 
     def archeryEntry(implicit S: Settings): archery.Entry[Disk] = archery.Entry(this.bbox(S.r.toFloat), this)
-    def pointEntry: archery.Entry[Disk] = archery.Entry(archery.Point(this.X, this.Y), this)
+    def pointEntry: archery.Entry[Disk]                         = archery.Entry(archery.Point(this.X, this.Y), this)
 
     def containedBy(cell: Cell): Boolean = cell.contains(this)
 
@@ -187,15 +186,7 @@ object Utils extends Logging {
       .filter(_.equals(this))
   }
 
-case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 0,
-    var nCandidates: Int = 0, var nMaximals: Int = 0,
-    var nCliques: Int = 0, var nMBC: Int = 0, var nBoxes: Int = 0,
-    var tCounts: Double = 0.0, var tRead: Double = 0.0, var tGrid: Double = 0.0,
-    var tCliques: Double = 0.0, var tMBC: Double = 0.0,
-    var tBand: Double = 0.0, var tSort: Double = 0.0,
-    var tPairs: Double = 0.0, var tCenters: Double = 0.0,
-    var tCandidates: Double = 0.0, var tMaximals: Double = 0.0,
-    var tBoxes: Double = 0.0, var tFilter: Double = 0.0){
+  case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 0, var nCandidates: Int = 0, var nMaximals: Int = 0, var nCliques: Int = 0, var nMBC: Int = 0, var nBoxes: Int = 0, var tCounts: Double = 0.0, var tRead: Double = 0.0, var tGrid: Double = 0.0, var tCliques: Double = 0.0, var tMBC: Double = 0.0, var tBand: Double = 0.0, var tSort: Double = 0.0, var tPairs: Double = 0.0, var tCenters: Double = 0.0, var tCandidates: Double = 0.0, var tMaximals: Double = 0.0, var tBoxes: Double = 0.0, var tFilter: Double = 0.0) {
 
     def printBFE(printTotal: Boolean = true): Unit = {
       log(s"BFE|Points     |${nPoints}")
@@ -210,7 +201,7 @@ case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 
       logt(s"BFE|Centers   |${tCenters}")
       logt(s"BFE|Candidates|${tCandidates}")
       logt(s"BFE|Maximals  |${tMaximals}")
-      if(printTotal){
+      if (printTotal) {
         val tTotal = tMaximals + tCandidates + tCenters + tPairs + tCliques + tRead + tGrid + tCounts
         logt(s"BFE|Total     |${tTotal}")
       }
@@ -231,7 +222,7 @@ case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 
       logt(s"PSI|Pairs     |$tPairs")
       logt(s"PSI|Centers   |$tCenters")
       logt(s"PSI|Candidates|$tCandidates")
-      logt(s"PSI|Boxes     |$tBoxes" )
+      logt(s"PSI|Boxes     |$tBoxes")
       logt(s"PSI|Filter    |$tFilter")
       if (printTotal) {
         val tTotal = tBand + tSort + tPairs + tCenters + tCandidates + tBoxes + tFilter
@@ -321,59 +312,57 @@ case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 
     log(msg)
   }
 
-  def debug[R](block: => R)(implicit S: Settings): Unit = { if(S.debug) block }
+  def debug[R](block: => R)(implicit S: Settings): Unit = { if (S.debug) block }
 
-  def experiments[R](block: => R)(implicit S: Settings): Unit = { if(S.experi) block }
+  def experiments[R](block: => R)(implicit S: Settings): Unit = { if (S.experi) block }
 
   def save(filename: String)(content: Seq[String]): Unit = {
     val start = clocktime
-    val f = new java.io.PrintWriter(filename)
+    val f     = new java.io.PrintWriter(filename)
     f.write(content.mkString(""))
     f.close
-    val end = clocktime
+    val end  = clocktime
     val time = "%.2f".format((end - start) / 1e9)
     println(s"Saved ${filename}\tin\t${time}s\t[${content.size} records].")
   }
 
   def timer[R](msg: String)(block: => R): R = {
-    val t0 = clocktime
-    val result = block    // call-by-name
-    val t1 = clocktime
+    val t0     = clocktime
+    val result = block // call-by-name
+    val t1     = clocktime
     logger.info("TIME|%-30s|%6.2f".format(msg, (t1 - t0) / 1e9))
     result
   }
 
   def timer[R](block: => R): (R, Double) = {
-    val t0 = clocktime
-    val result = block    // call-by-name
-    val t1 = clocktime
-    val time = (t1 - t0) / 1e9
+    val t0     = clocktime
+    val result = block // call-by-name
+    val t1     = clocktime
+    val time   = (t1 - t0) / 1e9
     (result, time)
   }
 
-  def computeCentres(p1: STPoint, p2:STPoint)
-    (implicit G: GeometryFactory, S: Settings): List[Point] = {
+  def computeCentres(p1: STPoint, p2: STPoint)(implicit G: GeometryFactory, S: Settings): List[Point] = {
 
-    calculateCenterCoordinates(p1.point, p2.point).map{ centre =>
+    calculateCenterCoordinates(p1.point, p2.point).map { centre =>
       centre.setUserData(s"${p1.oid} ${p2.oid}")
       centre
     }
   }
 
-  def calculateCenterCoordinates(p1: Point, p2: Point)
-    (implicit G: GeometryFactory, S: Settings): List[Point] = {
+  def calculateCenterCoordinates(p1: Point, p2: Point)(implicit G: GeometryFactory, S: Settings): List[Point] = {
 
-    val X: Double = p1.getX - p2.getX
-    val Y: Double = p1.getY - p2.getY
+    val X: Double  = p1.getX - p2.getX
+    val Y: Double  = p1.getY - p2.getY
     val D2: Double = math.pow(X, 2) + math.pow(Y, 2)
-    if (D2 != 0.0){
+    if (D2 != 0.0) {
       val root: Double = math.sqrt(math.abs(4.0 * (S.r2 / D2) - 1.0))
-      val h1: Double = ((X + Y * root) / 2) + p2.getX
-      val k1: Double = ((Y - X * root) / 2) + p2.getY
-      val h2: Double = ((X - Y * root) / 2) + p2.getX
-      val k2: Double = ((Y + X * root) / 2) + p2.getY
-      val h = G.createPoint(new Coordinate(h1,k1))
-      val k = G.createPoint(new Coordinate(h2,k2))
+      val h1: Double   = ((X + Y * root) / 2) + p2.getX
+      val k1: Double   = ((Y - X * root) / 2) + p2.getY
+      val h2: Double   = ((X - Y * root) / 2) + p2.getX
+      val k2: Double   = ((Y + X * root) / 2) + p2.getY
+      val h            = G.createPoint(new Coordinate(h1, k1))
+      val k            = G.createPoint(new Coordinate(h2, k2))
 
       List(h, k)
     } else {
@@ -382,26 +371,25 @@ case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 
     }
   }
 
-  def readPoints(input: String, isWKT: Boolean = false)
-    (implicit geofactory: GeometryFactory, S: Settings): List[STPoint] = {
+  def readPoints(input: String, isWKT: Boolean = false)(implicit geofactory: GeometryFactory, S: Settings): List[STPoint] = {
 
     val buffer = Source.fromFile(input)
     val points = buffer.getLines.zipWithIndex.toList
-      .map{ line =>
-        if(isWKT){
+      .map { line =>
+        if (isWKT) {
           val reader = new WKTReader(geofactory)
-          val i = line._2.toInt
-          val t = 0
-          val point = reader.read(line._1).asInstanceOf[Point]
+          val i      = line._2.toInt
+          val t      = 0
+          val point  = reader.read(line._1).asInstanceOf[Point]
 
           point.setUserData(Data(i, t))
           STPoint(point)
         } else {
-          val arr = line._1.split("\t")
-          val i = arr(0).toInt
-          val x = arr(1).toDouble
-          val y = arr(2).toDouble
-          val t = arr(3).toInt
+          val arr   = line._1.split("\t")
+          val i     = arr(0).toInt
+          val x     = arr(1).toDouble
+          val y     = arr(2).toDouble
+          val t     = arr(3).toInt
           val point = geofactory.createPoint(new Coordinate(x, y))
 
           val data = Data(i, t)

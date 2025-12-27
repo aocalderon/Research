@@ -16,37 +16,35 @@ import puj.Utils._
 import streaminer.SpookyHash
 
 object PSI_Utils extends Logging {
-  /**
-    * Simple wrapper for the JTS STRtree implementation.
-    * */
+
+  /** Simple wrapper for the JTS STRtree implementation.
+    */
   case class RTree[T]() extends STRtree() {
     var minx: Double = Double.MaxValue
     var miny: Double = Double.MaxValue
     var maxx: Double = Double.MinValue
     var maxy: Double = Double.MinValue
-    var pr:  STPoint = null
+    var pr: STPoint  = null
 
-    /**
-      * Return the most left bottom corner of all the points stored in the RTree.
-      * */
+    /** Return the most left bottom corner of all the points stored in the RTree.
+      */
     def left_bottom: Coordinate = new Coordinate(minx, miny)
 
-    /**
-      * Return the most right top corner of all the points stored in the RTree.
-      * */
+    /** Return the most right top corner of all the points stored in the RTree.
+      */
     def right_top: Coordinate = new Coordinate(maxx, maxy)
 
-    /**
-      * Return the extend of the points stored in the RTree.
-      * */
+    /** Return the extend of the points stored in the RTree.
+      */
     def envelope: Envelope = new Envelope(left_bottom, right_top)
 
-    /**
-      * Store the envelope attached to the element in the RTree.
+    /** Store the envelope attached to the element in the RTree.
       *
-      * @param envelope envelope of the element.
-      * @param element  the element to be stored.
-      * */
+      * @param envelope
+      *   envelope of the element.
+      * @param element
+      *   the element to be stored.
+      */
     def put[T](envelope: Envelope, element: T)(implicit S: Settings): Unit = {
       if (envelope.getMinX < minx) minx = envelope.getMinX - S.tolerance // to fix precision issues...
       if (envelope.getMinY < miny) miny = envelope.getMinY - S.tolerance
@@ -55,24 +53,30 @@ object PSI_Utils extends Logging {
       super.insert(envelope, element)
     }
 
-    /**
-      * Return a list of elements enclosed by an envelope.
+    /** Return a list of elements enclosed by an envelope.
       *
-      * @param envelope the envelope.
-      * @return list a list of elements.
-      * */
+      * @param envelope
+      *   the envelope.
+      * @return
+      *   list a list of elements.
+      */
     def get[T](envelope: Envelope): List[T] = {
-      super.query(envelope).asScala.map {
-        _.asInstanceOf[T]
-      }.toList
+      super
+        .query(envelope)
+        .asScala
+        .map {
+          _.asInstanceOf[T]
+        }
+        .toList
     }
 
-    /**
-      * Check if the envelope already exists in the RTree.
+    /** Check if the envelope already exists in the RTree.
       *
-      * @param envelope the envelope
-      * @return boolean true if exists, false otherwise.
-      * */
+      * @param envelope
+      *   the envelope
+      * @return
+      *   boolean true if exists, false otherwise.
+      */
     def exists[T](envelope: Envelope): Boolean = {
       this.get(envelope).exists { element: T =>
         if (element.isInstanceOf[Geometry]) {
@@ -83,29 +87,30 @@ object PSI_Utils extends Logging {
       }
     }
 
-    /**
-      * Return all the elements stored in the RTree.
+    /** Return all the elements stored in the RTree.
       *
-      * @return list a list of elements.
-      * */
+      * @return
+      *   list a list of elements.
+      */
     def getAll[T]: List[T] = super.query(this.envelope).asScala.map(_.asInstanceOf[T]).toList
 
   }
 
-  /**
-    * Stores the active boxes for candidates.
+  /** Stores the active boxes for candidates.
     *
-    * @constructor create a box from an envelope and the point it belongs
-    * @param hood an RTree with the points and envelope defining the box.
-    * */
+    * @constructor
+    *   create a box from an envelope and the point it belongs
+    * @param hood
+    *   an RTree with the points and envelope defining the box.
+    */
   case class Box(hood: RTree[STPoint]) extends Envelope(hood.envelope) {
-    val points: List[STPoint] = hood.getAll[STPoint]
-    val envelope: Envelope = hood.envelope
+    val points: List[STPoint]   = hood.getAll[STPoint]
+    val envelope: Envelope      = hood.envelope
     val left_bottom: Coordinate = hood.left_bottom
-    var disks: List[Disk] = _
+    var disks: List[Disk]       = _
     var pidsSet: Set[List[Int]] = _
-    var id: Int = -1
-    var pr: STPoint = NullPoint
+    var id: Int                 = -1
+    var pr: STPoint             = NullPoint
 
     def getCentroid: Coordinate = envelope.centre()
 
@@ -121,24 +126,25 @@ object PSI_Utils extends Logging {
     }
 
     def archeryEntry(implicit S: Settings): archery.Entry[Box] = archery.Entry(this.boundingBox, this)
-    
+
     def wkt(implicit G: GeometryFactory): String = G.toGeometry(this).toText
 
   }
 
-  /**
-    * Compute the envelope of all the points in the RTree.
+  /** Compute the envelope of all the points in the RTree.
     *
-    * @param tree the RTree.
-    * @return envelope the Envelope.
-    * */
+    * @param tree
+    *   the RTree.
+    * @return
+    *   envelope the Envelope.
+    */
   def getEnvelope(tree: ArcheryRTree[STPoint]): Envelope = {
 
     // the recursive function...
     @annotation.tailrec
     def get_envelope(points: List[STPoint], envelope: Envelope): Envelope = {
       points match {
-        case Nil => envelope
+        case Nil                     => envelope
         case headPoint :: tailPoints => {
           val x_min = if (envelope.getMinX < headPoint.X) envelope.getMinX else headPoint.X
           val y_min = if (envelope.getMinY < headPoint.Y) envelope.getMinY else headPoint.Y
