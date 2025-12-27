@@ -26,17 +26,12 @@ sparkBash := {
   val finder: PathFinder = (baseDirectory.value / "target") ** "*.jar"
   val jar                = finder.get.last
 
-  val log_file  = s"${System.getProperty("user.home")}/Spark/2.4/conf/log4j.properties "
-  val files     = s"$log_file "
-  val conf      = s"spark.driver.extraJavaOptions=-Dlog4j.configuration=file:$log_file "
   val jars      = s"${cpJars_paths.mkString(",")},${libJars_paths.mkString(",")} "
   val master    = s"local[*] "
   val classname = s"${args(0)} "
 
   val bash = List(
     s"PARAMS=(",
-    s" --files  $files \\",
-    s" --conf   $conf \\",
     s" --jars   $jars \\",
     s" --master $master \\",
     s" --class  $classname ",
