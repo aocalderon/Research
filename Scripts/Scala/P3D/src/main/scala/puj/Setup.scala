@@ -1,9 +1,10 @@
 package puj
 
-import puj.Utils.Settings
 import org.rogach.scallop._
+import java.time.Instant
+import org.apache.logging.log4j.scala.Logging
 
-object Setup{
+object Setup extends Logging {
   def getSettings(args: Seq[String]): Settings = { 
     val params = new Params(args)
     Settings(
@@ -28,6 +29,56 @@ object Setup{
       saves = params.saves()
     )
   }
+}
+
+case class Settings (
+    dataset: String   = "",
+    tag: String       = "",
+    output: String    = "",
+    method: String    = "",
+    master: String    = "",
+    eprime: Double    = 0.0,
+    sdist: Double     = 0.0,
+    fraction: Double  = 0.0,
+    tolerance: Double = 1e-3,
+    mu: Int 	        = 0,
+    delta: Int        = 0,
+    step: Int 	      = 0,
+    endtime: Int      = 0,
+    scapacity: Int    = 0,
+    tcapacity: Int    = 0,
+    debug: Boolean    = false,
+    print: Boolean    = false,
+    cached: Boolean   = false,
+    saves: Boolean    = false
+)  extends Logging {
+  val scale: Double = 1 / tolerance
+  val epsilon: Double = eprime + tolerance
+  val r: Double = (eprime / 2.0) + tolerance
+  val r2: Double = math.pow(eprime / 2.0, 2) + tolerance
+  val expansion: Double = eprime * 1.5 + tolerance
+  var partitions: Int = 1
+  var appId: String = s"${Instant.now()}"
+  val dataset_name: String = {
+    val d = dataset.split("/").last.split("\\.").head
+    if(d.startsWith("part-")) d.split("-")(1) else d
+  }
+
+  def printer: Unit = {
+    logger.info(s"${appId}|SETTINGS|DATASET=$dataset")
+    logger.info(s"${appId}|SETTINGS|EPSILON=$epsilon")
+    logger.info(s"${appId}|SETTINGS|MU=$mu")
+    logger.info(s"${appId}|SETTINGS|DELTA=$delta")
+    logger.info(s"${appId}|SETTINGS|METHOD=$method")
+    logger.info(s"${appId}|SETTINGS|SCAPACITY=$scapacity")
+    logger.info(s"${appId}|SETTINGS|TCAPACITY=$tcapacity")
+    logger.info(s"${appId}|SETTINGS|TOLERANCE=$tolerance")
+    logger.info(s"${appId}|SETTINGS|STEP=$step")
+    logger.info(s"${appId}|SETTINGS|SDIST=$sdist")
+    logger.info(s"${appId}|SETTINGS|DEBUG=$debug")
+  }
+  
+  override def toString: String = s"\nDATASET=$dataset\nEPSILON=$epsilon\nMU=$mu\nDELTA=$delta\nMETHOD=$method\nSCAPACITY=$scapacity\nTCAPACITY=$tcapacity\nTOLERANCE=$tolerance\n"
 }
 
 class Params(args: Seq[String]) extends ScallopConf(args) {

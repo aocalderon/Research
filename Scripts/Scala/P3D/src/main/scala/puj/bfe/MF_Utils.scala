@@ -14,7 +14,7 @@ import sys.process._
 
 import archery._
 
-import puj.Params
+import puj.Settings
 import puj.Utils._
 
 object MF_Utils extends Logging {

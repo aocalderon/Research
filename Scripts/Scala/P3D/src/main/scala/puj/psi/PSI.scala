@@ -12,8 +12,8 @@ import scala.annotation.tailrec
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 
-import puj._
-import puj.PSI_Utils._
+import puj.psi.PSI_Utils._
+import puj.{Setup, Settings}
 import puj.Utils._
 
 object PSI extends Logging {
@@ -554,8 +554,7 @@ object PSI extends Logging {
   }
 
   def main(args: Array[String]): Unit = {
-    implicit val params: Params = new Params(args)
-    implicit var S: Settings = params.getSettings(args) // Initializing settings...
+    implicit var S: Settings = Setup.getSettings(args) // Initializing settings...
     implicit val geofactory: GeometryFactory = new GeometryFactory(new PrecisionModel(S.scale))
 
     val points = readPoints(S.dataset)

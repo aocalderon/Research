@@ -1,4 +1,4 @@
-package puj
+package puj.psi
 
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.scala.Logging
@@ -10,7 +10,7 @@ import archery.{RTree => ArcheryRTree, Box => ArcheryBox}
 
 import scala.collection.JavaConverters._
 
-import puj._
+import puj.{Setup, Settings}
 import puj.Utils._
 
 import streaminer.SpookyHash

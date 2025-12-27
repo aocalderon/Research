@@ -10,7 +10,7 @@ import scala.collection.mutable.ListBuffer
 
 import archery._
 
-import puj.Params
+import puj.{Settings, Setup}
 import puj.bfe.MF_Utils._
 import puj.Utils._
 
@@ -154,8 +154,7 @@ object BFE extends Logging {
   }
 
   def main(args: Array[String]): Unit = {
-    implicit val params = new Params(args)
-    implicit var S: Settings = params.getSettings(args) // Initializing settings...
+    implicit var S: Settings = Setup.getSettings(args) // Initializing settings...
     implicit val geofactory = new GeometryFactory(new PrecisionModel(S.scale))
 
     val points = readPoints(S.dataset)
