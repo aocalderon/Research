@@ -204,9 +204,10 @@ object MF_Utils extends Logging {
         }
 
         if(n * m < limit){
-          val X_prime = (mbr.getMinX until mbr.getMaxX by epsilon).toList :+ mbr.getMaxX
+          val X_prime = (BigDecimal(mbr.getMinX) until BigDecimal(mbr.getMaxX) by BigDecimal(epsilon)).map(_.toDouble).toList :+ mbr.getMaxX
           val X = if(X_prime.size == 1) mbr.getMinX +: X_prime else X_prime
-          val Y_prime = (mbr.getMinY until mbr.getMaxY by epsilon).toList :+ mbr.getMaxY
+
+          val Y_prime = (BigDecimal(mbr.getMinY) until BigDecimal(mbr.getMaxY) by BigDecimal(epsilon)).map(_.toDouble).toList :+ mbr.getMaxY
           val Y = if(Y_prime.size == 1) mbr.getMinY +: Y_prime else Y_prime
 
           debug{

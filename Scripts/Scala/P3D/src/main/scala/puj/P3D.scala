@@ -19,22 +19,22 @@ import org.locationtech.jts.index.strtree.GeometryItemDistance
 import scala.collection.JavaConverters._
 import scala.util.Random
 
+import puj.Setup._
 import puj.Utils._
 
 object P3D extends Logging {
   
   def main(args: Array[String]): Unit = {
     logger.info("Starting P3D application")
-    implicit val params = new Params(args)
-    implicit var S: Settings = params.getSettings(args) // Initializing settings...
+    implicit var S: Settings = Setup.getSettings(args) // Initializing settings...
     implicit val G = new GeometryFactory(
-      new PrecisionModel(1.0 / params.tolerance())
+      new PrecisionModel(1.0 / S.tolerance)
     )
 
     implicit val spark: SparkSession = SparkSession
       .builder()
       .config("spark.serializer", classOf[KryoSerializer].getName)
-      .master(params.master())
+      .master(S.master)
       .appName("P3D")
       .getOrCreate()
     import spark.implicits._
@@ -43,7 +43,7 @@ object P3D extends Logging {
     val pointsRDD = spark.read
       .option("header", value = false)
       .option("delimiter", "\t")
-      .csv(params.input())
+      .csv(S.dataset)
       .rdd
       .map { row =>
         val oid = row.getString(0).toInt
@@ -60,7 +60,7 @@ object P3D extends Logging {
     logger.info(s"Total points loaded: $n")
 
     val (quadtree, cells, rtree, universe) =
-      Quadtree.build(pointsRDD, new Envelope(), capacity = params.scapacity(), fraction = params.fraction())
+      Quadtree.build(pointsRDD, new Envelope(), capacity = S.scapacity, fraction = S.fraction)
     logger.info(s"Quadtree built with ${cells.size} cells")
 
     debug{
@@ -123,7 +123,7 @@ object P3D extends Logging {
       logger.info("Temporal histogram TSV file saved for debugging")
     }
 
-    implicit val intervals = Interval.groupInstants(THist.collect().sortBy(_.instant).toSeq, capacity = params.tcapacity())
+    implicit val intervals = Interval.groupInstants(THist.collect().sortBy(_.instant).toSeq, capacity = S.tcapacity)
       .map{ group =>
         val begin = group.head.instant
         val end = group.last.instant

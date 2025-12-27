@@ -26,6 +26,7 @@ object Setup extends Logging {
       debug = params.debug(),
       print = params.print(),
       cached = params.cached(),
+      experi = params.experi(),
       saves = params.saves()
     )
   }
@@ -50,6 +51,7 @@ case class Settings (
     debug: Boolean    = false,
     print: Boolean    = false,
     cached: Boolean   = false,
+    experi: Boolean   = false,
     saves: Boolean    = false
 )  extends Logging {
   val scale: Double = 1 / tolerance
@@ -76,9 +78,8 @@ case class Settings (
     logger.info(s"${appId}|SETTINGS|STEP=$step")
     logger.info(s"${appId}|SETTINGS|SDIST=$sdist")
     logger.info(s"${appId}|SETTINGS|DEBUG=$debug")
+    logger.info(s"${appId}|SETTINGS|EXPERIMENTS=$experi")
   }
-  
-  override def toString: String = s"\nDATASET=$dataset\nEPSILON=$epsilon\nMU=$mu\nDELTA=$delta\nMETHOD=$method\nSCAPACITY=$scapacity\nTCAPACITY=$tcapacity\nTOLERANCE=$tolerance\n"
 }
 
 class Params(args: Seq[String]) extends ScallopConf(args) {
@@ -102,32 +103,8 @@ class Params(args: Seq[String]) extends ScallopConf(args) {
   val debug:  ScallopOption[Boolean] 	= opt[Boolean](short = 'd', default = Some(false), descr = "Enable debug mode")
   val print:  ScallopOption[Boolean] 	= opt[Boolean](short = 'p', default = Some(false), descr = "Enable print mode")
   val cached: ScallopOption[Boolean] 	= opt[Boolean](short = 'c', default = Some(false), descr = "Enable cached mode")
+  val experi: ScallopOption[Boolean] 	= opt[Boolean](short = 'e', default = Some(false), descr = "Enable experiments mode")
   val saves:  ScallopOption[Boolean] 	= opt[Boolean](short = 's', default = Some(false), descr = "Enable saves mode")
 
   verify()
-  
-  def getSettings(args: Seq[String]): Settings = {
-    val params = new Params(args)
-    Settings(
-      dataset = params.input(),
-      tag = params.tag(),
-      output = params.output(),
-      method = params.method(),
-      master = params.master(),
-      eprime = params.epsilon(),
-      sdist = params.sdist(),
-      fraction = params.fraction(),
-      tolerance = params.tolerance(),
-      mu = params.mu(),
-      delta = params.delta(),
-      step = params.step(),
-      endtime = params.endtime(),
-      scapacity = params.scapacity(),
-      tcapacity = params.tcapacity() ,
-      debug = params.debug(),
-      print = params.print(),
-      cached = params.cached(),
-      saves = params.saves()
-    )
-  }
 }

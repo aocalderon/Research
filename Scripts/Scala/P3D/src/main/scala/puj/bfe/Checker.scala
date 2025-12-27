@@ -74,8 +74,7 @@ object Checker extends Logging {
   }
 
   def main(args: Array[String]): Unit = {
-    implicit val params = new Params(args)
-    implicit var S: Settings = params.getSettings(args) // Initializing settings...
+    implicit var S: Settings = Setup.getSettings(args) // Initializing settings...
     implicit val geofactory = new GeometryFactory(new PrecisionModel(S.scale))
 
     val points = readPoints(S.dataset)
