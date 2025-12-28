@@ -1,6 +1,6 @@
 package puj.partitioning
 
-import edu.ucr.dblab.pflock.sedona.quadtree.{QuadRectangle, StandardQuadTree, Quadtree}
+import edu.ucr.dblab.pflock.sedona.quadtree.{QuadRectangle, StandardQuadTree}
 
 import org.apache.spark.{Partitioner, TaskContext}
 import org.apache.spark.serializer.KryoSerializer

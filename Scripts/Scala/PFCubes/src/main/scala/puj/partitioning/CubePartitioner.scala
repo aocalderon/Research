@@ -5,7 +5,6 @@ import org.locationtech.jts.geom.{GeometryFactory, Point}
 import org.apache.spark.rdd.RDD
 import org.apache.logging.log4j.scala.Logging
 
-import edu.ucr.dblab.pflock.sedona.quadtree.Quadtree.Cell   
 import edu.ucr.dblab.pflock.sedona.quadtree.{StandardQuadTree, QuadRectangle}
 
 import puj.Settings

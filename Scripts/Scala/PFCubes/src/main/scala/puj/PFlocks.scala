@@ -1,7 +1,6 @@
 package puj
 
 import edu.ucr.dblab.pflock.sedona.quadtree.{QuadRectangle, StandardQuadTree}
-import edu.ucr.dblab.pflock.sedona.quadtree.Quadtree.Cell
 
 import org.apache.spark.serializer.KryoSerializer
 import org.apache.spark.sql.SparkSession
@@ -13,6 +12,7 @@ import org.locationtech.jts.index.strtree.STRtree
 import scala.collection.JavaConverters.asScalaBufferConverter
 
 import puj.Utils._
+import puj.partitioning._
 import puj.bfe._
 import puj.psi._
 

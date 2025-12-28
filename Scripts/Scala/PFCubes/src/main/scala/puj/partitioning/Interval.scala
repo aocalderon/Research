@@ -17,7 +17,7 @@ case class Bin(instant: Int, count: Int) {
   override def toString(): String = s"[$instant, $count]"
 }
 
-class Interval(val index: Int, val begin: Int, val end: Int, val capacity: Int = 0) extends Serializable {
+case class Interval(index: Int, begin: Int, end: Int, capacity: Int = 0) {
   val duration: Int = end - begin
 
   override def toString(): String = s"$index -> [$begin $end]:$duration [$capacity]"
@@ -30,6 +30,14 @@ object Interval extends Logging {
   def apply(index: Int, begin: Int, end: Int, capacity: Int = 0): Interval =
     new Interval(index, begin, end, capacity)
 
+  /**
+    * Finds the interval that contains the given query value using binary search.
+    *
+    * @param bounds
+    * @param query
+    * @param intervals
+    * @return
+    */
   def findInterval(bounds: Array[Int], query: Integer)(implicit intervals: Map[Int, Interval]): Interval = {
     val index    = Arrays.binarySearch(bounds, query)
     val position = if (index < 0) -(index) - 2 else index
@@ -79,37 +87,5 @@ object Interval extends Logging {
 
     // After folding, we must add the last group being built (finalGroup), if it's not empty.
     if (finalGroup.nonEmpty) completedGroups :+ finalGroup else completedGroups
-  }
-
-  def main(args: Array[String]): Unit = {
-    val n          = 300
-    val nIntervals = 25
-    val size       = 25000
-
-    val I = (0 +: (0 to nIntervals - 2).map { i => Random.nextInt(n) }.toArray.sorted :+ n).distinct
-
-    implicit val intervals = I
-      .zip(I.tail)
-      .zipWithIndex
-      .map { case (t, i) =>
-        i -> Interval(i, t._1, t._2 - 1)
-      }
-      .toMap
-    val bounds = intervals.values.map(_.begin).toArray.sorted
-
-    val Q = (0 to size).map { i =>
-      Random.nextInt(n)
-    }.toList
-
-    Q foreach { query =>
-      val interval = findInterval(bounds, query)
-    }
-
-    var i = 0
-    while (i < Q.size) {
-      val query    = Q(i)
-      val interval = findInterval(bounds, query)
-      i += 1
-    }
   }
 }

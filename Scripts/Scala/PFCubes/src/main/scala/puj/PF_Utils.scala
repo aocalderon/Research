@@ -12,13 +12,13 @@ import org.locationtech.jts.geom.{Envelope, GeometryFactory, Point}
 import org.locationtech.jts.index.strtree.STRtree
 
 import edu.ucr.dblab.pflock.sedona.quadtree._
-import edu.ucr.dblab.pflock.sedona.quadtree.Quadtree.Cell
 
 import scala.annotation.tailrec
 import scala.collection.JavaConverters.asScalaBufferConverter
 import scala.collection.mutable
 
 import puj.Utils._
+import puj.partitioning.Cell
 import puj.bfe._
 import puj.psi._
 

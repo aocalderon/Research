@@ -17,8 +17,9 @@ import scala.util.Random
 import scala.collection.mutable
 import scala.collection.mutable.BitSet
 
-import edu.ucr.dblab.pflock.sedona.quadtree.Quadtree.Cell
 import scala.annotation.meta.param
+
+import puj.partitioning.Cell
 
 object Utils extends Logging {
 
