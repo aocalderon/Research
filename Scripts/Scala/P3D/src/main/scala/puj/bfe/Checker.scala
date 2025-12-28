@@ -11,7 +11,7 @@ import scala.io.Source
 
 import sys.process._
 
-import puj.P3D._
+import puj.partitioning.P3D._
 import puj.Utils._
 import puj.psi._
 import puj.bfe._

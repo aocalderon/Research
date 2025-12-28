@@ -1,4 +1,4 @@
-package puj
+package puj.partitioning
 
 import scala.util.Random
 import java.util.Arrays
@@ -101,19 +101,15 @@ object Interval extends Logging {
       Random.nextInt(n)
     }.toList
 
-    Timer.time("Foreach") {
-      Q foreach { query =>
-        val interval = findInterval(bounds, query)
-      }
+    Q foreach { query =>
+      val interval = findInterval(bounds, query)
     }
 
-    Timer.time("While") {
-      var i = 0
-      while (i < Q.size) {
-        val query    = Q(i)
-        val interval = findInterval(bounds, query)
-        i += 1
-      }
+    var i = 0
+    while (i < Q.size) {
+      val query    = Q(i)
+      val interval = findInterval(bounds, query)
+      i += 1
     }
   }
 }

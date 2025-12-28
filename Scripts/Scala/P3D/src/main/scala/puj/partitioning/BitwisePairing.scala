@@ -1,4 +1,4 @@
-package puj
+package puj.partitioning
 
 object BitwisePairing {
 

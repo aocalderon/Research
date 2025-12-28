@@ -1,4 +1,4 @@
-package puj
+package puj.partitioning
 
 import edu.ucr.dblab.pflock.sedona.quadtree.{QuadRectangle, StandardQuadTree, Quadtree}
 
@@ -17,6 +17,7 @@ import scala.util.Random
 
 import puj.Setup._
 import puj.Utils._
+import puj.{Setup, Settings}
 
 object P3D extends Logging {
 

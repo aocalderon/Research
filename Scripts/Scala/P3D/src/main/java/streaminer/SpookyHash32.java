@@ -15,9 +15,6 @@
  */
 package streaminer;
 
-import java.math.BigInteger;
-import java.util.Arrays;
-
 /**
  * A non-cryptographic, 128-bit hash function.<p>
  * SpookyHash is a Java implementation of Bob Jenkins' <i>SpookyHash V2</i> 
@@ -1139,7 +1136,6 @@ public class SpookyHash32 {
 
     public static int hashInt(int src, int seed) {
         int[] seedResult = {seed, seed};
-        int start = 0;
         int length = 1;
         int A_BITS = 0xdeadbeef;
         int h0, h1, h2, h3;
@@ -1149,8 +1145,6 @@ public class SpookyHash32 {
         h3 = A_BITS;
 
         int remaining = length;
-        int pos = start;
-
         h3 += ( (length << 3) ) << 56;
 
         if (remaining > 0) {
