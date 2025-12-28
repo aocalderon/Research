@@ -68,6 +68,7 @@ case class Settings(
 
   def printer: Unit = {
     logger.info(s"${appId}|SETTINGS|DATASET=$dataset")
+    logger.info(s"${appId}|SETTINGS|MASTER=$master")
     logger.info(s"${appId}|SETTINGS|EPSILON=$epsilon")
     logger.info(s"${appId}|SETTINGS|MU=$mu")
     logger.info(s"${appId}|SETTINGS|DELTA=$delta")

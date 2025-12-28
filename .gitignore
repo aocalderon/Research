@@ -39,21 +39,21 @@ Scripts/Scala/notebooks/.ipynb_checkpoints/*
 Scripts/Scala/PFlock/bash/target/routing-graph-cache/*
 Scripts/Scala/PFlock/target/routing-graph-cache/*
 
-Scripts/Scala/P3D/target/*
-Scripts/Scala/P3D/project/*
-Scripts/Scala/P3D/.vscode/*
-Scripts/Scala/P3D/.bsp/*
-Scripts/Scala/P3D/.bsp/sbt.json
-Scripts/Scala/P3D/.idea/*
-Scripts/Scala/P3D/.idea/workspace.xml
-Scripts/Scala/P3D/.ensime
-Scripts/Scala/P3D/.ensime_cache/*
-Scripts/Scala/P3D/.classpath
-Scripts/Scala/P3D/.project
-Scripts/Scala/P3D/.settings/*
-Scripts/Scala/P3D/.bloop/
-Scripts/Scala/P3D/.metals/
-Scripts/Scala/P3D/.scalafmt.conf
+Scripts/Scala/PFCubes/target/*
+Scripts/Scala/PFCubes/project/*
+Scripts/Scala/PFCubes/.vscode/*
+Scripts/Scala/PFCubes/.bsp/*
+Scripts/Scala/PFCubes/.bsp/sbt.json
+Scripts/Scala/PFCubes/.idea/*
+Scripts/Scala/PFCubes/.idea/workspace.xml
+Scripts/Scala/PFCubes/.ensime
+Scripts/Scala/PFCubes/.ensime_cache/*
+Scripts/Scala/PFCubes/.classpath
+Scripts/Scala/PFCubes/.project
+Scripts/Scala/PFCubes/.settings/*
+Scripts/Scala/PFCubes/.bloop/
+Scripts/Scala/PFCubes/.metals/
+Scripts/Scala/PFCubes/.scalafmt.conf
 
 Scripts/Scala/legacy/ICPE/target/*
 Scripts/Scala/legacy/ICPE/project/*

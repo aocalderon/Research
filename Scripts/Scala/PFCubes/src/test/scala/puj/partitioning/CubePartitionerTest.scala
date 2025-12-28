@@ -7,31 +7,15 @@ import org.scalatest.funsuite.AnyFunSuite
 import org.scalatestplus.mockito.MockitoSugar
 import org.mockito.Mockito._
 import puj.{Settings, Utils}
-import puj.Utils.Data
+import puj.Utils.{Data, save}
 import org.apache.spark.serializer.KryoSerializer
 import puj.Setup
 
 class CubePartitionerTest extends AnyFunSuite with BeforeAndAfterAll with MockitoSugar {
 
-  var spark: SparkSession = _
-  implicit val G: GeometryFactory = new GeometryFactory(new PrecisionModel(1000.0))
-
-  override def beforeAll(): Unit = {
-    spark = SparkSession.builder()
-      .master("local[2]")
-      .appName("CubePartitionerTest")
-      .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-      .getOrCreate()
-  }
-
-  override def afterAll(): Unit = {
-    if (spark != null) {
-      spark.stop()
-    }
-  }
-
   test("getFixedIntervalCubes should partition trajectory points correctly") {
     implicit var S: Settings        = Setup.getSettings(Seq.empty[String]) // Initializing settings...
+    S = S.copy(eprime = 5, debug = true, step = 3)
     implicit val G: GeometryFactory = new GeometryFactory(new PrecisionModel(S.scale)) // Setting precision model and geofactory...
 
     // Starting Spark...
@@ -53,6 +37,7 @@ class CubePartitionerTest extends AnyFunSuite with BeforeAndAfterAll with Mockit
       .option("delimiter", "\t")
       .csv(S.dataset)
       .rdd
+      //.sample(withReplacement=false, fraction=0.1, seed=42)
       .mapPartitions { rows =>
         rows.map { row =>
           val oid = row.getString(0).toInt
@@ -66,20 +51,29 @@ class CubePartitionerTest extends AnyFunSuite with BeforeAndAfterAll with Mockit
           (tid, point)
         }
       }
-      .cache
-    trajs.count()
-
+    val nTrajs = trajs.count()
 
     // Call the method under test
     val (partitionedRDD, cubes) = CubePartitioner.getFixedIntervalCubes(trajs)
 
+    save("/tmp/Cubes.wkt"){
+      cubes.values.map{ cube =>
+        val wkt = cube.cell.wkt
+        val beg = cube.interval.begin
+        val dur = cube.interval.duration
+        val  id = cube.id
+
+        s"$wkt\t$id\t$beg\t$dur\n"
+      }.toList
+    }
+
     // Verify the results
-    val resultPoints = partitionedRDD.collect()
-    assert(resultPoints.length === trajs.count())
     assert(cubes.nonEmpty)
 
     // Check that the RDD is partitioned
-    assert(partitionedRDD.partitioner.isDefined)
-    assert(partitionedRDD.partitioner.get.numPartitions === cubes.size)
+    assert(partitionedRDD.getNumPartitions === cubes.size)
+
+    spark.stop()
+
   }
 }

@@ -1,6 +1,0 @@
-[0m[[0m[0mdebug[0m] [0m[0mjavaOptions: Vector(-Xmx8G, -Xms4G, --add-opens=java.base/java.lang=ALL-UNNAMED, --add-opens=java.base/java.lang.invoke=ALL-UNNAMED, --add-opens=java.base/java.lang.reflect=ALL-UNNAMED, --add-opens=java.base/java.io=ALL-UNNAMED, --add-opens=java.base/java.net=ALL-UNNAMED, --add-opens=java.base/java.nio=ALL-UNNAMED, --add-opens=java.base/java.util=ALL-UNNAMED, --add-opens=java.base/java.util.concurrent=ALL-UNNAMED, --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED, --add-opens=java.base/sun.nio.ch=ALL-UNNAMED, --add-opens=java.base/sun.nio.cs=ALL-UNNAMED, --add-opens=java.base/sun.security.action=ALL-UNNAMED, --add-opens=java.base/sun.util.calendar=ALL-UNNAMED, --add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED)[0m
-[0m[[0m[0mdebug[0m] [0m[0mForking tests - parallelism = false[0m
-[0m[[0m[0mdebug[0m] [0m[0mCreate a single-thread test executor[0m
-[0m[[0m[0mdebug[0m] [0m[0mRunner for org.scalatest.tools.Framework produced 1 initial tasks for 1 tests.[0m
-[0m[[0m[0mdebug[0m] [0m[0m  Running TaskDef(puj.partitioning.CubePartitionerTest, sbt.ForkMain$SubclassFingerscan@520a3426, false, [SuiteSelector])[0m
-[0m[[0m[0minfo[0m] [0m[0m[32mCubePartitionerTest:[0m[0m

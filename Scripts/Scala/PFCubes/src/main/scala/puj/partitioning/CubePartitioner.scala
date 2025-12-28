@@ -9,7 +9,7 @@ import edu.ucr.dblab.pflock.sedona.quadtree.{StandardQuadTree, QuadRectangle}
 
 import puj.Settings
 import puj.PF_Utils
-import puj.Utils.{SimplePartitioner, Data}
+import puj.Utils.{SimplePartitioner, Data, debug}
 
 import scala.collection.JavaConverters.asScalaBufferConverter
 
@@ -46,6 +46,10 @@ object CubePartitioner extends Logging {
         quadtree.assignPartitionLineage()
         quadtree.dropElements()
 
+      debug{
+        logger.info(s"Quadtree done!")
+      }
+
         // Getting cells...
         implicit val cells: Map[Int, Cell] = quadtree.getLeafZones.asScala.map { leaf =>
             val envelope = leaf.getEnvelope
@@ -54,10 +58,19 @@ object CubePartitioner extends Logging {
             id -> Cell(id, envelope, leaf.lineage)
         }.toMap
 
+      debug{
+        logger.info(s"Cells done!")
+      }
+
+
         // FIXME: Currently, we are assuming that the time instants are continuous from 0 to endtime.
         // Getting intervals...
         val times_prime = (0 to S.endtime).toList
         implicit val intervals: Map[Int, Interval] = Interval.intervalsBySize(times_prime, S.step)
+
+      debug{
+        logger.info(s"Intervals done!")
+      }
 
         // Assigning points to spatio-temporal partitions...
         val trajs_prime = trajs
@@ -81,6 +94,10 @@ object CubePartitioner extends Logging {
             }
             .cache
 
+      debug{
+        logger.info(s"Partitions done!")
+      }
+
         // Creating cubes...
         val cubes: Map[Int, Cube] = trajs_prime.map { _._1 }.distinct().collect()
             .zipWithIndex.map{ case (st_index, cube_id) =>
@@ -95,7 +112,11 @@ object CubePartitioner extends Logging {
             cube.st_index -> cube_id
         }.toMap
 
-        // Partitioning trajectory points by cube_id...
+      debug{
+        logger.info(s"Cubes done!")
+      }
+
+        // Re-partitioning trajectory points by cube_id...
         val trajs_partitioned = trajs_prime
             .map { case (st_index, point) =>
                 val cube_id = cubes_reversed(st_index)
@@ -107,6 +128,10 @@ object CubePartitioner extends Logging {
                 val data = p.getUserData.asInstanceOf[Data]
                 data.tid <= S.endtime
             }
+
+      debug{
+        logger.info(s"Re-partitions done!")
+      }
 
         (trajs_partitioned, cubes)
     }
