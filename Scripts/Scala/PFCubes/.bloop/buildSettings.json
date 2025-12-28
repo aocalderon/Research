@@ -2,14 +2,14 @@
     "version": "1.4.0",
     "project": {
         "name": "buildSettings",
-        "directory": "/opt/Research/Scripts/Scala/P3D",
-        "workspaceDir": "/opt/Research/Scripts/Scala/P3D",
+        "directory": "/opt/Research/Scripts/Scala/PFCubes",
+        "workspaceDir": "/opt/Research/Scripts/Scala/PFCubes",
         "sources": [
-            "/opt/Research/Scripts/Scala/P3D/src/main/scala",
-            "/opt/Research/Scripts/Scala/P3D/src/main/scala-2.12",
-            "/opt/Research/Scripts/Scala/P3D/src/main/scala-2",
-            "/opt/Research/Scripts/Scala/P3D/src/main/java",
-            "/opt/Research/Scripts/Scala/P3D/target/scala-2.12/src_managed/main"
+            "/opt/Research/Scripts/Scala/PFCubes/src/main/scala",
+            "/opt/Research/Scripts/Scala/PFCubes/src/main/scala-2.12",
+            "/opt/Research/Scripts/Scala/PFCubes/src/main/scala-2",
+            "/opt/Research/Scripts/Scala/PFCubes/src/main/java",
+            "/opt/Research/Scripts/Scala/PFCubes/target/scala-2.12/src_managed/main"
         ],
         "dependencies": [
             
@@ -167,11 +167,11 @@
             "/home/and/.cache/coursier/v1/https/repo1.maven.org/maven2/com/google/flatbuffers/flatbuffers-java/1.12.0/flatbuffers-java-1.12.0.jar",
             "/home/and/.cache/coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-transport-native-epoll/4.1.96.Final/netty-transport-native-epoll-4.1.96.Final.jar"
         ],
-        "out": "/opt/Research/Scripts/Scala/P3D/.bloop/buildSettings",
-        "classesDir": "/opt/Research/Scripts/Scala/P3D/.bloop/buildSettings/scala-2.12/classes",
+        "out": "/opt/Research/Scripts/Scala/PFCubes/.bloop/buildSettings",
+        "classesDir": "/opt/Research/Scripts/Scala/PFCubes/.bloop/buildSettings/scala-2.12/classes",
         "resources": [
-            "/opt/Research/Scripts/Scala/P3D/src/main/resources",
-            "/opt/Research/Scripts/Scala/P3D/target/scala-2.12/resource_managed/main"
+            "/opt/Research/Scripts/Scala/PFCubes/src/main/resources",
+            "/opt/Research/Scripts/Scala/PFCubes/target/scala-2.12/resource_managed/main"
         ],
         "scala": {
             "organization": "org.scala-lang",
@@ -264,8 +264,8 @@
             "config": {
                 "home": "/opt/java/17.0.16",
                 "options": [
-                    "-Duser.dir=/opt/Research/Scripts/Scala/P3D",
-                    "-Xmx16G",
+                    "-Duser.dir=/opt/Research/Scripts/Scala/PFCubes",
+                    "-Xmx8G",
                     "-Xms4G",
                     "--add-opens=java.base/java.lang=ALL-UNNAMED",
                     "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
@@ -289,8 +289,8 @@
             "runtimeConfig": {
                 "home": "/opt/java/17.0.16",
                 "options": [
-                    "-Duser.dir=/opt/Research/Scripts/Scala/P3D",
-                    "-Xmx16G",
+                    "-Duser.dir=/opt/Research/Scripts/Scala/PFCubes",
+                    "-Xmx8G",
                     "-Xms4G",
                     "--add-opens=java.base/java.lang=ALL-UNNAMED",
                     "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
@@ -309,7 +309,7 @@
                 ]
             },
             "classpath": [
-                "/opt/Research/Scripts/Scala/P3D/.bloop/buildSettings/scala-2.12/classes",
+                "/opt/Research/Scripts/Scala/PFCubes/.bloop/buildSettings/scala-2.12/classes",
                 "/home/and/.sbt/boot/scala-2.12.20/lib/scala-library.jar",
                 "/home/and/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-core_2.12/3.5.7/spark-core_2.12-3.5.7.jar",
                 "/home/and/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-sql_2.12/3.5.7/spark-sql_2.12-3.5.7.jar",

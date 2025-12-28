@@ -1342,38 +1342,6 @@ object PF_Utils extends Logging {
     new Envelope(minX, maxX, minY, maxY)
   }
 
-  /**
-   * Cuts a sequence into n approximately equal parts and maps each element to its part index.
-   * @param xs The input sequence to be cut.
-   * @param n  The number of parts to cut the sequence into.
-   * @param k  An optional offset to start indexing parts from.
-   * @tparam A The type of elements in the input sequence.    
-   * @return A map where each element from the input sequence is associated with its part index.
-   */ 
-  def cut[A](xs: Seq[A], n: Int, k: Int = 0): Map[A, Int] = {
-    val m       = xs.length
-    val targets = (0 to n).map { x => math.round((x.toDouble * m) / n).toInt }
-
-    @tailrec
-    def snip(xs: Seq[A], ns: Seq[Int], got: Vector[Seq[A]]): Vector[Seq[A]] = {
-      if (ns.length < 2) got
-      else {
-        val (i, j) = (ns.head, ns.tail.head)
-        snip(xs.drop(j - i), ns.tail, got :+ xs.take(j - i))
-      }
-    }
-    val intervals = snip(xs, targets, Vector.empty)
-    intervals.zipWithIndex.flatMap { case (interval, id) =>
-      interval.map { x => (x, id) }
-    }.toMap
-  }
-
-  def getTime(p: Point)(implicit G: GeometryFactory): Int = p.getUserData.asInstanceOf[Data].tid
-
-  def getTemporalFixedPartitions(): RDD[Point] = {
-    ???
-  }
-
   def getEnvelope2(dataset: RDD[Point]): Envelope = {
     val Xs = dataset.map(_.getX).cache
     val Ys = dataset.map(_.getY).cache
@@ -1385,4 +1353,7 @@ object PF_Utils extends Logging {
 
     new Envelope(minX, maxX, minY, maxY)
   }
+
+  def getTime(p: Point)(implicit G: GeometryFactory): Int = p.getUserData.asInstanceOf[Data].tid
+
 }

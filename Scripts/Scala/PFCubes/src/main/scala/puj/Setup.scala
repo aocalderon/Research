@@ -83,10 +83,10 @@ case class Settings(
 }
 
 class Params(args: Seq[String]) extends ScallopConf(args) {
-  val filename = "/opt/Research/Datasets/gaussian/P25K.wkt"
+  val filename = "/home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv"
 
   val input: ScallopOption[String]     = opt[String](default = Some(filename))
-  val master: ScallopOption[String]    = opt[String](default = Some("local[3]"))
+  val master: ScallopOption[String]    = opt[String](default = Some("local[2]"))
   val tag: ScallopOption[String]       = opt[String](default = Some(""))
   val method: ScallopOption[String]    = opt[String](default = Some("PSI"))
   val output: ScallopOption[String]    = opt[String](default = Some("/tmp/"))

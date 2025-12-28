@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite hostname="and-Inspiron-5584" name="puj.partitioning.CubePartitionerTest" tests="1" errors="0" failures="1" skipped="0" time="2.35" timestamp="2025-12-28T16:25:20">
+          <properties>
+      <property name="java.specification.version" value="17"/><property name="sun.jnu.encoding" value="UTF-8"/><property name="sun.arch.data.model" value="64"/><property name="java.vendor.url" value="https://java.oracle.com/"/><property name="sun.boot.library.path" value="/opt/java/17.0.16/lib"/><property name="sun.java.command" value="/home/and/.cache/coursier/arc/https/github.com/sbt/sbt/releases/download/v1.11.7/sbt-1.11.7.zip/sbt/bin/sbt-launch.jar"/><property name="jdk.debug" value="release"/><property name="sun.stderr.encoding" value="UTF-8"/><property name="java.specification.vendor" value="Oracle Corporation"/><property name="java.version.date" value="2025-07-15"/><property name="java.home" value="/opt/java/17.0.16"/><property name="file.separator" value="/"/><property name="java.vm.compressedOopsMode" value="32-bit"/><property name="line.separator" value="
+"/><property name="sun.stdout.encoding" value="UTF-8"/><property name="java.vm.specification.vendor" value="Oracle Corporation"/><property name="java.specification.name" value="Java Platform API Specification"/><property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/><property name="java.runtime.version" value="17.0.16+12-LTS-247"/><property name="user.name" value="and"/><property name="log4j.ignoreTCL" value="true"/><property name="file.encoding" value="UTF-8"/><property name="jnidispatch.path" value="/home/and/.cache/JNA/temp/jna10056600408334640320.tmp"/><property name="jna.loaded" value="true"/><property name="java.io.tmpdir" value="/tmp"/><property name="java.version" value="17.0.16"/><property name="java.vm.specification.name" value="Java Virtual Machine Specification"/><property name="native.encoding" value="UTF-8"/><property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib"/><property name="java.vendor" value="Oracle Corporation"/><property name="java.specification.maintenance.version" value="1"/><property name="scala.ext.dirs" value="/home/and/.sbt/1.0/java9-rt-ext-oracle_corporation_17_0_16"/><property name="sun.io.unicode.encoding" value="UnicodeLittle"/><property name="java.class.path" value="/home/and/.cache/coursier/arc/https/github.com/sbt/sbt/releases/download/v1.11.7/sbt-1.11.7.zip/sbt/bin/sbt-launch.jar"/><property name="java.vm.vendor" value="Oracle Corporation"/><property name="jline.shutdownhook" value="false"/><property name="user.timezone" value="America/Bogota"/><property name="java.vm.specification.version" value="17"/><property name="os.name" value="Linux"/><property name="sun.java.launcher" value="SUN_STANDARD"/><property name="user.country" value="US"/><property name="sun.cpu.endian" value="little"/><property name="user.home" value="/home/and"/><property name="user.language" value="en"/><property name="sbt.script" value="/home/and/.cache/coursier/arc/https/github.com/sbt/sbt/releases/download/v1.11.7/sbt-1.11.7.zip/sbt/bin/sbt"/><property name="sbt.ipcsocket.tmpdir" value="/run/user/1000/.sbt26bde52e/ipcsocket"/><property name="swoval.tmpdir" value="/run/user/1000/.sbt26bde52e/swoval"/><property name="jline.esc.timeout" value="0"/><property name="path.separator" value=":"/><property name="os.version" value="6.14.0-37-generic"/><property name="jna.nosys" value="true"/><property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/><property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/><property name="jna.platform.library.path" value="/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu:/usr/lib64:/lib64:/usr/lib:/lib:/lib32:/usr/lib/x86_64-linux-gnu/libfakeroot"/><property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/><property name="user.dir" value="/opt/Research/Scripts/Scala/PFCubes"/><property name="os.arch" value="amd64"/><property name="java.vm.info" value="mixed mode, sharing"/><property name="java.vm.version" value="17.0.16+12-LTS-247"/><property name="java.class.version" value="61.0"/>
+    </properties>
+          <testcase classname="puj.partitioning.CubePartitionerTest" name="getFixedIntervalCubes should partition trajectory points correctly" time="2.35">
+                      <failure message="org.apache.spark.SparkException: Task not serializable" type="sbt.ForkMain$ForkError">sbt.ForkMain$ForkError: org.apache.spark.SparkException: Task not serializable
+	at org.apache.spark.util.ClosureCleaner$.ensureSerializable(ClosureCleaner.scala:444)
+	at org.apache.spark.util.ClosureCleaner$.clean(ClosureCleaner.scala:416)
+	at org.apache.spark.util.ClosureCleaner$.clean(ClosureCleaner.scala:163)
+	at org.apache.spark.SparkContext.clean(SparkContext.scala:2669)
+	at org.apache.spark.rdd.RDD.$anonfun$map$1(RDD.scala:418)
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)
+	at org.apache.spark.rdd.RDD.withScope(RDD.scala:410)
+	at org.apache.spark.rdd.RDD.map(RDD.scala:417)
+	at puj.partitioning.CubePartitionerTest.$anonfun$new$1(CubePartitionerTest.scala:49)
+	at org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+	at org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
+	at org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+	at org.scalatest.Transformer.apply(Transformer.scala:22)
+	at org.scalatest.Transformer.apply(Transformer.scala:20)
+	at org.scalatest.funsuite.AnyFunSuiteLike$$anon$1.apply(AnyFunSuiteLike.scala:226)
+	at org.scalatest.TestSuite.withFixture(TestSuite.scala:196)
+	at org.scalatest.TestSuite.withFixture$(TestSuite.scala:195)
+	at org.scalatest.funsuite.AnyFunSuite.withFixture(AnyFunSuite.scala:1564)
+	at org.scalatest.funsuite.AnyFunSuiteLike.invokeWithFixture$1(AnyFunSuiteLike.scala:224)
+	at org.scalatest.funsuite.AnyFunSuiteLike.$anonfun$runTest$1(AnyFunSuiteLike.scala:236)
+	at org.scalatest.SuperEngine.runTestImpl(Engine.scala:306)
+	at org.scalatest.funsuite.AnyFunSuiteLike.runTest(AnyFunSuiteLike.scala:236)
+	at org.scalatest.funsuite.AnyFunSuiteLike.runTest$(AnyFunSuiteLike.scala:218)
+	at org.scalatest.funsuite.AnyFunSuite.runTest(AnyFunSuite.scala:1564)
+	at org.scalatest.funsuite.AnyFunSuiteLike.$anonfun$runTests$1(AnyFunSuiteLike.scala:269)
+	at org.scalatest.SuperEngine.$anonfun$runTestsInBranch$1(Engine.scala:413)
+	at scala.collection.immutable.List.foreach(List.scala:431)
+	at org.scalatest.SuperEngine.traverseSubNodes$1(Engine.scala:401)
+	at org.scalatest.SuperEngine.runTestsInBranch(Engine.scala:396)
+	at org.scalatest.SuperEngine.runTestsImpl(Engine.scala:475)
+	at org.scalatest.funsuite.AnyFunSuiteLike.runTests(AnyFunSuiteLike.scala:269)
+	at org.scalatest.funsuite.AnyFunSuiteLike.runTests$(AnyFunSuiteLike.scala:268)
+	at org.scalatest.funsuite.AnyFunSuite.runTests(AnyFunSuite.scala:1564)
+	at org.scalatest.Suite.run(Suite.scala:1114)
+	at org.scalatest.Suite.run$(Suite.scala:1096)
+	at org.scalatest.funsuite.AnyFunSuite.org$scalatest$funsuite$AnyFunSuiteLike$$super$run(AnyFunSuite.scala:1564)
+	at org.scalatest.funsuite.AnyFunSuiteLike.$anonfun$run$1(AnyFunSuiteLike.scala:273)
+	at org.scalatest.SuperEngine.runImpl(Engine.scala:535)
+	at org.scalatest.funsuite.AnyFunSuiteLike.run(AnyFunSuiteLike.scala:273)
+	at org.scalatest.funsuite.AnyFunSuiteLike.run$(AnyFunSuiteLike.scala:272)
+	at puj.partitioning.CubePartitionerTest.org$scalatest$BeforeAndAfterAll$$super$run(CubePartitionerTest.scala:12)
+	at org.scalatest.BeforeAndAfterAll.liftedTree1$1(BeforeAndAfterAll.scala:213)
+	at org.scalatest.BeforeAndAfterAll.run(BeforeAndAfterAll.scala:210)
+	at org.scalatest.BeforeAndAfterAll.run$(BeforeAndAfterAll.scala:208)
+	at puj.partitioning.CubePartitionerTest.run(CubePartitionerTest.scala:12)
+	at org.scalatest.tools.Framework.org$scalatest$tools$Framework$$runSuite(Framework.scala:321)
+	at org.scalatest.tools.Framework$ScalaTestTask.execute(Framework.scala:517)
+	at sbt.ForkMain$Run.lambda$runTest$1(ForkMain.java:414)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: sbt.ForkMain$ForkError: java.io.NotSerializableException: org.scalatest.Engine
+Serialization stack:
+	- object not serializable (class: org.scalatest.Engine, value: org.scalatest.Engine@6124b03)
+	- field (class: org.scalatest.funsuite.AnyFunSuite, name: org$scalatest$funsuite$AnyFunSuiteLike$$engine, type: class org.scalatest.Engine)
+	- object (class puj.partitioning.CubePartitionerTest, CubePartitionerTest)
+	- element of array (index: 0)
+	- array (class [Ljava.lang.Object;, size 1)
+	- field (class: java.lang.invoke.SerializedLambda, name: capturedArgs, type: class [Ljava.lang.Object;)
+	- object (class java.lang.invoke.SerializedLambda, SerializedLambda[capturingClass=class puj.partitioning.CubePartitionerTest, functionalInterfaceMethod=scala/Function1.apply:(Ljava/lang/Object;)Ljava/lang/Object;, implementation=invokeStatic puj/partitioning/CubePartitionerTest.$anonfun$new$2:(Lpuj/partitioning/CubePartitionerTest;Lscala/Tuple3;)Lscala/Tuple2;, instantiatedMethodType=(Lscala/Tuple3;)Lscala/Tuple2;, numCaptured=1])
+	- writeReplace data (class: java.lang.invoke.SerializedLambda)
+	- object (class puj.partitioning.CubePartitionerTest$$Lambda$1175/0x000079aa987b8810, puj.partitioning.CubePartitionerTest$$Lambda$1175/0x000079aa987b8810@73717d5a)
+	at org.apache.spark.serializer.SerializationDebugger$.improveException(SerializationDebugger.scala:41)
+	at org.apache.spark.serializer.JavaSerializationStream.writeObject(JavaSerializer.scala:49)
+	at org.apache.spark.serializer.JavaSerializerInstance.serialize(JavaSerializer.scala:115)
+	at org.apache.spark.util.ClosureCleaner$.ensureSerializable(ClosureCleaner.scala:441)
+	... 52 more
+</failure>
+                    </testcase>
+          <system-out><![CDATA[]]></system-out>
+          <system-err><![CDATA[]]></system-err>
+        </testsuite>

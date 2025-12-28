@@ -26,8 +26,9 @@ object PFlocks extends Logging {
     implicit var S: Settings        = Setup.getSettings(args)                          // Initializing settings...
     implicit val G: GeometryFactory = new GeometryFactory(new PrecisionModel(S.scale)) // Setting precision model and geofactory...
 
+    // Starting Spark...
     implicit val spark: SparkSession = SparkSession
-      .builder() // Starting Spark...
+      .builder() 
       .config("spark.serializer", classOf[KryoSerializer].getName)
       .master(S.master)
       .appName("PFlock")
@@ -67,7 +68,7 @@ object PFlocks extends Logging {
     val t0          = clocktime // Starting timer...
     val times_prime = (0 to S.endtime).toList
     // Temporal partitions...
-    val time_partitions = PF_Utils.cut(times_prime, S.step)
+    val time_partitions = Interval.cut(times_prime, S.step)
 
     val sample   = trajs.sample(withReplacement = false, fraction = S.fraction, seed = 42).collect()
     val envelope = PF_Utils.getEnvelope(trajs)

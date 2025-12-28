@@ -154,8 +154,8 @@ object P3D extends Logging {
           val data = point.getUserData().asInstanceOf[Data]
           val tid  = data.tid
 
-          val temporal_index = Interval.findInterval(temporal_bounds, tid).index
-          val ST_Index       = BitwisePairing.encode(spatial_index, temporal_index)
+          val temporal_index = Interval.findTimeInstant(tid).index
+          val ST_Index       = Encoder.encode(spatial_index, temporal_index)
           (ST_Index, point)
         }
       }
@@ -184,7 +184,7 @@ object P3D extends Logging {
         .mapPartitions { points =>
           val partitionId        = TaskContext.getPartitionId()
           val st_index           = st_indexes_reverse(partitionId)
-          val (s_index, t_index) = BitwisePairing.decode(st_index)
+          val (s_index, t_index) = Encoder.decode(st_index)
           val wkts               = points
             .map { point =>
               val i   = point.getUserData().asInstanceOf[Data].oid
@@ -211,7 +211,7 @@ object P3D extends Logging {
         .mapPartitions { points =>
           val partitionId        = TaskContext.getPartitionId()
           val st_index           = st_indexes_reverse(partitionId)
-          val (s_index, t_index) = BitwisePairing.decode(st_index)
+          val (s_index, t_index) = Encoder.decode(st_index)
           val cell               = cells(s_index)
           val interval           = intervals(t_index)
 

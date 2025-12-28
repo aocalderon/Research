@@ -3,6 +3,14 @@ package puj.partitioning
 import org.locationtech.jts.geom.{Envelope, GeometryFactory}    
 import puj.Utils.Disk
 
+/**
+  * A spatial cell defined by its envelope and associated metadata.
+  *
+  * @param id
+  * @param envelope
+  * @param lineage
+  * @param G
+  */
 case class Cell (id: Int, envelope: Envelope, lineage: String = "")(implicit G: GeometryFactory) {
     def wkt: String = G.toGeometry(envelope).toText
 

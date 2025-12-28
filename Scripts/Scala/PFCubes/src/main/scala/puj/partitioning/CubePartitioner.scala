@@ -13,12 +13,28 @@ import puj.Utils.{SimplePartitioner, Data}
 
 import scala.collection.JavaConverters.asScalaBufferConverter
 
-case class Cube(id: Int, cell: Cell, interval: Interval)
+case class Cube(id: Int, cell: Cell, interval: Interval, st_index: Int)
 
 object CubePartitioner extends Logging {
 
-    def getFixedIntervalCubes(trajs: RDD[(Int, Point)])(implicit S: Settings, G: GeometryFactory): (RDD[Point], Map[Int, (Int, Int)]) = {
-        // Getting cells...
+    /** Partitions trajectory points into spatio-temporal cubes based on a quadtree 
+      *     for spatial partitioning and fixed time intervals for temporal partitioning.
+      *
+      * @param trajs
+      *   An RDD of trajectory points, each represented as a tuple of (time instant, Point).
+      * @param S
+      *   Implicit settings containing parameters for partitioning.
+      * @param G
+      *   Implicit geometry factory for creating geometric objects.
+      * @return
+      *   A tuple containing:
+      *   - An RDD of partitioned trajectory points.
+      *   - A map of cube IDs to Cube objects representing the spatio-temporal partitions.
+      */
+    def getFixedIntervalCubes( trajs: RDD[(Int, Point)] )
+        (implicit S: Settings, G: GeometryFactory): (RDD[Point], Map[Int, Cube]) = {
+        
+        // Building quadtree...
         val sample   = trajs.sample(withReplacement = false, fraction = S.fraction, seed = 42).collect()
         val universe = PF_Utils.getEnvelope(trajs)
         universe.expandBy(S.epsilon * 2.0)
@@ -30,50 +46,68 @@ object CubePartitioner extends Logging {
         quadtree.assignPartitionLineage()
         quadtree.dropElements()
 
-        val cells: Map[Int, Cell] = quadtree.getLeafZones.asScala.map { leaf =>
+        // Getting cells...
+        implicit val cells: Map[Int, Cell] = quadtree.getLeafZones.asScala.map { leaf =>
             val envelope = leaf.getEnvelope
             val id       = leaf.partitionId.toInt
 
             id -> Cell(id, envelope, leaf.lineage)
         }.toMap
 
+        // FIXME: Currently, we are assuming that the time instants are continuous from 0 to endtime.
         // Getting intervals...
         val times_prime = (0 to S.endtime).toList
-        val time_partitions = PF_Utils.cut(times_prime, S.step)
+        implicit val intervals: Map[Int, Interval] = Interval.intervalsBySize(times_prime, S.step)
 
-        // Assigning points to spatial partitions...
+        // Assigning points to spatio-temporal partitions...
         val trajs_prime = trajs
             .filter(_._1 <= S.endtime)
             .mapPartitions { rows =>
                 rows.flatMap { case (_, point) =>
-                    val tpart = time_partitions(PF_Utils.getTime(point))
+                    val tid = PF_Utils.getTime(point)
+                    val t_index = Interval.findTimeInstant(tid)
+
                     val env   = point.getEnvelopeInternal
                     env.expandBy(S.epsilon)
-                    quadtree.findZones(new QuadRectangle(env)).asScala.map { x =>
-                        ((x.partitionId.toInt, tpart), point)
+                    quadtree.findZones(new QuadRectangle(env)).asScala.map { cell =>
+                        val cid = cell.partitionId.toInt
+                        val s_index = cells(cid)
+
+                        val st_index = Encoder.encode(s_index.id, t_index.index)
+                        (st_index, point)
                     }
+                
                 }
             }
             .cache
 
-        // Assigning unique IDs to spatiotemporal partitions...
-        val cubes_ids: Map[(Int, Int), Int] = trajs_prime.map { _._1 }.distinct().collect().sortBy(_._1).sortBy(_._2).zipWithIndex.toMap
-        // Inverse map for spatiotemporal partitions...
-        val cubes_ids_inverse: Map[Int, (Int, Int)] = cubes_ids.map { case (key, value) => value -> key }
+        // Creating cubes...
+        val cubes: Map[Int, Cube] = trajs_prime.map { _._1 }.distinct().collect()
+            .zipWithIndex.map{ case (st_index, cube_id) =>
+                val (s_index, t_index) = Encoder.decode(st_index)
+                val cell = cells(s_index)
+                val interval = intervals(t_index)
 
-        // Repartitioning trajectories according to spatiotemporal partitions...
+                cube_id -> Cube(cube_id, cell, interval, st_index)
+            }.toMap
+        // Creating reverse mapping from st_index to cube_id...
+        val cubes_reversed: Map[Int, Int] = cubes.map { case (cube_id, cube) =>
+            cube.st_index -> cube_id
+        }.toMap
+
+        // Partitioning trajectory points by cube_id...
         val trajs_partitioned = trajs_prime
-            .map { case (tuple_id, point) =>
-                val cube_id = cubes_ids(tuple_id)
+            .map { case (st_index, point) =>
+                val cube_id = cubes_reversed(st_index)
                 (cube_id, point)
             }
-            .partitionBy(SimplePartitioner(cubes_ids.size))
+            .partitionBy(SimplePartitioner(cubes.size))
             .map(_._2)
             .filter { p =>
                 val data = p.getUserData.asInstanceOf[Data]
                 data.tid <= S.endtime
             }
 
-        (trajs_partitioned, cubes_ids_inverse)
+        (trajs_partitioned, cubes)
     }
 }

@@ -1,6 +1,6 @@
 package puj.partitioning
 
-object BitwisePairing {
+object Encoder {
 
   // We use 16 bits for the shift because 'y' (max 2000) fits easily
   // into 16 bits (max 65535), leaving the upper 16 bits for 'x'.
@@ -24,18 +24,5 @@ object BitwisePairing {
     val y = z & Y_MASK
 
     (x, y)
-  }
-
-  // --- Usage Example ---
-  def main(args: Array[String]): Unit = {
-    val xOriginal = 9999
-    val yOriginal = 1999
-
-    val encoded = encode(xOriginal, yOriginal)
-    val decoded = decode(encoded)
-
-    println(s"Original: ($xOriginal, $yOriginal)")
-    println(s"Encoded z: $encoded") // Result will be 655356463
-    println(s"Decoded: ${decoded._1}, ${decoded._2}")
   }
 }
