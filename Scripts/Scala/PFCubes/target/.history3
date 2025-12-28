@@ -1,0 +1,123 @@
+1765669494340:runMain
+1765669499706:compile
+1765669522894:runMain\\
+1765669531000:runMain puj.P3D
+1765671726716:compile
+1765672037181:runMain puj.P3D
+1765726203548:compile
+1765731842069:runMain puj.P3D
+1765731971145:compile
+1765732155360:runMain puj.P3D
+1765732273771:compile
+1765755439419:clean
+1765755442863:compile
+1765817957169:clean
+1765817960271:compile
+1765818376503:runMain puj.psi.PSI --input /opt/Research/Datasets/Demo/temporal_pflock/temporal_pflock/dummy.tsv -d
+1765825602636:compile
+1765825649020:runMain puj.psi.PSI --input /opt/Research/Datasets/Demo/temporal_pflock/temporal_pflock/dummy.tsv -d
+1765825879071:compile
+1765825882065:runMain puj.psi.PSI --input /opt/Research/Datasets/Demo/temporal_pflock/temporal_pflock/dummy.tsv -d
+1765826232276:compile
+1765826236475:runMain puj.psi.PSI --input /opt/Research/Datasets/Demo/temporal_pflock/temporal_pflock/dummy.tsv
+1765826367892:compile
+1765826372747:runMain puj.psi.PSI --input /opt/Research/Datasets/Demo/temporal_pflock/temporal_pflock/dummy.tsv
+1765826472237:compile
+1765826477403:runMain puj.psi.PSI --input /opt/Research/Datasets/Demo/temporal_pflock/temporal_pflock/dummy.tsv
+1765826657760:compile
+1765826659656:runMain puj.psi.PSI --input /opt/Research/Datasets/Demo/temporal_pflock/temporal_pflock/dummy.tsv
+1765919582545:clean
+1765919585198:compile
+1765921351131:runMain puj.bfe.BFE --input /opt/Research/Datasets/LA/LA_10K.tsv --epsilon_prime 10.0 --mu 3
+1765921861230:runMain puj.Checker --input /opt/Research/Datasets/LA/LA_10K.tsv --epsilon_prime 10.0 --mu 3
+1765921926883:compile
+1765921934916:runMain puj.Checker --input /opt/Research/Datasets/LA/LA_10K.tsv --epsilon_prime 10.0 --mu 3
+1765988996250:clean
+1765988999488:compile
+1765989135272:runMain puj.P3D --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --scapacity 250 --tcapacity 1000 --fraction 0.5
+1765989175285:runMain puj.P3D --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --scapacity 200 --tcapacity 100 --fraction 0.5
+1765989191105:runMain puj.P3D --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --scapacity 200 --tcapacity 100 --fraction 0.15
+1765989238289:runMain puj.P3D --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --scapacity 200 --tcapacity 100 --fraction 0.15 -d
+1765989331677:runMain puj.P3D --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --scapacity 200 --tcapacity 20000 --fraction 0.15 -d
+1765989510977:compile
+1765989530244:runMain puj.P3D --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --scapacity 200 --tcapacity 20000 --fraction 0.15 -d
+1765989688460:runMain puj.P3D --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --scapacity 200 --tcapacity 40000 --fraction 0.15 -d
+1765990276612:runMain puj.P3D --input /home/and/MEGA/Work/data/PFlocks/LA_25K.tsv --scapacity 200 --tcapacity 40000 --fraction 0.05 -d
+1765990347328:runMain puj.P3D --input /home/and/MEGA/Work/data/PFlocks/LA_25K.tsv --scapacity 1000 --tcapacity 40000 --fraction 0.05 -d
+1766009687324:clean
+1766009691262:compile
+1766009787251:runMain puj.P3D --input /opt/Research/Scripts/SUMO/dense/trajectories.tsv --scapacity 2000 --tcapacity 25000 --fraction 0.01 -d
+1766415537463:clean
+1766415539820:compile
+1766415565029:runMain puj.P3D --input /opt/Research/Scripts/SUMO/dense/trajectories.tsv --scapacity 2000 --tcapacity 25000 --fraction 0.01 -d
+1766417344227:exit
+1766435047671:compile
+1766441102822:runMain puj.PFlock6 --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 10.0 --mu 6 -d
+1766441119892:runMain puj.PFlock6 --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon_prime 10.0 --mu 6 -d
+1766498342435:clean
+1766498348262:compile
+1766498379908:package
+1766695801966:clean
+1766695804302:compile
+1766695879109:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon_prime 10.0 --mu 3 -d
+1766696716964:compile
+1766696731232:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon_prime 10.0 --mu 3 -d
+1766699444923:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon_prime 10.0 --mu 3
+1766780457252:compile
+1766780630199:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 10.0 --mu 3
+1766781203322:clean
+1766781205863:compile
+1766781241751:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 10.0 --mu 3 -d
+1766781280273:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 10.0 --mu 3
+1766782051132:compile
+1766782238569:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 10.0 --mu 3
+1766782297000:compile
+1766782304594:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 15.0 --mu 3
+1766783323422:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 5.0 --mu 3
+1766795711826:sparkBash puj.PFlocks
+1766795879710:package
+1766796402559:scalaBash puj.PFlocks
+1766796416764:reload
+1766796423538:scalaBash puj.PFlocks
+1766803024812:compile
+1766804030597:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 5.0 --mu 3
+1766804902427:compile
+1766805358468:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 5.0
+1766805661713:compile
+1766805663881:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 5.0
+1766805698949:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 5.0 -d
+1766805844714:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 5.0
+1766805858114:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 5.0 -d
+1766805998908:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 5.0
+1766806031894:compile
+1766806051278:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 5.0 -d
+1766806956543:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 10.0 -d
+1766806991890:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 5.0 -d
+1766807646302:compile
+1766807955348:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 5.0 -d
+1766807988916:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 10.0
+1766808059760:compile
+1766842903157:clean
+1766842904853:package
+1766843644424:clean
+1766843648100:compile
+1766843671646:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 5.0
+1766844092102:package
+1766845917072:clean
+1766845920796:compile
+1766846112742:compile -deprecation
+1766846167645:set scalacOptions += "-deprecation"\ncompile
+1766846179776:set scalacOptions += "-deprecation"
+1766846187745:compile
+1766847118246:package
+1766847129866:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 5.0 -e
+1766849760208:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 5.0
+1766851210465:compile
+1766851309762:runMain puj.PFlocks --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 5.0
+1766851361444:runMain puj.PFlocks --master local[2] --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 5.0 -e
+1766854548628:runMain puj.PFlocks --master local[2] --input /home/and/MEGA/Work/data/PFlocks/BERLIN_10K.tsv --epsilon 10.0 -e
+1766854599694:compile
+1766854605093:package
+1766878369794:compile
+1766888432586:package
+1766888435614:exit
