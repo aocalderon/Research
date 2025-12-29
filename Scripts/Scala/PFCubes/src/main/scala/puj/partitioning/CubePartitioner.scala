@@ -322,6 +322,6 @@ object CubePartitioner extends Logging {
       logger.info("Boxes WKT file saved for debugging")
     }
 
-    ???
+    (pointsSTRDD, cubes, quadtree)
   }
 }

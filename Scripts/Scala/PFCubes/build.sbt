@@ -26,8 +26,6 @@ lazy val root = (project in file("."))
     javaOptions ++= Seq(
       "-Xmx8G",
       "-Xms4G",
-      "-Xlint:unchecked",
-      "-Xlint:deprecation",
       "--add-opens=java.base/java.lang=ALL-UNNAMED",
       "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
       "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",
