@@ -66,63 +66,8 @@ object PFlocks extends Logging {
     * Spatio-temporal partitioning...
     */
     val t0          = clocktime // Starting timer...
-    val times_prime = (0 to S.endtime).toList
-    // Temporal partitions...
-    val time_partitions = Interval.cut(times_prime, S.step)
-
-    val sample   = trajs.sample(withReplacement = false, fraction = S.fraction, seed = 42).collect()
-    val envelope = PF_Utils.getEnvelope(trajs)
-    envelope.expandBy(S.epsilon * 2.0)
-    // Spatial partitions...
-    implicit val quadtree: StandardQuadTree[Point] = new StandardQuadTree[Point](new QuadRectangle(envelope), 0, S.scapacity, 16)
-    sample.foreach { case (_, point) =>
-      quadtree.insert(new QuadRectangle(point.getEnvelopeInternal), point)
-    }
-    quadtree.assignPartitionIds()
-    quadtree.assignPartitionLineage()
-    quadtree.dropElements()
-
-    // Getting quadtree cells...
-    implicit val cells: Map[Int, Cell] = quadtree.getLeafZones.asScala.map { leaf =>
-      val envelope = leaf.getEnvelope
-      val id       = leaf.partitionId.toInt
-
-      id -> Cell(id, envelope, leaf.lineage)
-    }.toMap
-
-    // Assigning points to spatiotemporal partitions...
-    val trajs_prime = trajs
-      .filter(_._1 <= S.endtime)
-      .mapPartitions { rows =>
-        rows.flatMap { case (_, point) =>
-          val tpart = time_partitions(PF_Utils.getTime(point))
-          val env   = point.getEnvelopeInternal
-          env.expandBy(S.epsilon)
-          quadtree.findZones(new QuadRectangle(env)).asScala.map { x =>
-            ((x.partitionId.toInt, tpart), point)
-          }
-        }
-      }
-      .cache
-
-    // Assigning unique IDs to spatiotemporal partitions...
-    implicit val cubes_ids: Map[(Int, Int), Int] = trajs_prime.map { _._1 }.distinct().collect().sortBy(_._1).sortBy(_._2).zipWithIndex.toMap
-    // Inverse map for spatiotemporal partitions...
-    implicit val cubes_ids_inverse: Map[Int, (Int, Int)] = cubes_ids.map { case (key, value) => value -> key }
-
-    // Repartitioning trajectories according to spatiotemporal partitions...
-    val trajs_partitioned = trajs_prime
-      .map { case (tuple_id, point) =>
-        val cube_id = cubes_ids(tuple_id)
-        (cube_id, point)
-      }
-      .partitionBy(SimplePartitioner(cubes_ids.size))
-      .map(_._2)
-      .filter { p =>
-        val data = p.getUserData.asInstanceOf[Data]
-        data.tid <= S.endtime
-      }
-      .cache
+    implicit val (trajs_partitioned, cubes, quadtree) = CubePartitioner.getFixedIntervalCubes(trajs)
+    trajs_partitioned.cache
     val nTrajs = trajs_partitioned.count()
     val tTrajs = (clocktime - t0) / 1e9
 
@@ -131,15 +76,9 @@ object PFlocks extends Logging {
 
     // Debugging info...
     debug {
-      save("/tmp/edgesCells.wkt") {
-        cells.map { case (id, cell) =>
-          val wkt = G.toGeometry(cell.envelope).toText
-          s"$wkt\tL${cell.lineage}\t$id\n"
-        }.toList
-      }
-      save("/tmp/cubes_ids.tsv") {
-        cubes_ids.map { case (k, v) =>
-          s"$v\t${k._1}\t${k._2}\n"
+      save("/tmp/Cubes.wkt") {
+        cubes.values.map{ cube =>
+          s"${cube.wkt}\n"
         }.toList
       }
     }
@@ -151,15 +90,14 @@ object PFlocks extends Logging {
       // Computing flocks in each spatiotemporal partition...
       val flocksRDD = trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
         val t0        = clocktime
-        val cell_id   = cubes_ids_inverse(index)._1
-        val cell_test = new Envelope(cells(cell_id).envelope)
+        val cell_test = new Envelope(cubes(index).cell.envelope)
         cell_test.expandBy(S.sdist * -1.0)
         val cell = if (cell_test.isNull) {
-          new Envelope(cells(cell_id).envelope.centre())
+          new Envelope(cell_test.centre())
         } else {
           cell_test
         }
-        val cell_prime = new Envelope(cells(cell_id).envelope)
+        val cell_prime = new Envelope(cell)
         val ps         = points.toList
           .map { point =>
             val data = point.getUserData.asInstanceOf[Data]
@@ -214,10 +152,10 @@ object PFlocks extends Logging {
     val (spartials, tSpartials) = timer {
       val spartialsRDD_prime = flocksRDD.mapPartitionsWithIndex { (index, flocks) =>
         val t0      = clocktime
-        val cube_id = cubes_ids_inverse(index)
-        val cell_id = cube_id._1
-        val time_id = cube_id._2
-        val cell    = cells(cell_id)
+        val cube    = cubes(index)
+        val cell_id = cube.cell.id
+        val time_id = cube.interval.index
+        val cell    = cube.cell
         val R       = flocks.flatMap(_._2).flatMap { partial =>
           val parents = quadtree
             .findZones(new QuadRectangle(partial.getExpandEnvelope(S.sdist + S.tolerance)))
@@ -279,6 +217,7 @@ object PFlocks extends Logging {
     /************************************************************************* 
     * Temporal partial finding...
     */
+    val ncells = quadtree.getLeafZones.size()
     val (tpartials, tTpartials) = timer {
       val tpartialsRDD = flocksRDD
         .mapPartitionsWithIndex { (_, flocks) =>
@@ -289,10 +228,10 @@ object PFlocks extends Logging {
             }
           }
         }
-        .partitionBy(SimplePartitioner(cells.size))
+        .partitionBy(SimplePartitioner(ncells))
         .mapPartitionsWithIndex { (index, prime) =>
           val t0       = clocktime
-          val cell     = cells(index)
+          val cell     = cubes(index).cell
           val tpartial = prime.map(_._2).toList
           val P        = tpartial.sortBy(_.start).groupBy(_.start)
           val partials = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()

@@ -18,7 +18,7 @@ import scala.collection.JavaConverters.asScalaBufferConverter
 import scala.collection.mutable
 
 import puj.Utils._
-import puj.partitioning.Cell
+import puj.partitioning.{Cell, Cube}
 import puj.bfe._
 import puj.psi._
 
@@ -122,7 +122,7 @@ object PF_Utils extends Logging {
 
   def pruneP(P: List[Disk]): List[Disk] = pruneQ(P, List.empty[Disk])
 
-  def parPrune(flocks: List[Disk])(implicit spark: SparkSession, S: Settings, cells: Map[Int, Cell], tree: StandardQuadTree[Point]): List[Disk] = {
+  def parPrune(flocks: List[Disk])(implicit spark: SparkSession, S: Settings, cubes: Map[Int, Cube], tree: StandardQuadTree[Point]): List[Disk] = {
     val n = tree.getLeafZones.size()
     spark.sparkContext
       .parallelize(flocks)
@@ -135,14 +135,14 @@ object PF_Utils extends Logging {
       .partitionBy(SimplePartitioner(n))
       .mapPartitionsWithIndex { (index, it) =>
         val t0     = clocktime
-        val cell   = cells(index)
+        val cell   = cubes(index).cell
         val flocks = it.map(_._2).toList
         val r      = pruneByArchery(flocks).filter { f =>
           cell.contains(f)
         }.toIterator
-        val t1 = (clocktime - t0) / 1e9
+        val tParPrune = (clocktime - t0) / 1e9
         debug {
-          logger.info(s"$index|$t1")
+          logger.info(s"TIME|PER_CELL|ParPrune|$index|$tParPrune")
         }
 
         r
@@ -150,6 +150,7 @@ object PF_Utils extends Logging {
       .collect()
       .toList
   }
+  
   def pruneByArchery(flocks: List[Disk])(implicit S: Settings): List[Disk] = {
     var tree = archery.RTree[Disk]()
     val f    = flocks.sortBy(_.start).zipWithIndex.map { case (flock, id) =>
@@ -649,7 +650,7 @@ object PF_Utils extends Logging {
       time_end: Int,
       partial2: List[Disk],
       partial3: List[Disk]
-  )(implicit S: Settings, G: GeometryFactory, C: Map[Int, (Int, Int)]): (List[Disk], List[Disk], List[Disk]) = {
+  )(implicit S: Settings, G: GeometryFactory, C: Map[Int, Cube]): (List[Disk], List[Disk], List[Disk]) = {
 
     val pid = TaskContext.getPartitionId()
     trajs match {

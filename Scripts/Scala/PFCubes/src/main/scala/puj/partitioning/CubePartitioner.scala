@@ -13,7 +13,15 @@ import puj.Utils.{SimplePartitioner, Data, debug}
 
 import scala.collection.JavaConverters.asScalaBufferConverter
 
-case class Cube(id: Int, cell: Cell, interval: Interval, st_index: Int)
+case class Cube(id: Int, cell: Cell, interval: Interval, st_index: Int) {
+  def wkt: String = {
+    val wkt = cell.wkt
+    val beg = interval.begin
+    val dur = interval.duration
+
+    s"$wkt\t$id\t$beg\t$dur"
+  }
+}
 
 object CubePartitioner extends Logging {
 
@@ -32,7 +40,7 @@ object CubePartitioner extends Logging {
       *   - A map of cube IDs to Cube objects representing the spatio-temporal partitions.
       */
     def getFixedIntervalCubes( trajs: RDD[(Int, Point)] )
-        (implicit S: Settings, G: GeometryFactory): (RDD[Point], Map[Int, Cube]) = {
+        (implicit S: Settings, G: GeometryFactory): (RDD[Point], Map[Int, Cube], StandardQuadTree[Point]) = {
         
         // Building quadtree...
         val sample   = trajs.sample(withReplacement = false, fraction = S.fraction, seed = 42).collect()
@@ -133,6 +141,6 @@ object CubePartitioner extends Logging {
         logger.info(s"Re-partitions done!")
       }
 
-        (trajs_partitioned, cubes)
+        (trajs_partitioned, cubes, quadtree)
     }
 }

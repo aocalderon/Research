@@ -54,7 +54,7 @@ class CubePartitionerTest extends AnyFunSuite with BeforeAndAfterAll with Mockit
     val nTrajs = trajs.count()
 
     // Call the method under test
-    val (partitionedRDD, cubes) = CubePartitioner.getFixedIntervalCubes(trajs)
+    val (partitionedRDD, cubes, _) = CubePartitioner.getFixedIntervalCubes(trajs)
 
     save("/tmp/Cubes.wkt"){
       cubes.values.map{ cube =>
