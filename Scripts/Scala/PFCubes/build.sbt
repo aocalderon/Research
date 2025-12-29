@@ -6,8 +6,8 @@ val SparkVersion = "3.5.7"
 
 lazy val root = (project in file("."))
   .settings(
-    name                                              := "pfcubes",
-    scalacOptions                                     ++= Seq("-deprecation", "-feature", "-unchecked"),
+    name := "pfcubes",
+    scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked"),
     libraryDependencies ++= Seq(
       "org.apache.spark"         %% "spark-core"      % SparkVersion,
       "org.apache.spark"         %% "spark-sql"       % SparkVersion,

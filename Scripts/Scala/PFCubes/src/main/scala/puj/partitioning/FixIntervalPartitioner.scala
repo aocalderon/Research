@@ -1,5 +1,3 @@
 package puj.partitioning
 
-object FixIntervalPartitioner {
-  
-}
+object FixIntervalPartitioner {}

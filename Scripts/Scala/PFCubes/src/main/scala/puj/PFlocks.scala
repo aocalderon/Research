@@ -20,15 +20,14 @@ object PFlocks extends Logging {
 
   def main(args: Array[String]): Unit = {
 
-    /************************************************************************* 
-    * Settings...
-    */
+    /** *********************************************************************** Settings...
+      */
     implicit var S: Settings        = Setup.getSettings(args)                          // Initializing settings...
     implicit val G: GeometryFactory = new GeometryFactory(new PrecisionModel(S.scale)) // Setting precision model and geofactory...
 
     // Starting Spark...
     implicit val spark: SparkSession = SparkSession
-      .builder() 
+      .builder()
       .config("spark.serializer", classOf[KryoSerializer].getName)
       .master(S.master)
       .appName("PFlock")
@@ -38,9 +37,8 @@ object PFlocks extends Logging {
     logger.info(s"${S.appId}|START|Starting PFlocks computation")
     S.printer
 
-    /************************************************************************* 
-    * Data reading...
-    */
+    /** *********************************************************************** Data reading...
+      */
     val trajs = spark.read // Reading trajectories...
       .option("header", value = false)
       .option("delimiter", "\t")
@@ -56,16 +54,15 @@ object PFlocks extends Logging {
           val point = G.createPoint(new Coordinate(lon, lat))
           point.setUserData(Data(oid, tid))
 
-          (tid, point)
+          point
         }
       }
       .cache
     trajs.count()
 
-    /************************************************************************* 
-    * Spatio-temporal partitioning...
-    */
-    val t0          = clocktime // Starting timer...
+    /** *********************************************************************** Spatio-temporal partitioning...
+      */
+    val t0                                            = clocktime // Starting timer...
     implicit val (trajs_partitioned, cubes, quadtree) = CubePartitioner.getFixedIntervalCubes(trajs)
     trajs_partitioned.cache
     val nTrajs = trajs_partitioned.count()
@@ -77,15 +74,14 @@ object PFlocks extends Logging {
     // Debugging info...
     debug {
       save("/tmp/Cubes.wkt") {
-        cubes.values.map{ cube =>
+        cubes.values.map { cube =>
           s"${cube.wkt}\n"
         }.toList
       }
     }
 
-    /************************************************************************* 
-    * Safe flocks finding...
-    */
+    /** *********************************************************************** Safe flocks finding...
+      */
     val ((flocksRDD, nFlocksRDD), tFlocksRDD) = timer {
       // Computing flocks in each spatiotemporal partition...
       val flocksRDD = trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
@@ -146,9 +142,8 @@ object PFlocks extends Logging {
     logger.info(s"${S.appId}|TIME|Safe|$tFlocksRDD")
     logger.info(s"${S.appId}|INFO|Safe|$nFlocksRDD")
 
-    /************************************************************************* 
-    * Spatial partial finding...
-    */
+    /** *********************************************************************** Spatial partial finding...
+      */
     val (spartials, tSpartials) = timer {
       val spartialsRDD_prime = flocksRDD.mapPartitionsWithIndex { (index, flocks) =>
         val t0      = clocktime
@@ -214,10 +209,9 @@ object PFlocks extends Logging {
     logger.info(s"${S.appId}|TIME|SPartial|$tSpartials")
     logger.info(s"${S.appId}|INFO|SPartial|${spartials.length}")
 
-    /************************************************************************* 
-    * Temporal partial finding...
-    */
-    val ncells = quadtree.getLeafZones.size()
+    /** *********************************************************************** Temporal partial finding...
+      */
+    val ncells                  = quadtree.getLeafZones.size()
     val (tpartials, tTpartials) = timer {
       val tpartialsRDD = flocksRDD
         .mapPartitionsWithIndex { (_, flocks) =>
@@ -257,9 +251,8 @@ object PFlocks extends Logging {
     logger.info(s"${S.appId}|TIME|TPartial|$tTpartials")
     logger.info(s"${S.appId}|INFO|TPartial|${tpartials.length}")
 
-    /************************************************************************* 
-    * Duplicate prunning...
-    */
+    /** *********************************************************************** Duplicate prunning...
+      */
     val (flocks, tPrune) = timer {
       PF_Utils.parPrune(safes.toList ++ spartials.toList ++ tpartials.toList)
     }

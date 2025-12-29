@@ -150,7 +150,7 @@ object PF_Utils extends Logging {
       .collect()
       .toList
   }
-  
+
   def pruneByArchery(flocks: List[Disk])(implicit S: Settings): List[Disk] = {
     var tree = archery.RTree[Disk]()
     val f    = flocks.sortBy(_.start).zipWithIndex.map { case (flock, id) =>
@@ -1331,9 +1331,9 @@ object PF_Utils extends Logging {
     tree
   }
 
-  def getEnvelope(dataset: RDD[(Int, Point)]): Envelope = {
-    val Xs = dataset.map(_._2.getX).cache
-    val Ys = dataset.map(_._2.getY).cache
+  def getEnvelope(dataset: RDD[Point]): Envelope = {
+    val Xs = dataset.map(_.getX).cache
+    val Ys = dataset.map(_.getY).cache
 
     val minX = Xs.min()
     val maxX = Xs.max()

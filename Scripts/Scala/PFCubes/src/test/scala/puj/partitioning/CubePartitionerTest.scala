@@ -14,13 +14,13 @@ import puj.Setup
 class CubePartitionerTest extends AnyFunSuite with BeforeAndAfterAll with MockitoSugar {
 
   test("getFixedIntervalCubes should partition trajectory points correctly") {
-    implicit var S: Settings        = Setup.getSettings(Seq.empty[String]) // Initializing settings...
+    implicit var S: Settings = Setup.getSettings(Seq.empty[String]) // Initializing settings...
     S = S.copy(eprime = 5, debug = true, step = 3)
     implicit val G: GeometryFactory = new GeometryFactory(new PrecisionModel(S.scale)) // Setting precision model and geofactory...
 
     // Starting Spark...
     implicit val spark: SparkSession = SparkSession
-      .builder() 
+      .builder()
       .config("spark.serializer", classOf[KryoSerializer].getName)
       .master(S.master)
       .appName("PFlock")
@@ -29,15 +29,14 @@ class CubePartitionerTest extends AnyFunSuite with BeforeAndAfterAll with Mockit
     S.appId = spark.sparkContext.applicationId
     S.printer
 
-    /************************************************************************* 
-    * Data reading...
-    */
+    /** *********************************************************************** Data reading...
+      */
     val trajs = spark.read // Reading trajectories...
       .option("header", value = false)
       .option("delimiter", "\t")
       .csv(S.dataset)
       .rdd
-      //.sample(withReplacement=false, fraction=0.1, seed=42)
+      // .sample(withReplacement=false, fraction=0.1, seed=42)
       .mapPartitions { rows =>
         rows.map { row =>
           val oid = row.getString(0).toInt
@@ -56,12 +55,12 @@ class CubePartitionerTest extends AnyFunSuite with BeforeAndAfterAll with Mockit
     // Call the method under test
     val (partitionedRDD, cubes, _) = CubePartitioner.getFixedIntervalCubes(trajs)
 
-    save("/tmp/Cubes.wkt"){
-      cubes.values.map{ cube =>
+    save("/tmp/Cubes.wkt") {
+      cubes.values.map { cube =>
         val wkt = cube.cell.wkt
         val beg = cube.interval.begin
         val dur = cube.interval.duration
-        val  id = cube.id
+        val id  = cube.id
 
         s"$wkt\t$id\t$beg\t$dur\n"
       }.toList
