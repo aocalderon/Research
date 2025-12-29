@@ -284,7 +284,7 @@ public class KDB implements Serializable {
                 continue;
             }
 
-            result.add(new Tuple2(leaf.getLeafId(), geometry));
+            result.add(new Tuple2<>(leaf.getLeafId(), geometry));
         }
 
         return result.iterator();
@@ -319,7 +319,7 @@ public class KDB implements Serializable {
             public boolean visit(KDB tree)
             {
                 if (tree.isLeaf()) {
-                    leafs.add(new Tuple2(tree.getLeafId(), tree.getExtent()));
+                    leafs.add(new Tuple2<>(tree.getLeafId(), tree.getExtent()));
                 }
                 return true;
             }

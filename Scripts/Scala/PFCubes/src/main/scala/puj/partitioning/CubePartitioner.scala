@@ -172,7 +172,8 @@ object CubePartitioner extends Logging {
     val nTrajs = trajsSRDD.count()
     logger.info(s"Trajectories repartitioned into SRDD with $nTrajs points")
 
-    val histogram: Array[Bin] = trajsSRDD.mapPartitions { it =>
+    val histogram: Array[Bin] = trajsSRDD
+      .mapPartitions { it =>
         val partitionId = TaskContext.getPartitionId()
         it.map { point =>
           point.getUserData().asInstanceOf[Data].tid
@@ -187,7 +188,8 @@ object CubePartitioner extends Logging {
       .map { case (tid, counts) =>
         val total = counts.sum
         Bin(tid, total)
-      }.collect()
+      }
+      .collect()
     logger.info("Temporal histogram computed")
 
     debug {
@@ -246,7 +248,8 @@ object CubePartitioner extends Logging {
       .map { case (st_index, _) => st_index }
       .distinct()
       .collect()
-      .zipWithIndex.map{ case (st_index, index) => 
+      .zipWithIndex
+      .map { case (st_index, index) =>
         val (s_index, t_index) = Encoder.decode(st_index)
         val cell               = cells(s_index)
         val interval           = intervals(t_index)
@@ -270,11 +273,11 @@ object CubePartitioner extends Logging {
     debug {
       pointsSTRDD
         .mapPartitions { points =>
-          val partitionId    = TaskContext.getPartitionId()
-          val cube           = cubes(partitionId)
-          val st_index       = cube.st_index
+          val partitionId        = TaskContext.getPartitionId()
+          val cube               = cubes(partitionId)
+          val st_index           = cube.st_index
           val (s_index, t_index) = Encoder.decode(st_index)
-          val wkts           = points
+          val wkts               = points
             .map { point =>
               val i   = point.getUserData().asInstanceOf[Data].oid
               val x   = point.getX
