@@ -1,20 +1,18 @@
 package puj.partitioning
 
-import org.locationtech.jts.geom.{GeometryFactory, Point}
+import org.locationtech.jts.geom.{GeometryFactory, Point, Envelope}
 
+import org.apache.spark.TaskContext
 import org.apache.spark.rdd.RDD
 import org.apache.logging.log4j.scala.Logging
 
 import edu.ucr.dblab.pflock.sedona.quadtree.{StandardQuadTree, QuadRectangle}
 
+import scala.collection.JavaConverters._
+
 import puj.Settings
 import puj.PF_Utils
-import puj.Utils.{SimplePartitioner, Data, debug}
-
-import scala.collection.JavaConverters.asScalaBufferConverter
-import org.locationtech.jts.geom.Envelope
-import puj.Utils.saveAsTSV
-import org.apache.spark.TaskContext
+import puj.Utils.{SimplePartitioner, Data, debug, save}
 
 case class Cube(id: Int, cell: Cell, interval: Interval, st_index: Int) {
   def wkt: String = {
@@ -41,9 +39,10 @@ object CubePartitioner extends Logging {
     *   - An RDD of partitioned trajectory points.
     *   - A map of cube IDs to Cube objects representing the spatio-temporal partitions.
     */
-  def getFixedIntervalCubes(trajs: RDD[Point])(implicit S: Settings, G: GeometryFactory): (RDD[Point], Map[Int, Cube], StandardQuadTree[Point]) = {
+  def getFixedIntervalCubes(trajs: RDD[Point])(implicit S: Settings): (RDD[Point], Map[Int, Cube], StandardQuadTree[Point]) = {
 
     // Building quadtree...
+    implicit var G: GeometryFactory = S.geofactory
     val sample   = trajs.sample(withReplacement = false, fraction = S.fraction, seed = 42).collect()
     val universe = PF_Utils.getEnvelope(trajs)
     universe.expandBy(S.epsilon * 2.0)
@@ -149,11 +148,15 @@ object CubePartitioner extends Logging {
     (trajs_partitioned, cubes, quadtree)
   }
 
-  def getDynamicIntervalCubes(trajs: RDD[Point])(implicit S: Settings, G: GeometryFactory): (RDD[Point], Map[Int, Cube], StandardQuadTree[Point]) = {
+  def getDynamicIntervalCubes(trajs: RDD[Point])(implicit S: Settings): (RDD[Point], Map[Int, Cube], StandardQuadTree[Point]) = {
     // Building quadtree...
+    implicit var G: GeometryFactory = S.geofactory
     val (quadtree, cells, rtree, universe) =
       Quadtree.build(trajs, new Envelope(), capacity = S.scapacity, fraction = S.fraction)
-    logger.info(s"Quadtree built with ${cells.size} cells")
+
+    debug {
+      logger.info(s"Quadtree done!")
+    }
 
     val trajsSRDD = trajs
       .mapPartitions { iter =>
@@ -170,7 +173,10 @@ object CubePartitioner extends Logging {
       .map(_._2)
       .cache()
     val nTrajs = trajsSRDD.count()
-    logger.info(s"Trajectories repartitioned into SRDD with $nTrajs points")
+
+    debug {
+      logger.info(s"Spatial partitioning done!")
+    }
 
     val histogram: Array[Bin] = trajsSRDD
       .mapPartitions { it =>
@@ -190,17 +196,15 @@ object CubePartitioner extends Logging {
         Bin(tid, total)
       }
       .collect()
-    logger.info("Temporal histogram computed")
 
     debug {
-      saveAsTSV(
-        "/tmp/histogram.tsv",
+      save("/tmp/histogram.tsv"){
         histogram
           .sortBy(_.instant)
           .map(bin => s"${bin.toString()}\n")
           .toList
-      )
-      logger.info("Temporal histogram TSV file saved for debugging")
+      }
+      logger.info("Histogram done!")
     }
 
     implicit val intervals = Interval
@@ -219,17 +223,15 @@ object CubePartitioner extends Logging {
       .toMap
 
     debug {
-      saveAsTSV(
-        "/tmp/Intervals.tsv",
+      save("/tmp/Intervals.tsv"){
         intervals.values.toList
           .sortBy(_.index)
           .map(interval => interval.toText)
-      )
-      logger.info("Temporal intervals TSV file saved for debugging")
+      }
+      logger.info("Intervals done!")
     }
-    logger.info(s"Total temporal intervals created: ${intervals.size}")
 
-    val temporal_bounds = intervals.values.map(_.begin).toArray.sorted
+    //val temporal_bounds = intervals.values.map(_.begin).toArray.sorted
 
     val pointsSTRDD_prime = trajsSRDD
       .mapPartitionsWithIndex { (spatial_index, it) =>
@@ -243,6 +245,11 @@ object CubePartitioner extends Logging {
         }
       }
       .cache()
+
+    debug {
+      logger.info(s"Spatio-temporal index done!")
+    }
+
 
     val cubes: Map[Int, Cube] = pointsSTRDD_prime
       .map { case (st_index, _) => st_index }
@@ -260,67 +267,21 @@ object CubePartitioner extends Logging {
     val cubes_reversed: Map[Int, Int] = cubes.map { case (cube_id, cube) =>
       cube.st_index -> cube_id
     }.toMap
-    logger.info(s"Total cubes created: ${cubes.size}")
 
+    debug {
+      logger.info(s"Cubes done!")
+    }
+    
     val pointsSTRDD = pointsSTRDD_prime
       .map { case (st_index, point) => (cubes_reversed(st_index), point) }
       .partitionBy(SimplePartitioner(cubes.size))
       .map(_._2)
       .cache()
     val nPointsSTRDD = pointsSTRDD.count()
-    logger.info(s"Points repartitioned into STRDD with $nPointsSTRDD points")
 
     debug {
-      pointsSTRDD
-        .mapPartitions { points =>
-          val partitionId        = TaskContext.getPartitionId()
-          val cube               = cubes(partitionId)
-          val st_index           = cube.st_index
-          val (s_index, t_index) = Encoder.decode(st_index)
-          val wkts               = points
-            .map { point =>
-              val i   = point.getUserData().asInstanceOf[Data].oid
-              val x   = point.getX
-              val y   = point.getY
-              val t   = point.getUserData().asInstanceOf[Data].tid
-              val wkt = point.toText()
-              s"$i\t$x\t$y\t$t\t$s_index\t$t_index\t$st_index\t$wkt\n"
-            }
-            .mkString("")
-          Iterator((s_index, wkts))
-        }
-        .collect()
-        .groupBy(_._1)
-        .foreach { case (s_index, wkts) =>
-          saveAsTSV(
-            s"/tmp/STRDD_$s_index.wkt",
-            wkts.map(_._2).toList
-          )
-        }
-      logger.info("STRDD WKT file saved for debugging")
-
-      pointsSTRDD
-        .mapPartitions { points =>
-          val partitionId        = TaskContext.getPartitionId()
-          val cube               = cubes(partitionId)
-          val st_index           = cube.st_index
-          val (s_index, t_index) = Encoder.decode(cube.st_index)
-          val cell               = cube.cell
-          val interval           = cube.interval
-
-          val wkt = s"${cell.wkt}\t$st_index\t$s_index\t$t_index\t${interval.begin}\t${interval.duration}\n"
-          Iterator((s_index, wkt))
-        }
-        .collect()
-        .groupBy(_._1)
-        .foreach { case (s_index, wkts) =>
-          saveAsTSV(
-            s"/tmp/Boxes_$s_index.wkt",
-            wkts.map(_._2).toList
-          )
-        }
-      logger.info("Boxes WKT file saved for debugging")
-    }
+      logger.info(s"Re-partition done!")
+    }    
 
     (pointsSTRDD, cubes, quadtree)
   }

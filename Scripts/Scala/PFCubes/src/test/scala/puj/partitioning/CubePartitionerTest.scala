@@ -1,38 +1,35 @@
 package puj.partitioning
 
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.rdd.RDD
-import org.locationtech.jts.geom.{Coordinate, GeometryFactory, Point, PrecisionModel}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funsuite.AnyFunSuite
-import org.scalatestplus.mockito.MockitoSugar
-import org.mockito.Mockito._
-import puj.{Settings, Utils}
-import puj.Utils.{Data, save}
+
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.rdd.RDD
 import org.apache.spark.serializer.KryoSerializer
-import puj.Setup
-import puj.partitioning.CubePartitioner.{getDynamicIntervalCubes => before}
 
-class CubePartitionerTest extends AnyFunSuite with BeforeAndAfterAll with MockitoSugar {
+import org.locationtech.jts.geom.{Coordinate, GeometryFactory, Point, PrecisionModel}
 
-  test("getFixedIntervalCubes should partition trajectory points correctly") {
+import puj.{Settings, Setup}
+import puj.Utils.{Data, save}
 
-    implicit var S: Settings = Setup.getSettings(Seq.empty[String]) // Initializing settings...
-    S = S.copy(eprime = 5, debug = true, step = 3)
-    implicit val G: GeometryFactory  = new GeometryFactory(new PrecisionModel(S.scale)) // Setting precision model and geofactory...
+class CubePartitionerTest extends AnyFunSuite with BeforeAndAfterAll {
 
-    // Starting Spark...
+  def startSparkSession(implicit S: Settings): SparkSession = {
     val spark: SparkSession = SparkSession
       .builder()
       .config("spark.serializer", classOf[KryoSerializer].getName)
       .master(S.master)
-      .appName("CubeTester")
+      .appName("CubePartitionerTest")
       .getOrCreate()
 
     S.appId = spark.sparkContext.applicationId
     S.printer
 
-    val trajs: RDD[Point] = spark.read // Reading trajectories...
+    spark
+  }
+
+  def getData(spark: SparkSession)(implicit S: Settings): RDD[Point] = {
+    val trajs = spark.read // Reading trajectories...
       .option("header", value = false)
       .option("delimiter", "\t")
       .csv(S.dataset)
@@ -44,16 +41,18 @@ class CubePartitionerTest extends AnyFunSuite with BeforeAndAfterAll with Mockit
           val lat = row.getString(2).toDouble
           val tid = row.getString(3).toInt
 
-          val point = G.createPoint(new Coordinate(lon, lat))
+          val point = S.geofactory.createPoint(new Coordinate(lon, lat))
           point.setUserData(Data(oid, tid))
 
           point
         }
-      }
-    val nTrajs = trajs.count()
-    val (partitionedRDD, cubes, _) = if(false) CubePartitioner.getFixedIntervalCubes(trajs) else CubePartitioner.getDynamicIntervalCubes(trajs)
+      }.cache()
+    trajs.count()
+    trajs
+  }
 
-    save("/tmp/CubesF.wkt") {
+  def saveResutls(partitionedRDD: RDD[Point], cubes: Map[Int, Cube], method: String): Unit = {
+    save(s"/tmp/Cubes${method}.wkt") {
       cubes.values.map { cube =>
         val wkt = cube.cell.wkt
         val beg = cube.interval.begin
@@ -64,7 +63,7 @@ class CubePartitionerTest extends AnyFunSuite with BeforeAndAfterAll with Mockit
       }.toList
     }
 
-    save("/tmp/SampleF.wkt") {
+    save(s"/tmp/Sample${method}.wkt") {
       partitionedRDD
         .sample(withReplacement = false, fraction = 0.1, seed = 42)
         .mapPartitionsWithIndex{ case(index, it) =>
@@ -79,53 +78,59 @@ class CubePartitionerTest extends AnyFunSuite with BeforeAndAfterAll with Mockit
         }
         .collect()
      }
-
-    // Verify the results
-    assert(cubes.nonEmpty)
-
-    // Check that the RDD is partitioned
-    assert(partitionedRDD.getNumPartitions === cubes.size)
-
-    spark.stop()
-
   }
 
-  /*
-  test("getDynamicIntervalCubes should partition trajectory points correctly") {
-    val (partitionedRDD, cubes, _) = CubePartitioner.getDynamicIntervalCubes(trajs)
+  test("getFixedIntervalCubes should partition trajectory points correctly") {
 
-    save("/tmp/CubesD.wkt") {
-      cubes.values.map { cube =>
-        val wkt = cube.cell.wkt
-        val beg = cube.interval.begin
-        val dur = cube.interval.duration
-        val id  = cube.id
+    // Setting up environment...
+    implicit var S: Settings = Setup.getSettings(Seq.empty[String]) // Initializing settings...
+    S = S.copy(master = "local[2]", eprime = 5, debug = true, step = 3, tcapacity = 100000)
 
-        s"$wkt\t$id\t$beg\t$dur\n"
-      }.toList
-    }
+    // Starting Spark...
+    val spark = startSparkSession
+    
+    // Loading data...
+    val trajs: RDD[Point] = getData(spark) 
 
-    save("/tmp/SampleD.wkt") {
-      partitionedRDD
-        .sample(withReplacement = false, fraction = 0.1, seed = 42)
-        .mapPartitionsWithIndex{ case(index, it) =>
-          val cube = cubes(index)
-          val (s_index, t_index) = Encoder.decode(cube.st_index)
-          it.map{ p =>
-            val wkt = p.toText
-            val data = p.getUserData.asInstanceOf[Data]
+    val (partitionedRDD, cubes, _) = CubePartitioner.getFixedIntervalCubes(trajs)
 
-            s"$wkt\t${data.tid}\t$s_index\t$t_index\t$index\n"
-          }
-        }
-        .collect()
-    }
-
-    // Verify the results
+    // Verifying the results...
     assert(cubes.nonEmpty)
 
-    // Check that the RDD is partitioned
+    // Checking that the RDD is partitioned...
     assert(partitionedRDD.getNumPartitions === cubes.size)
-   }
-   */
+
+    // Saving results for manual inspection...
+    saveResutls(partitionedRDD, cubes, "Fixed")
+
+    // Stopping Spark...
+    spark.stop()
+  }
+
+  test("getDynamicIntervalCubes should partition trajectory points correctly") {
+
+    // Setting up environment...
+    implicit var S: Settings = Setup.getSettings(Seq.empty[String]) // Initializing settings...
+    S = S.copy(master = "local[2]", eprime = 5, debug = true, tcapacity = 100000)
+
+    // Starting Spark...
+    val spark = startSparkSession
+    
+    // Loading data...
+    val trajs: RDD[Point] = getData(spark) 
+
+    val (partitionedRDD, cubes, _) = CubePartitioner.getDynamicIntervalCubes(trajs)
+
+    // Verifying the results...
+    assert(cubes.nonEmpty)
+
+    // Checking that the RDD is partitioned...
+    assert(partitionedRDD.getNumPartitions === cubes.size)
+
+    // Saving results for manual inspection...
+    saveResutls(partitionedRDD, cubes, "Dynamic")
+
+    // Stopping Spark...
+    spark.stop()
+  }
 }

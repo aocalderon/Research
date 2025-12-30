@@ -3,6 +3,7 @@ package puj
 import org.rogach.scallop._
 import java.time.Instant
 import org.apache.logging.log4j.scala.Logging
+import org.locationtech.jts.geom.{GeometryFactory, PrecisionModel}
 
 object Setup extends Logging {
   def getSettings(args: Seq[String]): Settings = {
@@ -32,7 +33,7 @@ object Setup extends Logging {
   }
 }
 
-case class Settings(
+case class Settings (
     dataset: String = "",
     tag: String = "",
     output: String = "",
@@ -61,6 +62,7 @@ case class Settings(
   val expansion: Double    = eprime * 1.5 + tolerance
   var partitions: Int      = 1
   var appId: String        = s"${Instant.now()}"
+  val geofactory: GeometryFactory = new GeometryFactory(new PrecisionModel(scale))
   val dataset_name: String = {
     val d = dataset.split("/").last.split("\\.").head
     if (d.startsWith("part-")) d.split("-")(1) else d
