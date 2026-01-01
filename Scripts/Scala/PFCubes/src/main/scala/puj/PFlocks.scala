@@ -23,7 +23,7 @@ object PFlocks extends Logging {
     /** *********************************************************************** Settings...
       */
     implicit var S: Settings        = Setup.getSettings(args)                          // Initializing settings...
-    implicit val G: GeometryFactory = new GeometryFactory(new PrecisionModel(S.scale)) // Setting precision model and geofactory...
+    implicit val G: GeometryFactory = S.geofactory                                   // Initializing geometry factory...
 
     // Starting Spark...
     implicit val spark: SparkSession = SparkSession
@@ -62,14 +62,15 @@ object PFlocks extends Logging {
 
     /** *********************************************************************** Spatio-temporal partitioning...
       */
-    val t0                                            = clocktime // Starting timer...
-    implicit val (trajs_partitioned, cubes, quadtree) = CubePartitioner.getFixedIntervalCubes(trajs)
-    trajs_partitioned.cache
-    val nTrajs = trajs_partitioned.count()
-    val tTrajs = (clocktime - t0) / 1e9
 
+    implicit val ( (trajs_partitioned, cubes, quadtree), tTrajs) = timer {
+      CubePartitioner.getFixedIntervalCubes(trajs)
+    }
+    val nTrajs = trajs_partitioned.count()
     logger.info(s"${S.appId}|TIME|STPart|$tTrajs")
     logger.info(s"${S.appId}|INFO|STPart|$nTrajs")
+
+    logger.info(s"${S.appId}|INFO|Cubes|${cubes.size}")
 
     // Debugging info...
     debug {
@@ -82,7 +83,7 @@ object PFlocks extends Logging {
 
     /** *********************************************************************** Safe flocks finding...
       */
-    val ((flocksRDD, nFlocksRDD), tFlocksRDD) = timer {
+    val (flocksRDD, tFlocksRDD) = timer {
       // Computing flocks in each spatiotemporal partition...
       val flocksRDD = trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
         val t0        = clocktime
@@ -93,7 +94,7 @@ object PFlocks extends Logging {
         } else {
           cell_test
         }
-        val cell_prime = new Envelope(cell)
+        val cell_prime = new Envelope(cubes(index).cell.envelope)
         val ps         = points.toList
           .map { point =>
             val data = point.getUserData.asInstanceOf[Data]
@@ -136,11 +137,16 @@ object PFlocks extends Logging {
         r
       }.cache
       val nFlocksRDD = flocksRDD.count()
-      (flocksRDD, nFlocksRDD)
+      debug {
+        logger.info { s"INFO|nFlocksRDD|$nFlocksRDD" }
+      }
+      flocksRDD
     }
+
     val safes = flocksRDD.collect().flatMap(_._1)
+    val nSafes = safes.length
     logger.info(s"${S.appId}|TIME|Safe|$tFlocksRDD")
-    logger.info(s"${S.appId}|INFO|Safe|$nFlocksRDD")
+    logger.info(s"${S.appId}|INFO|Safe|$nSafes")
 
     /** *********************************************************************** Spatial partial finding...
       */
@@ -172,8 +178,15 @@ object PFlocks extends Logging {
 
         R
       }.cache
+      val nSpartialRDD_prime = spartialsRDD_prime.count()
+
+      debug{
+        logger.info { s"INFO|nSpartialRDD_Prime|$nSpartialRDD_prime" }
+      }
+
       val cids  = spartialsRDD_prime.map(_._1).distinct().collect().zipWithIndex.toMap
       val nCids = cids.size
+
       debug {
         logger.info { s"INFO|CIDS|$nCids" }
       }
@@ -254,7 +267,11 @@ object PFlocks extends Logging {
     /** *********************************************************************** Duplicate prunning...
       */
     val (flocks, tPrune) = timer {
-      PF_Utils.parPrune(safes.toList ++ spartials.toList ++ tpartials.toList)
+      val allFlocks = (safes ++ spartials ++ tpartials).toList
+      debug {
+        logger.info { s"INFO|BeforePrune|${allFlocks.length}" }
+      }
+      PF_Utils.parPrune(allFlocks)
     }
     logger.info(s"${S.appId}|TIME|Flocks|$tPrune")
     logger.info(s"${S.appId}|INFO|Flocks|${flocks.size}")

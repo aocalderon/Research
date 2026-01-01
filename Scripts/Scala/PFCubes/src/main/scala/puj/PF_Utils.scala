@@ -124,6 +124,13 @@ object PF_Utils extends Logging {
 
   def parPrune(flocks: List[Disk])(implicit spark: SparkSession, S: Settings, cubes: Map[Int, Cube], tree: StandardQuadTree[Point]): List[Disk] = {
     val n = tree.getLeafZones.size()
+    val cells = tree.getLeafZones().asScala.map{ leaf =>
+
+      val id = leaf.partitionId.toInt
+      val envelope = leaf.getEnvelope()
+
+      id -> Cell(id, envelope, "")(S.geofactory)
+    }.toMap
     spark.sparkContext
       .parallelize(flocks)
       .flatMap { flock =>
@@ -135,13 +142,13 @@ object PF_Utils extends Logging {
       .partitionBy(SimplePartitioner(n))
       .mapPartitionsWithIndex { (index, it) =>
         val t0     = clocktime
-        val cell   = cubes(index).cell
+        val cell   = cells(index)
         val flocks = it.map(_._2).toList
         val r      = pruneByArchery(flocks).filter { f =>
           cell.contains(f)
         }.toIterator
         val tParPrune = (clocktime - t0) / 1e9
-        debug {
+        experiments {
           logger.info(s"TIME|PER_CELL|ParPrune|$index|$tParPrune")
         }
 
@@ -153,7 +160,7 @@ object PF_Utils extends Logging {
 
   def pruneByArchery(flocks: List[Disk])(implicit S: Settings): List[Disk] = {
     var tree = archery.RTree[Disk]()
-    val f    = flocks.sortBy(_.start).zipWithIndex.map { case (flock, id) =>
+    val f = flocks.sortBy(_.start).zipWithIndex.map{ case(flock, id) =>
       flock.id = id
       tree = tree.insert(flock.pointEntry)
 
@@ -162,6 +169,7 @@ object PF_Utils extends Logging {
 
     pruneByArcheryRec(f, List.empty[Disk], tree, S)
   }
+
   def pruneByLocation(flocks: List[Disk])(implicit S: Settings): List[Disk] = {
     val tree = new STRtree()
     val f    = flocks.sortBy(_.start).zipWithIndex.map { case (flock, id) =>
@@ -276,6 +284,7 @@ object PF_Utils extends Logging {
       case Nil => Q_prime
     }
   }
+
   @tailrec
   private def pruneByArcheryRec2(Q: List[Disk], Q_prime: List[Disk], tree_prime: RTree[Disk], S: Settings): List[Disk] = {
     tree_prime.entries.toList match {
@@ -658,21 +667,19 @@ object PF_Utils extends Logging {
         val time   = current_trajs._1
         val points = current_trajs._2.toList
 
-        val (new_flocks, stats) = if (S.method == "BFE") {
-          val (nf, stats) = BFE.run(points)
-          (nf.map(_.copy(start = time, end = time)).filter(d => cell_prime.contains(d.center.getCoordinate)), stats)
+        val (new_flocks_prime, stats) = if(S.method == "PSI"){
+          PSI.run(points)
         } else {
-          val (nf, stats) = PSI.run(points)
-          (nf.map(_.copy(start = time, end = time)).filter(d => cell_prime.contains(d.center.getCoordinate)), stats)
+          BFE.run(points)
+        }
+        val new_flocks = new_flocks_prime.map(_.copy(start = time, end = time)).filter(d => cell_prime.contains(d.center.getCoordinate))
+
+        if (S.print) {
+          if(S.method == "PSI") stats.printPSI() else stats.printBFE()
         }
 
-        debug {
-          stats.printPSI()
-        }
-
-        /** * start: merging previous flocks with current flocks...
-          */
-        val merged_ones = if (S.method != "BFE") {
+        //start: merging previous flocks with current flocks...
+        val merged_ones = if (S.method == "PSI") {
           val inverted_index = flocks
             .flatMap { flock =>
               flock.pids.map { pid =>
@@ -707,7 +714,7 @@ object PF_Utils extends Logging {
           }
 
           flocks_prime.flatten
-        } else { // PSI
+        } else { // BFE
           {
             for {
               old_flock <- flocks
@@ -723,12 +730,9 @@ object PF_Utils extends Logging {
             }
           }.filter(_.pids.size >= S.mu) // filtering by minimum number of entities (mu)...
         }
-
-        /** * end: merging previous flocks with current flocks...
-          */
-
-        /** * start: pruning subset flocks...
-          */
+        //end: merging previous flocks with current flocks...
+          
+        //start: pruning subset flocks...
         val M = pruneM(merged_ones, List.empty[Disk]).filterNot(_.subset)
 
         val N = new_flocks.filterNot(_.subset).map { flock =>
@@ -736,12 +740,9 @@ object PF_Utils extends Logging {
         }
 
         val candidates = M ++ pruneN(M, N, List.empty[Disk])
+        //end: pruning subset flocks...
 
-        /** * end: pruning subset flocks...
-          */
-
-        /** * start: reporting...
-          */
+        //start: reporting...
         val F_prime = candidates
           .map { flock =>
             val safe_delta = flock.end - flock.start >= S.delta - 1
@@ -751,16 +752,13 @@ object PF_Utils extends Logging {
           }
 
         val r = F_prime.filter(f => f._2 && f._3).map(_._1)
+        
         if (S.print) {
           r.foreach { println }
         }
+        //end: reporting...
 
-        /** * end: reporting...
-          */
-
-        /** * start: recurse...
-          */
-
+        //start: recurse...
         val F = F_prime
           .map { case (flock, safe_delta, _) =>
             if (safe_delta) {
@@ -809,8 +807,7 @@ object PF_Utils extends Logging {
           T_partial_end
         )
 
-      /** * start: recurse...
-        */
+      //end: recurse...
 
       case Nil => (f, partial, partial2 ++ partial3)
     }

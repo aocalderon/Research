@@ -29,13 +29,6 @@ object PSI extends Logging {
     // ordering by coordinate (it is first by x and then by y)...
     val pointset: List[STPoint] = points.sortBy(_.getCoord)
 
-    debug {
-      save("/tmp/edgesPointsPSI.wkt") {
-        pointset.zipWithIndex
-          .map { case (point, order) => s"${point.wkt}\t$order\n" }
-      }
-    }
-
     // setting data structures to store candidates and boxes...
     val candidates: RTree[Disk]               = RTree[Disk]()
     var boxes: ArcheryRTree[Box]              = ArcheryRTree[Box]()
@@ -99,10 +92,6 @@ object PSI extends Logging {
 
             val active_box = Box(band_for_pr)
 
-            debug {
-              println(active_box.wkt)
-            }
-
             val active_box_hood = boxes.searchIntersection(active_box.boundingBox)
 
             def coveredBy: Boolean = active_box_hood.exists(b => b.value.covers(active_box))
@@ -133,15 +122,6 @@ object PSI extends Logging {
     stats.tPairs = tPairs
     stats.tCenters = tCenters
     stats.tCandidates = tCandidates / 1e9
-
-    debug {
-      save("/tmp/edgesPairsPSI.wkt") {
-        pairs.toList.map { case (pr, p) =>
-          val coords = Array(pr.getCoord, p.getCoord)
-          G.createLineString(coords).toText + "\n"
-        }
-      }
-    }
 
     (candidates, boxes)
   }
@@ -198,9 +178,6 @@ object PSI extends Logging {
           p.distance(pr) <= S.epsilon // getting pairs...
         }
       }
-      debug {
-        logger.info(f"pr: $pr\t points: ${points.mkString(" ")}")
-      }
 
       pairs.appendAll(band_pairs.map(p => (pr, p)))
       nPairs += band_pairs.size
@@ -212,13 +189,6 @@ object PSI extends Logging {
         }
         nCenters += band_centres.size
         tCenters += tC
-
-        debug {
-          band_centres.map { centre =>
-            val wkt = centre.toText
-            s"$wkt\t${S.epsilon}"
-          } // .foreach{println}
-        }
 
         band_centres.foreach { centre =>
           val t0       = clocktime
@@ -327,13 +297,6 @@ object PSI extends Logging {
         }
         nCenters += band_centres.size
         tCenters += tC
-
-        debug {
-          band_centres.map { centre =>
-            val wkt = centre.toText
-            s"$wkt\t${S.epsilon}"
-          } // .foreach{println}
-        }
 
         band_centres.foreach { centre =>
           val t0       = clocktime
@@ -444,22 +407,6 @@ object PSI extends Logging {
     }
     stats.tSort = tS
 
-    debug {
-      save("/tmp/edgesBCandidates.wkt") {
-        boxes.flatMap { box =>
-          val bid = box.id
-          box.disks
-            .sortBy(_.pidsText)
-            .map { disk =>
-              val pids     = disk.pidsText
-              val disk_wkt = disk.getCircleWTK
-              s"$disk_wkt\t$bid\t$pids\n"
-            }
-            .sorted
-        }
-      }
-    }
-
     var C: ListBuffer[Disk] = ListBuffer()
 
     val (_, tI) = timer {
@@ -525,11 +472,6 @@ object PSI extends Logging {
 
     // Call plane sweeping technique algorithm...
     val boxes = PSI.planeSweeping(points, time_instant)
-    debug {
-      boxes.foreach { box =>
-        // println(s"${box.wkt}\t${box.id}\t${box.disks}")
-      }
-    }
 
     // Call filter candidates algorithm...
     val (maximals, tF) = timer {
@@ -548,11 +490,6 @@ object PSI extends Logging {
 
     // Call plane sweeping technique algorithm...
     val boxes = PSI.planeSweepingByPivot(points, pivot, time_instant)
-    debug {
-      boxes.foreach { box =>
-        // println(s"${box.wkt}\t${box.id}\t${box.disks}")
-      }
-    }
 
     // Call filter candidates algorithm...
     val (maximals, tF) = timer {
@@ -571,8 +508,9 @@ object PSI extends Logging {
     log(s"START")
 
     val (maximals, stats) = PSI.run(points)
+    
     stats.printPSI()
-
+    
     debug {
       save("/tmp/edgesPointsPSI.wkt") { points.map { _.wkt + "\n" } }
       save("/tmp/edgesMaximalsPSI.wkt") { maximals.map { _.wkt + "\n" } }

@@ -139,7 +139,8 @@ object CubePartitioner extends Logging {
       .filter { p =>
         val data = p.getUserData.asInstanceOf[Data]
         data.tid <= S.endtime
-      }
+      }.cache()
+    trajs_partitioned.count()
 
     debug {
       logger.info(s"Re-partitions done!")
@@ -233,7 +234,7 @@ object CubePartitioner extends Logging {
 
     //val temporal_bounds = intervals.values.map(_.begin).toArray.sorted
 
-    val pointsSTRDD_prime = trajsSRDD
+    val trajsSTRDD_prime = trajsSRDD
       .mapPartitionsWithIndex { (spatial_index, it) =>
         it.map { point =>
           val data = point.getUserData().asInstanceOf[Data]
@@ -251,7 +252,7 @@ object CubePartitioner extends Logging {
     }
 
 
-    val cubes: Map[Int, Cube] = pointsSTRDD_prime
+    val cubes: Map[Int, Cube] = trajsSTRDD_prime
       .map { case (st_index, _) => st_index }
       .distinct()
       .collect()
@@ -272,17 +273,17 @@ object CubePartitioner extends Logging {
       logger.info(s"Cubes done!")
     }
     
-    val pointsSTRDD = pointsSTRDD_prime
+    val trajsSTRDD = trajsSTRDD_prime
       .map { case (st_index, point) => (cubes_reversed(st_index), point) }
       .partitionBy(SimplePartitioner(cubes.size))
       .map(_._2)
       .cache()
-    val nPointsSTRDD = pointsSTRDD.count()
+    trajsSTRDD.count()
 
     debug {
       logger.info(s"Re-partition done!")
     }    
 
-    (pointsSTRDD, cubes, quadtree)
+    (trajsSTRDD, cubes, quadtree)
   }
 }
