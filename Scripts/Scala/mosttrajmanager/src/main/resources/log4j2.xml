@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+      <Console name="Console" target="SYSTEM_OUT">
+	<PatternLayout pattern="|%d{HH:mm:ss.SSS}|%-5level|%t|%logger{36}|%msg%n"/>
+      </Console>
+    </Appenders>
+
+    <Loggers>
+        <Root level="WARN">
+          <AppenderRef ref="Console"/>
+        </Root>
+
+	<Logger name="org.apache.hadoop.util.NativeCodeLoader" level="ERROR" additivity="false">
+          <AppenderRef ref="Console"/>
+	</Logger>
+	<Logger name="org.apache.spark" level="ERROR" additivity="false">
+          <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.spark_project" level="ERROR" additivity="false">
+          <AppenderRef ref="Console"/>
+        </Logger>
+
+	<Logger name="puj" level="INFO" additivity="false">
+          <AppenderRef ref="Console"/>
+        </Logger>
+    </Loggers>
+</Configuration>

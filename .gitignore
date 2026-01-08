@@ -39,6 +39,22 @@ Scripts/Scala/notebooks/.ipynb_checkpoints/*
 Scripts/Scala/PFlock/bash/target/routing-graph-cache/*
 Scripts/Scala/PFlock/target/routing-graph-cache/*
 
+Scripts/Scala/mosttrajmanager/target/*
+Scripts/Scala/mosttrajmanager/project/*
+Scripts/Scala/mosttrajmanager/.vscode/*
+Scripts/Scala/mosttrajmanager/.bsp/*
+Scripts/Scala/mosttrajmanager/.bsp/sbt.json
+Scripts/Scala/mosttrajmanager/.idea/*
+Scripts/Scala/mosttrajmanager/.idea/workspace.xml
+Scripts/Scala/mosttrajmanager/.ensime
+Scripts/Scala/mosttrajmanager/.ensime_cache/*
+Scripts/Scala/mosttrajmanager/.classpath
+Scripts/Scala/mosttrajmanager/.project
+Scripts/Scala/mosttrajmanager/.settings/*
+Scripts/Scala/mosttrajmanager/.bloop/
+Scripts/Scala/mosttrajmanager/.metals/
+Scripts/Scala/mosttrajmanager/.scalafmt.conf
+
 Scripts/Scala/PFCubes/target/*
 Scripts/Scala/PFCubes/project/*
 Scripts/Scala/PFCubes/.vscode/*
