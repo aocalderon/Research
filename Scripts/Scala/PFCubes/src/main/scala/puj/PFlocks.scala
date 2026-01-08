@@ -64,7 +64,7 @@ object PFlocks extends Logging {
       */
 
     implicit val ( (trajs_partitioned, cubes, quadtree), tTrajs) = timer {
-      CubePartitioner.getFixedIntervalCubes(trajs)
+      CubePartitioner.getDynamicIntervalCubes(trajs)
     }
     val nTrajs = trajs_partitioned.count()
     logger.info(s"${S.appId}|TIME|STPart|$tTrajs")
