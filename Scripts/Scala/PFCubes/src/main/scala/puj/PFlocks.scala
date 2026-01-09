@@ -64,7 +64,10 @@ object PFlocks extends Logging {
       */
 
     implicit val ( (trajs_partitioned, cubes, quadtree), tTrajs) = timer {
-      CubePartitioner.getDynamicIntervalCubes(trajs)
+      if (S.partitioner == "Fixed") 
+        CubePartitioner.getFixedIntervalCubes(trajs)
+      else 
+        CubePartitioner.getDynamicIntervalCubes(trajs)
     }
     val nTrajs = trajs_partitioned.count()
     logger.info(s"${S.appId}|TIME|STPart|$tTrajs")
@@ -75,6 +78,13 @@ object PFlocks extends Logging {
     // Debugging info...
     debug {
       save("/tmp/Cubes.wkt") {
+        cubes.values.map { cube =>
+          s"${cube.wkt}\n"
+        }.toList
+      }
+    }
+    experiments {
+      save(s"/tmp/Cubes_${S.appId}.wkt") {
         cubes.values.map { cube =>
           s"${cube.wkt}\n"
         }.toList

@@ -14,6 +14,7 @@ object Setup extends Logging {
       output = params.output(),
       method = params.method(),
       master = params.master(),
+      partitioner = params.partitioner(),
       eprime = params.epsilon(),
       sdist = params.sdist(),
       fraction = params.fraction(),
@@ -39,6 +40,7 @@ case class Settings (
     output: String = "",
     method: String = "",
     master: String = "",
+    partitioner: String = "",
     eprime: Double = 0.0,
     sdist: Double = 0.0,
     fraction: Double = 0.0,
@@ -75,6 +77,7 @@ case class Settings (
     logger.info(s"${appId}|SETTINGS|MU=$mu")
     logger.info(s"${appId}|SETTINGS|DELTA=$delta")
     logger.info(s"${appId}|SETTINGS|METHOD=$method")
+    logger.info(s"${appId}|SETTINGS|PARTITIONER=$partitioner")
     logger.info(s"${appId}|SETTINGS|SCAPACITY=$scapacity")
     logger.info(s"${appId}|SETTINGS|TCAPACITY=$tcapacity")
     logger.info(s"${appId}|SETTINGS|TOLERANCE=$tolerance")
@@ -93,6 +96,7 @@ class Params(args: Seq[String]) extends ScallopConf(args) {
   val tag: ScallopOption[String]       = opt[String](default = Some(""))
   val method: ScallopOption[String]    = opt[String](default = Some("PSI"))
   val output: ScallopOption[String]    = opt[String](default = Some("/tmp/"))
+  val partitioner: ScallopOption[String] = opt[String](default = Some("Fixed"))
   val epsilon: ScallopOption[Double]   = opt[Double](default = Some(10.0))
   val sdist: ScallopOption[Double]     = opt[Double](default = Some(20.0))
   val fraction: ScallopOption[Double]  = opt[Double](default = Some(0.1))

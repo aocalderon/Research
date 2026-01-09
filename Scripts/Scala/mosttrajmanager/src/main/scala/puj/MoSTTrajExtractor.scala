@@ -21,7 +21,7 @@ object MoSTTrajExtractor extends Logging {
     def wkt(): String = s"${toString}\n"
   }
 
-      /**
+  /**
    * Run the Spark job with the given settings.
    *
    * @param S

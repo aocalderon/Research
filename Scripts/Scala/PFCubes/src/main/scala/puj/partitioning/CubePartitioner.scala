@@ -17,10 +17,12 @@ import puj.Utils.{SimplePartitioner, Data, debug, save}
 case class Cube(id: Int, cell: Cell, interval: Interval, st_index: Int) {
   def wkt: String = {
     val wkt = cell.wkt
+    val sid = cell.id
+    val tid = interval.index
     val beg = interval.begin
     val dur = interval.duration
 
-    s"$wkt\t$id\t$beg\t$dur"
+    s"$wkt\t$id\t$sid\t$tid\t$beg\t$dur"
   }
 }
 
@@ -42,6 +44,9 @@ object CubePartitioner extends Logging {
   def getFixedIntervalCubes(trajs: RDD[Point])(implicit S: Settings): (RDD[Point], Map[Int, Cube], StandardQuadTree[Point]) = {
 
     // Building quadtree...
+    debug {
+      logger.info(s"Running Fixed Interval Cube Partitioner...")
+    }
     implicit var G: GeometryFactory = S.geofactory
     val sample   = trajs.sample(withReplacement = false, fraction = S.fraction, seed = 42).collect()
     val universe = PF_Utils.getEnvelope(trajs)
@@ -151,6 +156,9 @@ object CubePartitioner extends Logging {
 
   def getDynamicIntervalCubes(trajs: RDD[Point])(implicit S: Settings): (RDD[Point], Map[Int, Cube], StandardQuadTree[Point]) = {
     // Building quadtree...
+    debug {
+      logger.info(s"Running Dynamic Interval Cube Partitioner...")
+    }
     implicit var G: GeometryFactory = S.geofactory
     val (quadtree, cells, rtree, universe) =
       Quadtree.build(trajs, new Envelope(), capacity = S.scapacity, fraction = S.fraction)
