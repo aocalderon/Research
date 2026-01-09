@@ -1,8 +1,9 @@
 package puj
 
 import org.apache.spark.serializer.KryoSerializer
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{SparkSession, Dataset}
 import org.apache.logging.log4j.scala.Logging
+import org.apache.spark.sql.functions._
 
 import org.locationtech.jts.geom._
 import org.locationtech.jts.io.{WKTReader, WKTWriter}
@@ -13,9 +14,8 @@ import scopt.OParser
 import puj.Utils._
 
 object MoSTTrajExtractor extends Logging {
-  case class STPoint(oid: Int, lon: Double, lat: Double, tid: Int)    
   
-  case class Traj(oid: Int, line: String, start: Int, duration: Int){
+  case class Traj(oid: Long, line: String, start: Int, duration: Int){
     override def toString: String = s"${line}\t${oid}\t${start}\t${duration}"
 
     def wkt(): String = s"${toString}\n"
@@ -57,21 +57,54 @@ object MoSTTrajExtractor extends Logging {
             
             STPoint(oid, lon, lat, tid)
         }
+        .repartition($"oid")
         .cache()
       val nPoints = points.count()
       logger.info(s"Points=${nPoints}")
 
-      val trajs = points.groupByKey(_.oid).mapGroups{ case (oid, iter) =>
-        iter.toArray
-          .sortBy(_.tid)
-          .map{ point =>
-            val lon = point.lon
-            val lat = point.lat
-            val tid = point.tid
-            new Coordinate(lon, lat, tid)
+      val A: Dataset[List[STPoint]] = points.mapPartitions{ iter =>
+        iter.toList.groupBy(_.oid).flatMap{ case (oid, list) =>
+          val sorted = list.sortBy(_.tid)
+          val splitted: List[List[STPoint]] = Utils.splitSTPointByGap(sorted).filter(_.length >= minimum_duration).map{ segment =>
+            segment.zipWithIndex
+            .filter{ case (_, index) =>
+              index % 54 == 0
+            }
+            .map{ case (point, index) =>
+              point.copy(tid = index / 54)
+            }
           }
-      }
 
+          val sample: List[List[STPoint]] = splitted.flatMap{ segment =>
+            Utils.splitSTPointByStatic(segment).filter(_.length > 3)
+          }
+
+          sample
+        }.toIterator
+      }.cache()
+      val nA = A.count()
+      logger.info(s"Pointsets=${nA}")
+
+      val trajs2 = A.rdd.zipWithUniqueId()
+        .map { case(points: List[STPoint], oid: Long) => 
+            
+            val coords = points.map{ point =>
+              point.copy(oid = oid)
+              new Coordinate(point.lon, point.lat, point.tid)
+            }.toArray
+            val traj = S.geofactory.createLineString(coords)
+            val wkt = new WKTWriter(3).write(traj)
+            val beg = coords.head.getZ.toInt
+            val end = coords.last.getZ.toInt
+            val dur = (end - beg).toInt
+            Traj(oid, wkt, beg, dur)
+        }
+        .cache()
+      val nTrajs2 = trajs2.count()
+      logger.info(s"Trajectories2=${nTrajs2}")
+      save("/opt/Datasets/MoST2.wkt"){
+        trajs2.collect().toList.sortBy(_.oid).map{_.wkt()}
+      }
 
       val trajs = points.groupByKey(_.oid).flatMapGroups{ case (oid, iter) =>
         val sorted = iter.toArray.sortBy(_.tid)

@@ -7,6 +7,8 @@ import java.io.PrintWriter
 import org.apache.logging.log4j.scala.Logging
 
 object Utils extends Logging {
+  case class STPoint(oid: Long, lon: Double, lat: Double, tid: Int)    
+
   case class TrajPoint(oid: String, lon: Double, lat: Double, tid: Long)
 
   case class Data(oid: String, tid: Long)
@@ -72,7 +74,7 @@ object Utils extends Logging {
             case b :: _ =>
               // Compare current point 'p' with the buffered point 'b'
               // (Assumes double precision tolerance is not needed; if so, use math.abs)
-              if (p.lon == b.lon && p.lat == b.lat) {
+              if (p.getX == b.getX && p.getY == b.getY) {
                 // Point is static relative to buffer: Add to buffer
                 recurse(tail, p :: buffer, currentSeg, acc)
               } else {
@@ -129,6 +131,112 @@ object Utils extends Logging {
               // Check the gap between the next point and the most recent point in the current segment
               val nextTid = nextPoint.getZ.toInt
               val lastTid = lastPoint.getZ.toInt
+              if (nextTid - lastTid <= maxGap) {
+                // Consecutive: Prepend to current segment (O(1) operation)
+                recurse(tail, nextPoint :: currentSegment, acc)
+              } else {
+                // Gap found: Finalize current segment and start a new one
+                recurse(tail, List(nextPoint), currentSegment.reverse :: acc)
+              }
+          }
+      }
+    }
+
+    recurse(points, Nil, Nil)
+  }  
+
+  /**
+    * Splits a list of points into sub-lists based on static stops.
+    *
+    * A stop is defined as a sequence of identical points longer than the threshold.
+    * Segments are split at stops, and short pauses (<= threshold) are merged into moving segments.
+    *
+    * @param points Input list of points (assumed to be sorted by tid)
+    * @param threshold The minimum number of identical consecutive points to consider a stop
+    * @return A List of Lists, where each inner list is a moving segment
+    */
+  def splitSTPointByStatic(points: List[STPoint], threshold: Int = 3): List[List[STPoint]] = {
+
+    @annotation.tailrec
+    def recurse(
+        remaining: List[STPoint],
+        buffer: List[STPoint],       // Accumulates identical points to check count
+        currentSeg: List[STPoint],   // Accumulates valid moving points
+        acc: List[List[STPoint]]     // Accumulates finished segments
+    ): List[List[STPoint]] = {
+      remaining match {
+        case Nil =>
+          // End of input: Process the final buffer
+          if (buffer.size > threshold) {
+            // Final points were a static stop -> Discard buffer, finish currentSeg
+            if (currentSeg.isEmpty) acc.reverse
+            else (currentSeg.reverse :: acc).reverse
+          } else {
+            // Final points were moving -> Combine buffer + currentSeg
+            val finalSeg = (buffer ++ currentSeg).reverse
+            if (finalSeg.isEmpty) acc.reverse
+            else (finalSeg :: acc).reverse
+          }
+
+        case p :: tail =>
+          buffer match {
+            case Nil =>
+              // Initialize: Start buffering the first point
+              recurse(tail, List(p), currentSeg, acc)
+
+            case b :: _ =>
+              // Compare current point 'p' with the buffered point 'b'
+              // (Assumes double precision tolerance is not needed; if so, use math.abs)
+              if (p.lon == b.lon && p.lat == b.lat) {
+                // Point is static relative to buffer: Add to buffer
+                recurse(tail, p :: buffer, currentSeg, acc)
+              } else {
+                // Point moved: Evaluate the buffer we just finished
+                if (buffer.size > threshold) {
+                  // CASE 1: The buffer was a STOP (static > threshold)
+                  // Action: Split here. Save currentSeg, discard buffer, start new seg with p.
+                  val newAcc = if (currentSeg.isEmpty) acc else currentSeg.reverse :: acc
+                  recurse(tail, List(p), Nil, newAcc)
+                } else {
+                  // CASE 2: The buffer was just a pause (static <= threshold)
+                  // Action: Keep going. Move buffer to currentSeg, start buffering p.
+                  // Note: 'buffer' is reversed, 'currentSeg' is reversed. 
+                  // We prepend buffer to currentSeg to maintain reverse order correctly.
+                  recurse(tail, List(p), buffer ++ currentSeg, acc)
+                }
+              }
+          }
+      }
+    }
+
+    recurse(points, Nil, Nil, Nil)
+  }
+
+  def splitSTPointByGap(points: List[STPoint], maxGap: Int = 1): List[List[STPoint]] = {
+
+    @annotation.tailrec
+    def recurse(
+        remaining: List[STPoint],
+        currentSegment: List[STPoint],
+        acc: List[List[STPoint]]
+    ): List[List[STPoint]] = {
+      remaining match {
+        // Base case: No more points to process
+        case Nil =>
+          if (currentSegment.isEmpty) acc.reverse
+          else (currentSegment.reverse :: acc).reverse
+
+        // Recursive step
+        case nextPoint :: tail =>
+          currentSegment match {
+            case Nil =>
+              // Start the first segment
+              recurse(tail, List(nextPoint), acc)
+
+            case lastPoint :: _ =>
+              // Check the gap between the next point and the most recent point in the current segment
+              val nextTid = nextPoint.tid
+              val lastTid = lastPoint.tid
               if (nextTid - lastTid <= maxGap) {
                 // Consecutive: Prepend to current segment (O(1) operation)
                 recurse(tail, nextPoint :: currentSegment, acc)
