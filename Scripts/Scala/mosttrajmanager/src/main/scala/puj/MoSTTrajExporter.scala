@@ -47,12 +47,26 @@ object MoSTTrajExporter extends Logging {
 
           val geom = reader.read(line).asInstanceOf[LineString]
           val coords = (0 until geom.getNumPoints).map(i => geom.getCoordinateN(i))
-          coords.map(coord => STPoint(oid, coord.getX, coord.getY, coord.getZ.toInt))
-        }
+          val c1 = coords.map(coord => STPoint(oid, coord.getX, coord.getY, coord.getZ.toInt))
+          val c2 = coords.map(coord => STPoint(oid, coord.getX, coord.getY, -1 * coord.getZ.toInt)).filter(_.tid != 0)
+
+          c1 ++ c2
+        }.map{ point => point.copy(tid = point.tid + 46) } 
       }
       .cache()
     val nPoints = points.count()
     logger.info(s"Points=${nPoints}")
+
+    points.groupByKey(_.tid).mapGroups{ case (tid, pts) =>
+      val count = pts.size
+      (tid, count)
+    }.collect().sortBy(_._1).foreach{ case (tid, count) =>
+      logger.info(s"TID=${tid}, Count=${count}")
+    }
+
+    save("/opt/Datasets/MoST_points.tsv") {
+      points.collect().sortBy(_.tid).map{ point => s"${point.toString}\n"}
+    }
 
     spark.stop()
   }

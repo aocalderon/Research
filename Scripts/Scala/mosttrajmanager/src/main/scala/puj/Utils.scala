@@ -7,7 +7,9 @@ import java.io.PrintWriter
 import org.apache.logging.log4j.scala.Logging
 
 object Utils extends Logging {
-  case class STPoint(oid: Long, lon: Double, lat: Double, tid: Int)    
+  case class STPoint(oid: Long, lon: Double, lat: Double, tid: Int){
+    override def toString: String = s"${oid}\t${lon}\t${lat}\t${tid}"
+  }
 
   case class TrajPoint(oid: String, lon: Double, lat: Double, tid: Long)
 
