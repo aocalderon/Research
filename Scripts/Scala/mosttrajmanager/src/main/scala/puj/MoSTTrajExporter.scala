@@ -64,6 +64,20 @@ object MoSTTrajExporter extends Logging {
       logger.info(s"TID=${tid}, Count=${count}")
     }
 
+    save("/opt/Datasets/MoST_trajectories.tsv") {
+      points.groupByKey(_.oid).mapGroups{ case (oid, pts) =>
+        val coords = pts.toList.sortBy(_.tid).map{ point => 
+          new Coordinate(point.lon, point.lat, point.tid) 
+        }.toArray
+        val line = S.geofactory.createLineString(coords)
+        val wktWriter = new WKTWriter(3)
+        val wkt = wktWriter.write(line)
+        (wkt, oid)
+      }.collect().sortBy(_._2).map{ case (wkt, oid) =>
+        s"${wkt}\t${oid}\n"
+      }
+    }
+
     save("/opt/Datasets/MoST_points.tsv") {
       points.collect().sortBy(_.tid).map{ point => s"${point.toString}\n"}
     }
