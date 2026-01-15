@@ -7,7 +7,7 @@ import java.io.PrintWriter
 import org.apache.logging.log4j.scala.Logging
 
 object Utils extends Logging {
-  case class STPoint(oid: Long, lon: Double, lat: Double, tid: Int){
+  case class STPoint(oid: Long, lon: Double, lat: Double, tid: Int) {
     val wkt: String = s"${toString()}\n"
 
     override def toString: String = s"${oid}\t${lon}\t${lat}\t${tid}"
@@ -17,13 +17,13 @@ object Utils extends Logging {
 
   case class Data(oid: String, tid: Long)
 
-  case class Trajectory(oid: String, wkt: String, start: Long, duration: Int){
+  case class Trajectory(oid: String, wkt: String, start: Long, duration: Int) {
     override def toString: String = s"${wkt}\t${oid}\t${start}\t${duration}"
   }
 
   // Projection transformers (lazy to initialize once)
-  private lazy val crsFactory = new CRSFactory()
-  private lazy val ctFactory  = new CoordinateTransformFactory()
+  private lazy val crsFactory  = new CRSFactory()
+  private lazy val ctFactory   = new CoordinateTransformFactory()
   private lazy val transformer = ctFactory.createTransform(
     crsFactory.createFromName("EPSG:4326"),
     crsFactory.createFromName("EPSG:3944")
@@ -35,8 +35,7 @@ object Utils extends Logging {
   }
 
   // Functions...
-  /**
-    * Splits a list of points into sub-lists based on static stops.
+  /** Splits a list of points into sub-lists based on static stops.
     *
     * A stop is defined as a sequence of identical points longer than the threshold.
     * Segments are split at stops, and short pauses (<= threshold) are merged into moving segments.
@@ -50,11 +49,10 @@ object Utils extends Logging {
     @annotation.tailrec
     def recurse(
         remaining: List[Coordinate],
-        buffer: List[Coordinate],       // Accumulates identical points to check count
-        currentSeg: List[Coordinate],   // Accumulates valid moving points
-        acc: List[List[Coordinate]]     // Accumulates finished segments
-    ): List[List[Coordinate]] = {
-
+        buffer: List[Coordinate],     // Accumulates identical points to check count
+        currentSeg: List[Coordinate], // Accumulates valid moving points
+        acc: List[List[Coordinate]]   // Accumulates finished segments
+      ): List[List[Coordinate]] =
       remaining match {
         case Nil =>
           // End of input: Process the final buffer
@@ -91,20 +89,18 @@ object Utils extends Logging {
                 } else {
                   // CASE 2: The buffer was just a pause (static <= threshold)
                   // Action: Keep going. Move buffer to currentSeg, start buffering p.
-                  // Note: 'buffer' is reversed, 'currentSeg' is reversed. 
+                  // Note: 'buffer' is reversed, 'currentSeg' is reversed.
                   // We prepend buffer to currentSeg to maintain reverse order correctly.
                   recurse(tail, List(p), buffer ++ currentSeg, acc)
                 }
               }
           }
       }
-    }
 
     recurse(points, Nil, Nil, Nil)
   }
 
-  /**
-    * Splits a list of coordinates into sub-lists based on time continuity.
+  /** Splits a list of coordinates into sub-lists based on time continuity.
     *
     * @param points Input list of coordinates (assumed to be sorted by tid)
     * @param maxGap The maximum allowed difference in 'tid' to consider points consecutive
@@ -117,10 +113,10 @@ object Utils extends Logging {
         remaining: List[Coordinate],
         currentSegment: List[Coordinate],
         acc: List[List[Coordinate]]
-    ): List[List[Coordinate]] = {
+      ): List[List[Coordinate]] =
       remaining match {
         // Base case: No more points to process
-        case Nil =>
+        case Nil               =>
           if (currentSegment.isEmpty) acc.reverse
           else (currentSegment.reverse :: acc).reverse
 
@@ -144,13 +140,11 @@ object Utils extends Logging {
               }
           }
       }
-    }
 
     recurse(points, Nil, Nil)
-  }  
+  }
 
-  /**
-    * Splits a list of points into sub-lists based on static stops.
+  /** Splits a list of points into sub-lists based on static stops.
     *
     * A stop is defined as a sequence of identical points longer than the threshold.
     * Segments are split at stops, and short pauses (<= threshold) are merged into moving segments.
@@ -164,10 +158,10 @@ object Utils extends Logging {
     @annotation.tailrec
     def recurse(
         remaining: List[STPoint],
-        buffer: List[STPoint],       // Accumulates identical points to check count
-        currentSeg: List[STPoint],   // Accumulates valid moving points
-        acc: List[List[STPoint]]     // Accumulates finished segments
-    ): List[List[STPoint]] = {
+        buffer: List[STPoint],     // Accumulates identical points to check count
+        currentSeg: List[STPoint], // Accumulates valid moving points
+        acc: List[List[STPoint]]   // Accumulates finished segments
+      ): List[List[STPoint]] =
       remaining match {
         case Nil =>
           // End of input: Process the final buffer
@@ -204,14 +198,13 @@ object Utils extends Logging {
                 } else {
                   // CASE 2: The buffer was just a pause (static <= threshold)
                   // Action: Keep going. Move buffer to currentSeg, start buffering p.
-                  // Note: 'buffer' is reversed, 'currentSeg' is reversed. 
+                  // Note: 'buffer' is reversed, 'currentSeg' is reversed.
                   // We prepend buffer to currentSeg to maintain reverse order correctly.
                   recurse(tail, List(p), buffer ++ currentSeg, acc)
                 }
               }
           }
       }
-    }
 
     recurse(points, Nil, Nil, Nil)
   }
@@ -223,10 +216,10 @@ object Utils extends Logging {
         remaining: List[STPoint],
         currentSegment: List[STPoint],
         acc: List[List[STPoint]]
-    ): List[List[STPoint]] = {
+      ): List[List[STPoint]] =
       remaining match {
         // Base case: No more points to process
-        case Nil =>
+        case Nil               =>
           if (currentSegment.isEmpty) acc.reverse
           else (currentSegment.reverse :: acc).reverse
 
@@ -250,16 +243,14 @@ object Utils extends Logging {
               }
           }
       }
-    }
 
     recurse(points, Nil, Nil)
-  }  
+  }
 
-  /**
-   * Transform a coordinate from EPSG:4326 -> EPSG:3944.
-   * Returns (x, y) in target CRS.
-   * Optimized to reuse ProjCoordinate containers.
-   */
+  /** Transform a coordinate from EPSG:4326 -> EPSG:3944.
+    * Returns (x, y) in target CRS.
+    * Optimized to reuse ProjCoordinate containers.
+    */
   def transform(lon: Double, lat: Double): Coordinate = {
     val (src, dst) = threadLocalCoords.get()
     src.x = lon
@@ -268,11 +259,10 @@ object Utils extends Logging {
     new Coordinate(dst.x, dst.y)
   }
 
-    /**
-   * Transform a coordinate from EPSG:4326 -> EPSG:3944.
-   * Returns (x, y) in target CRS.
-   * Optimized to reuse ProjCoordinate containers.
-   */
+  /** Transform a coordinate from EPSG:4326 -> EPSG:3944.
+    * Returns (x, y) in target CRS.
+    * Optimized to reuse ProjCoordinate containers.
+    */
   def transform3d(lon: Double, lat: Double, tid: Long = -1): Coordinate = {
     val (src, dst) = threadLocalCoords.get()
     src.x = lon
@@ -281,21 +271,19 @@ object Utils extends Logging {
     new Coordinate(dst.x, dst.y, tid.toDouble)
   }
 
-  /**
-   * Get current clock time in nanoseconds.
-   */
+  /** Get current clock time in nanoseconds.
+    */
   def clocktime: Long = System.nanoTime()
 
-  /**
-   * Save content to a file and log the time taken.
-   */
+  /** Save content to a file and log the time taken.
+    */
   def save(filename: String)(content: Seq[String]): Unit = {
     val start = clocktime
     val f     = new PrintWriter(filename)
     f.write(content.mkString(""))
     f.close
-    val end  = clocktime
-    val time = "%.2f".format((end - start) / 1e9)
+    val end   = clocktime
+    val time  = "%.2f".format((end - start) / 1e9)
     logger.info(s"Saved ${filename} in ${time}s [${content.size} records].")
   }
 

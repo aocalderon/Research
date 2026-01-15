@@ -18,7 +18,7 @@ lazy val root = project
       "org.scalameta"            %% "munit"           % "1.0.0"  % Test
     ),
     scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked"),
-    fork := true, // enabling forking to apply JVM options to the app, not just the sbt shell...
+    fork         := true, // enabling forking to apply JVM options to the app, not just the sbt shell...
     javaOptions ++= Seq(
       "-Xmx128G",
       "-Xms128G",

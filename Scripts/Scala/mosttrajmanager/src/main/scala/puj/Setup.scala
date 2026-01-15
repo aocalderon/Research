@@ -11,14 +11,13 @@ case class Settings(
     crsin: String = "EPSG:4326",
     crsout: String = "EPSG:3944",
     tolerance: Double = 1e-2,
-    debug: Boolean = false
-) {
+    debug: Boolean = false) {
   val geofactory: GeometryFactory = new GeometryFactory(new PrecisionModel(1 / tolerance))
 }
 
 object Setup {
   val builder = OParser.builder[Settings]
-  val parser = {
+  val parser  = {
     import builder._
     OParser.sequence(
       programName("MoST Trajectory Processor"),
