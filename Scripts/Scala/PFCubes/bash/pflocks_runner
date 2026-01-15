@@ -1,17 +1,43 @@
-  #!/bin/bash
+#!/bin/bash
 
 DATASET=$1
 N=$2
 
-ES=( 5 10 15 20 25 30 35 40 45 50) # epsilon
+ES=( 5 10 15 20 25 30 ) # epsilon
+SC=( 50 100 150 200 ) # scapacity
+TC=( 60000 70000 80000 90000 100000 ) # scapacity
 
 for n in $(seq 1 "$N")
 do
-	for e in "${ES[@]}"
+	for s in "${SC[@]}"
 	do
-		echo ""
-		echo "Running ./pflocks_spark --master local[10] --input $DATASET --epsilon $e (iteration $n)"
-		echo ""
-		./pflocks_spark --master local[10] --input "$DATASET" --epsilon "$e" -e
+		for t in "${TC[@]}"
+		do
+			for e in "${ES[@]}"
+			do
+				echo ""
+				echo "Running /pflocks_spark_desktop --master local[20] --input "$DATASET" --epsilon "$e" --scapacity "$s" --tcapacity "$t" --partitioner Dynamic -e"
+				echo ""
+				./pflocks_spark_desktop --master local[20] --input "$DATASET" --epsilon "$e" --scapacity "$s" --tcapacity "$t" --partitioner Dynamic -e
+			done
+		done
+	done
+done
+
+
+ES=( 5 10 15 20 25 30 ) # epsilon
+SC=( 6 10 20 30 40 ) # step
+
+for n in $(seq 1 "$N")
+do
+	for s in "${SC[@]}"
+	do
+		for e in "${ES[@]}"
+		do
+			echo ""
+			echo "Running ./pflocks_spark_desktop --master local[20] --input "$DATASET" --epsilon "$e" --step "$s" --partitioner Fixed -e"
+			echo ""
+			./pflocks_spark_desktop --master local[20] --input "$DATASET" --epsilon "$e" --step "$s" --partitioner Fixed -e
+		done
 	done
 done

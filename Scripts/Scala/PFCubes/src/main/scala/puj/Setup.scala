@@ -104,7 +104,7 @@ class Params(args: Seq[String]) extends ScallopConf(args) {
   val mu: ScallopOption[Int]           = opt[Int](default = Some(3))
   val delta: ScallopOption[Int]        = opt[Int](default = Some(3))
   val step: ScallopOption[Int]         = opt[Int](default = Some(1))
-  val endtime: ScallopOption[Int]      = opt[Int](default = Some(10))
+  val endtime: ScallopOption[Int]      = opt[Int](default = Some(-1))
   val scapacity: ScallopOption[Int]    = opt[Int](default = Some(200))
   val tcapacity: ScallopOption[Int]    = opt[Int](default = Some(200))
   val debug: ScallopOption[Boolean]    = opt[Boolean](short = 'd', default = Some(false), descr = "Enable debug mode")

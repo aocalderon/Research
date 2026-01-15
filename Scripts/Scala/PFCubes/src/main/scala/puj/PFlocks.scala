@@ -64,10 +64,13 @@ object PFlocks extends Logging {
       */
 
     implicit val ( (trajs_partitioned, cubes, quadtree), tTrajs) = timer {
-      if (S.partitioner == "Fixed") 
+      if (S.partitioner == "Fixed") {
+        logger.info(s"${S.appId}|INFO|Partitioner|${S.partitioner}")
         CubePartitioner.getFixedIntervalCubes(trajs)
-      else 
+      } else {
+        logger.info(s"${S.appId}|INFO|Partitioner|${S.partitioner}")
         CubePartitioner.getDynamicIntervalCubes(trajs)
+      }
     }
     val nTrajs = trajs_partitioned.count()
     logger.info(s"${S.appId}|TIME|STPart|$tTrajs")
@@ -89,6 +92,19 @@ object PFlocks extends Logging {
           s"${cube.wkt}\n"
         }.toList
       }
+      trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
+        save(s"/tmp/${S.appId}_${index}.tsv") {  
+          points.map{ point =>
+            val data = point.getUserData.asInstanceOf[Data]
+            val oid = data.oid
+            val lon = point.getX
+            val lat = point.getY
+            val tid = data.tid
+            s"$oid\t$lon\t$lat\t$tid\n"
+          }.toList
+        }
+        points
+      }.count()
     }
 
     /** *********************************************************************** Safe flocks finding...
@@ -97,14 +113,15 @@ object PFlocks extends Logging {
       // Computing flocks in each spatiotemporal partition...
       val flocksRDD = trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
         val t0        = clocktime
-        val cell_test = new Envelope(cubes(index).cell.envelope)
+        val originalEnv = cubes(index).cell.envelope
+        val cell_test = new Envelope(originalEnv)
         cell_test.expandBy(S.sdist * -1.0)
         val cell = if (cell_test.isNull) {
-          new Envelope(cell_test.centre())
+          new Envelope(originalEnv.centre())
         } else {
           cell_test
         }
-        val cell_prime = new Envelope(cubes(index).cell.envelope)
+        val cell_prime = new Envelope(originalEnv)
         val ps         = points.toList
           .map { point =>
             val data = point.getUserData.asInstanceOf[Data]
@@ -183,7 +200,7 @@ object PFlocks extends Logging {
         }
         val tSpartial1 = (clocktime - t0) / 1e9
         experiments {
-          logger.info(s"TIME|PER_CELL|SPartial1|$index|$tSpartial1")
+          logger.info(s"${S.appId}|TIME|PER_CELL|SPartial1|$index|$tSpartial1")
         }
 
         R
@@ -222,7 +239,7 @@ object PFlocks extends Logging {
           val R          = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
           val tSpartial2 = (clocktime - t0) / 1e9
           experiments {
-            logger.info(s"TIME|PER_CELL|SPartial2|$index|$tSpartial2")
+            logger.info(s"${S.appId}|TIME|PER_CELL|SPartial2|$index|$tSpartial2")
           }
 
           R.toIterator
@@ -263,7 +280,7 @@ object PFlocks extends Logging {
           val R         = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk]).filter { f => cell.contains(f) }
           val tTpartial = (clocktime - t0) / 1e9
           experiments {
-            logger.info(s"TIME|PER_CELL|TPartial|$index|$tTpartial")
+            logger.info(s"${S.appId}|TIME|PER_CELL|TPartial|$index|$tTpartial")
           }
 
           R.toIterator
@@ -279,7 +296,7 @@ object PFlocks extends Logging {
     val (flocks, tPrune) = timer {
       val allFlocks = (safes ++ spartials ++ tpartials).toList
       debug {
-        logger.info { s"INFO|BeforePrune|${allFlocks.length}" }
+        logger.info(s"INFO|BeforePrune|${allFlocks.length}")
       }
       PF_Utils.parPrune(allFlocks)
     }

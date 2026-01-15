@@ -60,7 +60,7 @@ object CubePartitioner extends Logging {
     quadtree.dropElements()
 
     debug {
-      logger.info(s"Quadtree done!")
+      logger.info(s"Quadtree done! ${quadtree.getLeafZones.size()} leaf zones created.")
     }
 
     // Getting cells...
@@ -72,21 +72,34 @@ object CubePartitioner extends Logging {
     }.toMap
 
     debug {
-      logger.info(s"Cells done!")
+      logger.info(s"Cells done! ${cells.size} cells created.")
     }
 
     // FIXME: Currently, we are assuming that the time instants are continuous from 0 to endtime.
     // Getting intervals...
-    val times_prime                            = (0 to S.endtime).toList
+    val endtime = if (S.endtime > 0) S.endtime else {
+      trajs.map { point =>
+        PF_Utils.getTime(point)
+      }.max()
+    }
+    debug {
+      logger.info(s"Using endtime = $endtime")
+    }
+    val times_prime                            = (0 to endtime).toList
     implicit val intervals: Map[Int, Interval] = Interval.intervalsBySize(times_prime, S.step)
 
     debug {
       logger.info(s"Intervals done!")
+      save("/tmp/Intervals.tsv"){
+        intervals.values.toList
+          .sortBy(_.index)
+          .map(interval => interval.toText)
+      }
     }
 
     // Assigning points to spatio-temporal partitions...
     val trajs_prime = trajs
-      .filter(point => PF_Utils.getTime(point) <= S.endtime)
+      .filter(point => PF_Utils.getTime(point) <= endtime)
       .mapPartitions { rows =>
         rows.flatMap { point =>
           val tid     = PF_Utils.getTime(point)
@@ -143,7 +156,7 @@ object CubePartitioner extends Logging {
       .map(_._2)
       .filter { p =>
         val data = p.getUserData.asInstanceOf[Data]
-        data.tid <= S.endtime
+        data.tid <= endtime
       }.cache()
     trajs_partitioned.count()
 
