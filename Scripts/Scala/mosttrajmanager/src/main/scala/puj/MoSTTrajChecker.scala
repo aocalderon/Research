@@ -12,7 +12,7 @@ import scopt.OParser
 
 import puj.Utils._
 
-object MoSTTrajAnalyzer extends Logging {
+object MoSTTrajChecker extends Logging {
   /**
    * Run the Spark job with the given settings.
    *
@@ -22,7 +22,7 @@ object MoSTTrajAnalyzer extends Logging {
 
     implicit val spark: SparkSession = SparkSession
       .builder()
-      .appName("MoST Trajectory Analyzer")
+      .appName("MoST Trajectory Checker")
       .master(S.master)
       .config("spark.serializer", classOf[KryoSerializer].getName)
       .getOrCreate()
@@ -31,43 +31,25 @@ object MoSTTrajAnalyzer extends Logging {
 
     logger.info(s"Reading ${S.input}")
 
-    val trajs = spark.read
+    val points = spark.read
         .textFile(S.input)
-        .repartition(200)
-        .cache()
-    val nTrajs = trajs.count()
-    logger.info(s"Data=${nTrajs}")
-
-    val oids: Map[String, Long] = trajs.mapPartitions { rows =>
-        rows.map { row =>
+        .map{ row =>
           val arr = row.split("\t")
-          arr(0)
-        }
-      }
-      .distinct()
-      .collect()
-      .zipWithIndex
-      .map{ case (oid, index) =>
-        (oid, index.toLong)
-      }.toMap
-    val nOids = oids.size
-    logger.info(s"OIDs=${nOids}")
-
-    val points: Dataset[STPoint] = trajs.mapPartitions { rows =>
-        rows.map { row =>
-          val arr = row.split("\t")
-          val oid = oids(arr(0)).toLong
+          val oid = arr(0).toLong
           val lon = arr(1).toDouble
           val lat = arr(2).toDouble
           val tid = arr(3).toInt
-
           STPoint(oid, lon, lat, tid)
-        } 
-      }
-      .repartition($"oid")
-      .cache()
+        }
+        .repartition($"oid")
+        .cache()
     val nPoints = points.count()
     logger.info(s"Points=${nPoints}")
+
+    val oids = points.select($"oid").distinct()
+    val nOids = oids.count()
+    logger.info(s"OIDs=${nOids}")
+
 
     if(S.debug){
       points.show(10, truncate = false)
@@ -96,13 +78,8 @@ object MoSTTrajAnalyzer extends Logging {
             }
           }.filter(wkt => !wkt.isEmpty).toIterator
         }
-        .sample(false, 0.1, 42L)
         .collect()
       }
-    }
-
-    save("/opt/Datasets/MoST/MoST.tsv"){
-      points.sort($"tid", $"oid").map{_.wkt}.collect()
     }
 
     spark.stop()
