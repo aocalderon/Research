@@ -11,7 +11,7 @@ import puj.Utils.Disk
   * @param G
   */
 case class Cell(id: Int, envelope: Envelope, lineage: String = "")(implicit G: GeometryFactory) {
-  def wkt: String = G.toGeometry(envelope).toText
+  val wkt: String = G.toGeometry(envelope).toText
 
   override def toString(): String = s"$wkt\t$id\t$lineage"
 

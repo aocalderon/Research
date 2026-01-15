@@ -317,14 +317,15 @@ object Utils extends Logging {
 
   def experiments[R](block: => R)(implicit S: Settings): Unit = { if (S.experi) block }
 
-  def save(filename: String)(content: Seq[String]): Unit = {
+  def save(filename: String, verbose: Boolean = true)(content: Seq[String]): Unit = {
     val start = clocktime
     val f     = new java.io.PrintWriter(filename)
     f.write(content.mkString(""))
     f.close
     val end  = clocktime
     val time = "%.2f".format((end - start) / 1e9)
-    println(s"Saved ${filename}\tin\t${time}s\t[${content.size} records].")
+    if(verbose)
+      println(s"Saved ${filename}\tin\t${time}s\t[${content.size} records].")
   }
 
   def timer[R](msg: String)(block: => R): R = {

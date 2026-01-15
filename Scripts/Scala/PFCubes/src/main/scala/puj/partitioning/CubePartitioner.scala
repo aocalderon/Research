@@ -24,6 +24,17 @@ case class Cube(id: Int, cell: Cell, interval: Interval, st_index: Int) {
 
     s"$wkt\t$id\t$sid\t$tid\t$beg\t$dur"
   }
+
+  def toText(field: String = ""): String = {
+    val wkt = cell.wkt
+    val beg = interval.begin
+    val dur = interval.duration
+
+    if (field == "")
+      s"$wkt\t$id\t$beg\t$dur\n"
+    else
+      s"$wkt\t$id\t$beg\t$dur\t$field\n"
+  }
 }
 
 object CubePartitioner extends Logging {
@@ -178,6 +189,11 @@ object CubePartitioner extends Logging {
 
     debug {
       logger.info(s"Quadtree done!")
+      save(s"/tmp/Cells_${S.appId}.wkt") {
+        cells.values.map { cell =>
+          s"${cell.toText}"
+        }.toList
+      }
     }
 
     val trajsSRDD = trajs
@@ -252,8 +268,6 @@ object CubePartitioner extends Logging {
       }
       logger.info("Intervals done!")
     }
-
-    //val temporal_bounds = intervals.values.map(_.begin).toArray.sorted
 
     val trajsSTRDD_prime = trajsSRDD
       .mapPartitionsWithIndex { (spatial_index, it) =>

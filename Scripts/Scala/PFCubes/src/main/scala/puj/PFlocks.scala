@@ -60,7 +60,8 @@ object PFlocks extends Logging {
       .cache
     trajs.count()
 
-    /** *********************************************************************** Spatio-temporal partitioning...
+    /** *********************************************************************** 
+     * Spatio-temporal partitioning...
       */
 
     implicit val ( (trajs_partitioned, cubes, quadtree), tTrajs) = timer {
@@ -107,7 +108,8 @@ object PFlocks extends Logging {
       }.count()
     }
 
-    /** *********************************************************************** Safe flocks finding...
+    /** *********************************************************************** 
+     * Safe flocks finding...
       */
     val (flocksRDD, tFlocksRDD) = timer {
       // Computing flocks in each spatiotemporal partition...
@@ -175,7 +177,8 @@ object PFlocks extends Logging {
     logger.info(s"${S.appId}|TIME|Safe|$tFlocksRDD")
     logger.info(s"${S.appId}|INFO|Safe|$nSafes")
 
-    /** *********************************************************************** Spatial partial finding...
+    /** *********************************************************************** 
+     * Spatial partial finding...
       */
     val (spartials, tSpartials) = timer {
       val spartialsRDD_prime = flocksRDD.mapPartitionsWithIndex { (index, flocks) =>
@@ -249,7 +252,8 @@ object PFlocks extends Logging {
     logger.info(s"${S.appId}|TIME|SPartial|$tSpartials")
     logger.info(s"${S.appId}|INFO|SPartial|${spartials.length}")
 
-    /** *********************************************************************** Temporal partial finding...
+    /** *********************************************************************** 
+     * Temporal partial finding...
       */
     val ncells                  = quadtree.getLeafZones.size()
     val (tpartials, tTpartials) = timer {
@@ -291,7 +295,8 @@ object PFlocks extends Logging {
     logger.info(s"${S.appId}|TIME|TPartial|$tTpartials")
     logger.info(s"${S.appId}|INFO|TPartial|${tpartials.length}")
 
-    /** *********************************************************************** Duplicate prunning...
+    /** *********************************************************************** 
+     * Duplicate prunning...
       */
     val (flocks, tPrune) = timer {
       val allFlocks = (safes ++ spartials ++ tpartials).toList
