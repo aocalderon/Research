@@ -38,10 +38,12 @@ object MoSTTrajChecker extends Logging {
           val oid = arr(0).toLong
           val lon = arr(1).toDouble
           val lat = arr(2).toDouble
-          val tid = arr(3).toInt
+          val tid = (arr(3).toInt / 300) - 49
+
           STPoint(oid, lon, lat, tid)
         }
         .repartition($"oid")
+        .sort($"tid", $"oid")
         .cache()
     val nPoints = points.count()
     logger.info(s"Points=${nPoints}")
@@ -50,35 +52,18 @@ object MoSTTrajChecker extends Logging {
     val nOids = oids.count()
     logger.info(s"OIDs=${nOids}")
 
+    save(s"${S.output}/MoST.tsv"){
+      points.collect().sortBy(_.tid).map(_.wkt)
+    }
 
     if(S.debug){
-      points.show(10, truncate = false)
+      points.sort($"tid", $"oid").show(200, truncate = false)
       save("/tmp/histogram.tsv"){
         points.groupByKey(_.tid).mapGroups{ case (tid, points) =>
-          val time = tid / 3600
+          val time = tid
           val count = points.size
           s"$time\t$count\n"
         }.collect().sortBy(_.split("\t")(0 ).toInt)
-      }
-
-      save("/tmp/trajectories.wkt"){
-        points.mapPartitions{ rows =>
-          val wktWriter = new WKTWriter(3)
-          rows.toList.groupBy(_.oid).map{ case (oid, points) =>
-            val coords = points.sortBy(_.tid).map{ point =>
-              new Coordinate(point.lon, point.lat, point.tid.toDouble)
-            }.toArray
-            try {
-              val lineString = S.geofactory.createLineString(coords)
-              val wkt = wktWriter.write(lineString)
-              s"$wkt\t$oid\n"
-            } catch {
-              case e: IllegalArgumentException =>
-                ""
-            }
-          }.filter(wkt => !wkt.isEmpty).toIterator
-        }
-        .collect()
       }
     }
 

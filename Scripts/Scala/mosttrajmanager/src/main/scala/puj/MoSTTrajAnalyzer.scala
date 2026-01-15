@@ -59,7 +59,7 @@ object MoSTTrajAnalyzer extends Logging {
           val oid = oids(arr(0)).toLong
           val lon = arr(1).toDouble
           val lat = arr(2).toDouble
-          val tid = arr(3).toInt
+          val tid = arr(3).toInt / 300
 
           STPoint(oid, lon, lat, tid)
         } 

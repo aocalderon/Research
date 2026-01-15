@@ -39,11 +39,11 @@ object Setup {
       opt[String]("crsout")
         .action((x, c) => c.copy(crsout = x))
         .text("Output CRS SRID (default: EPSG:3944)"),
-      opt[Double]("tolerance")
+      opt[Double]('t', "tolerance")
         .action((x, c) => c.copy(tolerance = x))
         .text("Tolerance for geometry operations (default: 1e-2)"),
-      opt[Boolean]("debug")
-        .action((x, c) => c.copy(debug = x))
+      opt[Unit]('d', "debug")
+        .action((_, c) => c.copy(debug = true))
         .text("Enable debug mode"),
 
       // Validate inputs immediately
