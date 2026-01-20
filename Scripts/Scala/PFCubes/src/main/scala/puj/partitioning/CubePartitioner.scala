@@ -101,7 +101,7 @@ object CubePartitioner extends Logging {
 
     debug {
       logger.info(s"Intervals done!")
-      save("/tmp/Intervals.tsv"){
+      save(s"/tmp/Intervals_${S.appId}.tsv"){
         intervals.values.toList
           .sortBy(_.index)
           .map(interval => interval.toText)
@@ -236,7 +236,7 @@ object CubePartitioner extends Logging {
       .collect()
 
     debug {
-      save("/tmp/histogram.tsv"){
+      save(s"/tmp/histogram_${S.appId}.tsv"){
         histogram
           .sortBy(_.instant)
           .map(bin => s"${bin.toString()}\n")
@@ -261,7 +261,7 @@ object CubePartitioner extends Logging {
       .toMap
 
     debug {
-      save("/tmp/Intervals.tsv"){
+      save(s"/tmp/Intervals_${S.appId}.tsv"){
         intervals.values.toList
           .sortBy(_.index)
           .map(interval => interval.toText)

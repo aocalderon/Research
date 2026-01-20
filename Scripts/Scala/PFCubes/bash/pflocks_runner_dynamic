@@ -1,0 +1,25 @@
+#!/bin/bash
+
+DATASET=$1
+N=$2
+
+ES=( 10 15 20 ) # epsilon
+SC=( 250 ) # scapacity
+TC=( 80000 ) # scapacity
+
+for n in $(seq 1 "$N")
+do
+	for s in "${SC[@]}"
+	do
+		for t in "${TC[@]}"
+		do
+			for e in "${ES[@]}"
+			do
+				echo ""
+				echo "Running ./pflocks_spark_desktop --master local[20] --input "$DATASET" --epsilon "$e" --scapacity "$s" --tcapacity "$t" --partitioner Dynamic -e"
+				echo ""
+				./pflocks_spark_desktop --master local[20] --input "$DATASET" --epsilon "$e" --scapacity "$s" --tcapacity "$t" --partitioner Dynamic -e
+			done
+		done
+	done
+done

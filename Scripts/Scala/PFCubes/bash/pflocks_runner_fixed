@@ -1,0 +1,21 @@
+#!/bin/bash
+
+DATASET=$1
+N=$2
+
+ES=( 1 ) # epsilon
+SC=( 5 10 20 ) # step
+
+for n in $(seq 1 "$N")
+do
+	for s in "${SC[@]}"
+	do
+		for e in "${ES[@]}"
+		do
+			echo ""
+			echo "Running ./pflocks_spark_desktop --master local[20] --input "$DATASET" --epsilon "$e" --step "$s" --partitioner Fixed -e"
+			echo ""
+			./pflocks_spark_desktop --master local[20] --input "$DATASET" --epsilon "$e" --step "$s" --partitioner Fixed -e
+		done
+	done
+done

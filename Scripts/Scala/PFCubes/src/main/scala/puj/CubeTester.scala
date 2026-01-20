@@ -81,7 +81,7 @@ object CubeTester extends Logging {
         }
         points
     }.count()
-    save(s"/tmp/CC.wkt") {
+    save(s"/tmp/CC_${S.appId}.wkt") {
         trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
             val cube   = cubes(index)
             val counts = points.size.toString()

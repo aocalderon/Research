@@ -93,19 +93,19 @@ object PFlocks extends Logging {
           s"${cube.wkt}\n"
         }.toList
       }
-      trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
-        save(s"/tmp/${S.appId}_${index}.tsv") {  
-          points.map{ point =>
-            val data = point.getUserData.asInstanceOf[Data]
-            val oid = data.oid
-            val lon = point.getX
-            val lat = point.getY
-            val tid = data.tid
-            s"$oid\t$lon\t$lat\t$tid\n"
-          }.toList
-        }
-        points
-      }.count()
+      // trajs_partitioned.mapPartitionsWithIndex { (index, points) =>
+      //   save(s"/tmp/${S.appId}_${index}.tsv") {  
+      //     points.map{ point =>
+      //       val data = point.getUserData.asInstanceOf[Data]
+      //       val oid = data.oid
+      //       val lon = point.getX
+      //       val lat = point.getY
+      //       val tid = data.tid
+      //       s"$oid\t$lon\t$lat\t$tid\n"
+      //     }.toList
+      //   }
+      //   points
+      // }.count()
     }
 
     /** *********************************************************************** 
@@ -160,14 +160,14 @@ object PFlocks extends Logging {
         }
         val tSafe = (clocktime - t0) / 1e9
         experiments {
-          logger.info(s"TIME|PER_CELL|Safe|$index|$tSafe")
+          logger.info(s"${S.appId}|TIME|PER_CELL|Safe|$index|$tSafe")
         }
 
         r
       }.cache
       val nFlocksRDD = flocksRDD.count()
       debug {
-        logger.info { s"INFO|nFlocksRDD|$nFlocksRDD" }
+        logger.info { s"${S.appId}|INFO|nFlocksRDD|$nFlocksRDD" }
       }
       flocksRDD
     }

@@ -1,0 +1,43 @@
+#!/bin/bash
+
+DATASET=$1
+N=$2
+
+ES=( 1 ) # epsilon
+SC=( 100 250 500 750 1000) # scapacity
+TC=( 60000 70000 80000 90000 100000 ) # scapacity
+
+for n in $(seq 1 "$N")
+do
+	for s in "${SC[@]}"
+	do
+		for t in "${TC[@]}"
+		do
+			for e in "${ES[@]}"
+			do
+				echo ""
+				echo "Running ./cubetester_spark --master local[20] --input "$DATASET" --epsilon "$e" --scapacity "$s" --tcapacity "$t" --partitioner Dynamic -d"
+				echo ""
+				./cubetester_spark --master local[20] --input "$DATASET" --epsilon "$e" --scapacity "$s" --tcapacity "$t" --partitioner Dynamic -d
+			done
+		done
+	done
+done
+
+
+ES=( 1 ) # epsilon
+SC=( 10 20 30 40 ) # step
+
+for n in $(seq 1 "$N")
+do
+	for s in "${SC[@]}"
+	do
+		for e in "${ES[@]}"
+		do
+			echo ""
+			echo "Running ./cubetester_spark --master local[20] --input "$DATASET" --epsilon "$e" --step "$s" --partitioner Fixed -d"
+			echo ""
+			./cubetester_spark --master local[20] --input "$DATASET" --epsilon "$e" --step "$s" --partitioner Fixed -d
+		done
+	done
+done
