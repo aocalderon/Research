@@ -26,6 +26,7 @@ case class Bin(instant: Int, count: Int) {
   * @param capacity
   */
 case class Interval(index: Int, begin: Int, end: Int, capacity: Int = 0) {
+
   val duration: Int = end - begin
 
   override def toString(): String = s"$index -> [$begin $end]:$duration [$capacity]"
@@ -51,45 +52,50 @@ object Interval extends Logging {
     intervals(position)
   }
 
-  /** Groups a sequence of bins (instants and their counts) into sub-sequences from left to right, such that the sum of each group does not exceed a maximum limit. The process is greedy: it maximizes the size of the current group before starting a new one. The relative order of elements is preserved.
+  /** Groups a sequence of bins (instants and their counts) into sub-sequences from left to right, such that the sum of
+    * each group does not exceed a maximum limit. The process is greedy: it maximizes the size of the current group
+    * before starting a new one. The relative order of elements is preserved.
     *
     * @param numbers
     *   The input sequence of integers.
     * @param capacity
     *   The maximum allowed sum for any group.
     * @return
-    *   A list of lists, where each inner list is a valid group (except for elements that individually exceed the maxSum, which are handled with a warning).
+    *   A list of lists, where each inner list is a valid group (except for elements that individually exceed the
+    *   maxSum, which are handled with a warning).
     */
   def groupInstants(numbers: Seq[Bin], capacity: Double): List[List[Bin]] = {
     // We use a foldLeft to process the list sequentially and maintain state.
     // The state (accumulator) is a tuple: (completedGroups, currentGroup, currentSum)
     val initialState = (List.empty[List[Bin]], List.empty[Bin], 0)
 
-    val (completedGroups, finalGroup, _) = numbers.foldLeft(initialState) { case ((groups, currentGroup, currentSum), bin) =>
+    val (completedGroups, finalGroup, _) = numbers.foldLeft(initialState) {
+      case ((groups, currentGroup, currentSum), bin) =>
 
-      // 1. Sanity Check: If an individual number exceeds the maximum sum,
-      // it must form its own group. We complete the current group and start
-      // a new one containing only the violating number.
-      val number = bin.count
-      if (number > capacity) {
-        // println(s"Warning: Element $number exceeds maxSum $maxSum. It will be placed in a separate group.")
-        val updatedGroups = if (currentGroup.nonEmpty) groups :+ currentGroup else groups
-        // Start a new group with the single, violating number and immediately complete it.
-        (updatedGroups :+ List(bin), List.empty[Bin], 0)
-      }
+        // 1. Sanity Check: If an individual number exceeds the maximum sum,
+        // it must form its own group. We complete the current group and start
+        // a new one containing only the violating number.
+        val number = bin.count
+        if (number > capacity) {
+          // println(s"Warning: Element $number exceeds maxSum $maxSum. It will be placed in a separate
+          // group.")
+          val updatedGroups = if (currentGroup.nonEmpty) groups :+ currentGroup else groups
+          // Start a new group with the single, violating number and immediately complete it.
+          (updatedGroups :+ List(bin), List.empty[Bin], 0)
+        }
 
-      // 2. Standard case: Check if adding the number is within the limit
-      else if (currentSum + number <= capacity) {
-        // If the sum is within the limit, add the number to the current group
-        // Note: using :+ on List for simple append is fine for small lists,
-        // but for highly performance-critical code on very large lists,
-        // one might prefer prepending and reversing at the end.
-        (groups, currentGroup :+ bin, currentSum + number)
-      } else {
-        // 3. Limit exceeded: The current group is complete.
-        // Start a new group with the current number.
-        (groups :+ currentGroup, List(bin), number)
-      }
+        // 2. Standard case: Check if adding the number is within the limit
+        else if (currentSum + number <= capacity) {
+          // If the sum is within the limit, add the number to the current group
+          // Note: using :+ on List for simple append is fine for small lists,
+          // but for highly performance-critical code on very large lists,
+          // one might prefer prepending and reversing at the end.
+          (groups, currentGroup :+ bin, currentSum + number)
+        } else {
+          // 3. Limit exceeded: The current group is complete.
+          // Start a new group with the current number.
+          (groups :+ currentGroup, List(bin), number)
+        }
     }
 
     // After folding, we must add the last group being built (finalGroup), if it's not empty.
@@ -107,10 +113,11 @@ object Interval extends Logging {
     */
   def intervalsBySize(numbers: Seq[Int], n: Int): Map[Int, Interval] = {
     val grouped = numbers.grouped(n).toList
-    grouped.zipWithIndex.map { case (group, idx) =>
-      val begin = group.head
-      val end   = group.last + 1
-      idx -> Interval(idx, begin, end)
+    grouped.zipWithIndex.map {
+      case (group, idx) =>
+        val begin = group.head
+        val end   = group.last + 1
+        idx -> Interval(idx, begin, end)
     }.toMap
   }
 
@@ -138,9 +145,10 @@ object Interval extends Logging {
         snip(xs.drop(j - i), ns.tail, got :+ xs.take(j - i))
       }
     }
-    val intervals = snip(xs, targets, Vector.empty)
-    intervals.zipWithIndex.flatMap { case (interval, id) =>
-      interval.map { x => (x, id) }
+    val intervals                                                           = snip(xs, targets, Vector.empty)
+    intervals.zipWithIndex.flatMap {
+      case (interval, id) =>
+        interval.map { x => (x, id) }
     }.toMap
   }
 }

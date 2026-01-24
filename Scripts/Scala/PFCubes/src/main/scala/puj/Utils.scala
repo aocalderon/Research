@@ -5,8 +5,8 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.apache.logging.log4j.scala.Logging
 
-import archery.{RTree, Box}
-import streaminer.{MurmurHash3 => Murmur, SpookyHash32 => Spooky}
+import archery.{ RTree, Box }
+import streaminer.{ MurmurHash3 => Murmur, SpookyHash32 => Spooky }
 
 import org.locationtech.jts.geom._
 import org.locationtech.jts.index.strtree.STRtree
@@ -28,11 +28,13 @@ object Utils extends Logging {
   case class Data(oid: Int, tid: Int)
 
   case class SimplePartitioner(partitions: Int) extends Partitioner {
+
     override def numPartitions: Int          = partitions
     override def getPartition(key: Any): Int = key.asInstanceOf[Int]
   }
 
   case class STPoint(point: Point, cid: Int = 0) {
+
     val userData = if (point.getUserData.isInstanceOf[Data]) point.getUserData.asInstanceOf[Data] else null
     val oid      = if (point.getUserData.isInstanceOf[Data]) userData.oid else -1
     val tid      = if (point.getUserData.isInstanceOf[Data]) userData.tid else -1
@@ -106,8 +108,9 @@ object Utils extends Logging {
 
     val signature: BitSet = {
       val signature_prime: BitSet = new BitSet
-      pids.foreach { oid =>
-        pureHash(signature_prime, oid)
+      pids.foreach {
+        oid =>
+          pureHash(signature_prime, oid)
       }
       signature_prime
     }
@@ -119,7 +122,13 @@ object Utils extends Logging {
       println(f"${soid}%-20s\t${sval}%-20s\t${spos}%-20s")
     }
 
-    private def pureHash(signature: BitSet, oid: Int, size: Int = SIG_SIZE, seed: Int = 0, debug: Boolean = false): Unit = {
+    private def pureHash(
+      signature: BitSet,
+      oid: Int,
+      size: Int = SIG_SIZE,
+      seed: Int = 0,
+      debug: Boolean = false
+    ): Unit = {
       val murmur_value = math.abs(Murmur.hashInt2(oid, seed))
       val spooky_value = math.abs(Spooky.hash32(oid, seed))
       val murmur_pos   = murmur_value % size
@@ -187,7 +196,29 @@ object Utils extends Logging {
       .filter(_.equals(this))
   }
 
-  case class Stats(var nPoints: Int = 0, var nPairs: Int = 0, var nCenters: Int = 0, var nCandidates: Int = 0, var nMaximals: Int = 0, var nCliques: Int = 0, var nMBC: Int = 0, var nBoxes: Int = 0, var tCounts: Double = 0.0, var tRead: Double = 0.0, var tGrid: Double = 0.0, var tCliques: Double = 0.0, var tMBC: Double = 0.0, var tBand: Double = 0.0, var tSort: Double = 0.0, var tPairs: Double = 0.0, var tCenters: Double = 0.0, var tCandidates: Double = 0.0, var tMaximals: Double = 0.0, var tBoxes: Double = 0.0, var tFilter: Double = 0.0) {
+  case class Stats(
+    var nPoints: Int = 0,
+    var nPairs: Int = 0,
+    var nCenters: Int = 0,
+    var nCandidates: Int = 0,
+    var nMaximals: Int = 0,
+    var nCliques: Int = 0,
+    var nMBC: Int = 0,
+    var nBoxes: Int = 0,
+    var tCounts: Double = 0.0,
+    var tRead: Double = 0.0,
+    var tGrid: Double = 0.0,
+    var tCliques: Double = 0.0,
+    var tMBC: Double = 0.0,
+    var tBand: Double = 0.0,
+    var tSort: Double = 0.0,
+    var tPairs: Double = 0.0,
+    var tCenters: Double = 0.0,
+    var tCandidates: Double = 0.0,
+    var tMaximals: Double = 0.0,
+    var tBoxes: Double = 0.0,
+    var tFilter: Double = 0.0
+  ) {
 
     def printBFE(printTotal: Boolean = true): Unit = {
       log(s"BFE|Points     |${nPoints}")
@@ -235,18 +266,18 @@ object Utils extends Logging {
   // Methods...
 
   def gaussianSeries(
-      n: Int = 1000,
-      min: Double = 0.0,
-      max: Double = 1.0
+    n: Int = 1000,
+    min: Double = 0.0,
+    max: Double = 1.0
   ): List[Double] = {
     val data = (0 to n).toList.map(_ => Random.nextGaussian())
     rescaleList(data, min, max)
   }
 
   def rescaleList(
-      data: List[Double],
-      newMin: Double,
-      newMax: Double
+    data: List[Double],
+    newMin: Double,
+    newMax: Double
   ): List[Double] = {
     if (data.isEmpty) return List.empty
     val currentMin = data.min
@@ -254,41 +285,44 @@ object Utils extends Logging {
     if (currentMin == currentMax) {
       return data.map(_ => newMin)
     }
-    data.map { x =>
-      val normalized = (x - currentMin) / (currentMax - currentMin)
-      normalized * (newMax - newMin) + newMin
+    data.map {
+      x =>
+        val normalized = (x - currentMin) / (currentMax - currentMin)
+        normalized * (newMax - newMin) + newMin
     }
   }
 
   def generateGaussianPointset(
-      n: Int,
-      x_limit: Double = 5000.0,
-      y_limit: Double = 5000.0,
-      t_limit: Double = 1000.0
+    n: Int,
+    x_limit: Double = 5000.0,
+    y_limit: Double = 5000.0,
+    t_limit: Double = 1000.0
   )(implicit G: GeometryFactory, spark: SparkSession): RDD[Point] = {
 
     val Xs     = gaussianSeries(n, 0.0, x_limit)
     val Ys     = gaussianSeries(n, 0.0, y_limit)
     val Ts     = gaussianSeries(n, 0.0, t_limit).map(_.toInt)
-    val points = (0 to n).map { i =>
-      val x     = Xs(i)
-      val y     = Ys(i)
-      val t     = Ts(i)
-      val point = G.createPoint(new Coordinate(x, y))
-      point.setUserData(Data(i, t))
-      point
+    val points = (0 to n).map {
+      i =>
+        val x     = Xs(i)
+        val y     = Ys(i)
+        val t     = Ts(i)
+        val point = G.createPoint(new Coordinate(x, y))
+        point.setUserData(Data(i, t))
+        point
     }
 
     saveAsTSV(
       "/tmp/P.wkt",
-      points.map { point =>
-        val x   = point.getX
-        val y   = point.getY
-        val t   = point.getUserData().asInstanceOf[Data].tid
-        val i   = point.getUserData().asInstanceOf[Data].oid
-        val wkt = point.toText()
+      points.map {
+        point =>
+          val x   = point.getX
+          val y   = point.getY
+          val t   = point.getUserData().asInstanceOf[Data].tid
+          val i   = point.getUserData().asInstanceOf[Data].oid
+          val wkt = point.toText()
 
-        f"$i%d\t$x%.3f\t$y%.3f\t$t%d\t$wkt\n"
+          f"$i%d\t$x%.3f\t$y%.3f\t$t%d\t$wkt\n"
       }.toList
     )
 
@@ -322,9 +356,9 @@ object Utils extends Logging {
     val f     = new java.io.PrintWriter(filename)
     f.write(content.mkString(""))
     f.close
-    val end  = clocktime
-    val time = "%.2f".format((end - start) / 1e9)
-    if(verbose)
+    val end   = clocktime
+    val time  = "%.2f".format((end - start) / 1e9)
+    if (verbose)
       println(s"Saved ${filename}\tin\t${time}s\t[${content.size} records].")
   }
 
@@ -346,9 +380,10 @@ object Utils extends Logging {
 
   def computeCentres(p1: STPoint, p2: STPoint)(implicit G: GeometryFactory, S: Settings): List[Point] = {
 
-    calculateCenterCoordinates(p1.point, p2.point).map { centre =>
-      centre.setUserData(s"${p1.oid} ${p2.oid}")
-      centre
+    calculateCenterCoordinates(p1.point, p2.point).map {
+      centre =>
+        centre.setUserData(s"${p1.oid} ${p2.oid}")
+        centre
     }
   }
 
@@ -373,31 +408,35 @@ object Utils extends Logging {
     }
   }
 
-  def readPoints(input: String, isWKT: Boolean = false)(implicit geofactory: GeometryFactory, S: Settings): List[STPoint] = {
+  def readPoints(input: String, isWKT: Boolean = false)(implicit
+    geofactory: GeometryFactory,
+    S: Settings
+  ): List[STPoint] = {
 
     val buffer = Source.fromFile(input)
     val points = buffer.getLines.zipWithIndex.toList
-      .map { line =>
-        if (isWKT) {
-          val reader = new WKTReader(geofactory)
-          val i      = line._2.toInt
-          val t      = 0
-          val point  = reader.read(line._1).asInstanceOf[Point]
+      .map {
+        line =>
+          if (isWKT) {
+            val reader = new WKTReader(geofactory)
+            val i      = line._2.toInt
+            val t      = 0
+            val point  = reader.read(line._1).asInstanceOf[Point]
 
-          point.setUserData(Data(i, t))
-          STPoint(point)
-        } else {
-          val arr   = line._1.split("\t")
-          val i     = arr(0).toInt
-          val x     = arr(1).toDouble
-          val y     = arr(2).toDouble
-          val t     = arr(3).toInt
-          val point = geofactory.createPoint(new Coordinate(x, y))
+            point.setUserData(Data(i, t))
+            STPoint(point)
+          } else {
+            val arr   = line._1.split("\t")
+            val i     = arr(0).toInt
+            val x     = arr(1).toDouble
+            val y     = arr(2).toDouble
+            val t     = arr(3).toInt
+            val point = geofactory.createPoint(new Coordinate(x, y))
 
-          val data = Data(i, t)
-          point.setUserData(data)
-          STPoint(point)
-        }
+            val data = Data(i, t)
+            point.setUserData(data)
+            STPoint(point)
+          }
       }
     buffer.close
 

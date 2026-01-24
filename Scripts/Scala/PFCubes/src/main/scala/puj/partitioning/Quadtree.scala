@@ -1,12 +1,12 @@
 package puj.partitioning
 
-import org.locationtech.jts.geom.{GeometryFactory, Envelope, Coordinate, Polygon, Point}
+import org.locationtech.jts.geom.{ GeometryFactory, Envelope, Coordinate, Polygon, Point }
 import org.locationtech.jts.index.strtree.STRtree
 import org.locationtech.jts.io.WKTReader
 
 import org.apache.spark.rdd.RDD
 
-import edu.ucr.dblab.pflock.sedona.quadtree.{StandardQuadTree, QuadRectangle}
+import edu.ucr.dblab.pflock.sedona.quadtree.{ StandardQuadTree, QuadRectangle }
 
 import scala.collection.JavaConverters._
 import scala.io.Source
@@ -59,12 +59,13 @@ object Quadtree {
   def save[T](quadtree: StandardQuadTree[T], filename: String): Unit = {
     val f   = new FileWriter(filename)
     val WKT = quadtree.getLeafZones.asScala
-      .map { leaf =>
-        val wkt = leaf.wkt
-        val cid = leaf.partitionId
-        val lin = leaf.lineage
+      .map {
+        leaf =>
+          val wkt = leaf.wkt
+          val cid = leaf.partitionId
+          val lin = leaf.lineage
 
-        s"$wkt\t$cid\t$lin\n"
+          s"$wkt\t$cid\t$lin\n"
       }
       .mkString("")
     f.write(WKT)
@@ -72,13 +73,14 @@ object Quadtree {
   }
 
   def load[T](filename: String)(implicit geofactory: GeometryFactory): StandardQuadTree[T] = {
-    val reader = new WKTReader(geofactory)
-    val buffer = Source.fromFile(filename)
-    val cells  = buffer.getLines.toList.map { line =>
-      val arr      = line.split("\t")
-      val envelope = reader.read(arr(0)).asInstanceOf[Polygon].getEnvelopeInternal
-      val lineage  = arr(1)
-      (lineage, envelope)
+    val reader   = new WKTReader(geofactory)
+    val buffer   = Source.fromFile(filename)
+    val cells    = buffer.getLines.toList.map {
+      line =>
+        val arr      = line.split("\t")
+        val envelope = reader.read(arr(0)).asInstanceOf[Polygon].getEnvelopeInternal
+        val lineage  = arr(1)
+        (lineage, envelope)
     }
     buffer.close()
     val left     = cells.map(_._2.getMinX).min
@@ -116,13 +118,13 @@ object Quadtree {
   }
 
   def build(
-      points: RDD[Point],
-      envelope: Envelope = new Envelope(),
-      capacity: Int = 100,
-      fraction: Double = 0.05,
-      maxLevel: Int = 16,
-      level: Int = 0,
-      seed: Int = 42
+    points: RDD[Point],
+    envelope: Envelope = new Envelope(),
+    capacity: Int = 100,
+    fraction: Double = 0.05,
+    maxLevel: Int = 16,
+    level: Int = 0,
+    seed: Int = 42
   )(implicit G: GeometryFactory): (StandardQuadTree[Point], Map[Int, Cell], STRtree, Envelope) = {
 
     val universe = if (envelope.isNull) {
@@ -143,41 +145,46 @@ object Quadtree {
     points
       .sample(false, fraction, seed)
       .collect
-      .foreach { point =>
-        val mbr = new QuadRectangle(point.getEnvelopeInternal)
-        quadtree.insert(mbr, point)
+      .foreach {
+        point =>
+          val mbr = new QuadRectangle(point.getEnvelopeInternal)
+          quadtree.insert(mbr, point)
       }
     quadtree.assignPartitionIds
     quadtree.assignPartitionLineage
     quadtree.dropElements
 
     val rtree = new STRtree()
-    val cells = quadtree.getLeafZones.asScala.map { leaf =>
-      val id       = leaf.partitionId.toInt
-      val envelope = leaf.getEnvelope
-      val linage   = leaf.lineage
+    val cells = quadtree.getLeafZones.asScala.map {
+      leaf =>
+        val id       = leaf.partitionId.toInt
+        val envelope = leaf.getEnvelope
+        val linage   = leaf.lineage
 
-      val cell = Cell(id, envelope, linage)
+        val cell = Cell(id, envelope, linage)
 
-      rtree.insert(envelope, id)
-      (id -> cell)
+        rtree.insert(envelope, id)
+        (id -> cell)
     }.toMap
 
     (quadtree, cells, rtree, universe.getEnvelope)
   }
 
-  def read(cells_file: String, boundary_file: String)(implicit geofactory: GeometryFactory): (Map[Int, Envelope], STRtree, Envelope) = {
+  def read(cells_file: String, boundary_file: String)(implicit
+    geofactory: GeometryFactory
+  ): (Map[Int, Envelope], STRtree, Envelope) = {
 
     val reader = new WKTReader(geofactory)
     val buffer = Source.fromFile(cells_file)
     val tree   = new STRtree()
-    val cells  = buffer.getLines.toList.map { line =>
-      val arr      = line.split("\t")
-      val envelope = reader.read(arr(0)).asInstanceOf[Polygon].getEnvelopeInternal
-      val cellId   = arr(1).toInt
+    val cells  = buffer.getLines.toList.map {
+      line =>
+        val arr      = line.split("\t")
+        val envelope = reader.read(arr(0)).asInstanceOf[Polygon].getEnvelopeInternal
+        val cellId   = arr(1).toInt
 
-      tree.insert(envelope, cellId)
-      (cellId, envelope)
+        tree.insert(envelope, cellId)
+        (cellId, envelope)
     }.toMap
     buffer.close()
 

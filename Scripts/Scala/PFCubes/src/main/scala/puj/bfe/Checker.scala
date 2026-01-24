@@ -3,8 +3,8 @@ package puj
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.scala.Logging
 
-import org.locationtech.jts.geom.{GeometryFactory, PrecisionModel}
-import org.locationtech.jts.geom.{Envelope, Coordinate, Point}
+import org.locationtech.jts.geom.{ GeometryFactory, PrecisionModel }
+import org.locationtech.jts.geom.{ Envelope, Coordinate, Point }
 
 import scala.collection.JavaConverters._
 import scala.io.Source
@@ -17,7 +17,13 @@ import puj.bfe._
 
 object Checker extends Logging {
 
-  def checkMaximalDisks(ours: List[Disk], theirs: List[Disk], ours_label: String = "ours", theirs_label: String = "theirs", points: List[STPoint])(implicit G: GeometryFactory, S: Settings): Unit = {
+  def checkMaximalDisks(
+    ours: List[Disk],
+    theirs: List[Disk],
+    ours_label: String = "ours",
+    theirs_label: String = "theirs",
+    points: List[STPoint]
+  )(implicit G: GeometryFactory, S: Settings): Unit = {
 
     val ours_pids      = ours.map(_.pidsText)
     val ours_pids_file = s"/tmp/${ours_label}_pids.txt"

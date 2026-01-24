@@ -1,7 +1,7 @@
 import complete.DefaultParsers._
 import sys.process._
 import java.io.FileWriter
-import java.nio.file.{Files, Paths}
+import java.nio.file.{ Files, Paths }
 
 lazy val sparkBash = inputKey[Unit]("Create a spark bash script...")
 sparkBash := {
@@ -13,7 +13,7 @@ sparkBash := {
     .map(_.toString)
     .filterNot(_.contains("spark"))
     .filterNot(_.contains("scala-library"))
-  val cpJars_paths = for {
+  val cpJars_paths             = for {
     module <- modules.map(_.split(":")(1))
     path   <- classpathJars.map(_.toString)
     if { path.contains(module) }
@@ -42,7 +42,7 @@ sparkBash := {
   val script_name = classname.split("\\.").last.toLowerCase.trim
   val script      = new File(s"bash/${script_name}_spark")
   script.setExecutable(true, true)
-  val f = new FileWriter(script)
+  val f           = new FileWriter(script)
   f.write("#/usr/bin/bash \n\n")
   f.write(bash)
   f.close
@@ -56,9 +56,10 @@ copyClasspath := {
   val dir_output    = Files.createDirectories(Paths.get(args(0)))
   val cp: Seq[File] = (Runtime / fullClasspathAsJars).value.files
   val base          = baseDirectory.value
-  cp.foreach { c =>
-    println(s"Copy $c ...")
-    s"cp $c ${dir_output}" !
+  cp.foreach {
+    c =>
+      println(s"Copy $c ...")
+      s"cp $c ${dir_output}" !
   }
 }
 
@@ -77,7 +78,7 @@ scalaBash := {
   val script_name = classname.split("\\.").last.toLowerCase.trim
   val script      = new File(s"bash/${script_name}_scala")
   script.setExecutable(true, true)
-  val f = new FileWriter(script)
+  val f           = new FileWriter(script)
   f.write(s"""#/usr/bin/bash \n\n""")
   f.write(s"""JARS=(\n${strCP}\n)\n""")
   f.write(s"""function join_by { local IFS="$$1"; shift; echo "$$*"; }\n""")
@@ -110,7 +111,7 @@ javaBash := {
   val script_name = classname.split("\\.").last.toLowerCase.trim
   val script      = new File(s"bash/${script_name}_java")
   script.setExecutable(true, true)
-  val f = new FileWriter(script)
+  val f           = new FileWriter(script)
   f.write("#/usr/bin/bash \n\n")
   f.write(bash)
   f.write("\n")

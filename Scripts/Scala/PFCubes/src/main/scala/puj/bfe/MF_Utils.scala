@@ -1,12 +1,12 @@
 package puj.bfe
 
-import org.apache.spark.{Partitioner, TaskContext}
+import org.apache.spark.{ Partitioner, TaskContext }
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.rdd.RDD
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.scala.Logging
 
-import org.locationtech.jts.geom.{Coordinate, Envelope, GeometryFactory, Point, LineString}
+import org.locationtech.jts.geom.{ Coordinate, Envelope, GeometryFactory, Point, LineString }
 import org.locationtech.jts.index.strtree.STRtree
 
 import scala.collection.JavaConverters._
@@ -63,9 +63,10 @@ object MF_Utils extends Logging {
         if (maximals_prime.exists(maximal => maximal.isSubsetOf(candidate))) {
           val toRemove = maximals_prime
             .filter(maximal => maximal.isSubsetOf(candidate))
-            .map { maximal =>
-              val center = archery.Point(maximal.X, maximal.Y)
-              Entry(center, maximal)
+            .map {
+              maximal =>
+                val center = archery.Point(maximal.X, maximal.Y)
+                Entry(center, maximal)
             }
           val center   = archery.Point(candidate.X, candidate.Y)
           val toInsert = Entry(center, candidate)
@@ -85,7 +86,7 @@ object MF_Utils extends Logging {
     } yield {
       point
     }
-    val c = G.createMultiPoint(pids.map(_.point).toArray).getCentroid
+    val c    = G.createMultiPoint(pids.map(_.point).toArray).getCentroid
     Disk(c, pids.map(_.oid))
   }
 
@@ -93,27 +94,30 @@ object MF_Utils extends Logging {
     val tree = new STRtree(200)
     points_prime.foreach { point => tree.insert(point.envelope, point) }
 
-    val join = points_prime.flatMap { p1 =>
-      val envelope = p1.envelope
-      envelope.expandBy(S.epsilon)
-      val hood = tree.query(envelope).asScala.map { _.asInstanceOf[STPoint] }
-      for {
-        p2 <- hood if { p1.distance(p2) <= S.epsilon }
-      } yield {
-        (p1, 1)
-      }
+    val join   = points_prime.flatMap {
+      p1 =>
+        val envelope = p1.envelope
+        envelope.expandBy(S.epsilon)
+        val hood     = tree.query(envelope).asScala.map { _.asInstanceOf[STPoint] }
+        for {
+          p2 <- hood if { p1.distance(p2) <= S.epsilon }
+        } yield {
+          (p1, 1)
+        }
     }
     val points = join
       .groupBy(_._1)
-      .map { case (point, counts) =>
-        point.count = counts.size
-        point
+      .map {
+        case (point, counts) =>
+          point.count = counts.size
+          point
       }
       .toList
     points
   }
 
   case class Grid(points: List[STPoint], envelope: Envelope = new Envelope()) {
+
     private var minx: Double            = _
     private var miny: Double            = _
     private var maxx: Double            = _
@@ -125,12 +129,13 @@ object MF_Utils extends Logging {
       val epsilon = if (expansion) S.expansion else S.eprime
       minx = if (envelope.isNull()) points.minBy(_.X).X else envelope.getMinX
       miny = if (envelope.isNull()) points.minBy(_.Y).Y else envelope.getMinY
-      val grid = points
+      val grid    = points
         .filter(_.count >= S.mu)
-        .map { point =>
-          val i = math.floor((point.X - minx) / epsilon).toInt
-          val j = math.floor((point.Y - miny) / epsilon).toInt
-          (encode(i, j), point)
+        .map {
+          point =>
+            val i = math.floor((point.X - minx) / epsilon).toInt
+            val j = math.floor((point.Y - miny) / epsilon).toInt
+            (encode(i, j), point)
         }
         .groupBy(_._1)
 
@@ -140,10 +145,11 @@ object MF_Utils extends Logging {
     def buildGrid1_5(minX: Double, minY: Double)(implicit S: Settings): Map[Long, List[STPoint]] = {
       val epsilon = (S.eprime * 1.5) + S.tolerance
       val grid    = points
-        .map { point =>
-          val i = math.floor((point.X - minX) / epsilon).toInt
-          val j = math.floor((point.Y - minY) / epsilon).toInt
-          (encode(i, j), point)
+        .map {
+          point =>
+            val i = math.floor((point.X - minX) / epsilon).toInt
+            val j = math.floor((point.Y - minY) / epsilon).toInt
+            (encode(i, j), point)
         }
         .groupBy(_._1)
 
@@ -155,14 +161,16 @@ object MF_Utils extends Logging {
     }
 
     def toText: List[String] = {
-      index.flatMap { case (key, points) =>
-        val (i, j) = decode(key)
-        points.map { point =>
-          val wkt = point.toText
-          val oid = point.oid
+      index.flatMap {
+        case (key, points) =>
+          val (i, j) = decode(key)
+          points.map {
+            point =>
+              val wkt = point.toText
+              val oid = point.oid
 
-          s"$wkt\t$key\t($i $j)\t$oid\n"
-        }
+              s"$wkt\t$key\t($i $j)\t$oid\n"
+          }
       }.toList
     }
 
@@ -213,10 +221,14 @@ object MF_Utils extends Logging {
         }
 
         if (n * m < limit) {
-          val X_prime = (BigDecimal(mbr.getMinX) until BigDecimal(mbr.getMaxX) by BigDecimal(epsilon)).map(_.toDouble).toList :+ mbr.getMaxX
+          val X_prime = (BigDecimal(mbr.getMinX) until BigDecimal(mbr.getMaxX) by BigDecimal(
+            epsilon
+          )).map(_.toDouble).toList :+ mbr.getMaxX
           val X       = if (X_prime.size == 1) mbr.getMinX +: X_prime else X_prime
 
-          val Y_prime = (BigDecimal(mbr.getMinY) until BigDecimal(mbr.getMaxY) by BigDecimal(epsilon)).map(_.toDouble).toList :+ mbr.getMaxY
+          val Y_prime = (BigDecimal(mbr.getMinY) until BigDecimal(mbr.getMaxY) by BigDecimal(
+            epsilon
+          )).map(_.toDouble).toList :+ mbr.getMaxY
           val Y       = if (Y_prime.size == 1) mbr.getMinY +: Y_prime else Y_prime
 
           debug {

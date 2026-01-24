@@ -3,7 +3,7 @@
 DATASET=$1
 N=$2
 
-ES=( 10 15 20 ) # epsilon
+ES=( 10 20 30 40 50) # epsilon
 SC=( 250 ) # scapacity
 TC=( 80000 ) # scapacity
 

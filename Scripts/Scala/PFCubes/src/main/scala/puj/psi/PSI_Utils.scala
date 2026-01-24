@@ -6,11 +6,11 @@ import org.apache.logging.log4j.scala.Logging
 import org.locationtech.jts.geom._
 import org.locationtech.jts.index.strtree.STRtree
 
-import archery.{RTree => ArcheryRTree, Box => ArcheryBox}
+import archery.{ RTree => ArcheryRTree, Box => ArcheryBox }
 
 import scala.collection.JavaConverters._
 
-import puj.{Setup, Settings}
+import puj.{ Setup, Settings }
 import puj.Utils._
 
 import streaminer.SpookyHash
@@ -20,6 +20,7 @@ object PSI_Utils extends Logging {
   /** Simple wrapper for the JTS STRtree implementation.
     */
   case class RTree[T]() extends STRtree() {
+
     var minx: Double = Double.MaxValue
     var miny: Double = Double.MaxValue
     var maxx: Double = Double.MinValue
@@ -78,12 +79,13 @@ object PSI_Utils extends Logging {
       *   boolean true if exists, false otherwise.
       */
     def exists[T](envelope: Envelope): Boolean = {
-      this.get(envelope).exists { element: T =>
-        if (element.isInstanceOf[Geometry]) {
-          element.asInstanceOf[Geometry].getEnvelopeInternal.compareTo(envelope) == 0
-        } else {
-          false
-        }
+      this.get(envelope).exists {
+        element: T =>
+          if (element.isInstanceOf[Geometry]) {
+            element.asInstanceOf[Geometry].getEnvelopeInternal.compareTo(envelope) == 0
+          } else {
+            false
+          }
       }
     }
 
@@ -104,6 +106,7 @@ object PSI_Utils extends Logging {
     *   an RTree with the points and envelope defining the box.
     */
   case class Box(hood: RTree[STPoint]) extends Envelope(hood.envelope) {
+
     val points: List[STPoint]   = hood.getAll[STPoint]
     val envelope: Envelope      = hood.envelope
     val left_bottom: Coordinate = hood.left_bottom

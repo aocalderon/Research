@@ -4,7 +4,7 @@ DATASET=$1
 N=$2
 
 ES=( 1 ) # epsilon
-SC=( 5 10 20 ) # step
+SC=( 1 3 6 9 12 ) # step
 
 for n in $(seq 1 "$N")
 do

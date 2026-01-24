@@ -3,7 +3,7 @@ package puj.psi
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.scala.Logging
 
-import archery.{RTree => ArcheryRTree}
+import archery.{ RTree => ArcheryRTree }
 
 import org.locationtech.jts.geom._
 import org.locationtech.jts.index.strtree.STRtree
@@ -13,7 +13,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 
 import puj.psi.PSI_Utils._
-import puj.{Setup, Settings}
+import puj.{ Setup, Settings }
 import puj.Utils._
 
 object PSI extends Logging {
@@ -24,7 +24,11 @@ object PSI extends Logging {
     * @return
     *   list of candidates and list of boxes.
     */
-  def planeSweeping2(points: List[STPoint])(implicit S: Settings, G: GeometryFactory, stats: Stats): (RTree[Disk], ArcheryRTree[Box]) = {
+  def planeSweeping2(points: List[STPoint])(implicit
+    S: Settings,
+    G: GeometryFactory,
+    stats: Stats
+  ): (RTree[Disk], ArcheryRTree[Box]) = {
 
     // ordering by coordinate (it is first by x and then by y)...
     val pointset: List[STPoint] = points.sortBy(_.getCoord)
@@ -42,77 +46,83 @@ object PSI extends Logging {
     var tBoxes                                = 0.0
 
     // feeding candidates and active boxes...
-    pointset.foreach { pr: STPoint =>
-      // feeding band with points inside 2-epsilon x 2-epsilon...
-      val band_for_pr: RTree[STPoint] = RTree[STPoint]()
-      val (_, tB)                     = timer {
-        pointset
-          .filter { ps: STPoint =>
-            math.abs(ps.X - pr.X) <= S.epsilon && math.abs(ps.Y - pr.Y) <= S.epsilon
-          }
-          .foreach { ps: STPoint =>
-            band_for_pr.put(ps.envelope, ps)
-          }
-      }
-      tBand += tB
-
-      // finding pairs of points, centers, candidates and boxes...
-      val (band_pairs, tP) = timer {
-        band_for_pr
-          .getAll[STPoint]
-          .filter { p =>
-            p.X >= pr.X &&              // those at the right...
-            p.oid != pr.oid &&          // prune duplicates...
-            p.distance(pr) <= S.epsilon // getting pairs...
-          }
-      }
-      pairs.appendAll(band_pairs.map(p => (pr, p)))
-      nPairs += band_pairs.size
-      tPairs += tP
-
-      band_pairs.foreach { p =>
-        val (band_centres, tC) = timer {
-          computeCentres(pr, p) // gettings centres...
-        }
-        nCenters += band_centres.size
-        tCenters += tC
-
-        band_centres.foreach { centre =>
-          val t0       = clocktime
-          val envelope = centre.getEnvelopeInternal
-          envelope.expandBy(S.r)
-          val hood = band_for_pr
-            .get[STPoint](envelope)
-            .filter { _.distanceToPoint(centre) <= S.r }
-
-          val t1 = if (hood.size >= S.mu) {
-            val candidate = Disk(centre, hood.map(_.oid))
-            candidates.put(candidate.envelope, candidate) // getting candidates...
-            val t1 = clocktime
-
-            val active_box = Box(band_for_pr)
-
-            val active_box_hood = boxes.searchIntersection(active_box.boundingBox)
-
-            def coveredBy: Boolean = active_box_hood.exists(b => b.value.covers(active_box))
-            def covers: Boolean    = active_box_hood.exists(b => active_box.covers(b.value))
-            if (coveredBy) {
-              // do nothing...
-            } else if (covers) {
-              // remove previous box and add the active one...
-              val box_prime = active_box_hood.find(b => active_box.covers(b.value)).get
-              boxes = boxes.remove(box_prime).insert(active_box.archeryEntry)
-            } else {
-              // otherwise add the active box...
-              boxes = boxes.insert(active_box.archeryEntry)
+    pointset.foreach {
+      pr: STPoint =>
+        // feeding band with points inside 2-epsilon x 2-epsilon...
+        val band_for_pr: RTree[STPoint] = RTree[STPoint]()
+        val (_, tB)                     = timer {
+          pointset
+            .filter {
+              ps: STPoint =>
+                math.abs(ps.X - pr.X) <= S.epsilon && math.abs(ps.Y - pr.Y) <= S.epsilon
             }
-            t1
-          } else clocktime
-          val t2 = clocktime
-          tCandidates += (t1 - t0)
-          tBoxes += (t2 - t1)
+            .foreach {
+              ps: STPoint =>
+                band_for_pr.put(ps.envelope, ps)
+            }
         }
-      }
+        tBand += tB
+
+        // finding pairs of points, centers, candidates and boxes...
+        val (band_pairs, tP) = timer {
+          band_for_pr
+            .getAll[STPoint]
+            .filter {
+              p =>
+                p.X >= pr.X &&              // those at the right...
+                p.oid != pr.oid &&          // prune duplicates...
+                p.distance(pr) <= S.epsilon // getting pairs...
+            }
+        }
+        pairs.appendAll(band_pairs.map(p => (pr, p)))
+        nPairs += band_pairs.size
+        tPairs += tP
+
+        band_pairs.foreach {
+          p =>
+            val (band_centres, tC) = timer {
+              computeCentres(pr, p) // gettings centres...
+            }
+            nCenters += band_centres.size
+            tCenters += tC
+
+            band_centres.foreach {
+              centre =>
+                val t0       = clocktime
+                val envelope = centre.getEnvelopeInternal
+                envelope.expandBy(S.r)
+                val hood     = band_for_pr
+                  .get[STPoint](envelope)
+                  .filter { _.distanceToPoint(centre) <= S.r }
+
+                val t1 = if (hood.size >= S.mu) {
+                  val candidate = Disk(centre, hood.map(_.oid))
+                  candidates.put(candidate.envelope, candidate) // getting candidates...
+                  val t1 = clocktime
+
+                  val active_box = Box(band_for_pr)
+
+                  val active_box_hood = boxes.searchIntersection(active_box.boundingBox)
+
+                  def coveredBy: Boolean = active_box_hood.exists(b => b.value.covers(active_box))
+                  def covers: Boolean    = active_box_hood.exists(b => active_box.covers(b.value))
+                  if (coveredBy) {
+                    // do nothing...
+                  } else if (covers) {
+                    // remove previous box and add the active one...
+                    val box_prime = active_box_hood.find(b => active_box.covers(b.value)).get
+                    boxes = boxes.remove(box_prime).insert(active_box.archeryEntry)
+                  } else {
+                    // otherwise add the active box...
+                    boxes = boxes.insert(active_box.archeryEntry)
+                  }
+                  t1
+                } else clocktime
+                val t2 = clocktime
+                tCandidates += (t1 - t0)
+                tBoxes += (t2 - t1)
+            }
+        }
     } // foreach pointset
     stats.nPairs = nPairs
     stats.nCenters = nCenters
@@ -126,7 +136,11 @@ object PSI extends Logging {
     (candidates, boxes)
   }
 
-  def planeSweeping(points: List[STPoint], time_instant: Int)(implicit S: Settings, G: GeometryFactory, stats: Stats): List[Box] = {
+  def planeSweeping(points: List[STPoint], time_instant: Int)(implicit
+    S: Settings,
+    G: GeometryFactory,
+    stats: Stats
+  ): List[Box] = {
 
     // ordering by coordinate (it is first by x and then by y)...
     val (pointset, tSort) = timer {
@@ -146,76 +160,89 @@ object PSI extends Logging {
     // feeding bands with points inside 2-epsilon x 2-epsilon...
     val (bands, tBand) = timer {
       val tree = new STRtree()
-      pointset.foreach { P =>
-        tree.insert(P.point.getEnvelopeInternal, P)
+      pointset.foreach {
+        P =>
+          tree.insert(P.point.getEnvelopeInternal, P)
       }
       pointset
-        .map { pr: STPoint =>
-          val band_for_pr: RTree[STPoint] = RTree[STPoint]()
-          band_for_pr.pr = pr
+        .map {
+          pr: STPoint =>
+            val band_for_pr: RTree[STPoint] = RTree[STPoint]()
+            band_for_pr.pr = pr
 
-          val env = new Envelope(pr.envelope)
-          env.expandBy(S.epsilon)
-          tree.query(env).asScala.map { _.asInstanceOf[STPoint] }.foreach { ps: STPoint =>
-            band_for_pr.put(ps.envelope, ps)
-          }
+            val env = new Envelope(pr.envelope)
+            env.expandBy(S.epsilon)
+            tree.query(env).asScala.map { _.asInstanceOf[STPoint] }.foreach {
+              ps: STPoint =>
+                band_for_pr.put(ps.envelope, ps)
+            }
 
-          band_for_pr
+            band_for_pr
         }
         .filter(_.size() >= S.mu)
     }
     stats.tBand = tBand
 
     val t_prime      = clocktime
-    val active_boxes = bands.map { band =>
-      var candidates: ListBuffer[Disk] = new ListBuffer[Disk]
-      val points                       = band.getAll[STPoint]
-      val pr                           = band.pr
-      val (band_pairs, tP)             = timer {
-        points.filter { p =>
-          p.X >= pr.X &&              // those at the right...
-          p.oid != pr.oid &&          // prune duplicates...
-          p.distance(pr) <= S.epsilon // getting pairs...
-        }
-      }
-
-      pairs.appendAll(band_pairs.map(p => (pr, p)))
-      nPairs += band_pairs.size
-      tPairs += tP
-
-      band_pairs.foreach { p =>
-        val (band_centres, tC) = timer {
-          computeCentres(pr, p) // gettings centres...
-        }
-        nCenters += band_centres.size
-        tCenters += tC
-
-        band_centres.foreach { centre =>
-          val t0       = clocktime
-          val envelope = centre.getEnvelopeInternal
-          envelope.expandBy(S.r)
-          val hood = band.get[STPoint](envelope).filter { _.distanceToPoint(centre) <= S.r }
-
-          if (hood.size >= S.mu) {
-            // val c = G.createMultiPoint(hood.map(_.point).toArray).getCentroid
-            // val candidate = Disk(c, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
-            val candidate = Disk(centre, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
-            candidates.append(candidate) // getting candidates...
+    val active_boxes = bands.map {
+      band =>
+        var candidates: ListBuffer[Disk] = new ListBuffer[Disk]
+        val points                       = band.getAll[STPoint]
+        val pr                           = band.pr
+        val (band_pairs, tP)             = timer {
+          points.filter {
+            p =>
+              p.X >= pr.X &&              // those at the right...
+              p.oid != pr.oid &&          // prune duplicates...
+              p.distance(pr) <= S.epsilon // getting pairs...
           }
-          tCandidates += (clocktime - t0) / 1e9
-        } // foreach centres
-      }   // foreach pairs
+        }
 
-      nCandidates += candidates.size
+        pairs.appendAll(band_pairs.map(p => (pr, p)))
+        nPairs += band_pairs.size
+        tPairs += tP
 
-      val box = Box(band)
-      box.pr = pr
-      box.id = pr.oid
-      box.disks = candidates.toList
+        band_pairs.foreach {
+          p =>
+            val (band_centres, tC) = timer {
+              computeCentres(pr, p) // gettings centres...
+            }
+            nCenters += band_centres.size
+            tCenters += tC
 
-      box
+            band_centres.foreach {
+              centre =>
+                val t0       = clocktime
+                val envelope = centre.getEnvelopeInternal
+                envelope.expandBy(S.r)
+                val hood     = band.get[STPoint](envelope).filter { _.distanceToPoint(centre) <= S.r }
+
+                if (hood.size >= S.mu) {
+                  // val c = G.createMultiPoint(hood.map(_.point).toArray).getCentroid
+                  // val candidate = Disk(c, hood.map(_.oid), time_instant, time_instant) // set with
+                  // the default time instance...
+                  val candidate = Disk(
+                    centre,
+                    hood.map(_.oid),
+                    time_instant,
+                    time_instant
+                  ) // set with the default time instance...
+                  candidates.append(candidate) // getting candidates...
+                }
+                tCandidates += (clocktime - t0) / 1e9
+            } // foreach centres
+        } // foreach pairs
+
+        nCandidates += candidates.size
+
+        val box = Box(band)
+        box.pr = pr
+        box.id = pr.oid
+        box.disks = candidates.toList
+
+        box
     }
-    val tBoxes = (clocktime - t_prime) - tPairs - tCenters - tCandidates
+    val tBoxes       = (clocktime - t_prime) - tPairs - tCenters - tCandidates
 
     stats.tPairs = tPairs
     stats.tCenters = tCenters
@@ -229,7 +256,11 @@ object PSI extends Logging {
     active_boxes
   }
 
-  def planeSweepingByPivot(points: List[STPoint], pivot: Point, time_instant: Int)(implicit S: Settings, G: GeometryFactory, stats: Stats): List[Box] = {
+  def planeSweepingByPivot(points: List[STPoint], pivot: Point, time_instant: Int)(implicit
+    S: Settings,
+    G: GeometryFactory,
+    stats: Stats
+  ): List[Box] = {
 
     // ordering by coordinate (it is first by x and then by y)...
     val (pointset, tSort) = timer {
@@ -249,81 +280,95 @@ object PSI extends Logging {
     // feeding bands with points inside 2-epsilon x 2-epsilon...
     val (bands, tBand) = timer {
       val tree = new STRtree()
-      pointset.foreach { P =>
-        tree.insert(P.point.getEnvelopeInternal, P)
+      pointset.foreach {
+        P =>
+          tree.insert(P.point.getEnvelopeInternal, P)
       }
       pointset
-        .map { pr: STPoint =>
-          val band_for_pr: RTree[STPoint] = RTree[STPoint]()
-          band_for_pr.pr = pr
+        .map {
+          pr: STPoint =>
+            val band_for_pr: RTree[STPoint] = RTree[STPoint]()
+            band_for_pr.pr = pr
 
-          val env = new Envelope(pr.envelope)
-          env.expandBy(S.epsilon)
-          tree.query(env).asScala.map { _.asInstanceOf[STPoint] }.foreach { ps: STPoint =>
-            band_for_pr.put(ps.envelope, ps)
-          }
+            val env = new Envelope(pr.envelope)
+            env.expandBy(S.epsilon)
+            tree.query(env).asScala.map { _.asInstanceOf[STPoint] }.foreach {
+              ps: STPoint =>
+                band_for_pr.put(ps.envelope, ps)
+            }
 
-          band_for_pr
+            band_for_pr
         }
         .filter(_.size() >= S.mu)
     }
     stats.tBand = tBand
 
     val t_prime      = clocktime
-    val active_boxes = bands.map { band =>
-      var candidates: ListBuffer[Disk] = new ListBuffer[Disk]
-      val points                       = band.getAll[STPoint]
-      val pr                           = band.pr
-      val (band_pairs, tP)             = timer {
-        points.filter { p =>
-          p.X >= pr.X &&              // those at the right...
-          p.oid != pr.oid &&          // prune duplicates...
-          p.distance(pr) <= S.epsilon // getting pairs...
-        }
-      }
-      pairs.appendAll(band_pairs.map(p => (pr, p)))
-      nPairs += band_pairs.size
-      tPairs += tP
-
-      band_pairs.foreach { p =>
-        val (band_centres, tC) = timer {
-          val centre = computeCentres(pr, p)
-            .map { centre => // pick centre closest to pivot...
-              val dist = centre.distance(pivot)
-              (dist, centre)
-            }
-            .minBy(_._1)
-          List(centre._2) // gettings centres...
-        }
-        nCenters += band_centres.size
-        tCenters += tC
-
-        band_centres.foreach { centre =>
-          val t0       = clocktime
-          val envelope = centre.getEnvelopeInternal
-          envelope.expandBy(S.r)
-          val hood = band.get[STPoint](envelope).filter { _.distanceToPoint(centre) <= S.r }
-
-          if (hood.size >= S.mu) {
-            // val c = G.createMultiPoint(hood.map(_.point).toArray).getCentroid
-            // val candidate = Disk(c, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
-            val candidate = Disk(centre, hood.map(_.oid), time_instant, time_instant) // set with the default time instance...
-            candidates.append(candidate) // getting candidates...
+    val active_boxes = bands.map {
+      band =>
+        var candidates: ListBuffer[Disk] = new ListBuffer[Disk]
+        val points                       = band.getAll[STPoint]
+        val pr                           = band.pr
+        val (band_pairs, tP)             = timer {
+          points.filter {
+            p =>
+              p.X >= pr.X &&              // those at the right...
+              p.oid != pr.oid &&          // prune duplicates...
+              p.distance(pr) <= S.epsilon // getting pairs...
           }
-          tCandidates += (clocktime - t0) / 1e9
-        } // foreach centres
-      }   // foreach pairs
+        }
+        pairs.appendAll(band_pairs.map(p => (pr, p)))
+        nPairs += band_pairs.size
+        tPairs += tP
 
-      nCandidates += candidates.size
+        band_pairs.foreach {
+          p =>
+            val (band_centres, tC) = timer {
+              val centre = computeCentres(pr, p)
+                .map {
+                  centre => // pick centre closest to pivot...
+                    val dist = centre.distance(pivot)
+                    (dist, centre)
+                }
+                .minBy(_._1)
+              List(centre._2) // gettings centres...
+            }
+            nCenters += band_centres.size
+            tCenters += tC
 
-      val box = Box(band)
-      box.pr = pr
-      box.id = pr.oid
-      box.disks = candidates.toList
+            band_centres.foreach {
+              centre =>
+                val t0       = clocktime
+                val envelope = centre.getEnvelopeInternal
+                envelope.expandBy(S.r)
+                val hood     = band.get[STPoint](envelope).filter { _.distanceToPoint(centre) <= S.r }
 
-      box
+                if (hood.size >= S.mu) {
+                  // val c = G.createMultiPoint(hood.map(_.point).toArray).getCentroid
+                  // val candidate = Disk(c, hood.map(_.oid), time_instant, time_instant) // set with
+                  // the default time instance...
+                  val candidate = Disk(
+                    centre,
+                    hood.map(_.oid),
+                    time_instant,
+                    time_instant
+                  ) // set with the default time instance...
+                  candidates.append(candidate) // getting candidates...
+                }
+                tCandidates += (clocktime - t0) / 1e9
+            } // foreach centres
+        } // foreach pairs
+
+        nCandidates += candidates.size
+
+        val box = Box(band)
+        box.pr = pr
+        box.id = pr.oid
+        box.disks = candidates.toList
+
+        box
     }
-    val tBoxes = (clocktime - t_prime) - tPairs - tCenters - tCandidates
+    val tBoxes       = (clocktime - t_prime) - tPairs - tCenters - tCandidates
 
     stats.tPairs = tPairs
     stats.tCenters = tCenters
@@ -347,16 +392,22 @@ object PSI extends Logging {
           val final_candidates_prime = itRemain(box_i, boxes, candidates, final_candidates, false)
           itBoxes(remain_boxes, final_candidates_prime)
         }
-        case Nil => final_candidates.toList
+        case Nil                   => final_candidates.toList
       }
     }
 
     @tailrec
-    def itRemain(box_i: Box, boxes: List[Box], candidates: List[Disk], final_candidates: ListBuffer[Disk], was_processed: Boolean)(implicit S: Settings): ListBuffer[Disk] = {
+    def itRemain(
+      box_i: Box,
+      boxes: List[Box],
+      candidates: List[Disk],
+      final_candidates: ListBuffer[Disk],
+      was_processed: Boolean
+    )(implicit S: Settings): ListBuffer[Disk] = {
       boxes match {
         case box_j :: more_boxes => {
           if (math.abs(box_i.getCentroid.x - box_j.getCentroid.x) <= S.epsilon) { // boxes are close enough in X...
-            if (box_i.intersects(box_j)) {                                        // boxes intersects...
+            if (box_i.intersects(box_j)) { // boxes intersects...
               val final_candidates_prime = itCandidates(candidates, final_candidates)
               itRemain(box_i, List.empty[Box], candidates, final_candidates_prime, true)
             } else {
@@ -366,7 +417,7 @@ object PSI extends Logging {
             itRemain(box_i, List.empty[Box], candidates, final_candidates, false)
           }
         }
-        case Nil =>
+        case Nil                 =>
           if (was_processed)
             itCandidates(candidates, final_candidates)
           else
@@ -375,13 +426,15 @@ object PSI extends Logging {
     }
 
     @tailrec
-    def itCandidates(candidates: List[Disk], final_candidates: ListBuffer[Disk])(implicit S: Settings): ListBuffer[Disk] = {
+    def itCandidates(candidates: List[Disk], final_candidates: ListBuffer[Disk])(implicit
+      S: Settings
+    ): ListBuffer[Disk] = {
       candidates match {
         case candidate :: remain_candidates => {
           val final_candidates_prime = insertDisk(final_candidates, candidate)
           itCandidates(remain_candidates, final_candidates_prime)
         }
-        case Nil => final_candidates
+        case Nil                            => final_candidates
       }
     }
 
@@ -445,7 +498,7 @@ object PSI extends Logging {
     var continue: Boolean = true
     for (d <- C if continue) {
       (c, d) match {
-        case _ if { c.signature == d.signature } => // Manage especial case (hash conflict)...
+        case _ if { c.signature == d.signature }          => // Manage especial case (hash conflict)...
           (c, d) match {
             case _ if c.isSubsetOf(d) => continue = false
             case _ if d.isSubsetOf(c) => C -= d
@@ -464,7 +517,10 @@ object PSI extends Logging {
     * @param points
     *   list of points.
     */
-  def run(points: List[STPoint], time_instant: Int = 0)(implicit S: Settings, G: GeometryFactory): (List[Disk], Stats) = {
+  def run(points: List[STPoint], time_instant: Int = 0)(implicit
+    S: Settings,
+    G: GeometryFactory
+  ): (List[Disk], Stats) = {
 
     // For debugging purposes...
     implicit val stats: Stats = Stats()
@@ -482,7 +538,10 @@ object PSI extends Logging {
     (maximals, stats)
   }
 
-  def runByPivot(points: List[STPoint], pivot: Point, time_instant: Int = 0)(implicit S: Settings, G: GeometryFactory): (List[Disk], Stats) = {
+  def runByPivot(points: List[STPoint], pivot: Point, time_instant: Int = 0)(implicit
+    S: Settings,
+    G: GeometryFactory
+  ): (List[Disk], Stats) = {
 
     // For debugging purposes...
     implicit val stats: Stats = Stats()
@@ -508,9 +567,9 @@ object PSI extends Logging {
     log(s"START")
 
     val (maximals, stats) = PSI.run(points)
-    
+
     stats.printPSI()
-    
+
     debug {
       save("/tmp/edgesPointsPSI.wkt") { points.map { _.wkt + "\n" } }
       save("/tmp/edgesMaximalsPSI.wkt") { maximals.map { _.wkt + "\n" } }
