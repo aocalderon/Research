@@ -4,7 +4,7 @@ DATASET=$1
 N=$2
 
 ES=( 1 ) # epsilon
-SC=( 1 3 6 9 12 ) # step
+SC=( 20 ) # step
 
 for n in $(seq 1 "$N")
 do
@@ -15,7 +15,7 @@ do
 			echo ""
 			echo "Running ./pflocks_spark_desktop --master local[20] --input "$DATASET" --epsilon "$e" --step "$s" --partitioner Fixed -e"
 			echo ""
-			./pflocks_spark_desktop --master local[20] --input "$DATASET" --epsilon "$e" --step "$s" --partitioner Fixed -e
+			./pflocks_spark_desktop --master local[20] --input "$DATASET" --epsilon "$e" --step "$s" --output /home/and/tmp/ --partitioner Fixed -e
 		done
 	done
 done
