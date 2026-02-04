@@ -13,9 +13,9 @@ do
 		for e in "${ES[@]}"
 		do
 			echo ""
-			echo "Running ./pflocks_spark_desktop --master local[20] --input "$DATASET" --epsilon "$e" --step "$s" --partitioner Fixed -e"
+			echo "Running ./pflocks_spark_desktop --master local[20] --input "$DATASET" --epsilon "$e" --step "$s" --output /home/and/tmp/  --scapacity 200 --partitioner Fixed -e"
 			echo ""
-			./pflocks_spark_desktop --master local[20] --input "$DATASET" --epsilon "$e" --step "$s" --output /home/and/tmp/ --partitioner Fixed -e
+			./pflocks_spark_desktop --master local[20] --input "$DATASET" --epsilon "$e" --step "$s" --output /home/and/tmp/  --scapacity 200 --partitioner Fixed -e
 		done
 	done
 done

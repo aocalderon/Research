@@ -191,163 +191,163 @@ object PFlocks extends Logging {
     /************************************************************************* 
      * Spatial partial finding...
      */
-    val (spartials, tSpartials) = timer {
-      val spartialsRDD_prime = flocksRDD.mapPartitionsWithIndex {
-        (index, flocks) =>
-          val t0         = clocktime
-          val cube       = cubes(index)
-          val cell_id    = cube.cell.id
-          val time_id    = cube.interval.index
-          val cell       = cube.cell
-          val R          = flocks.flatMap(_._2).flatMap {
-            partial =>
-              val parents = quadtree
-                .findZones(new QuadRectangle(partial.getExpandEnvelope(S.sdist + S.tolerance)))
-                .asScala
-                .filter(zone => zone.partitionId != cell.id)
-                .toList
-                .map {
-                  zone =>
-                    val lin = PF_Utils.mca(zone.lineage, cell.lineage)
-                    partial.lineage = lin
-                    partial.did = index
-                    ((lin, time_id), partial)
-                }
-              parents
-          }
-          val tSpartial1 = (clocktime - t0) / 1e9
-          experiments {
-            logger.info(s"${S.appId}|TIME|PER_CELL|SPartial1|$index|$tSpartial1")
-          }
+    // val (spartials, tSpartials) = timer {
+    //   val spartialsRDD_prime = flocksRDD.mapPartitionsWithIndex {
+    //     (index, flocks) =>
+    //       val t0         = clocktime
+    //       val cube       = cubes(index)
+    //       val cell_id    = cube.cell.id
+    //       val time_id    = cube.interval.index
+    //       val cell       = cube.cell
+    //       val R          = flocks.flatMap(_._2).flatMap {
+    //         partial =>
+    //           val parents = quadtree
+    //             .findZones(new QuadRectangle(partial.getExpandEnvelope(S.sdist + S.tolerance)))
+    //             .asScala
+    //             .filter(zone => zone.partitionId != cell.id)
+    //             .toList
+    //             .map {
+    //               zone =>
+    //                 val lin = PF_Utils.mca(zone.lineage, cell.lineage)
+    //                 partial.lineage = lin
+    //                 partial.did = index
+    //                 ((lin, time_id), partial)
+    //             }
+    //           parents
+    //       }
+    //       val tSpartial1 = (clocktime - t0) / 1e9
+    //       experiments {
+    //         logger.info(s"${S.appId}|TIME|PER_CELL|SPartial1|$index|$tSpartial1")
+    //       }
 
-          R
-      }.cache
-      val nSpartialRDD_prime = spartialsRDD_prime.count()
+    //       R
+    //   }.cache
+    //   val nSpartialRDD_prime = spartialsRDD_prime.count()
 
-      debug {
-        logger.info { s"INFO|nSpartialRDD_Prime|$nSpartialRDD_prime" }
-      }
+    //   debug {
+    //     logger.info { s"INFO|nSpartialRDD_Prime|$nSpartialRDD_prime" }
+    //   }
 
-      val cids  = spartialsRDD_prime.map(_._1).distinct().collect().zipWithIndex.toMap
-      val nCids = cids.size
+    //   val cids  = spartialsRDD_prime.map(_._1).distinct().collect().zipWithIndex.toMap
+    //   val nCids = cids.size
 
-      debug {
-        logger.info { s"INFO|CIDS|$nCids" }
-      }
+    //   debug {
+    //     logger.info { s"INFO|CIDS|$nCids" }
+    //   }
 
-      val spartialsRDD = spartialsRDD_prime
-        .map {
-          case (cid, partial) =>
-            (cids(cid), partial)
-        }
-        .partitionBy(SimplePartitioner(cids.size))
-        .mapPartitionsWithIndex {
-          (index, p_prime) =>
-            val t0         = clocktime
-            val pp         = p_prime.map { case (_, partial) => partial }.toList
-            val P          = pp.sortBy(_.start).groupBy(_.start)
-            val partials   = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()
-            P.toSeq.map {
-              case (time, candidates) =>
-                val tree = new STRtree()
-                candidates.foreach {
-                  candidate =>
-                    tree.insert(new Envelope(candidate.locations.head), candidate)
-                }
-                partials(time) = (candidates, tree)
-            }
-            val times      = (0 to S.endtime).toList
-            val R          = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
-            val tSpartial2 = (clocktime - t0) / 1e9
-            experiments {
-              logger.info(s"${S.appId}|TIME|PER_CELL|SPartial2|$index|$tSpartial2")
-            }
+    //   val spartialsRDD = spartialsRDD_prime
+    //     .map {
+    //       case (cid, partial) =>
+    //         (cids(cid), partial)
+    //     }
+    //     .partitionBy(SimplePartitioner(cids.size))
+    //     .mapPartitionsWithIndex {
+    //       (index, p_prime) =>
+    //         val t0         = clocktime
+    //         val pp         = p_prime.map { case (_, partial) => partial }.toList
+    //         val P          = pp.sortBy(_.start).groupBy(_.start)
+    //         val partials   = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()
+    //         P.toSeq.map {
+    //           case (time, candidates) =>
+    //             val tree = new STRtree()
+    //             candidates.foreach {
+    //               candidate =>
+    //                 tree.insert(new Envelope(candidate.locations.head), candidate)
+    //             }
+    //             partials(time) = (candidates, tree)
+    //         }
+    //         val times      = (0 to S.endtime).toList
+    //         val R          = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk])
+    //         val tSpartial2 = (clocktime - t0) / 1e9
+    //         experiments {
+    //           logger.info(s"${S.appId}|TIME|PER_CELL|SPartial2|$index|$tSpartial2")
+    //         }
 
-            R.toIterator
-        }
-      spartialsRDD.collect()
-    }
-    logger.info(s"${S.appId}|TIME|SPartial|$tSpartials")
-    logger.info(s"${S.appId}|INFO|SPartial|${spartials.length}")
+    //         R.toIterator
+    //     }
+    //   spartialsRDD.collect()
+    // }
+    // logger.info(s"${S.appId}|TIME|SPartial|$tSpartials")
+    // logger.info(s"${S.appId}|INFO|SPartial|${spartials.length}")
 
-    /************************************************************************* 
-     * Temporal partial finding...
-     */
-    val ncells                  = quadtree.getLeafZones.size()
-    val (tpartials, tTpartials) = timer {
-      val tpartialsRDD = flocksRDD
-        .mapPartitionsWithIndex {
-          (_, flocks) =>
-            flocks.flatMap(_._3).flatMap {
-              tpartial =>
-                val envelope = tpartial.getExpandEnvelope(S.sdist + S.tolerance)
-                quadtree.findZones(new QuadRectangle(envelope)).asScala.map {
-                  zone =>
-                    (zone.partitionId.toInt, tpartial)
-                }
-            }
-        }
-        .partitionBy(SimplePartitioner(ncells))
-        .mapPartitionsWithIndex {
-          (index, prime) =>
-            val t0        = clocktime
-            val cell      = cubes(index).cell
-            val tpartial  = prime.map(_._2).toList
-            val P         = tpartial.sortBy(_.start).groupBy(_.start)
-            val partials  = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()
-            P.toSeq.map {
-              case (time, candidates) =>
-                val tree = new STRtree()
-                candidates.foreach {
-                  candidate =>
-                    tree.insert(new Envelope(candidate.locations.head), candidate)
-                }
-                partials(time) = (candidates, tree)
-            }
-            val times     = (0 to S.endtime).toList
-            val R         = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk]).filter {
-              f => cell.contains(f)
-            }
-            val tTpartial = (clocktime - t0) / 1e9
-            experiments {
-              logger.info(s"${S.appId}|TIME|PER_CELL|TPartial|$index|$tTpartial")
-            }
+    // /************************************************************************* 
+    //  * Temporal partial finding...
+    //  */
+    // val ncells                  = quadtree.getLeafZones.size()
+    // val (tpartials, tTpartials) = timer {
+    //   val tpartialsRDD = flocksRDD
+    //     .mapPartitionsWithIndex {
+    //       (_, flocks) =>
+    //         flocks.flatMap(_._3).flatMap {
+    //           tpartial =>
+    //             val envelope = tpartial.getExpandEnvelope(S.sdist + S.tolerance)
+    //             quadtree.findZones(new QuadRectangle(envelope)).asScala.map {
+    //               zone =>
+    //                 (zone.partitionId.toInt, tpartial)
+    //             }
+    //         }
+    //     }
+    //     .partitionBy(SimplePartitioner(ncells))
+    //     .mapPartitionsWithIndex {
+    //       (index, prime) =>
+    //         val t0        = clocktime
+    //         val cell      = cubes(index).cell
+    //         val tpartial  = prime.map(_._2).toList
+    //         val P         = tpartial.sortBy(_.start).groupBy(_.start)
+    //         val partials  = collection.mutable.HashMap[Int, (List[Disk], STRtree)]()
+    //         P.toSeq.map {
+    //           case (time, candidates) =>
+    //             val tree = new STRtree()
+    //             candidates.foreach {
+    //               candidate =>
+    //                 tree.insert(new Envelope(candidate.locations.head), candidate)
+    //             }
+    //             partials(time) = (candidates, tree)
+    //         }
+    //         val times     = (0 to S.endtime).toList
+    //         val R         = PF_Utils.processPartials(List.empty[Disk], times, partials, List.empty[Disk]).filter {
+    //           f => cell.contains(f)
+    //         }
+    //         val tTpartial = (clocktime - t0) / 1e9
+    //         experiments {
+    //           logger.info(s"${S.appId}|TIME|PER_CELL|TPartial|$index|$tTpartial")
+    //         }
 
-            R.toIterator
-        }
-        .cache
-      tpartialsRDD.collect()
-    }
-    logger.info(s"${S.appId}|TIME|TPartial|$tTpartials")
-    logger.info(s"${S.appId}|INFO|TPartial|${tpartials.length}")
+    //         R.toIterator
+    //     }
+    //     .cache
+    //   tpartialsRDD.collect()
+    // }
+    // logger.info(s"${S.appId}|TIME|TPartial|$tTpartials")
+    // logger.info(s"${S.appId}|INFO|TPartial|${tpartials.length}")
 
-    /*********************************************************************** 
-     * Duplicate prunning...
-     */
-    val (flocks, tPrune) = timer {
-      val allFlocks = (safes ++ spartials ++ tpartials).toList
-      debug {
-        logger.info(s"INFO|BeforePrune|${allFlocks.length}")
-      }
-      PF_Utils.parPrune(allFlocks)
-    }
-    logger.info(s"${S.appId}|TIME|Flocks|$tPrune")
-    logger.info(s"${S.appId}|INFO|Flocks|${flocks.size}")
+    // /*********************************************************************** 
+    //  * Duplicate prunning...
+    //  */
+    // val (flocks, tPrune) = timer {
+    //   val allFlocks = (safes ++ spartials ++ tpartials).toList
+    //   debug {
+    //     logger.info(s"INFO|BeforePrune|${allFlocks.length}")
+    //   }
+    //   PF_Utils.parPrune(allFlocks)
+    // }
+    // logger.info(s"${S.appId}|TIME|Flocks|$tPrune")
+    // logger.info(s"${S.appId}|INFO|Flocks|${flocks.size}")
 
-    logger.info(s"${S.appId}|TIME|Total|${tFlocksRDD + tSpartials + tTpartials + tPrune}")
-    logger.info(s"${S.appId}|INFO|Total|${flocks.size}")
+    // logger.info(s"${S.appId}|TIME|Total|${tFlocksRDD + tSpartials + tTpartials + tPrune}")
+    // logger.info(s"${S.appId}|INFO|Total|${flocks.size}")
 
-    debug {
-      save("/tmp/flocks.tsv") {
-        flocks.map {
-          n =>
-            val s = n.start
-            val e = n.end
-            val m = n.pidsText
-            s"$s\t$e\t$m\n"
-        }.sorted
-      }
-    }
+    // debug {
+    //   save("/tmp/flocks.tsv") {
+    //     flocks.map {
+    //       n =>
+    //         val s = n.start
+    //         val e = n.end
+    //         val m = n.pidsText
+    //         s"$s\t$e\t$m\n"
+    //     }.sorted
+    //   }
+    // }
 
     spark.close
     logger.info(s"${S.appId}|END|PFlocks computation ended.")
