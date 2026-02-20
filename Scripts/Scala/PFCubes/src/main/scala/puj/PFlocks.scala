@@ -85,112 +85,130 @@ object PFlocks extends Logging {
 
     // Debugging info...
     debug {
-      save("/tmp/Cubes.wkt") {
-        cubes.values.map {
-          cube =>
-            s"${cube.wkt}\n"
-        }.toList
-      }
-    }
-    experiments {
       save(s"${S.output}Cubes_${S.appId}.wkt") {
         cubes.values.map {
           cube =>
             s"${cube.wkt}\n"
         }.toList
       }
-      trajs_partitioned.mapPartitionsWithIndex {
-        (index, points) =>
-          save(s"${S.output}${S.appId}_${index}.tsv") {
-            points.map {
-              point =>
-                val data = point.getUserData.asInstanceOf[Data]
-                val oid  = data.oid
-                val lon  = point.getX
-                val lat  = point.getY
-                val tid  = data.tid
-                s"$oid\t$lon\t$lat\t$tid\n"
-            }.toList
-          }
-          points
-      }.count()
-    }
 
-    /************************************************************************* 
-     * Safe flocks finding...
-     */
-    val (flocksRDD, tFlocksRDD) = timer {
-      // Computing flocks in each spatiotemporal partition...
-      val flocksRDD  = trajs_partitioned.mapPartitionsWithIndex {
-        (index, points) =>
-          val t0          = clocktime
-          val originalEnv = cubes(index).cell.envelope
-          val cell_test   = new Envelope(originalEnv)
-          cell_test.expandBy(S.sdist * -1.0)
-          val cell        = if (cell_test.isNull) {
-            new Envelope(originalEnv.centre())
-          } else {
-            cell_test
-          }
-          val cell_prime  = new Envelope(originalEnv)
-          val ps          = points.toList
-            .map {
-              point =>
-                val data = point.getUserData.asInstanceOf[Data]
-                (data.tid, point)
-            }
-            .groupBy(_._1)
-            .map {
-              case (time, points) =>
-                (time, points.map(p => STPoint(p._2)))
-            }
-            .toList
-            .sortBy(_._1)
-          val times_prime = ps.map(_._1)
-          val r           = if (times_prime.isEmpty) {
-            val r = (List.empty[Disk], List.empty[Disk], List.empty[Disk])
-            Iterator(r)
-          } else {
-            val time_start = times_prime.head
-            val time_end   = times_prime.last
+      val dense = trajs_partitioned.mapPartitionsWithIndex { (index, points_prime) =>
+        val points = points_prime.toList
+        val cell = cubes(index).cell
+        val densities = points.groupBy(_.getUserData.asInstanceOf[Data].tid).mapValues { case(points) =>
+          val count = points.length
+          val area = cell.envelope.getArea
+          count / area
+        }.values
+        val density = densities.sum / densities.size
+        val wkt = cell.wkt
 
-            val flocks_and_partials = PF_Utils.joinDisksCachingPartials(
-              ps,
-              List.empty[Disk],
-              List.empty[Disk],
-              cell,
-              cell_prime,
-              List.empty[Disk],
-              time_start,
-              time_end,
-              List.empty[Disk],
-              List.empty[Disk]
-            )
+        Iterator(s"$wkt\t$index\t$density\n")
+      }.collect()
 
-            Iterator(flocks_and_partials)
-          }
-          val tSafe       = (clocktime - t0) / 1e9
-          experiments {
-            logger.info(s"${S.appId}|TIME|PER_CELL|Safe|$index|$tSafe")
-          }
-
-          r
-      }.cache
-      val nFlocksRDD = flocksRDD.count()
-      debug {
-        logger.info { s"${S.appId}|INFO|nFlocksRDD|$nFlocksRDD" }
+      save(s"${S.output}Densities_${S.appId}.wkt") {
+        dense
       }
-      flocksRDD
     }
+    // experiments {
+    //   save(s"${S.output}Cubes_${S.appId}.wkt") {
+    //     cubes.values.map {
+    //       cube =>
+    //         s"${cube.wkt}\n"
+    //     }.toList
+    //   }
+    //   trajs_partitioned.mapPartitionsWithIndex {
+    //     (index, points) =>
+    //       save(s"${S.output}${S.appId}_${index}.tsv") {
+    //         points.map {
+    //           point =>
+    //             val data = point.getUserData.asInstanceOf[Data]
+    //             val oid  = data.oid
+    //             val lon  = point.getX
+    //             val lat  = point.getY
+    //             val tid  = data.tid
+    //             s"$oid\t$lon\t$lat\t$tid\n"
+    //         }.toList
+    //       }
+    //       points
+    //   }.count()
+    // }
 
-    val safes  = flocksRDD.collect().flatMap(_._1)
-    val nSafes = safes.length
-    logger.info(s"${S.appId}|TIME|Safe|$tFlocksRDD")
-    logger.info(s"${S.appId}|INFO|Safe|$nSafes")
+    // /************************************************************************* 
+    //  * Safe flocks finding...
+    //  */
+    // val (flocksRDD, tFlocksRDD) = timer {
+    //   // Computing flocks in each spatiotemporal partition...
+    //   val flocksRDD  = trajs_partitioned.mapPartitionsWithIndex {
+    //     (index, points) =>
+    //       val t0          = clocktime
+    //       val originalEnv = cubes(index).cell.envelope
+    //       val cell_test   = new Envelope(originalEnv)
+    //       cell_test.expandBy(S.sdist * -1.0)
+    //       val cell        = if (cell_test.isNull) {
+    //         new Envelope(originalEnv.centre())
+    //       } else {
+    //         cell_test
+    //       }
+    //       val cell_prime  = new Envelope(originalEnv)
+    //       val ps          = points.toList
+    //         .map {
+    //           point =>
+    //             val data = point.getUserData.asInstanceOf[Data]
+    //             (data.tid, point)
+    //         }
+    //         .groupBy(_._1)
+    //         .map {
+    //           case (time, points) =>
+    //             (time, points.map(p => STPoint(p._2)))
+    //         }
+    //         .toList
+    //         .sortBy(_._1)
+    //       val times_prime = ps.map(_._1)
+    //       val r           = if (times_prime.isEmpty) {
+    //         val r = (List.empty[Disk], List.empty[Disk], List.empty[Disk])
+    //         Iterator(r)
+    //       } else {
+    //         val time_start = times_prime.head
+    //         val time_end   = times_prime.last
 
-    /************************************************************************* 
-     * Spatial partial finding...
-     */
+    //         val flocks_and_partials = PF_Utils.joinDisksCachingPartials(
+    //           ps,
+    //           List.empty[Disk],
+    //           List.empty[Disk],
+    //           cell,
+    //           cell_prime,
+    //           List.empty[Disk],
+    //           time_start,
+    //           time_end,
+    //           List.empty[Disk],
+    //           List.empty[Disk]
+    //         )
+
+    //         Iterator(flocks_and_partials)
+    //       }
+    //       val tSafe       = (clocktime - t0) / 1e9
+    //       experiments {
+    //         logger.info(s"${S.appId}|TIME|PER_CELL|Safe|$index|$tSafe")
+    //       }
+
+    //       r
+    //   }.cache
+    //   val nFlocksRDD = flocksRDD.count()
+    //   debug {
+    //     logger.info { s"${S.appId}|INFO|nFlocksRDD|$nFlocksRDD" }
+    //   }
+    //   flocksRDD
+    // }
+
+    // val safes  = flocksRDD.collect().flatMap(_._1)
+    // val nSafes = safes.length
+    // logger.info(s"${S.appId}|TIME|Safe|$tFlocksRDD")
+    // logger.info(s"${S.appId}|INFO|Safe|$nSafes")
+
+    // /************************************************************************* 
+    //  * Spatial partial finding...
+    //  */
     // val (spartials, tSpartials) = timer {
     //   val spartialsRDD_prime = flocksRDD.mapPartitionsWithIndex {
     //     (index, flocks) =>
