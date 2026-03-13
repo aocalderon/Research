@@ -337,6 +337,14 @@ object Utils extends Logging {
     logger.info(s"Saved ${content.size} records to $filename")
   }
 
+  def round(value: Double, places: Int = 3): Double = {
+    BigDecimal(value).setScale(places, BigDecimal.RoundingMode.HALF_UP).toDouble
+  }
+
+  def addNoise(value: Double, position: Int): Double = {
+    value + Random.nextDouble() * math.pow(10, -position)
+  }  
+
   def clocktime: Long = System.nanoTime()
 
   def log(msg: String): Unit = {
