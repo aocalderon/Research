@@ -73,11 +73,20 @@ object TrajDedup extends Logging {
       .sortByKey()
       .collect()
 
-    logger.info(s"${S.appId}|RESULT|Duplicates Distribution:")
-    logger.info(s"${S.appId}|RESULT|#Duplicates\t#Points")
-    duplicateDistribution.foreach {
-      case (count, numPoints) =>
-        logger.info(s"${S.appId}|RESULT|$count\t$numPoints")
+    //logger.info(s"${S.appId}|RESULT|Duplicates Distribution:")
+    //logger.info(s"${S.appId}|RESULT|#Duplicates\t#Points")
+    //duplicateDistribution.foreach {
+    //  case (count, numPoints) =>
+    //    logger.info(s"${S.appId}|RESULT|$count\t$numPoints")
+    //}
+
+    val dense = duplicates.filter(_._2 >= 200)
+      .map{ case ((x, y), count) =>
+        logger.info(s"${S.appId}|DUPLICATE|$count\t$x\t$y")
+        s"$x\t$y\t$count\n"
+      }.collect()
+    save("/tmp/dense.tsv"){
+      dense
     }
 
     spark.stop()
