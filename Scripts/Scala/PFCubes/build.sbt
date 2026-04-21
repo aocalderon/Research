@@ -12,20 +12,19 @@ lazy val root = (project in file("."))
       "org.apache.spark"         %% "spark-core"      % SparkVersion,
       "org.apache.spark"         %% "spark-sql"       % SparkVersion,
       "org.locationtech.jts"      % "jts-core"        % "1.20.0",
+      "org.locationtech.proj4j"   % "proj4j"          % "1.1.0",
       "org.rogach"               %% "scallop"         % "5.3.0",
       "org.spire-math"           %% "archery"         % "0.6.0",
       "org.apache.logging.log4j"  % "log4j-api"       % "2.24.1",
       "org.apache.logging.log4j"  % "log4j-core"      % "2.24.1",
       "org.apache.logging.log4j" %% "log4j-api-scala" % "13.1.0",
-      "org.scalatest"            %% "scalatest"       % "3.2.17"   % Test,
-      "org.scalatestplus"        %% "mockito-4-11"    % "3.2.17.0" % Test,
-      "org.mockito"               % "mockito-inline"  % "4.11.0"   % Test
+      "org.scalatest"            %% "scalatest"       % "3.2.17"   % Test
     ),
     fork := true, // enabling forking to apply JVM options to the app, not just the sbt shell...
     // Adding the necessary JVM options
     javaOptions ++= Seq(
-      "-Xmx8G",
-      "-Xms4G",
+      "-Xmx128G",
+      "-Xms128G",
       "--add-opens=java.base/java.lang=ALL-UNNAMED",
       "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
       "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",
