@@ -12,6 +12,9 @@ import puj.{Setup, Settings}
 import scala.util.Random
 
 object TrajDedup extends Logging {
+  case class STPoint_prime(oid: String, lon: Double, lat: Double, tid: Long) {
+    override def toString: String = s"${oid}\t${lon}\t${lat}\t${tid}"
+  }
 
   def main(args: Array[String]): Unit = {
     implicit var S: Settings        = Setup.getSettings(args) // Initializing settings...
@@ -21,6 +24,8 @@ object TrajDedup extends Logging {
     implicit val spark: SparkSession = SparkSession
       .builder()
       .config("spark.serializer", classOf[KryoSerializer].getName)
+      .config("spark.driver.memory",   "32g")
+      .config("spark.executor.memory", "32g")
       .master(S.master)
       .appName("PFlock")
       .getOrCreate()
@@ -30,64 +35,40 @@ object TrajDedup extends Logging {
     S.printer
 
     val trajs = spark.read // Reading trajectories...
-      .option("header", value = false)
+      .option("header", value = true)
       .option("delimiter", "\t")
       .csv(S.dataset)
       .rdd
-      .mapPartitions {
-        rows =>
-          rows.map {
-            row =>
-              val oid = row.getString(0).toInt
-              val lon = addNoise(row.getString(1).toDouble, 3)
-              val lat = addNoise(row.getString(2).toDouble, 3)
-              val tid = row.getString(3).toInt
-
-              val point = G.createPoint(new Coordinate(round(lon, 3), round(lat, 3)))
-              // val point = G.createPoint(new Coordinate())
-              point.setUserData(Data(oid, tid))
-
-              point
-          }
-      }
-      .cache
-    val nTrajs =trajs.count()
-    logger.info(s"${S.appId}|INFO|Read $nTrajs trajectories")
-
-    trajs.take(10).foreach {
-      p =>
-        val data = p.getUserData.asInstanceOf[Data]
-        logger.info(s"${S.appId}|SAMPLE|Trajectory ${data.oid} at time ${data.tid} at (${p.getX}, ${p.getY})")
-    }
-
-    val duplicates = trajs.groupBy(p => (p.getCoordinate().x, p.getCoordinate().y))
-      .mapValues(_.size)
-      .filter(_._2 > 1)
       .cache()
-    val nDuplicates = duplicates.count()
-    logger.info(s"${S.appId}|RESULT|Found $nDuplicates duplicate trajectories")
+    val nTrajs = trajs.count()
+    logger.info(s"INFO|Read $nTrajs trajectories")
 
-    val duplicateDistribution = duplicates
-      .map { case (_, count) => (count, 1) }
-      .reduceByKey(_ + _)
-      .sortByKey()
-      .collect()
+    val trajsDedup = trajs.filter{ !_.isNullAt(1) }
+      .cache()
+    val nTrajsDedup = trajsDedup.count()
+    logger.info(s"INFO|Deduped $nTrajsDedup trajectories")
 
-    //logger.info(s"${S.appId}|RESULT|Duplicates Distribution:")
-    //logger.info(s"${S.appId}|RESULT|#Duplicates\t#Points")
-    //duplicateDistribution.foreach {
-    //  case (count, numPoints) =>
-    //    logger.info(s"${S.appId}|RESULT|$count\t$numPoints")
-    //}
+    val pointsRDD = trajsDedup.mapPartitions{ rows =>
+        rows.flatMap{ row =>
+          try{
+            val tid = row.getString(0).toDouble.toLong
+            val oid = row.getString(1)
+            val lon = row.getString(2).toDouble
+            val lat = row.getString(3).toDouble
 
-    val dense = duplicates.filter(_._2 >= 200)
-      .map{ case ((x, y), count) =>
-        logger.info(s"${S.appId}|DUPLICATE|$count\t$x\t$y")
-        s"$x\t$y\t$count\n"
-      }.collect()
-    save("/tmp/dense.tsv"){
-      dense
-    }
+            Some(STPoint_prime(oid, lon, lat, tid))
+          } catch {
+            case _: Throwable => None
+          }
+        }
+      }
+      .cache()
+      
+    val nPoints = pointsRDD.count()
+    logger.info(s"INFO|Extracted $nPoints points")
+
+    pointsRDD.map{_.toString() + "\n"}
+      .saveAsTextFile(S.output)
 
     spark.stop()
     logger.info(s"${S.appId}|END|TrajDedup computation finished")
