@@ -94,7 +94,7 @@ object TrajSplitter extends Logging {
     val nTrajs = trajs.count()
     logger.info(s"INFO|Extracted $nTrajs trajectories")
 
-    val validSubTrajs: RDD[Array[Point]] = trajs.flatMap { points =>
+    val validSubTrajs: RDD[(Array[Point], Long)] = trajs.flatMap { points =>
         val pairs = points.sliding(2).toArray
         val distances = pairs.map{ pair =>
           val p1 = pair(0)
@@ -125,13 +125,14 @@ object TrajSplitter extends Logging {
 
         result
       }
+      .zipWithUniqueId
       .cache()
     val nValidSubTrajs = validSubTrajs.count()
     logger.info(s"INFO|Extracted $nValidSubTrajs valid sub-trajectories")
 
     import spark.implicits._
 
-    validSubTrajs.zipWithUniqueId.map{ case(traj: Array[Point], oid: Long) =>
+    validSubTrajs.map{ case(traj: Array[Point], oid: Long) =>
         val start = traj.head.getUserData().asInstanceOf[Data].tid
         val end = traj.last.getUserData().asInstanceOf[Data].tid
         val coords = traj.map(_.getCoordinate()).toArray
@@ -146,9 +147,23 @@ object TrajSplitter extends Logging {
       .toDS()
       .write
       .mode("overwrite")
-      .text(S.output)
+      .text("/tmp/valid_sub_trajectories.wkt")
 
-    //pointsRDD_3944.map{_.toString()}.saveAsTextFile(S.output)
+      validSubTrajs.flatMap{ case(traj: Array[Point], oid: Long) =>
+        traj.map{ point =>
+          val tid = point.getUserData().asInstanceOf[Data].tid
+          val lon = point.getX
+          val lat = point.getY
+
+          STPoint(oid, lon, lat, tid)
+        }  
+      }
+      .sortBy(point => (point.tid))
+      .map(_.toString)
+      .toDS()
+      .write
+      .mode("overwrite")
+      .text(S.output)
 
     spark.stop()
     logger.info(s"${S.appId}|END|${this.getClass.getSimpleName()} computation finished")
